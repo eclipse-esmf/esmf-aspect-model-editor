@@ -34,11 +34,6 @@ export interface WindowInfo {
   menu: Menu | null;
 }
 
-export interface LockedFile {
-  namespace: string;
-  file: string;
-}
-
 export interface CustomMenuItem {
   id?: string;
   submenu?: CustomMenuItem[];
@@ -52,7 +47,6 @@ class WindowsManager {
   private _state: {
     focusedWindowId?: number;
     activeWindows: WindowInfo[];
-    lockedFiles: LockedFile[];
   };
   private _timeout?: NodeJS.Timeout;
   private _updates: Array<{ids: string[]; update: Record<string, any>}>;
@@ -70,7 +64,6 @@ class WindowsManager {
     this._state = {
       focusedWindowId: undefined,
       activeWindows: [],
-      lockedFiles: [],
     };
 
     this._updates = [];
@@ -129,29 +122,6 @@ class WindowsManager {
       this._state.activeWindows.forEach(({id, window}) => {
         window.webContents.send(EVENTS.REQUEST.REFRESH_WORKSPACE);
       });
-    });
-
-    ipcMain.on(EVENTS.REQUEST.ADD_LOCK, (_, {namespace, file}) => {
-      const found = this._state.lockedFiles.find(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
-      if (!found) {
-        console.log('REQUEST.ADD_LOCK', namespace, file);
-        this._state.lockedFiles.push({namespace, file});
-        this._state.activeWindows.forEach(({window}) => window.webContents.send(EVENTS.RESPONSE.LOCKED_FILES, this._state.lockedFiles));
-      }
-    });
-
-    ipcMain.on(EVENTS.REQUEST.REMOVE_LOCK, (_, {namespace, file}) => {
-      const foundIndex = this._state.lockedFiles.findIndex(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
-      if (foundIndex > -1) {
-        console.log('REQUEST.REMOVE_LOCK', namespace, file);
-        this._state.lockedFiles.splice(foundIndex, 1);
-        this._state.activeWindows.forEach(({window}) => window.webContents.send(EVENTS.RESPONSE.LOCKED_FILES, this._state.lockedFiles));
-      }
-    });
-
-    ipcMain.on(EVENTS.REQUEST.LOCKED_FILES, event => {
-      console.log('REQUEST.LOCKED_FILES', this._state.lockedFiles);
-      event.sender.send(EVENTS.RESPONSE.LOCKED_FILES, this._state.lockedFiles);
     });
 
     ipcMain.on(EVENTS.SIGNAL.WINDOW_FOCUS, event => {
@@ -396,14 +366,14 @@ class WindowsManager {
     ipcMain.on(EVENTS.REQUEST.WINDOW_DATA, executeFn);
   }
 
-  private _loadApplication({window, id}: WindowInfo) {
+  private async _loadApplication({window, id}: WindowInfo) {
     if (inDevMode()) {
-      return window.loadURL('http://localhost:4200').then(() => {
-        window.webContents.openDevTools();
-        console.log(`Window \x1b[36m${id}\x1b[0m created!`);
-      });
+      await window.loadURL('http://localhost:4200');
+      window.webContents.openDevTools();
+      console.log(`Window \x1b[36m${id}\x1b[0m created!`);
     }
-    return window.loadFile('./dist/apps/ame/index.html').then(() => console.log(`Window ${id} created!`));
+    await window.loadFile('./dist/apps/ame/index.html');
+    return console.log(`Window ${id} created!`);
   }
 
   private _handleClosingWindow(windowInfo: WindowInfo) {

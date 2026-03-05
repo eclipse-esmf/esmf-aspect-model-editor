@@ -558,8 +558,7 @@
     "FOLD_NAMESPACES": "折叠namespaces",
     "OUTDATED_FILE": "此文件基于较旧的SAMM版本({{sammVersion}})",
     "ERRORED_FILE": "这个文件加载出错",
-    "CURRENT_FILE": "该文件在当前窗口中打开",
-    "LOCKED_FILE": "该文件当前在另一个窗口中打开"
+    "CURRENT_FILE": "该文件在当前窗口中打开"
   },
   "SEARCHES": {
     "ELEMENTS_LABEL": "寻找元素...",
@@ -568,8 +567,7 @@
       "NOTIFICATIONS": {
         "TITLE": "不能找到文件",
         "ERROR_MESSAGE": "这个文件有错误",
-        "ALREADY_LOADED_FILE_MESSAGE": "这个文件已被加载",
-        "LOCKED_FILE_MESSAGE": "该文件在其他窗口中加载"
+        "ALREADY_LOADED_FILE_MESSAGE": "这个文件已被加载"
       },
       "OPEN_DIALOG": {
         "TITLE": "打开文件{{fileName}}",

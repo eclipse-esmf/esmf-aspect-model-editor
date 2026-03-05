@@ -39,7 +39,7 @@ import {
   SaveValidateErrorsCodes,
   TitleService,
 } from '@ame/shared';
-import {FileStatus, SidebarStateService} from '@ame/sidebar';
+import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {decodeText, readFile} from '@ame/utils';
 import {DestroyRef, Injectable, inject} from '@angular/core';
@@ -207,18 +207,6 @@ export class FileHandlingService {
     });
 
     this.loadedFilesService.removeAll();
-    let fileStatus: FileStatus;
-
-    if (this.currentLoadedFile) {
-      const [namespace, version, file] = this.currentLoadedFile.absoluteName;
-      const namespaceVersion = `${namespace}:${version}`;
-      fileStatus = this.sidebarService.namespacesState.getFile(namespaceVersion, file);
-
-      if (fileStatus) {
-        fileStatus.locked = false;
-        this.electronSignalsService.call('removeLock', {namespace: namespaceVersion, file: file});
-      }
-    }
 
     const model = 'new-model.ttl';
     const namespaceName = 'com.examples';

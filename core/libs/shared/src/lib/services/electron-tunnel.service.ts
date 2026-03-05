@@ -33,9 +33,9 @@ import {Injectable, NgZone, inject} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {IpcRenderer} from 'electron';
-import {BehaviorSubject, Observable, catchError, distinctUntilChanged, filter, map, of, switchMap, tap} from 'rxjs';
+import {BehaviorSubject, Observable, distinctUntilChanged, filter, map, of, switchMap, tap} from 'rxjs';
 import {ELECTRON_EVENTS} from '../enums';
-import {ElectronSignals, LockUnlockPayload, StartupData, StartupPayload} from '../model';
+import {ElectronSignals, StartupData, StartupPayload} from '../model';
 import {ElectronSignalsService} from './electron-signals.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {NotificationsService} from './notifications.service';
@@ -61,8 +61,6 @@ export class ElectronTunnelService {
   private searchesStateService = inject(SearchesStateService);
   private translate = inject(LanguageTranslationService);
   private ngZone = inject(NgZone);
-
-  private lockedFiles$ = new BehaviorSubject<LockUnlockPayload[]>([]);
 
   public ipcRenderer: IpcRenderer = window.require?.('electron').ipcRenderer;
   public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
@@ -92,14 +90,10 @@ export class ElectronTunnelService {
     this.onHighlightElement();
     this.onRefreshWorkspace();
     this.onWindowClose();
-    this.onLockUnlockFile();
-    this.onReceiveLockedFiles();
     this.onAppMenuInteraction();
 
     this.setListeners();
     this.setMenuStateListeners();
-
-    this.requestLockedFiles();
   }
 
   private setListeners() {
@@ -240,14 +234,6 @@ export class ElectronTunnelService {
     this.ipcRenderer.send(ELECTRON_EVENTS.SIGNAL.REFRESH_WORKSPACE);
   }
 
-  private requestLockedFiles() {
-    if (!this.ipcRenderer) {
-      return;
-    }
-
-    this.ipcRenderer.send(ELECTRON_EVENTS.REQUEST.LOCKED_FILES);
-  }
-
   private onWindowClose() {
     if (!this.ipcRenderer) {
       return;
@@ -255,24 +241,7 @@ export class ElectronTunnelService {
 
     this.ipcRenderer.on(ELECTRON_EVENTS.REQUEST.IS_FILE_SAVED, (_: unknown, windowId: string) => {
       this.modelSavingTracker.isSaved$
-        .pipe(
-          switchMap(isSaved => (isSaved ? of(true) : this.ngZone.run(() => this.saveModelDialogService.openDialog()))),
-          switchMap(close =>
-            close
-              ? this.requestWindowData().pipe(
-                  switchMap(({options}) =>
-                    this.electronSignalsService.call('unlockFile', {
-                      namespace: options?.namespace,
-                      file: options?.file,
-                      aspectModelUrn: options.aspectModelUrn,
-                    }),
-                  ),
-                  map(() => close),
-                )
-              : of(close),
-          ),
-          catchError(() => of(true)),
-        )
+        .pipe(switchMap(isSaved => (isSaved ? of(true) : this.ngZone.run(() => this.saveModelDialogService.openDialog()))))
         .subscribe((close: boolean) => {
           close && this.ipcRenderer.send(ELECTRON_EVENTS.REQUEST.CLOSE_WINDOW, windowId);
         });
@@ -316,30 +285,6 @@ export class ElectronTunnelService {
 
     this.ipcRenderer.on(ELECTRON_EVENTS.REQUEST.REFRESH_WORKSPACE, () => {
       this.sidebarService.workspace.refresh();
-    });
-  }
-
-  private onReceiveLockedFiles() {
-    this.ipcRenderer.on(ELECTRON_EVENTS.RESPONSE.LOCKED_FILES, (_: unknown, files: LockUnlockPayload[]) => {
-      this.lockedFiles$.next(files);
-    });
-  }
-
-  private onLockUnlockFile() {
-    if (!this.ipcRenderer) {
-      return;
-    }
-
-    this.electronSignalsService.addListener('addLock', ({namespace, file}) => {
-      this.ipcRenderer.send(ELECTRON_EVENTS.REQUEST.ADD_LOCK, {namespace, file});
-    });
-
-    this.electronSignalsService.addListener('removeLock', ({namespace, file}) => {
-      this.ipcRenderer.send(ELECTRON_EVENTS.REQUEST.REMOVE_LOCK, {namespace, file});
-    });
-
-    this.electronSignalsService.addListener('lockedFiles', () => {
-      return this.lockedFiles$.asObservable();
     });
   }
 

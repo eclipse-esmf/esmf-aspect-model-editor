@@ -13,11 +13,7 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {BrowserService, ElectronSignals, ElectronSignalsService} from '@ame/shared';
-import {DestroyRef, Injectable, computed, effect, inject, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {Subscription, of} from 'rxjs';
-import {environment} from '../../../../environments/environment';
+import {Injectable, computed, effect, inject, signal} from '@angular/core';
 
 class SidebarState {
   readonly opened = signal(false);
@@ -68,7 +64,6 @@ class Selection {
 }
 
 export class FileStatus {
-  public locked: boolean;
   public loaded: boolean;
   public outdated: boolean;
   public errored: boolean;
@@ -103,19 +98,6 @@ export class NamespacesManager {
     return this.namespaces()[namespace]?.find(fs => fs.name === file);
   }
 
-  lockFiles(files: {namespace: string; file: string}[]) {
-    const current = this.currentFile?.name;
-    this.namespaces.update(map => {
-      const next: typeof map = {};
-      for (const ns of Object.keys(map)) {
-        next[ns] = map[ns].map(fs =>
-          fs.name !== current ? {...fs, locked: files.some(f => f.namespace === ns && f.file === fs.name)} : fs,
-        );
-      }
-      return next;
-    });
-  }
-
   clear() {
     this.namespaces.set({});
   }
@@ -123,10 +105,7 @@ export class NamespacesManager {
 
 @Injectable({providedIn: 'root'})
 export class SidebarStateService {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private loadedFilesService = inject(LoadedFilesService);
-  private destroyRef = inject(DestroyRef);
-  private browserService = inject(BrowserService);
 
   public sammElements = new SidebarState();
   public workspace = new SidebarStateWithRefresh();
@@ -136,9 +115,6 @@ export class SidebarStateService {
 
   constructor() {
     this.manageSidebars();
-    requestAnimationFrame(() => {
-      this.getLockedFiles();
-    });
   }
 
   public isCurrentFileLoaded(): boolean {
@@ -164,26 +140,7 @@ export class SidebarStateService {
     }
 
     this.namespacesState.hasOutdatedFiles.set(hasOutdated);
-    this.getLockedFiles(true);
     return this.namespacesState.namespaces();
-  }
-
-  private getLockedFiles(takeOne?: boolean) {
-    if (!environment.production && window.location.search.includes('?e2e=true')) {
-      return of({}).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
-    }
-
-    if (this.browserService.isStartedAsElectronApp() || (window as any).require) {
-      return this.electronSignalsService
-        .call('lockedFiles')
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(files => {
-          this.namespacesState.lockFiles(files);
-          if (takeOne) this.destroyRef;
-        });
-    }
-
-    return new Subscription();
   }
 
   private manageSidebars() {

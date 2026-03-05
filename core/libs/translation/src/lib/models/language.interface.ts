@@ -67,7 +67,6 @@ export interface Notifications {
   TITLE: string;
   ERROR_MESSAGE: string;
   ALREADY_LOADED_FILE_MESSAGE: string;
-  LOCKED_FILE_MESSAGE: string;
 }
 export interface Tooltips {
   WORKSPACE: string;
@@ -82,7 +81,6 @@ export interface Tooltips {
   OUTDATED_FILE: string;
   ERRORED_FILE: string;
   CURRENT_FILE: string;
-  LOCKED_FILE: string;
 }
 export interface LoadingScreenDialog {
   MODEL_GENERATION: string;
