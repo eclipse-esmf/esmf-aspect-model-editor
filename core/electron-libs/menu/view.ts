@@ -26,7 +26,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.SHOW_HIDE_TOOLBAR.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_SHOW_HIDE_TOOLBAR);
+        bw?.webContents.send(EVENTS.SIGNAL.SHOW_HIDE_TOOLBAR);
       },
     },
     {
@@ -35,7 +35,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.SHOW_HIDE_MINIMAP.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_SHOW_HIDE_MINIMAP);
+        bw?.webContents.send(EVENTS.SIGNAL.SHOW_HIDE_MINIMAP);
       },
     },
     {
@@ -50,7 +50,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
           icon: getIcon(icons.FILTER_MODEL_BY_NONE.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-            bw?.webContents.send(EVENTS.SIGNAL_FILTER_MODEL_BY, 'default');
+            bw?.webContents.send(EVENTS.SIGNAL.FILTER_MODEL_BY, 'default');
           },
         },
         {
@@ -59,7 +59,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
           icon: getIcon(icons.FILTER_MODEL_BY_PROPERTIES.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-            bw?.webContents.send(EVENTS.SIGNAL_FILTER_MODEL_BY, 'properties');
+            bw?.webContents.send(EVENTS.SIGNAL.FILTER_MODEL_BY, 'properties');
           },
         },
       ],
@@ -74,7 +74,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.ZOOM_IN.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_ZOOM_IN);
+        bw?.webContents.send(EVENTS.SIGNAL.ZOOM_IN);
       },
     },
     {
@@ -84,7 +84,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.ZOOM_OUT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_ZOOM_OUT);
+        bw?.webContents.send(EVENTS.SIGNAL.ZOOM_OUT);
       },
     },
     {
@@ -94,7 +94,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.ZOOM_TO_FIT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_ZOOM_TO_FIT);
+        bw?.webContents.send(EVENTS.SIGNAL.ZOOM_TO_FIT);
       },
     },
     {
@@ -104,7 +104,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.ZOOM_TO_ACTUAL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_ZOOM_TO_ACTUAL);
+        bw?.webContents.send(EVENTS.SIGNAL.ZOOM_TO_ACTUAL);
       },
     },
   ];

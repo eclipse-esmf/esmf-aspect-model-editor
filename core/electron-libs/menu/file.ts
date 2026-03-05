@@ -39,7 +39,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
           icon: getIcon(icons.NEW_WINDOW.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-            bw?.webContents.send(EVENTS.SIGNAL_NEW_EMPTY_MODEL);
+            bw?.webContents.send(EVENTS.SIGNAL.NEW_EMPTY_MODEL);
           },
         },
         {
@@ -49,7 +49,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
             openFile(FILE_TYPE_FILTERS.TTL)
-              .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL_LOAD_FILE, fileInfo))
+              .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL.LOAD_FILE, fileInfo))
               .catch(error => console.error(error));
           },
         },
@@ -59,7 +59,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
           icon: getIcon(icons.LOAD_FROM_TEXT.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-            bw?.webContents.send(EVENTS.SIGNAL_LOAD_FROM_TEXT);
+            bw?.webContents.send(EVENTS.SIGNAL.LOAD_FROM_TEXT);
           },
         },
         {
@@ -76,7 +76,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
             getFileInfo(path.join(paths.models, 'SimpleAspect.ttl'))
-              .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL_LOAD_SPECIFIC_FILE, fileInfo))
+              .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL.LOAD_SPECIFIC_FILE, fileInfo))
               .catch(error => console.error(error));
           },
         },
@@ -87,7 +87,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
             getFileInfo(path.join(paths.models, 'Movement.ttl'))
-              .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL_LOAD_SPECIFIC_FILE, fileInfo))
+              .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL.LOAD_SPECIFIC_FILE, fileInfo))
               .catch(error => console.error(error));
           },
         },
@@ -99,7 +99,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.NEW_WINDOW.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_NEW_WINDOW);
+        bw?.webContents.send(EVENTS.SIGNAL.NEW_WINDOW);
       },
     },
     {
@@ -109,7 +109,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
         openFile(FILE_TYPE_FILTERS.TTL)
-          .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL_IMPORT_TO_WORKSPACE, fileInfo))
+          .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL.IMPORT_TO_WORKSPACE, fileInfo))
           .catch(error => console.error(error));
       },
     },
@@ -120,7 +120,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
         openFile(FILE_TYPE_FILTERS.ZIP)
-          .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL_IMPORT_NAMESPACES, fileInfo))
+          .then(fileInfo => bw?.webContents.send(EVENTS.SIGNAL.IMPORT_NAMESPACES, fileInfo))
           .catch(error => console.error(error));
       },
     },
@@ -134,7 +134,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.COPY_TO_CLIPBOARD.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_COPY_TO_CLIPBOARD);
+        bw?.webContents.send(EVENTS.SIGNAL.COPY_TO_CLIPBOARD);
       },
     },
     {
@@ -144,7 +144,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.SAVE_TO_WORKSPACE.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_SAVE_TO_WORKSPACE);
+        bw?.webContents.send(EVENTS.SIGNAL.SAVE_TO_WORKSPACE);
       },
     },
     {
@@ -154,7 +154,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.EXPORT_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_EXPORT_MODEL);
+        bw?.webContents.send(EVENTS.SIGNAL.EXPORT_MODEL);
       },
     },
     {
@@ -163,7 +163,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.EXPORT_PACKAGE.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_EXPORT_NAMESPACES);
+        bw?.webContents.send(EVENTS.SIGNAL.EXPORT_NAMESPACES);
       },
     },
   ];

@@ -26,7 +26,7 @@ export function search(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.SEARCH_ELEMENTS.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_SEARCH_ELEMENTS);
+        bw?.webContents.send(EVENTS.SIGNAL.SEARCH_ELEMENTS);
       },
     },
     {
@@ -35,7 +35,7 @@ export function search(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.SEARCH_FILES.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_SEARCH_FILES);
+        bw?.webContents.send(EVENTS.SIGNAL.SEARCH_FILES);
       },
     },
   ];

@@ -27,7 +27,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.OPEN_SELECTED_ELEMENT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_OPEN_SELECTED_ELEMENT);
+        bw?.webContents.send(EVENTS.SIGNAL.OPEN_SELECTED_ELEMENT);
       },
     },
     {
@@ -37,7 +37,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.REMOVE_SELECTED_ELEMENT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_REMOVE_SELECTED_ELEMENT);
+        bw?.webContents.send(EVENTS.SIGNAL.REMOVE_SELECTED_ELEMENT);
       },
     },
     {
@@ -47,7 +47,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.COLLAPSE_EXPAND_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_COLLAPSE_EXPAND_MODEL);
+        bw?.webContents.send(EVENTS.SIGNAL.COLLAPSE_EXPAND_MODEL);
       },
     },
     {
@@ -57,7 +57,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.FORMAT_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_FORMAT_MODEL);
+        bw?.webContents.send(EVENTS.SIGNAL.FORMAT_MODEL);
       },
     },
     {
@@ -67,7 +67,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
       icon: getIcon(icons.CONNECT_ELEMENTS.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_CONNECT_ELEMENTS);
+        bw?.webContents.send(EVENTS.SIGNAL.CONNECT_ELEMENTS);
       },
     },
     {

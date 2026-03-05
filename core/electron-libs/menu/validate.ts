@@ -26,7 +26,7 @@ export function validate(translation: Translation): MenuItemConstructorOptions[]
       icon: getIcon(icons.VALIDATE_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_VALIDATE_MODEL);
+        bw?.webContents.send(EVENTS.SIGNAL.VALIDATE_MODEL);
       },
     },
   ];

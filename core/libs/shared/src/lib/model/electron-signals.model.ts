@@ -42,7 +42,7 @@ type ElectronPayloadAndReturn = {
 };
 
 export type ElectronEventKeys = keyof ElectronReturnDataOnly | keyof ElectronPayloadOnly | keyof ElectronPayloadAndReturn;
-export type RegisteredElectronEvents = Partial<Record<ElectronEventKeys, Function>>;
+export type RegisteredELECTRON_EVENTS = Partial<Record<ElectronEventKeys, Function>>;
 
 export interface ElectronSignals {
   call<K extends keyof ElectronPayloadOnly>(listener: K, payload: ElectronPayloadOnly[K]): void;

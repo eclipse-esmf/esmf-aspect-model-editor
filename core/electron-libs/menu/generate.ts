@@ -26,7 +26,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
       icon: getIcon(icons.GENERATE_HTML_DOCUMENTATION.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_GENERATE_HTML_DOCUMENTATION);
+        bw?.webContents.send(EVENTS.SIGNAL.GENERATE_HTML_DOCUMENTATION);
       },
     },
     {
@@ -36,7 +36,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
       icon: getIcon(icons.GENERATE_OPEN_API_SPECIFICATION.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_GENERATE_OPEN_API_SPECIFICATION);
+        bw?.webContents.send(EVENTS.SIGNAL.GENERATE_OPEN_API_SPECIFICATION);
       },
     },
     {
@@ -46,7 +46,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
       icon: getIcon(icons.GENERATE_ASYNC_API_SPECIFICATION.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_GENERATE_ASYNC_API_SPECIFICATION);
+        bw?.webContents.send(EVENTS.SIGNAL.GENERATE_ASYNC_API_SPECIFICATION);
       },
     },
     {
@@ -56,7 +56,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
       icon: getIcon(icons.GENERATE_AASX_XML.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_GENERATE_AASX_XML);
+        bw?.webContents.send(EVENTS.SIGNAL.GENERATE_AASX_XML);
       },
     },
     {
@@ -69,7 +69,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
       icon: getIcon(icons.GENERATE_JSON_PAYLOAD.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_GENERATE_JSON_PAYLOAD);
+        bw?.webContents.send(EVENTS.SIGNAL.GENERATE_JSON_PAYLOAD);
       },
     },
     {
@@ -79,7 +79,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
       icon: getIcon(icons.GENERATE_JSON_SCHEMA.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
-        bw?.webContents.send(EVENTS.SIGNAL_GENERATE_JSON_SCHEMA);
+        bw?.webContents.send(EVENTS.SIGNAL.GENERATE_JSON_SCHEMA);
       },
     },
   ];

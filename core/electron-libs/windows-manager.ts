@@ -77,13 +77,13 @@ class WindowsManager {
   }
 
   activateCommunicationProtocol() {
-    ipcMain.on(EVENTS.REQUEST_CREATE_WINDOW, (_, options) => {
+    ipcMain.on(EVENTS.REQUEST.CREATE_WINDOW, (_, options) => {
       const activeWindow = this._isWindowAlreadyDefined(options);
       activeWindow ? this.createWindow(activeWindow, options) : this.createNewWindow(options);
     });
 
     // updates loaded file data with new loaded one or with new file data
-    ipcMain.on(EVENTS.REQUEST_UPDATE_DATA, (event, options) => {
+    ipcMain.on(EVENTS.REQUEST.UPDATE_DATA, (event, options) => {
       const windowId = event.sender.id;
       const windowInfo = this._state.activeWindows.find(windowInfo => windowInfo.id === windowId);
 
@@ -92,11 +92,11 @@ class WindowsManager {
       windowInfo.options = options;
       console.log(`UPDATED: \x1b[36m${windowId}\x1b[0m with \x1b[36m${options.namespace} | ${options.file}\x1b[0m`);
 
-      ipcMain.emit(EVENTS.SIGNAL_REFRESH_WORKSPACE);
+      ipcMain.emit(EVENTS.SIGNAL.REFRESH_WORKSPACE);
     });
 
     // maximizes window if it exists
-    ipcMain.on(EVENTS.REQUEST_MAXIMIZE_WINDOW, event => {
+    ipcMain.on(EVENTS.REQUEST.MAXIMIZE_WINDOW, event => {
       const windowId = event.sender.id;
       const window = this._state.activeWindows.find(windowInfo => windowInfo.id === windowId)?.window;
       if (window) {
@@ -105,12 +105,12 @@ class WindowsManager {
     });
 
     // checks to see if the is only one window opened
-    ipcMain.on(EVENTS.REQUEST_IS_FIRST_WINDOW, event => {
-      event.sender.send(EVENTS.RESPONSE_IS_FIRST_WINDOW, this._state.activeWindows.length <= 1);
+    ipcMain.on(EVENTS.REQUEST.IS_FIRST_WINDOW, event => {
+      event.sender.send(EVENTS.RESPONSE.IS_FIRST_WINDOW, this._state.activeWindows.length <= 1);
     });
 
     // closes window by force
-    ipcMain.on(EVENTS.REQUEST_CLOSE_WINDOW, event => {
+    ipcMain.on(EVENTS.REQUEST.CLOSE_WINDOW, event => {
       const windowId = event.sender.id;
       const index = this._state.activeWindows.findIndex(windowInfo => windowId === windowInfo.id);
       const win = index >= 0 ? this._state.activeWindows[index]?.window : null;
@@ -124,49 +124,49 @@ class WindowsManager {
       win.destroy();
     });
 
-    ipcMain.on(EVENTS.SIGNAL_REFRESH_WORKSPACE, event => {
+    ipcMain.on(EVENTS.SIGNAL.REFRESH_WORKSPACE, event => {
       const windowId = event?.sender?.id;
       this._state.activeWindows.forEach(({id, window}) => {
-        window.webContents.send(EVENTS.REQUEST_REFRESH_WORKSPACE);
+        window.webContents.send(EVENTS.REQUEST.REFRESH_WORKSPACE);
       });
     });
 
-    ipcMain.on(EVENTS.REQUEST_ADD_LOCK, (_, {namespace, file}) => {
+    ipcMain.on(EVENTS.REQUEST.ADD_LOCK, (_, {namespace, file}) => {
       const found = this._state.lockedFiles.find(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
       if (!found) {
-        console.log('REQUEST_ADD_LOCK', namespace, file);
+        console.log('REQUEST.ADD_LOCK', namespace, file);
         this._state.lockedFiles.push({namespace, file});
-        this._state.activeWindows.forEach(({window}) => window.webContents.send(EVENTS.RESPONSE_LOCKED_FILES, this._state.lockedFiles));
+        this._state.activeWindows.forEach(({window}) => window.webContents.send(EVENTS.RESPONSE.LOCKED_FILES, this._state.lockedFiles));
       }
     });
 
-    ipcMain.on(EVENTS.REQUEST_REMOVE_LOCK, (_, {namespace, file}) => {
+    ipcMain.on(EVENTS.REQUEST.REMOVE_LOCK, (_, {namespace, file}) => {
       const foundIndex = this._state.lockedFiles.findIndex(lockedFile => lockedFile.namespace === namespace && lockedFile.file === file);
       if (foundIndex > -1) {
-        console.log('REQUEST_REMOVE_LOCK', namespace, file);
+        console.log('REQUEST.REMOVE_LOCK', namespace, file);
         this._state.lockedFiles.splice(foundIndex, 1);
-        this._state.activeWindows.forEach(({window}) => window.webContents.send(EVENTS.RESPONSE_LOCKED_FILES, this._state.lockedFiles));
+        this._state.activeWindows.forEach(({window}) => window.webContents.send(EVENTS.RESPONSE.LOCKED_FILES, this._state.lockedFiles));
       }
     });
 
-    ipcMain.on(EVENTS.REQUEST_LOCKED_FILES, event => {
-      console.log('REQUEST_LOCKED_FILES', this._state.lockedFiles);
-      event.sender.send(EVENTS.RESPONSE_LOCKED_FILES, this._state.lockedFiles);
+    ipcMain.on(EVENTS.REQUEST.LOCKED_FILES, event => {
+      console.log('REQUEST.LOCKED_FILES', this._state.lockedFiles);
+      event.sender.send(EVENTS.RESPONSE.LOCKED_FILES, this._state.lockedFiles);
     });
 
-    ipcMain.on(EVENTS.SIGNAL_WINDOW_FOCUS, event => {
-      console.log('SIGNAL_WINDOW_FOCUS', event.sender.id);
+    ipcMain.on(EVENTS.SIGNAL.WINDOW_FOCUS, event => {
+      console.log('SIGNAL.WINDOW_FOCUS', event.sender.id);
       this._state.focusedWindowId = event.sender.id;
       this._setActiveMenu();
     });
 
-    ipcMain.on(EVENTS.SIGNAL_UPDATE_MENU_ITEM, (event, {ids, payload}) => {
-      console.log('SIGNAL_UPDATE_MENU_ITEM', event.sender.id);
+    ipcMain.on(EVENTS.SIGNAL.UPDATE_MENU_ITEM, (event, {ids, payload}) => {
+      console.log('SIGNAL.UPDATE_MENU_ITEM', event.sender.id);
       this._state.focusedWindowId = event.sender.id;
       this._updateMenu(ids, payload);
     });
 
-    ipcMain.on(EVENTS.SIGNAL_TRANSLATE_MENU_ITEMS, (event, {id, payload}) => {
+    ipcMain.on(EVENTS.SIGNAL.TRANSLATE_MENU_ITEMS, (event, {id, payload}) => {
       Menu.setApplicationMenu(Menu.buildFromTemplate([...appMenuTemplate(payload.translation)]));
     });
   }
@@ -220,9 +220,9 @@ class WindowsManager {
     window.focus();
 
     if (options?.editElement) {
-      window.webContents.send(EVENTS.REQUEST_EDIT_ELEMENT, options.editElement);
+      window.webContents.send(EVENTS.REQUEST.EDIT_ELEMENT, options.editElement);
     } else {
-      window.webContents.send(EVENTS.REQUEST_SHOW_NOTIFICATION, 'Model already loaded');
+      window.webContents.send(EVENTS.REQUEST.SHOW_NOTIFICATION, 'Model already loaded');
     }
   }
 
@@ -390,10 +390,10 @@ class WindowsManager {
         return;
       }
 
-      event.sender.send(EVENTS.RESPONSE_WINDOW_DATA, {id, options});
+      event.sender.send(EVENTS.RESPONSE.WINDOW_DATA, {id, options});
     };
 
-    ipcMain.on(EVENTS.REQUEST_WINDOW_DATA, executeFn);
+    ipcMain.on(EVENTS.REQUEST.WINDOW_DATA, executeFn);
   }
 
   private _loadApplication({window, id}: WindowInfo) {
@@ -409,7 +409,7 @@ class WindowsManager {
   private _handleClosingWindow(windowInfo: WindowInfo) {
     const {window} = windowInfo;
     window.show();
-    window.webContents.send(EVENTS.REQUEST_IS_FILE_SAVED, windowInfo.id);
+    window.webContents.send(EVENTS.REQUEST.IS_FILE_SAVED, windowInfo.id);
   }
 }
 
