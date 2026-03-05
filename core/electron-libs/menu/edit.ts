@@ -13,7 +13,7 @@
 
 import {BaseWindow, BrowserWindow, MenuItemConstructorOptions} from 'electron';
 import {icons} from '../const/icons';
-import {EVENTS} from '../events';
+import {EVENTS} from '../events/events';
 import {getIcon} from '../utils/icon-utils';
 import {Translation} from './app';
 import MenuItem = Electron.MenuItem;

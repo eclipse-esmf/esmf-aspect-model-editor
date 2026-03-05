@@ -75,7 +75,7 @@ export class ModelLoaderService {
       switchMap(() => this.modelRenderer.renderModel(payload.editElementUrn)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
-        if (this.browserService.isStartedAsElectronApp() || window.require) {
+        if (this.browserService.isStartedAsElectronApp()) {
           const currentFile = this.loadedFilesService.currentLoadedFile;
           this.electronSignalsService.call('updateWindowInfo', {
             namespace: currentFile.namespace,

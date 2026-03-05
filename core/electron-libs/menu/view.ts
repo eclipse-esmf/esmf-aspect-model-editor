@@ -14,7 +14,7 @@
 // core/electron-libs/menu/view-sub-menu.ts
 import {BaseWindow, BrowserWindow, MenuItem, MenuItemConstructorOptions} from 'electron';
 import {icons} from '../const/icons';
-import {EVENTS} from '../events';
+import {EVENTS} from '../events/events';
 import {getIcon} from '../utils/icon-utils';
 import {Translation} from './app';
 

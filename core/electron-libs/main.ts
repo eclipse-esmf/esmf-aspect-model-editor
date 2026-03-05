@@ -11,14 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {app, BrowserWindow, nativeTheme} from 'electron';
+import {app, BrowserWindow} from 'electron';
 import {cleanUpProcesses, startService} from './core';
 import {isWin} from './platform/platform';
-import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './shortcuts';
+import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './shortcuts/index';
 import {inProdMode} from './utils/mode';
 import {windowsManager} from './windows-manager';
-
-if (require('electron-squirrel-startup')) process.exit();
 
 if (inProdMode()) {
   console.log = () => {};
@@ -26,26 +24,32 @@ if (inProdMode()) {
 
 if (isWin) app.setUserTasks([]);
 
-app.on('ready', () => {
-  app.on('browser-window-blur', unregisterGlobalShortcuts);
-  app.on('browser-window-focus', registerGlobalShortcuts);
+const onReady = async (): Promise<void> => {
+  try {
+    app.on('browser-window-blur', unregisterGlobalShortcuts);
+    app.on('browser-window-focus', registerGlobalShortcuts);
+    await startService();
+    windowsManager.activateCommunicationProtocol();
+  } catch (error) {
+    console.error('Failed to start service:', error);
+  }
+};
 
-  startService();
-  windowsManager.activateCommunicationProtocol();
-});
-
-app.on('activate', () => {
+const onActivate = (): void => {
   if (BrowserWindow.getAllWindows().length === 0) {
     windowsManager.createNewWindow();
   }
-});
+};
 
-app.on('window-all-closed', () => {
+const onWindowAllClosed = (): void => {
   app.quit();
-});
+};
 
-app.on('before-quit', () => {
+const onBeforeQuit = (): void => {
   cleanUpProcesses();
-});
+};
 
-nativeTheme.themeSource = 'light';
+app.on('ready', onReady);
+app.on('activate', onActivate);
+app.on('window-all-closed', onWindowAllClosed);
+app.on('before-quit', onBeforeQuit);

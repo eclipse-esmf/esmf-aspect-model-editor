@@ -12,32 +12,30 @@
  */
 
 import {ModelLoaderService} from '@ame/editor';
-import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, IPC_RENDERER} from '@ame/shared';
 import {ExporterHelper} from '@ame/sidebar';
 import {HttpClient} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, map} from 'rxjs';
-import {ModelApiService} from './model-api.service';
 import {MigrationStatus} from './models';
 
 @Injectable({providedIn: 'root'})
 export class MigratorApiService {
+  private ipcRenderer = inject(IPC_RENDERER);
   private config: AppConfig = inject(APP_CONFIG);
   private http = inject(HttpClient);
   private browserService = inject(BrowserService);
-  private modelApiService = inject(ModelApiService);
   private modelLoader = inject(ModelLoaderService);
 
   private defaultPort = this.config.defaultPort;
-  private readonly serviceUrl = this.config.serviceUrl;
+  private serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
 
   public rdfModelsToMigrate = [];
 
   constructor() {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
-      const remote = window.require('@electron/remote');
-      this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));
+      this.ipcRenderer.getBackendPort().then((port: string) => (this.serviceUrl = this.serviceUrl.replace(this.defaultPort, port)));
     }
   }
 

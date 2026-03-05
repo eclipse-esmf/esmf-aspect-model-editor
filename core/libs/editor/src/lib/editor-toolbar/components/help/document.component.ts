@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig, BrowserService} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, IPC_RENDERER} from '@ame/shared';
 import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -26,18 +26,17 @@ import {TranslatePipe} from '@ngx-translate/core';
   imports: [MatButtonModule, MatIconModule, MatDialogModule, TranslatePipe],
 })
 export class DocumentComponent {
+  private ipcRenderer = inject(IPC_RENDERER);
   private browserService = inject(BrowserService);
   public config = inject(APP_CONFIG) as AppConfig;
 
   AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
 
   openLink(event: MouseEvent) {
-    if (!this.browserService.isStartedAsElectronApp() || !window.require) {
-      return;
-    }
-
-    const {shell} = window.require('electron');
     event.preventDefault();
-    shell.openExternal((event.target as HTMLAnchorElement).href);
+
+    if (!this.browserService.isStartedAsElectronApp()) return;
+
+    this.ipcRenderer.openExternalLink((event.target as HTMLAnchorElement).href);
   }
 }

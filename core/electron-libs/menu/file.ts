@@ -15,7 +15,7 @@ import {BaseWindow, BrowserWindow, MenuItem, MenuItemConstructorOptions} from 'e
 import * as path from 'path';
 import {icons} from '../const/icons';
 import {paths} from '../const/paths';
-import {EVENTS} from '../events';
+import {EVENTS} from '../events/events';
 import {getFileInfo, openFile} from '../utils/file-utils';
 import {getIcon} from '../utils/icon-utils';
 import {Translation} from './app';

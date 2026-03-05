@@ -12,7 +12,7 @@
  */
 
 import {ChildProcess, spawn} from 'child_process';
-import {BrowserWindow} from 'electron';
+import {BrowserWindow, ipcMain} from 'electron';
 import * as path from 'path';
 import * as portfinder from 'portfinder';
 import {extension, isWin} from './platform/platform';
@@ -22,80 +22,25 @@ import {windowsManager} from './windows-manager';
 import projectVersion from '../package.json';
 import {inDevMode} from './utils/mode';
 
-let mainWindow: BrowserWindow | null = null;
-let splashWindow: BrowserWindow | null = null;
 const processes: ChildProcess[] = [];
 
-async function cleanUpProcesses(): Promise<void> {
+export async function cleanUpProcesses(): Promise<void> {
   for (const process of processes) {
     if (!process) continue;
-
     console.log(`Killing process: ${process.pid}...`);
-    const success = process.kill();
-    if (!success) {
+    if (!process.kill()) {
       try {
         await execPromise(isWin ? `taskkill /F /PID ${process.pid}` : `kill -9 ${process.pid}`);
         console.log(`Killed process: ${process.pid}`);
       } catch (error) {
-        console.log(error);
+        console.error(`Failed to kill process ${process.pid}:`, error);
       }
     }
   }
 }
 
-function startService(): void {
-  createSplashWindow();
-
-  if (inDevMode()) {
-    (global as any).backendPort = 9090;
-    setTimeout(() => {
-      splashWindow?.close();
-      windowsManager.createNewWindow();
-    }, 1000);
-    return;
-  }
-
-  portfinder
-    .getPortPromise({
-      port: 30000,
-      stopPort: 31000,
-    })
-    .then(port => {
-      const rootPath = path.join(__dirname, '..', '..', '..', 'backend', isWin ? 'signed_dir' : '');
-
-      if (processes.length === 0) {
-        (global as any).backendPort = port;
-        const proc = spawn(path.join(rootPath, `ame-backend-${projectVersion.version}-${extension}`), [`-Dmicronaut.server.port=${port}`]);
-
-        proc.stdout.on('data', (data: Buffer) => {
-          console.log(data.toString());
-          if (data.includes(`Server Running`)) {
-            console.log(`AME Server Running`);
-            splashWindow?.close();
-            windowsManager.createNewWindow();
-          }
-        });
-
-        proc.on('close', (code: number) => {
-          console.log(`child process exited with code ${code}`);
-        });
-
-        proc.on('error', (error: Error) => {
-          console.log('Error on opening Tomcat');
-          console.log(error);
-        });
-
-        processes.push(proc);
-      }
-    })
-    .catch(error => {
-      console.log(error);
-      alert('Port between 30000 and 31000 are already in use.');
-    });
-}
-
-function createSplashWindow(): void {
-  splashWindow = new BrowserWindow({
+async function _createSplashWindow(): Promise<BrowserWindow> {
+  const splashWindow = new BrowserWindow({
     width: 800,
     height: 600,
     frame: false,
@@ -107,7 +52,58 @@ function createSplashWindow(): void {
     ? path.join('.', 'electron-libs', 'loading-screen')
     : path.join(__dirname, '..', '..', '..', 'loading-screen');
 
-  splashWindow.loadFile(`${splashScreenPath}${path.sep}splash.html`).catch(() => console.log('Splash screen not found.'));
+  await splashWindow.loadFile(`${splashScreenPath}${path.sep}splash.html`).catch(() => console.warn('Splash screen not found.'));
+
+  return splashWindow;
 }
 
-export {cleanUpProcesses, mainWindow, startService};
+function spawnBackendProcess(port: number, splashWindow: BrowserWindow): ChildProcess {
+  const rootPath = path.join(__dirname, '..', '..', '..', 'backend', isWin ? 'signed_dir' : '');
+  const execPath = path.join(rootPath, `ame-backend-${projectVersion.version}-${extension}`);
+  const proc = spawn(execPath, [`-Dmicronaut.server.port=${port}`]);
+
+  proc.stdout.on('data', (data: Buffer) => {
+    const output = data.toString();
+    console.log(output);
+    if (output.includes('Server Running')) {
+      console.log('AME Server Running');
+      splashWindow?.close();
+      windowsManager.createNewWindow();
+    }
+  });
+
+  proc.on('close', (code: number) => {
+    console.log(`Backend process exited with code ${code}`);
+  });
+
+  proc.on('error', (error: Error) => {
+    console.error('Error starting backend process:', error);
+  });
+
+  return proc;
+}
+
+export async function startService(): Promise<void> {
+  const splashWindow = await _createSplashWindow();
+
+  if (inDevMode()) {
+    ipcMain.handle('get-backend-port', () => '9090');
+    setTimeout(() => {
+      splashWindow?.close();
+      windowsManager.createNewWindow();
+    }, 1000);
+    return;
+  }
+
+  try {
+    const port = await portfinder.getPortPromise({port: 30000, stopPort: 31000});
+    ipcMain.handle('get-backend-port', () => port.toString());
+    if (processes.length === 0) {
+      const process = spawnBackendProcess(port, splashWindow);
+      processes.push(process);
+    }
+  } catch (error) {
+    console.error('Port between 30000 and 31000 are already in use.', error);
+    alert('Port between 30000 and 31000 are already in use.');
+  }
+}

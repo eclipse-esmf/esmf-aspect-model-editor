@@ -11,11 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {enable, initialize} from '@electron/remote/main';
-import {BrowserWindow, ipcMain, Menu, MenuItem, NativeImage} from 'electron';
+import {BrowserWindow, clipboard, ipcMain, Menu, MenuItem, NativeImage, shell} from 'electron';
+import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import {icons} from './const/icons';
-import {EVENTS} from './events';
+import {EVENTS} from './events/events';
 import {appMenuTemplate} from './menu/app';
 import {getIcon} from './utils/icon-utils';
 import {inDevMode} from './utils/mode';
@@ -56,8 +57,9 @@ class WindowsManager {
       show: false,
       icon: this._getIcon(),
       webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
+        preload: path.join(__dirname, 'preload.js'),
+        contextIsolation: true,
+        nodeIntegration: false,
       },
     };
 
@@ -75,7 +77,6 @@ class WindowsManager {
       activeWindow ? this.createWindow(activeWindow, options) : this.createNewWindow(options);
     });
 
-    // updates loaded file data with new loaded one or with new file data
     ipcMain.on(EVENTS.REQUEST.UPDATE_DATA, (event, options) => {
       const windowId = event.sender.id;
       const windowInfo = this._state.activeWindows.find(windowInfo => windowInfo.id === windowId);
@@ -88,7 +89,6 @@ class WindowsManager {
       ipcMain.emit(EVENTS.SIGNAL.REFRESH_WORKSPACE);
     });
 
-    // maximizes window if it exists
     ipcMain.on(EVENTS.REQUEST.MAXIMIZE_WINDOW, event => {
       const windowId = event.sender.id;
       const window = this._state.activeWindows.find(windowInfo => windowInfo.id === windowId)?.window;
@@ -97,12 +97,10 @@ class WindowsManager {
       }
     });
 
-    // checks to see if the is only one window opened
     ipcMain.on(EVENTS.REQUEST.IS_FIRST_WINDOW, event => {
       event.sender.send(EVENTS.RESPONSE.IS_FIRST_WINDOW, this._state.activeWindows.length <= 1);
     });
 
-    // closes window by force
     ipcMain.on(EVENTS.REQUEST.CLOSE_WINDOW, event => {
       const windowId = event.sender.id;
       const index = this._state.activeWindows.findIndex(windowInfo => windowId === windowInfo.id);
@@ -139,6 +137,47 @@ class WindowsManager {
     ipcMain.on(EVENTS.SIGNAL.TRANSLATE_MENU_ITEMS, (event, {id, payload}) => {
       Menu.setApplicationMenu(Menu.buildFromTemplate([...appMenuTemplate(payload.translation)]));
     });
+
+    ipcMain.handle(EVENTS.SIGNAL.OPEN_PRINT_WINDOW, (event, filePath) => {
+      const win = new BrowserWindow({width: 1920, height: 1080});
+      win.loadFile(filePath);
+      win.reload();
+      win.focus();
+    });
+
+    ipcMain.handle(EVENTS.SIGNAL.WRITE_PRINT_FILE, async (_, documentation: string) => {
+      const ameTmpDir = path.join(os.homedir(), '.ametmp');
+      const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
+
+      if (!fs.existsSync(ameTmpDir)) {
+        fs.mkdirSync(ameTmpDir);
+      }
+
+      await fs.promises.writeFile(printFilePath, documentation);
+      return printFilePath;
+    });
+
+    ipcMain.on(EVENTS.SIGNAL.SHOW_CONTEXT_MENU, (event, {href}) => {
+      const win = BrowserWindow.fromWebContents(event.sender);
+      if (!win) return;
+
+      const template = [];
+
+      if (href) {
+        template.push({
+          label: href.startsWith('mailto:') ? 'Send email' : 'Open in browser',
+          click: () => shell.openExternal(href),
+        });
+
+        template.push({
+          label: 'Copy link address',
+          click: () => clipboard.writeText(href),
+        });
+      }
+
+      const menu = Menu.buildFromTemplate(template);
+      menu.popup({window: win});
+    });
   }
 
   /**
@@ -161,14 +200,9 @@ class WindowsManager {
     this._configureWindow(windowInfo);
     this._setWindowListeners(windowInfo);
 
-    if (this._state.activeWindows.length === 0) {
-      initialize();
-    }
-
     this._state.activeWindows.push(windowInfo);
     this._state.focusedWindowId = windowInfo.id;
 
-    enable(newWindow.webContents);
     this._listenForWindowDataRequest();
     this._loadApplication(windowInfo);
 
@@ -355,11 +389,11 @@ class WindowsManager {
     const executeFn = (event: Electron.IpcMainEvent) => {
       console.log('RECEIVED REQUEST WINDOW DATA');
       const windowId = event.sender.id;
-      const {id, options} = this._state.activeWindows.find(window => window.id === windowId) || {};
-      if (!id) {
+      const win = this._state.activeWindows.find(window => window.id === windowId);
+      if (!win) {
         return;
       }
-
+      const {id, options} = win;
       event.sender.send(EVENTS.RESPONSE.WINDOW_DATA, {id, options});
     };
 
@@ -371,9 +405,10 @@ class WindowsManager {
       await window.loadURL('http://localhost:4200');
       window.webContents.openDevTools();
       console.log(`Window \x1b[36m${id}\x1b[0m created!`);
+    } else {
+      await window.loadFile('./dist/apps/ame/index.html');
+      console.log(`Window ${id} created!`);
     }
-    await window.loadFile('./dist/apps/ame/index.html');
-    return console.log(`Window ${id} created!`);
   }
 
   private _handleClosingWindow(windowInfo: WindowInfo) {
