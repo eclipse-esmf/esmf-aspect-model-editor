@@ -13,13 +13,10 @@
 
 import {contextBridge, ipcRenderer, shell} from 'electron';
 
-type Cb = (value: unknown) => void;
-type Listener = (...args: unknown[]) => void;
-
 contextBridge.exposeInMainWorld('electronAPI', {
   send: (channel: string, args: unknown): void => ipcRenderer.send(channel, args),
   on: (channel: string, cb: (...args: unknown[]) => void) => ipcRenderer.on(channel, (_e, ...args) => cb(...args)),
-  removeListener: (listener: string, cb: Cb) => ipcRenderer.removeListener(listener, cb),
+  removeListener: (listener: string, cb: (value: unknown) => void) => ipcRenderer.removeListener(listener, cb),
   getBackendPort: async (): Promise<string> => await ipcRenderer.invoke('get-backend-port'),
   openPrintWindow: async (filePath: string) => await ipcRenderer.invoke('OPEN_PRINT_WINDOW', filePath),
   writePrintFile: (content: string) => ipcRenderer.invoke('WRITE_PRINT_FILE', content),
