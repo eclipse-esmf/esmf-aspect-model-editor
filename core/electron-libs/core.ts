@@ -22,8 +22,20 @@ import {windowsManager} from './windows-manager';
 import projectVersion from '../package.json';
 import {inDevMode} from './utils/mode';
 
+/**
+ * Array of spawned backend processes.
+ * @type {ChildProcess[]}
+ */
 const processes: ChildProcess[] = [];
 
+/**
+ * Cleans up all spawned backend processes by attempting to kill them.
+ * Uses platform-specific commands if processed. kill fails.
+ * Logs the outcome for each process.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves when all processes are cleaned up.
+ */
 export async function cleanUpProcesses(): Promise<void> {
   for (const process of processes) {
     if (!process) continue;
@@ -39,6 +51,12 @@ export async function cleanUpProcesses(): Promise<void> {
   }
 }
 
+/**
+ * Creates and returns a splash window for loading screen.
+ *
+ * @async
+ * @returns {Promise<BrowserWindow>} The splash BrowserWindow instance.
+ */
 async function _createSplashWindow(): Promise<BrowserWindow> {
   const splashWindow = new BrowserWindow({
     width: 800,
@@ -57,6 +75,13 @@ async function _createSplashWindow(): Promise<BrowserWindow> {
   return splashWindow;
 }
 
+/**
+ * Spawns the backend process and attaches listeners for output and errors.
+ *
+ * @param {number} port - The port to start the backend server on.
+ * @param {BrowserWindow} splashWindow - The splash window to close when ready.
+ * @returns {ChildProcess} The spawned backend process.
+ */
 function spawnBackendProcess(port: number, splashWindow: BrowserWindow): ChildProcess {
   const rootPath = path.join(__dirname, '..', '..', '..', 'backend', isWin ? 'signed_dir' : '');
   const execPath = path.join(rootPath, `ame-backend-${projectVersion.version}-${extension}`);
@@ -83,6 +108,13 @@ function spawnBackendProcess(port: number, splashWindow: BrowserWindow): ChildPr
   return proc;
 }
 
+/**
+ * Starts the backend service and opens the main application window.
+ * Handles splash screen, port selection, and backend process spawning.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves when the service is started.
+ */
 export async function startService(): Promise<void> {
   const splashWindow = await _createSplashWindow();
 

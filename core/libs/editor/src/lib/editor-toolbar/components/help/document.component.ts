@@ -17,6 +17,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {TranslatePipe} from '@ngx-translate/core';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   standalone: true,
@@ -28,6 +29,7 @@ import {TranslatePipe} from '@ngx-translate/core';
 export class DocumentComponent {
   private ipcRenderer = inject(IPC_RENDERER);
   private browserService = inject(BrowserService);
+  private toastr = inject(ToastrService);
   public config = inject(APP_CONFIG) as AppConfig;
 
   AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
@@ -37,6 +39,9 @@ export class DocumentComponent {
 
     if (!this.browserService.isStartedAsElectronApp()) return;
 
-    this.ipcRenderer.openExternalLink((event.target as HTMLAnchorElement).href);
+    const opened = this.ipcRenderer.openExternalLink((event.target as HTMLAnchorElement).href);
+    if (opened) {
+      this.toastr.success('Documentation opened in your default browser');
+    }
   }
 }

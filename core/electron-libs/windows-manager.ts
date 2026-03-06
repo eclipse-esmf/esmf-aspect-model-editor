@@ -43,15 +43,40 @@ export interface CustomMenuItem {
   [key: string]: any;
 }
 
+/**
+ * Manages Electron BrowserWindows, their state, communication, and menus.
+ */
 class WindowsManager {
+  /**
+   * Default configuration for Electron BrowserWindow.
+   * @private
+   */
   private _windowConfig: Electron.BrowserWindowConstructorOptions;
+
+  /**
+   * State tracking focused window and active windows.
+   * @private
+   */
   private _state: {
     focusedWindowId?: number;
     activeWindows: WindowInfo[];
   };
+
+  /**
+   * Timeout handler for menu updates.
+   * @private
+   */
   private _timeout?: NodeJS.Timeout;
+
+  /**
+   * Queue of menu updates.
+   * @private
+   */
   private _updates: Array<{ids: string[]; update: Record<string, any>}>;
 
+  /**
+   * Constructs a new WindowsManager instance.
+   */
   constructor() {
     this._windowConfig = {
       show: false,
@@ -71,6 +96,9 @@ class WindowsManager {
     this._updates = [];
   }
 
+  /**
+   * Activates IPC communication protocol for window management.
+   */
   activateCommunicationProtocol() {
     ipcMain.on(EVENTS.REQUEST.CREATE_WINDOW, (_, options) => {
       const activeWindow = this._isWindowAlreadyDefined(options);
@@ -181,11 +209,10 @@ class WindowsManager {
   }
 
   /**
-   * Creates a new Electron `BrowserWindow`, configures it, sets up listeners,
-   * initializes Electron remote if needed, and loads the application.
-   * Adds the window to the active windows state and sets it as focused.
+   * Creates a new Electron BrowserWindow and adds it to the active windows.
    *
-   * @returns {BrowserWindow} The newly created BrowserWindow instance.
+   * @param {WindowOptions} [options] - Options for the new window.
+   * @returns {BrowserWindow} The created BrowserWindow instance.
    */
   createNewWindow(options: WindowOptions = null): BrowserWindow {
     const newWindow = new BrowserWindow(this._windowConfig);
@@ -210,13 +237,10 @@ class WindowsManager {
   }
 
   /**
-   * Finds an existing window matching the given options and brings it to the foreground.
-   * If the window exists, it is shown and focused. If `editElement` is provided in options,
-   * sends an edit request to the window; otherwise, shows a notification that the model is already loaded.
+   * Brings an existing window to the foreground or sends an edit request.
    *
    * @param {WindowInfo} activeWindow - The window info object to activate.
-   * @param {WindowOptions} options - Options describing the window to find or create.
-   * @returns {void}
+   * @param {WindowOptions} options - Options describing the window.
    */
   createWindow(activeWindow: WindowInfo, options: WindowOptions): void {
     const {window} = activeWindow;
@@ -231,20 +255,19 @@ class WindowsManager {
   }
 
   /**
-   * Returns the active window that is currently focused.
+   * Returns the currently focused window info.
    *
-   * @returns {WindowInfo|undefined} The focused window info, or `undefined` if none is focused.
+   * @returns {WindowInfo|undefined} The focused window info.
    */
   private _selectActiveWindow(): WindowInfo | undefined {
     return this._state.activeWindows.find(window => window.id === this._state?.focusedWindowId);
   }
 
   /**
-   * Checks if a window with the given options already exists in the active windows list.
-   * Returns the matching window info if found, otherwise `undefined`.
+   * Checks if a window with the given options already exists.
    *
-   * @param {WindowOptions} options - The options to match against existing windows.
-   * @returns {WindowInfo|undefined} The matching window info, or `undefined` if not found.
+   * @param {WindowOptions} options - The options to match.
+   * @returns {WindowInfo|undefined} The matching window info.
    */
   private _isWindowAlreadyDefined(options: WindowOptions): WindowInfo | undefined {
     return this._state.activeWindows.find(
@@ -253,6 +276,13 @@ class WindowsManager {
     );
   }
 
+  /**
+   * Updates menu items by pushing updates and applying them after a timeout.
+   *
+   * @param {string[]} ids - Menu item IDs to update.
+   * @param {Record<string, any>} update - Update payload.
+   * @private
+   */
   private _updateMenu(ids: string[], update: Record<string, any>) {
     this._updates.push({ids, update});
     if (this._timeout) clearTimeout(this._timeout);
@@ -263,6 +293,12 @@ class WindowsManager {
     }, 150);
   }
 
+  /**
+   * Processes queued menu updates and returns the updated menu.
+   *
+   * @returns {CustomMenuItem[]|null} Updated menu items.
+   * @private
+   */
   private _processMenuUpdates(): CustomMenuItem[] | null {
     let menu: CustomMenuItem[] | null = null;
     while (this._updates.length) {
@@ -272,6 +308,13 @@ class WindowsManager {
     return menu;
   }
 
+  /**
+   * Applies the menu to the active window.
+   *
+   * @param {CustomMenuItem[]|null} menu - Menu items.
+   * @param {Record<string, any>} update - Update payload.
+   * @private
+   */
   private _applyMenu(menu: CustomMenuItem[] | null, update: Record<string, any>) {
     const activeWindow = this._selectActiveWindow();
     if (!activeWindow) return;
@@ -284,11 +327,23 @@ class WindowsManager {
     this._setActiveMenu();
   }
 
+  /**
+   * Sets the application menu for the currently focused window.
+   * @private
+   */
   private _setActiveMenu() {
     const menu = this._selectActiveWindow()?.menu;
     if (menu) Menu.setApplicationMenu(menu);
   }
 
+  /**
+   * Updates menu icons based on enabled state and IDs.
+   *
+   * @param {string[]} ids - Menu item IDs.
+   * @param {Record<string, any>} updates - Update payload.
+   * @returns {CustomMenuItem[]|undefined} Updated menu items.
+   * @private
+   */
   private _updateMenuIcon(ids: string[], updates: Record<string, any>): CustomMenuItem[] | undefined {
     const activeMenu = this._selectActiveWindow()?.menu;
     if (!activeMenu) return;
@@ -349,6 +404,12 @@ class WindowsManager {
     return stack;
   }
 
+  /**
+   * Configures a new window (show, remove menu, set open handler).
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
   private _configureWindow(windowInfo: WindowInfo) {
     const win = windowInfo.window;
 
@@ -361,6 +422,12 @@ class WindowsManager {
     });
   }
 
+  /**
+   * Sets listeners for window events (closed, close).
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
   private _setWindowListeners(windowInfo: WindowInfo) {
     windowInfo.window.on('closed', () => {
       const windowIndex = this._state.activeWindows.findIndex(({id}) => windowInfo.id === id);
@@ -376,11 +443,21 @@ class WindowsManager {
     });
   }
 
+  /**
+   * Returns the icon path for the window.
+   *
+   * @returns {string} Icon path.
+   * @private
+   */
   private _getIcon(): string {
     const iconPathArray = ['..', 'apps', 'ame', 'src', 'assets', 'img', 'png', 'aspect-model-editor-targetsize-192.png'];
     return path.join(__dirname, ...iconPathArray);
   }
 
+  /**
+   * Listens for window data requests via IPC.
+   * @private
+   */
   private _listenForWindowDataRequest() {
     const executeFn = (event: Electron.IpcMainEvent) => {
       console.log('RECEIVED REQUEST WINDOW DATA');
@@ -396,6 +473,12 @@ class WindowsManager {
     ipcMain.on(EVENTS.REQUEST.WINDOW_DATA, executeFn);
   }
 
+  /**
+   * Loads the application in the window (dev or production).
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
   private async _loadApplication({window, id}: WindowInfo) {
     if (inDevMode()) {
       await window.loadURL('http://localhost:4200');
@@ -407,6 +490,12 @@ class WindowsManager {
     }
   }
 
+  /**
+   * Handles closing a window, sending file save request.
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
   private _handleClosingWindow(windowInfo: WindowInfo) {
     const {window} = windowInfo;
     window.show();
@@ -414,4 +503,7 @@ class WindowsManager {
   }
 }
 
+/**
+ * Singleton instance of WindowsManager.
+ */
 export const windowsManager = new WindowsManager();

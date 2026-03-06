@@ -18,12 +18,25 @@ import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './shortcuts/in
 import {inProdMode} from './utils/mode';
 import {windowsManager} from './windows-manager';
 
+/**
+ * Disables console logging in production mode.
+ */
 if (inProdMode()) {
   console.log = () => {};
 }
 
+/**
+ * Removes user tasks from Windows taskbar if running on Windows.
+ */
 if (isWin) app.setUserTasks([]);
 
+/**
+ * Handles Electron app 'ready' event.
+ * Sets up global shortcut listeners, starts backend service, and activates window communication.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves when setup is complete.
+ */
 const onReady = async (): Promise<void> => {
   try {
     app.on('browser-window-blur', unregisterGlobalShortcuts);
@@ -35,20 +48,35 @@ const onReady = async (): Promise<void> => {
   }
 };
 
+/**
+ * Handles Electron app 'activate' event.
+ * Creates a new window if none are open.
+ */
 const onActivate = (): void => {
   if (BrowserWindow.getAllWindows().length === 0) {
     windowsManager.createNewWindow();
   }
 };
 
+/**
+ * Handles Electron app 'window-all-closed' event.
+ * Quits the application.
+ */
 const onWindowAllClosed = (): void => {
   app.quit();
 };
 
+/**
+ * Handles Electron app 'before-quit' event.
+ * Cleans up backend processes before quitting.
+ */
 const onBeforeQuit = (): void => {
   cleanUpProcesses();
 };
 
+/**
+ * Registers main Electron app event listeners.
+ */
 app.on('ready', onReady);
 app.on('activate', onActivate);
 app.on('window-all-closed', onWindowAllClosed);
