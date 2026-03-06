@@ -2,7 +2,8 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 cd core
-npm run format:all -- --uncommited
+npm run lint -- --uncommited
+npm run format -- --uncommited
 
 if [ -n "$(git status --porcelain)" ]; then
   git add .

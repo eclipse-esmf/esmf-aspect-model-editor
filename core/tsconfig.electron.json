@@ -6,6 +6,6 @@
     "sourceMap": true,
     "noImplicitAny": true
   },
-  "include": ["electron-libs/main.ts", "electron-libs/**/*.ts"],
+  "include": ["electron/main.ts", "electron/**/*.ts"],
   "exclude": ["node_modules", "tmp"]
 }

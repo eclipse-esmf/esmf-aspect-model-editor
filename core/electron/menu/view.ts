@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-// core/electron-libs/menu/view-sub-menu.ts
 import {BaseWindow, BrowserWindow, MenuItem, MenuItemConstructorOptions} from 'electron';
 import {icons} from '../const/icons';
 import {EVENTS} from '../events/events';

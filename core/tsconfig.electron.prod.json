@@ -10,6 +10,6 @@
     "strict": true,
     "noEmitOnError": true
   },
-  "include": ["electron-libs/main.ts", "electron-libs/**/*.ts"],
+  "include": ["electron/main.ts", "electron/**/*.ts"],
   "exclude": ["node_modules", "tmp"]
 }

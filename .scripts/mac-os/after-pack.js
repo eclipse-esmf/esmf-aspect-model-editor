@@ -5,7 +5,7 @@ const path = require('path');
 const child_process = require('child_process');
 const isBinaryFile = require('isbinaryfile').isBinaryFile;
 
-const rootDir = path.join(__dirname, '..', '..', '..');
+const rootDir = path.join(__dirname, '..', '..');
 const signCommand = path.join(__dirname, 'sign.sh');
 const notarizeCommand = path.join(__dirname, 'notarize.sh');
 const entitlements = path.resolve(rootDir, 'entitlements.plist');
@@ -81,7 +81,7 @@ const signFile = file => {
 };
 
 async function defaultFunction() {
-  const appOutDir = path.join(__dirname, '..', '..', '..', 'unpack_mac_dir');
+  const appOutDir = path.join(__dirname, '..', '..', 'unpack_mac_dir');
   const singedAppPath = path.resolve(appOutDir, 'Aspect-Model-Editor.app');
 
   let childPaths = await walkAsync(appOutDir);

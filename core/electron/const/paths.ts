@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-// core/electron-libs/const/paths.ts
 import * as path from 'path';
 import {inDevMode} from '../utils/mode';
 

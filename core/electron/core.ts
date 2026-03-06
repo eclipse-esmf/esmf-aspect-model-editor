@@ -67,7 +67,7 @@ async function _createSplashWindow(): Promise<BrowserWindow> {
   });
 
   const splashScreenPath = inDevMode()
-    ? path.join('.', 'electron-libs', 'loading-screen')
+    ? path.join('.', 'electron', 'loading-screen')
     : path.join(__dirname, '..', '..', '..', 'loading-screen');
 
   await splashWindow.loadFile(`${splashScreenPath}${path.sep}splash.html`).catch(() => console.warn('Splash screen not found.'));
