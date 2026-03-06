@@ -57,7 +57,7 @@ class WindowsManager {
       show: false,
       icon: this._getIcon(),
       webPreferences: {
-        preload: path.join(__dirname, 'preload.js'),
+        preload: path.join(__dirname, 'context-bridge', 'preload.js'),
         contextIsolation: true,
         nodeIntegration: false,
       },
@@ -230,7 +230,6 @@ class WindowsManager {
     }
   }
 
-  //#region Selectors
   /**
    * Returns the active window that is currently focused.
    *
@@ -253,9 +252,7 @@ class WindowsManager {
         options?.namespace === winOptions?.namespace && options?.file === winOptions?.file && winOptions?.fromWorkspace,
     );
   }
-  //#endregion
 
-  //#region Actions
   private _updateMenu(ids: string[], update: Record<string, any>) {
     this._updates.push({ids, update});
     if (this._timeout) clearTimeout(this._timeout);
@@ -292,7 +289,6 @@ class WindowsManager {
     if (menu) Menu.setApplicationMenu(menu);
   }
 
-  //#endregion
   private _updateMenuIcon(ids: string[], updates: Record<string, any>): CustomMenuItem[] | undefined {
     const activeMenu = this._selectActiveWindow()?.menu;
     if (!activeMenu) return;
