@@ -79,9 +79,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
    * Opens an external link in the default browser.
    *
    * @param {string} link - The URL to open.
-   * @returns {Promise<void>} Resolves when the link is opened.
+   * @returns {Promise<void> | boolean} Resolves when the link is opened.
    */
-  openExternalLink: (link: string): boolean => shell.openExternal(link),
+  openExternalLink: (link: string): Promise<void> | boolean => shell.openExternal(link),
 
   /**
    * Shows a context menu for the given payload.

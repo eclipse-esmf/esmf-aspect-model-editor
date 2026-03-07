@@ -22,7 +22,7 @@ declare global {
       getBackendPort?: Promise<number>;
       openPrintWindow?: Promise<any>;
       writePrintFile?: Promise<any>;
-      openExternalLink?: void;
+      openExternalLink?: Promise<void> | boolean;
       showContextMenu?: void;
     };
   }

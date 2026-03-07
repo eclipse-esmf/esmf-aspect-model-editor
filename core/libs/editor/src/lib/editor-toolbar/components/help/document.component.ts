@@ -39,9 +39,6 @@ export class DocumentComponent {
 
     if (!this.browserService.isStartedAsElectronApp()) return;
 
-    const opened = this.ipcRenderer.openExternalLink((event.target as HTMLAnchorElement).href);
-    if (opened) {
-      this.toastr.success('Documentation opened in your default browser');
-    }
+    this.ipcRenderer.openExternalLink((event.target as HTMLAnchorElement).href);
   }
 }
