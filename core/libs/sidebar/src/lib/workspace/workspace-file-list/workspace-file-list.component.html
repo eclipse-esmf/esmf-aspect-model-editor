@@ -44,7 +44,6 @@
           class="file"
           [class.selected]="selection.isSelected(namespace.key, file.name)"
           [class.outdated]="file.outdated"
-          [class.locked]="file.locked"
           [class.errored]="file.errored"
           [matTooltip]="isCurrentFile(namespace.key, file)"
           (click)="selectFile(namespace.key, file)"
@@ -53,11 +52,7 @@
           matTooltipPosition="right"
         >
           <div class="content">
-            <mat-icon
-              >{{
-                file.loaded ? 'arrow_right_alt' : file.locked ? 'lock' : file.outdated ? 'update' : file.errored ? 'error' : 'description'
-              }}
-            </mat-icon>
+            <mat-icon>{{ file.loaded ? 'arrow_right_alt' : file.outdated ? 'update' : file.errored ? 'error' : 'description' }} </mat-icon>
             <span>{{ file.name }}</span>
           </div>
           <button

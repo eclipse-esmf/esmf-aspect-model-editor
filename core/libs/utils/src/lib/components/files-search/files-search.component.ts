@@ -150,14 +150,12 @@ export class FilesSearchComponent {
 
   private checkFile(file: string, namespace: string) {
     const fileStatus = this.sidebarStateService.namespacesState.getFile(namespace, file);
-    if (fileStatus && (fileStatus.errored || fileStatus.loaded || fileStatus.locked)) {
+    if (fileStatus && (fileStatus.errored || fileStatus.loaded)) {
       this.notificationService.warning({
         title: this.translate.language.SEARCHES.FILES.NOTIFICATIONS.TITLE,
         message: fileStatus.errored
           ? this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ERROR_MESSAGE
-          : fileStatus.loaded
-            ? this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ALREADY_LOADED_FILE_MESSAGE
-            : this.translate.language.SEARCHES.FILES.NOTIFICATIONS.LOCKED_FILE_MESSAGE,
+          : this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ALREADY_LOADED_FILE_MESSAGE,
       });
       return 'invalid-file';
     }

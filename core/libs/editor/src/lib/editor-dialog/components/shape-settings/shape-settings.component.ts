@@ -13,18 +13,7 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  EventEmitter,
-  HostListener,
-  inject,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MatButton, MatIconButton} from '@angular/material/button';
@@ -49,6 +38,9 @@ import {SharedSettingsTitleComponent} from './shared-settings-title/shared-setti
 
 @Component({
   selector: 'ame-shape-settings',
+  host: {
+    '(window:keydown.control.enter)': 'saveOnKeyControlEnterEvent()',
+  },
   templateUrl: './shape-settings.component.html',
   styleUrls: ['./shape-settings.component.scss'],
   imports: [
@@ -97,7 +89,6 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
   @Output() save = new EventEmitter<FormGroup>();
   @Output() afterClose = new EventEmitter();
 
-  @HostListener('window:keydown.control.enter')
   saveOnKeyControlEnterEvent() {
     if (this.isOpened) {
       this.onSave();

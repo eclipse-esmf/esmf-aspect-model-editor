@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": false,
+    "noImplicitAny": true,
+    "declaration": false,
+    "removeComments": true,
+    "strict": true,
+    "noEmitOnError": true
+  },
+  "include": ["electron/main.ts", "electron/**/*.ts"],
+  "exclude": ["node_modules", "tmp"]
+}

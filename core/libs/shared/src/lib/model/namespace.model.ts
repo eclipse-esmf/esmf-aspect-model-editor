@@ -16,7 +16,6 @@ export interface FileStatus {
     outdated: boolean;
     version: string;
     hasErrors?: boolean;
-    locked?: boolean;
   };
 }
 
@@ -42,10 +41,6 @@ export class NamespaceModel {
     } else {
       this.fileStatus[file] = {...this.fileStatus[file], version: null, outdated: false, hasErrors};
     }
-  }
-
-  lockFile(file: string, locked: boolean) {
-    this.fileStatus[file] = this.fileStatus[file] ? {...this.fileStatus[file], locked} : {locked, version: null, outdated: false};
   }
 
   getFileStatus(file: string) {

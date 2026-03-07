@@ -17,7 +17,7 @@ import {APP_CONFIG, config} from '@ame/shared';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {enableProdMode, importProvidersFrom} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {provideAnimations} from '@angular/platform-browser/animations';
 import {PreloadAllModules, provideRouter, withPreloading} from '@angular/router';
 import {TranslateModule} from '@ngx-translate/core';
 import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -36,7 +36,7 @@ const bootstrap = () =>
     providers: [
       provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
       provideHttpClient(withInterceptorsFromDi()),
-      importProvidersFrom(BrowserAnimationsModule),
+      provideAnimations(),
       importProvidersFrom(
         ToastrModule.forRoot(),
         TranslateModule.forRoot({

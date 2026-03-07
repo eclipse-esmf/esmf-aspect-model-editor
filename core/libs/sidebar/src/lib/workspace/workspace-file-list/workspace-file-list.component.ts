@@ -145,7 +145,7 @@ export class WorkspaceFileListComponent {
 
   public loadInNewWindow() {
     const {namespace, file} = this.menuSelection;
-    if (file.outdated || file.errored || file.locked) {
+    if (file.outdated || file.errored) {
       return;
     }
 
@@ -160,19 +160,19 @@ export class WorkspaceFileListComponent {
   }
 
   public isLoadDisabled() {
-    return this.menuSelection.file.locked || !this.isOpenable();
+    return !this.isOpenable();
   }
 
   public isDeleteDisabled() {
     const {namespace, file} = this.menuSelection;
-    return file.locked || this.sidebarService.isCurrentFile(namespace, file.name);
+    return this.sidebarService.isCurrentFile(namespace, file.name);
   }
 
   public openFile() {
     const {namespace, file} = this.menuSelection;
     const absoluteFileName = `${namespace}:${file.name}`;
 
-    if (file.outdated || file.errored || file.locked) {
+    if (file.outdated || file.errored) {
       return;
     }
 
@@ -245,10 +245,6 @@ export class WorkspaceFileListComponent {
 
       if (file.loaded) {
         return this.translate.language.TOOLTIPS.CURRENT_FILE;
-      }
-
-      if (file.locked) {
-        return this.translate.language.TOOLTIPS.LOCKED_FILE;
       }
 
       return '';

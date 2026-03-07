@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.electron.json",
+  "compilerOptions": {
+    "types": ["@jest/globals", "node"],
+    "typeRoots": ["../node_modules/@types", "../node_modules"]
+  },
+  "include": ["**/*.spec.ts", "**/*.d.ts"]
+}
