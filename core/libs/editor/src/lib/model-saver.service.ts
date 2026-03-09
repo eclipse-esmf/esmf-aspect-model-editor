@@ -10,7 +10,6 @@ import {DestroyRef, Injectable, Injector, inject, runInInjectionContext} from '@
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {Observable, Subscription, catchError, delayWhen, filter, first, map, of, retry, switchMap, tap, throwError, timer} from 'rxjs';
-import {finalize} from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class ModelSaverService {
@@ -137,7 +136,7 @@ export class ModelSaverService {
               .pipe(
                 filter(Boolean),
                 switchMap(() => this.modelApiService.deleteAspectModel(originalAspectModelUrn)),
-                finalize(saveModel),
+                switchMap(() => saveModel()),
               );
           });
         }
