@@ -35,7 +35,7 @@ The main structure of interest is
 - core
   - apps
 - ame
-  - electron-libs
+  - electron
   - libs
     - aspect-explorer
     - aspect-model-loader _(library extracted from [Aspect Model Loader]() which will be removed in the future from this project and be imported as a npm library)_
@@ -62,7 +62,7 @@ The main structure of interest is
 
 Contains only the container type components and the routing system
 
-### electron-libs
+### electron
 
 Contains all scripts related to electron. From application start to menus, creating new windows and communication with the angular application.
 The scripts are somehow basic for an electron application, so nothing out of the ordinary from what is found in [Electron](https://www.electronjs.org/docs/latest/) documentation.

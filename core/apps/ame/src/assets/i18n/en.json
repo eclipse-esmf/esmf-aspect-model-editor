@@ -566,8 +566,7 @@
     "FOLD_NAMESPACES": "Fold namespaces",
     "OUTDATED_FILE": "This file is based on an older SAMM version ({{sammVersion}})",
     "ERRORED_FILE": "This file has loaded with errors",
-    "CURRENT_FILE": "This file is currently opened in the current window",
-    "LOCKED_FILE": "This file is opened in other window"
+    "CURRENT_FILE": "This file is currently opened in the current window"
   },
   "SEARCHES": {
     "ELEMENTS_LABEL": "Search elements...",
@@ -576,8 +575,7 @@
       "NOTIFICATIONS": {
         "TITLE": "Could not load file",
         "ERROR_MESSAGE": "This file contains errors",
-        "ALREADY_LOADED_FILE_MESSAGE": "This file is already loaded",
-        "LOCKED_FILE_MESSAGE": "This file is loaded in other window"
+        "ALREADY_LOADED_FILE_MESSAGE": "This file is already loaded"
       },
       "OPEN_DIALOG": {
         "TITLE": "Open file {{fileName}}",

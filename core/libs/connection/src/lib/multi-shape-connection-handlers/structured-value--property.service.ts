@@ -20,9 +20,10 @@ import {mxgraph} from 'mxgraph-factory';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
-export class StructuredValueCharacteristicPropertyConnectionHandler
-  implements MultiShapeConnector<DefaultStructuredValue, DefaultProperty>
-{
+export class StructuredValueCharacteristicPropertyConnectionHandler implements MultiShapeConnector<
+  DefaultStructuredValue,
+  DefaultProperty
+> {
   private mxGraphService = inject(MxGraphService);
   private mxGraphAttributeService = inject(MxGraphAttributeService);
   private sammLangService = inject(SammLanguageSettingsService);

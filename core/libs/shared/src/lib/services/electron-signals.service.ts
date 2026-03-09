@@ -13,11 +13,11 @@
 
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {ElectronEventKeys, ElectronSignals, RegisteredElectronEvents} from '../model';
+import {ElectronEventKeys, ElectronSignals, RegisteredELECTRON_EVENTS} from '../model';
 
 @Injectable({providedIn: 'root'})
 export class ElectronSignalsService implements ElectronSignals {
-  private listeners: RegisteredElectronEvents = {};
+  private listeners: RegisteredELECTRON_EVENTS = {};
 
   addListener(listener: ElectronEventKeys, callback: Function) {
     if (typeof callback === 'function') {

@@ -16,7 +16,7 @@ import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {CommonModule} from '@angular/common';
-import {Component, DestroyRef, ElementRef, HostListener, OnInit, ViewChild, inject} from '@angular/core';
+import {Component, DestroyRef, ElementRef, OnInit, ViewChild, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
@@ -55,6 +55,10 @@ export interface OpenApi {
 
 @Component({
   standalone: true,
+  host: {
+    '(window:dragover)': '$event.preventDefault()',
+    '(window:drop)': 'handleFileDrop($event)',
+  },
   selector: 'ame-generate-open-api',
   templateUrl: './generate-open-api.component.html',
   styleUrls: ['./generate-open-api.component.scss'],
@@ -174,12 +178,6 @@ export class GenerateOpenApiComponent implements OnInit {
     });
   }
 
-  @HostListener('dragover', ['$event'])
-  preventDragDefaults(event: Event): void {
-    event.preventDefault();
-  }
-
-  @HostListener('drop', ['$event'])
   handleFileDrop(event: DragEvent): void {
     event.preventDefault();
     if (!this.dropArea.nativeElement.contains(event.target)) return;

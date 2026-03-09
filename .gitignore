@@ -49,7 +49,7 @@ Thumbs.db
 # electron
 **/out
 **/.cache
-**/electron
+**/.electron
 **/.files
 lsp
 

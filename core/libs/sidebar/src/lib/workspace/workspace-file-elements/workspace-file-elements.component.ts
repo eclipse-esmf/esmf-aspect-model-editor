@@ -175,7 +175,6 @@ export class WorkspaceFileElementsComponent {
           this.loadingElements.set(false);
         },
         error: e => {
-          console.log(e);
           this.loadingElements.set(false);
         },
       });

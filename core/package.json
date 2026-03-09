@@ -4,7 +4,7 @@
   "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
   "version": "",
-  "main": "main.js",
+  "main": "dist/electron/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor.git"
@@ -16,9 +16,7 @@
       "target": "zip",
       "icon": "./apps/ame/src/assets/img/png/aspect-model-editor-targetsize-256.png",
       "files": [
-        "main.js",
-        "dist",
-        "electron-libs"
+        "dist"
       ],
       "extraFiles": [
         {
@@ -43,7 +41,7 @@
           ]
         },
         {
-          "from": "./electron-libs/loading-screen/",
+          "from": "./electron/loading-screen/",
           "to": "loading-screen/",
           "filter": [
             "**/*"
@@ -55,9 +53,7 @@
       "target": "zip",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
-        "main.js",
-        "dist",
-        "electron-libs"
+        "dist"
       ],
       "extraFiles": [
         {
@@ -82,7 +78,7 @@
           ]
         },
         {
-          "from": "./electron-libs/loading-screen/",
+          "from": "./electron/loading-screen/",
           "to": "loading-screen/",
           "filter": [
             "**/*"
@@ -94,9 +90,7 @@
       "target": "tar.gz",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
-        "main.js",
-        "dist",
-        "electron-libs"
+        "dist"
       ],
       "extraFiles": [
         {
@@ -121,7 +115,7 @@
           ]
         },
         {
-          "from": "./electron-libs/loading-screen/",
+          "from": "./electron/loading-screen/",
           "to": "loading-screen/",
           "filter": [
             "**/*"
@@ -130,66 +124,53 @@
       ]
     },
     "directories": {
-      "output": "./electron"
+      "output": "./.electron"
     }
   },
   "scripts": {
-    "jest": "jest",
-    "ng": "nx",
-    "nx": "nx",
+    "start": "nx serve",
+    "start:electron:mac": "npm run build:electron && electron . --dev",
+    "start:electron:linux": "npm run build:electron && electron . --dev",
+    "start:electron:win": "npm run build:electron && .\\node_modules\\electron\\dist\\electron.exe . --dev",
+    "start:electron:mac:prod": "npm run build:electron:prod && electron .",
+    "start:electron:linux:prod": "npm run build:electron:prod electron .",
+    "start:electron:win:prod": "npm run build:electron:prod .\\node_modules\\electron\\dist\\electron.exe .",
+    "build": "nx build",
+    "build:prod": "nx build --configuration=production",
+    "build:stats": "nx build --configuration=production --stats-json",
+    "build:electron": "tsc -p tsconfig.electron.json && cp -R ./electron/loading-screen ./dist/electron/",
+    "build:electron:prod": "tsc -p tsconfig.electron.prod.json && npm run electron:minify && npm run electron:obfuscate && cp -R ./electron/loading-screen ./dist/electron/",
+    "build:win": "npm run build:electron && nx build && electron-builder build --win",
+    "build:mac": "npm run build:electron && nx build && electron-builder build --mac",
+    "build:linux": "npm run build:electron && nx build && electron-builder build --linux",
+    "build:win:prod": "npm run build:electron:prod && nx build --configuration=production && electron-builder build --win",
+    "build:mac:prod": "npm run build:electron:prod && nx build --configuration=production && electron-builder build --mac",
+    "build:linux:prod": "npm run build:electron:prod && nx build --configuration=production && electron-builder build --linux",
+    "electron:minify": "esbuild 'dist/electron/**/*.js' --minify --platform=node --outdir=dist/electron --legal-comments=none --target=node20",
+    "electron:obfuscate": "javascript-obfuscator dist/electron --output dist/electron --compact true --self-defending true --overwrite",
     "lint": "nx run-many --all --target=lint --exclude=ame-e2e",
-    "start": "ng serve",
-    "build": "ng build",
-    "build:stats": "ng build --configuration=production --stats-json",
-    "build:prod": "ng build --configuration=production",
-    "format:check-apps": "prettier --config ./.prettierrc --list-different \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\"",
-    "format:check-libs": "prettier --config ./.prettierrc --list-different \"./libs/**/*{.ts,.js,.json,.html,.scss}\"",
-    "prettier:apps": "prettier --config ./.prettierrc --write \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\" \"./apps/ame-e2e/src/integration/**/*{.ts,.js,.json,.html,.scss}\"",
-    "prettier:libs": "prettier --config ./.prettierrc --write \"./libs/**/*{.ts,.js,.json,.html,.scss}\"",
-    "prettier:env": "prettier --config ./.prettierrc --write \"./environments/**/*{.ts,.js,.json,.html,.scss}\"",
-    "prettier:all": "prettier --config ./.prettierrc --write \"./**/*{.ts,.js,.json,.html,.scss}\"",
-    "doc:app": "compodoc -p apps/ame-e2e/tsconfig.json -t --hideGenerator -d dist/docs/app",
-    "start:mac": "electron . --dev",
-    "start:linux": "electron . --dev",
-    "start:win": ".\\node_modules\\electron\\dist\\electron.exe . --dev",
-    "start:mac:prod": "electron .",
-    "start:linux:prod": "electron .",
-    "start:win:prod": ".\\node_modules\\electron\\dist\\electron.exe .",
-    "build:win": "ng build && electron-builder build --win",
-    "build:mac": "ng build && electron-builder build --mac",
-    "build:linux": "ng build && electron-builder build --linux",
-    "build:win:prod": "ng build --configuration=production && electron-builder build --win",
-    "build:mac:prod": "ng build --configuration=production && electron-builder build --mac",
-    "build:linux:prod": "ng build --configuration=production && electron-builder build --linux",
-    "help": "nx help",
-    "affected:apps": "nx affected:apps",
-    "affected:libs": "nx affected:libs",
-    "affected:build": "nx affected:build",
-    "affected:e2e": "nx affected:e2e",
-    "affected:test": "nx affected:test",
-    "affected:lint": "nx affected:lint --exclude ame-e2e",
-    "affected:dep-graph": "nx affected:dep-graph",
-    "affected": "nx affected",
-    "format": "nx format:write",
-    "format:write": "nx format:write",
-    "format:all": "nx format:write --all",
-    "format:nx-check": "nx format:check",
-    "update": "nx migrate latest",
-    "workspace-generator": "nx workspace-generator",
-    "dep-graph": "nx dep-graph",
-    "postinstall": "node ./decorate-angular-cli.js",
+    "lint:affected": "nx affected:lint --exclude ame-e2e",
     "test": "nx run-many --all --target=test --maxWorkers=1",
     "test:coverage": "nx run-many --all --target=test --coverage",
     "test:headless": "npm run test:headless:app",
+    "test:affected": "nx affected:test",
     "cypress": "npm run cypress:clean && npm run cypress:ci",
-    "cypress:clean": "rimraf 'cypress/reports' && rimraf 'coverage' && rimraf '.nyc_output'",
-    "cypress:cache-clean": "cypress cache clear && cypress install",
-    "cypress:headless": "cypress run --browser chrome",
     "cypress:open": "npm run cypress:clean && npx cypress open",
     "cypress:ci": "start-server-and-test start http://localhost:4200 cypress:headless",
+    "cypress:headless": "cypress run --browser chrome",
+    "cypress:clean": "rimraf 'cypress/reports' && rimraf 'coverage' && rimraf '.nyc_output'",
+    "cypress:cache-clean": "cypress cache clear && cypress install",
+    "affected:build": "nx affected:build",
+    "affected:e2e": "nx affected:e2e",
+    "affected:dep-graph": "nx affected:dep-graph",
+    "dep-graph": "nx dep-graph",
+    "update": "nx migrate latest",
+    "format:check": "prettier --config ./.prettierrc --list-different \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\" \"./apps/ame-e2e/src/integration/**/*{.ts,.js,.json,.html,.scss}\" \"./libs/**/*{.ts,.js,.json,.html,.scss}\" \"./environments/**/*{.ts,.js,.json,.html,.scss}\"",
+    "format": "prettier --config ./.prettierrc --write \"./apps/ame/src/{app,assets}/**/*{.ts,.js,.json,.html,.scss}\" \"./apps/ame-e2e/src/integration/**/*{.ts,.js,.json,.html,.scss}\" \"./libs/**/*{.ts,.js,.json,.html,.scss}\" \"./environments/**/*{.ts,.js,.json,.html,.scss}\"",
+    "doc:app": "compodoc -p apps/ame-e2e/tsconfig.json -t --hideGenerator -d dist/docs/app",
     "license-report": "license-report --only=prod --output=html --department.value=ESMF --relatedTo.value=esmf-aspect-model-editor",
-    "prepare": "cd .. && husky install core/.husky",
-    "generate-translate-interfaces": "node ./utils/create_interface.js ..\\apps\\ame\\src\\assets\\i18n\\en.json ..\\libs\\translation\\src\\lib\\models\\language.interface.ts"
+    "generate:translate-interfaces": "node ./utils/create_interface.js ..\\apps\\ame\\src\\assets\\i18n\\en.json ..\\libs\\translation\\src\\lib\\models\\language.interface.ts",
+    "prepare": "cd .. && husky install core/.husky"
   },
   "nyc": {
     "extends": "@istanbuljs/nyc-config-typescript",
@@ -220,12 +201,9 @@
     "@angular/platform-browser": "20.2.4",
     "@angular/platform-browser-dynamic": "20.2.4",
     "@angular/router": "20.2.4",
-    "@electron/remote": "^2.1.3",
     "@juggle/resize-observer": "^4.0.0-4",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
-    "electron-localshortcut": "^3.2.1",
-    "electron-squirrel-startup": "^1.0.1",
     "file-saver": "^2.0.5",
     "fuse.js": "~6.5.3",
     "locale-codes": "^1.3.1",
@@ -274,11 +252,12 @@
     "@swc/core": "1.5.7",
     "@swc/helpers": "0.5.17",
     "@typed-mxgraph/typed-mxgraph": "^1.0.4",
+    "@types/electron": "^1.4.38",
     "@types/file-saver": "^2.0.5",
     "@types/jasmine": "~4.0.0",
     "@types/jest": "30.0.0",
     "@types/n3": "^1.4.4",
-    "@types/node": "24.5.2",
+    "@types/node": "^24.5.2",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/experimental-utils": "^5.29.0",
     "@typescript-eslint/parser": "7.18.0",
@@ -289,6 +268,7 @@
     "cypress-real-events": "^1.13.0",
     "electron": "39.2.3",
     "electron-builder": "^26.0.12",
+    "esbuild": "^0.27.3",
     "eslint": "8.57.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-cypress": "^3.3.0",
@@ -299,6 +279,7 @@
     "events": "^3.3.0",
     "husky": "^8.0.3",
     "isbinaryfile": "^5.0.2",
+    "javascript-obfuscator": "^5.3.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "jest-environment-node": "^29.5.0",
@@ -322,7 +303,7 @@
     "ts-jest": "29.4.4",
     "ts-loader": "^9.2.5",
     "ts-node": "10.9.1",
-    "typescript": "5.9.2",
+    "typescript": "^5.9.2",
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0"
   },
