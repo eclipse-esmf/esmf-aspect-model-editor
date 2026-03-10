@@ -247,10 +247,11 @@ export class CharacteristicRenderService extends BaseRenderService {
   }
 
   private handleComplexDataType(cell: mxgraph.mxCell, newDataType: DefaultEntity) {
-    if (this.metaModelElement instanceof DefaultStructuredValue) {
-      return;
-    }
-    const cachedEntity = this.loadedFilesService.currentLoadedFile.cachedFile.resolveInstance(newDataType);
+    if (this.metaModelElement instanceof DefaultStructuredValue) return;
+
+    const extEntity = this.loadedFilesService.findElementOnExtReferences<DefaultEntity>(newDataType.aspectModelUrn);
+    const cachedEntity = extEntity ? extEntity : this.loadedFilesService.currentLoadedFile.cachedFile.resolveInstance(newDataType);
+
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell
       ? resolvedCell
