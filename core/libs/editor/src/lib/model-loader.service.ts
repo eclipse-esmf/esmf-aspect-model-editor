@@ -119,6 +119,10 @@ export class ModelLoaderService {
       switchMap(() => this.getNamespaceDependencies(payload.rdfAspectModel, payload.aspectModelUri, {}, 0)),
       // loading in sequence all RdfModels for the current file and dependencies
       switchMap(files => this.loadRdfModelFromFiles(files, payload)),
+      map(({files, rdfModels}) => {
+        const remainingFiles = Object.fromEntries(Object.entries(files).filter(([key]) => key !== payload.namespaceFileName));
+        return {files: remainingFiles, rdfModels};
+      }),
       // loading the model with all namespace dependencies
       switchMap(({files, rdfModels}) =>
         loadAspectModel({
