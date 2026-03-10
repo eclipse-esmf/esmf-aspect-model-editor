@@ -51,7 +51,7 @@ export function constraintFactory(initProps: BaseInitProps) {
     const initialUrn: string = constraint.aspectModelUrn;
 
     // assign a unique random name
-    constraint.name = constraint.name ? constraint.name : 'Constraint' + Math.random().toString(36).substring(2, 9);
+    constraint.name = constraint.name ? constraint.name : 'Constraint' + String(Math.floor(Math.random() * 900) + 100);
     constraint.aspectModelUrn = `${rdfModel.getAspectModelUrn()}${constraint.name}`;
     constraint.syntheticName = true;
     cache.addElement(initialUrn, constraint);
