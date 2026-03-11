@@ -6,6 +6,7 @@
   !include LogicLib.nsh
 
   !define MUI_ICON "..\core\apps\ame\src\assets\img\ico\aspect-model-editor-targetsize-192.ico"
+
 ;--------------------------------
 ;General
 
@@ -14,6 +15,11 @@
   Unicode True
 
   OutFile "aspect-model-editor-v${VERSION}-win.exe"
+
+  ; "highest" requests the highest level the current user already has.
+  ; Admins get elevated (UAC prompt), standard users do not.
+  ; This avoids forcing a UAC prompt for a per-user install into $LOCALAPPDATA.
+  RequestExecutionLevel highest
 
   ;Default installation folder
   InstallDir "$LOCALAPPDATA\ASPECT-MODEL-EDITOR"
@@ -50,13 +56,21 @@
 ;Installer Sections
 
 Section "Install"
-; Sets the context of $SMPROGRAMS and other shell folders.
-; If set to 'current' (the default), the current user's shell folders are used.
-; If set to 'all', the 'all users' shell folder is used.
-  SetShellVarContext all
+  ; Use 'all' shell folders (All Users Start Menu etc.) only when running as admin.
+  ; Standard users fall back to 'current' (per-user Start Menu / Desktop).
+  UserInfo::GetAccountType
+  Pop $1
+  ${If} $1 == "Admin"
+    SetShellVarContext all
+  ${Else}
+    SetShellVarContext current
+  ${EndIf}
+
   SetOutPath "$INSTDIR"
 
-  ExecWait 'icacls "$INSTDIR" /grant *S-1-5-19:(OI)(CI)F /T'
+  ; $LOCALAPPDATA is already fully owned by the current user — no icacls needed.
+  ; For admin installs the directory may differ; icacls is only required when
+  ; installing to a shared location (e.g. $PROGRAMFILES), which is not the case here.
 
   Call uninstall_Previous_Version
   Call install_AME
@@ -67,14 +81,29 @@ Section "Install"
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
-                   "DisplayName" "Aspect Model Editor"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
-                   "Publisher" "eclipse.org"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
-                   "DisplayVersion" "${VERSION}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" \
-                   "UninstallString" "$INSTDIR\uninstall.exe"
+  ; Write Add/Remove Programs entry -- use HKLM for admins, fall back to HKCU for standard users
+  !define UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR"
+  UserInfo::GetAccountType
+  Pop $1
+  ${If} $1 == "Admin"
+    WriteRegStr HKLM "${UNINST_KEY}" "DisplayName"     "Aspect Model Editor"
+    WriteRegStr HKLM "${UNINST_KEY}" "Publisher"       "eclipse.org"
+    WriteRegStr HKLM "${UNINST_KEY}" "DisplayVersion"  "${VERSION}"
+    WriteRegStr HKLM "${UNINST_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
+    WriteRegStr HKLM "${UNINST_KEY}" "DisplayIcon"     "$INSTDIR\Aspect-Model-Editor.exe"
+    WriteRegStr HKLM "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
+    WriteRegDWORD HKLM "${UNINST_KEY}" "NoModify"      1
+    WriteRegDWORD HKLM "${UNINST_KEY}" "NoRepair"      1
+  ${Else}
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayName"     "Aspect Model Editor"
+    WriteRegStr HKCU "${UNINST_KEY}" "Publisher"       "eclipse.org"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayVersion"  "${VERSION}"
+    WriteRegStr HKCU "${UNINST_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
+    WriteRegStr HKCU "${UNINST_KEY}" "DisplayIcon"     "$INSTDIR\Aspect-Model-Editor.exe"
+    WriteRegStr HKCU "${UNINST_KEY}" "InstallLocation" "$INSTDIR"
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoModify"      1
+    WriteRegDWORD HKCU "${UNINST_KEY}" "NoRepair"      1
+  ${EndIf}
 
 SectionEnd
 
@@ -82,26 +111,40 @@ SectionEnd
 ;Uninstaller Section
 
 Section "Uninstall"
-; Sets the context of $SMPROGRAMS and other shell folders.
-; If set to 'current' (the default), the current user's shell folders are used.
-; If set to 'all', the 'all users' shell folder is used.
-  SetShellVarContext all
+  ; Mirror the same shell context used during install so shortcuts are found
+  ; and deleted from the correct location (All Users vs. current user).
+  UserInfo::GetAccountType
+  Pop $1
+  ${If} $1 == "Admin"
+    SetShellVarContext all
+  ${Else}
+    SetShellVarContext current
+  ${EndIf}
+
   ExecWait "TaskKill /IM Aspect-Model-Editor.exe /F"
 
   Call un.install_AME
 
   Delete "$INSTDIR\Uninstall.exe"
 
+  ; Remove Add/Remove Programs entry from the same hive it was written to
+  UserInfo::GetAccountType
+  Pop $1
+  ${If} $1 == "Admin"
+    DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR"
+  ${Else}
+    DeleteRegKey HKCU "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR"
+  ${EndIf}
   DeleteRegKey /ifempty HKCU "Software\ASPECT-MODEL-EDITOR"
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR"
 SectionEnd
 
 ;--------------------------------
-Section "" SpaceRequired
+; Hidden section used only for disk space calculation in GuiInit
+Section "-SpaceRequired" SEC_SPACE
 SectionEnd
 
 ;--------------------------------
-;Function
+;Functions
 
 Function DirectoryLeave
     ExpandEnvStrings $0 "%USERPROFILE%\ASPECT-MODEL-EDITOR"
@@ -113,7 +156,7 @@ Function DirectoryLeave
 FunctionEnd
 
 Function install_AME
-    File /r "..\core\electron\win-unpacked\*"
+    File /r "..\core\.electron\win-unpacked\*"
 
     CreateDirectory "$SMPROGRAMS\ESMF"
 
@@ -130,36 +173,47 @@ Function un.install_AME
 
     Delete "$SMPROGRAMS\ESMF\Aspect-Model-Editor.lnk"
     Delete "$SMPROGRAMS\ESMF\Aspect-Model-Editor Uninstaller.lnk"
-    RMDir /r  "$SMPROGRAMS\ESMF"
+    RMDir /r "$SMPROGRAMS\ESMF"
 
     Delete "$DESKTOP\Aspect-Model-Editor.lnk"
 FunctionEnd
 
-;WOW6432Node automatically added by windows for 64 bits applications
+; Check all three possible registry locations for a previous installation:
+; 1. HKLM native 64-bit (installed by admin)
+; 2. HKLM WOW6432Node 32-bit (installed by admin on 64-bit OS, legacy)
+; 3. HKCU (installed by standard user)
 Function uninstall_Previous_Version
-    ; Check for uninstaller.
-    ReadRegStr $R0 HKLM "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" "UninstallString"
+    ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" "UninstallString"
+    ${If} $R0 == ""
+        ReadRegStr $R0 HKLM "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" "UninstallString"
+    ${EndIf}
+    ${If} $R0 == ""
+        ReadRegStr $R0 HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ASPECT-MODEL-EDITOR" "UninstallString"
+    ${EndIf}
 
     ${If} $R0 != ""
-            ExecWait '"$R0" /S'
-            Sleep 10000
+        ExecWait '"$R0" /S'
+        Sleep 10000
     ${EndIf}
 FunctionEnd
 
-Function GuiInit
-  Push "$INSTDIR\Aspect-Model-Editor.exe"
-  Call FileSizeNew
-  Pop $0
-  IntOp $0 $0 / 1024
-SectionSetSize ${SpaceRequired} "$0"
+; FIX: Use GetFileSize (System plugin) instead of FileSeek to correctly handle files larger than 2 GB
+Function FileSizeNew
+    Exch $0
+    Push $1
+    Push $2
+    System::Call "kernel32::GetFileAttributesEx(t '$0', i 0, @r1)"
+    System::Call "*$1(i, l, l, l, l .r2, l)"
+    IntOp $0 $2 / 1024
+    Pop $2
+    Pop $1
+    Exch $0
 FunctionEnd
 
-Function FileSizeNew
-  Exch $0
-  Push $1
-  FileOpen $1 $0 "r"
-  FileSeek $1 0 END $0
-  FileClose $1
-  Pop $1
-  Exch $0
+; FIX: Use correct section index constant ${SEC_SPACE} instead of ${SpaceRequired}
+Function GuiInit
+    Push "$INSTDIR\Aspect-Model-Editor.exe"
+    Call FileSizeNew
+    Pop $0
+    SectionSetSize ${SEC_SPACE} $0
 FunctionEnd
