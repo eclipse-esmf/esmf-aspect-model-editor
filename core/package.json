@@ -146,7 +146,7 @@
     "build:win:prod": "npm run build:electron:prod && nx build --configuration=production && electron-builder build --win",
     "build:mac:prod": "npm run build:electron:prod && nx build --configuration=production && electron-builder build --mac",
     "build:linux:prod": "npm run build:electron:prod && nx build --configuration=production && electron-builder build --linux",
-    "electron:minify": "esbuild 'dist/electron/**/*.js' --minify --platform=node --outdir=dist/electron --legal-comments=none --target=node20 --allow-overwrite",
+    "electron:minify": "esbuild dist/electron/**/*.js --minify --platform=node --outdir=dist/electron --legal-comments=none --target=node20 --allow-overwrite",
     "electron:obfuscate": "javascript-obfuscator dist/electron --output dist/electron --compact true --self-defending true",
     "lint": "nx run-many --all --target=lint --exclude=ame-e2e",
     "lint:affected": "nx affected:lint --exclude ame-e2e",
