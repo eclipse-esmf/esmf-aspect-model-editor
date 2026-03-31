@@ -14,13 +14,9 @@
 import {Observable} from 'rxjs';
 import {StartupData, StartupPayload} from './startup-options';
 
-export type LockUnlockPayload = Omit<StartupPayload, 'fromWorkspace' | 'editElement'>;
-
 interface ElectronPayloadOnly {
   updateWindowInfo: StartupPayload;
   openWindow: StartupPayload;
-  addLock: LockUnlockPayload;
-  removeLock: LockUnlockPayload;
 }
 
 interface ElectronReturnDataOnly {
@@ -28,36 +24,17 @@ interface ElectronReturnDataOnly {
   requestMaximizeWindow: void;
   requestWindowData: Observable<StartupData>;
   requestRefreshWorkspaces: void;
-  lockedFiles: Observable<LockUnlockPayload[]>;
 }
 
-type GenericPayloadAndReturn<Payload, Return> = {
-  payload: Payload;
-  return: Return;
-};
-
-type ElectronPayloadAndReturn = {
-  lockFile: GenericPayloadAndReturn<LockUnlockPayload, Observable<string>>;
-  unlockFile: GenericPayloadAndReturn<LockUnlockPayload, Observable<string>>;
-};
-
-export type ElectronEventKeys = keyof ElectronReturnDataOnly | keyof ElectronPayloadOnly | keyof ElectronPayloadAndReturn;
-export type RegisteredElectronEvents = Partial<Record<ElectronEventKeys, Function>>;
+export type ElectronEventKeys = keyof ElectronReturnDataOnly | keyof ElectronPayloadOnly;
+export type RegisteredELECTRON_EVENTS = Partial<Record<ElectronEventKeys, Function>>;
 
 export interface ElectronSignals {
   call<K extends keyof ElectronPayloadOnly>(listener: K, payload: ElectronPayloadOnly[K]): void;
   call<K extends keyof ElectronReturnDataOnly>(listener: K): ElectronReturnDataOnly[K];
-  call<K extends keyof ElectronPayloadAndReturn>(
-    listener: K,
-    payload: ElectronPayloadAndReturn[K]['payload'],
-  ): ElectronPayloadAndReturn[K]['return'];
 
   addListener<K extends keyof ElectronPayloadOnly>(listener: K, callback: (payload: ElectronPayloadOnly[K]) => void): void;
   addListener<K extends ElectronEventKeys>(listener: K, callback: () => void): void;
-  addListener<K extends keyof ElectronPayloadAndReturn>(
-    listener: K,
-    callback: (payload: ElectronPayloadAndReturn[K]['payload']) => ElectronPayloadAndReturn[K]['return'],
-  ): void;
 
   removeListener<K extends ElectronEventKeys>(listener: K, callback: Function): void;
 }

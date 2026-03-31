@@ -78,7 +78,9 @@ export class BaseEntityRendererService {
       return;
     }
 
-    const cachedEntity = this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(extendsElement);
+    const extEntity = this.loadedFiles.findElementOnExtReferences<DefaultEntity>(extendsElement.aspectModelUrn);
+    const cachedEntity = extEntity ? extEntity : this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(extendsElement);
+
     const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedEntity);
     const entityCell = resolvedCell
       ? resolvedCell

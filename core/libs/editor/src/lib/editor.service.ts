@@ -506,7 +506,7 @@ export class EditorService {
         localStorage.setItem(ValidateStatus.validating, 'yes');
         const rdfModel = this.loadedFilesService.currentLoadedFile?.rdfModel;
         return rdfModel
-          ? this.modelApiService.validate(this.rdfService.serializeModel(rdfModel), rdfModel.getSourceLocation())
+          ? this.modelApiService.validate(this.rdfService.serializeModel(rdfModel), rdfModel.getSourceLocation(), true)
           : throwError(() => ({type: SaveValidateErrorsCodes.emptyModel}));
       }),
     );

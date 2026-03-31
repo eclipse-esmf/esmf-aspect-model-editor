@@ -78,14 +78,12 @@ describe('Files search', () => {
     {
       name: 'AspectDefault.ttl',
       loaded: true,
-      locked: false,
       outdated: false,
       errored: false,
       sammVersion: '2.1.0',
     },
     {
       name: 'SharedModel.ttl',
-      locked: false,
       outdated: false,
       errored: false,
       loaded: true,

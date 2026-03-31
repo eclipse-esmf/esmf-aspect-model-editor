@@ -13,7 +13,7 @@
 
 import {AsyncApi, FileEntry, FileInformation, OpenApi, ViolationError} from '@ame/editor';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, IPC_RENDERER} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
@@ -24,6 +24,7 @@ import {ModelData, WorkspaceStructure} from './models';
 
 @Injectable({providedIn: 'root'})
 export class ModelApiService {
+  private ipcRenderer = inject(IPC_RENDERER);
   private config: AppConfig = inject(APP_CONFIG);
   private http = inject(HttpClient);
   private browserService = inject(BrowserService);
@@ -31,14 +32,13 @@ export class ModelApiService {
   private translate = inject(LanguageTranslationService);
 
   private defaultPort = this.config.defaultPort;
-  private readonly serviceUrl = this.config.serviceUrl;
+  private serviceUrl = this.config.serviceUrl;
   private api = this.config.api;
   private requestTimeout = 60000;
 
   constructor() {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
-      const remote = window.require('@electron/remote');
-      this.serviceUrl = this.serviceUrl.replace(this.defaultPort, remote.getGlobal('backendPort'));
+      this.ipcRenderer.getBackendPort().then((port: string) => (this.serviceUrl = this.serviceUrl.replace(this.defaultPort, port)));
     }
   }
 
@@ -98,7 +98,7 @@ export class ModelApiService {
       );
   }
 
-  validate(rdfContent: string, sourceLocation?: string): Observable<Array<ViolationError>> {
+  validate(rdfContent: string, sourceLocation?: string, validInfo?: boolean): Observable<Array<ViolationError>> {
     const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http
       .post<Array<ViolationError>>(`${this.serviceUrl}${this.api.models}/validate`, formData, {
@@ -107,7 +107,7 @@ export class ModelApiService {
       .pipe(
         timeout(this.requestTimeout),
         map((data: any) => data.violationErrors),
-        tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors)),
+        tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors, validInfo)),
         catchError(res => throwError(() => res)),
       );
   }

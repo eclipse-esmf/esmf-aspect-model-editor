@@ -1,0 +1,509 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {BrowserWindow, clipboard, ipcMain, Menu, MenuItem, NativeImage, shell} from 'electron';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+import {icons} from './const/icons';
+import {EVENTS} from './events/events';
+import {appMenuTemplate} from './menu/app';
+import {getIcon} from './utils/icon-utils';
+import {inDevMode} from './utils/mode';
+
+export interface WindowOptions {
+  namespace: string;
+  file: string;
+  editElement?: string;
+  fromWorkspace?: boolean;
+}
+
+export interface WindowInfo {
+  id: number;
+  window: BrowserWindow;
+  options: WindowOptions | null;
+  menu: Menu | null;
+}
+
+export interface CustomMenuItem {
+  id?: string;
+  submenu?: CustomMenuItem[];
+  icon?: NativeImage;
+  enabled?: boolean;
+  [key: string]: any;
+}
+
+/**
+ * Manages Electron BrowserWindows, their state, communication, and menus.
+ */
+class WindowsManager {
+  /**
+   * Default configuration for Electron BrowserWindow.
+   * @private
+   */
+  private _windowConfig: Electron.BrowserWindowConstructorOptions;
+
+  /**
+   * State tracking focused window and active windows.
+   * @private
+   */
+  private _state: {
+    focusedWindowId?: number;
+    activeWindows: WindowInfo[];
+  };
+
+  /**
+   * Timeout handler for menu updates.
+   * @private
+   */
+  private _timeout?: NodeJS.Timeout;
+
+  /**
+   * Queue of menu updates.
+   * @private
+   */
+  private _updates: Array<{ids: string[]; update: Record<string, any>}>;
+
+  /**
+   * Constructs a new WindowsManager instance.
+   */
+  constructor() {
+    this._windowConfig = {
+      show: false,
+      icon: this._getIcon(),
+      webPreferences: {
+        preload: path.join(__dirname, 'context-bridge', 'preload.js'),
+        contextIsolation: true,
+        nodeIntegration: false,
+      },
+    };
+
+    this._state = {
+      focusedWindowId: undefined,
+      activeWindows: [],
+    };
+
+    this._updates = [];
+  }
+
+  /**
+   * Activates IPC communication protocol for window management.
+   */
+  activateCommunicationProtocol() {
+    ipcMain.on(EVENTS.REQUEST.CREATE_WINDOW, (_, options) => {
+      const activeWindow = this._isWindowAlreadyDefined(options);
+      activeWindow ? this.createWindow(activeWindow, options) : this.createNewWindow(options);
+    });
+
+    ipcMain.on(EVENTS.REQUEST.UPDATE_DATA, (event, options) => {
+      const windowId = event.sender.id;
+      const windowInfo = this._state.activeWindows.find(windowInfo => windowInfo.id === windowId);
+
+      if (!windowInfo) return;
+
+      windowInfo.options = options;
+      console.log(`UPDATED: \x1b[36m${windowId}\x1b[0m with \x1b[36m${options.namespace} | ${options.file}\x1b[0m`);
+
+      ipcMain.emit(EVENTS.SIGNAL.REFRESH_WORKSPACE);
+    });
+
+    ipcMain.on(EVENTS.REQUEST.MAXIMIZE_WINDOW, event => {
+      const windowId = event.sender.id;
+      const window = this._state.activeWindows.find(windowInfo => windowInfo.id === windowId)?.window;
+      if (window) {
+        window.maximize();
+      }
+    });
+
+    ipcMain.on(EVENTS.REQUEST.IS_FIRST_WINDOW, event => {
+      event.sender.send(EVENTS.RESPONSE.IS_FIRST_WINDOW, this._state.activeWindows.length <= 1);
+    });
+
+    ipcMain.on(EVENTS.REQUEST.CLOSE_WINDOW, event => {
+      const windowId = event.sender.id;
+      const index = this._state.activeWindows.findIndex(windowInfo => windowId === windowInfo.id);
+      const win = index >= 0 ? this._state.activeWindows[index]?.window : null;
+
+      this._state.activeWindows.splice(index, 1);
+
+      if (!win) {
+        return;
+      }
+
+      win.destroy();
+    });
+
+    ipcMain.on(EVENTS.SIGNAL.REFRESH_WORKSPACE, event => {
+      const windowId = event?.sender?.id;
+      this._state.activeWindows.forEach(({id, window}) => {
+        window.webContents.send(EVENTS.REQUEST.REFRESH_WORKSPACE);
+      });
+    });
+
+    ipcMain.on(EVENTS.SIGNAL.WINDOW_FOCUS, event => {
+      console.log('SIGNAL.WINDOW_FOCUS', event.sender.id);
+      this._state.focusedWindowId = event.sender.id;
+      this._setActiveMenu();
+    });
+
+    ipcMain.on(EVENTS.SIGNAL.UPDATE_MENU_ITEM, (event, {ids, payload}) => {
+      console.log('SIGNAL.UPDATE_MENU_ITEM', event.sender.id);
+      this._state.focusedWindowId = event.sender.id;
+      this._updateMenu(ids, payload);
+    });
+
+    ipcMain.on(EVENTS.SIGNAL.TRANSLATE_MENU_ITEMS, (event, {id, payload}) => {
+      Menu.setApplicationMenu(Menu.buildFromTemplate([...appMenuTemplate(payload.translation)]));
+    });
+
+    ipcMain.handle(EVENTS.SIGNAL.OPEN_PRINT_WINDOW, (event, filePath) => {
+      const win = new BrowserWindow({width: 1920, height: 1080});
+      win.loadFile(filePath);
+      win.reload();
+      win.focus();
+    });
+
+    ipcMain.handle(EVENTS.SIGNAL.WRITE_PRINT_FILE, async (_, documentation: string) => {
+      const ameTmpDir = path.join(os.homedir(), '.ametmp');
+      const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
+
+      if (!fs.existsSync(ameTmpDir)) {
+        fs.mkdirSync(ameTmpDir);
+      }
+
+      await fs.promises.writeFile(printFilePath, documentation);
+      return printFilePath;
+    });
+
+    ipcMain.on(EVENTS.SIGNAL.SHOW_CONTEXT_MENU, (event, {href}) => {
+      const win = BrowserWindow.fromWebContents(event.sender);
+      if (!win) return;
+
+      const template = [];
+
+      if (href) {
+        template.push({
+          label: href.startsWith('mailto:') ? 'Send email' : 'Open in browser',
+          click: () => shell.openExternal(href),
+        });
+
+        template.push({
+          label: 'Copy link address',
+          click: () => clipboard.writeText(href),
+        });
+      }
+
+      const menu = Menu.buildFromTemplate(template);
+      menu.popup({window: win});
+    });
+  }
+
+  /**
+   * Creates a new Electron BrowserWindow and adds it to the active windows.
+   *
+   * @param {WindowOptions} [options] - Options for the new window.
+   * @returns {BrowserWindow} The created BrowserWindow instance.
+   */
+  createNewWindow(options: WindowOptions = null): BrowserWindow {
+    const newWindow = new BrowserWindow(this._windowConfig);
+
+    const windowInfo = {
+      id: newWindow.webContents.id,
+      window: newWindow,
+      options: options,
+      menu: null as any,
+    };
+
+    this._configureWindow(windowInfo);
+    this._setWindowListeners(windowInfo);
+
+    this._state.activeWindows.push(windowInfo);
+    this._state.focusedWindowId = windowInfo.id;
+
+    this._listenForWindowDataRequest();
+    this._loadApplication(windowInfo);
+
+    return newWindow;
+  }
+
+  /**
+   * Brings an existing window to the foreground or sends an edit request.
+   *
+   * @param {WindowInfo} activeWindow - The window info object to activate.
+   * @param {WindowOptions} options - Options describing the window.
+   */
+  createWindow(activeWindow: WindowInfo, options: WindowOptions): void {
+    const {window} = activeWindow;
+    window.show();
+    window.focus();
+
+    if (options?.editElement) {
+      window.webContents.send(EVENTS.REQUEST.EDIT_ELEMENT, options.editElement);
+    } else {
+      window.webContents.send(EVENTS.REQUEST.SHOW_NOTIFICATION, 'Model already loaded');
+    }
+  }
+
+  /**
+   * Returns the currently focused window info.
+   *
+   * @returns {WindowInfo|undefined} The focused window info.
+   */
+  private _selectActiveWindow(): WindowInfo | undefined {
+    return this._state.activeWindows.find(window => window.id === this._state?.focusedWindowId);
+  }
+
+  /**
+   * Checks if a window with the given options already exists.
+   *
+   * @param {WindowOptions} options - The options to match.
+   * @returns {WindowInfo|undefined} The matching window info.
+   */
+  private _isWindowAlreadyDefined(options: WindowOptions): WindowInfo | undefined {
+    return this._state.activeWindows.find(
+      ({options: winOptions}) =>
+        options?.namespace === winOptions?.namespace && options?.file === winOptions?.file && winOptions?.fromWorkspace,
+    );
+  }
+
+  /**
+   * Updates menu items by pushing updates and applying them after a timeout.
+   *
+   * @param {string[]} ids - Menu item IDs to update.
+   * @param {Record<string, any>} update - Update payload.
+   * @private
+   */
+  private _updateMenu(ids: string[], update: Record<string, any>) {
+    this._updates.push({ids, update});
+    if (this._timeout) clearTimeout(this._timeout);
+
+    this._timeout = setTimeout(() => {
+      const menu = this._processMenuUpdates();
+      this._applyMenu(menu, update);
+    }, 150);
+  }
+
+  /**
+   * Processes queued menu updates and returns the updated menu.
+   *
+   * @returns {CustomMenuItem[]|null} Updated menu items.
+   * @private
+   */
+  private _processMenuUpdates(): CustomMenuItem[] | null {
+    let menu: CustomMenuItem[] | null = null;
+    while (this._updates.length) {
+      const {ids, update} = this._updates.shift()!;
+      menu = this._updateMenuIcon(ids, update);
+    }
+    return menu;
+  }
+
+  /**
+   * Applies the menu to the active window.
+   *
+   * @param {CustomMenuItem[]|null} menu - Menu items.
+   * @param {Record<string, any>} update - Update payload.
+   * @private
+   */
+  private _applyMenu(menu: CustomMenuItem[] | null, update: Record<string, any>) {
+    const activeWindow = this._selectActiveWindow();
+    if (!activeWindow) return;
+
+    if (menu) {
+      activeWindow.menu = Menu.buildFromTemplate(menu);
+    } else {
+      activeWindow.menu = Menu.buildFromTemplate([...appMenuTemplate(update.translation)]);
+    }
+    this._setActiveMenu();
+  }
+
+  /**
+   * Sets the application menu for the currently focused window.
+   * @private
+   */
+  private _setActiveMenu() {
+    const menu = this._selectActiveWindow()?.menu;
+    if (menu) Menu.setApplicationMenu(menu);
+  }
+
+  /**
+   * Updates menu icons based on enabled state and IDs.
+   *
+   * @param {string[]} ids - Menu item IDs.
+   * @param {Record<string, any>} updates - Update payload.
+   * @returns {CustomMenuItem[]|undefined} Updated menu items.
+   * @private
+   */
+  private _updateMenuIcon(ids: string[], updates: Record<string, any>): CustomMenuItem[] | undefined {
+    const activeMenu = this._selectActiveWindow()?.menu;
+    if (!activeMenu) return;
+
+    const cleanMenuItem = (item: MenuItem): CustomMenuItem => {
+      const copy: CustomMenuItem = {};
+      for (const key in item) {
+        if (key !== 'items' && !key.startsWith('_')) {
+          copy[key] = (item as any)[key];
+        }
+      }
+      if ((item as any).submenu && Array.isArray((item as any).submenu.items)) {
+        copy.submenu = (item as any).submenu.items.map((subItem: MenuItem) => cleanMenuItem(subItem));
+      }
+      if ((item as any).submenu && Array.isArray((item as any).submenu.submenu)) {
+        copy.submenu = (item as any).submenu.submenu.map((subSubItem: MenuItem) => cleanMenuItem(subSubItem));
+      }
+      return copy;
+    };
+    const stack: CustomMenuItem[] = activeMenu.items.map((item: MenuItem) => cleanMenuItem(item));
+
+    for (const menuItem of stack) {
+      if (!menuItem.id) continue;
+      if (!menuItem.submenu?.length) continue;
+
+      for (const subMenu of menuItem.submenu) {
+        if (ids.includes(subMenu.id!)) {
+          for (const key in updates) {
+            subMenu[key] = updates[key];
+          }
+
+          if (typeof updates.enabled === 'boolean') {
+            const id = ids.find(id => id === subMenu.id);
+            if (id) {
+              const icon = icons[id as keyof typeof icons];
+              subMenu.icon = getIcon(updates.enabled ? icon.enabled : icon.disabled);
+            }
+          }
+        } else if (subMenu.id === 'MENU_NEW' && subMenu.submenu) {
+          for (const subSubMenu of subMenu.submenu) {
+            if (ids.includes(subSubMenu.id!)) {
+              for (const key in updates) {
+                subSubMenu[key] = updates[key];
+              }
+
+              if (typeof updates.enabled === 'boolean') {
+                const id = ids.find(id => id === subSubMenu.id);
+                if (id) {
+                  const icon = icons[id as keyof typeof icons];
+                  subSubMenu.icon = getIcon(updates.enabled ? icon.enabled : icon.disabled);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return stack;
+  }
+
+  /**
+   * Configures a new window (show, remove menu, set open handler).
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
+  private _configureWindow(windowInfo: WindowInfo) {
+    const win = windowInfo.window;
+
+    win.show();
+    win.removeMenu();
+    Menu.setApplicationMenu(windowInfo.menu || null);
+
+    win.webContents.setWindowOpenHandler(() => {
+      return {action: 'allow', overrideBrowserWindowOptions: {width: 1280, height: 720}};
+    });
+  }
+
+  /**
+   * Sets listeners for window events (closed, close).
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
+  private _setWindowListeners(windowInfo: WindowInfo) {
+    windowInfo.window.on('closed', () => {
+      const windowIndex = this._state.activeWindows.findIndex(({id}) => windowInfo.id === id);
+      if (windowIndex >= 0) {
+        this._state.activeWindows.splice(windowIndex, 1);
+        console.log(`Window closed: \x1b[36m${windowInfo.id}\x1b[0m`);
+      }
+    });
+
+    windowInfo.window.on('close', event => {
+      event.preventDefault();
+      this._handleClosingWindow(windowInfo);
+    });
+  }
+
+  /**
+   * Returns the icon path for the window.
+   *
+   * @returns {string} Icon path.
+   * @private
+   */
+  private _getIcon(): string {
+    const iconPathArray = ['..', 'apps', 'ame', 'src', 'assets', 'img', 'png', 'aspect-model-editor-targetsize-192.png'];
+    return path.join(__dirname, ...iconPathArray);
+  }
+
+  /**
+   * Listens for window data requests via IPC.
+   * @private
+   */
+  private _listenForWindowDataRequest() {
+    const executeFn = (event: Electron.IpcMainEvent) => {
+      console.log('RECEIVED REQUEST WINDOW DATA');
+      const windowId = event.sender.id;
+      const win = this._state.activeWindows.find(window => window.id === windowId);
+      if (!win) {
+        return;
+      }
+      const {id, options} = win;
+      event.sender.send(EVENTS.RESPONSE.WINDOW_DATA, {id, options});
+    };
+
+    ipcMain.on(EVENTS.REQUEST.WINDOW_DATA, executeFn);
+  }
+
+  /**
+   * Loads the application in the window (dev or production).
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
+  private async _loadApplication({window, id}: WindowInfo) {
+    if (inDevMode()) {
+      await window.loadURL('http://localhost:4200');
+      window.webContents.openDevTools();
+      console.log(`Window \x1b[36m${id}\x1b[0m created!`);
+    } else {
+      await window.loadFile('./dist/apps/ame/index.html');
+      console.log(`Window ${id} created!`);
+    }
+  }
+
+  /**
+   * Handles closing a window, sending file save request.
+   *
+   * @param {WindowInfo} windowInfo - Window info object.
+   * @private
+   */
+  private _handleClosingWindow(windowInfo: WindowInfo) {
+    const {window} = windowInfo;
+    window.show();
+    window.webContents.send(EVENTS.REQUEST.IS_FILE_SAVED, windowInfo.id);
+  }
+}
+
+/**
+ * Singleton instance of WindowsManager.
+ */
+export const windowsManager = new WindowsManager();

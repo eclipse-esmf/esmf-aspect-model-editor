@@ -23,6 +23,7 @@ import {ShapeSettingsStateService} from './shape-settings-state.service';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {
+  private ngZone = inject(NgZone);
   private mxGraphAttributeService = inject(MxGraphAttributeService);
   private mxGraphService = inject(MxGraphService);
   private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
@@ -30,19 +31,21 @@ export class ShapeSettingsService {
   private editorService = inject(EditorService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private openReferencedElementService = inject(OpenReferencedElementService);
-  public loadedFiles = inject(LoadedFilesService);
-  private ngZone = inject(NgZone);
-
-  public modelElement: NamedElement = null;
+  private loadedFiles = inject(LoadedFilesService);
 
   private selectedCellsSubject = new BehaviorSubject([]);
+
+  public modelElement: NamedElement = null;
+  public hasCellsSubject = new BehaviorSubject(false);
   public selectedCells$ = this.selectedCellsSubject.asObservable();
+  public hasCellsSubject$ = this.hasCellsSubject.asObservable();
 
   setGraphListeners() {
+    this.setCellAddedListener();
+    this.setSelectCellListener();
     this.setMoveCellsListener();
     this.setFoldListener();
     this.setDblClickListener();
-    this.setSelectCellListener();
   }
 
   setContextMenuActions() {
@@ -60,6 +63,16 @@ export class ShapeSettingsService {
       if (evt.altKey) {
         evt.preventDefault();
       }
+    });
+  }
+
+  setCellAddedListener(): void {
+    const graph = this.mxGraphAttributeService.graph;
+    graph.addListener(mxEvent.CELLS_ADDED, () => {
+      const graph = this.mxGraphAttributeService.graph;
+      const hasAnyChildren = graph.getModel().getChildCount(graph.getDefaultParent()) > 0;
+
+      this.ngZone.run(() => this.hasCellsSubject.next(hasAnyChildren));
     });
   }
 

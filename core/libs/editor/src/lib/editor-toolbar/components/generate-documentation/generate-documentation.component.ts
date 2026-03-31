@@ -20,11 +20,11 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {TranslatePipe} from '@ngx-translate/core';
 import {saveAs} from 'file-saver';
 import * as locale from 'locale-codes';
-import {Observable, map, throwError} from 'rxjs';
+import {Observable, from, map, throwError} from 'rxjs';
 import {catchError, finalize, first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
-import {BrowserService} from '@ame/shared';
+import {BrowserService, IPC_RENDERER} from '@ame/shared';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
@@ -52,6 +52,7 @@ import {MatSelectModule} from '@angular/material/select';
   ],
 })
 export class GenerateDocumentationComponent {
+  private ipcRenderer = inject(IPC_RENDERER);
   private destroyRef = inject(DestroyRef);
   private dialogRef = inject(MatDialogRef<GenerateDocumentationComponent>);
   private languageService = inject(SammLanguageSettingsService);
@@ -125,45 +126,20 @@ export class GenerateDocumentationComponent {
       .pipe(
         map((documentation: string) => {
           if (!this.browserService.isStartedAsElectronApp()) {
-            const tabRef = window.open('about:blank', '_blank');
-            tabRef.document.write(documentation);
-            tabRef.focus();
-            tabRef.document.close();
             return;
           }
 
-          const fs = window.require('fs');
-          const os = window.require('os');
-          const path = window.require('path');
-          const ameTmpDir = path.join(os.homedir(), '.ametmp');
-          const printFilePath = path.normalize(path.join(ameTmpDir, 'print.html'));
-          const BrowserWindow = window.require('@electron/remote').BrowserWindow;
-          const electronBrowserWindow = new BrowserWindow({
-            width: 1920,
-            height: 1080,
-          });
-
-          if (!fs.existsSync(ameTmpDir)) {
-            fs.mkdirSync(ameTmpDir);
-          }
-
-          fs.writeFile(printFilePath, documentation, err => {
-            if (err) {
-              console.error('Write error:  ' + err.message);
-            } else {
-              electronBrowserWindow.loadFile(printFilePath);
-              electronBrowserWindow.reload();
-              electronBrowserWindow.focus();
-            }
-          });
+          from(
+            this.ipcRenderer
+              .writePrintFile(documentation)
+              .then((printFilePath: string) => this.ipcRenderer.openPrintWindow(printFilePath))
+              .catch((err: any) => console.error('Print error:', err)),
+          );
         }),
         catchError(response => {
           if (response instanceof HttpErrorResponse) {
             if (response.status === 422) {
               return throwError(() => JSON.parse(response.error).error.message.split(': ')[1]);
-            } else if (response.status === 400) {
-              // TODO This should be removed as soon as the SDK has fixed the graphviz error.
-              return throwError(() => JSON.parse(response.error).error.message);
             }
           }
           return throwError(() => 'Server error');

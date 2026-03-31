@@ -1,0 +1,15 @@
+{
+  "name": "electron",
+  "root": "electron",
+  "sourceRoot": "electron",
+  "projectType": "application",
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "electron/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}

@@ -13,22 +13,28 @@
 
 import {StartupService} from '@ame/app/startup.service';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {MxGraphHelper, ThemeService} from '@ame/mx-graph';
+import {MxGraphAttributeService, MxGraphHelper, ThemeService} from '@ame/mx-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, ElectronTunnelService, TitleService} from '@ame/shared';
+import {BrowserService, ElectronTunnelService, IPC_RENDERER, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
-import {Component, HostListener, inject, Injector, OnInit} from '@angular/core';
+import {Component, inject, Injector, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {take} from 'rxjs';
 
 @Component({
   selector: 'ame-root',
+  host: {
+    '(window:keydown.control.f)': 'openSearchElements()',
+    '(window:keydown.control.p)': 'openFilesElements()',
+    '(window:keydown.escape)': 'closeSearchModals()',
+  },
   templateUrl: './app.component.html',
   standalone: true,
   imports: [RouterOutlet],
 })
 export class AppComponent implements OnInit {
+  private ipcRenderer = inject(IPC_RENDERER);
   private titleService = inject(TitleService);
   private domainModelToRdf = inject(DomainModelToRdfService);
   private browserService = inject(BrowserService);
@@ -37,11 +43,16 @@ export class AppComponent implements OnInit {
   private themeService = inject(ThemeService);
   private translate = inject(LanguageTranslationService);
   private searchesStateService = inject(SearchesStateService);
+  private mxGraphAttributeService = inject(MxGraphAttributeService);
   private startupService = inject(StartupService);
   private injector = inject(Injector);
 
   private language = 'en';
   public title = 'Aspect Model Editor';
+
+  get currentLanguage(): string {
+    return this.translate.translateService.getCurrentLang();
+  }
 
   constructor() {
     this.domainModelToRdf.listenForStoreUpdates();
@@ -55,8 +66,8 @@ export class AppComponent implements OnInit {
     this.electronTunnelService.subscribeMessages();
     this.titleService.setTitle(this.title);
 
-    if (this.browserService.isStartedAsElectronApp() || !window.require) {
-      this.setMenuTranslation();
+    if (this.browserService.isStartedAsElectronApp()) {
+      this.electronTunnelService.sendTranslationsToElectron(this.currentLanguage);
       this.setContextMenu();
     }
 
@@ -69,17 +80,17 @@ export class AppComponent implements OnInit {
     this.startupService.listenForLoading().pipe(take(1)).subscribe();
   }
 
-  @HostListener('window:keydown.control.f')
   openSearchElements(): void {
-    this.searchesStateService.elementsSearch.toggle();
+    const graph = this.mxGraphAttributeService.graph;
+    const hasAnyChildren = graph.getModel().getChildCount(graph.getDefaultParent()) > 0;
+
+    if (hasAnyChildren) this.searchesStateService.elementsSearch.toggle();
   }
 
-  @HostListener('window:keydown.control.p')
   openFilesElements(): void {
     this.searchesStateService.filesSearch.toggle();
   }
 
-  @HostListener('window:keydown.esc')
   closeSearchModals(): void {
     this.searchesStateService.filesSearch.close();
     this.searchesStateService.elementsSearch.close();
@@ -101,48 +112,16 @@ export class AppComponent implements OnInit {
   }
 
   setContextMenu(): void {
-    if (!window.require) return;
-    const {Menu} = window.require('@electron/remote');
-    const {shell} = window.require('electron');
-
     window.addEventListener('contextmenu', e => {
       e.preventDefault();
+
       const target = e.target as HTMLAnchorElement;
-      if (this.isGraphElement(target)) {
-        return;
-      }
 
-      const template: any = [
-        ...(target.tagName.toLowerCase() === 'a'
-          ? [
-              {
-                label: target.href.startsWith('mailto:') ? 'Send email' : 'Open in browser',
-                click: () => {
-                  shell.openExternal((e.target as HTMLAnchorElement).href);
-                },
-              },
-            ]
-          : []),
-        ...(target.tagName.toLowerCase() === 'a'
-          ? [
-              {
-                label: 'Copy link address',
-                click: () => {
-                  navigator.clipboard.writeText(target.href);
-                },
-              },
-            ]
-          : []),
-      ];
+      if (this.isGraphElement(target)) return;
 
-      if (template?.length) {
-        const menu = Menu.buildFromTemplate(template);
-        menu.popup();
-      }
+      this.ipcRenderer.showContextMenu({
+        href: target?.href ?? null,
+      });
     });
-  }
-
-  setMenuTranslation(): void {
-    this.electronTunnelService.sendTranslationsToElectron(this.translate.translateService.getCurrentLang());
   }
 }

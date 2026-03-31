@@ -29,10 +29,12 @@ export class ModelValidatorService {
    * Informs user about the errors that are correctable.
    * In this category are included syntactic,processing and semantic errors.
    */
-  notifyCorrectableErrors(violationErrors: Array<ViolationError>) {
+  notifyCorrectableErrors(violationErrors: Array<ViolationError>, validInfo = false) {
     if (!violationErrors.length) {
-      this.notificationsService.info({title: 'Validation completed successfully', message: 'The model is valid'});
-      console.info('Validated completed successfully');
+      if (validInfo) {
+        this.notificationsService.info({title: 'Validation completed successfully', message: 'The model is valid'});
+        console.info('Validated completed successfully');
+      }
       return;
     }
 
