@@ -10,6 +10,7 @@ on:
 env:
   RELEASE_VERSION: ${{ github.event.inputs.release_version }}
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ELECTRON_BUILDER_PUBLISH: never
 
 permissions: {}
 
