@@ -89,7 +89,6 @@ pipeline {
               echo "NPM version:"
               npm --version
               npm install isbinaryfile@5
-              cd core
               chmod +x .scripts/mac-os/sign.sh
               chmod +x .scripts/mac-os/notarize.sh
               node .scripts/mac-os/after-pack.js
