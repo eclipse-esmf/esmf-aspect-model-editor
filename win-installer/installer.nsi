@@ -113,7 +113,7 @@ Function DirectoryLeave
 FunctionEnd
 
 Function install_AME
-    File /r "..\core\electron\win-unpacked\*"
+    File /r "..\core\.electron\win-unpacked\*"
 
     CreateDirectory "$SMPROGRAMS\ESMF"
 
