@@ -10,6 +10,7 @@
     "strict": true,
     "noEmitOnError": true
   },
-  "include": ["electron/main.ts", "electron/**/*.ts"],
+  "include": [
+    "main.ts", "electron/**/*.ts"],
   "exclude": ["node_modules", "tmp", "electron/**/*.spec.ts", "electron/__mocks__", "electron/jest.config.ts"]
 }

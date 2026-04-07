@@ -29,34 +29,34 @@ jest.mock('electron', () => ({
   }),
 }));
 
-jest.mock('./core', () => ({
+jest.mock('./electron/core', () => ({
   cleanUpProcesses: jest.fn(),
   startService: (jest.fn() as unknown as jest.MockedFunction<(...args: any[]) => any>).mockResolvedValue(undefined),
 }));
 
-jest.mock('./platform/platform', () => ({
+jest.mock('./electron/platform/platform', () => ({
   isWin: false,
 }));
 
-jest.mock('./shortcuts/index', () => ({
+jest.mock('./electron/shortcuts', () => ({
   registerGlobalShortcuts: jest.fn(),
   unregisterGlobalShortcuts: jest.fn(),
 }));
 
-jest.mock('./utils/mode', () => ({
+jest.mock('./electron/utils/mode', () => ({
   inProdMode: jest.fn().mockReturnValue(false),
 }));
 
-jest.mock('./windows-manager', () => ({
+jest.mock('./electron/windows-manager', () => ({
   windowsManager: {
     createNewWindow: jest.fn(),
     activateCommunicationProtocol: jest.fn(),
   },
 }));
 
-import {cleanUpProcesses, startService} from './core';
-import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './shortcuts/index';
-import {windowsManager} from './windows-manager';
+import {cleanUpProcesses, startService} from './electron/core';
+import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './electron/shortcuts';
+import {windowsManager} from './electron/windows-manager';
 
 const mockedStartService = startService as unknown as jest.MockedFunction<(...args: any[]) => any>;
 const mockedCleanUpProcesses = cleanUpProcesses as unknown as jest.MockedFunction<(...args: any[]) => any>;

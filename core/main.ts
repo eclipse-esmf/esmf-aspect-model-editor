@@ -12,11 +12,11 @@
  */
 
 import {app, BrowserWindow} from 'electron';
-import {cleanUpProcesses, startService} from './core';
-import {isWin} from './platform/platform';
-import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './shortcuts/index';
-import {inProdMode} from './utils/mode';
-import {windowsManager} from './windows-manager';
+import {cleanUpProcesses, startService} from './electron/core';
+import {isWin} from './electron/platform/platform';
+import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './electron/shortcuts';
+import {inProdMode} from './electron/utils/mode';
+import {windowsManager} from './electron/windows-manager';
 
 /**
  * Disables console logging in production mode.

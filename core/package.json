@@ -4,7 +4,7 @@
   "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
   "version": "",
-  "main": "dist/electron/main.js",
+  "main": "main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor.git"
@@ -16,7 +16,30 @@
       "target": "zip",
       "icon": "./apps/ame/src/assets/img/png/aspect-model-editor-targetsize-256.png",
       "files": [
-        "dist"
+        {
+          "from": "dist/electron",
+          "to": "electron",
+          "filter": [
+            "**/*",
+            "!main/**"
+          ]
+        },
+        {
+          "from": "dist",
+          "to": "dist",
+          "filter": [
+            "**/*",
+            "!electron/**"
+          ]
+        },
+        {
+          "from": "dist",
+          "to": ".",
+          "filter": [
+            "main.js",
+            "package.json"
+          ]
+        }
       ],
       "extraFiles": [
         {
@@ -41,7 +64,7 @@
           ]
         },
         {
-          "from": "./electron/loading-screen/",
+          "from": "./dist/electron/loading-screen/",
           "to": "loading-screen/",
           "filter": [
             "**/*"
@@ -53,7 +76,30 @@
       "target": "zip",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
-        "dist"
+        {
+          "from": "dist/electron",
+          "to": "electron",
+          "filter": [
+            "**/*",
+            "!main/**"
+          ]
+        },
+        {
+          "from": "dist",
+          "to": "dist",
+          "filter": [
+            "**/*",
+            "!electron/**"
+          ]
+        },
+        {
+          "from": "dist",
+          "to": ".",
+          "filter": [
+            "main.js",
+            "package.json"
+          ]
+        }
       ],
       "extraFiles": [
         {
@@ -78,7 +124,7 @@
           ]
         },
         {
-          "from": "./electron/loading-screen/",
+          "from": "./dist/electron/loading-screen/",
           "to": "loading-screen/",
           "filter": [
             "**/*"
@@ -90,7 +136,30 @@
       "target": "tar.gz",
       "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
       "files": [
-        "dist"
+        {
+          "from": "dist/electron",
+          "to": "electron",
+          "filter": [
+            "**/*",
+            "!main/**"
+          ]
+        },
+        {
+          "from": "dist",
+          "to": "dist",
+          "filter": [
+            "**/*",
+            "!electron/**"
+          ]
+        },
+        {
+          "from": "dist",
+          "to": ".",
+          "filter": [
+            "main.js",
+            "package.json"
+          ]
+        }
       ],
       "extraFiles": [
         {
@@ -115,7 +184,7 @@
           ]
         },
         {
-          "from": "./electron/loading-screen/",
+          "from": "./dist/electron/loading-screen/",
           "to": "loading-screen/",
           "filter": [
             "**/*"
