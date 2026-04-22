@@ -9,7 +9,7 @@ import {LanguageTranslationService} from '@ame/translation';
 import {DestroyRef, Injectable, Injector, inject, runInInjectionContext} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
-import {Observable, Subscription, catchError, delayWhen, filter, first, map, of, retry, switchMap, tap, throwError, timer} from 'rxjs';
+import {Observable, Subscription, catchError, delayWhen, first, map, of, retry, switchMap, tap, throwError, timer} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ModelSaverService {
@@ -134,8 +134,7 @@ export class ModelSaverService {
             return inject(FileHandlingService)
               .isFileExistOnWorkspace(namespaceName, namespaceVersion, this.currentFile?.originalName)
               .pipe(
-                filter(Boolean),
-                switchMap(() => this.modelApiService.deleteAspectModel(originalAspectModelUrn)),
+                map(exists => (exists ? this.modelApiService.deleteAspectModel(originalAspectModelUrn) : of(null))),
                 switchMap(() => saveModel()),
               );
           });
