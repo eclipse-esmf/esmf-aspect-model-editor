@@ -185,7 +185,9 @@ export class MxGraphSetupService {
 
     // Necessary to display the minimap
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    new mxOutline(this.graph, document.getElementById('outline')); //NOSONAR
+    const outlineElement = document.getElementById('outline') as HTMLDivElement;
+    new mxOutline(this.graph, outlineElement);
+    outlineElement.style.maxWidth = '300px';
   }
 
   private convertValueToString(cell: mxgraph.mxCell) {

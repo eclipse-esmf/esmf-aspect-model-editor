@@ -85,7 +85,7 @@ async function _createSplashWindow(): Promise<BrowserWindow> {
 function spawnBackendProcess(port: number, splashWindow: BrowserWindow): ChildProcess {
   const rootPath = path.join(__dirname, '..', '..', '..', 'backend', isWin ? 'signed_dir' : '');
   const execPath = path.join(rootPath, `ame-backend-${projectVersion.version}-${extension}`);
-  const proc = spawn(execPath, [`-Dmicronaut.server.port=${port}`]);
+  const proc = spawn(execPath, [`-Dmicronaut.server.port=${port}`, `-DZstdTempFolder=${rootPath}`]);
 
   proc.stdout.on('data', (data: Buffer) => {
     const output = data.toString();
