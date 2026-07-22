@@ -3,7 +3,10 @@
 [[release-notes]]
 = Release notes
 
-Find the release notes for the Aspect Model Editor at the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[GitHub releases overview^, opts=nofollow].
+Find the release notes for the Aspect Model Editor at the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[GitHub releases overview^,opts=nofollow].
+
+See xref:installation.adoc#upgrade[Upgrade the Aspect Model Editor] for instructions on how to install a new release.
+Also check the xref:support/known-issues.adoc#known-issues[known issues] and xref:support/known-limitations.adoc#known-limitations[known limitations] for the version you are about to install.
 
 ++++
 <style>

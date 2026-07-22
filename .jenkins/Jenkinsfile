@@ -29,7 +29,6 @@ pipeline {
             }
 
             echo "Artifact URL Win: ${env.artifact_url_win}"
-            echo "Artifact URL Mac: ${env.artifact_url_mac}"
             echo "Version: ${env.version}"
           } else {
             echo "Error: parameters.txt does not exist."
@@ -64,50 +63,12 @@ pipeline {
       }
     }
 
-    stage('Download Mac artifact') {
+    stage('Release signed Windows artifact to GitHub Releases') {
       steps {
         script {
-          sh "mkdir -p unpack_mac_dir"
-          def macOsFile = "aspect-model-editor-v${env.version}-mac.zip"
-          sh "curl -L -H 'Accept: application/vnd.github.v3+json' \
-                        -H 'Authorization: Bearer ${GITHUB_BOT_TOKEN}' \
-                        '${env.artifact_url_mac}' \
-                        --output 'unpack_mac_dir/${macOsFile}'"
-          sh "unzip -o unpack_mac_dir/${macOsFile} -d unpack_mac_dir"
-          sh "unzip -o unpack_mac_dir/${macOsFile} -d unpack_mac_dir"
-          sh "rm 'unpack_mac_dir/${macOsFile}'"
-          sh "ls -a unpack_mac_dir"
-        }
-      }
-    }
-
-    stage('Sign Electron Application on Mac') {
-      steps {
-        script {
-          nodejs(nodeJSInstallationName: 'node_20.x') {
-            sh '''
-              echo "NPM version:"
-              npm --version
-              npm install isbinaryfile@5
-              chmod +x .scripts/mac-os/sign.sh
-              chmod +x .scripts/mac-os/notarize.sh
-              node .scripts/mac-os/after-pack.js
-            '''
-          }
-        }
-      }
-    }
-
-    stage('Release signed Windows and Mac artifact to GitHub Releases') {
-      steps {
-        script {
-          def macOsFile = "aspect-model-editor-v${env.version}-mac.zip"
-          sh "mv unpack_mac_dir/notarized.zip ./${macOsFile}"
-
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
           def fileNameWin = "aspect-model-editor-v${env.version}-win.zip"
-          def fileNameMac = "aspect-model-editor-v${env.version}-mac.zip"
           def releaseId = ""
 
           def tagExists = sh(script: """
@@ -145,16 +106,6 @@ pipeline {
                          -H "Content-Type: application/octet-stream" \
                          --data-binary @${fileNameWin} \
                          "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileNameWin}"
-                    """
-
-          sh """
-                    curl -L \
-                         -X POST \
-                         -H "Accept: application/vnd.github+json" \\
-                         -H "Authorization: Bearer \$GITHUB_BOT_TOKEN" \
-                         -H "Content-Type: application/octet-stream" \
-                         --data-binary @${fileNameMac} \
-                         "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileNameMac}"
                     """
 
           sh """

@@ -10,8 +10,7 @@ See also xref:support/known-issues.adoc#known-issues[Known issues].
 [[current-known-limitations]]
 == Current limitations related to the SAMM Aspect Meta Model
 
-This sections lists features that are supported in Aspect Models by the SAMM Aspect Meta Model but not fully or only partially available within the Aspect Model Editor.
-
+This section lists features that are supported in Aspect Models by the SAMM Aspect Meta Model but not fully or only partially available within the Aspect Model Editor.
 
 [cols="15%,30%,55%"]
 |===
@@ -29,7 +28,7 @@ This sections lists features that are supported in Aspect Models by the SAMM Asp
 [[current-known-limitations-ux]]
 == Current limitations related to usability
 
-This sections lists features that can be achieved within the Aspect Model Editor, but with a substantial limitation in the usability.
+This section lists features that can be achieved within the Aspect Model Editor, but with a substantial limitation in the usability.
 
 [cols="15%,30%,55%"]
 |===
@@ -43,6 +42,30 @@ This sections lists features that can be achieved within the Aspect Model Editor
 | Aspect Repository and Entity Repository
 | This version of the Aspect Model Editor supports only file-based operations. Users also want to share Aspects and Entities for reuse.
 |===
+
+[[current-known-limitations-macos]]
+== Current limitations on macOS
+
+This section lists limitations that are specific to running the Aspect Model Editor on macOS.
+
+[[macos-notarization]]
+=== No notarization or code signing
+
+The Electron application is currently not notarized or signed with an Apple Developer certificate. As a result, macOS Gatekeeper blocks the app from starting and marks it as quarantined after downloading.
+
+To run the application, use one of the following workarounds:
+
+* Remove the quarantine attribute via Terminal:
++
+[source,bash]
+----
+xattr -r -d com.apple.quarantine /path/to/Aspect-Model-Editor.app
+----
+
+* Allow the app manually via *System Settings* -> *Privacy & Security*: after the first blocked launch attempt, scroll down to the security section and click *Open Anyway*.
+
+For installation steps on macOS, see xref:installation.adoc#install-mac[Install the Aspect Model Editor on Mac].
+If you encounter a JavaScript error on startup instead, see xref:support/known-issues.adoc#javascript-mac-ame3.0.0[macOS: JavaScript error occurred in the main process].
 
 ++++
 <style>

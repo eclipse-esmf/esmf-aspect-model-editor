@@ -3,10 +3,13 @@
 [[system-requirements]]
 = System requirements
 
+Make sure your system meets the requirements below before you xref:installation.adoc[install the Aspect Model Editor].
+
 == Screen resolution
 
 For a comfortable working experience, we recommend a screen resolution of 1920 x 1080 pixel. The Aspect Model Editor is not designed for mobile devices.
 
+[[system-requirements-windows]]
 == Windows
 
 To use the Aspect Model Editor on Windows, you need:
@@ -18,13 +21,20 @@ To use the Aspect Model Editor on Windows, you need:
 
 NOTE: Servers require Windows Server 2008 R2, Windows Server 2012, Windows Server 2012 R2, or Windows Server 2016.
 
+See xref:installation.adoc#install-windows[Install the Aspect Model Editor on Windows] to get started.
 
+[[system-requirements-mac]]
 == Mac
 
 To use the Aspect Model Editor on Mac, you need:
 
 * OS X El Capitan 10.11 or later
 
+NOTE: The Aspect Model Editor is currently not notarized or signed with an Apple Developer certificate, see xref:support/known-limitations.adoc#current-known-limitations-macos[Current limitations on macOS].
+
+See xref:installation.adoc#install-mac[Install the Aspect Model Editor on Mac] to get started.
+
+[[system-requirements-linux]]
 == Linux
 
 To use the Aspect Model Editor on Linux, you need:
@@ -32,4 +42,4 @@ To use the Aspect Model Editor on Linux, you need:
 * 64-bit Ubuntu 20.04+, Debian 10+, openSUSE 15.2+, or Fedora Linux 32+
 * An Intel Pentium 4 processor or faster that is SSE3-capable
 
-
+See xref:installation.adoc#install-linux[Install the Aspect Model Editor on Linux] to get started.

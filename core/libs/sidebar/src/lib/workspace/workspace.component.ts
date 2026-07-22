@@ -19,7 +19,7 @@ import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslatePipe} from '@ngx-translate/core';
-import {finalize, map} from 'rxjs';
+import {EMPTY, Subject, catchError, debounceTime, finalize, map, switchMap, tap} from 'rxjs';
 import {WorkspaceEmptyComponent} from './workspace-empty/workspace-empty.component';
 import {WorkspaceErrorComponent} from './workspace-error/workspace-error.component';
 import {WorkspaceFileElementsComponent} from './workspace-file-elements/workspace-file-elements.component';
@@ -55,32 +55,43 @@ export class WorkspaceComponent {
     return this.namespaces.namespacesKeys();
   }
 
+  // Coalesces refresh signals that can occur multiple times in quick succession for the same
+  // logical change (e.g. saving a model triggers a local refresh as well as an IPC-broadcasted
+  // one), so `detectWorkspaceErrors()` is only executed once per burst instead of repeatedly.
+  private readonly refresh$ = new Subject<void>();
+
   constructor() {
     effect(() => {
       this.sidebarService.workspace.refreshTick();
-
-      this.error = null;
-      this.loading = true;
-      this.changeDetector.detectChanges();
-
-      this.modelChecker
-        .detectWorkspaceErrors()
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          map(files => this.sidebarService.updateWorkspace(files)),
-          finalize(() => {
-            this.loading = false;
-            this.changeDetector.detectChanges();
-          }),
-        )
-        .subscribe({
-          error: err => {
-            if (err?.error?.error) {
-              this.error = err.error.error;
-            }
-          },
-        });
+      this.refresh$.next();
     });
+
+    this.refresh$
+      .pipe(
+        debounceTime(50),
+        tap(() => {
+          this.error = null;
+          this.loading = true;
+          this.changeDetector.detectChanges();
+        }),
+        switchMap(() =>
+          this.modelChecker.detectWorkspaceErrors().pipe(
+            map(files => this.sidebarService.updateWorkspace(files)),
+            catchError(err => {
+              if (err?.error?.error) {
+                this.error = err.error.error;
+              }
+              return EMPTY;
+            }),
+            finalize(() => {
+              this.loading = false;
+              this.changeDetector.detectChanges();
+            }),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
   }
 
   refreshWorkspace() {

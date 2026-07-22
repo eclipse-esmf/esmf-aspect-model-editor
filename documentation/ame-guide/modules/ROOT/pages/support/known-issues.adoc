@@ -189,7 +189,6 @@ h| Explanation
 a|
 Elements may in some cases be moved on top of each other or far away. This can for example happen when there are elements in the Aspect Model that are not connected to the Aspect (directly or via other elements)
 
-
 h| Workaround
 a|
 * It is the preferred working style to keep all elements connected to the Aspect (i.e. avoiding the use of "isolated elements")
@@ -207,18 +206,17 @@ h| Error
 a| After importing elements from workspace the element subtree overlaps the present model or the overlap happened from other reason
 
 h| Explanation
-a| This happens due autoformat not being enabled or/and the hierarchical layout is disabled
-
+a| This happens due to autoformat not being enabled and/or the hierarchical layout being disabled.
 
 h| Workaround
 a|
 One of the following options can be used to fix the problem:
 
-1. Right click on the imported element, select the option "Select all references" and drag the elements to a free space
-2. Manually select the desired elements and drag them to a free space
-3. Switch to hierarchical layout from settings and:
-  a. (autoformat disabled) Click format button from toolbar. All elements will be rearranged without overlapping
-  b. (autoformat enabled) When importing from workspace, the format happens automatically and the elements will not overlap. In case of overlapping click format button.
+. Right click on the imported element, select the option "Select all references" and drag the elements to a free space.
+. Manually select the desired elements and drag them to a free space.
+. Switch to hierarchical layout from settings and:
+.. (autoformat disabled) Click format button from toolbar. All elements will be rearranged without overlapping.
+.. (autoformat enabled) When importing from workspace, the format happens automatically and the elements will not overlap. In case of overlapping, click format button.
 |===
 
 [[uninstaller-not-available]]
@@ -237,7 +235,6 @@ a| Unknown root cause.
 
 h| Workaround
 a|
-
 Uninstall via context menu which will lead to add/remove programs
 
 image::uninstall-04.png[width=50%]
@@ -246,29 +243,34 @@ image::uninstall-05.png[width=100%]
 |===
 
 [[javascript-mac-ame3.0.0]]
-=== MacOS: JavaScript error occurred in the main process
+=== macOS: JavaScript error occurred in the main process
+
+NOTE: This issue is caused by the Aspect Model Editor not being notarized or signed with an Apple Developer certificate. See xref:support/known-limitations.adoc#current-known-limitations-macos[Current limitations on macOS] for background information.
 
 [%noheader,cols="15%,85%"]
 |===
 h| Error
 a|
-Error message when starting the Aspect Model Editor on MacOS.
+Error message when starting the Aspect Model Editor on macOS.
 
 h| Explanation
 a|
-If your MacOS version is running Apple's new security feature, it could happen that the application is started in a kind of sandbox. You can easily detect this by reading the following in the JavaScript error message: `Uncaught Exception: Error: spawn /private/var...` (see image below).
+If your macOS version is running Apple's Gatekeeper security feature, it could happen that the application is started in a kind of sandbox. You can easily detect this by reading the following in the JavaScript error message: `Uncaught Exception: Error: spawn /private/var...` (see image below).
 
 image::error-mac-javascript-main-process.png[width=50%]
 
 h| Workaround
 a|
-The keyword here is `/private/var`, which means that your application is in a kind of quarantine and can only be unlocked by you. For this you must open your terminal and execute the following command:
+The keyword here is `/private/var`, which means that your application is quarantined and can only be unlocked by you. For this you must open Terminal and execute the following command:
 
-`xattr -r -d com.apple.quarantine /Applications/AspectModelEditor/Aspect-Model-Editor.app`
+[source,bash]
+----
+xattr -r -d com.apple.quarantine /Applications/AspectModelEditor/Aspect-Model-Editor.app
+----
 
 Please note that the path to the application can change and this is only the default path.
 
-Please keep in mind that this is not an official Apple version, and it must be confirmed in the security settings first. You may be asked several times before the app opens.
+Please keep in mind that this is not an official Apple-signed version, and it must be confirmed in the security settings first. You may be asked several times before the app opens.
 
 If your security settings are enabled to launch unverified applications, the following error messages may pop up. These must be pre-approved in the security settings of your system.
 
@@ -277,9 +279,8 @@ image::error-mac-javascript-main-process-approval.png[width=70%]
 The following should be considered when approving:
 
 * Error messages must not be closed.
-* Go to System Preferences and click on Security & Privacy.
-* Open the General tab and click on the small padlock at the left bottom corner to make changes.
-* Enter your admin password.
+* Go to *System Settings* and click on *Privacy & Security*.
+* Scroll down to the security section and click *Open Anyway*, entering your admin password if prompted.
 * Close messages and restart the Aspect Model Editor.
 |===
 
