@@ -44,6 +44,31 @@ This sections lists features that can be achieved within the Aspect Model Editor
 | This version of the Aspect Model Editor supports only file-based operations. Users also want to share Aspects and Entities for reuse.
 |===
 
+[[current-known-limitations-macos]]
+== Current limitations on macOS
+
+This section lists limitations that are specific to running the Aspect Model Editor on macOS.
+
+[cols="15%,30%,55%"]
+|===
+| Category | Title | Explanation
+
+| macOS
+| No notarization/certification
+| The Electron application is currently not notarized or signed with an Apple Developer certificate. As a result, macOS Gatekeeper blocks the app from starting and marks it as quarantined after downloading.
+
+To run the application, users need to either:
+
+* Remove the quarantine attribute via Terminal:
++
+[source,bash]
+----
+xattr -d com.apple.quarantine /path/to/Aspect-Model-Editor.app
+----
+
+* Or allow the app manually via *System Settings* -> *Privacy & Security*, by scrolling down to the security section after the first blocked launch attempt and clicking *Open Anyway*.
+|===
+
 ++++
 <style>
   .imageblock {flex-direction: row !important;}

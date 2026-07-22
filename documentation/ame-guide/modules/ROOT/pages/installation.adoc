@@ -125,6 +125,8 @@ In case you have already an older version, uninstall it first and then install t
 
 In case you are prompted, agree that the sources come from a trustful source.
 
+NOTE: The Aspect Model Editor is currently not notarized or signed with an Apple Developer certificate. macOS Gatekeeper may therefore block the app from starting. For details and workarounds, see xref:support/known-limitations.adoc#current-known-limitations-macos[Current limitations on macOS].
+
 By default, the Workspace is created at
 _/Users/<YOUR-USER-NAME>/aspect-model-editor_ .
 
