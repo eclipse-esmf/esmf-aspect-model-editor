@@ -4,6 +4,7 @@
 = Support
 
 For troubleshooting, have a look at the xref:support/known-issues.adoc#known-issues[known issues] and the xref:support/known-limitations.adoc#known-limitations[known limitations] of the Aspect Model Editor.
+Also make sure your system meets the xref:system-requirements.adoc[system requirements].
 
 As the Aspect Model Editor relies on the SAMM specification, also check out the https://eclipse-esmf.github.io/samm-specification/2.2.0/index.html[SAMM Aspect Meta Model version 2.2.0^,opts=nofollow].
 
@@ -27,6 +28,7 @@ This feature enables you to inspect logs, errors, and other crucial debugging in
 
 * For Windows users: Press Ctrl+Shift+I on your keyboard to open the developer tools.
 * For Mac users: Press Command+Option+I on your keyboard to open the developer tools.
+* For Linux users: Press Ctrl+Shift+I on your keyboard to open the developer tools.
 
 *Navigating the developer tools*
 

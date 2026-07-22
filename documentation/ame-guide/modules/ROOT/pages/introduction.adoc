@@ -57,6 +57,10 @@ An Aspect Model describes, for example, the physical unit or the possible value 
 Each Aspect references a particular Aspect Model, which, in a machine-readable way, describes how that Aspect is structured &ndash; based on the SAMM Aspect Meta Model specification.
 For more information on Aspects and Aspect Models, refer to https://eclipse-esmf.github.io/samm-specification/2.2.0/index.html[SAMM Aspect Meta Model version 2.2.0^,opts=nofollow].
 
+== Next steps
+
+Ready to get started? Check the xref:system-requirements.adoc[system requirements] and then xref:installation.adoc[install the Aspect Model Editor].
+
 == License
 
 SPDX-License-Identifier: MPL-2.0

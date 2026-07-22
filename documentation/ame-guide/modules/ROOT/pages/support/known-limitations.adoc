@@ -59,12 +59,13 @@ To run the application, use one of the following workarounds:
 +
 [source,bash]
 ----
-xattr -d com.apple.quarantine /path/to/Aspect-Model-Editor.app
+xattr -r -d com.apple.quarantine /path/to/Aspect-Model-Editor.app
 ----
 
 * Allow the app manually via *System Settings* -> *Privacy & Security*: after the first blocked launch attempt, scroll down to the security section and click *Open Anyway*.
 
 For installation steps on macOS, see xref:installation.adoc#install-mac[Install the Aspect Model Editor on Mac].
+If you encounter a JavaScript error on startup instead, see xref:support/known-issues.adoc#javascript-mac-ame3.0.0[macOS: JavaScript error occurred in the main process].
 
 ++++
 <style>

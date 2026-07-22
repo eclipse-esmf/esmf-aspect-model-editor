@@ -8,6 +8,7 @@
 
 Before you install the latest version of the Aspect Model Editor, make sure you have covered the following:
 
+* Check that your system meets the xref:system-requirements.adoc[system requirements].
 * Login with administrator permissions to install or uninstall the Aspect Model Editor.
 * If you have previously installed the Aspect Model Editor, see xref:installation.adoc#upgrade[Upgrade].
 * Download the installation file for your system from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor release page^,opts=nofollow].
@@ -163,6 +164,8 @@ Your workspace folder at _/Users/<YOUR-USER-NAME>/aspect-model-editor_ is not re
 
 [[upgrade]]
 == Upgrade the Aspect Model Editor
+
+See the xref:release-notes.adoc[release notes] to find out what changed in the version you want to upgrade to.
 
 To upgrade the Aspect Model Editor to the latest version, proceed as follows:
 
