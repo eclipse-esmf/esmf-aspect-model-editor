@@ -293,7 +293,7 @@
   },
   "devDependencies": {
     "@angular-devkit/architect": "^0.2003.3",
-    "@angular-devkit/build-angular": "20.2.2",
+    "@angular-devkit/build-angular": "20.3.22",
     "@angular-devkit/core": "20.2.2",
     "@angular-devkit/schematics": "20.2.2",
     "@angular-eslint/builder": "20.3.0",
@@ -309,7 +309,7 @@
     "@babel/preset-typescript": "^7.17.12",
     "@compodoc/compodoc": "^1.1.25",
     "@cypress/webpack-preprocessor": "^6.0.0",
-    "@nx/angular": "22.1.0",
+    "@nx/angular": "22.6.3",
     "@nx/cypress": "21.5.3",
     "@nx/eslint": "21.5.3",
     "@nx/eslint-plugin": "21.5.3",
