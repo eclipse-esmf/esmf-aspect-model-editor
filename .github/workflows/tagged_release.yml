@@ -68,7 +68,7 @@ jobs:
 
       - name: Set antora version
         if: matrix.os == 'ubuntu-latest'
-        run: yq eval -i '.version = "${RELEASE_VERSION}"' documentation/ame-guide/antora.yml
+        run: yq eval -i '.version = "${{ github.event.inputs.release_version }}"' documentation/ame-guide/antora.yml
 
       - name: Commit version changes and push to upstream repository
         if: matrix.os == 'ubuntu-latest'
