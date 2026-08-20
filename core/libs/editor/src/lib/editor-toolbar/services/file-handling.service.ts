@@ -224,7 +224,7 @@ export class FileHandlingService {
       fromWorkspace: false,
     });
 
-    return of().pipe(
+    return of(true).pipe(
       map(() => {
         this.sidebarService.sammElements.open();
 
