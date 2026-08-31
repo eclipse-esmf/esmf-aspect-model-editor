@@ -31,24 +31,29 @@ const processes: ChildProcess[] = [];
 /**
  * Cleans up all spawned backend processes by attempting to kill them.
  * Uses platform-specific commands if processed. kill fails.
- * Logs the outcome for each process.
+ * Logs the outcome for each child.
  *
  * @async
  * @returns {Promise<void>} Resolves when all processes are cleaned up.
  */
 export async function cleanUpProcesses(): Promise<void> {
-  for (const process of processes) {
-    if (!process) continue;
-    console.log(`Killing process: ${process.pid}...`);
-    if (!process.kill()) {
-      try {
-        await execPromise(isWin ? `taskkill /F /PID ${process.pid}` : `kill -9 ${process.pid}`);
-        console.log(`Killed process: ${process.pid}`);
-      } catch (error) {
-        console.error(`Failed to kill process ${process.pid}:`, error);
+  for (const child of processes) {
+    if (!child || !child.pid) continue;
+    console.log(`Killing process: ${child.pid}...`);
+
+    try {
+      if (isWin) {
+        await execPromise(`taskkill /F /T /PID ${child.pid}`);
+      } else {
+        child.kill('SIGKILL');
       }
+      console.log(`Successfully killed process: ${child.pid}`);
+    } catch (error) {
+      console.error(`Failed to kill process ${child.pid}:`, error);
     }
   }
+
+  processes.length = 0;
 }
 
 /**
