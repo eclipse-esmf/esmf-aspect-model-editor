@@ -139,11 +139,13 @@ export class WorkspaceFileElementsComponent {
     return false;
   }
 
-  public toggleFilter(checkedOrEvent: boolean | Event, key: string) {
-    if (typeof checkedOrEvent !== 'boolean' && checkedOrEvent?.stopPropagation) {
-      checkedOrEvent.stopPropagation();
-    }
-    const isChecked = typeof checkedOrEvent === 'boolean' ? checkedOrEvent : !this.elements()[key]?.displayed;
+  public toggleFilter(checkedOrEvent: any, key: string) {
+    const isChecked =
+      typeof checkedOrEvent === 'boolean'
+        ? checkedOrEvent
+        : typeof checkedOrEvent?.checked === 'boolean'
+          ? checkedOrEvent.checked
+          : !this.elements()[key]?.displayed;
     const currentElements = this.elements();
     if (currentElements[key]) {
       this.elements.set({

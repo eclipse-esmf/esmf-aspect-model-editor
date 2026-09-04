@@ -13,7 +13,7 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL} from '../../support/api-mocks';
+import {API_BASE_URL, NAMESPACES_URL, SAMM_VERSION_ACTUAL} from '../../support/api-mocks';
 import {
   SELECTOR_openFileMenu,
   SELECTOR_workspaceBtn,
@@ -34,13 +34,17 @@ describe('Test workspace file management', () => {
             version: '1.0.0',
             models: [
               {
+                name: 'AspectDefault.ttl',
                 model: 'AspectDefault.ttl',
                 aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#AspectDefault',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
               {
+                name: 'Movement.ttl',
                 model: 'Movement.ttl',
                 aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#Movement',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
             ],
@@ -49,8 +53,10 @@ describe('Test workspace file management', () => {
             version: '2.0.0',
             models: [
               {
+                name: 'Vehicle.ttl',
                 model: 'Vehicle.ttl',
                 aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:2.0.0#Vehicle',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
             ],
@@ -61,8 +67,10 @@ describe('Test workspace file management', () => {
             version: '1.0.0',
             models: [
               {
+                name: 'SharedUnits.ttl',
                 model: 'SharedUnits.ttl',
                 aspectModelUrn: 'urn:samm:org.eclipse.examples.shared:1.0.0#SharedUnits',
+                version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
             ],
@@ -70,6 +78,42 @@ describe('Test workspace file management', () => {
         ],
       },
     }).as('getNamespaces');
+
+    cy.fixture('/default-models/aspect-default.txt', 'utf-8').then(defaultTtl => {
+      cy.intercept('POST', `${API_BASE_URL}/models/batch`, {
+        statusCode: 200,
+        body: [
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#AspectDefault',
+            aspectModel: defaultTtl,
+            absoluteName: 'org.eclipse.examples.aspect:1.0.0:AspectDefault.ttl',
+            fileName: 'AspectDefault.ttl',
+            modelVersion: SAMM_VERSION_ACTUAL,
+          },
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#Movement',
+            aspectModel: defaultTtl,
+            absoluteName: 'org.eclipse.examples.aspect:1.0.0:Movement.ttl',
+            fileName: 'Movement.ttl',
+            modelVersion: SAMM_VERSION_ACTUAL,
+          },
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:2.0.0#Vehicle',
+            aspectModel: defaultTtl,
+            absoluteName: 'org.eclipse.examples.aspect:2.0.0:Vehicle.ttl',
+            fileName: 'Vehicle.ttl',
+            modelVersion: SAMM_VERSION_ACTUAL,
+          },
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.shared:1.0.0#SharedUnits',
+            aspectModel: defaultTtl,
+            absoluteName: 'org.eclipse.examples.shared:1.0.0:SharedUnits.ttl',
+            fileName: 'SharedUnits.ttl',
+            modelVersion: SAMM_VERSION_ACTUAL,
+          },
+        ],
+      }).as('batchModels');
+    });
 
     cy.startModelling();
     cy.get(SELECTOR_workspaceBtn).click({force: true});

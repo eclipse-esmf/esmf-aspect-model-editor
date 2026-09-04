@@ -15,7 +15,7 @@
   <div class="header">
     <h2>{{ t('sidebar.sammElements') }}</h2>
     @if (!isEmptyModel) {
-      <button (click)="sidebarService.sammElements.close()" mat-mini-fab>
+      <button (click)="sidebarService.sammElements.close()" mat-mini-fab data-cy="sidebar-close">
         <mat-icon>close</mat-icon>
       </button>
     }

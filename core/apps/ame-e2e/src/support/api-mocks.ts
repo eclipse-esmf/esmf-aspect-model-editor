@@ -36,6 +36,7 @@ export const NAMESPACES_URL = `${API_BASE_URL}/models/namespaces*`;
 export const VALIDATE_API_URL = `${API_BASE_URL}/models/validate`;
 export const FORMAT_API_URL = `${API_BASE_URL}/models/format`;
 export const CHECK_ELEMENT_API_URL = `${API_BASE_URL}/models/check-element*`;
+export const MODELS_BATCH_API_URL = `${API_BASE_URL}/models/batch`;
 
 /**
  * SAMM version number to be used in e2e tests.
@@ -50,6 +51,7 @@ export function setUpDefaultInterceptors(): void {
   cy.intercept('POST', FORMAT_API_URL, {}).as('formatModel');
   cy.intercept('GET', MODELS_API_URL, {statusCode: 200, body: {content: '', sourceLocation: null}}).as('getModels');
   cy.intercept('POST', MODELS_API_URL, {});
+  cy.intercept('POST', MODELS_BATCH_API_URL, {statusCode: 200, body: []}).as('batchModelsDefault');
   cy.intercept('DELETE', MODELS_API_URL, {});
   cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}}).as('getNamespaces');
 }

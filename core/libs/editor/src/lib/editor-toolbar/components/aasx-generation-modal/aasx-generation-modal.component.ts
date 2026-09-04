@@ -72,7 +72,8 @@ export class AASXGenerationModalComponent {
         tap(content => {
           const file = new Blob([content], {type: selectedFormat === 'aasx' ? 'text/aasx' : 'text/xml'});
 
-          const fileName = `${currentFile.name}${selectedFormat === 'aasx' ? '.aasx' : '-aas.xml'}`;
+          const aspectName = currentFile.name.endsWith('.ttl') ? currentFile.name.slice(0, -4) : currentFile.name;
+          const fileName = `${aspectName}${selectedFormat === 'aasx' ? '.aasx' : '-aas.xml'}`;
           saveAs(file, fileName);
         }),
         finalize(() => {

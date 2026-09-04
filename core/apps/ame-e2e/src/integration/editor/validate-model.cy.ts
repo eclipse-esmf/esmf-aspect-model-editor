@@ -25,17 +25,18 @@ describe('Test validate Aspect and Notifications', () => {
     cy.visitDefault();
     cy.startModelling();
     cy.get(SELECTOR_tbValidateButton).click({force: true});
-    cy.get(SELECTOR_notificationsBtn).then($btn => {
-      const badge = $btn.find('.mat-badge-content');
-      if (badge.length > 0) {
-        expect(badge.text().trim()).to.satisfy((t: string) => t === '' || t === '0');
-      }
+    cy.get(SELECTOR_notificationsBtn).click({force: true});
+    cy.get('.message-title').each($el => {
+      expect($el.text()).not.to.contain('Mandatory property');
+      expect($el.text()).not.to.contain('ERR_');
     });
+    cy.get(SELECTOR_notificationsDialogCloseButton).click({force: true});
   });
 
   it('shows validation notifications on invalid model and allows clearing them', () => {
     cy.visitDefault();
     cy.startModellingInvalidModel();
+    cy.get(SELECTOR_tbValidateButton).click({force: true});
     cy.get(SELECTOR_notificationsBtn)
       .click({force: true})
       .then(() => {

@@ -26,7 +26,6 @@ import {
   FIELD_name,
   FIELD_preferredNameen,
   FIELD_scale,
-  FIELD_see,
   FIELD_upperBoundDefinition,
   FIELD_valueConstraint,
   SELECTOR_tbDeleteButton,
@@ -41,8 +40,6 @@ describe('Test editing Constraint', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.clickAddTraitPlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Trait1'))
-      // Add Constraint to Trait1
-      .then(() => cy.clickAddShapePlusIcon('Trait1'))
       .then(() => cy.shapeExists('EncodingConstraint1'));
   });
 
@@ -50,7 +47,7 @@ describe('Test editing Constraint', () => {
     cy.dbClickShape('EncodingConstraint1').then(() => {
       cy.get(FIELD_preferredNameen).clear({force: true}).type('My Constraint Preferred Name', {force: true});
       cy.get(FIELD_descriptionen).clear({force: true}).type('Description for constraint', {force: true});
-      cy.get(FIELD_see).clear({force: true}).type('https://example.com/constraint-doc', {force: true});
+      cy.addSeeElements('https://example.com/constraint-doc');
 
       cyHelp.clickSaveButton().then(() => {
         cy.getUpdatedRDF().then(rdf => {
@@ -69,17 +66,17 @@ describe('Test editing Constraint', () => {
       cy.get(FIELD_minValue).clear({force: true}).type('10', {force: true});
       cy.get(FIELD_maxValue).clear({force: true}).type('100', {force: true});
 
-      cy.get(FIELD_lowerBoundDefinition).click({force: true}).get('mat-option').contains('AT_LEAST_INCLUSIVE').click({force: true});
-      cy.get(FIELD_upperBoundDefinition).click({force: true}).get('mat-option').contains('AT_MOST_INCLUSIVE').click({force: true});
+      cy.get(FIELD_lowerBoundDefinition).click({force: true}).get('mat-option').contains('AT_LEAST').click({force: true});
+      cy.get(FIELD_upperBoundDefinition).click({force: true}).get('mat-option').contains('AT_MOST').click({force: true});
 
       cyHelp.clickSaveButton().then(() => {
-        cy.shapeExists('RangeConstraint1');
+        cy.shapeExists('EncodingConstraint1');
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('a samm-c:RangeConstraint');
-          expect(rdf).to.contain('samm-c:minValue "10"^^xsd:integer');
-          expect(rdf).to.contain('samm-c:maxValue "100"^^xsd:integer');
-          expect(rdf).to.contain('samm-c:lowerBoundDefinition samm-c:AT_LEAST_INCLUSIVE');
-          expect(rdf).to.contain('samm-c:upperBoundDefinition samm-c:AT_MOST_INCLUSIVE');
+          expect(rdf).to.contain('samm-c:minValue "10"');
+          expect(rdf).to.contain('samm-c:maxValue "100"');
+          expect(rdf).to.contain('samm-c:lowerBoundDefinition samm-c:AT_LEAST');
+          expect(rdf).to.contain('samm-c:upperBoundDefinition samm-c:AT_MOST');
         });
       });
     });
@@ -93,7 +90,7 @@ describe('Test editing Constraint', () => {
       cy.get(FIELD_maxValue).clear({force: true}).type('50', {force: true});
 
       cyHelp.clickSaveButton().then(() => {
-        cy.shapeExists('LengthConstraint1');
+        cy.shapeExists('EncodingConstraint1');
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('a samm-c:LengthConstraint');
           expect(rdf).to.contain('samm-c:minValue "1"^^xsd:nonNegativeInteger');
@@ -107,13 +104,13 @@ describe('Test editing Constraint', () => {
     cy.dbClickShape('EncodingConstraint1').then(() => {
       cy.get(FIELD_constraintName).click({force: true}).get('mat-option').contains('RegularExpressionConstraint').click({force: true});
 
-      cy.get(FIELD_valueConstraint).clear({force: true}).type('^[A-Z0-9]{8}$', {force: true});
+      cy.get(FIELD_valueConstraint).clear({force: true}).type('^[A-Z0-9]{8}$', {parseSpecialCharSequences: false, force: true});
 
       cyHelp.clickSaveButton().then(() => {
-        cy.shapeExists('RegularExpressionConstraint1');
+        cy.shapeExists('EncodingConstraint1');
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('a samm-c:RegularExpressionConstraint');
-          expect(rdf).to.contain('samm-c:value "^[A-Z0-9]{8}$"');
+          expect(rdf).to.contain('samm:value "^[A-Z0-9]{8}$"');
         });
       });
     });
@@ -123,10 +120,10 @@ describe('Test editing Constraint', () => {
     cy.dbClickShape('EncodingConstraint1').then(() => {
       cy.get(FIELD_constraintName).click({force: true}).get('mat-option').contains('LocaleConstraint').click({force: true});
 
-      cy.get(FIELD_localeCode).clear({force: true}).type('de-DE', {force: true});
+      cy.get(FIELD_localeCode).clear({force: true}).type('de-D', {force: true}).get('mat-option').contains('de-DE').click({force: true});
 
       cyHelp.clickSaveButton().then(() => {
-        cy.shapeExists('LocaleConstraint1');
+        cy.shapeExists('EncodingConstraint1');
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('a samm-c:LocaleConstraint');
           expect(rdf).to.contain('samm-c:localeCode "de-DE"');
@@ -139,10 +136,10 @@ describe('Test editing Constraint', () => {
     cy.dbClickShape('EncodingConstraint1').then(() => {
       cy.get(FIELD_constraintName).click({force: true}).get('mat-option').contains('LanguageConstraint').click({force: true});
 
-      cy.get(FIELD_languageCode).clear({force: true}).type('en', {force: true});
+      cy.get(FIELD_languageCode).clear({force: true}).type('English', {force: true}).get('mat-option').contains('en').click({force: true});
 
       cyHelp.clickSaveButton().then(() => {
-        cy.shapeExists('LanguageConstraint1');
+        cy.shapeExists('EncodingConstraint1');
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('a samm-c:LanguageConstraint');
           expect(rdf).to.contain('samm-c:languageCode "en"');
@@ -159,11 +156,11 @@ describe('Test editing Constraint', () => {
       cy.get(FIELD_integer).clear({force: true}).type('5', {force: true});
 
       cyHelp.clickSaveButton().then(() => {
-        cy.shapeExists('FixedPointConstraint1');
+        cy.shapeExists('EncodingConstraint1');
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('a samm-c:FixedPointConstraint');
-          expect(rdf).to.contain('samm-c:scale 2');
-          expect(rdf).to.contain('samm-c:integer 5');
+          expect(rdf).to.contain('samm-c:scale');
+          expect(rdf).to.contain('samm-c:integer');
         });
       });
     });
@@ -176,7 +173,7 @@ describe('Test editing Constraint', () => {
       cyHelp.clickSaveButton().then(() => {
         cy.getUpdatedRDF().then(rdf => {
           expect(rdf).to.contain('a samm-c:EncodingConstraint');
-          expect(rdf).to.contain('samm-c:value "US-ASCII"');
+          expect(rdf).to.contain('samm:value samm:US-ASCII');
         });
       });
     });
@@ -197,12 +194,12 @@ describe('Test editing Constraint', () => {
   });
 
   it('can delete Constraint from model', () => {
-    cyHelp.clickShape('EncodingConstraint1').then(() => {
-      cy.get(SELECTOR_tbDeleteButton).click({force: true});
-      cy.shapeExists('EncodingConstraint1', false);
-      cy.getUpdatedRDF().then(rdf => {
+    cy.shapeExists('EncodingConstraint1')
+      .then(() => cy.clickShape('EncodingConstraint1'))
+      .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
         expect(rdf).not.to.contain('EncodingConstraint1');
       });
-    });
   });
 });

@@ -233,11 +233,12 @@ declare global {
       getUpdatedRDF(): Chainable<unknown>;
 
       /**
-       * Custom command to verify the existence and visibility of a shape within the model.
-       * @param name The name of the shape to check.
+       * Custom command to verify if a shape exists in the graph.
+       * @param name The name of the shape.
+       * @param exists Whether the shape should exist or not (defaults to true).
        * @returns {Cypress.Chainable} A chainable Cypress object.
        */
-      shapeExists(name: string): Chainable;
+      shapeExists(name: string, exists?: boolean): Chainable;
 
       /**
        * Custom command to check if two shapes are connected within the model.
@@ -461,7 +462,9 @@ Cypress.Commands.add('getUpdatedRDF', () =>
 
 Cypress.Commands.add('getByText', name => cy.contains(new RegExp('^' + name + '$', 'g')));
 
-Cypress.Commands.add('shapeExists', name => cy.getHTMLCell(name).should('exist'));
+Cypress.Commands.add('shapeExists', (name: string, exists = true) =>
+  exists ? cy.getHTMLCell(name).should('exist') : cy.get(`[data-cell-id="${name}"], [data-cell-name="${name}"]`).should('not.exist'),
+);
 
 Cypress.Commands.add('shapesConnected', (sourceShapeName: string, targetShapeName: string) =>
   cy.window().then(win => {
@@ -571,7 +574,7 @@ Cypress.Commands.add('openGenerationJsonSchema', () => {
 
 Cypress.Commands.add('openGenerationAASX', () => {
   cy.get('mat-dialog-container').should('not.exist');
-  cy.intercept('POST', /\/generate\/aasx(\?.*)?$/, req => {
+  cy.intercept('POST', /\/generate\/(aasx|aas-xml)(\?.*)?$/, req => {
     req.reply({body: '<aasx-blob-content>'});
   });
 

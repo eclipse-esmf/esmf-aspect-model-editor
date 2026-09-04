@@ -86,20 +86,21 @@
     }
 
     <mat-menu class="filter-menu" #filter="matMenu">
-      @for (key of elementsOrder; track key) {
-        @if (elements()[key]?.elements?.length) {
-          <mat-checkbox
-            class="filter-menu-item"
-            [checked]="elements()[key]?.displayed"
-            [attr.data-cy]="'filterCheckbox-' + key"
-            (click)="$event.stopPropagation()"
-            (change)="toggleFilter($event.checked, key)"
-            labelPosition="before"
-          >
-            {{ elements()[key]?.plural }}
-          </mat-checkbox>
+      <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0" role="presentation">
+        @for (key of elementsOrder; track key) {
+          @if (elements()[key]?.elements?.length) {
+            <mat-checkbox
+              class="filter-menu-item"
+              [checked]="elements()[key]?.displayed"
+              [attr.data-cy]="'filterCheckbox-' + key"
+              (change)="toggleFilter($event.checked, key)"
+              labelPosition="before"
+            >
+              {{ elements()[key]?.plural }}
+            </mat-checkbox>
+          }
         }
-      }
+      </div>
     </mat-menu>
   }
 </ng-container>

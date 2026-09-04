@@ -68,12 +68,18 @@ describe('Constraint', () => {
       });
 
       it('should create and rename Constraint', () => {
+        cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}});
         cy.startModelling()
           .then(() => cy.shapeExists('AspectDefault'))
           .then(() => cy.get(SELECTOR_elementBtn).click())
           .then(() => cy.dragElement(SELECTOR_ecConstraint, 350, 300))
           .then(() => cy.dbClickShape('EncodingConstraint1'))
-          .then(() => cy.get(field.selector).clear({force: true}).type(field.value, {force: true}));
+          .then(() => {
+            cy.get(field.selector).clear({force: true}).type(field.value, {force: true});
+            if (field.selector === FIELD_see) {
+              cy.get(`[data-cy="option__${field.value}"]`).click({force: true});
+            }
+          });
       });
 
       for (const classType of constraintClassTypes) {
@@ -82,7 +88,13 @@ describe('Constraint', () => {
             .click({force: true})
             .get(`mat-option[cy-value="${classType}"]`)
             .click({force: true})
-            .then(() => cy.get(field.selector).should('have.value', field.value));
+            .then(() => {
+              if (field.selector === FIELD_see) {
+                cy.get(`[data-cy="chip__${field.value}"] .chip-content`).should('contain.text', field.value);
+              } else {
+                cy.get(field.selector).should('have.value', field.value);
+              }
+            });
         });
       }
     });
