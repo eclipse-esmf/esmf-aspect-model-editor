@@ -33,10 +33,10 @@
         @if (form.namespaceConfiguration.aspectUri().invalid()) {
           @for (error of form.namespaceConfiguration.aspectUri().errors(); track error) {
             @if (error.kind === 'required') {
-              <mat-error>Namespace is required</mat-error>
+              <mat-error>{{ t('settingsDialog.namespaces.errors.requiredNamespace') }}</mat-error>
             }
             @if (error.kind === 'pattern') {
-              <mat-error>Not a valid namespace</mat-error>
+              <mat-error>{{ t('settingsDialog.namespaces.errors.invalidNamespace') }}</mat-error>
             }
           }
         }
@@ -54,10 +54,10 @@
         @if (form.namespaceConfiguration.aspectVersion().invalid()) {
           @for (error of form.namespaceConfiguration.aspectVersion().errors(); track error) {
             @if (error.kind === 'required') {
-              <mat-error>Version is required</mat-error>
+              <mat-error>{{ t('settingsDialog.namespaces.errors.requiredVersion') }}</mat-error>
             }
             @if (error.kind === 'pattern') {
-              <mat-error>Not a valid version</mat-error>
+              <mat-error>{{ t('settingsDialog.namespaces.errors.invalidVersion') }}</mat-error>
             }
           }
         }

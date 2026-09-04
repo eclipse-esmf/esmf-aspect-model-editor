@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,42 +12,43 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<!-- Select field -->
-<mat-form-field appearance="fill">
-  <mat-label for="deconstructionRule">Deconstruction rule name</mat-label>
-  <mat-select [value]="selectedRule() || ''" data-cy="deconstruction-rule-select">
-    <mat-option (click)="customRuleActive.set(true); setCustomRule()" value="--custom-rule--">Custom Rule</mat-option>
-    @for (predefinedRule of predefinedRules(); track predefinedRule) {
-      <mat-option [value]="predefinedRule.regex" (click)="customRuleActive.set(false); selectPredefinedRule(predefinedRule)">
-        {{ predefinedRule.name }}
-      </mat-option>
+  <!-- Select field -->
+  <mat-form-field appearance="fill">
+    <mat-label for="deconstructionRule">Deconstruction rule name</mat-label>
+    <mat-select [value]="selectedRule() || ''" data-cy="deconstruction-rule-select">
+      <mat-option (click)="customRuleActive.set(true); setCustomRule()" value="--custom-rule--">Custom Rule</mat-option>
+      @for (predefinedRule of predefinedRules(); track predefinedRule) {
+        <mat-option [value]="predefinedRule.regex" (click)="customRuleActive.set(false); selectPredefinedRule(predefinedRule)">
+          {{ predefinedRule.name }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Input field -->
+  <mat-form-field appearance="fill">
+    <mat-label>deconstructionRule *</mat-label>
+    <input class="deconstruction-rule-input" [formField]="deconstructionRuleField" data-cy="deconstruction-rule-input" matInput />
+    @if (hasRuleError('required')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.structuredValue.ruleRequired') }}</mat-error>
     }
-  </mat-select>
-</mat-form-field>
+    @if (hasRuleError('regexValidator')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.structuredValue.invalidRegex') }}</mat-error>
+    }
+  </mat-form-field>
 
-<!-- Input field -->
-<mat-form-field appearance="fill">
-  <mat-label>deconstructionRule *</mat-label>
-  <input class="deconstruction-rule-input" [formField]="deconstructionRuleField" data-cy="deconstruction-rule-input" matInput />
-  @if (hasRuleError('required')) {
-    <mat-error>Rule definition is required</mat-error>
-  }
-  @if (hasRuleError('regexValidator')) {
-    <mat-error>Please provide a valid regular expression</mat-error>
-  }
-</mat-form-field>
+  <!-- Elements Button to open the modal -->
+  <div class="elements">
+    <div class="elements-action">
+      <p>
+        <mat-icon>format_list_bulleted</mat-icon>
+        <span>Elements</span>
+      </p>
+      <button (click)="openModal()" mat-button type="button" color="primary" data-cy="elements-modal-button">Open elements table</button>
+    </div>
 
-<!-- Elements Button to open the modal -->
-<div class="elements">
-  <div class="elements-action">
-    <p>
-      <mat-icon>format_list_bulleted</mat-icon>
-      <span>Elements</span>
-    </p>
-    <button (click)="openModal()" mat-button type="button" color="primary" data-cy="elements-modal-button">Open elements table</button>
+    @if (hasGroupsError) {
+      <span class="groups-error">{{ t('editorCanvas.shapeSetting.field.structuredValue.assignProperties') }}</span>
+    }
   </div>
-
-  @if (hasGroupsError) {
-    <span class="groups-error">Please assign Properties to your elements</span>
-  }
-</div>
+</ng-container>

@@ -92,7 +92,7 @@ export class SettingsFormService {
     validate(schemaPath.automatedWorkflow.saveTimerSeconds, ({value}) => {
       const val = value();
       if (this.settingsModel().automatedWorkflow.autoSaveEnabled && (val === null || val === undefined || val < 60)) {
-        return {kind: 'min', message: 'The time must be at least 60 second'};
+        return {kind: 'min', message: 'Min. 60 seconds'};
       }
       return null;
     });
@@ -103,7 +103,7 @@ export class SettingsFormService {
     validate(schemaPath.automatedWorkflow.validationTimerSeconds, ({value}) => {
       const val = value();
       if (this.settingsModel().automatedWorkflow.autoValidationEnabled && (val === null || val === undefined || val < 60)) {
-        return {kind: 'min', message: 'The time must be at least 60 second'};
+        return {kind: 'min', message: 'Min. 60 seconds'};
       }
       return null;
     });
@@ -126,7 +126,7 @@ export class SettingsFormService {
     validate(schemaPath.copyrightHeaderConfiguration.copyright, ({value}) => {
       const text = value();
       if (text && text.split('\n').some((line: string) => line.trim() !== '' && !line.startsWith('#'))) {
-        return {kind: 'startsWithoutHash', message: 'All lines must begin with a #'};
+        return {kind: 'startsWithoutHash', message: 'All lines must start with #'};
       }
       return null;
     });

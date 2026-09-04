@@ -61,7 +61,7 @@
       }
     </mat-autocomplete>
     @if (hasError('required')) {
-      <mat-error>Please define a right characteristic</mat-error>
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.characteristic.pleaseDefineRight') }}</mat-error>
     }
 
     @if (hasError('checkShapeNameExtRef')) {

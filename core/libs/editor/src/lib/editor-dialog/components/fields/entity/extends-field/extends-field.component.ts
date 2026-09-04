@@ -22,6 +22,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultEntity, Entity, useLoader} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -50,6 +51,7 @@ export interface EntityExtendsOption {
     MatOptgroup,
     MatOption,
     MatError,
+    TranslocoDirective,
   ],
 })
 export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEntity> implements OnInit, OnDestroy {

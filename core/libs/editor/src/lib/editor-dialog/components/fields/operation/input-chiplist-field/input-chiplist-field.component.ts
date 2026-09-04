@@ -23,6 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultOperation, DefaultProperty, Property, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -47,6 +48,7 @@ import {InputFieldComponent} from '../../input-field.component';
     MatChipsModule,
     MatIconModule,
     MatInput,
+    TranslocoDirective,
   ],
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {

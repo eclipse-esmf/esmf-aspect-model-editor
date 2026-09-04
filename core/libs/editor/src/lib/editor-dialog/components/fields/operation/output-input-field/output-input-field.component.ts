@@ -25,6 +25,7 @@ import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@
 import {MatIconButton} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
   selector: 'ame-output-input-field',
@@ -42,6 +43,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatAutocomplete,
     MatOptgroup,
     MatOption,
+    TranslocoDirective,
   ],
 })
 export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {

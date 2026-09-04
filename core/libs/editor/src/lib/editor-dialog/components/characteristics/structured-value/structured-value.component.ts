@@ -21,6 +21,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {debounceTime, Subscription, take} from 'rxjs';
 import {InputFieldComponent} from '../../fields';
 import {StructuredValueVanillaGroups} from './elements-input-field/model';
@@ -33,7 +34,18 @@ const customRule = '--custom-rule--';
   selector: 'ame-structured-value',
   templateUrl: './structured-value.component.html',
   styleUrls: ['./structured-value.component.scss'],
-  imports: [MatFormFieldModule, MatLabel, MatSelect, MatOption, FormField, MatError, MatInput, MatIconModule, MatButton],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    FormField,
+    MatError,
+    MatInput,
+    MatIconModule,
+    MatButton,
+    TranslocoDirective,
+  ],
 })
 export class StructuredValueComponent extends InputFieldComponent<DefaultStructuredValue> implements OnInit, OnDestroy {
   private predefinedRulesService = inject(PredefinedRulesService);

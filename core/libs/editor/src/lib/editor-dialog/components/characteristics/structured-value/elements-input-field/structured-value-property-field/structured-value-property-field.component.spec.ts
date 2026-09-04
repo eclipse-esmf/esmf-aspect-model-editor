@@ -16,6 +16,7 @@ import {ElementCreatorService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -40,7 +41,11 @@ describe('StructuredValuePropertyFieldComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StructuredValuePropertyFieldComponent, BrowserAnimationsModule],
+      imports: [
+        StructuredValuePropertyFieldComponent,
+        BrowserAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), dummyAspect),

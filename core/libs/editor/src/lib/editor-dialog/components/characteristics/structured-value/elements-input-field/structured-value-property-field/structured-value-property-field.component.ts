@@ -23,6 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultCharacteristic, DefaultProperty, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {debounceTime, map, Observable} from 'rxjs';
 
 @Component({
@@ -42,6 +43,7 @@ import {debounceTime, map, Observable} from 'rxjs';
     MatOptgroup,
     MatOption,
     MatError,
+    TranslocoDirective,
   ],
 })
 export class StructuredValuePropertyFieldComponent implements OnInit {

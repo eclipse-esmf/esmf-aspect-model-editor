@@ -59,7 +59,7 @@
         </mat-option>
       }
       @if (hasSearchError('uri')) {
-        <mat-error class="error">Invalid URI</mat-error>
+        <mat-error class="error">{{ t('editorCanvas.shapeSetting.field.seeInput.invalidUri') }}</mat-error>
       }
     </mat-autocomplete>
   </mat-form-field>

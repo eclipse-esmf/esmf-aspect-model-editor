@@ -15,35 +15,53 @@
   <div>
     <h3>{{ t('settingsDialog.subNode.editor') }}</h3>
     <div>
-      <div class="setting-item">
-        <mat-slide-toggle
-          [formField]="form.editorConfiguration.enableHierarchicalLayout"
-          matTooltip="may be more suitable for some models, e.g. with recursion"
-        >
-          {{ t('settingsDialog.configuration.usingHierarchicalLayout') }}
-        </mat-slide-toggle>
-      </div>
+      <div class="settings-container">
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle
+                [formField]="form.editorConfiguration.enableHierarchicalLayout"
+                matTooltip="may be more suitable for some models, e.g. with recursion"
+              >
+                {{ t('settingsDialog.configuration.usingHierarchicalLayout') }}
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </div>
 
-      <div class="setting-item">
-        <mat-slide-toggle [formField]="form.editorConfiguration.showConnectionLabels">
-          {{ t('settingsDialog.configuration.displayDisambiguationLabel') }}
-          <mat-icon
-            [matTooltipShowDelay]="0"
-            [matTooltipHideDelay]="100"
-            [matTooltip]="t('settingsDialog.configuration.displayDisambiguationLabelTooltip')"
-          >
-            info
-          </mat-icon>
-        </mat-slide-toggle>
-      </div>
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.editorConfiguration.showConnectionLabels">
+                {{ t('settingsDialog.configuration.displayDisambiguationLabel') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.displayDisambiguationLabelTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
+          </div>
+        </div>
 
-      <div class="setting-item">
-        <mat-slide-toggle [formField]="form.editorConfiguration.darkMode" data-cy="darkModeToggle">
-          {{ t('settingsDialog.configuration.darkMode') }}
-          <mat-icon [matTooltipShowDelay]="0" [matTooltipHideDelay]="100" [matTooltip]="t('settingsDialog.configuration.darkModeTooltip')">
-            info
-          </mat-icon>
-        </mat-slide-toggle>
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.editorConfiguration.darkMode" data-cy="darkModeToggle">
+                {{ t('settingsDialog.configuration.darkMode') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.darkModeTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

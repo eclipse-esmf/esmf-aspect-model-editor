@@ -388,7 +388,13 @@
       "name": "名称",
       "sammVersion": "SAMM版本",
       "predefinedNamespaces": "预先定义的Namespaces",
-      "aspectNamespaceTooltip": "请注意，只有当前版本中的当前方面模型才会被移动到另一个命名空间。对其他方面模型和/或版本的引用将保留原始命名空间。"
+      "aspectNamespaceTooltip": "请注意，只有当前版本中的当前方面模型才会被移动到另一个命名空间。对其他方面模型和/或版本的引用将保留原始命名空间。",
+      "errors": {
+        "requiredNamespace": "命名空间是必填项",
+        "invalidNamespace": "无效的命名空间",
+        "requiredVersion": "版本是必填项",
+        "invalidVersion": "无效的版本"
+      }
     }
   },
   "elementModelDescription": {
@@ -453,8 +459,25 @@
           "create": "创建新的Unit",
           "fieldRequired": "必填"
         },
+        "operation": {
+          "pleaseDefineOutput": "请定义一个输出",
+          "noOutputDefined": "未定义输出"
+        },
+        "characteristic": {
+          "pleaseDefineRight": "请定义右特征"
+        },
+        "entity": {
+          "pleaseDefineAbstractEntity": "请定义抽象实体"
+        },
+        "structuredValue": {
+          "ruleRequired": "解构规则为必填项",
+          "invalidRegex": "请提供有效的正则表达式",
+          "assignProperties": "请为元素分配属性",
+          "propertyRequired": "请选择或创建属性"
+        },
         "seeInput": {
-          "typeToSearch": "输入搜索或写入 URN 或 URL"
+          "typeToSearch": "输入搜索或写入 URN 或 URL",
+          "invalidUri": "无效的 URI"
         },
         "value": {
           "pleaseDefine": "请定义一个值"

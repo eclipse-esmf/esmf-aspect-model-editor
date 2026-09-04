@@ -394,7 +394,13 @@
       "name": "Name",
       "sammVersion": "SAMM Version",
       "predefinedNamespaces": "Predefined Namespaces",
-      "aspectNamespaceTooltip": "Please note that only the current Aspect Model in its current version will be moved to another namespace. References to other Aspect Models and/or versions will keep the original namespace."
+      "aspectNamespaceTooltip": "Please note that only the current Aspect Model in its current version will be moved to another namespace. References to other Aspect Models and/or versions will keep the original namespace.",
+      "errors": {
+        "requiredNamespace": "Namespace is required",
+        "invalidNamespace": "Not a valid namespace",
+        "requiredVersion": "Version is required",
+        "invalidVersion": "Not a valid version"
+      }
     }
   },
   "elementModelDescription": {
@@ -459,8 +465,25 @@
           "create": "Create new Unit",
           "fieldRequired": "This field is required"
         },
+        "operation": {
+          "pleaseDefineOutput": "Please define an output",
+          "noOutputDefined": "No output defined"
+        },
+        "characteristic": {
+          "pleaseDefineRight": "Please define a right characteristic"
+        },
+        "entity": {
+          "pleaseDefineAbstractEntity": "Please define an Abstract Entity"
+        },
+        "structuredValue": {
+          "ruleRequired": "Rule definition is required",
+          "invalidRegex": "Please provide a valid regular expression",
+          "assignProperties": "Please assign Properties to your elements",
+          "propertyRequired": "Please choose or create a Property"
+        },
         "seeInput": {
-          "typeToSearch": "Type to search or write an URN or URL"
+          "typeToSearch": "Type to search or write an URN or URL",
+          "invalidUri": "Invalid URI"
         },
         "value": {
           "pleaseDefine": "Please define a value"

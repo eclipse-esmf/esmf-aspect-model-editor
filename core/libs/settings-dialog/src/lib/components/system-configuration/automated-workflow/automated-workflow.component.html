@@ -17,32 +17,36 @@
     <div>
       <div class="settings-container">
         <div class="setting-item">
-          <div class="setting-item__toggle">
-            <mat-slide-toggle [formField]="form.automatedWorkflow.autoFormatEnabled" data-cy="autoFormatToggle">
-              {{ t('settingsDialog.configuration.autoFormatting') }}
-            </mat-slide-toggle>
-            <mat-icon
-              [matTooltipShowDelay]="0"
-              [matTooltipHideDelay]="100"
-              [matTooltip]="t('settingsDialog.configuration.autoFormattingTooltip')"
-            >
-              info
-            </mat-icon>
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.automatedWorkflow.autoFormatEnabled" data-cy="autoFormatToggle">
+                {{ t('settingsDialog.configuration.autoFormatting') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.autoFormattingTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
           </div>
         </div>
 
         <div class="setting-item">
           <div class="setting-item__content">
-            <mat-slide-toggle class="setting-item__toggle" [formField]="form.automatedWorkflow.autoSaveEnabled" data-cy="autoSaveToggle">
-              {{ t('settingsDialog.configuration.autoSave') }}
-            </mat-slide-toggle>
-          </div>
-          <div class="settings-item">
-            <mat-form-field class="setting-item__value" appearance="fill">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.automatedWorkflow.autoSaveEnabled" data-cy="autoSaveToggle">
+                {{ t('settingsDialog.configuration.autoSave') }}
+              </mat-slide-toggle>
+            </div>
+            <mat-form-field class="setting-item__value" appearance="fill" subscriptSizing="dynamic">
               <mat-label for="autoSaveTime">{{ t('settingsDialog.configuration.waitingPeriod') }}</mat-label>
               <input [formField]="form.automatedWorkflow.saveTimerSeconds" matInput type="number" data-cy="autoSaveTime" />
               @if (form.automatedWorkflow.saveTimerSeconds().invalid()) {
-                <mat-error>The time must be at least 60 second</mat-error>
+                @for (error of form.automatedWorkflow.saveTimerSeconds().errors(); track error) {
+                  <mat-error>{{ error.message }}</mat-error>
+                }
               }
             </mat-form-field>
           </div>
@@ -62,11 +66,13 @@
                 info
               </mat-icon>
             </div>
-            <mat-form-field class="setting-item__value" appearance="fill">
+            <mat-form-field class="setting-item__value" appearance="fill" subscriptSizing="dynamic">
               <mat-label for="autoValidateTime">{{ t('settingsDialog.configuration.waitingPeriod') }}</mat-label>
               <input [formField]="form.automatedWorkflow.validationTimerSeconds" matInput type="number" data-cy="autoValidateTime" />
               @if (form.automatedWorkflow.validationTimerSeconds().invalid()) {
-                <mat-error>The time must be at least 60 second</mat-error>
+                @for (error of form.automatedWorkflow.validationTimerSeconds().errors(); track error) {
+                  <mat-error>{{ error.message }}</mat-error>
+                }
               }
             </mat-form-field>
           </div>

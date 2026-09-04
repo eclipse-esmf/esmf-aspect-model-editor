@@ -17,7 +17,9 @@
     <div>
       <textarea [formField]="form.copyrightHeaderConfiguration.copyright" data-cy="copyright"></textarea>
       @if (form.copyrightHeaderConfiguration.copyright().invalid()) {
-        <mat-error>All lines must begin with a #</mat-error>
+        @for (error of form.copyrightHeaderConfiguration.copyright().errors(); track error) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
       }
     </div>
   </div>
