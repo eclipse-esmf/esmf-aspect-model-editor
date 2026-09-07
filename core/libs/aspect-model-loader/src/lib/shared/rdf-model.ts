@@ -107,7 +107,7 @@ export class RdfModel {
 
     const inPrefixes = Object.values(this.prefixes).some(value => value === namespace);
     if ((alias === '' || alias === undefined) && !inPrefixes) {
-      const matched = namespace.match(/[a-zA-Z]+/gi); //NOSONAR
+      const matched = namespace.match(/[a-zA-Z]+/gi);
       if (matched.length) {
         let newAlias = `ext-${matched[matched.length - 1]}`;
         if (this.prefixes[newAlias]) {

@@ -139,11 +139,11 @@ export abstract class InputFieldComponent<T extends NamedElement> implements OnD
   }
 
   isLowerCase(value: string) {
-    return /^(\b[a-z]+[a-zA-Z0-9]*)$/.test(value);
+    return /^[a-z][a-zA-Z0-9]*$/.test(value);
   }
 
   isUpperCase(value: string) {
-    return /^(\b[A-Z]+[a-zA-Z0-9]*)$/.test(value); //NOSONAR
+    return /^[A-Z][a-zA-Z0-9]*$/.test(value);
   }
 
   isAlreadyDefined(filteredType: any, value: string) {

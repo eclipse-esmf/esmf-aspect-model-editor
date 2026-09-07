@@ -28,7 +28,7 @@ export class EditorDialogValidators {
   static seeURIValue(value: string): EditorValidationErrors | null {
     if (!value) return null;
 
-    const uriRegEx = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/; //NOSONAR
+    const uriRegEx = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
     const values = value.split(',');
     const invalidUris = values.filter(uri => {
       const trimmedUri = uri.trim();
