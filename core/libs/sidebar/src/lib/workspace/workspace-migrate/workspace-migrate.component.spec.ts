@@ -60,14 +60,30 @@ describe('WorkspaceMigrateComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open migration dialog and refresh workspace when files to migrate exist', () => {
+  it('should open migration dialog and refresh workspace when files to migrate exist and migration succeeds', () => {
     const refreshSpy = vi.spyOn(sidebarService.workspace, 'refresh');
+    const clearSpy = vi.spyOn(sidebarService.namespacesState, 'clear');
 
     component.migrate();
 
     expect(migratorApiMock.hasFilesToMigrate).toHaveBeenCalled();
     expect(matDialogMock.open).toHaveBeenCalledWith(MigrationDialogComponent, {disableClose: true});
+    expect(clearSpy).toHaveBeenCalled();
     expect(refreshSpy).toHaveBeenCalled();
+  });
+
+  it('should not clear or refresh workspace when migration dialog is cancelled', () => {
+    matDialogMock.open.mockReturnValue({
+      afterClosed: () => of(false),
+    });
+    const refreshSpy = vi.spyOn(sidebarService.workspace, 'refresh');
+    const clearSpy = vi.spyOn(sidebarService.namespacesState, 'clear');
+
+    component.migrate();
+
+    expect(migratorApiMock.hasFilesToMigrate).toHaveBeenCalled();
+    expect(clearSpy).not.toHaveBeenCalled();
+    expect(refreshSpy).not.toHaveBeenCalled();
   });
 
   it('should not open migration dialog when no files need migration', () => {

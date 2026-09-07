@@ -55,7 +55,7 @@ jobs:
 
       - name: Install node modules (Dev)
         run: |
-          pnpm install --include=optional
+          pnpm install
           pnpm rebuild nx
           pnpm dlx cypress install
         working-directory: core

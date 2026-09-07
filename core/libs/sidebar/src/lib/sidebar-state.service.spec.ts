@@ -159,6 +159,10 @@ describe('SidebarStateService and models', () => {
       expect(file2.isLoadedInWorkspace).toBe(true);
       expect(result['org.eclipse.esmf:1.0.0']).toHaveLength(2);
       expect(service.namespacesState.hasOutdatedFiles()).toBe(true);
+
+      // Subsequent update with empty list should retain hasOutdatedFiles = true
+      service.updateWorkspace([]);
+      expect(service.namespacesState.hasOutdatedFiles()).toBe(true);
     });
 
     it('should close workspace and fileElements when sammElements opens', () => {

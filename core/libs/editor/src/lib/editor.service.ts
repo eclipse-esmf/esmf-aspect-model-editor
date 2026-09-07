@@ -29,6 +29,7 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {
   AlertService,
+  basicShapeGeometry,
   ElementCreatorService,
   LoadingScreenService,
   NotificationsService,
@@ -195,6 +196,18 @@ export class EditorService {
   }
 
   createElement(x: number, y: number, elementType: string, aspectModelUrn?: string) {
+    const isGraphEmpty = this.maxgraphService.isModelEmpty();
+    const container = this.maxgraphAttributeService.graph?.getContainer();
+    const getCenteredCoordinates = (width: number, height: number) => {
+      if (isGraphEmpty && container && container.clientWidth > 0 && container.clientHeight > 0) {
+        return {
+          x: Math.max(20, Math.round((container.clientWidth - width) / 2)),
+          y: Math.max(20, Math.round((container.clientHeight - height) / 2)),
+        };
+      }
+      return {x, y};
+    };
+
     // in case of new element (no urn passed)
     if (!aspectModelUrn) {
       let newInstance = null;
@@ -213,13 +226,19 @@ export class EditorService {
       }
 
       if (newInstance instanceof DefaultAspect) {
-        this.createAspect(newInstance, {x, y});
+        const shapeWidth = basicShapeGeometry.expandedWith;
+        const shapeHeight = basicShapeGeometry.expandedHeight;
+        const targetPos = getCenteredCoordinates(shapeWidth, shapeHeight);
+        this.createAspect(newInstance, targetPos);
         return;
       }
       const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
 
       const node = this.filtersService.createNode(newInstance);
-      this.maxgraphService.setCoordinatesForNextCellRender(x, y);
+      const shapeWidth = node?.shape?.expandedWith || basicShapeGeometry.expandedWith;
+      const shapeHeight = node?.shape?.expandedHeight || basicShapeGeometry.expandedHeight;
+      const targetPos = getCenteredCoordinates(shapeWidth, shapeHeight);
+      this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
       const cell = maxgraphRenderer.render(node, null);
       this.maxgraphService.formatCell(cell, true);
       if (cell) {
@@ -230,10 +249,14 @@ export class EditorService {
       if (!this.maxgraphService.resolveCellByModelElement(element)) {
         const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
 
-        this.maxgraphService.setCoordinatesForNextCellRender(x, y);
-
         const filteredElements = this.filtersService.filter([element]);
-        const cell = maxgraphRenderer.render(filteredElements[0], null);
+        const node = filteredElements[0];
+        const shapeWidth = node?.shape?.expandedWith || basicShapeGeometry.expandedWith;
+        const shapeHeight = node?.shape?.expandedHeight || basicShapeGeometry.expandedHeight;
+        const targetPos = getCenteredCoordinates(shapeWidth, shapeHeight);
+        this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
+
+        const cell = maxgraphRenderer.render(node, null);
 
         this.maxgraphService.formatCell(cell);
         if (cell) {

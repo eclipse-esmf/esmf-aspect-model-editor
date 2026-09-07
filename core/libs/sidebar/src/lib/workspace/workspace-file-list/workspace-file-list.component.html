@@ -56,7 +56,7 @@
             [class.selected]="selection.isSelected(namespace.key, file.name)"
             [class.outdated]="file.outdated"
             [class.errored]="file.errored"
-            [matTooltip]="file.name"
+            [matTooltip]="getFileTooltip(namespace.key, file)"
             (click)="selectFile(namespace.key, file)"
             (dblclick)="prepare(namespace.key, file); loadInNewWindow()"
             (keyup.enter)="selectFile(namespace.key, file)"

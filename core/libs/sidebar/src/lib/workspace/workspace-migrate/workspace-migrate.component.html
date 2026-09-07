@@ -11,6 +11,13 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-  <p>{{ t('sammMigration.sidebar.message') }}</p>
-  <button (click)="migrate()" mat-flat-button color="primary">{{ t('sammMigration.sidebar.button') }}</button>
+  <div class="migrate-box">
+    <div class="migrate-info">
+      <mat-icon class="migrate-icon">update</mat-icon>
+      <p class="migrate-message">{{ t('sammMigration.sidebar.message') }}</p>
+    </div>
+    <button (click)="migrate()" mat-flat-button color="primary" data-cy="workspaceMigrateButton">
+      {{ t('sammMigration.sidebar.button') }}
+    </button>
+  </div>
 </ng-container>

@@ -81,7 +81,7 @@ export class MigrationDialogComponent {
   }
 
   closeDialog() {
-    this.dialogRef.close();
+    this.dialogRef.close(!!this.migrationStatus()?.success);
   }
 
   currentStep() {

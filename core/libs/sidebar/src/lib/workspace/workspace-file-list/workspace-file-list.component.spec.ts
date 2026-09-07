@@ -275,4 +275,21 @@ describe('WorkspaceFileListComponent', () => {
     const sorted = component.sortNamespaces(unsorted);
     expect(sorted.map(s => s.key)).toEqual(['org.a:1.0.0', 'org.b:1.0.0', 'org.c:1.0.0']);
   });
+
+  it('should return appropriate tooltip for current, outdated, errored and normal files', () => {
+    const currentFile = new FileStatus('Current.ttl');
+    expect(component.getFileTooltip('org.eclipse.esmf:1.0.0', currentFile)).toContain('Current.ttl');
+
+    const outdatedFile = new FileStatus('Outdated.ttl');
+    outdatedFile.outdated = true;
+    outdatedFile.sammVersion = '2.0.0';
+    expect(component.getFileTooltip('org.eclipse.esmf:1.0.0', outdatedFile)).toContain('tooltips.outdatedFile');
+
+    const erroredFile = new FileStatus('Error.ttl');
+    erroredFile.errored = true;
+    expect(component.getFileTooltip('org.eclipse.esmf:1.0.0', erroredFile)).toContain('Error.ttl');
+
+    const normalFile = new FileStatus('Normal.ttl');
+    expect(component.getFileTooltip('other.namespace:1.0.0', normalFile)).toBe('Normal.ttl');
+  });
 });

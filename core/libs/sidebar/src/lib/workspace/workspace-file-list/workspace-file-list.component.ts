@@ -252,12 +252,14 @@ export class WorkspaceFileListComponent {
       })
       .subscribe(confirm => {
         if (confirm !== ConfirmDialogEnum.cancel) {
+          this.sidebarService.namespacesState.removeFile(namespace, file.name);
+          this.sidebarService.selection.reset();
+          this.loadedFiles.removeFile(aspectModelFileName);
           this.modelApiService.deleteAspectModel(selection.file.aspectModelUrn).subscribe(() => {
+            this.sidebarService.namespacesState.clear();
             this.sidebarService.workspace.refresh();
             this.electronSignalsService.call('requestRefreshWorkspaces');
           });
-          this.sidebarService.selection.reset();
-          this.loadedFiles.removeFile(aspectModelFileName);
         }
       });
   }
@@ -283,5 +285,22 @@ export class WorkspaceFileListComponent {
       ...currentFolded,
       [namespaceKey]: !currentFolded[namespaceKey],
     });
+  }
+
+  public getFileTooltip(namespaceKey: string, file: FileStatus): string {
+    if (this.isCurrentFile(namespaceKey, file.name)) {
+      const tooltip = this.translate.language.tooltips?.currentFile || 'Currently opened file';
+      return `${file.name} (${tooltip})`;
+    }
+    if (file.outdated) {
+      const sammVersion = file.sammVersion || '';
+      const tooltip = this.translate.translateService.translate('tooltips.outdatedFile', {sammVersion: sammVersion || 'older'});
+      return `${file.name} (${tooltip})`;
+    }
+    if (file.errored) {
+      const tooltip = this.translate.language.tooltips?.erroredFile || 'File has errors';
+      return `${file.name} (${tooltip})`;
+    }
+    return file.name;
   }
 }

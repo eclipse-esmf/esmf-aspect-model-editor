@@ -191,4 +191,57 @@ describe('EditorService', () => {
     expect(elementModelService.deleteElement).toHaveBeenCalledWith(vertex);
     expect(elementModelService.deleteElement).not.toHaveBeenCalledWith(edge);
   });
+
+  it('createElement should center element coordinates when the graph is empty', () => {
+    const maxgraphService = TestBed.inject(MaxGraphService);
+    const maxgraphAttributeService = TestBed.inject(MaxGraphAttributeService);
+    const elementCreatorService = TestBed.inject(ElementCreatorService);
+    const filtersService = TestBed.inject(FiltersService);
+
+    const mockContainer = {clientWidth: 1000, clientHeight: 800} as HTMLDivElement;
+    (maxgraphAttributeService as any).graph.getContainer = vi.fn(() => mockContainer);
+    (maxgraphService as any).isModelEmpty = vi.fn(() => true);
+    maxgraphService.setCoordinatesForNextCellRender = vi.fn();
+    maxgraphService.formatCell = vi.fn();
+    maxgraphService.navigateToCell = vi.fn();
+
+    const mockElement = {name: 'property', aspectModelUrn: 'urn:test:1.0.0#property'};
+    vi.spyOn(elementCreatorService, 'createEmptyElement').mockReturnValue(mockElement as any);
+    vi.spyOn(filtersService, 'createNode').mockReturnValue({
+      element: mockElement,
+      shape: {expandedWith: 300, expandedHeight: 120},
+      children: [],
+    } as any);
+
+    service.createElement(50, 60, 'property');
+
+    // Expected centered coords: (1000 - 300)/2 = 350, (800 - 120)/2 = 340
+    expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(350, 340);
+  });
+
+  it('createElement should use given drop coordinates when the graph is not empty', () => {
+    const maxgraphService = TestBed.inject(MaxGraphService);
+    const maxgraphAttributeService = TestBed.inject(MaxGraphAttributeService);
+    const elementCreatorService = TestBed.inject(ElementCreatorService);
+    const filtersService = TestBed.inject(FiltersService);
+
+    const mockContainer = {clientWidth: 1000, clientHeight: 800} as HTMLDivElement;
+    (maxgraphAttributeService as any).graph.getContainer = vi.fn(() => mockContainer);
+    (maxgraphService as any).isModelEmpty = vi.fn(() => false);
+    maxgraphService.setCoordinatesForNextCellRender = vi.fn();
+    maxgraphService.formatCell = vi.fn();
+    maxgraphService.navigateToCell = vi.fn();
+
+    const mockElement = {name: 'property', aspectModelUrn: 'urn:test:1.0.0#property'};
+    vi.spyOn(elementCreatorService, 'createEmptyElement').mockReturnValue(mockElement as any);
+    vi.spyOn(filtersService, 'createNode').mockReturnValue({
+      element: mockElement,
+      shape: {expandedWith: 300, expandedHeight: 120},
+      children: [],
+    } as any);
+
+    service.createElement(50, 60, 'property');
+
+    expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(50, 60);
+  });
 });

@@ -109,6 +109,19 @@ export class NamespacesManager {
     return this.namespaces()[namespace]?.find(fs => fs.name === file);
   }
 
+  removeFile(namespace: string, file: string) {
+    this.namespaces.update(map => {
+      const list = map[namespace];
+      if (!list) return map;
+      const filtered = list.filter(fs => fs.name !== file);
+      if (filtered.length === 0) {
+        const {[namespace]: _, ...rest} = map;
+        return rest;
+      }
+      return {...map, [namespace]: filtered};
+    });
+  }
+
   clear() {
     this.namespaces.set({});
   }
@@ -142,18 +155,18 @@ export class SidebarStateService {
   }
 
   updateWorkspace(fileStatus: FileStatus[] = []) {
-    let hasOutdated = false;
     for (const status of fileStatus) {
       status.isLoadedInWorkspace = true;
       const chunks = RdfModelUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
       const namespace = chunks[2];
       const version = chunks[3];
       this.namespacesState.setFile(`${namespace}:${version}`, status);
-      hasOutdated ||= status.outdated;
     }
 
+    const allNamespaces = this.namespacesState.namespaces();
+    const hasOutdated = Object.values(allNamespaces).some(files => files.some(f => f.outdated));
     this.namespacesState.hasOutdatedFiles.set(hasOutdated);
-    return this.namespacesState.namespaces();
+    return allNamespaces;
   }
 
   private manageSidebars() {

@@ -186,7 +186,7 @@ jobs:
 
       - name: Install node modules
         run: |
-          pnpm install --include=optional
+          pnpm install
           pnpm rebuild nx
         working-directory: core
 
