@@ -15,7 +15,6 @@ import {FileHandlingService} from '@ame/editor';
 import {MaxGraphAttributeService} from '@ame/max-graph';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {Cell, CellOverlay} from '@maxgraph/core';
-import {finalize} from 'rxjs/operators';
 import {FIELD_name, SELECTOR_editorSaveButton, SELECTOR_propertiesCancelButton, SIDEBAR_CLOSE_BUTTON} from './constants';
 
 /**
@@ -376,14 +375,18 @@ export class cyHelp {
   static loadModel(rdfString: string): Cypress.Chainable {
     return cy
       .window()
-      .then(win => {
-        const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
-        const sub = fileHandlingService
-          .loadModel(rdfString)
-          .pipe(finalize(() => sub.unsubscribe()))
-          .subscribe();
-        return sub;
-      })
-      .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'));
+      .then(
+        win =>
+          new Cypress.Promise((resolve, reject) => {
+            const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
+            fileHandlingService.loadModel(rdfString).subscribe({
+              next: () => resolve(true),
+              error: err => reject(err),
+              complete: () => resolve(true),
+            });
+          }),
+      )
+      .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'))
+      .then(() => cy.get('#graph', {timeout: 15000}).should('be.visible'));
   }
 }

@@ -34,7 +34,6 @@ import {MatInputModule} from '@angular/material/input';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {Cell} from '@maxgraph/core';
-import {throttleTime} from 'rxjs';
 import {SearchesStateService} from '../../search-state.service';
 
 @Component({
@@ -69,15 +68,13 @@ export class ElementsSearchComponent {
   });
 
   constructor() {
-    toObservable(this.searchQuery)
-      .pipe(throttleTime(150))
-      .subscribe(value => {
-        this.elements.set(
-          this.searchService
-            .search<Cell>(value, this.maxgraphService.getAllCells(), mxCellSearchOption)
-            ?.map(cell => MaxGraphHelper.getModelElement(cell)),
-        );
-      });
+    toObservable(this.searchQuery).subscribe(value => {
+      this.elements.set(
+        this.searchService
+          .search<Cell>(value, this.maxgraphService.getAllCells(), mxCellSearchOption)
+          ?.map(cell => MaxGraphHelper.getModelElement(cell)),
+      );
+    });
   }
 
   openElement(element: NamedElement) {
