@@ -17,6 +17,7 @@ import {FILTER_ATTRIBUTES, FiltersService} from '@ame/loader-filters';
 import {
   MaxGraphAttributeService,
   MaxGraphService,
+  MaxGraphSetupService,
   MaxGraphShapeOverlayService,
   MaxGraphShapeSelectorService,
   ThemeService,
@@ -27,7 +28,7 @@ import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-d
 import {AlertService, ElementCreatorService, LoadingScreenService, NotificationsService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
-import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
@@ -72,6 +73,9 @@ describe('EditorService', () => {
           graph: {
             getOutgoingEdges: vi.fn(() => []),
           } as any,
+        }),
+        MockProvider(MaxGraphSetupService, {
+          centerGraph: vi.fn(),
         }),
         MockProvider(MaxGraphShapeOverlayService),
         MockProvider(MaxGraphShapeSelectorService, {
@@ -194,18 +198,17 @@ describe('EditorService', () => {
 
   it('createElement should center element coordinates when the graph is empty', () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
-    const maxgraphAttributeService = TestBed.inject(MaxGraphAttributeService);
+    const maxgraphSetupService = TestBed.inject(MaxGraphSetupService);
     const elementCreatorService = TestBed.inject(ElementCreatorService);
     const filtersService = TestBed.inject(FiltersService);
 
-    const mockContainer = {clientWidth: 1000, clientHeight: 800} as HTMLDivElement;
-    (maxgraphAttributeService as any).graph.getContainer = vi.fn(() => mockContainer);
     (maxgraphService as any).isModelEmpty = vi.fn(() => true);
+    maxgraphService.renderModelElement = vi.fn(() => ({id: 'mock-cell'}) as any);
     maxgraphService.setCoordinatesForNextCellRender = vi.fn();
     maxgraphService.formatCell = vi.fn();
     maxgraphService.navigateToCell = vi.fn();
 
-    const mockElement = {name: 'property', aspectModelUrn: 'urn:test:1.0.0#property'};
+    const mockElement = new DefaultProperty({name: 'property', aspectModelUrn: 'urn:test:1.0.0#property', metaModelVersion: '2.0.0'});
     vi.spyOn(elementCreatorService, 'createEmptyElement').mockReturnValue(mockElement as any);
     vi.spyOn(filtersService, 'createNode').mockReturnValue({
       element: mockElement,
@@ -215,8 +218,8 @@ describe('EditorService', () => {
 
     service.createElement(50, 60, 'property');
 
-    // Expected centered coords: (1000 - 300)/2 = 350, (800 - 120)/2 = 340
-    expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(350, 340);
+    expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(40, 40);
+    expect(maxgraphSetupService.centerGraph).toHaveBeenCalled();
   });
 
   it('createElement should use given drop coordinates when the graph is not empty', () => {
@@ -228,11 +231,12 @@ describe('EditorService', () => {
     const mockContainer = {clientWidth: 1000, clientHeight: 800} as HTMLDivElement;
     (maxgraphAttributeService as any).graph.getContainer = vi.fn(() => mockContainer);
     (maxgraphService as any).isModelEmpty = vi.fn(() => false);
+    maxgraphService.renderModelElement = vi.fn(() => ({id: 'mock-cell'}) as any);
     maxgraphService.setCoordinatesForNextCellRender = vi.fn();
     maxgraphService.formatCell = vi.fn();
     maxgraphService.navigateToCell = vi.fn();
 
-    const mockElement = {name: 'property', aspectModelUrn: 'urn:test:1.0.0#property'};
+    const mockElement = new DefaultProperty({name: 'property', aspectModelUrn: 'urn:test:1.0.0#property', metaModelVersion: '2.0.0'});
     vi.spyOn(elementCreatorService, 'createEmptyElement').mockReturnValue(mockElement as any);
     vi.spyOn(filtersService, 'createNode').mockReturnValue({
       element: mockElement,

@@ -19,6 +19,7 @@ import {
   MaxGraphHelper,
   MaxGraphRenderer,
   MaxGraphService,
+  MaxGraphSetupService,
   MaxGraphShapeOverlayService,
   MaxGraphShapeSelectorService,
   ShapeConfiguration,
@@ -29,7 +30,6 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {
   AlertService,
-  basicShapeGeometry,
   ElementCreatorService,
   LoadingScreenService,
   NotificationsService,
@@ -58,6 +58,7 @@ export class EditorService {
   private configurationService: ConfigurationService = inject(ConfigurationService);
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
   private maxgraphService = inject(MaxGraphService);
+  private maxgraphSetupService = inject(MaxGraphSetupService);
   private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
   private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
@@ -197,16 +198,7 @@ export class EditorService {
 
   createElement(x: number, y: number, elementType: string, aspectModelUrn?: string) {
     const isGraphEmpty = this.maxgraphService.isModelEmpty();
-    const container = this.maxgraphAttributeService.graph?.getContainer();
-    const getCenteredCoordinates = (width: number, height: number) => {
-      if (isGraphEmpty && container && container.clientWidth > 0 && container.clientHeight > 0) {
-        return {
-          x: Math.max(20, Math.round((container.clientWidth - width) / 2)),
-          y: Math.max(20, Math.round((container.clientHeight - height) / 2)),
-        };
-      }
-      return {x, y};
-    };
+    const targetPos = isGraphEmpty ? {x: 40, y: 40} : {x, y};
 
     // in case of new element (no urn passed)
     if (!aspectModelUrn) {
@@ -226,23 +218,21 @@ export class EditorService {
       }
 
       if (newInstance instanceof DefaultAspect) {
-        const shapeWidth = basicShapeGeometry.expandedWith;
-        const shapeHeight = basicShapeGeometry.expandedHeight;
-        const targetPos = getCenteredCoordinates(shapeWidth, shapeHeight);
         this.createAspect(newInstance, targetPos);
         return;
       }
       const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
 
       const node = this.filtersService.createNode(newInstance);
-      const shapeWidth = node?.shape?.expandedWith || basicShapeGeometry.expandedWith;
-      const shapeHeight = node?.shape?.expandedHeight || basicShapeGeometry.expandedHeight;
-      const targetPos = getCenteredCoordinates(shapeWidth, shapeHeight);
       this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
       const cell = maxgraphRenderer.render(node, null);
       this.maxgraphService.formatCell(cell, true);
       if (cell) {
-        this.maxgraphService.navigateToCell(cell, true);
+        if (isGraphEmpty) {
+          this.maxgraphSetupService.centerGraph();
+        } else {
+          this.maxgraphService.navigateToCell(cell, true);
+        }
       }
     } else {
       const element: NamedElement = this.loadedFilesService.findElementOnExtReferences(aspectModelUrn);
@@ -251,16 +241,17 @@ export class EditorService {
 
         const filteredElements = this.filtersService.filter([element]);
         const node = filteredElements[0];
-        const shapeWidth = node?.shape?.expandedWith || basicShapeGeometry.expandedWith;
-        const shapeHeight = node?.shape?.expandedHeight || basicShapeGeometry.expandedHeight;
-        const targetPos = getCenteredCoordinates(shapeWidth, shapeHeight);
         this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
 
         const cell = maxgraphRenderer.render(node, null);
 
         this.maxgraphService.formatCell(cell);
         if (cell) {
-          this.maxgraphService.navigateToCell(cell, true);
+          if (isGraphEmpty) {
+            this.maxgraphSetupService.centerGraph();
+          } else {
+            this.maxgraphService.navigateToCell(cell, true);
+          }
         }
       } else {
         this.notificationsService.warning({
@@ -296,7 +287,7 @@ export class EditorService {
             geometry,
           });
           if (cell) {
-            this.maxgraphService.navigateToCell(cell, true);
+            this.maxgraphSetupService.centerGraph();
           }
         } else {
           this.openAlertBox();
