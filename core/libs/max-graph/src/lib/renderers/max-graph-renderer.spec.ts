@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultCharacteristic, DefaultUnit} from '@esmf/aspect-model-loader';
+import {DefaultUnit} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {MaxGraphRenderer} from './max-graph-renderer';
@@ -49,6 +49,7 @@ describe('MaxGraphRenderer', () => {
       name: 'Kilometre',
       aspectModelUrn: 'urn:samm:org.example:1.0.0#Kilometre',
       metaModelVersion: '2.2.0',
+      quantityKinds: [],
     });
 
     const node = {
@@ -67,6 +68,7 @@ describe('MaxGraphRenderer', () => {
       name: 'Kilometre',
       aspectModelUrn: 'urn:samm:org.example:1.0.0#Kilometre',
       metaModelVersion: '2.2.0',
+      quantityKinds: [],
     });
 
     const parentCell = new Cell();
@@ -80,4 +82,3 @@ describe('MaxGraphRenderer', () => {
     expect(cell).toBeNull();
   });
 });
-
