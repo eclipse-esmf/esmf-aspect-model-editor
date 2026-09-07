@@ -20,6 +20,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NamedElement} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {Cell} from '@maxgraph/core';
 import {ModelElementParserPipe} from '../editor-dialog/components/element-list/element-list.pipe';
 
@@ -32,7 +33,7 @@ interface Element {
   selector: 'ame-connect-with-dialog',
   templateUrl: './connect-with-dialog.component.html',
   styleUrls: ['./connect-with-dialog.component.scss'],
-  imports: [MatFormFieldModule, MatTooltipModule, CommonModule, MatButtonModule, MatDialogModule, MatInputModule],
+  imports: [MatFormFieldModule, MatTooltipModule, CommonModule, MatButtonModule, MatDialogModule, MatInputModule, TranslocoDirective],
   providers: [ModelElementParserPipe],
 })
 export class ConnectWithDialogComponent {

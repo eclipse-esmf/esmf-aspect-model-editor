@@ -16,13 +16,14 @@ import {disabled, form, FormField, required, validate} from '@angular/forms/sign
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultFixedPointConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-integer-input-field',
   templateUrl: './integer-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormFieldModule, MatLabel, MatError, MatInput, FormField],
+  imports: [MatFormFieldModule, MatLabel, MatError, MatInput, FormField, TranslocoDirective],
 })
 export class IntegerInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
   private readonly model = signal<number | string | null>(null);

@@ -21,6 +21,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultQuantityKind, DefaultUnit} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 declare const sammUDefinition: any;
@@ -43,6 +44,7 @@ declare const sammUDefinition: any;
     MatOption,
     MatChipsModule,
     MatIconModule,
+    TranslocoDirective,
   ],
 })
 export class QuantityKindsInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {

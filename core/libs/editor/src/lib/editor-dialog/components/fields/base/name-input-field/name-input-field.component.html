@@ -13,7 +13,7 @@
   -->
 
   <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-    <mat-label>Name </mat-label>
+    <mat-label>{{ t('editorCanvas.shapeSetting.field.name.name') }}</mat-label>
     <input class="ellipsis" [formField]="field" matInput data-cy="name" />
     @if (hasError('required')) {
       <mat-error>{{ t('editorCanvas.shapeSetting.field.name.pleaseDefine') }}</mat-error>

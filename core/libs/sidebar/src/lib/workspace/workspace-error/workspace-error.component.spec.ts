@@ -12,6 +12,7 @@
  */
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {WorkspaceErrorComponent} from './workspace-error.component';
 
@@ -21,7 +22,23 @@ describe('WorkspaceErrorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [WorkspaceErrorComponent],
+      imports: [
+        WorkspaceErrorComponent,
+        TranslocoTestingModule.forRoot({
+          langs: {
+            en: {
+              sidebar: {
+                workspaceError: {
+                  title: 'Workspace validation error!',
+                  description:
+                    'It seems at least one workspace file has validation errors. Fix or remove the errored file then refresh the workspace.',
+                },
+              },
+            },
+          },
+          translocoConfig: {availableLangs: ['en'], defaultLang: 'en'},
+        }),
+      ],
     });
 
     fixture = TestBed.createComponent(WorkspaceErrorComponent);

@@ -29,6 +29,7 @@ import {
   MatTableDataSource,
 } from '@angular/material/table';
 import {DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {StructuredValuePropertyFieldComponent} from '../structured-value-property-field/structured-value-property-field.component';
 
 export interface StructuredValuePropertyRow {
@@ -60,6 +61,7 @@ export interface StructuredValueTableRow {
     MatRow,
     MatRowDef,
     MatButton,
+    TranslocoDirective,
   ],
 })
 export class StructuredValuePropertiesComponent implements OnInit {

@@ -12,6 +12,7 @@
  */
 
 import {Component, input} from '@angular/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 interface WorkspaceValidationError {
   code: number;
@@ -23,6 +24,7 @@ interface WorkspaceValidationError {
   selector: 'ame-workspace-error',
   templateUrl: './workspace-error.component.html',
   styleUrls: ['./workspace-error.component.scss'],
+  imports: [TranslocoDirective],
 })
 export class WorkspaceErrorComponent {
   error = input<WorkspaceValidationError>();

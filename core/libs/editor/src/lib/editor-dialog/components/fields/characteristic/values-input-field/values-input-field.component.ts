@@ -31,6 +31,7 @@ import {
   ScalarValue,
   Value,
 } from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EntityInstanceViewComponent} from '../../../entity-instance';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -53,6 +54,7 @@ import {InputFieldComponent} from '../../input-field.component';
     MatIconModule,
     MatAutocompleteModule,
     ElementIconComponent,
+    TranslocoDirective,
   ],
 })
 export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumeration> implements OnInit, OnDestroy {

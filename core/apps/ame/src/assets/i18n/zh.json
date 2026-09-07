@@ -38,6 +38,15 @@
       "content": "版本升级成功完成",
       "close": "关闭"
     },
+    "migrationDialog": {
+      "title": "迁移",
+      "successContent": "迁移成功完成。",
+      "errorContent": "迁移失败。请重试或联系技术支持。",
+      "warningContent": "迁移完成但有警告。请查看下方详情。",
+      "migrationFailedTitle": "迁移失败",
+      "migrationMessage": "迁移消息",
+      "close": "关闭"
+    },
     "sidebar": {
       "message": "找到了具有较低SAMM版本的文件。",
       "button": "迁移"
@@ -139,9 +148,11 @@
   "declareNameDialog": {
     "title": "声明共享Model的名称",
     "infoContent": "您将要删除该Aspect, 这会将该Aspect Model转换为共享Model。请为此共享Model选择一个名称",
+    "namePlaceholder": "名称 *",
     "requiredError": "必填",
     "charactersError": "允许的字符：字母数字、空格、点 (.)、减号 (-) 和下划线 (_)",
     "existError": "该文件已存在于您的namespace",
+    "alreadyDefinedError": "文件名已存在于您的命名空间中",
     "removeAspect": "移除Aspect",
     "cancel": "取消"
   },
@@ -177,6 +188,11 @@
   "exportNamespaceDialog": {
     "title": "导出namespace(s) 到包",
     "infoContent": "请选择你想要作为Aspect Model Package导出的namespace.",
+    "loadingNamespaces": "正在加载命名空间...",
+    "namespaces": "命名空间",
+    "file": "文件",
+    "namespace": "命名空间",
+    "version": "版本",
     "cancel": "取消",
     "next": "导出"
   },
@@ -200,6 +216,7 @@
     "noAspectTitle": "在验证之前加载或创建Aspect Model"
   },
   "helpDialog": {
+    "startModeling": "开始建模",
     "infoContent": "Aspect Model Editor是基于SAMM的方面模型的可视化编辑器, 作为Eclipse语义建模框架的一部分。",
     "pleaseRefer": "请参考",
     "regardUsageEditor": "来获得有关方面模型编辑器的使用的帮助。",
@@ -256,6 +273,8 @@
     "uploadDragAndDropText": "将文件拖放到此处或单击图标进行上传",
     "uploadedFileTitle": "上传了 {{output}} 文件",
     "uploadFileAccordionTitle": "属性",
+    "fileProperties": "文件属性",
+    "includeApiExtensions": "包含用于附加 CRUD 操作的 API 扩展",
     "uploadErrorTitle": "错误的文件格式",
     "uploadErrorMessage": "请上传一个 {{output}} 文件。",
     "uploadFileRequired": "{{output}} 文件是必需的 - 已在资源路径中定义了一个变量。",
@@ -309,6 +328,7 @@
     "downloadFile": "下载文件"
   },
   "sidebar": {
+    "loadingElements": "正在加载元素...",
     "elementAlreadyImported": "元素已导入",
     "dragToRightToAdd": "{{value}} - 向右拖动即可添加",
     "openWorkspace": "打开Workspace",
@@ -321,6 +341,10 @@
       "saveMessage": "要在下面的列表中查看当前模型，请将其保存到工作区。",
       "callToAction": "当前工作区没有任何文件。单击下面的按钮导入Namespaces!",
       "importButton": "导入包"
+    },
+    "workspaceError": {
+      "title": "工作区校验错误！",
+      "description": "似乎至少有一个工作区文件存在校验错误。修复或删除错误文件后刷新工作区。"
     },
     "actions": {
       "searchElements": "寻找元素...",
@@ -364,6 +388,7 @@
       "autoValidation": "自动校验",
       "autoFormatting": "自动格式化",
       "usingHierarchicalLayout": "使用垂直布局",
+      "hierarchicalLayoutTooltip": "可能更适合某些模型，例如带有递归的模型",
       "displayEntityValueEntity": "展示 'Entity Value - Entity' 关系",
       "displayPropertyAbstractProperty": "展示 'Property - Abstract Property' 关系",
       "displayDisambiguationLabel": "展示 消歧义 标签",
@@ -374,6 +399,7 @@
       "displayDisambiguationLabelTooltip": "显示需要消歧的关系标签，例如操作输入/输出、特征左/右以及设置了 notInPayload 的属性。"
     },
     "languages": {
+      "aspectModel": "Aspect Model",
       "userInterface": "用户界面",
       "chooseLanguage": "选择语言",
       "english": "英语",
@@ -413,6 +439,9 @@
     "value": "一个带有语义元数据的值"
   },
   "editorCanvas": {
+    "dragElementPrompt": "拖动一个元素开始创建模型",
+    "dragElementLine1": "拖动一个元素",
+    "dragElementLine2": "开始创建模型",
     "fittingProgress": "将完整Model拟合到当前视图上",
     "reset": "将缩放级别重置为 100%",
     "zoomInProgress": "放大",
@@ -440,37 +469,72 @@
         "optional": "可选",
         "payloadName": "payload名称",
         "notInPayload": "不在Payload之内",
+        "inherited": "继承",
         "save": "保存",
         "cancel": "取消"
       },
       "field": {
         "name": {
+          "name": "名称",
           "pleaseDefine": "请定义一个name",
           "pleaseStartWithUpperCase": "请以大写字符开头，后跟字母/数字。",
           "pleaseStartWithALowerCase": "请以小写字符开头，后跟字母/数字。",
           "pleaseSelectDifferentName": "请选择其他名称，因为该名称已在同一命名空间中使用",
           "pleaseSelectDifferentNameNamespace": "请选择一个不同的名称，因为该名称已在同一命名空间中使用",
           "noContainWhitespaces": "名称不得包含空格",
-          "alreadyDefinedInSameNamespace": "Please select a different name as this one is already in use in the same namespace"
+          "alreadyDefinedInSameNamespace": "请选择不同的名称，因为该名称已在同一命名空间中使用"
         },
         "unit": {
           "selectDifferentNameType": "请选择不同的名称，因为该名称属于不同类型",
-          "selectDifferentNameNamespace": "请选择不同的名称，因为该名称在同一命名空间中属于不同类型",
+          "selectDifferentNameNamespace": "请选择不同���名称，因为该名称在同一命名空间中属于不同类型",
           "create": "创建新的Unit",
-          "fieldRequired": "必填"
+          "fieldRequired": "必填",
+          "searchQuantityKinds": "搜索数量种类..."
         },
         "operation": {
           "pleaseDefineOutput": "请定义一个输出",
-          "noOutputDefined": "未定义输出"
+          "noOutputDefined": "未定义输出",
+          "addValueClickOption": "添加值，点击选项"
         },
         "characteristic": {
+          "removeDatatypeHint": "要启用此字段，请删除数据类型。",
+          "createNew": "创建新 Characteristic",
+          "upperCaseNotice": "请使用大写字母提供新 Characteristic 的名称。",
+          "pleaseDefineLeft": "请定义左特征",
           "pleaseDefineRight": "请定义右特征"
         },
         "entity": {
-          "pleaseDefineAbstractEntity": "请定义抽象实体"
+          "pleaseDefineAbstractEntity": "请定义抽象实体",
+          "upperCaseNotice": "请使用大写字母提供新 Entity 的名称。"
+        },
+        "property": {
+          "createNew": "创建新 Property",
+          "lowerCaseNotice": "请使用小写字母提供新 Property 的名称。",
+          "exampleValueDisabledComplex": "复杂数据类型已禁用 exampleValue"
+        },
+        "constraints": {
+          "integerRequired": "整数为必填项",
+          "positiveInteger": "请提供正整数",
+          "scaleRequired": "比例为必填项",
+          "positiveNumber": "请提供正数",
+          "nonNegativeInteger": "请提供非负整数",
+          "valueRequired": "值为必填项",
+          "languageCodeRequired": "语言代码为必填项",
+          "localeCodeRequired": "区域代码为必填项"
+        },
+        "values": {
+          "onlyNewEditableHint": "仅可编辑新创建的 Value 和简单值！",
+          "placeholder": "输入并选择"
         },
         "structuredValue": {
-          "ruleRequired": "解构规则为必填项",
+          "ruleName": "解构规则名称",
+          "customRule": "自定义规则",
+          "elements": "元素",
+          "openElementsTable": "打开元素表",
+          "elementsTitle": "StructuredValue 元素",
+          "captureGroup": "捕获组",
+          "property": "Property",
+          "ruleRequired": "解构规则为必填���",
           "invalidRegex": "请提供有效的正则表达式",
           "assignProperties": "请为元素分配属性",
           "propertyRequired": "请选择或创建属性"
@@ -623,11 +687,41 @@
     "name": "名称",
     "value": "值",
     "entityValue": "Entity值",
+    "entityValues": "Entity 值",
+    "create": "创建",
     "language": "语言",
     "property": "属性",
     "edit": {
-      "searchBar": "找到复杂值"
+      "searchBar": "找到复杂值",
+      "addComplexValue": "添加复杂值"
+    },
+    "view": {
+      "deleteComplexValue": "删除复杂值 {{name}}",
+      "complexDataType": "复杂数据类型",
+      "noData": "暂无数据",
+      "noEntityValues": "没有 Entity 值",
+      "filteredOut": "Entity 值已被过滤。"
     }
+  },
+  "connectWithDialog": {
+    "connect": "连接",
+    "with": "至...",
+    "searchElements": "搜索元素",
+    "cancel": "取消",
+    "connectButton": "连接"
+  },
+  "largeFileWarning": {
+    "title": "给定的 Aspect Model 包含 {{count}} 个元素",
+    "description": "推荐的 Aspect Model 大小最多约为 100 个元素（根据系统性能可能会更大）。继续操作时，请注意缩放和格式化等用户操作可能会影响应用程序的响应速度��",
+    "cancel": "取消",
+    "continue": "继续"
+  },
+  "openElementWindow": {
+    "openingModel": "正在打开模型"
+  },
+  "loading": {
+    "errorMessage": "打开编辑器时出错。",
+    "openingEditor": "正在打开编辑器..."
   },
   "menu": {
     "file": {

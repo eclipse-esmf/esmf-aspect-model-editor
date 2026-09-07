@@ -14,9 +14,11 @@
 
   <!-- Select field -->
   <mat-form-field appearance="fill">
-    <mat-label for="deconstructionRule">Deconstruction rule name</mat-label>
+    <mat-label for="deconstructionRule">{{ t('editorCanvas.shapeSetting.field.structuredValue.ruleName') }}</mat-label>
     <mat-select [value]="selectedRule() || ''" data-cy="deconstruction-rule-select">
-      <mat-option (click)="customRuleActive.set(true); setCustomRule()" value="--custom-rule--">Custom Rule</mat-option>
+      <mat-option (click)="customRuleActive.set(true); setCustomRule()" value="--custom-rule--">{{
+        t('editorCanvas.shapeSetting.field.structuredValue.customRule')
+      }}</mat-option>
       @for (predefinedRule of predefinedRules(); track predefinedRule) {
         <mat-option [value]="predefinedRule.regex" (click)="customRuleActive.set(false); selectPredefinedRule(predefinedRule)">
           {{ predefinedRule.name }}
@@ -42,9 +44,11 @@
     <div class="elements-action">
       <p>
         <mat-icon>format_list_bulleted</mat-icon>
-        <span>Elements</span>
+        <span>{{ t('editorCanvas.shapeSetting.field.structuredValue.elements') }}</span>
       </p>
-      <button (click)="openModal()" mat-button type="button" color="primary" data-cy="elements-modal-button">Open elements table</button>
+      <button (click)="openModal()" mat-button type="button" color="primary" data-cy="elements-modal-button">
+        {{ t('editorCanvas.shapeSetting.field.structuredValue.openElementsTable') }}
+      </button>
     </div>
 
     @if (hasGroupsError) {

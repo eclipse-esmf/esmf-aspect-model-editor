@@ -11,11 +11,13 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="loading-container">
-  <img ngSrc="./assets/img/png/aspect-model-editor-targetsize-256.png" alt="AME Logo" fill />
-  @if (hasError()) {
-    <h2>Something went wrong while opening the editor.</h2>
-  } @else {
-    <h2>Opening editor...</h2>
-  }
-</div>
+<ng-container *transloco="let t">
+  <div class="loading-container">
+    <img ngSrc="./assets/img/png/aspect-model-editor-targetsize-256.png" alt="AME Logo" fill />
+    @if (hasError()) {
+      <h2>{{ t('loading.errorMessage') }}</h2>
+    } @else {
+      <h2>{{ t('loading.openingEditor') }}</h2>
+    }
+  </div>
+</ng-container>

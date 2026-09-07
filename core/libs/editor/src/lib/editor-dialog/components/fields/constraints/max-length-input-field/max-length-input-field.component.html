@@ -11,10 +11,12 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-  <mat-label>maxValue</mat-label>
-  <input [formField]="field" matInput type="number" data-cy="maxValue" />
-  @if (hasError('pattern')) {
-    <mat-error>Please provide a non-negative integer</mat-error>
-  }
-</mat-form-field>
+<ng-container *transloco="let t">
+  <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label>maxValue</mat-label>
+    <input [formField]="field" matInput type="number" data-cy="maxValue" />
+    @if (hasError('pattern')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.constraints.nonNegativeInteger') }}</mat-error>
+    }
+  </mat-form-field>
+</ng-container>

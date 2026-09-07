@@ -16,6 +16,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {disabled, form, FormField, required} from '@angular/forms/signals';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLocaleConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -35,7 +36,17 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     `,
   ],
   styleUrls: ['../../field.scss'],
-  imports: [MatFormFieldModule, MatLabel, FormField, MatAutocompleteTrigger, MatInput, MatAutocomplete, MatOption, MatError],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    FormField,
+    MatAutocompleteTrigger,
+    MatInput,
+    MatAutocomplete,
+    MatOption,
+    MatError,
+    TranslocoDirective,
+  ],
 })
 export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLocaleConstraint> implements OnInit, OnDestroy {
   private readonly model = signal('');

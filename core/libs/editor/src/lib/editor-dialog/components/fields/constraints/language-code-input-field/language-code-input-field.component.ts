@@ -18,6 +18,7 @@ import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/mater
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLanguageConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -34,7 +35,17 @@ import {InputFieldComponent} from '../../input-field.component';
     `,
   ],
   styleUrls: ['../../field.scss'],
-  imports: [MatFormFieldModule, MatLabel, FormField, MatAutocomplete, MatAutocompleteTrigger, MatInput, MatOption, MatError],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    FormField,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatInput,
+    MatOption,
+    MatError,
+    TranslocoDirective,
+  ],
 })
 export class LanguageCodeInputFieldComponent extends InputFieldComponent<DefaultLanguageConstraint> implements OnInit, OnDestroy {
   private readonly model = signal('');

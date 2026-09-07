@@ -23,6 +23,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatHint, MatInput, MatLabel} from '@angular/material/input';
 import {Characteristic, DefaultCharacteristic, DefaultCollection} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -50,6 +51,7 @@ export interface ElementCharacteristicOption {
     MatError,
     MatAutocomplete,
     MatOption,
+    TranslocoDirective,
   ],
 })
 export class ElementCharacteristicInputFieldComponent extends InputFieldComponent<DefaultCollection> implements OnInit, OnDestroy {

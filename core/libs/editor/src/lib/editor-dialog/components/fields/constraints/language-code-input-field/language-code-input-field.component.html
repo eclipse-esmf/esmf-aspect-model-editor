@@ -11,17 +11,19 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-  <mat-label>languageCode *</mat-label>
-  <input [formField]="field" [matAutocomplete]="auto" matInput data-cy="languageCode" />
-  <mat-autocomplete #auto="matAutocomplete">
-    @for (lang of filteredLanguages(); track lang.tag) {
-      <mat-option class="language-code" [value]="lang.tag">
-        {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
-      </mat-option>
+<ng-container *transloco="let t">
+  <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label>languageCode *</mat-label>
+    <input [formField]="field" [matAutocomplete]="auto" matInput data-cy="languageCode" />
+    <mat-autocomplete #auto="matAutocomplete">
+      @for (lang of filteredLanguages(); track lang.tag) {
+        <mat-option class="language-code" [value]="lang.tag">
+          {{ lang.tag }}<br /><span class="option-description">{{ lang.name }}</span>
+        </mat-option>
+      }
+    </mat-autocomplete>
+    @if (hasError('required')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.constraints.languageCodeRequired') }}</mat-error>
     }
-  </mat-autocomplete>
-  @if (hasError('required')) {
-    <mat-error>Language Code is required</mat-error>
-  }
-</mat-form-field>
+  </mat-form-field>
+</ng-container>

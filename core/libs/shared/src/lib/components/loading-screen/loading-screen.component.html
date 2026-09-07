@@ -21,7 +21,7 @@
 
   @if (data.hasCloseButton) {
     <mat-dialog-actions align="end">
-      <button (click)="close()" mat-button data-cy="close-loading-modal">Close</button>
+      <button (click)="close()" mat-button data-cy="close-loading-modal">{{ t('sammMigration.migrationDialog.close') }}</button>
     </mat-dialog-actions>
   }
 </ng-container>

@@ -36,7 +36,7 @@
     @if (loadingElements()) {
       <div class="loading">
         <mat-spinner></mat-spinner>
-        <p>Loading elements...</p>
+        <p>{{ t('sidebar.loadingElements') }}</p>
       </div>
     } @else {
       <div class="elements" data-cy="fileElementsList">

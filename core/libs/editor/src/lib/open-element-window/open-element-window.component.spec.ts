@@ -17,6 +17,7 @@ import {DialogRef} from '@angular/cdk/dialog';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {NamedNode, Quad, Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of, throwError} from 'rxjs';
@@ -42,7 +43,10 @@ describe('OpenElementWindowComponent', () => {
     } as unknown as DialogRef<OpenElementWindowComponent>;
 
     await TestBed.configureTestingModule({
-      imports: [OpenElementWindowComponent],
+      imports: [
+        OpenElementWindowComponent,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         {provide: DialogRef, useValue: dialogRef},
         {provide: MAT_DIALOG_DATA, useValue: {urn, file}},

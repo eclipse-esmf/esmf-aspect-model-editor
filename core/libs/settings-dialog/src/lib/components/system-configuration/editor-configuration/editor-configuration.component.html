@@ -21,7 +21,7 @@
             <div class="setting-item__toggle">
               <mat-slide-toggle
                 [formField]="form.editorConfiguration.enableHierarchicalLayout"
-                matTooltip="may be more suitable for some models, e.g. with recursion"
+                [matTooltip]="t('settingsDialog.configuration.hierarchicalLayoutTooltip')"
               >
                 {{ t('settingsDialog.configuration.usingHierarchicalLayout') }}
               </mat-slide-toggle>

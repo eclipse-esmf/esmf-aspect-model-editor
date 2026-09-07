@@ -16,13 +16,14 @@ import {disabled, form, FormField, validate} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLengthConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-max-length-input-field',
   templateUrl: './max-length-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormFieldModule, MatLabel, FormField, MatInput, MatError],
+  imports: [MatFormFieldModule, MatLabel, FormField, MatInput, MatError, TranslocoDirective],
 })
 export class MaxLengthInputFieldComponent extends InputFieldComponent<DefaultLengthConstraint> implements OnInit, OnDestroy {
   private readonly model = signal<number | string | null>(null);

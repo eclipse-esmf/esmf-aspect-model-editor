@@ -16,13 +16,14 @@ import {NgOptimizedImage} from '@angular/common';
 import {Component, DestroyRef, OnInit, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from '@angular/router';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {Observable, catchError, forkJoin, of, switchMap, take} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 @Component({
   templateUrl: 'loading.component.html',
   styleUrls: ['loading.component.scss'],
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, TranslocoDirective],
 })
 export class LoadingComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);

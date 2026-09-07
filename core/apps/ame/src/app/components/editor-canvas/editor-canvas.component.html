@@ -48,10 +48,10 @@
 <div id="graph" #graph></div>
 
 @if (isModelEmpty()) {
-  <div class="empty-model">
+  <div class="empty-model" *transloco="let t">
     <span>
-      Drag an element <br />
-      to start creating a model
+      {{ t('editorCanvas.dragElementLine1') }} <br />
+      {{ t('editorCanvas.dragElementLine2') }}
     </span>
   </div>
 }

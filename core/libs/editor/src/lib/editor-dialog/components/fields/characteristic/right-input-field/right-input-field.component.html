@@ -32,11 +32,11 @@
             >
               @if (isUpperCase(displayValue())) {
                 <span>
-                  + Create new characteristic: <strong>{{ displayValue() }}</strong>
+                  + {{ t('editorCanvas.shapeSetting.field.characteristic.createNew') }}: <strong>{{ displayValue() }}</strong>
                 </span>
               }
               @if (!isUpperCase(displayValue())) {
-                <span>Characteristic should be upper case</span>
+                <span>{{ t('editorCanvas.shapeSetting.field.characteristic.upperCaseNotice') }}</span>
               }
             </mat-option>
           }

@@ -11,77 +11,79 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-  <mat-label>dataType</mat-label>
-  <input #dataType [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="dataType" />
-  @if (!frozen() && displayField().disabled() && loadedFiles.isElementInCurrentFile(metaModelElement)) {
-    <button (click)="unlockDataType()" data-cy="clear-dataType-button" type="button" matSuffix mat-icon-button tabindex="-1">
-      <mat-icon>close</mat-icon>
-    </button>
-  }
-
-  @if (hasError('checkShapeName')) {
-    <mat-error>Please select a different name as this one is of different type</mat-error>
-  }
-  @if (hasError('checkShapeNameExtRef')) {
-    <mat-error>Please select a different name as this one is of different type in the same namespace</mat-error>
-  }
-
-  <mat-autocomplete class="characteristic-datatype-autocomplete" #auto="matAutocomplete">
-    @if (!entitiesDisabled() && filteredEntityTypes(); as filteredEntityTypes) {
-      <mat-optgroup label="Entities">
-        @if (filteredEntityTypes.length === 0 && displayField().errors().length === 0) {
-          <mat-option
-            [disabled]="!isUpperCase(displayValue())"
-            [value]="!isUpperCase(displayValue()) ? '' : displayValue()"
-            (click)="createNewEntity(displayValue())"
-          >
-            @if (isUpperCase(displayValue())) {
-              <ame-element [type]="{type: 'entity', symbol: 'E'}" [isNewValue]="true" [name]="displayValue()" size="medium"></ame-element>
-            } @else {
-              <span class="ellipsis">Please provide the name for the new Entity in upper case.</span>
-            }
-          </mat-option>
-        }
-
-        @for (dataType of filteredEntityTypes; track dataType.name) {
-          <mat-option [value]="dataType.name" (onSelectionChange)="onSelectionChange('dataType', dataType.entity, $event)">
-            <div class="ellipsis">
-              <span>{{ dataType.name }}</span>
-              @if (dataType.description) {
-                <span class="horizontal-separator"></span>
-              }
-              @if (dataType.description) {
-                <span class="option-description" [title]="dataType.description">
-                  {{ dataType.description }}
-                </span>
-              }
-            </div>
-            @if (dataType.namespace) {
-              <p class="namespace-prefix ellipsis" [title]="dataType.namespace">
-                {{ dataType.namespace }}
-              </p>
-            }
-          </mat-option>
-        }
-      </mat-optgroup>
+<ng-container *transloco="let t">
+  <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label>dataType</mat-label>
+    <input #dataType [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="dataType" />
+    @if (!frozen() && displayField().disabled() && loadedFiles.isElementInCurrentFile(metaModelElement)) {
+      <button (click)="unlockDataType()" data-cy="clear-dataType-button" type="button" matSuffix mat-icon-button tabindex="-1">
+        <mat-icon>close</mat-icon>
+      </button>
     }
 
-    @if (filteredDataTypes(); as filteredDataTypes) {
-      @if (filteredDataTypes?.length) {
-        <mat-optgroup label="Types">
-          @for (dataType of filteredDataTypes; track dataType.name) {
+    @if (hasError('checkShapeName')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.unit.selectDifferentNameType') }}</mat-error>
+    }
+    @if (hasError('checkShapeNameExtRef')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.unit.selectDifferentNameNamespace') }}</mat-error>
+    }
+
+    <mat-autocomplete class="characteristic-datatype-autocomplete" #auto="matAutocomplete">
+      @if (!entitiesDisabled() && filteredEntityTypes(); as filteredEntityTypes) {
+        <mat-optgroup label="Entities">
+          @if (filteredEntityTypes.length === 0 && displayField().errors().length === 0) {
             <mat-option
-              [value]="dataType.name"
-              (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
-              data-cy="dataTypeOption"
+              [disabled]="!isUpperCase(displayValue())"
+              [value]="!isUpperCase(displayValue()) ? '' : displayValue()"
+              (click)="createNewEntity(displayValue())"
             >
-              <span class="option-title">{{ dataType.name }}</span
-              ><span class="option-description">{{ dataType.getDescription('en') }}</span>
+              @if (isUpperCase(displayValue())) {
+                <ame-element [type]="{type: 'entity', symbol: 'E'}" [isNewValue]="true" [name]="displayValue()" size="medium"></ame-element>
+              } @else {
+                <span class="ellipsis">{{ t('editorCanvas.shapeSetting.field.entity.upperCaseNotice') }}</span>
+              }
+            </mat-option>
+          }
+
+          @for (dataType of filteredEntityTypes; track dataType.name) {
+            <mat-option [value]="dataType.name" (onSelectionChange)="onSelectionChange('dataType', dataType.entity, $event)">
+              <div class="ellipsis">
+                <span>{{ dataType.name }}</span>
+                @if (dataType.description) {
+                  <span class="horizontal-separator"></span>
+                }
+                @if (dataType.description) {
+                  <span class="option-description" [title]="dataType.description">
+                    {{ dataType.description }}
+                  </span>
+                }
+              </div>
+              @if (dataType.namespace) {
+                <p class="namespace-prefix ellipsis" [title]="dataType.namespace">
+                  {{ dataType.namespace }}
+                </p>
+              }
             </mat-option>
           }
         </mat-optgroup>
       }
-    }
-  </mat-autocomplete>
-</mat-form-field>
+
+      @if (filteredDataTypes(); as filteredDataTypes) {
+        @if (filteredDataTypes?.length) {
+          <mat-optgroup label="Types">
+            @for (dataType of filteredDataTypes; track dataType.name) {
+              <mat-option
+                [value]="dataType.name"
+                (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
+                data-cy="dataTypeOption"
+              >
+                <span class="option-title">{{ dataType.name }}</span
+                ><span class="option-description">{{ dataType.getDescription('en') }}</span>
+              </mat-option>
+            }
+          </mat-optgroup>
+        }
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>

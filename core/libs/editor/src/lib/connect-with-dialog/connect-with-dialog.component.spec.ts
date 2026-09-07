@@ -20,6 +20,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {DefaultAspect, DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {ModelElementParserPipe} from '../editor-dialog';
 import {ConnectWithDialogComponent} from './connect-with-dialog.component';
 
@@ -69,7 +70,12 @@ describe('RdfNodeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ConnectWithDialogComponent, MatFormFieldModule, MatInputModule],
+      imports: [
+        ConnectWithDialogComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         ModelElementParserPipe,
         {

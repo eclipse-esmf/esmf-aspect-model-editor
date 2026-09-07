@@ -28,7 +28,7 @@
       </p>
 
       <mat-form-field>
-        <input [formField]="renameForm.fileName" matInput placeholder="Name *" data-cy="file-rename" />
+        <input [formField]="renameForm.fileName" [placeholder]="t('declareNameDialog.namePlaceholder')" matInput data-cy="file-rename" />
         <span class="input-suffix" matSuffix>.ttl</span>
         @if (renameForm.fileName().invalid()) {
           @for (error of renameForm.fileName().errors(); track error) {

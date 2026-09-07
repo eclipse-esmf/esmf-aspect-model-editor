@@ -24,6 +24,7 @@ import {MatInput, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {MatTooltip} from '@angular/material/tooltip';
 import {DefaultProperty, DefaultScalar, DefaultValue, ScalarValue} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
@@ -41,6 +42,7 @@ import {InputFieldComponent} from '../../input-field.component';
     MatIcon,
     MatIconButton,
     ElementIconComponent,
+    TranslocoDirective,
   ],
 })
 export class ExampleValueInputFieldComponent extends InputFieldComponent<DefaultProperty> implements OnInit, OnDestroy {

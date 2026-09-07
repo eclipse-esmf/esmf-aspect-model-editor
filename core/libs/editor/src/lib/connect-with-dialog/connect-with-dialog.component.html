@@ -11,46 +11,50 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>
-  Connect
-  <span class="element-icon element-icon--small" [ngClass]="getClass(connectWithModel())">{{ getFirstLetter(connectWithModel()) }}</span
-  >{{ connectWithModel()?.name }} with...
-</h2>
+<ng-container *transloco="let t">
+  <h2 mat-dialog-title>
+    {{ t('connectWithDialog.connect') }}
+    <span class="element-icon element-icon--small" [ngClass]="getClass(connectWithModel())">{{ getFirstLetter(connectWithModel()) }}</span
+    >{{ connectWithModel()?.name }} {{ t('connectWithDialog.with') }}
+  </h2>
 
-<mat-dialog-content>
-  <mat-form-field>
-    <input #search matInput placeholder="Search elements" />
-  </mat-form-field>
-  <section class="elements">
-    @for (element of elements(); track element?.model?.aspectModelUrn) {
-      @if (isFiltered(element, search.value)) {
-        <div
-          class="element"
-          [class.selected]="isSelected(element)"
-          [attr.aria-pressed]="isSelected(element)"
-          (click)="selectedElement.set(element)"
-          (keyup.enter)="selectedElement.set(element)"
-          (keyup.space)="selectedElement.set(element)"
-          tabindex="0"
-          role="button"
-          aria-label="Select element {{ element.model.name }}"
-        >
-          <span class="element-icon element-icon--big" [ngClass]="getClass(element.model)">{{ getFirstLetter(element.model) }}</span>
-          <div class="element-content">
-            <span class="element-name">{{ element.model.name }}</span>
-            @if (element.model.getDescription('en'); as description) {
-              <span class="element-description" [matTooltip]="description" [matTooltipDisabled]="description.length < 80">{{
-                description
-              }}</span>
-            }
+  <mat-dialog-content>
+    <mat-form-field>
+      <input #search [placeholder]="t('connectWithDialog.searchElements')" matInput />
+    </mat-form-field>
+    <section class="elements">
+      @for (element of elements(); track element?.model?.aspectModelUrn) {
+        @if (isFiltered(element, search.value)) {
+          <div
+            class="element"
+            [class.selected]="isSelected(element)"
+            [attr.aria-pressed]="isSelected(element)"
+            (click)="selectedElement.set(element)"
+            (keyup.enter)="selectedElement.set(element)"
+            (keyup.space)="selectedElement.set(element)"
+            tabindex="0"
+            role="button"
+            aria-label="Select element {{ element.model.name }}"
+          >
+            <span class="element-icon element-icon--big" [ngClass]="getClass(element.model)">{{ getFirstLetter(element.model) }}</span>
+            <div class="element-content">
+              <span class="element-name">{{ element.model.name }}</span>
+              @if (element.model.getDescription('en'); as description) {
+                <span class="element-description" [matTooltip]="description" [matTooltipDisabled]="description.length < 80">{{
+                  description
+                }}</span>
+              }
+            </div>
           </div>
-        </div>
+        }
       }
-    }
-  </section>
-</mat-dialog-content>
+    </section>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button (click)="close()" mat-button>Cancel</button>
-  <button [disabled]="!selectedElement()" (click)="connect()" mat-flat-button color="primary">Connect</button>
-</mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button (click)="close()" mat-button>{{ t('connectWithDialog.cancel') }}</button>
+    <button [disabled]="!selectedElement()" (click)="connect()" mat-flat-button color="primary">
+      {{ t('connectWithDialog.connectButton') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

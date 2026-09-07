@@ -39,6 +39,7 @@
       "errorContent": "Migration failed. Please try again or contact for support.",
       "warningContent": "Migration completed with warnings. Please review the details below.",
       "migrationFailedTitle": "Migration failed",
+      "migrationMessage": "Migration Message",
       "close": "Close"
     },
     "sidebar": {
@@ -144,6 +145,7 @@
   "declareNameDialog": {
     "title": "Declare name of Shared Model",
     "infoContent": "You are about to remove the Aspect which will transform this Aspect Model into a Shared Model. Please choose a name for this Shared Model.",
+    "namePlaceholder": "Name *",
     "requiredError": "This field is required",
     "charactersError": "Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)",
     "existError": "This file already exists in your namespace",
@@ -183,6 +185,11 @@
   "exportNamespaceDialog": {
     "title": "Export namespace(s) to package",
     "infoContent": "Select the Aspect Model file containing the aspect you want to export as a package. All dependencies will be automatically included in the ZIP file.",
+    "loadingNamespaces": "Loading namespaces...",
+    "namespaces": "Namespaces",
+    "file": "File",
+    "namespace": "Namespace",
+    "version": "Version",
     "cancel": "Cancel",
     "next": "Export"
   },
@@ -206,6 +213,7 @@
     "noAspectTitle": "Load or create an Aspect Model before validating"
   },
   "helpDialog": {
+    "startModeling": "Start modeling",
     "infoContent": "The Aspect Model Editor is the visual editor for Aspect Models based on SAMM as part of the Eclipse Semantic Modeling Framework.",
     "pleaseRefer": "Please refer to the",
     "regardUsageEditor": "for help regarding the usage of the Aspect Model Editor.",
@@ -262,6 +270,8 @@
     "uploadDragAndDropText": "Drag and drop files here or click the icon to upload",
     "uploadedFileTitle": "Uploaded {{output}} File",
     "uploadFileAccordionTitle": "Properties",
+    "fileProperties": "file properties",
+    "includeApiExtensions": "Include API extensions for additional CRUD operations",
     "uploadErrorTitle": "Wrong file format",
     "uploadErrorMessage": "Please upload a {{output}} file.",
     "uploadFileRequired": "{{output}} file is required - a variable has been defined in the resource path.",
@@ -315,6 +325,7 @@
     "downloadFile": "Download file"
   },
   "sidebar": {
+    "loadingElements": "Loading elements...",
     "elementAlreadyImported": "Element already imported",
     "dragToRightToAdd": "{{value}} - Drag to the right to add",
     "openWorkspace": "Open Workspace",
@@ -327,6 +338,10 @@
       "saveMessage": "To see your current Model in the below list, save it to workspace.",
       "callToAction": "Currently the workspace doesn't have any files. Click the button bellow to import namespaces!",
       "importButton": "Import Package"
+    },
+    "workspaceError": {
+      "title": "Workspace validation error!",
+      "description": "It seems at least one workspace file has validation errors. Fix or remove the errored file then refresh the workspace."
     },
     "actions": {
       "searchElements": "Search elements...",
@@ -370,6 +385,7 @@
       "autoValidation": "Auto-validation",
       "autoFormatting": "Auto-Formatting",
       "usingHierarchicalLayout": "Use 'hierarchical' layout",
+      "hierarchicalLayoutTooltip": "may be more suitable for some models, e.g. with recursion",
       "displayEntityValueEntity": "Display 'Entity Value - Entity' relationship",
       "displayPropertyAbstractProperty": "Display 'Property - Abstract Property' relationship",
       "displayDisambiguationLabel": "Display disambiguation labels",
@@ -380,6 +396,7 @@
       "displayDisambiguationLabelTooltip": "Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set."
     },
     "languages": {
+      "aspectModel": "Aspect Model",
       "userInterface": "User Interface",
       "chooseLanguage": "Choose language",
       "english": "English",
@@ -419,6 +436,9 @@
     "value": "Represent a value enriched with semantic metadata"
   },
   "editorCanvas": {
+    "dragElementPrompt": "Drag an element to start creating a model",
+    "dragElementLine1": "Drag an element",
+    "dragElementLine2": "to start creating a model",
     "fittingProgress": "Fit the complete model on the current view",
     "reset": "Reset zoom level to 100%",
     "zoomInProgress": "Zoom in",
@@ -446,11 +466,13 @@
         "optional": "Optional",
         "payloadName": "payloadName",
         "notInPayload": "Not In Payload",
+        "inherited": "Inherited",
         "save": "Save",
         "cancel": "Cancel"
       },
       "field": {
         "name": {
+          "name": "Name",
           "pleaseDefine": "Please define a name",
           "pleaseStartWithUpperCase": "Please start with an upper case character followed by letters/numerals.",
           "pleaseStartWithALowerCase": "Please start with a lower case character followed by letters/numerals.",
@@ -463,19 +485,52 @@
           "selectDifferentNameType": "Please select a different name as this one is of different type",
           "selectDifferentNameNamespace": "Please select a different name as this one is of different type in the same namespace",
           "create": "Create new Unit",
-          "fieldRequired": "This field is required"
+          "fieldRequired": "This field is required",
+          "searchQuantityKinds": "Search quantity kinds..."
         },
         "operation": {
           "pleaseDefineOutput": "Please define an output",
-          "noOutputDefined": "No output defined"
+          "noOutputDefined": "No output defined",
+          "addValueClickOption": "Add value, click option"
         },
         "characteristic": {
+          "removeDatatypeHint": "To enable this field, remove datatype.",
+          "createNew": "Create new characteristic",
+          "upperCaseNotice": "Please provide the name for the new Characteristic in upper case.",
+          "pleaseDefineLeft": "Please define a left characteristic",
           "pleaseDefineRight": "Please define a right characteristic"
         },
         "entity": {
-          "pleaseDefineAbstractEntity": "Please define an Abstract Entity"
+          "pleaseDefineAbstractEntity": "Please define an Abstract Entity",
+          "upperCaseNotice": "Please provide the name for the new Entity in upper case."
+        },
+        "property": {
+          "createNew": "Create new property",
+          "lowerCaseNotice": "Please provide the name for the new Property in lower case.",
+          "exampleValueDisabledComplex": "exampleValue disabled for complex datatypes"
+        },
+        "constraints": {
+          "integerRequired": "Integer is required",
+          "positiveInteger": "Please provide a positive integer",
+          "scaleRequired": "Scale is required",
+          "positiveNumber": "Please provide a positive number",
+          "nonNegativeInteger": "Please provide a non-negative integer",
+          "valueRequired": "Value is required",
+          "languageCodeRequired": "Language Code is required",
+          "localeCodeRequired": "Locale Code is required"
+        },
+        "values": {
+          "onlyNewEditableHint": "Only newly created Values and simple values can be edited!",
+          "placeholder": "Type and select"
         },
         "structuredValue": {
+          "ruleName": "Deconstruction rule name",
+          "customRule": "Custom Rule",
+          "elements": "Elements",
+          "openElementsTable": "Open elements table",
+          "elementsTitle": "StructuredValue Elements",
+          "captureGroup": "Capture Group",
+          "property": "Property",
           "ruleRequired": "Rule definition is required",
           "invalidRegex": "Please provide a valid regular expression",
           "assignProperties": "Please assign Properties to your elements",
@@ -629,11 +684,41 @@
     "name": "Name",
     "value": "Value",
     "entityValue": "Entity Value",
+    "entityValues": "Entity Values",
+    "create": "Create",
     "language": "Language",
     "property": "Property",
     "edit": {
-      "searchBar": "Find complex value"
+      "searchBar": "Find complex value",
+      "addComplexValue": "Add a complex value"
+    },
+    "view": {
+      "deleteComplexValue": "Delete complex value {{name}}",
+      "complexDataType": "Complex Data type",
+      "noData": "No data",
+      "noEntityValues": "No entity values",
+      "filteredOut": "Entity values are filtered out."
     }
+  },
+  "connectWithDialog": {
+    "connect": "Connect",
+    "with": "with...",
+    "searchElements": "Search elements",
+    "cancel": "Cancel",
+    "connectButton": "Connect"
+  },
+  "largeFileWarning": {
+    "title": "The given Aspect Model has {{count}} elements",
+    "description": "The recommended size of Aspect Models is up to ~ 100 elements (may be larger depending on the system performance). When proceeding, be aware that user actions like zoom and formatting may impact the application reactivity.",
+    "cancel": "Cancel",
+    "continue": "Continue"
+  },
+  "openElementWindow": {
+    "openingModel": "Opening model"
+  },
+  "loading": {
+    "errorMessage": "Something went wrong while opening the editor.",
+    "openingEditor": "Opening editor..."
   },
   "menu": {
     "file": {

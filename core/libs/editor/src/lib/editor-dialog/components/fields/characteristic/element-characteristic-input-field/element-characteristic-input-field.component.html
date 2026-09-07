@@ -11,73 +11,77 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-  <mat-label>elementCharacteristic</mat-label>
-  <input #elementCharacteristic [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="elementCharacteristic" />
-  @if (displayField().disabled()) {
-    <mat-hint>To enable this field, remove datatype.</mat-hint>
-  }
-  @if (!frozen() && displayField().disabled() && loadedFiles.isElementInCurrentFile(metaModelElement)) {
-    <button
-      (click)="unlockElementCharacteristic()"
-      data-cy="clear-element-characteristic-button"
-      type="button"
-      matSuffix
-      mat-icon-button
-      tabindex="-1"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-  }
-
-  @if (hasError('checkShapeName')) {
-    <mat-error>Please select a different name as this one is of different type</mat-error>
-  }
-  @if (hasError('checkShapeNameExtRef')) {
-    <mat-error>Please select a different name as this one is of different type in the same namespace</mat-error>
-  }
-
-  <mat-autocomplete class="element-characteristic" #auto="matAutocomplete">
-    @if (filteredCharacteristicTypes(); as filteredCharacteristicTypes) {
-      <div label="Characteristic">
-        @if (!isAlreadyDefined(filteredCharacteristicTypes, displayValue()) && displayField().errors().length === 0) {
-          <mat-option
-            [disabled]="!isUpperCase(displayValue())"
-            [value]="!isUpperCase(displayValue()) ? '' : displayValue()"
-            (click)="createNewCharacteristic(displayValue())"
-          >
-            @if (isUpperCase(displayValue())) {
-              <span>
-                + Create new characteristic: <strong>{{ displayValue() }}</strong>
-              </span>
-            }
-            @if (!isUpperCase(displayValue())) {
-              <span>Please provide the name for the new Characteristic in upper case.</span>
-            }
-          </mat-option>
-        }
-        @for (elementCharacteristic of filteredCharacteristicTypes; track elementCharacteristic.name) {
-          <mat-option
-            [value]="elementCharacteristic.name"
-            (onSelectionChange)="$event.isUserInput && onSelectionChange('elementCharacteristicDisplay', elementCharacteristic)"
-          >
-            <div class="ellipsis">
-              <span>{{ elementCharacteristic.name }}</span>
-              @if (elementCharacteristic.description) {
-                <span class="horizontal-separator"></span>
-              }
-              @if (elementCharacteristic.description) {
-                <span class="option-description" [title]="elementCharacteristic.description">{{ elementCharacteristic.description }}</span>
-              }
-            </div>
-            @if (elementCharacteristic.namespace) {
-              <p class="namespace-prefix" [title]="elementCharacteristic.namespace">
-                {{ elementCharacteristic.namespace }}
-              </p>
-            }
-          </mat-option>
-        }
-      </div>
+<ng-container *transloco="let t">
+  <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label>elementCharacteristic</mat-label>
+    <input #elementCharacteristic [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="elementCharacteristic" />
+    @if (displayField().disabled()) {
+      <mat-hint>{{ t('editorCanvas.shapeSetting.field.characteristic.removeDatatypeHint') }}</mat-hint>
     }
-  </mat-autocomplete>
-</mat-form-field>
+    @if (!frozen() && displayField().disabled() && loadedFiles.isElementInCurrentFile(metaModelElement)) {
+      <button
+        (click)="unlockElementCharacteristic()"
+        data-cy="clear-element-characteristic-button"
+        type="button"
+        matSuffix
+        mat-icon-button
+        tabindex="-1"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+
+    @if (hasError('checkShapeName')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.unit.selectDifferentNameType') }}</mat-error>
+    }
+    @if (hasError('checkShapeNameExtRef')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.unit.selectDifferentNameNamespace') }}</mat-error>
+    }
+
+    <mat-autocomplete class="element-characteristic" #auto="matAutocomplete">
+      @if (filteredCharacteristicTypes(); as filteredCharacteristicTypes) {
+        <div label="Characteristic">
+          @if (!isAlreadyDefined(filteredCharacteristicTypes, displayValue()) && displayField().errors().length === 0) {
+            <mat-option
+              [disabled]="!isUpperCase(displayValue())"
+              [value]="!isUpperCase(displayValue()) ? '' : displayValue()"
+              (click)="createNewCharacteristic(displayValue())"
+            >
+              @if (isUpperCase(displayValue())) {
+                <span>
+                  + {{ t('editorCanvas.shapeSetting.field.characteristic.createNew') }}: <strong>{{ displayValue() }}</strong>
+                </span>
+              }
+              @if (!isUpperCase(displayValue())) {
+                <span>{{ t('editorCanvas.shapeSetting.field.characteristic.upperCaseNotice') }}</span>
+              }
+            </mat-option>
+          }
+          @for (elementCharacteristic of filteredCharacteristicTypes; track elementCharacteristic.name) {
+            <mat-option
+              [value]="elementCharacteristic.name"
+              (onSelectionChange)="$event.isUserInput && onSelectionChange('elementCharacteristicDisplay', elementCharacteristic)"
+            >
+              <div class="ellipsis">
+                <span>{{ elementCharacteristic.name }}</span>
+                @if (elementCharacteristic.description) {
+                  <span class="horizontal-separator"></span>
+                }
+                @if (elementCharacteristic.description) {
+                  <span class="option-description" [title]="elementCharacteristic.description">{{
+                    elementCharacteristic.description
+                  }}</span>
+                }
+              </div>
+              @if (elementCharacteristic.namespace) {
+                <p class="namespace-prefix" [title]="elementCharacteristic.namespace">
+                  {{ elementCharacteristic.namespace }}
+                </p>
+              }
+            </mat-option>
+          }
+        </div>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>

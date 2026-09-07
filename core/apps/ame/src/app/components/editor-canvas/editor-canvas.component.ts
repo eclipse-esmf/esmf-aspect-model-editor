@@ -32,6 +32,7 @@ import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {MatIconModule} from '@angular/material/icon';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NamedElement} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {Cell} from '@maxgraph/core';
 import {fromEvent} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
@@ -53,6 +54,7 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
     EditorToolbarComponent,
     SidebarComponent,
     ShapeSettingsComponent,
+    TranslocoDirective,
   ],
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit {

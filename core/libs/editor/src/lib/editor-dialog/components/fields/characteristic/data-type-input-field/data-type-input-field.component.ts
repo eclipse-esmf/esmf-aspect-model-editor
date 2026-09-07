@@ -33,6 +33,7 @@ import {
   Entity,
   Type,
 } from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -62,6 +63,7 @@ export interface EntityDataTypeOption {
     MatOptgroup,
     MatOption,
     ElementIconComponent,
+    TranslocoDirective,
   ],
 })
 export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultCharacteristic> implements OnInit, OnDestroy {

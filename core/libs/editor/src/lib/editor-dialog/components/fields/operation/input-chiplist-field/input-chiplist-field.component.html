@@ -32,9 +32,9 @@
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
         [matChipInputSeparatorKeyCodes]="separatorKeysCodes()"
+        [placeholder]="t('editorCanvas.shapeSetting.field.operation.addValueClickOption')"
         matInput
         spellcheck="false"
-        placeholder="Add value, click option"
         data-cy="inputValues"
       />
     </mat-chip-grid>
@@ -50,11 +50,11 @@
             >
               @if (isLowerCase(searchValue())) {
                 <span>
-                  + Create new property: <strong>{{ searchValue() }}</strong>
+                  + {{ t('editorCanvas.shapeSetting.field.property.createNew') }}: <strong>{{ searchValue() }}</strong>
                 </span>
               }
               @if (!isLowerCase(searchValue())) {
-                <span>Please provide the name for the new Property in lower case.</span>
+                <span>{{ t('editorCanvas.shapeSetting.field.property.lowerCaseNotice') }}</span>
               }
             </mat-option>
           }

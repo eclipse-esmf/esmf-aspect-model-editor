@@ -57,11 +57,11 @@
 
                   <mat-autocomplete class="characteristic-entity-value-autocomplete" #entityAuto="matAutocomplete">
                     @let entityValues = filteredEntityValues(source[0], i);
-                    <mat-optgroup label="Entity Values">
+                    <mat-optgroup [label]="t('entityValue.entityValues')">
                       @if (showCreateNewEntityOption(source[0], i)) {
                         <mat-option [value]="entityValueInput.value" (click)="createNewEntityValue(source[0], entityValueInput.value)">
                           <span
-                            >+ Create: <strong>{{ entityValueInput.value }}</strong></span
+                            >+ {{ t('entityValue.create') }}: <strong>{{ entityValueInput.value }}</strong></span
                           >
                         </mat-option>
                       }

@@ -42,7 +42,7 @@
               <mat-icon>warning</mat-icon>
               {{ t('sammMigration.migrationDialog.warningContent') }}
             </div>
-            <span>Migration Message:</span>
+            <span>{{ t('sammMigration.migrationDialog.migrationMessage') }}:</span>
             <ul>
               @for (error of migrationStatus().errors; track error) {
                 <li>{{ error }}</li>

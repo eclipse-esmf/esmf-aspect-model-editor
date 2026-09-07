@@ -25,7 +25,7 @@
         <mat-cell *matCellDef="let overwritten" [ngClass]="{inherited: overwritten.inherited, disabled: overwritten.disabled}">
           <span>{{ overwritten.property.name }}</span>
           @if (overwritten.inherited) {
-            <span>Inherited</span>
+            <span>{{ t('editorCanvas.shapeSetting.propertiesModal.inherited') }}</span>
           }
         </mat-cell>
       </ng-container>
@@ -36,7 +36,7 @@
           @if (!(overwritten.disabled || overwritten.inherited)) {
             @if (!isReadonly()) {
               <mat-form-field>
-                <mat-label for="refines">Payload Name</mat-label>
+                <mat-label for="refines">{{ t('editorCanvas.shapeSetting.propertiesModal.payloadName') }}</mat-label>
                 <input
                   [value]="propertiesModel()[overwritten.property.aspectModelUrn]?.payloadName || ''"
                   [attr.data-cy]="'property-' + overwritten.property.name + '-payloadName'"
@@ -63,11 +63,11 @@
               (change)="updateOptional(overwritten.property.aspectModelUrn, $event.checked)"
               (click)="updateOptional(overwritten.property.aspectModelUrn)"
             >
-              Optional
+              {{ t('editorCanvas.shapeSetting.propertiesModal.optional') }}
             </mat-checkbox>
           } @else {
             <mat-checkbox [disabled]="true" [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.optional">
-              Optional
+              {{ t('editorCanvas.shapeSetting.propertiesModal.optional') }}
             </mat-checkbox>
           }
         </mat-cell>
@@ -84,11 +84,11 @@
               (change)="updateNotInPayload(overwritten.property.aspectModelUrn, $event.checked)"
               (click)="updateNotInPayload(overwritten.property.aspectModelUrn)"
             >
-              Not In Payload
+              {{ t('editorCanvas.shapeSetting.propertiesModal.notInPayload') }}
             </mat-checkbox>
           } @else {
             <mat-checkbox [disabled]="true" [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.notInPayload">
-              Not In Payload
+              {{ t('editorCanvas.shapeSetting.propertiesModal.notInPayload') }}
             </mat-checkbox>
           }
         </mat-cell>

@@ -15,10 +15,11 @@ import {LoadedFilesService} from '@ame/cache';
 import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
   templateUrl: './large-file-warning-dialog.html',
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, TranslocoDirective],
 })
 export class LargeFileWarningComponent {
   private loadedFilesService = inject(LoadedFilesService);

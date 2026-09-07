@@ -16,13 +16,14 @@ import {disabled, form, FormField, required} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultRegularExpressionConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-regular-expression-value-input-field',
   templateUrl: './regular-expression-value-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [FormField, MatFormFieldModule, MatLabel, MatError, MatInput],
+  imports: [FormField, MatFormFieldModule, MatLabel, MatError, MatInput, TranslocoDirective],
 })
 export class RegularExpressionValueInputFieldComponent
   extends InputFieldComponent<DefaultRegularExpressionConstraint>

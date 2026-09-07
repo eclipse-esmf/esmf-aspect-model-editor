@@ -32,10 +32,10 @@
             >
               @if (isLowerCase(property.value)) {
                 <span data-cy="new-property">
-                  + Create new property: <strong>{{ property.value }}</strong>
+                  + {{ t('editorCanvas.shapeSetting.field.property.createNew') }}: <strong>{{ property.value }}</strong>
                 </span>
               } @else {
-                <span>Please provide the name for the new Property in lower case.</span>
+                <span>{{ t('editorCanvas.shapeSetting.field.property.lowerCaseNotice') }}</span>
               }
             </mat-option>
           }

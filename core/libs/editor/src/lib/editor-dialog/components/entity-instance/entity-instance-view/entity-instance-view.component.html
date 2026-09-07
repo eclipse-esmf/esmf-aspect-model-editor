@@ -27,8 +27,8 @@
           <div class="complex-value-toolbox">
             @if (loadedFiles.isElementInCurrentFile(enumeration())) {
               <mat-icon
+                [matTooltip]="t('entityValue.view.deleteComplexValue', {name: complexValue.name})"
                 (click)="onDelete(complexValue, $event)"
-                matTooltip="Delete complex value {{ complexValue.name }}"
                 data-cy="remove-entity-value"
                 >delete
               </mat-icon>
@@ -62,7 +62,9 @@
               <mat-header-cell *matHeaderCellDef>{{ t('entityValue.value') }}</mat-header-cell>
               <mat-cell *matCellDef="let element">
                 @if (element.value.type?.isComplexType()) {
-                  <mat-icon class="material-icons complex-value-icon" matTooltip="Complex Data type">view_module</mat-icon>
+                  <mat-icon class="material-icons complex-value-icon" [matTooltip]="t('entityValue.view.complexDataType')"
+                    >view_module</mat-icon
+                  >
                   {{ element.value.name }}
                 } @else {
                   {{ element.value.value }}
@@ -79,7 +81,7 @@
           </mat-table>
         } @else {
           <div class="empty-state">
-            <p>No data</p>
+            <p>{{ t('entityValue.view.noData') }}</p>
           </div>
         }
       </mat-action-row>
@@ -87,9 +89,9 @@
   }
 
   @if (displayedValues()?.length === 0) {
-    <div class="text--center">No entity values</div>
+    <div class="text--center">{{ t('entityValue.view.noEntityValues') }}</div>
   }
   @if ((displayedValues() | entityInstance: searchFilter())?.length === 0) {
-    <div class="text--center">Entity values are filtered out.</div>
+    <div class="text--center">{{ t('entityValue.view.filteredOut') }}</div>
   }
 </ng-container>
