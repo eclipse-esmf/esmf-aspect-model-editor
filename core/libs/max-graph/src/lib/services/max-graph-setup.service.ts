@@ -16,7 +16,7 @@ import {ConfigurationService} from '@ame/settings-dialog';
 import {AssetsPath, BindingsService, BrowserService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {inject, Injectable} from '@angular/core';
-import {DefaultEntityInstance, DefaultTrait} from '@esmf/aspect-model-loader';
+import {DefaultAspect, DefaultEntityInstance, DefaultTrait} from '@esmf/aspect-model-loader';
 import {
   Cell,
   CellState,
@@ -188,16 +188,17 @@ export class MaxGraphSetupService {
   }
 
   centerGraph(): void {
-    const bounds = this.graph.getGraphBounds();
-    const height = Math.max(bounds.height, this.scrollTileSize.height * this.graph.view.scale);
+    const vertices = this.graph?.getChildVertices?.(this.graph.getDefaultParent());
+    if (!vertices || vertices.length === 0) return;
 
-    const aspect = this.graph
-      .getChildCells(this.graph.getDefaultParent(), true, false)
-      .find(({style}: Cell) => style.fillColor.includes('aspect'));
-    if (aspect) {
-      const topCoordinate = Math.floor(Math.max(0, bounds.y - Math.max(0, (this.graph.container.clientHeight - height) / 2)));
-      this.graph.scrollCellToVisible(aspect, true);
-      this.graph.container.scrollTop = topCoordinate - aspect.geometry.height / 2;
+    const aspect = vertices.find((cell: Cell) => {
+      const model = MaxGraphHelper.getModelElement(cell);
+      return model instanceof DefaultAspect || (cell.style?.baseStyleNames && cell.style.baseStyleNames.includes('aspect'));
+    });
+
+    const targetCell = aspect || vertices[0];
+    if (targetCell) {
+      this.graph.scrollCellToVisible(targetCell, true);
     }
   }
 

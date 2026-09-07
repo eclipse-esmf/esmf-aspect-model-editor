@@ -130,7 +130,7 @@ export class MaxGraphRenderer implements ModelRenderer<Cell, Cell> {
 
   renderUnit(node: ModelTree<DefaultUnit>, parent: Cell, geometry: ShapeConfiguration['geometry'] = {}): Cell {
     const unit = node.element;
-    if (this.inParentRendered(unit, parent) || (parent && !(MaxGraphHelper.getModelElement(parent) instanceof DefaultCharacteristic))) {
+    if (parent && (this.inParentRendered(unit, parent) || !(MaxGraphHelper.getModelElement(parent) instanceof DefaultCharacteristic))) {
       return null;
     }
 
@@ -301,9 +301,12 @@ export class MaxGraphRenderer implements ModelRenderer<Cell, Cell> {
   // ==========================================================================================
 
   private inParentRendered(element: NamedElement, parent: Cell): boolean {
-    return this.maxgraphService.graph
-      .getOutgoingEdges(parent, null)
-      .some(cell => MaxGraphHelper.getModelElement(cell)?.aspectModelUrn === element.aspectModelUrn);
+    if (!parent) {
+      return false;
+    }
+    return (this.maxgraphService.graph?.getOutgoingEdges(parent, null) || []).some(
+      cell => MaxGraphHelper.getModelElement(cell)?.aspectModelUrn === element.aspectModelUrn,
+    );
   }
 
   private connectIsolatedElement(parentCell: Cell, childCell: Cell) {

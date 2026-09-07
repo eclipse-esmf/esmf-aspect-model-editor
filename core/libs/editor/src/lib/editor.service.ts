@@ -222,6 +222,9 @@ export class EditorService {
       this.maxgraphService.setCoordinatesForNextCellRender(x, y);
       const cell = maxgraphRenderer.render(node, null);
       this.maxgraphService.formatCell(cell, true);
+      if (cell) {
+        this.maxgraphService.navigateToCell(cell, true);
+      }
     } else {
       const element: NamedElement = this.loadedFilesService.findElementOnExtReferences(aspectModelUrn);
       if (!this.maxgraphService.resolveCellByModelElement(element)) {
@@ -233,6 +236,9 @@ export class EditorService {
         const cell = maxgraphRenderer.render(filteredElements[0], null);
 
         this.maxgraphService.formatCell(cell);
+        if (cell) {
+          this.maxgraphService.navigateToCell(cell, true);
+        }
       } else {
         this.notificationsService.warning({
           title: 'Element is already used',
@@ -262,10 +268,13 @@ export class EditorService {
         this.loadedFilesService.updateFileNaming(this.currentLoadedFile, {aspect: aspectInstance, name: `${aspectInstance.name}.ttl`});
 
         if (aspectInstance) {
-          this.maxgraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
+          const cell = this.maxgraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
             shapeAttributes: [],
             geometry,
           });
+          if (cell) {
+            this.maxgraphService.navigateToCell(cell, true);
+          }
         } else {
           this.openAlertBox();
         }
