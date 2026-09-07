@@ -17,6 +17,7 @@ import {SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultFixedPointConstraint, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
@@ -44,7 +45,11 @@ describe('ScaleInputFieldComponent', () => {
     const rdfModel = new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#');
 
     TestBed.configureTestingModule({
-      imports: [ScaleInputFieldComponent, BrowserAnimationsModule],
+      imports: [
+        ScaleInputFieldComponent,
+        BrowserAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         MockProvider(EditorModelService, {
           getMetaModelElement: vi.fn(() => of(constraint)),

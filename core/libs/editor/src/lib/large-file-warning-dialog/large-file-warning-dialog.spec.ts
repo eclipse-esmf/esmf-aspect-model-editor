@@ -15,6 +15,7 @@ import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -32,7 +33,10 @@ describe('LargeFileWarningComponent', () => {
     } as unknown as MatDialogRef<LargeFileWarningComponent>;
 
     await TestBed.configureTestingModule({
-      imports: [LargeFileWarningComponent],
+      imports: [
+        LargeFileWarningComponent,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
         {provide: MAT_DIALOG_DATA, useValue: {elementsCount: 150}},

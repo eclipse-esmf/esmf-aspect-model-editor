@@ -17,6 +17,7 @@ import {SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultFixedPointConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -39,7 +40,11 @@ describe('IntegerInputFieldComponent signal form', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IntegerInputFieldComponent, BrowserAnimationsModule],
+      imports: [
+        IntegerInputFieldComponent,
+        BrowserAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         MockProvider(EditorModelService, {
           getMetaModelElement: vi.fn(() => of(constraint)),

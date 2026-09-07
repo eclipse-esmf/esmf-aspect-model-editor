@@ -18,6 +18,7 @@ import {
   RdfModel,
   ScalarValue,
 } from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
@@ -55,7 +56,11 @@ describe('ValuesInputFieldComponent', () => {
     );
 
     TestBed.configureTestingModule({
-      imports: [ValuesInputFieldComponent, BrowserAnimationsModule],
+      imports: [
+        ValuesInputFieldComponent,
+        BrowserAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         MockProvider(EditorModelService, {getMetaModelElement: vi.fn(() => of(enumeration)), isReadOnly: vi.fn(() => false)}),
         MockProvider(LoadedFilesService, {

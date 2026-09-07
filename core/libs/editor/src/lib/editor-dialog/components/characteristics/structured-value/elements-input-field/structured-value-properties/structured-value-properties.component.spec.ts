@@ -17,6 +17,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -57,7 +58,11 @@ describe('StructuredValuePropertiesComponent', () => {
   beforeEach(async () => {
     dialogRefMock.close.mockClear();
     await TestBed.configureTestingModule({
-      imports: [StructuredValuePropertiesComponent, BrowserAnimationsModule],
+      imports: [
+        StructuredValuePropertiesComponent,
+        BrowserAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         {provide: MAT_DIALOG_DATA, useValue: dialogData},
         {provide: MatDialogRef, useValue: dialogRefMock},

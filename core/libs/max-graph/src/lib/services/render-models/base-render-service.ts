@@ -81,6 +81,8 @@ export abstract class BaseRenderService {
       MaxGraphHelper.establishRelation(modelElement, property);
       this.graph.insertEdge(this.graph.getDefaultParent(), null, null, e.source, e.target, {
         baseStyleNames: [modelElement.propertiesPayload[property.aspectModelUrn]?.optional ? 'optionalPropertyEdge' : 'defaultEdge'],
+        strokeColor: this.themeService.currentColors.border,
+        fontColor: this.themeService.currentColors.font,
       });
     });
   }

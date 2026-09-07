@@ -22,6 +22,7 @@ import {
   MaxGraphShapeOverlayService,
   MaxGraphShapeSelectorService,
   ShapeConfiguration,
+  ThemeService,
 } from '@ame/max-graph';
 import {ElementModelService} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
@@ -74,6 +75,7 @@ export class EditorService {
   private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
   private elementCreator = inject(ElementCreatorService);
+  private themeService = inject(ThemeService);
 
   private validateModelSubscription$: Subscription;
   public readonly isAllShapesExpanded = signal<boolean>(true);
@@ -343,7 +345,7 @@ export class EditorService {
       vertexCells.forEach((cell: Cell) => {
         this.maxgraphAttributeService.graph.setCellStyles(
           'strokeColor',
-          'black',
+          this.themeService.currentColors.border,
           this.maxgraphService.graph.getOutgoingEdges(cell, null).map(edge => edge.target),
         );
         this.elementModelService.deleteElement(cell);

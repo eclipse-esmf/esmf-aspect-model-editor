@@ -493,6 +493,8 @@ export class MaxGraphService {
 
     this.graph.insertEdge(this.graph.getDefaultParent(), null, null, parent, child, {
       baseStyleNames: [edgeStyle || childNode.fromParentArrow],
+      strokeColor: this.themeService.currentColors.border,
+      fontColor: this.themeService.currentColors.font,
     } as CellStyle);
 
     if (!this.filterAttributes.isFiltering) {

@@ -19,6 +19,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatOptionSelectionChange} from '@angular/material/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultCharacteristic, DefaultEntity, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
@@ -46,7 +47,11 @@ describe('DataTypeInputFieldComponent', () => {
     cachedFile = new ModelElementCache();
 
     TestBed.configureTestingModule({
-      imports: [DataTypeInputFieldComponent, BrowserAnimationsModule],
+      imports: [
+        DataTypeInputFieldComponent,
+        BrowserAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         MockProvider(EditorModelService, {
           getMetaModelElement: vi.fn(() => of(characteristic)),

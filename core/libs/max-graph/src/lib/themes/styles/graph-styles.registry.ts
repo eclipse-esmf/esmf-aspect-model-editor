@@ -60,6 +60,7 @@ export class GraphStylesRegistry {
         [EdgeStyles.entityValueEntityEdge]: {dashed: true},
         [EdgeStyles.abstractPropertyEdge]: {dashed: true},
         [EdgeStyles.abstractElementEdge]: {endArrow: 'block'},
+        [EdgeStyles.defaultEdge]: {},
       },
     );
   }

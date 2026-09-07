@@ -14,7 +14,13 @@
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {FILTER_ATTRIBUTES, FiltersService} from '@ame/loader-filters';
-import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService, MaxGraphShapeSelectorService} from '@ame/max-graph';
+import {
+  MaxGraphAttributeService,
+  MaxGraphService,
+  MaxGraphShapeOverlayService,
+  MaxGraphShapeSelectorService,
+  ThemeService,
+} from '@ame/max-graph';
 import {ElementModelService} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
@@ -104,6 +110,9 @@ describe('EditorService', () => {
           updateElement: vi.fn(),
         }),
         MockProvider(TitleService),
+        MockProvider(ThemeService, {
+          currentColors: {border: '#000000', font: '#000000'} as any,
+        }),
         MockProvider(ShapeSettingsStateService, {
           isShapeSettingOpened: vi.fn(() => false) as any,
           selectedShapeForUpdate: vi.fn(() => null) as any,

@@ -61,6 +61,9 @@ export class ThemeService {
 
   setGraph(graph: Graph) {
     this.graph = graph;
+    if (this.graph) {
+      this.applyTheme(this.currentTheme);
+    }
   }
 
   applyTheme(theme: string) {
