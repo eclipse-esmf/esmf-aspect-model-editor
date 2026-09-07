@@ -64,7 +64,7 @@ jobs:
         run: pnpm run lint
         working-directory: core
 
-      - name: Performing jest tests
+      - name: Performing vi tests
         run: pnpm run test
         working-directory: core
 

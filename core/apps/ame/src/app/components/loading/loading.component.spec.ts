@@ -15,6 +15,7 @@ import {ModelApiService} from '@ame/api';
 import {ElectronSignalsService, ElectronTunnelService, NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {LoadingComponent} from './loading.component';
@@ -52,7 +53,7 @@ describe('LoadingComponent', () => {
     notificationsService = {error: vi.fn()};
 
     TestBed.configureTestingModule({
-      imports: [LoadingComponent],
+      imports: [LoadingComponent, TranslocoTestingModule.forRoot({langs: {en: {}}})],
       providers: [
         {provide: Router, useValue: router},
         {provide: ElectronSignalsService, useValue: electronSignalsService},
