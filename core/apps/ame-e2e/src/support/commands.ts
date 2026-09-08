@@ -19,7 +19,7 @@ import {SearchesStateService} from '@ame/utils';
 import {Aspect} from '@esmf/aspect-model-loader';
 import {EventObject, InternalEvent} from '@maxgraph/core';
 import 'cypress-file-upload';
-import {API_BASE_URL, FORMAT_API_URL, VALIDATE_API_URL} from './api-mocks';
+import {API_BASE_URL, FORMAT_API_URL, setUpDefaultInterceptors, VALIDATE_API_URL} from './api-mocks';
 import {FIELD_see, SELECTOR_editorSaveButton, SELECTOR_tbConnectButton} from './constants';
 import {cyHelp} from './helpers';
 
@@ -293,6 +293,7 @@ declare global {
 }
 
 Cypress.Commands.add('visitDefault', () => {
+  setUpDefaultInterceptors();
   cy.visit('/editor?e2e=true');
   cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist');
   return cy.get('#graph', {timeout: 15000}).should('be.visible');
