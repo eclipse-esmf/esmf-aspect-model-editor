@@ -114,3 +114,13 @@ table.mxPopupMenu hr {
 table.mxPopupMenu tr {
   font-size: 4pt;
 }
+
+#graph {
+  outline: none;
+
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    outline: none;
+  }
+}
