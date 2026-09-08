@@ -124,6 +124,7 @@ export function dragExternalElementFromWorkspace(options: {
     .startModelling(true)
     .then(() => cyHelp.checkAspectDefaultExists())
     .then(() => cy.get(SELECTOR_workspaceBtn).click())
+    .then(() => cy.get('ame-workspace-file-list', {timeout: 15000}).should('be.visible'))
     .then(() => cy.get(SELECTOR_openNamespacesButton).contains(options.fileName).click({force: true}))
     .then(() => cy.get(SELECTOR_searchElementsInp).type(searchTerm))
     .then(() => {
