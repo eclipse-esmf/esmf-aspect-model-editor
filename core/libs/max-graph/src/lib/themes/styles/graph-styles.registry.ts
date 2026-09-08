@@ -53,16 +53,14 @@ export class GraphStylesRegistry {
   }
 
   private static registerEdgeVariants(b: GraphStyleBuilder): void {
-    b.variants(
-      {},
-      {
-        [EdgeStyles.optionalPropertyEdge]: {dashed: true},
-        [EdgeStyles.entityValueEntityEdge]: {dashed: true},
-        [EdgeStyles.abstractPropertyEdge]: {dashed: true},
-        [EdgeStyles.abstractElementEdge]: {endArrow: 'block'},
-        [EdgeStyles.defaultEdge]: {},
-      },
-    );
+    const baseEdge = this.defaultEdgeStyle();
+    b.variants(baseEdge, {
+      [EdgeStyles.optionalPropertyEdge]: {dashed: true},
+      [EdgeStyles.entityValueEntityEdge]: {dashed: true},
+      [EdgeStyles.abstractPropertyEdge]: {dashed: true, endArrow: 'block'},
+      [EdgeStyles.abstractElementEdge]: {endArrow: 'block'},
+      [EdgeStyles.defaultEdge]: {},
+    });
   }
 
   private static baseNodeStyle(): CellStyle {

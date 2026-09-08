@@ -23,7 +23,7 @@ import {environment} from 'environments/environment';
 import {Observable, Subject} from 'rxjs';
 import {MaxGraphGeometryProviderService, MaxGraphSetupService} from '.';
 import {MaxGraphCharacteristicHelper, MaxGraphHelper} from '../helpers';
-import {ShapeConfiguration} from '../models';
+import {EdgeStyles, ShapeConfiguration} from '../models';
 import {ThemeService} from '../themes/theme.service';
 import {MaxGraphAttributeService} from './max-graph-attribute.service';
 import {MaxGraphShapeOverlayService} from './max-graph-shape-overlay.service';
@@ -492,7 +492,7 @@ export class MaxGraphService {
     }
 
     this.graph.insertEdge(this.graph.getDefaultParent(), null, null, parent, child, {
-      baseStyleNames: [edgeStyle || childNode.fromParentArrow],
+      baseStyleNames: [edgeStyle || childNode?.fromParentArrow || EdgeStyles.defaultEdge],
       strokeColor: this.themeService.currentColors.border,
       fontColor: this.themeService.currentColors.font,
     } as CellStyle);
