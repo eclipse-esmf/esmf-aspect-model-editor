@@ -57,6 +57,7 @@ export function setupExternalReference(options: {
           version,
           models: [
             {
+              name: options.fileName,
               model: options.fileName,
               aspectModelUrn: urn,
               version: SAMM_VERSION_ACTUAL,
