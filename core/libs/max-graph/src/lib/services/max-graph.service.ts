@@ -300,7 +300,13 @@ export class MaxGraphService {
     }
 
     this.graph.setSelectionCell(cell);
+    this.graph.view?.validate?.();
     this.graph.scrollCellToVisible(cell, center);
+    if (typeof requestAnimationFrame === 'function') {
+      requestAnimationFrame(() => {
+        this.graph?.scrollCellToVisible(cell, center);
+      });
+    }
 
     return cell;
   }

@@ -282,12 +282,17 @@ export class EditorService {
         this.loadedFilesService.updateFileNaming(this.currentLoadedFile, {aspect: aspectInstance, name: `${aspectInstance.name}.ttl`});
 
         if (aspectInstance) {
+          const isGraphEmpty = this.maxgraphService.isModelEmpty();
           const cell = this.maxgraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
             shapeAttributes: [],
             geometry,
           });
           if (cell) {
-            this.maxgraphSetupService.centerGraph();
+            if (isGraphEmpty) {
+              this.maxgraphSetupService.centerGraph();
+            } else {
+              this.maxgraphService.navigateToCell(cell, true);
+            }
           }
         } else {
           this.openAlertBox();
