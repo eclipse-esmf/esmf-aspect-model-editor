@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -15,7 +14,8 @@
 import {QuantifiableProps} from '../../shared/props';
 import {DefaultQuantifiable, Quantifiable} from './default-quantifiable';
 
-export interface Duration extends Quantifiable {}
+export type Duration = Quantifiable;
+
 export class DefaultDuration extends DefaultQuantifiable implements Quantifiable {
   override className = 'DefaultDuration';
 

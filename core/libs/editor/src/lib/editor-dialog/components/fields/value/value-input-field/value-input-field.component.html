@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -10,10 +11,11 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="value">value</mat-label>
-  <input [formControl]="getControl('value')" matInput name="value" data-cy="valueElement" />
-  @if (getControl('value')?.errors?.required) {
-    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.VALUE.PLEASE_DEFINE' | translate }} </mat-error>
-  }
-</mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>value *</mat-label>
+    <input [formField]="field" matInput data-cy="valueElement" />
+    @if (hasError('required')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.value.pleaseDefine') }} </mat-error>
+    }
+  </mat-form-field>
+</ng-container>

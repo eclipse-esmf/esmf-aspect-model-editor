@@ -1,13 +1,26 @@
-import {ModelApiService, WorkspaceStructure} from '@ame/api';
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {FileEntry, FileInformation, ModelApiService, ModelData, WorkspaceStructure} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {config} from '@ame/shared';
-import {ExporterHelper, FileStatus, SidebarStateService} from '@ame/sidebar';
+import {FileStatus, SidebarStateService} from '@ame/sidebar';
+import {isVersionOutdated} from '@ame/utils';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {Observable, Subject, forkJoin, map, of, switchMap} from 'rxjs';
-import {FileEntry, FileInformation} from './editor-toolbar';
 import {ModelLoaderService} from './model-loader.service';
 
 @Injectable({providedIn: 'root'})
@@ -54,9 +67,9 @@ export class ModelCheckerService {
         namespacesStructure = structure;
         const fileEntries: Array<FileEntry> = Object.entries(structure).flatMap(([namespace, versions]) =>
           versions.flatMap(({version, models}) =>
-            models.map(model => ({
-              absoluteName: `${namespace}:${version}:${model.model}`,
-              fileName: model.model,
+            models.map((model: ModelData) => ({
+              absoluteName: `${namespace}:${version}:${model.name}`,
+              fileName: model.name,
               aspectModelUrn: model.aspectModelUrn,
               modelVersion: model.version,
             })),
@@ -103,7 +116,7 @@ export class ModelCheckerService {
     status.dependencies = dependencies;
     status.missingDependencies = missingDependencies;
     status.sammVersion = modelVersion || 'unknown';
-    status.outdated = ExporterHelper.isVersionOutdated(modelVersion, config.currentSammVersion);
+    status.outdated = isVersionOutdated(modelVersion, config.currentSammVersion);
     status.loaded = currentFile?.absoluteName === absoluteName;
     status.errored = status.sammVersion === 'unknown' || missingDependencies.length > 0;
     status.aspectModelUrn = aspectModelUrn;
@@ -139,7 +152,7 @@ export class ModelCheckerService {
         for (const namespace in structure) {
           for (const element of structure[namespace]) {
             for (const value of element.models) {
-              const fileInformation = {namespace: namespace, model: value.model, version: element.version};
+              const fileInformation = {namespace: namespace, model: value.name, version: element.version};
               requests[value.aspectModelUrn] = fileInformation;
             }
           }

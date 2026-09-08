@@ -44,6 +44,7 @@
   flex-direction: column;
   align-items: center;
   font-weight: 400;
+  color: var(--ame-font, #000000);
   position: relative;
 
   .element-name {
@@ -63,7 +64,12 @@
 
     &:not(.simple) {
       padding-bottom: 6px;
-      border-bottom: 2px solid var(--ame-font);
+      border-bottom: 2px solid var(--ame-font, #000000);
+    }
+
+    &.anonymous-node {
+      font-style: italic;
+      letter-spacing: 0.5px;
     }
   }
 
@@ -76,6 +82,7 @@
     text-overflow: ellipsis;
     overflow-x: hidden;
     box-sizing: border-box;
+    color: var(--ame-font, inherit);
   }
 }
 
@@ -83,6 +90,6 @@
   height: 15px;
   border-radius: 3px;
   padding: 2px 4px;
-  color: black;
+  color: var(--ame-font, #000000);
   transform: translate(0, -4px);
 }

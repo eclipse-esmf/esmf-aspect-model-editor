@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -319,6 +319,7 @@ export class SammC {
       this.samm.Constraint().value,
       this.samm.Entity().value,
       this.samm.EventsProperty().value,
+      this.samm.Value().value,
       this.LanguageConstraint().value,
       this.LocaleConstraint().value,
       this.RangeConstraint().value,
@@ -326,6 +327,7 @@ export class SammC {
       this.LengthConstraint().value,
       this.RegularExpressionConstraint().value,
       this.FixedPointConstraint().value,
+      this.TraitCharacteristic().value,
       this.StateCharacteristic().value,
       this.EitherCharacteristic().value,
       this.CodeCharacteristic().value,

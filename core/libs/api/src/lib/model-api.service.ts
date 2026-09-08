@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AsyncApi, FileEntry, FileInformation, OpenApi, ViolationError} from '@ame/editor';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, IPC_RENDERER} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
@@ -20,21 +19,21 @@ import {Injectable, inject} from '@angular/core';
 import {Observable, forkJoin, of, throwError} from 'rxjs';
 import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
-import {ModelData, WorkspaceStructure} from './models';
+import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, ViolationError, WorkspaceStructure} from './models';
 
 @Injectable({providedIn: 'root'})
 export class ModelApiService {
-  private ipcRenderer = inject(IPC_RENDERER);
-  private config: AppConfig = inject(APP_CONFIG);
-  private http = inject(HttpClient);
-  private browserService = inject(BrowserService);
-  private modelValidatorService = inject(ModelValidatorService);
-  private translate = inject(LanguageTranslationService);
+  private readonly ipcRenderer = inject(IPC_RENDERER);
+  private readonly config: AppConfig = inject(APP_CONFIG);
+  private readonly http = inject(HttpClient);
+  private readonly browserService = inject(BrowserService);
+  private readonly modelValidatorService = inject(ModelValidatorService);
+  private readonly translate = inject(LanguageTranslationService);
 
-  private defaultPort = this.config.defaultPort;
+  private readonly defaultPort = this.config.defaultPort;
+  private readonly api = this.config.api;
+  private readonly requestTimeout = 60000;
   private serviceUrl = this.config.serviceUrl;
-  private api = this.config.api;
-  private requestTimeout = 60000;
 
   constructor() {
     if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
@@ -73,10 +72,10 @@ export class ModelApiService {
   }
 
   saveAspectModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string> {
-    if (RdfModelUtil.splitRdfIntoChunks(absoluteModelName)[2] === 'new-model.ttl') {
+    if (absoluteModelName && RdfModelUtil.splitRdfIntoChunks(absoluteModelName)[2] === 'new-model.ttl') {
       return throwError(() => ({
         error: {
-          message: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_DEFAULT_MODEL,
+          message: this.translate.language.notificationService.aspectSavedDefaultModel,
         },
       }));
     }
@@ -166,7 +165,7 @@ export class ModelApiService {
             map(model => model.content),
             map(
               aspectMetaModel =>
-                new FileContentModel(modelData.model, modelData.aspectModelUrn, modelData.version, modelData.existing, aspectMetaModel),
+                new FileContentModel(modelData.name, modelData.aspectModelUrn, modelData.version, modelData.existing, aspectMetaModel),
             ),
           ),
         );

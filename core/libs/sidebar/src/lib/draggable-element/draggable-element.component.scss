@@ -15,4 +15,9 @@
   display: block;
   cursor: move;
   margin-top: 16px;
+
+  &.readonly,
+  &.disabled {
+    cursor: default;
+  }
 }

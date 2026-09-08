@@ -67,6 +67,13 @@
   transition: 0.5s;
   position: relative;
   width: 100%;
+  outline: none;
+
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    outline: none;
+  }
 }
 
 .empty-model {
@@ -103,7 +110,7 @@
 }
 
 .canvas {
-  background: white;
+  background: var(--ame-background, white);
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -130,7 +137,8 @@
   transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   box-shadow: -4px 8px 8px 0 var(--ame-shadow--black-25);
   z-index: 1;
-  background: white;
+  background: var(--ame-surface, white);
+  color: var(--ame-font, inherit);
 
   &__gutter {
     display: flex;
@@ -170,9 +178,10 @@
   position: absolute;
   top: 70px;
   right: 24px;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 0 8px 2px var(--ame-shadow--black-25);
+  background-color: var(--ame-surface, white);
+  border: 1px solid var(--ame-border-color, transparent);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--ame-shadow--black-25);
 
   .map {
     position: absolute;
@@ -180,6 +189,32 @@
     top: 4px;
     right: 4px;
     border-radius: 2px;
+
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:focus {
+      outline: 2px solid #007bff;
+      outline-offset: 2px;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:focus-visible {
+      outline: 2px solid #007bff;
+      outline-offset: 2px;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
   }
 
   &.hidden {

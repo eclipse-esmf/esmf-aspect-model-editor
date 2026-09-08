@@ -16,11 +16,11 @@ import {FiltersService} from '@ame/loader-filters';
 import {
   CharacteristicRenderService,
   EnumerationRenderService,
-  MxGraphAttributeService,
-  MxGraphHelper,
-  MxGraphService,
-  MxGraphShapeOverlayService,
-} from '@ame/mx-graph';
+  MaxGraphAttributeService,
+  MaxGraphHelper,
+  MaxGraphService,
+  MaxGraphShapeOverlayService,
+} from '@ame/max-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {useUpdater} from '@ame/utils';
 import {inject, Injectable} from '@angular/core';
@@ -40,24 +40,24 @@ import {
   NamedElement,
   ScalarValue,
 } from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicModelService extends BaseModelService {
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private mxGraphService = inject(MxGraphService);
-  private characteristicRenderer = inject(CharacteristicRenderService);
-  private enumerationRenderer = inject(EnumerationRenderService);
-  private filtersService = inject(FiltersService);
+  private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
+  private readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly characteristicRenderer = inject(CharacteristicRenderService);
+  private readonly enumerationRenderer = inject(EnumerationRenderService);
+  private readonly filtersService = inject(FiltersService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultCharacteristic;
   }
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const originalModelElement = MxGraphHelper.getModelElement(cell);
+  update(cell: Cell, form: {[key: string]: any}) {
+    const originalModelElement = MaxGraphHelper.getModelElement(cell);
     const {metaModelElement, cell: newCell} = this.onChangedMetaModel(cell, form);
 
     if (!metaModelElement) {
@@ -89,35 +89,35 @@ export class CharacteristicModelService extends BaseModelService {
     }
   }
 
-  delete(cell: mxgraph.mxCell): void {
+  delete(cell: Cell): void {
     super.delete(cell);
-    const elementModel = MxGraphHelper.getModelElement(cell);
-    const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
-    const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
+    const elementModel = MaxGraphHelper.getModelElement(cell);
+    const outgoingEdges = this.maxgraphAttributeService.graph.getOutgoingEdges(cell, null);
+    const incomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(cell, null);
     this.removePredefinedUnit(outgoingEdges);
-    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, elementModel);
-    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, elementModel);
-    this.mxGraphService.removeCells([cell]);
+    this.maxgraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, elementModel);
+    this.maxgraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, elementModel);
+    this.maxgraphService.removeCells([cell]);
   }
 
-  private removePredefinedUnit(edges: Array<mxgraph.mxCell>) {
+  private removePredefinedUnit(edges: Array<Cell>) {
     edges.forEach(edge => {
-      const metaModelElement = MxGraphHelper.getModelElement(edge.target);
+      const metaModelElement = MaxGraphHelper.getModelElement(edge.target);
       if (metaModelElement instanceof DefaultUnit && metaModelElement.isPredefined) {
-        this.mxGraphService.removeCells([edge.target]);
+        this.maxgraphService.removeCells([edge.target]);
       }
     });
   }
 
-  private onChangedMetaModel(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    let metaModelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
+  private onChangedMetaModel(cell: Cell, form: {[key: string]: any}) {
+    let metaModelElement = MaxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (form.changedMetaModel) {
       this.changeMetaModel(metaModelElement, form, cell);
       const originalModelElement = metaModelElement;
       metaModelElement = form.changedMetaModel;
 
       if (!metaModelElement.isPredefined) {
-        cell = this.mxGraphService.resolveCellByModelElement(metaModelElement);
+        cell = this.maxgraphService.resolveCellByModelElement(metaModelElement) || cell;
       }
 
       if (!(metaModelElement instanceof DefaultEnumeration)) {
@@ -128,7 +128,7 @@ export class CharacteristicModelService extends BaseModelService {
         // in case this is a predefined characteristic, no need to update anything
         const children = [...(originalModelElement.children || [])];
         for (const child of children) {
-          MxGraphHelper.removeRelation(originalModelElement, child);
+          MaxGraphHelper.removeRelation(originalModelElement, child);
         }
         this.characteristicRenderer.update({cell, form});
         return {};
@@ -137,8 +137,8 @@ export class CharacteristicModelService extends BaseModelService {
     return {metaModelElement, cell};
   }
 
-  private handleStructuredValue(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
+  private handleStructuredValue(cell: Cell, form: {[key: string]: any}) {
+    const metaModelElement = MaxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (!(metaModelElement instanceof DefaultStructuredValue)) {
       return;
     }
@@ -152,7 +152,7 @@ export class CharacteristicModelService extends BaseModelService {
       form.elements.forEach(element => {
         if (typeof element !== 'string' && element instanceof DefaultProperty) {
           this.currentCachedFile.resolveInstance(element);
-          MxGraphHelper.establishRelation(metaModelElement, element);
+          MaxGraphHelper.establishRelation(metaModelElement, element);
           if (element.characteristic) {
             this.currentCachedFile.resolveInstance(element.characteristic);
           }
@@ -171,23 +171,23 @@ export class CharacteristicModelService extends BaseModelService {
     }
   }
 
-  private removeEntityDependency(cell: mxgraph.mxCell) {
-    this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
-      const modelElement = MxGraphHelper.getModelElement(edge.target);
+  private removeEntityDependency(cell: Cell) {
+    this.maxgraphAttributeService.graph.getOutgoingEdges(cell, null).forEach(edge => {
+      const modelElement = MaxGraphHelper.getModelElement(edge.target);
       if (modelElement instanceof DefaultEntityInstance) {
-        MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(cell), modelElement);
+        MaxGraphHelper.removeRelation(MaxGraphHelper.getModelElement(cell), modelElement);
         this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
       }
     });
   }
 
-  private updateParentModel(cell: mxgraph.mxCell, value: any, oldModel?: NamedElement) {
-    this.mxGraphAttributeService.graph.getIncomingEdges(cell).forEach(edgeToParent => {
-      const modelElementParent = MxGraphHelper.getModelElement<NamedElement>(edgeToParent.source);
+  private updateParentModel(cell: Cell, value: any, oldModel?: NamedElement) {
+    this.maxgraphAttributeService.graph.getIncomingEdges(cell, null).forEach(edgeToParent => {
+      const modelElementParent = MaxGraphHelper.getModelElement<NamedElement>(edgeToParent.source);
       if (modelElementParent) {
         if (oldModel) {
-          MxGraphHelper.removeRelation(modelElementParent, oldModel);
-          MxGraphHelper.establishRelation(modelElementParent, value);
+          MaxGraphHelper.removeRelation(modelElementParent, oldModel);
+          MaxGraphHelper.establishRelation(modelElementParent, value);
         }
         useUpdater(modelElementParent).update(value);
       }
@@ -221,7 +221,7 @@ export class CharacteristicModelService extends BaseModelService {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {
         this.currentCachedFile.resolveInstance(form.elementCharacteristic);
-        MxGraphHelper.establishRelation(metaModelElement, form.elementCharacteristic);
+        MaxGraphHelper.establishRelation(metaModelElement, form.elementCharacteristic);
       }
     }
   }
@@ -236,17 +236,17 @@ export class CharacteristicModelService extends BaseModelService {
         metaModelElement.unit?.aspectModelUrn !== form.unit?.aspectModelUrn ||
         metaModelElement.className !== originalModelElement.className
       ) {
-        MxGraphHelper.removeRelation(metaModelElement, metaModelElement.unit);
+        MaxGraphHelper.removeRelation(metaModelElement, metaModelElement.unit);
       }
     }
 
     if (originalModelElement?.unit) {
-      MxGraphHelper.removeRelation(originalModelElement, originalModelElement.unit);
+      MaxGraphHelper.removeRelation(originalModelElement, originalModelElement.unit);
     }
 
     metaModelElement.unit = form.unit;
     if (form.unit instanceof DefaultUnit) {
-      MxGraphHelper.establishRelation(metaModelElement, form.unit);
+      MaxGraphHelper.establishRelation(metaModelElement, form.unit);
     }
 
     if (form.unit && !form.unit?.isPredefined) {
@@ -280,9 +280,9 @@ export class CharacteristicModelService extends BaseModelService {
     metaModelElement.values = [...form.chipList];
   }
 
-  private changeMetaModel(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}, cell: mxgraph.mxCell) {
+  private changeMetaModel(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}, cell: Cell) {
     this.updateParentModel(cell, form.changedMetaModel, metaModelElement);
     this.updateModelElementCache(metaModelElement, form.changedMetaModel);
-    MxGraphHelper.setElementNode(cell, this.filtersService.createNode(form.changedMetaModel));
+    MaxGraphHelper.setElementNode(cell, this.filtersService.createNode(form.changedMetaModel));
   }
 }

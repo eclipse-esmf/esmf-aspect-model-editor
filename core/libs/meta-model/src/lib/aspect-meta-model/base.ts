@@ -14,10 +14,13 @@
 import {NamedElement} from '@esmf/aspect-model-loader';
 
 export class ModelRelationArray<T extends NamedElement> extends Array<T> {
-  push(...items: T[]): number {
+  override push(...items: T[]): number {
     let pushedItemsCount = 0;
     for (const item of items) {
-      const existent = this.some(e => e.aspectModelUrn === item.aspectModelUrn);
+      if (!item) {
+        continue;
+      }
+      const existent = this.some(e => e?.aspectModelUrn === item.aspectModelUrn);
       if (existent) {
         continue;
       }

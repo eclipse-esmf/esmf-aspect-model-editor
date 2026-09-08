@@ -7,14 +7,24 @@
   "tags": [],
   "targets": {
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/aspect-model-loader"],
       "options": {
-        "jestConfig": "libs/aspect-model-loader/jest.config.ts"
+        "tsConfig": "libs/aspect-model-loader/tsconfig.spec.json",
+        "buildTarget": "aspect-model-loader:build",
+        "watch": false
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/libs/aspect-model-loader"],
+      "options": {
+        "project": "libs/aspect-model-loader/ng-package.json"
+      },
+      "dependsOn": []
     }
   }
 }

@@ -11,34 +11,53 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {LoadingScreenComponent} from '@ame/shared';
+import {provideMockObject} from '@ame/test-helpers';
 import {LanguageTranslationService} from '@ame/translation';
 import {CommonModule} from '@angular/common';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {beforeEach, describe, expect, it} from '@jest/globals';
-import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
-import {provideMockObject} from '../../../../../../jest-helpers';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
+import {TranslocoTestingModule} from '@jsverse/transloco';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadingScreenOptions} from '../../services/loading-screen.service';
+import {LoadingScreenComponent} from './loading-screen.component';
 
 describe('LoadingScreenComponent', () => {
   let component: LoadingScreenComponent;
   let fixture: ComponentFixture<LoadingScreenComponent>;
+  let dialogRefMock: {close: ReturnType<typeof vi.fn>};
+  let loadingData: LoadingScreenOptions;
 
   beforeEach(async () => {
+    dialogRefMock = {
+      close: vi.fn(),
+    };
+
+    loadingData = {
+      title: 'Loading Data',
+      content: 'Please wait...',
+      hasCloseButton: true,
+      closeButtonAction: vi.fn(),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [CommonModule, MatDialogModule, MatProgressBarModule, MatButtonModule, TranslateModule.forRoot(), TranslatePipe],
+      imports: [
+        CommonModule,
+        MatDialogModule,
+        MatProgressBarModule,
+        MatButtonModule,
+        TranslocoTestingModule.forRoot({
+          langs: {en: {loadingScreenDialog: {generalWaitMessage: 'Please wait'}}},
+          translocoConfig: {availableLangs: ['en'], defaultLang: 'en'},
+        }),
+        LoadingScreenComponent,
+      ],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        {provide: MAT_DIALOG_DATA, useValue: {}},
-        {provide: MatDialogRef, useValue: {}},
+        {provide: MAT_DIALOG_DATA, useValue: loadingData},
+        {provide: MatDialogRef, useValue: dialogRefMock},
         {
           provide: LanguageTranslationService,
           useValue: provideMockObject(LanguageTranslationService),
@@ -53,7 +72,21 @@ describe('LoadingScreenComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create and display title and content', () => {
     expect(component).toBeTruthy();
+    expect(component.data.title).toBe('Loading Data');
+    expect(component.data.content).toBe('Please wait...');
+  });
+
+  it('close() should call closeButtonAction and close dialog', () => {
+    component.close();
+    expect(loadingData.closeButtonAction).toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalled();
+  });
+
+  it('close() should handle missing closeButtonAction', () => {
+    component.data.closeButtonAction = undefined;
+    component.close();
+    expect(dialogRefMock.close).toHaveBeenCalled();
   });
 });

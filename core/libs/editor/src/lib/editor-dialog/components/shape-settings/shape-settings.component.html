@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,77 +12,77 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="shape-settings__header">
-  <div class="column-container">
-    <h3 class="shape-settings__header-title">
-      <ame-shared-settings-title [metaModelElementInput]="metaModelElement"></ame-shared-settings-title>
-    </h3>
-    @if (loadedFilesService.isElementExtern(metaModelElement)) {
-      <p class="shape-settings__header-description">
-        {{ metaModelElement?.aspectModelUrn?.split('#')[0] }}
-      </p>
-    }
-  </div>
-
-  <div class="actions">
-    <ame-locate-element></ame-locate-element>
-    <button (click)="onClose()" mat-icon-button tabindex="-1">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-</div>
-
-<div class="shape-settings__content">
-  @if (metaModelElement) {
-    <form [formGroup]="formGroup" novalidate>
-      <!-- the same view can be shown in more than one case -->
-      @if (isOfType(['DefaultAspect'])) {
-        <ame-aspect [parentForm]="formGroup"></ame-aspect>
-      } @else if (isCharacteristic() && !isOfType(['DefaultTrait'])) {
-        <ame-characteristic [parentForm]="formGroup"></ame-characteristic>
-      } @else if (isConstraint()) {
-        <ame-constraint [parentForm]="formGroup"></ame-constraint>
-      } @else if (isOfType(['DefaultProperty'])) {
-        <ame-property [parentForm]="formGroup"></ame-property>
-      } @else if (isOfType(['DefaultAbstractProperty'])) {
-        <ame-abstract-property [parentForm]="formGroup"></ame-abstract-property>
-      } @else if (isOfType(['DefaultOperation'])) {
-        <ame-operation [parentForm]="formGroup"></ame-operation>
-      } @else if (isOfType(['DefaultAbstractEntity'])) {
-        <ame-abstract-entity [parentForm]="formGroup"></ame-abstract-entity>
-      } @else if (isOfType(['DefaultEntity'])) {
-        <ame-entity [parentForm]="formGroup"></ame-entity>
-      } @else if (isOfType(['DefaultUnit'])) {
-        <ame-unit [parentForm]="formGroup"></ame-unit>
-      } @else if (isOfType(['DefaultTrait'])) {
-        <ame-trait-characteristic [parentForm]="formGroup"></ame-trait-characteristic>
-      } @else if (isOfType(['DefaultEntityInstance'])) {
-        <ame-entity-instance [parentForm]="formGroup"></ame-entity-instance>
-      } @else if (isOfType(['DefaultValue'])) {
-        <ame-value [parentForm]="formGroup"></ame-value>
-      } @else if (isOfType(['DefaultEvent'])) {
-        <ame-event [parentForm]="formGroup"></ame-event>
+  <div class="shape-settings__header">
+    <div class="column-container">
+      <h3 class="shape-settings__header-title">
+        <ame-shared-settings-title [metaModelElement]="metaModelElement()"></ame-shared-settings-title>
+      </h3>
+      @if (loadedFilesService.isElementExtern(metaModelElement())) {
+        <p class="shape-settings__header-description">
+          {{ metaModelElement()?.aspectModelUrn?.split('#')[0] }}
+        </p>
       }
+    </div>
+
+    <div class="actions">
+      <ame-locate-element></ame-locate-element>
+      <button (click)="onClose()" type="button" mat-icon-button tabindex="-1">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (metaModelElement()) {
+    <form class="shape-settings__form" (submit)="$event.preventDefault(); onSave()" novalidate>
+      <div class="shape-settings__content">
+        <!-- the same view can be shown in more than one case -->
+        @if (isOfType(['DefaultAspect'])) {
+          <ame-aspect [signalForm]="signalForm"></ame-aspect>
+        } @else if (isCharacteristic() && !isOfType(['DefaultTrait'])) {
+          <ame-characteristic [signalForm]="signalForm"></ame-characteristic>
+        } @else if (isConstraint()) {
+          <ame-constraint [signalForm]="signalForm"></ame-constraint>
+        } @else if (isOfType(['DefaultProperty'])) {
+          <ame-property [signalForm]="signalForm"></ame-property>
+        } @else if (isOfType(['DefaultAbstractProperty'])) {
+          <ame-abstract-property [signalForm]="signalForm"></ame-abstract-property>
+        } @else if (isOfType(['DefaultOperation'])) {
+          <ame-operation [signalForm]="signalForm"></ame-operation>
+        } @else if (isOfType(['DefaultAbstractEntity'])) {
+          <ame-abstract-entity [signalForm]="signalForm"></ame-abstract-entity>
+        } @else if (isOfType(['DefaultEntity'])) {
+          <ame-entity [signalForm]="signalForm"></ame-entity>
+        } @else if (isOfType(['DefaultUnit'])) {
+          <ame-unit [signalForm]="signalForm"></ame-unit>
+        } @else if (isOfType(['DefaultTrait'])) {
+          <ame-trait-characteristic [signalForm]="signalForm"></ame-trait-characteristic>
+        } @else if (isOfType(['DefaultEntityInstance'])) {
+          <ame-entity-instance [signalForm]="signalForm"></ame-entity-instance>
+        } @else if (isOfType(['DefaultValue'])) {
+          <ame-value [signalForm]="signalForm"></ame-value>
+        } @else if (isOfType(['DefaultEvent'])) {
+          <ame-event [signalForm]="signalForm"></ame-event>
+        }
+      </div>
+
+      <div class="shape-settings__actions">
+        @if (metaModelDialogService.isSaveButtonEnabled()) {
+          <button (click)="onClose()" type="button" mat-flat-button data-cy="editorCancelButton">
+            {{ t('editorCanvas.shapeSetting.cancel') }}
+          </button>
+        }
+        @if (metaModelDialogService.isSaveButtonEnabled()) {
+          <button
+            [disabled]="!signalForm.valid() || loadedFilesService.isElementExtern(metaModelElement())"
+            mat-flat-button
+            color="primary"
+            type="submit"
+            data-cy="editorSaveButton"
+          >
+            {{ t('editorCanvas.shapeSetting.save') }}
+          </button>
+        }
+      </div>
     </form>
   }
-</div>
-
-<div class="shape-settings__actions">
-  @if (metaModelDialogService.isSaveButtonEnabled()) {
-    <button (click)="onClose()" type="button" mat-flat-button data-cy="editorCancelButton">
-      {{ 'EDITOR_CANVAS.SHAPE_SETTING.CANCEL' | translate }}
-    </button>
-  }
-  @if (metaModelDialogService.isSaveButtonEnabled()) {
-    <button
-      [disabled]="!formGroup.valid || loadedFilesService.isElementExtern(metaModelElement)"
-      (click)="onSave()"
-      mat-flat-button
-      color="primary"
-      type="button"
-      data-cy="editorSaveButton"
-    >
-      {{ 'EDITOR_CANVAS.SHAPE_SETTING.SAVE' | translate }}
-    </button>
-  }
-</div>
+</ng-container>

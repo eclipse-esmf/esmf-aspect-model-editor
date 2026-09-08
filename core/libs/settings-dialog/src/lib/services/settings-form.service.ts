@@ -11,63 +11,126 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ConfigurationService, NamespaceConfiguration, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {GeneralConfig} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Injectable, inject} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {inject, Injectable, signal} from '@angular/core';
+import {disabled, form, pattern, required, validate} from '@angular/forms/signals';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
-import {
-  AutomatedWorkflowUpdateStrategy,
-  EditorConfigurationUpdateStrategy,
-  LanguageConfigurationUpdateStrategy,
-  NamespaceConfigurationUpdateStrategy,
-  SettingsUpdateStrategy,
-} from '../strategy';
+import {AspectModelLanguageEntry, NamespaceConfiguration, SettingsFormData} from '../model';
+import {AutomatedWorkflowUpdateStrategy} from '../strategy/automated-workflow-update.strategy';
 import {CopyrightHeaderUpdateStrategy} from '../strategy/copyright-header-update.strategy';
+import {EditorConfigurationUpdateStrategy} from '../strategy/editor-configuration-update.strategy';
+import {LanguageConfigurationUpdateStrategy} from '../strategy/language-configuration-update.strategy';
+import {NamespaceConfigurationUpdateStrategy} from '../strategy/namespace-configuration-update.strategy';
+import {SettingsUpdateStrategy} from '../strategy/settings-update.strategy';
+import {ConfigurationService} from './configuration.service';
+import {SammLanguageSettingsService} from './samm-language-settings.service';
 
-function createRegexValidator(regex: RegExp, errorKey: string): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const valid = regex.test(control.value);
-    return valid ? null : {[errorKey]: {value: control.value}};
-  };
-}
+const createDefaultSettingsModel = (): SettingsFormData => ({
+  automatedWorkflow: {
+    autoSaveEnabled: true,
+    saveTimerSeconds: 60,
+    autoValidationEnabled: true,
+    validationTimerSeconds: 400,
+    autoFormatEnabled: true,
+  },
+  editorConfiguration: {
+    enableHierarchicalLayout: true,
+    showConnectionLabels: true,
+    darkMode: false,
+  },
+  languageConfiguration: {
+    userInterface: 'en',
+    aspectModel: [],
+  },
+  namespaceConfiguration: {
+    aspectUri: '',
+    aspectName: '',
+    aspectVersion: '',
+    sammVersion: GeneralConfig?.sammVersion || '2.3.0',
+  },
+  copyrightHeaderConfiguration: {
+    copyright: '',
+  },
+});
 
-export const namespaceValidator = (): ValidatorFn => createRegexValidator(/^[A-Za-z0-9]+([.-][A-Za-z0-9_]+)*$/, 'invalidPattern');
-
-export const versionFormatValidator = (): ValidatorFn => createRegexValidator(/^\d+\.\d+\.\d+(-[A-Za-z0-9]+)?$/, 'invalidVersionFormat');
 @Injectable({providedIn: 'root'})
 export class SettingsFormService {
-  private formBuilder = inject(FormBuilder);
-  private configurationService = inject(ConfigurationService);
-  private translate = inject(LanguageTranslationService);
-  private sammLangService = inject(SammLanguageSettingsService);
-  private automatedWorkflowStrategy = inject(AutomatedWorkflowUpdateStrategy);
-  private editorConfigStrategy = inject(EditorConfigurationUpdateStrategy);
-  private languageConfigStrategy = inject(LanguageConfigurationUpdateStrategy);
-  private namespaceConfigStrategy = inject(NamespaceConfigurationUpdateStrategy);
-  private copyrightHeaderUpdateStrategy = inject(CopyrightHeaderUpdateStrategy);
-  private loadedFilesService = inject(LoadedFilesService);
+  private readonly configurationService = inject(ConfigurationService);
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly sammLangService = inject(SammLanguageSettingsService);
+  private readonly automatedWorkflowStrategy = inject(AutomatedWorkflowUpdateStrategy);
+  private readonly editorConfigStrategy = inject(EditorConfigurationUpdateStrategy);
+  private readonly languageConfigStrategy = inject(LanguageConfigurationUpdateStrategy);
+  private readonly namespaceConfigStrategy = inject(NamespaceConfigurationUpdateStrategy);
+  private readonly copyrightHeaderUpdateStrategy = inject(CopyrightHeaderUpdateStrategy);
+  private readonly loadedFilesService = inject(LoadedFilesService);
 
-  private get currentLoadedFile(): NamespaceFile {
+  private get currentLoadedFile(): NamespaceFile | undefined {
     return this.loadedFilesService.currentLoadedFile;
   }
-  private form: FormGroup;
-  private namespace: string;
-  private version: string;
-  private strategies: Array<SettingsUpdateStrategy>;
-  private languagesToBeRemove: Array<string> = [];
 
-  constructor() {
-    this.strategies = [
-      this.automatedWorkflowStrategy,
-      this.editorConfigStrategy,
-      this.languageConfigStrategy,
-      this.namespaceConfigStrategy,
-      this.copyrightHeaderUpdateStrategy,
-    ];
-  }
+  private namespace = '';
+  private version = '';
+  private readonly strategies: SettingsUpdateStrategy[] = [
+    this.automatedWorkflowStrategy,
+    this.editorConfigStrategy,
+    this.languageConfigStrategy,
+    this.namespaceConfigStrategy,
+    this.copyrightHeaderUpdateStrategy,
+  ];
+  private languagesToBeRemove: string[] = [];
+
+  readonly settingsModel = signal<SettingsFormData>(createDefaultSettingsModel());
+
+  readonly settingsForm = form(this.settingsModel, schemaPath => {
+    // Automated workflow
+    disabled(schemaPath.automatedWorkflow.saveTimerSeconds, {
+      when: () => !this.settingsModel().automatedWorkflow.autoSaveEnabled,
+    });
+    validate(schemaPath.automatedWorkflow.saveTimerSeconds, ({value}) => {
+      const val = value();
+      if (this.settingsModel().automatedWorkflow.autoSaveEnabled && (val === null || val === undefined || val < 60)) {
+        return {kind: 'min', message: 'Min. 60 seconds'};
+      }
+      return null;
+    });
+
+    disabled(schemaPath.automatedWorkflow.validationTimerSeconds, {
+      when: () => !this.settingsModel().automatedWorkflow.autoValidationEnabled,
+    });
+    validate(schemaPath.automatedWorkflow.validationTimerSeconds, ({value}) => {
+      const val = value();
+      if (this.settingsModel().automatedWorkflow.autoValidationEnabled && (val === null || val === undefined || val < 60)) {
+        return {kind: 'min', message: 'Min. 60 seconds'};
+      }
+      return null;
+    });
+
+    // Namespace configuration
+    required(schemaPath.namespaceConfiguration.aspectUri);
+    pattern(schemaPath.namespaceConfiguration.aspectUri, /^[A-Za-z0-9]+([.-][A-Za-z0-9_]+)*$/);
+
+    required(schemaPath.namespaceConfiguration.aspectVersion);
+    pattern(schemaPath.namespaceConfiguration.aspectVersion, /^\d+\.\d+\.\d+(-[A-Za-z0-9]+)?$/);
+
+    disabled(schemaPath.namespaceConfiguration.aspectName, {
+      when: () => !!this.currentLoadedFile?.aspect,
+    });
+    disabled(schemaPath.namespaceConfiguration.sammVersion, {
+      when: () => true,
+    });
+
+    // Copyright
+    validate(schemaPath.copyrightHeaderConfiguration.copyright, ({value}) => {
+      const text = value();
+      if (text && text.split('\n').some((line: string) => line.trim() !== '' && !line.startsWith('#'))) {
+        return {kind: 'startsWithoutHash', message: 'All lines must start with #'};
+      }
+      return null;
+    });
+  });
 
   public initializeForm(): void {
     this.initializeNamespaceAndVersion();
@@ -81,86 +144,97 @@ export class SettingsFormService {
     this.version = version;
   }
 
-  private parseRdfModelFilename(): Array<string> {
+  private parseRdfModelFilename(): string[] {
     if (!this.currentLoadedFile) {
       return ['', '', ''];
     }
 
-    return this.currentLoadedFile?.absoluteName.replace('.ttl', '').replace('urn:samm:', '').split(':');
+    return this.currentLoadedFile.absoluteName.replace('.ttl', '').replace('urn:samm:', '').split(':');
   }
 
   private createForm(): void {
     const [namespace, version, modelName] = this.parseRdfModelFilename();
     const settings = this.configurationService.getSettings();
 
-    this.form = this.formBuilder.group({
-      automatedWorkflow: this.formBuilder.group({
-        autoSaveEnabled: [settings.autoSaveEnabled],
-        saveTimerSeconds: [
-          {
-            value: settings.saveTimerSeconds,
-            disabled: !settings.autoSaveEnabled,
-          },
-          [Validators.min(60)],
-        ],
-        autoValidationEnabled: [settings.autoValidationEnabled],
-        validationTimerSeconds: [
-          {
-            value: settings.validationTimerSeconds,
-            disabled: !settings.autoValidationEnabled,
-          },
-          [Validators.min(60)],
-        ],
-        autoFormatEnabled: [settings.autoFormatEnabled],
-      }),
-      editorConfiguration: this.formBuilder.group({
-        enableHierarchicalLayout: [settings.enableHierarchicalLayout],
-        showEntityValueEntityEdge: [settings.showEntityValueEntityEdge],
-        showConnectionLabels: [settings.showConnectionLabels],
-        showAbstractPropertyConnection: [settings.showAbstractPropertyConnection],
-      }),
-      languageConfiguration: this.formBuilder.group({
-        userInterface: [this.translate.translateService.currentLang],
-        aspectModel: this.formBuilder.array([]),
-      }),
-      namespaceConfiguration: this.formBuilder.group({
-        aspectUri: [namespace, [Validators.required, namespaceValidator()]],
-        aspectName: [{value: modelName, disabled: !!this.currentLoadedFile?.aspect}],
-        aspectVersion: [version, [Validators.required, versionFormatValidator()]],
-        sammVersion: [{value: GeneralConfig.sammVersion, disabled: true}],
-      }),
-      copyrightHeaderConfiguration: this.formBuilder.group({
-        copyright: [settings.copyrightHeader.join('\n'), [this.startsWithoutHashValidator]],
-      }),
+    this.settingsModel.set({
+      automatedWorkflow: {
+        autoSaveEnabled: settings.autoSaveEnabled,
+        saveTimerSeconds: settings.saveTimerSeconds,
+        autoValidationEnabled: settings.autoValidationEnabled,
+        validationTimerSeconds: settings.validationTimerSeconds,
+        autoFormatEnabled: settings.autoFormatEnabled,
+      },
+      editorConfiguration: {
+        enableHierarchicalLayout: settings.enableHierarchicalLayout,
+        showConnectionLabels: settings.showConnectionLabels,
+        darkMode: settings.darkMode ?? false,
+      },
+      languageConfiguration: {
+        userInterface: this.translate.translateService.getActiveLang(),
+        aspectModel: [],
+      },
+      namespaceConfiguration: {
+        aspectUri: namespace || '',
+        aspectName: modelName || '',
+        aspectVersion: version || '',
+        sammVersion: GeneralConfig?.sammVersion || '2.3.0',
+      },
+      copyrightHeaderConfiguration: {
+        copyright: (settings.copyrightHeader || []).join('\n'),
+      },
     });
-  }
-
-  private startsWithoutHashValidator(control: FormControl): {[key: string]: boolean} | null {
-    return control.value && control.value.split('\n').some((line: string) => line.trim() !== '' && !line.startsWith('#'))
-      ? {startsWithoutHash: true}
-      : null;
   }
 
   private populateLanguages(): void {
+    const languages: AspectModelLanguageEntry[] = [];
     this.sammLangService.getSammLanguageCodes().forEach(languageCode => {
       const lang = locale.getByTag(languageCode);
-      this.addNewLanguage(lang.name, lang.tag);
+      if (lang) {
+        languages.push({language: {name: lang.name, tag: lang.tag}});
+      } else {
+        languages.push({language: {name: languageCode, tag: languageCode}});
+      }
     });
+
+    this.settingsModel.update(model => ({
+      ...model,
+      languageConfiguration: {
+        ...model.languageConfiguration,
+        aspectModel: languages,
+      },
+    }));
   }
 
   addNewLanguage(name?: string, tag?: string): void {
-    const aspectModelArray = this.form.get('languageConfiguration').get('aspectModel') as FormArray;
-    const value = name && tag ? {name: name, tag: tag} : '';
-    aspectModelArray.push(
-      this.formBuilder.group({
-        language: [value, Validators.required],
-      }),
-    );
+    const langEntry: AspectModelLanguageEntry = name && tag ? {language: {name, tag}} : {language: null};
+    this.settingsModel.update(model => ({
+      ...model,
+      languageConfiguration: {
+        ...model.languageConfiguration,
+        aspectModel: [...model.languageConfiguration.aspectModel, langEntry],
+      },
+    }));
+  }
+
+  removeLanguage(index: number): void {
+    const entry = this.settingsModel().languageConfiguration.aspectModel[index];
+    const tag = typeof entry?.language === 'object' && entry?.language ? entry.language.tag : String(entry?.language || '');
+    if (tag) {
+      this.addLanguageToBeRemove(tag);
+    }
+    this.settingsModel.update(model => ({
+      ...model,
+      languageConfiguration: {
+        ...model.languageConfiguration,
+        aspectModel: model.languageConfiguration.aspectModel.filter((_, i) => i !== index),
+      },
+    }));
   }
 
   public updateSettings(): void {
     const settings = this.configurationService.getSettings();
-    this.strategies.forEach(strategy => strategy.updateSettings(this.form, settings));
+    const model = this.settingsModel();
+    this.strategies.forEach(strategy => strategy.updateSettings(model, settings));
     this.configurationService.setLocalStorageItem(settings);
   }
 
@@ -169,24 +243,20 @@ export class SettingsFormService {
     return oldNamespace !== newNamespace || oldVersion !== newVersion;
   }
 
-  getNamespaceConfiguration(): any {
-    const settings = this.configurationService.getSettings();
+  getNamespaceConfiguration(): NamespaceConfiguration {
+    const model = this.settingsModel().namespaceConfiguration;
 
     return {
       oldNamespace: this.namespace,
       oldVersion: this.version,
-      rdfModel: this.currentLoadedFile.rdfModel,
-      newNamespace: settings.namespace,
-      newVersion: settings.version,
+      rdfModel: this.currentLoadedFile?.rdfModel,
+      newNamespace: model.aspectUri,
+      newVersion: model.aspectVersion,
     } as NamespaceConfiguration;
   }
 
-  getForm(): FormGroup {
-    return this.form;
-  }
-
-  getLoadedRdfModel(): RdfModel {
-    return this.currentLoadedFile.rdfModel;
+  getLoadedRdfModel(): RdfModel | undefined {
+    return this.currentLoadedFile?.rdfModel;
   }
 
   setNamespace(value: string): void {
@@ -197,7 +267,7 @@ export class SettingsFormService {
     this.version = value;
   }
 
-  getLanguagesToBeRemove(): Array<string> {
+  getLanguagesToBeRemove(): string[] {
     return this.languagesToBeRemove;
   }
 

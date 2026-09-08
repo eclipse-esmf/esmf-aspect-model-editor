@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -28,9 +27,13 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Value', () => {
-  it('can add new aspect model', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling().then(() => cy.get(SELECTOR_elementBtn).click());
+    cy.startModelling();
+  });
+
+  it('can add new aspect model', () => {
+    cy.get(SELECTOR_elementBtn).click();
   });
 
   it('can add new Value', () => cy.dragElement(SELECTOR_ecValue, 350, 300).then(() => cy.clickShape('Value1')));

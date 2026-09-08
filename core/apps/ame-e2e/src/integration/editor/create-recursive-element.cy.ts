@@ -17,15 +17,18 @@ import {FIELD_characteristicName, SELECTOR_tbDeleteButton} from '../../support/c
 import {cyHelp} from '../../support/helpers';
 
 describe('Test create recursive element', () => {
+  before(() => {
+    cy.visitDefault();
+    cy.startModelling();
+  });
+
   function checkIfAspectHasCharacteristic(aspect) {
     expect(aspect.properties[0].characteristic.dataType.properties[0].characteristic.name).to.equal('Characteristic1');
     expect(aspect.properties[0].characteristic.dataType.properties[1].characteristic.name).to.equal('Characteristic1');
   }
 
   it('can add new element', () => {
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.shapeExists('Characteristic1'))
+    cy.shapeExists('Characteristic1')
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))

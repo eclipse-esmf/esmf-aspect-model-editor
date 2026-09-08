@@ -5,16 +5,25 @@
   "sourceRoot": "libs/settings-dialog/src",
   "prefix": "ame",
   "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/settings-dialog"],
-      "options": {
-        "jestConfig": "libs/settings-dialog/jest.config.ts",
-        "tsConfig": "libs/settings-dialog/tsconfig.spec.json"
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/libs/settings-dialog"],
+      "options": {
+        "project": "libs/settings-dialog/ng-package.json"
+      },
+      "dependsOn": []
+    },
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/settings-dialog"],
+      "options": {
+        "tsConfig": "libs/settings-dialog/tsconfig.spec.json",
+        "buildTarget": "settings-dialog:build",
+        "watch": false
+      }
     }
   }
 }

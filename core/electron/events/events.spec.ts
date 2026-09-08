@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect} from '@jest/globals';
+import {describe, expect, it} from 'vitest';
 import {EVENTS} from './events';
 
 describe('EVENTS', () => {

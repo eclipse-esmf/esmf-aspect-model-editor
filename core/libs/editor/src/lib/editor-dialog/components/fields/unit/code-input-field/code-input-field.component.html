@@ -13,9 +13,9 @@
 
 @if (metaModelElement?.code || !metaModelElement?.isPredefined) {
   <div>
-    <mat-form-field [floatLabel]="getControl('code')?.disabled ? 'always' : 'auto'" appearance="fill">
-      <mat-label for="code">code</mat-label>
-      <input [formControl]="getControl('code')" matInput name="code" />
+    <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
+      <mat-label>code</mat-label>
+      <input [formField]="field" matInput />
     </mat-form-field>
   </div>
 }

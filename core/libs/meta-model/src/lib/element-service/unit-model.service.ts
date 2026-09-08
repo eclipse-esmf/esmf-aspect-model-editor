@@ -12,20 +12,20 @@
  */
 
 import {inject, Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, UnitRenderService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeOverlayService, UnitRenderService} from '@ame/max-graph';
 import {DefaultQuantityKind, DefaultUnit, NamedElement, SammU} from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
 import {BaseModelService} from './base-model-service';
 
 declare const sammUDefinition: any;
 
 @Injectable({providedIn: 'root'})
 export class UnitModelService extends BaseModelService {
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private mxGraphService = inject(MxGraphService);
-  private unitRenderer = inject(UnitRenderService);
+  private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
+  private readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly unitRenderer = inject(UnitRenderService);
 
   private get sammU(): SammU {
     return this.loadedFile?.rdfModel.sammU;
@@ -35,8 +35,8 @@ export class UnitModelService extends BaseModelService {
     return metaModelElement instanceof DefaultUnit;
   }
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const modelElement = MxGraphHelper.getModelElement<DefaultUnit>(cell);
+  update(cell: Cell, form: {[key: string]: any}) {
+    const modelElement = MaxGraphHelper.getModelElement<DefaultUnit>(cell);
     super.update(cell, form);
     modelElement.referenceUnit = form.referenceUnit;
     modelElement.code = form.code;
@@ -60,13 +60,13 @@ export class UnitModelService extends BaseModelService {
     this.unitRenderer.update({cell, form});
   }
 
-  delete(cell: mxgraph.mxCell) {
+  delete(cell: Cell) {
     super.delete(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
-    const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
-    const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
-    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
-    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
-    this.mxGraphService.removeCells([cell]);
+    const modelElement = MaxGraphHelper.getModelElement(cell);
+    const outgoingEdges = this.maxgraphAttributeService.graph.getOutgoingEdges(cell, null);
+    const incomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(cell, null);
+    this.maxgraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
+    this.maxgraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
+    this.maxgraphService.removeCells([cell]);
   }
 }

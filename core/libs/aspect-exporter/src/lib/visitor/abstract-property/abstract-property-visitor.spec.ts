@@ -11,46 +11,41 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, Mocked, vi} from 'vitest';
+
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
 import {TestBed} from '@angular/core/testing';
 import {DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
-import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractPropertyVisitor} from './abstract-property-visitor';
 
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
 describe('Property Visitor', () => {
   let service: AbstractPropertyVisitor;
-  let rdfNodeService: jest.Mocked<RdfNodeService>;
+  let rdfNodeService: Mocked<RdfNodeService>;
 
-  let modelService: jest.Mocked<ModelService>;
+  let modelService: Mocked<ModelService>;
   let abstractProperty: DefaultProperty;
 
   beforeEach(() => {
     const rdfModel: RdfModel = {
       store: new Store(),
       samm: new Samm(''),
-      hasDependency: jest.fn(() => false),
-      addPrefix: jest.fn(() => {}),
+      hasDependency: vi.fn(() => false),
+      addPrefix: vi.fn(() => {}),
     } as any;
 
     TestBed.configureTestingModule({
       providers: [
         AbstractPropertyVisitor,
-        MockProvider(MxGraphService),
         MockProvider(RdfListService, {
-          push: jest.fn(),
+          push: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
-          update: jest.fn(),
+          update: vi.fn(),
         }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
@@ -66,7 +61,7 @@ describe('Property Visitor', () => {
       isAbstract: true,
     });
 
-    rdfNodeService = TestBed.inject(RdfNodeService) as jest.Mocked<RdfNodeService>;
+    rdfNodeService = TestBed.inject(RdfNodeService) as Mocked<RdfNodeService>;
     rdfNodeService.modelService = modelService;
 
     service = TestBed.inject(AbstractPropertyVisitor);

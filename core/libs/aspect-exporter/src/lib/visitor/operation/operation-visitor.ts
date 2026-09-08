@@ -31,9 +31,9 @@ export class OperationVisitor extends BaseVisitor<DefaultOperation> {
 
   visit(operation: DefaultOperation): DefaultOperation {
     this.setPrefix(operation.aspectModelUrn);
-    const oldAspectModelUrn = operation.aspectModelUrn;
+    const oldAspectModelUrn = operation.consumePreviousAspectModelUrn();
     this.addProperties(operation);
-    if (oldAspectModelUrn !== operation.aspectModelUrn) {
+    if (oldAspectModelUrn && oldAspectModelUrn !== operation.aspectModelUrn) {
       this.removeOldQuads(oldAspectModelUrn);
     }
     return operation;

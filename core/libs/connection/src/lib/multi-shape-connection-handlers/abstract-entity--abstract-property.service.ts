@@ -12,10 +12,10 @@
  */
 
 import {EntityInstanceService} from '@ame/editor';
-import {MxGraphHelper} from '@ame/mx-graph';
+import {MaxGraphHelper} from '@ame/max-graph';
 import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {MultiShapeConnector} from '../models';
 
@@ -26,7 +26,7 @@ export class AbstractEntityAbstractPropertyConnectionHandler
 {
   private entityInstanceService = inject(EntityInstanceService);
 
-  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: Cell, childCell: Cell) {
     if (!parentMetaModel.isAbstractEntity() || !childMetaModel.isAbstract) return;
 
     if (!parentMetaModel.properties.find(property => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
@@ -34,13 +34,13 @@ export class AbstractEntityAbstractPropertyConnectionHandler
       this.entityInstanceService.onNewProperty(childMetaModel, parentMetaModel);
     }
 
-    const grandParents = this.mxGraphService.graph
-      .getIncomingEdges(parentCell)
+    const grandParents = this.maxgraphService.graph
+      .getIncomingEdges(parentCell, null)
       .map(edge => edge.source)
-      .filter(cell => MxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
+      .filter(cell => MaxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
 
     for (const grandParent of grandParents) {
-      const grandParentElement = MxGraphHelper.getModelElement<DefaultEntity>(grandParent);
+      const grandParentElement = MaxGraphHelper.getModelElement<DefaultEntity>(grandParent);
       const alreadyExtended = grandParentElement.properties.some(
         property => property.getExtends()?.aspectModelUrn === childMetaModel.aspectModelUrn,
       );
@@ -59,16 +59,16 @@ export class AbstractEntityAbstractPropertyConnectionHandler
         characteristic: this.elementCreator.createEmptyElement(DefaultCharacteristic),
       });
 
-      MxGraphHelper.establishRelation(property, childMetaModel);
+      MaxGraphHelper.establishRelation(property, childMetaModel);
 
       // adding property to its parent (entity)
       grandParentElement.properties.push(property);
-      MxGraphHelper.establishRelation(grandParentElement, property);
+      MaxGraphHelper.establishRelation(grandParentElement, property);
 
       this.renderTree(property, grandParent);
     }
 
-    this.mxGraphService.assignToParent(childCell, parentCell);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.assignToParent(childCell, parentCell);
+    this.maxgraphService.formatShapes();
   }
 }

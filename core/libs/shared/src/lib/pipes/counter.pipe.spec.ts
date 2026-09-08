@@ -11,6 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it} from 'vitest';
+
 import {CounterPipe} from './counter.pipe';
 
 const falsyValues = [null, '', undefined, 0, NaN];

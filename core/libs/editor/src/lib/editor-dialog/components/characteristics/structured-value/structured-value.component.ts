@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {disabled, form, FormField, required, validate} from '@angular/forms/signals';
 import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -21,8 +21,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
-import {debounceTime, take} from 'rxjs';
-import {EditorDialogValidators} from '../../../validators';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {debounceTime, Subscription, take} from 'rxjs';
 import {InputFieldComponent} from '../../fields';
 import {StructuredValueVanillaGroups} from './elements-input-field/model';
 import {StructuredValuePropertiesComponent} from './elements-input-field/structured-value-properties/structured-value-properties.component';
@@ -34,41 +34,65 @@ const customRule = '--custom-rule--';
   selector: 'ame-structured-value',
   templateUrl: './structured-value.component.html',
   styleUrls: ['./structured-value.component.scss'],
-  imports: [MatFormFieldModule, MatLabel, MatSelect, MatOption, ReactiveFormsModule, MatError, MatInput, MatIconModule, MatButton],
+  imports: [
+    MatFormFieldModule,
+    MatLabel,
+    MatSelect,
+    MatOption,
+    FormField,
+    MatError,
+    MatInput,
+    MatIconModule,
+    MatButton,
+    TranslocoDirective,
+  ],
 })
 export class StructuredValueComponent extends InputFieldComponent<DefaultStructuredValue> implements OnInit, OnDestroy {
   private predefinedRulesService = inject(PredefinedRulesService);
   private matDialog = inject(MatDialog);
 
   public deconstructionRule = '';
-  public selectedRule = customRule;
-  public customRuleActive = true;
   public groups: StructuredValueVanillaGroups[] = [];
   public splitters: StructuredValueVanillaGroups[] = [];
   public elements: (DefaultProperty | string)[] = [];
-  public predefinedRules: Array<{regex: string; name: string}>;
+
+  public selectedRule = signal(customRule);
+  public customRuleActive = signal(true);
+  public predefinedRules = signal<{regex: string; name: string}[]>([]);
+  private readonly deconstructionRuleModel = signal('');
+  private readonly elementsModel = signal<(DefaultProperty | string)[]>([]);
+  private readonly ruleLocked = signal(false);
+  private readonly blocked = signal(false);
+  private readonly ruleChanges = toObservable(this.deconstructionRuleModel);
+  private ruleSubscription: Subscription;
+  private unregisterRule = () => undefined;
+
+  readonly deconstructionRuleField = form(this.deconstructionRuleModel, path => {
+    required(path);
+    validate(path, ({value}) => {
+      try {
+        new RegExp(value());
+        return null;
+      } catch (error) {
+        return {kind: 'regexValidator', message: (error as Error).message};
+      }
+    });
+    disabled(path, {when: () => this.ruleLocked() || this.blocked()});
+  });
 
   get hasGroupsError() {
-    if (this.groups.length <= 0) {
-      return false;
-    }
-    const hasErrors = this.groups.some(group => !group.property);
-    const controller = this.parentForm.get('elements');
-
-    hasErrors &&
-      this.parentForm.get('elements')?.setErrors({
-        ...controller.errors,
-        noFilledGroups: {error: true},
-      });
-    return hasErrors;
+    return this.groups.length > 0 && this.groups.some(group => !group.property);
   }
 
   constructor() {
     super();
-    this.predefinedRules = Object.entries(this.predefinedRulesService.rules).map(([key, value]) => ({
-      regex: key,
-      name: (value as any).name,
-    }));
+    this.resetFormOnDestroy = false;
+    this.predefinedRules.set(
+      Object.entries(this.predefinedRulesService.rules).map(([key, value]) => ({
+        regex: key,
+        name: (value as any).name,
+      })),
+    );
   }
 
   ngOnInit(): void {
@@ -81,34 +105,25 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   }
 
   ngOnDestroy() {
+    this.ruleSubscription?.unsubscribe();
+    this.unregisterRule();
+    this.signalForm().remove('elements');
     super.ngOnDestroy();
-    this.parentForm.removeControl('deconstructionRule');
-    this.parentForm.removeControl('elements');
   }
 
   initForm() {
     this.deconstructionRule = this.metaModelElement.deconstructionRule || '';
-    this.customRuleActive = !this.predefinedRulesService.rules[this.deconstructionRule];
+    this.customRuleActive.set(!this.predefinedRulesService.rules[this.deconstructionRule]);
     this.elements = [...(this.metaModelElement.elements || [])];
 
-    this.selectedRule = this.customRuleActive ? customRule : this.deconstructionRule;
-
-    this.parentForm.setControl(
-      'deconstructionRule',
-      new FormControl(
-        {
-          value: this.deconstructionRule || '',
-          disabled: !this.customRuleActive || this.loadedFiles.isElementExtern(this.metaModelElement),
-        },
-        {validators: [Validators.required, EditorDialogValidators.regexValidator]},
-      ),
-    );
-    this.parentForm.get('deconstructionRule').markAsTouched();
-
-    this.parentForm.setControl(
-      'elements',
-      new FormControl({value: [...this.elements], disabled: this.loadedFiles.isElementExtern(this.metaModelElement)}),
-    );
+    this.selectedRule.set(this.customRuleActive() ? customRule : this.deconstructionRule);
+    this.blocked.set(this.loadedFiles.isElementExtern(this.metaModelElement));
+    this.ruleLocked.set(!this.customRuleActive());
+    this.deconstructionRuleModel.set(this.deconstructionRule);
+    this.elementsModel.set([...this.elements]);
+    this.deconstructionRuleField().markAsTouched();
+    this.unregisterRule = this.signalForm().register('deconstructionRule', this.deconstructionRuleField);
+    this.signalForm().set('elements', [...this.elements]);
 
     this.rebuildElements();
   }
@@ -119,20 +134,25 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       return;
     }
 
+    this.selectedRule.set(selectedRule.regex);
+    this.deconstructionRuleModel.set(selectedRule.regex);
+    this.ruleLocked.set(true);
+    this.elementsModel.set([...predefinedRule.elements]);
+    this.elements = predefinedRule.elements;
+    this.signalForm().set('elements', [...predefinedRule.elements]);
     this.handlePredefinedRegex();
-    this.selectedRule = selectedRule.regex;
-    const deconstructionRuleControl = this.parentForm.get('deconstructionRule');
-    deconstructionRuleControl?.setValue(selectedRule.regex);
-    deconstructionRuleControl?.disable();
-    this.parentForm.get('elements')?.setValue([...predefinedRule.elements]);
   }
 
   openModal() {
+    this.rebuildElements();
     this.matDialog
       .open(StructuredValuePropertiesComponent, {
-        data: {groups: this.groups},
+        data: {
+          groups: this.groups,
+          parentProperties: this.metaModelElement?.parents || [],
+        },
       })
-      .afterClosed()
+      .beforeClosed()
       .pipe(take(1))
       .subscribe(value => {
         if (!value) {
@@ -149,21 +169,16 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   }
 
   setCustomRule() {
-    const deconstructionRuleControl = this.parentForm.get('deconstructionRule');
-    deconstructionRuleControl?.setValue(this.deconstructionRule);
-    deconstructionRuleControl.enable();
+    this.deconstructionRuleModel.set(this.deconstructionRule);
+    this.ruleLocked.set(false);
   }
 
   private subscribeToRuleChanging() {
-    this.parentForm
-      .get('deconstructionRule')
-      ?.valueChanges.pipe(debounceTime(500))
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value: string) => {
-        this.selectedRule = this.predefinedRulesService.rules[value] ? value : customRule;
-        this.elements = this.parentForm.get('elements')?.value || this.elements;
-        this.rebuildElements();
-      });
+    this.ruleSubscription = this.ruleChanges.pipe(debounceTime(500)).subscribe((value: string) => {
+      this.selectedRule.set(this.predefinedRulesService.rules[value] ? value : customRule);
+      this.elements = this.elementsModel() || this.elements;
+      this.rebuildElements();
+    });
   }
 
   private rebuildElements() {
@@ -188,13 +203,13 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       }
     }
 
-    this.parentForm
-      .get('elements')
-      ?.setValue(allGroups.map(v => (v.isSplitter ? v.text : v.property)).filter(e => (typeof e === 'string' ? !!e.length : true)));
+    const filteredPure = allGroups.map(v => (v.isSplitter ? v.text : v.property)).filter(e => (typeof e === 'string' ? !!e.length : true));
+    this.elementsModel.set(filteredPure);
+    this.signalForm().set('elements', filteredPure);
   }
 
   private handlePredefinedRegex() {
-    const deconstructionRule: string = this.parentForm.get('deconstructionRule')?.value;
+    const deconstructionRule = this.deconstructionRuleModel();
     const ruleName = Object.keys(this.predefinedRulesService.rules).find(
       key => this.predefinedRulesService.rules[key].rule === deconstructionRule,
     );
@@ -204,8 +219,9 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       return;
     }
 
-    this.parentForm.get('elements')?.setValue(predefinedRule.elements);
+    this.elementsModel.set([...predefinedRule.elements]);
     this.elements = predefinedRule.elements;
+    this.signalForm().set('elements', [...predefinedRule.elements]);
 
     this.fillElementsWithBlanks();
     this.serializeGroups();
@@ -222,7 +238,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   }
 
   private serializeGroups() {
-    const deconstructionRule: string = this.parentForm.get('deconstructionRule')?.value;
+    const deconstructionRule = this.deconstructionRuleModel();
     if (!deconstructionRule) {
       return;
     }
@@ -246,7 +262,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
       // when '(' found outside a group, create a new group
       if (char === '(' && deconstructionRule[index - 1] !== '\\') {
         this.groups.push({start: index, end: null, text: char});
-        currentSplitter && (currentSplitter.end = index - 1);
+        if (currentSplitter) currentSplitter.end = index - 1;
         continue;
       }
 
@@ -282,7 +298,7 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
   }
 
   private fillElementsWithBlanks() {
-    if (this.parentForm.get('expertMode')?.value) {
+    if (this.signalForm().get('expertMode')) {
       this.elements = [...(this.metaModelElement.elements || [])];
     } else {
       this.elements = this.elements || [];
@@ -310,20 +326,19 @@ export class StructuredValueComponent extends InputFieldComponent<DefaultStructu
     }
   }
 
-  private setElementsControllerValue(setPropertiesFromElements?: boolean) {
+  private setElementsControllerValue() {
     this.elements = [...(this.splitters || []), ...(this.groups || [])]
       .sort((a, b) => a.start - b.start)
       .map(v => (v.isSplitter ? v.text : v.property));
 
-    this.parentForm.get('elements')?.setValue([...this.elements.filter(e => (typeof e === 'string' ? !!e.length : true))]);
+    const filteredElements = this.elements.filter(e => (typeof e === 'string' ? !!e.length : true));
+    this.elementsModel.set([...filteredElements]);
+    this.signalForm().set('elements', [...filteredElements]);
+  }
 
-    if (setPropertiesFromElements) {
-      const filtered = this.elements.filter(e => typeof e !== 'string');
-      for (const index in this.groups) {
-        if (this.groups[index] && filtered[index]) {
-          this.groups[index].property = filtered[index] as DefaultProperty;
-        }
-      }
-    }
+  hasRuleError(kind: string): boolean {
+    return this.deconstructionRuleField()
+      .errors()
+      .some(error => error.kind === kind);
   }
 }

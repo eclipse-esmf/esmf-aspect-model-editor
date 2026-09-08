@@ -6,15 +6,24 @@
   "prefix": "ame",
   "targets": {
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{workspaceRoot}/coverage/libs/editor"],
       "options": {
-        "jestConfig": "libs/editor/jest.config.ts",
-        "tsConfig": "libs/editor/tsconfig.spec.json"
+        "tsConfig": "libs/editor/tsconfig.spec.json",
+        "buildTarget": "editor:build",
+        "watch": false
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/libs/editor"],
+      "options": {
+        "project": "libs/editor/ng-package.json"
+      },
+      "dependsOn": []
     }
   }
 }

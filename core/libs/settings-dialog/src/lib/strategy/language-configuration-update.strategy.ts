@@ -11,29 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Settings} from '@ame/settings-dialog';
 import {ElectronTunnelService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {inject, Injectable} from '@angular/core';
-import {FormArray, FormGroup} from '@angular/forms';
+import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  private translate = inject(LanguageTranslationService);
-  private electronTunnelService = inject(ElectronTunnelService);
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly electronTunnelService = inject(ElectronTunnelService);
 
-  updateSettings(form: FormGroup, settings: Settings): void {
-    const languageConfiguration = form.get('languageConfiguration');
+  updateSettings(model: SettingsFormData, settings: Settings): void {
+    const languageConfiguration = model?.languageConfiguration;
     if (!languageConfiguration) return;
 
-    const userInterfaceLang = languageConfiguration.get('userInterface')?.value;
-    this.translate.translateService.use(userInterfaceLang);
+    const userInterfaceLang = languageConfiguration.userInterface;
+    this.translate.translateService.setActiveLang(userInterfaceLang);
     this.electronTunnelService.sendTranslationsToElectron(userInterfaceLang);
     localStorage.setItem('applicationLanguage', userInterfaceLang);
 
-    settings.aspectModelLanguages = (languageConfiguration.get('aspectModel') as FormArray).controls.map(
-      control => control.get('language')?.value.tag,
-    );
+    settings.aspectModelLanguages = (languageConfiguration.aspectModel || [])
+      .map(entry => (typeof entry.language === 'object' && entry.language ? entry.language.tag : String(entry.language || '')))
+      .filter(Boolean);
   }
 }

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {applyEach, form, required} from '@angular/forms/signals';
 import {MatButton} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {
@@ -28,7 +28,21 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
+import {DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {StructuredValuePropertyFieldComponent} from '../structured-value-property-field/structured-value-property-field.component';
+
+export interface StructuredValuePropertyRow {
+  key: string;
+  regex: string;
+  propertyName: string;
+}
+
+export interface StructuredValueTableRow {
+  key: string;
+  regex: string;
+  property: DefaultProperty | null;
+}
 
 @Component({
   selector: 'ame-structured-value-properties',
@@ -47,36 +61,75 @@ import {StructuredValuePropertyFieldComponent} from '../structured-value-propert
     MatRow,
     MatRowDef,
     MatButton,
+    TranslocoDirective,
   ],
 })
 export class StructuredValuePropertiesComponent implements OnInit {
-  private data = inject(MAT_DIALOG_DATA);
+  public data: {groups: Array<{start: number; end: number; text: string; property?: DefaultProperty}>; parentProperties?: NamedElement[]} =
+    inject(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<StructuredValuePropertiesComponent>);
 
   public readonly displayedColumns = ['regex', 'property'];
-  public dataSource: MatTableDataSource<any>;
-  public form = new FormGroup({});
+  public dataSource: MatTableDataSource<StructuredValueTableRow>;
+  public propertiesMap = new Map<string, DefaultProperty>();
+  public propertiesModel = signal<StructuredValuePropertyRow[]>([]);
+  public propertiesForm = form(this.propertiesModel, path => {
+    applyEach(path, row => required(row.propertyName));
+  });
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(
-      this.data.groups.map(group => ({data: group, regex: group.text, property: group.property || ''})),
-    );
-    for (const group of this.data.groups || []) {
-      this.form.addControl(this.getKey(group), new FormControl(group.property, [Validators.required]));
-    }
+    const rows: StructuredValuePropertyRow[] = [];
+    const tableData: StructuredValueTableRow[] = this.data.groups.map(group => {
+      const key = this.getKey(group);
+      if (group.property) {
+        this.propertiesMap.set(key, group.property);
+      }
+      rows.push({
+        key,
+        regex: group.text,
+        propertyName: group.property?.name || '',
+      });
+      return {
+        key,
+        regex: group.text,
+        property: group.property || null,
+      };
+    });
+    this.propertiesModel.set(rows);
+    this.dataSource = new MatTableDataSource(tableData);
   }
 
-  getControl(name: string): FormControl {
-    return this.form.controls[name] as FormControl;
-  }
-
-  getKey(group) {
+  getKey(group: {start: number; end: number; text: string}) {
     return `[${group.start}-${group.end}] -> ` + group.text;
   }
 
+  onPropertyChange(index: number, key: string, property: DefaultProperty | null) {
+    if (property) {
+      this.propertiesMap.set(key, property);
+    } else {
+      this.propertiesMap.delete(key);
+    }
+    this.propertiesModel.update(rows => {
+      const updated = [...rows];
+      if (updated[index]) {
+        updated[index] = {
+          ...updated[index],
+          propertyName: property?.name || '',
+        };
+      }
+      return updated;
+    });
+  }
+
   closeModal(save?: boolean) {
-    if (this.form.valid || !save) {
-      this.dialogRef.close(save ? this.form.value : null);
+    if (!save) {
+      this.dialogRef.close(null);
+      return;
+    }
+
+    if (this.propertiesForm().valid()) {
+      const result = Object.fromEntries(this.propertiesModel().map(row => [row.key, this.propertiesMap.get(row.key) || null]));
+      this.dialogRef.close(result);
     }
   }
 }

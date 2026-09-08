@@ -10,20 +10,20 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
 import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';
 
 @Injectable({providedIn: 'root'})
 export class Point3dRemoveService implements PredefinedRemove {
-  private modelRootService = inject(ModelRootService);
-  private mxGraphService = inject(MxGraphService);
+  private readonly modelRootService = inject(ModelRootService);
+  private readonly maxgraphService = inject(MaxGraphService);
 
-  delete(cell: mxgraph.mxCell): boolean {
-    const modelElement = MxGraphHelper.getModelElement(cell);
+  delete(cell: Cell): boolean {
+    const modelElement = MaxGraphHelper.getModelElement(cell);
     if (!this.modelRootService.isPredefined(modelElement)) {
       return false;
     }
@@ -33,9 +33,9 @@ export class Point3dRemoveService implements PredefinedRemove {
         modelElement.name as PredefinedPropertiesEnum,
       )
     ) {
-      const parent = this.mxGraphService
+      const parent = this.maxgraphService
         .resolveParents(cell)
-        .find(p => MxGraphHelper.getModelElement(p).name === PredefinedEntitiesEnum.Point3d);
+        .find(p => MaxGraphHelper.getModelElement(p).name === PredefinedEntitiesEnum.Point3d);
       return this.removeTree(parent);
     }
 
@@ -46,7 +46,7 @@ export class Point3dRemoveService implements PredefinedRemove {
     return false;
   }
 
-  decouple(edge: mxgraph.mxCell, source: NamedElement): boolean {
+  decouple(edge: Cell, source: NamedElement): boolean {
     if (!this.modelRootService.isPredefined(source)) {
       return false;
     }
@@ -58,17 +58,17 @@ export class Point3dRemoveService implements PredefinedRemove {
     return false;
   }
 
-  private removeTree(cell: mxgraph.mxCell): boolean {
+  private removeTree(cell: Cell): boolean {
     if (!cell) {
       return false;
     }
 
-    for (const edge of this.mxGraphService.graph.getIncomingEdges(cell)) {
-      MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(edge.source), MxGraphHelper.getModelElement(cell));
+    for (const edge of this.maxgraphService.graph.getIncomingEdges(cell, null)) {
+      MaxGraphHelper.removeRelation(MaxGraphHelper.getModelElement(edge.source), MaxGraphHelper.getModelElement(cell));
     }
 
-    [cell, ...this.mxGraphService.graph.getOutgoingEdges(cell).map(e => e.target)].forEach(c => {
-      const modelElement = MxGraphHelper.getModelElement(c);
+    [cell, ...this.maxgraphService.graph.getOutgoingEdges(cell, null).map(e => e.target)].forEach(c => {
+      const modelElement = MaxGraphHelper.getModelElement(c);
       const elementModelService = this.modelRootService.getElementModelService(modelElement);
       elementModelService?.delete(c);
     });

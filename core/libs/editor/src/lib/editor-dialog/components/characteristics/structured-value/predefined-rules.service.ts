@@ -12,10 +12,9 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {config} from '@ame/shared';
+import {config, simpleDataTypes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty, DefaultScalar} from '@esmf/aspect-model-loader';
-import {simpleDataTypes} from '../../../../../../../shared/src/lib/constants/xsd-datatypes';
 
 @Injectable({providedIn: 'root'})
 export class PredefinedRulesService {

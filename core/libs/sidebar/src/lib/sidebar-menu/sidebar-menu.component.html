@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,64 +12,77 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ame-bar-item
-  class="sidebar__workspace"
-  [matTooltipShowDelay]="0"
-  [matTooltipHideDelay]="0"
-  [class.selected]="sidebarService.workspace.opened()"
-  [matTooltip]="'TOOLTIPS.WORKSPACE' | translate"
-  (click)="sidebarService.workspace.toggle()"
-  matTooltipPosition="right"
-  data-cy="workspaceBtn"
->
-  <mat-icon>topic</mat-icon>
-</ame-bar-item>
+  <ame-bar-item
+    class="sidebar__workspace"
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    [class.selected]="sidebarService.workspace.opened()"
+    [matTooltip]="t('tooltips.workspace')"
+    (click)="sidebarService.workspace.toggle()"
+    matTooltipPosition="right"
+    data-cy="workspaceBtn"
+  >
+    <mat-icon>topic</mat-icon>
+  </ame-bar-item>
 
-<ame-bar-item
-  class="sidebar__item sidebar__elements"
-  [matTooltipShowDelay]="0"
-  [matTooltipHideDelay]="0"
-  [class.selected]="sidebarService.sammElements.opened()"
-  [matTooltip]="'TOOLTIPS.ELEMENTS' | translate"
-  (click)="sidebarService.sammElements.toggle()"
-  matTooltipPosition="right"
-  data-cy="elementsBtn"
->
-  <mat-icon>view_comfy_alt</mat-icon>
-</ame-bar-item>
+  <ame-bar-item
+    class="sidebar__item sidebar__elements"
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    [class.selected]="sidebarService.sammElements.opened()"
+    [matTooltip]="t('tooltips.elements')"
+    (click)="sidebarService.sammElements.toggle()"
+    matTooltipPosition="right"
+    data-cy="elementsBtn"
+  >
+    <mat-icon>view_comfy_alt</mat-icon>
+  </ame-bar-item>
 
-<ame-bar-item
-  class="sidebar__item sidebar__settings"
-  [matTooltipShowDelay]="0"
-  [matTooltipHideDelay]="0"
-  [matTooltip]="'TOOLTIPS.SETTINGS' | translate"
-  (click)="openSettingsDialog()"
-  matTooltipPosition="right"
-  data-cy="settingsBtn"
->
-  <mat-icon>settings</mat-icon>
-</ame-bar-item>
+  <ame-bar-item
+    class="sidebar__item sidebar__theme"
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    [matTooltip]="isDarkMode ? t('tooltips.lightMode') : t('tooltips.darkMode')"
+    (click)="toggleDarkMode()"
+    matTooltipPosition="right"
+    data-cy="darkModeBtn"
+  >
+    <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </ame-bar-item>
 
-<ame-bar-item
-  class="sidebar__item sidebar__notifications"
-  [matTooltipShowDelay]="0"
-  [matTooltipHideDelay]="0"
-  [matTooltip]="'TOOLTIPS.NOTIFICATIONS' | translate"
-  (click)="openNotificationDialog()"
-  matTooltipPosition="right"
-  data-cy="notificationsBtn"
->
-  <mat-icon [matBadge]="notificationService.badgeText | async" aria-hidden="false">notifications</mat-icon>
-</ame-bar-item>
+  <ame-bar-item
+    class="sidebar__item sidebar__settings"
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    [matTooltip]="t('tooltips.settings')"
+    (click)="openSettingsDialog()"
+    matTooltipPosition="right"
+    data-cy="settingsBtn"
+  >
+    <mat-icon>settings</mat-icon>
+  </ame-bar-item>
 
-<ame-bar-item
-  class="sidebar__item sidebar__help"
-  [matTooltipShowDelay]="0"
-  [matTooltipHideDelay]="0"
-  [matTooltip]="'TOOLTIPS.HELP' | translate"
-  (click)="openHelpDialog()"
-  matTooltipPosition="right"
-  data-cy="helpBtn"
->
-  <mat-icon>help</mat-icon>
-</ame-bar-item>
+  <ame-bar-item
+    class="sidebar__item sidebar__notifications"
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    [matTooltip]="t('tooltips.notifications')"
+    (click)="openNotificationDialog()"
+    matTooltipPosition="right"
+    data-cy="notificationsBtn"
+  >
+    <mat-icon [matBadge]="notificationService.badgeText | async" aria-hidden="false">notifications</mat-icon>
+  </ame-bar-item>
+
+  <ame-bar-item
+    class="sidebar__item sidebar__help"
+    [matTooltipShowDelay]="0"
+    [matTooltipHideDelay]="0"
+    [matTooltip]="t('tooltips.help')"
+    (click)="openHelpDialog()"
+    matTooltipPosition="right"
+    data-cy="helpBtn"
+  >
+    <mat-icon>help</mat-icon>
+  </ame-bar-item>
+</ng-container>

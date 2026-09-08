@@ -10,21 +10,43 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {disabled, form, FormField, validate} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLengthConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-max-length-input-field',
   templateUrl: './max-length-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput, MatError],
+  imports: [MatFormFieldModule, MatLabel, FormField, MatInput, MatError, TranslocoDirective],
 })
 export class MaxLengthInputFieldComponent extends InputFieldComponent<DefaultLengthConstraint> implements OnInit, OnDestroy {
+  private readonly model = signal<number | string | null>(null);
+  private unregisterField = () => undefined;
+
+  readonly field = form(this.model, path => {
+    validate(path, ({value}) => {
+      const length = value();
+      if (length === null || length === undefined || length === '') {
+        return null;
+      }
+      if (typeof length === 'number') {
+        return Number.isInteger(length) && length >= 0 ? null : {kind: 'pattern', message: 'Please provide a non-negative integer'};
+      }
+      if (typeof length === 'string') {
+        const trimmed = length.trim();
+        return trimmed === '' || /^\d+$/.test(trimmed) ? null : {kind: 'pattern', message: 'Please provide a non-negative integer'};
+      }
+      return {kind: 'pattern', message: 'Please provide a non-negative integer'};
+    });
+    disabled(path, {when: () => !!this.metaModelElement && this.loadedFiles.isElementExtern(this.metaModelElement)});
+  });
+
   constructor() {
     super();
     this.resetFormOnDestroy = false;
@@ -32,7 +54,7 @@ export class MaxLengthInputFieldComponent extends InputFieldComponent<DefaultLen
   }
 
   getCurrentValue(key: string) {
-    return this.previousData[key]?.[this.metaModelElement.className] || this.metaModelElement?.[key] || '';
+    return this.previousData()[key]?.[this.metaModelElement.className] || this.metaModelElement?.[key] || '';
   }
 
   ngOnInit() {
@@ -44,18 +66,19 @@ export class MaxLengthInputFieldComponent extends InputFieldComponent<DefaultLen
   }
 
   ngOnDestroy() {
+    this.unregisterField();
     super.ngOnDestroy();
-
-    this.parentForm.removeControl(this.fieldName);
   }
 
   initForm() {
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl({
-        value: this.getCurrentValue(this.fieldName),
-        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-      }),
-    );
+    const value = this.getCurrentValue(this.fieldName);
+    this.model.set(value === '' || value === null || value === undefined ? null : Number(value));
+    this.unregisterField = this.signalForm().register(this.fieldName, this.field);
+  }
+
+  hasError(kind: string): boolean {
+    return this.field()
+      .errors()
+      .some(error => error.kind === kind);
   }
 }

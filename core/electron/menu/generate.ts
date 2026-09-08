@@ -21,7 +21,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
   return [
     {
       id: 'GENERATE_HTML_DOCUMENTATION',
-      label: translation.HTML_DOCUMENTATION,
+      label: translation.htmlDocumentation,
       enabled: false,
       icon: getIcon(icons.GENERATE_HTML_DOCUMENTATION.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -31,7 +31,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
     },
     {
       id: 'GENERATE_OPEN_API_SPECIFICATION',
-      label: translation.OPEN_API_SPECIFICATION,
+      label: translation.openApiSpecification,
       enabled: false,
       icon: getIcon(icons.GENERATE_OPEN_API_SPECIFICATION.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -41,7 +41,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
     },
     {
       id: 'GENERATE_ASYNC_API_SPECIFICATION',
-      label: translation.ASYNC_API_SPECIFICATION,
+      label: translation.asyncApiSpecification,
       enabled: false,
       icon: getIcon(icons.GENERATE_ASYNC_API_SPECIFICATION.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -51,7 +51,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
     },
     {
       id: 'GENERATE_AASX_XML',
-      label: translation.AASX_XML,
+      label: translation.aasxXml,
       enabled: false,
       icon: getIcon(icons.GENERATE_AASX_XML.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -64,7 +64,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
     },
     {
       id: 'GENERATE_JSON_PAYLOAD',
-      label: translation.SAMPLE_JSON_PAYLOAD,
+      label: translation.sampleJsonPayload,
       enabled: false,
       icon: getIcon(icons.GENERATE_JSON_PAYLOAD.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -74,7 +74,7 @@ export function generate(translation: Translation): MenuItemConstructorOptions[]
     },
     {
       id: 'GENERATE_JSON_SCHEMA',
-      label: translation.JSON_SCHEMA,
+      label: translation.jsonSchema,
       enabled: false,
       icon: getIcon(icons.GENERATE_JSON_SCHEMA.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {

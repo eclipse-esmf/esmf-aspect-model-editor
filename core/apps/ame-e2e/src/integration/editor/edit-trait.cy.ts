@@ -17,18 +17,20 @@ import {FIELD_descriptionen, FIELD_preferredNameen} from '../../support/constant
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Trait', () => {
-  it('can add new and rename', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling().then(() => {
-      cy.shapeExists('Characteristic1')
-        .then(() => cy.clickAddTraitPlusIcon('Characteristic1'))
-        .then(() => {
-          cy.getAspect().then(aspect => {
-            expect(aspect.properties).to.have.length(1);
-            expect(aspect.properties[0].characteristic.name).to.equal('Trait1');
-          });
+    cy.startModelling();
+  });
+
+  it('can add new and rename', () => {
+    cy.shapeExists('Characteristic1')
+      .then(() => cy.clickAddTraitPlusIcon('Characteristic1'))
+      .then(() => {
+        cy.getAspect().then(aspect => {
+          expect(aspect.properties).to.have.length(1);
+          expect(aspect.properties[0].characteristic.name).to.equal('Trait1');
         });
-    });
+      });
   });
 
   it('can edit description', () => {

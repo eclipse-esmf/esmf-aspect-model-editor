@@ -11,20 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity, DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
-import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MockProvider, MockProviders} from 'ng-mocks';
+import {MockProvider} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AbstractEntityVisitor} from './abstract-entity';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
 
 describe('Abstract Entity Visitor', () => {
   let service: AbstractEntityVisitor;
@@ -32,8 +28,8 @@ describe('Abstract Entity Visitor', () => {
   const rdfModel: RdfModel = {
     store: new Store(),
     samm: new Samm(''),
-    hasDependency: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    hasDependency: vi.fn(() => false),
+    addPrefix: vi.fn(() => {}),
   } as any;
   const property: DefaultProperty = new DefaultProperty({name: '', metaModelVersion: '', aspectModelUrn: '', characteristic: null});
   const entity = new DefaultEntity({
@@ -47,12 +43,11 @@ describe('Abstract Entity Visitor', () => {
     TestBed.configureTestingModule({
       providers: [
         AbstractEntityVisitor,
-        MockProviders(MxGraphService),
         MockProvider(RdfListService, {
-          push: jest.fn(),
+          push: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
-          update: jest.fn(),
+          update: vi.fn(),
         }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),

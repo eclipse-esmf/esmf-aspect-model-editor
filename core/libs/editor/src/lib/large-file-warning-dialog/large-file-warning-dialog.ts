@@ -12,24 +12,24 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
-  standalone: true,
   templateUrl: './large-file-warning-dialog.html',
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, TranslocoDirective],
 })
 export class LargeFileWarningComponent {
   private loadedFilesService = inject(LoadedFilesService);
   private dialogRef = inject(MatDialogRef<LargeFileWarningComponent>);
   private data = inject<{elementsCount: number}>(MAT_DIALOG_DATA);
 
-  public elementsCount: number;
+  public elementsCount = signal(0);
 
   constructor() {
-    this.elementsCount = this.data?.elementsCount || 0;
+    this.elementsCount.set(this.data?.elementsCount || 0);
   }
 
   close(response: 'open' | 'cancel') {

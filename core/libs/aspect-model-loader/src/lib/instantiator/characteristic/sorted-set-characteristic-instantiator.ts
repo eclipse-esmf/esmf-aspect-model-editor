@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -36,7 +36,7 @@ export function sortedSetCharacteristicFactory(initProps: BaseInitProps) {
           characteristic.ordered = Boolean(propertyQuad.object.value);
         } else if (sammC.isElementCharacteristicProperty(propertyQuad.predicate.value)) {
           characteristic.elementCharacteristic = characteristicCreator(propertyQuad);
-          characteristic.elementCharacteristic && characteristic.elementCharacteristic.addParent(characteristic);
+          if (characteristic.elementCharacteristic) characteristic.elementCharacteristic.addParent(characteristic);
         }
       }
       return characteristic;

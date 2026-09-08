@@ -71,12 +71,13 @@ export class RdfNodeService {
    * @param metaModelElement
    * @param properties
    */
-  public update(metaModelElement: NamedElement, properties: BasePropertiesInterface): void {
-    const elementQuads: Quad[] = this.rdfModel.store.getQuads(DataFactory.namedNode(metaModelElement.aspectModelUrn), null, null, null);
+  public update(metaModelElement: NamedElement, properties: BasePropertiesInterface, subjectNode?: Quad_Subject): void {
+    const subject = subjectNode || DataFactory.namedNode(metaModelElement.aspectModelUrn);
+    const elementQuads: Quad[] = this.rdfModel.store.getQuads(subject, null, null, null);
 
     if (!elementQuads?.some(quad => this.rdfModel.samm.RdfType().value === quad.predicate.value)) {
       const newElement = DataFactory.triple(
-        DataFactory.namedNode(metaModelElement.aspectModelUrn),
+        subject,
         this.rdfModel.samm.RdfType(),
         DataFactory.namedNode(RdfModelUtil.getFullQualifiedModelName(metaModelElement)),
       );
@@ -89,7 +90,7 @@ export class RdfNodeService {
       }
 
       const outdatedQuad = this.rdfModel.store.getQuads(
-        DataFactory.namedNode(metaModelElement.aspectModelUrn),
+        subject,
         DataFactory.namedNode(this.rdfModel.samm.getAspectModelUrn(key)),
         null,
         null,
@@ -109,10 +110,10 @@ export class RdfNodeService {
       switch (key) {
         case PropertyEnum.Description:
         case PropertyEnum.PreferredName:
-          this.updateLocalizedValue(metaModelElement, properties, key);
+          this.updateLocalizedValue(metaModelElement, properties, key, subject);
           break;
         case PropertyEnum.See:
-          this.updateArrayField(metaModelElement, properties, key, samm.getAspectModelUrn(key));
+          this.updateArrayField(metaModelElement, properties, key, samm.getAspectModelUrn(key), subject);
           break;
         case metaModelElement instanceof DefaultEncodingConstraint && PropertyEnum.Value: {
           const propKey = properties[key].substring(properties[key].indexOf('#') + 1);
@@ -121,18 +122,20 @@ export class RdfNodeService {
             metaModelElement,
             samm.getAspectModelUrn(key),
             encodingsList.find((el: any) => el.value === propKey).isDefinedBy,
+            false,
+            subject,
           );
           break;
         }
         case PropertyEnum.NumericConversionFactor:
-          this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key));
+          this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key), undefined, subject);
           break;
         case PropertyEnum.DataType:
-          this.addDatatype(metaModelElement, samm.getAspectModelUrn(key), properties[key]);
+          this.addDatatype(metaModelElement, samm.getAspectModelUrn(key), properties[key], false, subject);
           break;
         case PropertyEnum.LowerBoundDefinition:
         case PropertyEnum.UpperBoundDefinition:
-          this.addDatatype(metaModelElement, sammC.getAspectModelUrn(key), sammC.getAspectModelUrn(properties[key]));
+          this.addDatatype(metaModelElement, sammC.getAspectModelUrn(key), sammC.getAspectModelUrn(properties[key]), false, subject);
           break;
         case PropertyEnum.MaxValue:
         case PropertyEnum.MinValue:
@@ -140,13 +143,13 @@ export class RdfNodeService {
         case PropertyEnum.Integer:
         case PropertyEnum.LocaleCode:
         case PropertyEnum.LanguageCode:
-          this.addQuad(metaModelElement, properties[key], sammC.getAspectModelUrn(key), properties['characteristicType']);
+          this.addQuad(metaModelElement, properties[key], sammC.getAspectModelUrn(key), properties['characteristicType'], subject);
           break;
         case PropertyEnum.ConversionFactor:
-          this.addQuad(metaModelElement, properties[key], sammU.getAspectModelUrn(key));
+          this.addQuad(metaModelElement, properties[key], sammU.getAspectModelUrn(key), undefined, subject);
           break;
         default:
-          this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key));
+          this.addQuad(metaModelElement, properties[key], samm.getAspectModelUrn(key), undefined, subject);
           break;
       }
     });
@@ -219,7 +222,13 @@ export class RdfNodeService {
     rdfModel.store.removeQuad(quad);
   }
 
-  private updateLocalizedValue(metaModelElement: NamedElement, properties: BasePropertiesInterface, key: string) {
+  private updateLocalizedValue(
+    metaModelElement: NamedElement,
+    properties: BasePropertiesInterface,
+    key: string,
+    subjectNode?: Quad_Subject,
+  ) {
+    const subject = subjectNode || DataFactory.namedNode(metaModelElement.aspectModelUrn);
     properties[key].forEach((localeValue: LocaleInterface & {value: number}) => {
       if (!localeValue.value && localeValue.value !== 0) {
         return;
@@ -227,7 +236,7 @@ export class RdfNodeService {
 
       this.rdfModel.store.addQuad(
         DataFactory.triple(
-          DataFactory.namedNode(metaModelElement.aspectModelUrn),
+          subject,
           DataFactory.namedNode(this.rdfModel.samm.getAspectModelUrn(key)),
           DataFactory.literal(localeValue.value, localeValue.language),
         ),
@@ -235,40 +244,66 @@ export class RdfNodeService {
     });
   }
 
-  private updateArrayField(metaModelElement: NamedElement, properties: BasePropertiesInterface, key: string, aspectModelUrn: string) {
+  private updateArrayField(
+    metaModelElement: NamedElement,
+    properties: BasePropertiesInterface,
+    key: string,
+    aspectModelUrn: string,
+    subjectNode?: Quad_Subject,
+  ) {
     const arrayProperty: string[] = properties[key];
     arrayProperty.forEach(property => {
-      this.addDatatype(metaModelElement, aspectModelUrn, property, key !== 'see');
+      this.addDatatype(metaModelElement, aspectModelUrn, property, key !== 'see', subjectNode);
     });
   }
 
-  private addDatatype(metaModelElement: NamedElement, aspectModelUrn: string, value: string | number | boolean, encodeUrn?: boolean) {
+  private addDatatype(
+    metaModelElement: NamedElement,
+    aspectModelUrn: string,
+    value: string | number | boolean,
+    encodeUrn?: boolean,
+    subjectNode?: Quad_Subject,
+  ) {
     if (!value && value !== 0) {
       return;
     }
 
+    const subject = subjectNode || DataFactory.namedNode(metaModelElement.aspectModelUrn);
+
     this.rdfModel.store.addQuad(
       DataFactory.triple(
-        DataFactory.namedNode(metaModelElement.aspectModelUrn),
+        subject,
         DataFactory.namedNode(aspectModelUrn),
         DataFactory.namedNode(encodeUrn ? encodeURIComponent(`${value}`) : `${value}`),
       ),
     );
   }
 
-  private addQuad(metaModelElement: NamedElement, value: string | number | boolean, aspectModelUrn: string, characteristicType?: Type) {
+  private addQuad(
+    metaModelElement: NamedElement,
+    value: string | number | boolean,
+    aspectModelUrn: string,
+    characteristicType?: Type,
+    subjectNode?: Quad_Subject,
+  ) {
     if (!value && value !== 0) {
       return;
     }
 
     const rdfModel = this.loadedFilesService.currentLoadedFile?.rdfModel;
-    rdfModel &&
+    const subject = subjectNode || DataFactory.namedNode(metaModelElement.aspectModelUrn);
+
+    if (rdfModel) {
       this.rdfModel.store.addQuad(
         DataFactory.triple(
-          DataFactory.namedNode(metaModelElement.aspectModelUrn),
+          subject,
           DataFactory.namedNode(aspectModelUrn),
-          DataFactory.literal(`${value}`, RdfModelUtil.resolveAccurateType(metaModelElement, aspectModelUrn, rdfModel, characteristicType)),
+          DataFactory.literal(
+            `${value}`,
+            RdfModelUtil.resolveAccurateType(metaModelElement, aspectModelUrn, rdfModel, characteristicType) || undefined,
+          ),
         ),
       );
+    }
   }
 }

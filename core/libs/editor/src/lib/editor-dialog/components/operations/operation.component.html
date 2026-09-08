@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,15 +12,16 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ame-base-input [parentForm]="parentForm"></ame-base-input>
-<ame-input-chiplist-field [parentForm]="parentForm"></ame-input-chiplist-field>
-<ame-output-input-field [parentForm]="parentForm"></ame-output-input-field>
-<ame-element-list
-  [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.INCOMING_EDGES' | translate"
-  [elements]="(element$ | async)?.parents"
-  iconRotation="rotate270"
-></ame-element-list>
-<ame-element-list
-  [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.OUTGOING_EDGES' | translate"
-  [elements]="(element$ | async)?.children"
-></ame-element-list>
+  <ame-base-input [signalForm]="signalForm()"></ame-base-input>
+  <ame-input-chiplist-field [signalForm]="signalForm()"></ame-input-chiplist-field>
+  <ame-output-input-field [signalForm]="signalForm()"></ame-output-input-field>
+  <ame-element-list
+    [label]="t('editorCanvas.shapeSetting.ameElementListLabel.incomingEdges')"
+    [elements]="element()?.parents"
+    iconRotation="rotate270"
+  ></ame-element-list>
+  <ame-element-list
+    [label]="t('editorCanvas.shapeSetting.ameElementListLabel.outgoingEdges')"
+    [elements]="element()?.children"
+  ></ame-element-list>
+</ng-container>

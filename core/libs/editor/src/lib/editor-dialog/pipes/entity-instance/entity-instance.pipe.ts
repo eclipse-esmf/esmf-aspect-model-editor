@@ -15,7 +15,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DefaultEntityInstance} from '@esmf/aspect-model-loader';
 
 @Pipe({
-  standalone: true,
   name: 'entityInstance',
 })
 export class EntityInstancePipe implements PipeTransform {

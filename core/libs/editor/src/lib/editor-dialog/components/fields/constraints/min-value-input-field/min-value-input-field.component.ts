@@ -10,12 +10,12 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MxGraphHelper} from '@ame/mx-graph';
+import {MaxGraphHelper} from '@ame/max-graph';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {DataTypeService} from '@ame/shared';
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {disabled, form, FormField} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultRangeConstraint, DefaultTrait, NamedElement, Type} from '@esmf/aspect-model-loader';
@@ -24,12 +24,18 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-min-value-input-field',
   templateUrl: './min-value-input-field.component.html',
-  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatLabel, FormField, MatInput],
 })
 export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRangeConstraint> implements OnInit, OnDestroy {
   private dataTypeService = inject(DataTypeService);
+  private readonly model = signal('');
+  private unregisterField = () => undefined;
 
-  public rangeConstraintDataType: Type;
+  readonly field = form(this.model, path =>
+    disabled(path, {when: () => !!this.metaModelElement && this.loadedFiles.isElementExtern(this.metaModelElement)}),
+  );
+
+  public rangeConstraintDataType = signal<Type>(null);
 
   constructor() {
     super();
@@ -38,7 +44,7 @@ export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRang
   }
 
   getCurrentValue(key: string) {
-    return this.previousData[key]?.[this.metaModelElement.className] || this.metaModelElement?.[key] || '';
+    return this.previousData()[key]?.[this.metaModelElement.className] || this.metaModelElement?.[key] || '';
   }
 
   ngOnInit() {
@@ -48,14 +54,14 @@ export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRang
         if (modelElement instanceof DefaultRangeConstraint) {
           this.metaModelElement = modelElement;
         }
-        this.rangeConstraintDataType = this.getCharacteristicTypeForConstraint(modelElement.name);
+        this.rangeConstraintDataType.set(this.getCharacteristicTypeForConstraint(modelElement.name));
         this.initForm();
       });
   }
 
   ngOnDestroy() {
+    this.unregisterField();
     super.ngOnDestroy();
-    this.parentForm.removeControl(this.fieldName);
   }
 
   getPlaceholder(rangeValueDataType: string): string {
@@ -64,24 +70,19 @@ export class MinValueInputFieldComponent extends InputFieldComponent<DefaultRang
   }
 
   initForm() {
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl({
-        value: this.getCurrentValue(this.fieldName),
-        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-      }),
-    );
+    this.model.set(this.getCurrentValue(this.fieldName));
+    this.unregisterField = this.signalForm().register(this.fieldName, this.field);
   }
 
-  getValueWithoutUrnDefinition(value: any) {
+  getValueWithoutUrnDefinition(value: string) {
     return RdfModelUtil.getValueWithoutUrnDefinition(value);
   }
 
   private getCharacteristicTypeForConstraint(id: string): Type {
-    const edges = this.mxGraphService.getAllEdges(id);
+    const edges = this.maxgraphService.getAllEdges(id);
 
     // constraint can only have trait as a source edge
-    const types = edges?.map(edge => MxGraphHelper.getModelElement<DefaultTrait>(edge.source)?.getBaseCharacteristic()?.dataType) || [];
+    const types = edges?.map(edge => MaxGraphHelper.getModelElement<DefaultTrait>(edge.source)?.getBaseCharacteristic()?.dataType) || [];
 
     if (types.length > 0) {
       // return type only if we have one kind of a type in list.

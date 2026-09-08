@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormsModule} from '@angular/forms';
+import {disabled, form, FormField} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
@@ -34,15 +34,20 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 @Component({
   selector: 'ame-constraint-name-dropdown-field',
   templateUrl: './constraint-name-dropdown-field.component.html',
-  imports: [MatFormFieldModule, MatLabel, MatSelect, FormsModule, MatOption],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, FormField, MatOption],
 })
 export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent<DefaultConstraint> implements OnInit {
   private destroyRef = inject(DestroyRef);
+  private readonly classModel = signal('');
+
+  readonly classField = form(this.classModel, path =>
+    disabled(path, {when: () => !!this.selectedMetaModelElement && this.loadedFilesService.isElementExtern(this.selectedMetaModelElement)}),
+  );
 
   public listConstraintNames: Array<string>;
-  public listConstraints: Map<string, Function> = new Map();
+  public listConstraints: Map<string, () => NamedElement> = new Map();
 
-  @Output() selectedConstraint = new EventEmitter<string>();
+  readonly selectedConstraint = output<string>();
 
   ngOnInit(): void {
     this.initConstraintList();
@@ -51,11 +56,13 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
       .subscribe(() => {
         this.selectedMetaModelElement = this.metaModelElement;
         this.setMetaModelClassName();
+        this.classModel.set(this.metaModelClassName);
         this.selectedConstraint.emit(this.metaModelClassName);
       });
   }
 
   onConstraintChange(constraint: string) {
+    this.classModel.set(constraint);
     this.setPreviousData();
 
     const createInstanceFunction = this.listConstraints.get(constraint);
@@ -63,28 +70,38 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
 
     const oldMetaModelElement = this.metaModelElement;
     this.metaModelElement = newConstraintType;
+    this.metaModelElement.anonymous = Boolean(oldMetaModelElement?.isAnonymous?.());
 
-    this.metaModelElement.name = oldMetaModelElement.name;
+    this.metaModelElement.name = this.metaModelElement.isAnonymous?.() ? `[${constraint}]` : oldMetaModelElement.name;
     this.metaModelElement.aspectModelUrn = oldMetaModelElement.aspectModelUrn;
     this.migrateCommonAttributes(oldMetaModelElement);
 
     this.addLanguageSettings(this.metaModelElement);
     this.setMetaModelElementAspectUrn(newConstraintType);
+
+    if (this.metaModelElement.isAnonymous?.()) {
+      this.signalForm().set('name', this.metaModelElement.name);
+      this.signalForm().set('isAnonymous', true);
+    }
+
     this.updateFields(newConstraintType);
 
     this.selectedConstraint.emit(constraint);
   }
 
-  private getMetaModelElementTypeWhenChange(createInstanceFunction: Function) {
+  private getMetaModelElementTypeWhenChange(createInstanceFunction: () => NamedElement) {
     const modelElementType = createInstanceFunction();
     if (modelElementType.aspectModelUrn === this.selectedMetaModelElement.aspectModelUrn) {
       this.metaModelElement = this.selectedMetaModelElement;
-      return;
     }
+
     return modelElementType;
   }
 
   private setMetaModelElementAspectUrn(modelElement: Constraint) {
+    if (this.metaModelElement?.isAnonymous?.()) {
+      return;
+    }
     this.metaModelElement.aspectModelUrn = `${this.loadedFilesService.currentLoadedFile?.rdfModel?.getAspectModelUrn()}${modelElement.name}`;
   }
 
@@ -118,7 +135,10 @@ export class ConstraintNameDropdownFieldComponent extends DropdownFieldComponent
 
   private migrateCommonAttributes(oldMetaModelElement: NamedElement) {
     Object.keys(oldMetaModelElement).forEach(oldKey => {
-      if (!['aspectModelUrn', 'name', 'className'].includes(oldKey) && Object.keys(this.metaModelElement).find(key => key === oldKey)) {
+      if (
+        !['aspectModelUrn', 'name', '_name', 'className'].includes(oldKey) &&
+        Object.keys(this.metaModelElement).find(key => key === oldKey)
+      ) {
         this.metaModelElement[oldKey] = oldMetaModelElement[oldKey];
       }
     });

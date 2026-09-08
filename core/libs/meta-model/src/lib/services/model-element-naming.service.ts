@@ -17,7 +17,7 @@ import {NamedElement} from '@esmf/aspect-model-loader';
 
 @Injectable({providedIn: 'root'})
 export class ModelElementNamingService {
-  private loadedFiles = inject(LoadedFilesService);
+  private readonly loadedFiles = inject(LoadedFilesService);
 
   /**
    * Creates a new instance of the element and assigns it a default name
@@ -27,7 +27,7 @@ export class ModelElementNamingService {
    */
   resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean): T {
     for (const child of element.children) {
-      if (!child.aspectModelUrn) {
+      if (!child.aspectModelUrn || child.aspectModelUrn.startsWith('#')) {
         if (cached) this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(this.resolveElementNaming(child));
         else this.resolveElementNaming(child);
       }

@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -14,41 +13,35 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL} from '../../support/api-mocks';
-
 import {SELECTOR_alertRightButton, SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test language settings', () => {
-  it('can open settings dialog', () => {
-    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-
+  before(() => {
     cy.visitDefault();
-    cy.wait(1000);
+  });
+
+  it('can open settings dialog', () => {
     cy.startModelling();
     cy.get(SELECTOR_settingsButton)
       .click()
-      .wait(1000)
-      .then(() => cy.get(':nth-child(5) > .settings__node').click())
+      .then(() => cy.get(':nth-child(5) > .settings__node').should('be.visible').click())
       .then(() => cy.get('[data-cy=langCode]').should('exist').should('have.value', 'English (en)'))
       .then(() => cy.get(SettingsDialogSelectors.settingsDialogOkButton).click());
   });
 
   it('can add new language', () => {
-    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-
     cy.get(SELECTOR_settingsButton)
       .click()
-      .wait(1000)
-      .then(() => cy.get(':nth-child(5) > .settings__node').click())
+      .then(() => cy.get(':nth-child(5) > .settings__node').should('be.visible').click())
       .then(() => cy.get('[data-cy=langCode]').should('exist').should('have.value', 'English (en)'))
       .then(() => cy.get('[data-cy="addLang"]').click({force: true}))
-      .then(() =>
-        cy.get('[data-cy="langCode"]').get('input:last').type('German').wait(1500).get('.mat-mdc-option:first').click({force: true}),
-      );
-    cy.wait(1000)
-      .then(() => cy.get('[data-cy="settingsDialogApplyButton"]').click({force: true}))
-      .then(() => cy.get('[data-cy="langCode"]').get('input:last').should('exist').should('have.value', 'German (de)'));
+      .then(() => {
+        cy.get('[data-cy="langCode"]').last().type('German');
+        cy.get('.mat-mdc-option').first().should('be.visible').click({force: true});
+      })
+      .then(() => cy.get('[data-cy="settingsDialogApplyButton"]').should('be.visible').click({force: true}))
+      .then(() => cy.get('[data-cy="langCode"]').last().should('exist').should('have.value', 'German (de)'));
   });
 
   it('can delete language', () => {
@@ -56,21 +49,18 @@ describe('Test language settings', () => {
       .click({force: true})
       .then(() => cy.get('[data-cy="settingsDialogApplyButton"]').click({force: true}))
       .then(() => cy.get('[data-cy="alert-left-btn"]').click({force: true}))
-      .then(() => cy.get('[data-cy="langCode"]').get('input:last').should('exist').should('have.value', 'English (en)'));
+      .then(() => cy.get('[data-cy="langCode"]').last().should('exist').should('have.value', 'English (en)'))
+      .then(() => cy.get(SettingsDialogSelectors.settingsDialogCancelButton).click());
   });
 
   it('can delete and remove all multi language information in the loaded model', () => {
-    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.visitDefault();
     cy.fixture('multi-language-model')
       .as('rdfString')
       .then(rdfString => {
         cy.loadModel(rdfString).then(() => {
-          cy.get('.cdk-overlay-container').should('not.be.visible');
-          cy.get(SELECTOR_settingsButton).click().wait(1000);
-          cy.get(':nth-child(5) > .settings__node').click();
+          cy.get('mat-dialog-container').should('not.exist');
+          cy.get(SELECTOR_settingsButton).click();
+          cy.get(':nth-child(5) > .settings__node').should('be.visible').click();
           cy.get('[data-cy=langCode]').should('have.length', 3);
           cy.get('.delete-icon:last').click({force: true});
           cy.get('.delete-icon:last').click({force: true});
@@ -79,7 +69,7 @@ describe('Test language settings', () => {
             .should('be.visible')
             .click({force: true})
             .then(() => {
-              cy.get('.cdk-overlay-container').should('not.be.visible', 8000);
+              cy.get('mat-dialog-container', {timeout: 8000}).should('not.exist');
               cy.getUpdatedRDF().then(rdf => {
                 expect(rdf).not.contain('@en-us');
                 expect(rdf).not.contain('@de-de');

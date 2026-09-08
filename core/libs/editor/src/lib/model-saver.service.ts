@@ -1,15 +1,28 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {FileHandlingService} from '@ame/editor';
 import {ModelService, RdfSerializerService} from '@ame/rdf/services';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {ModelSavingTrackerService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
-import {DestroyRef, Injectable, Injector, inject, runInInjectionContext} from '@angular/core';
+import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
-import {Observable, Subscription, catchError, delayWhen, first, map, of, retry, switchMap, tap, throwError, timer} from 'rxjs';
+import {catchError, delayWhen, first, map, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
+import {FileHandlingService} from './editor-toolbar/services/file-handling.service';
 
 @Injectable({providedIn: 'root'})
 export class ModelSaverService {
@@ -42,14 +55,14 @@ export class ModelSaverService {
       switchMap(() => this.writeModelToWorkspace(rdfModel)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
-        this.notificationsService.info({title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_SUCCESS});
+        this.notificationsService.info({title: this.translate.language.notificationService.aspectSavedSuccess});
         console.info('Aspect model was saved to the local folder');
         this.sidebarService.workspace.refresh();
       }),
       catchError(error => {
         console.error('Error on saving aspect model', error);
         this.notificationsService.error({
-          title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_ERROR,
+          title: this.translate.language.notificationService.aspectSavedError,
           message: error?.error?.message,
         });
         return of(null);
@@ -76,7 +89,11 @@ export class ModelSaverService {
   }
 
   enableAutoSave(): void {
-    this.settings.autoSaveEnabled ? this.startSaveModel() : this.stopSaveModel();
+    if (this.settings.autoSaveEnabled) {
+      this.startSaveModel();
+    } else {
+      this.stopSaveModel();
+    }
   }
 
   private startSaveModel(): void {
@@ -98,7 +115,7 @@ export class ModelSaverService {
       console.info('Model is empty. Skipping saving.');
       return throwError(() => ({
         error: {
-          message: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_EMPTY_MODEL,
+          message: this.translate.language.notificationService.aspectSavedEmptyModel,
         },
       }));
     }
@@ -109,7 +126,7 @@ export class ModelSaverService {
         if (!content) {
           return throwError(() => ({
             error: {
-              message: this.translate.language.NOTIFICATION_SERVICE.ASPECT_SAVED_EMPTY_MODEL,
+              message: this.translate.language.notificationService.aspectSavedEmptyModel,
             },
           }));
         }

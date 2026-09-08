@@ -13,14 +13,14 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {ChangeDetectorRef, Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, effect, inject, input, OnInit, output, signal, untracked} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement, Unit} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorFormModel, EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {AbstractEntityComponent} from '../abstract-entities';
 import {AbstractPropertyComponent} from '../abstract-property';
 import {AspectComponent} from '../aspect';
@@ -48,7 +48,6 @@ import {SharedSettingsTitleComponent} from './shared-settings-title/shared-setti
     LocateElementComponent,
     MatIconButton,
     MatIconModule,
-    ReactiveFormsModule,
     AspectComponent,
     CharacteristicComponent,
     ConstraintComponent,
@@ -60,13 +59,13 @@ import {SharedSettingsTitleComponent} from './shared-settings-title/shared-setti
     UnitComponent,
     TraitCharacteristicComponent,
     EntityInstanceComponent,
-    TranslatePipe,
+    TranslocoDirective,
     MatButton,
     ValueComponent,
     EventComponent,
   ],
 })
-export class ShapeSettingsComponent implements OnInit, OnChanges {
+export class ShapeSettingsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private languageSettings = inject(SammLanguageSettingsService);
   private changeDetector = inject(ChangeDetectorRef);
@@ -74,33 +73,34 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
   public metaModelDialogService = inject(EditorModelService);
   public loadedFilesService = inject(LoadedFilesService);
 
-  public metaModelClassName: string;
-  public metaModelElement: NamedElement;
   public selectedMetaModelElement: NamedElement;
   public tmpCharacteristic: DefaultCharacteristic | DefaultConstraint;
   public units: Unit[] = [];
-  public formGroup: FormGroup = new FormGroup({
-    changedMetaModel: new FormControl(null),
-  });
+  public signalForm = new EditorSignalFormContext<EditorFormModel>({changedMetaModel: null});
 
-  @Input() isOpened = false;
-  @Input() modelElement: NamedElement = null;
+  public metaModelElement = signal<NamedElement>(undefined);
 
-  @Output() save = new EventEmitter<FormGroup>();
-  @Output() afterClose = new EventEmitter();
+  readonly isOpened = input(false);
+  readonly modelElement = input<NamedElement>(null);
 
-  saveOnKeyControlEnterEvent() {
-    if (this.isOpened) {
-      this.onSave();
-    }
+  readonly save = output<EditorFormModel>();
+  readonly afterClose = output();
+
+  constructor() {
+    effect(() => {
+      const modelElement = this.modelElement();
+      if (!modelElement) {
+        return;
+      }
+
+      untracked(() => this.onEdit(modelElement));
+    });
   }
 
-  ngOnChanges(): void {
-    if (!this.modelElement) {
-      return;
+  saveOnKeyControlEnterEvent() {
+    if (this.isOpened()) {
+      this.onSave();
     }
-
-    this.onEdit(this.modelElement);
   }
 
   ngOnInit() {
@@ -108,36 +108,35 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
       .getMetaModelElement()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(metaModelElement => {
-        this.metaModelElement = metaModelElement;
-        this.changeDetector.detectChanges();
+        this.metaModelElement.set(metaModelElement);
       });
   }
 
   onSave(): void {
-    if (this.formGroup?.valid) {
-      this.save.emit(this.formGroup.getRawValue());
-      this.formGroup.reset();
+    if (this.signalForm.valid()) {
+      this.save.emit(this.signalForm.value());
+      this.signalForm.reset({changedMetaModel: null});
       this.onClose();
     }
   }
 
   onClose(): void {
-    this.formGroup.reset();
+    this.signalForm.reset({changedMetaModel: null});
     this.afterClose.emit();
   }
 
   isOfType(types: string[]): boolean {
-    return types.includes(this.metaModelElement.className);
+    return types.includes(this.metaModelElement().className);
   }
 
   onEdit(selectedModelElement: NamedElement) {
     if (selectedModelElement) {
-      this.metaModelElement = selectedModelElement;
+      this.metaModelElement.set(selectedModelElement);
       this.selectedMetaModelElement = selectedModelElement;
       this.addLanguageSettings(selectedModelElement);
-      this.metaModelDialogService.updateMetaModelElement(this.metaModelElement);
-      if (this.metaModelElement instanceof DefaultCharacteristic || this.metaModelElement instanceof DefaultConstraint) {
-        this.tmpCharacteristic = this.metaModelElement;
+      this.metaModelDialogService.updateMetaModelElement(this.metaModelElement());
+      if (this.metaModelElement() instanceof DefaultCharacteristic || this.metaModelElement() instanceof DefaultConstraint) {
+        this.tmpCharacteristic = this.metaModelElement();
       }
     } else {
       console.warn('Selected element is null. The dialog will not shown.');
@@ -156,10 +155,10 @@ export class ShapeSettingsComponent implements OnInit, OnChanges {
   }
 
   isCharacteristic(): boolean {
-    return this.isOpened && this.metaModelElement instanceof DefaultCharacteristic;
+    return this.isOpened() && this.metaModelElement() instanceof DefaultCharacteristic;
   }
 
   isConstraint(): boolean {
-    return this.metaModelElement instanceof DefaultConstraint;
+    return this.metaModelElement() instanceof DefaultConstraint;
   }
 }

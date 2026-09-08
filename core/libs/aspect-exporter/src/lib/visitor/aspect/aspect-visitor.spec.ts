@@ -11,20 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
-import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MockProvider, MockProviders} from 'ng-mocks';
+import {MockProvider} from 'ng-mocks';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {AspectVisitor} from './aspect-visitor';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
 
 describe('Aspect Visitor', () => {
   let service: AspectVisitor;
@@ -32,8 +28,8 @@ describe('Aspect Visitor', () => {
   const rdfModel: RdfModel = {
     store: new Store(),
     samm: new Samm(''),
-    hasDependency: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    hasDependency: vi.fn(() => false),
+    addPrefix: vi.fn(() => {}),
   } as any;
 
   const aspect = new DefaultAspect({metaModelVersion: '1', aspectModelUrn: 'samm#aspect', name: 'aspect1'});
@@ -42,14 +38,12 @@ describe('Aspect Visitor', () => {
     TestBed.configureTestingModule({
       providers: [
         AspectVisitor,
-        MockProviders(MxGraphService),
-        MockProvider(MxGraphService),
         MockProvider(RdfListService, {
-          push: jest.fn(),
-          createEmpty: jest.fn(),
+          push: vi.fn(),
+          createEmpty: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
-          update: jest.fn(),
+          update: vi.fn(),
         }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),

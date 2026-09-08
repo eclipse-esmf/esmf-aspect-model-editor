@@ -16,20 +16,21 @@ import {ElectronSignalsService} from '@ame/shared';
 import {Component, inject, input} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
   selector: 'ame-workspace-empty',
   templateUrl: './workspace-empty.component.html',
   styleUrls: ['./workspace-empty.component.scss'],
-  imports: [MatProgressSpinner, MatButton, TranslatePipe],
+  imports: [MatProgressSpinner, MatButton, TranslocoDirective],
 })
 export class WorkspaceEmptyComponent {
   private namespacesManagerService = inject(NamespacesManagerService);
   private electronSignalsService = inject(ElectronSignalsService);
 
-  loading = input(false);
-  file: File | null = null;
+  private file: File | null = null;
+
+  public loading = input(false);
 
   onFileInput(files: FileList | null): void {
     if (files) {

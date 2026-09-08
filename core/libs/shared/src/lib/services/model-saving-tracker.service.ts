@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {Injectable, inject} from '@angular/core';
 import {map, take} from 'rxjs';
@@ -21,7 +21,7 @@ import {map, take} from 'rxjs';
 export class ModelSavingTrackerService {
   private modelService = inject(ModelService);
   private rdfService = inject(RdfService);
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private loadedFilesService = inject(LoadedFilesService);
   private savedModel: string;
   private firstLoad: boolean;
@@ -35,7 +35,7 @@ export class ModelSavingTrackerService {
 
   public get isSaved$() {
     return this.currentModel$.pipe(
-      map(currentModel => (!this.firstLoad && this.savedModel === currentModel) || !this.mxGraphService.getAllCells()?.length),
+      map(currentModel => (!this.firstLoad && this.savedModel === currentModel) || !this.maxgraphService.getAllCells()?.length),
     );
   }
 

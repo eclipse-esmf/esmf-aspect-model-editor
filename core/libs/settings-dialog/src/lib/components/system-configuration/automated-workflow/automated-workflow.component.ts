@@ -11,15 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject, OnInit} from '@angular/core';
-import {AbstractControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Component, inject} from '@angular/core';
+import {FormField} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {MatTooltip} from '@angular/material/tooltip';
-import {TranslatePipe} from '@ngx-translate/core';
-import {finalize} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {SettingsFormService} from '../../../services';
 
 export const automatedWorkflowControlName = 'automatedWorkflow';
@@ -28,50 +27,10 @@ export const automatedWorkflowControlName = 'automatedWorkflow';
   selector: 'ame-automated-workflow-config',
   templateUrl: './automated-workflow.component.html',
   styleUrls: ['./automated-workflow.component.scss'],
-  imports: [
-    ReactiveFormsModule,
-    MatSlideToggle,
-    MatIconModule,
-    MatTooltip,
-    MatFormFieldModule,
-    MatLabel,
-    MatError,
-    MatInput,
-    TranslatePipe,
-  ],
+  imports: [FormField, MatSlideToggle, MatIconModule, MatTooltip, MatFormFieldModule, MatLabel, MatError, MatInput, TranslocoDirective],
 })
-export class AutomatedWorkflowComponent implements OnInit {
-  private formService = inject(SettingsFormService);
+export class AutomatedWorkflowComponent {
+  protected readonly formService = inject(SettingsFormService);
 
-  public form: FormGroup;
-
-  ngOnInit(): void {
-    this.form = this.formService.getForm().get('automatedWorkflow') as FormGroup;
-    this.setupAutoSaveFeature();
-    this.setupAutoValidationFeature();
-  }
-
-  // Sets up the auto-save feature
-  private setupAutoSaveFeature(): void {
-    const autoSaveEnabledControl = this.form.get('autoSaveEnabled');
-    this.subscribeToControlChanges(autoSaveEnabledControl, 'saveTimerSeconds');
-  }
-
-  // Sets up the auto-validation feature
-  private setupAutoValidationFeature(): void {
-    const autoValidationEnabledControl = this.form.get('autoValidationEnabled');
-    this.subscribeToControlChanges(autoValidationEnabledControl, 'validationTimerSeconds');
-  }
-
-  // Subscribes to a control's value changes and enables/disables a related control
-  private subscribeToControlChanges(control: AbstractControl, relatedControlName: string): void {
-    if (!control) return;
-
-    const valueChange$ = control.valueChanges.pipe(finalize(() => valueChange$.unsubscribe())).subscribe(enabled => {
-      const relatedControl = this.form.get(relatedControlName);
-      if (relatedControl) {
-        enabled ? relatedControl.enable() : relatedControl.disable();
-      }
-    });
-  }
+  readonly form = this.formService.settingsForm;
 }

@@ -27,17 +27,19 @@ export function namespaceFactory(initProps: BaseInitProps) {
       if (!element.namespace || element.namespace.length == 0) {
         return true;
       }
-      if (!allElementsByNamespace.has(element.namespace)) {
-        allElementsByNamespace.set(element.namespace, []);
+      let list = allElementsByNamespace.get(element.namespace);
+      if (!list) {
+        list = [];
+        allElementsByNamespace.set(element.namespace, list);
       }
-      allElementsByNamespace.get(element.namespace).push(element);
+      list.push(element);
       return false;
     });
 
     return allElementsByNamespace;
   };
 
-  function loadModelElements(type: NamedNode, instantiatorFunction) {
+  function loadModelElements(type: NamedNode, instantiatorFunction: (quad: Quad) => any) {
     rdfModel.store.getQuads(null, rdfModel.samm.RdfType(), type, null).forEach(instantiatorFunction);
   }
 }

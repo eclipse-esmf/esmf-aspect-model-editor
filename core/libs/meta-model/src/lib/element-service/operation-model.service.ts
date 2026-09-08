@@ -13,26 +13,26 @@
 
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
-import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphService, OperationRenderService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, ModelInfo, OperationRenderService} from '@ame/max-graph';
 import {Injectable, inject} from '@angular/core';
 import {DefaultOperation, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class OperationModelService extends BaseModelService {
-  private filtersService = inject(FiltersService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private shapeConnectorService = inject(ShapeConnectorService);
-  private mxGraphService = inject(MxGraphService);
-  private operationRender = inject(OperationRenderService);
+  private readonly filtersService = inject(FiltersService);
+  private readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private readonly shapeConnectorService = inject(ShapeConnectorService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly operationRender = inject(OperationRenderService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultOperation;
   }
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const modelElement = MxGraphHelper.getModelElement<DefaultOperation>(cell);
+  update(cell: Cell, form: {[key: string]: any}) {
+    const modelElement = MaxGraphHelper.getModelElement<DefaultOperation>(cell);
     super.update(cell, form);
 
     const inputList = form.inputChipList;
@@ -51,15 +51,15 @@ export class OperationModelService extends BaseModelService {
     this.operationRender.update({cell});
   }
 
-  delete(cell: mxgraph.mxCell) {
+  delete(cell: Cell) {
     super.delete(cell);
-    this.mxGraphService.removeCells([cell]);
+    this.maxgraphService.removeCells([cell]);
   }
 
-  private removeInputDependency(cell: mxgraph.mxCell, input: Array<DefaultProperty>, output: DefaultProperty) {
-    const operation = MxGraphHelper.getModelElement<DefaultOperation>(cell);
-    this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
-      const modelElement = MxGraphHelper.getModelElement(edge.target);
+  private removeInputDependency(cell: Cell, input: Array<DefaultProperty>, output: DefaultProperty) {
+    const operation = MaxGraphHelper.getModelElement<DefaultOperation>(cell);
+    this.maxgraphAttributeService.graph.getOutgoingEdges(cell, null).forEach(edge => {
+      const modelElement = MaxGraphHelper.getModelElement(edge.target);
       const inputProperty = input.find(value => value.aspectModelUrn === modelElement.aspectModelUrn);
       if (
         modelElement instanceof DefaultProperty &&
@@ -67,46 +67,46 @@ export class OperationModelService extends BaseModelService {
         output?.aspectModelUrn !== modelElement.aspectModelUrn &&
         inputProperty
       ) {
-        this.mxGraphService.removeCells([cell.removeEdge(edge, true)]);
-        MxGraphHelper.removeRelation(operation, inputProperty);
+        this.maxgraphService.removeCells([cell.removeEdge(edge, true)]);
+        MaxGraphHelper.removeRelation(operation, inputProperty);
       }
     });
   }
 
-  private removeOutputDependency(cell: mxgraph.mxCell, output: DefaultProperty, input: Array<DefaultProperty>) {
-    const operation = MxGraphHelper.getModelElement<DefaultOperation>(cell);
-    this.mxGraphAttributeService.graph.getOutgoingEdges(cell).forEach(edge => {
-      const modelElement = MxGraphHelper.getModelElement(edge.target);
+  private removeOutputDependency(cell: Cell, output: DefaultProperty, input: Array<DefaultProperty>) {
+    const operation = MaxGraphHelper.getModelElement<DefaultOperation>(cell);
+    this.maxgraphAttributeService.graph.getOutgoingEdges(cell, null).forEach(edge => {
+      const modelElement = MaxGraphHelper.getModelElement(edge.target);
       if (
         modelElement instanceof DefaultProperty &&
         output?.aspectModelUrn === modelElement.aspectModelUrn &&
         !input.find(value => value.aspectModelUrn === modelElement.aspectModelUrn)
       ) {
-        this.mxGraphService.removeCells([cell.removeEdge(edge, true)]);
-        MxGraphHelper.removeRelation(operation, output);
+        this.maxgraphService.removeCells([cell.removeEdge(edge, true)]);
+        MaxGraphHelper.removeRelation(operation, output);
       }
     });
   }
 
-  private addInputProperties(cell: mxgraph.mxCell, input: Array<DefaultProperty>) {
+  private addInputProperties(cell: Cell, input: Array<DefaultProperty>) {
     input.forEach(property => {
       const cachedProperty = this.currentCachedFile.resolveInstance(property);
-      const operation = MxGraphHelper.getModelElement(cell);
-      const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedProperty);
+      const operation = MaxGraphHelper.getModelElement(cell);
+      const resolvedCell = this.maxgraphService.resolveCellByModelElement(cachedProperty);
       const propertyCell = resolvedCell
         ? resolvedCell
-        : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedProperty, {parent: operation}));
+        : this.maxgraphService.renderModelElement(this.filtersService.createNode(cachedProperty, {parent: operation}));
       this.shapeConnectorService.connectShapes(operation, cachedProperty, cell, propertyCell, ModelInfo.IS_OPERATION_INPUT);
     });
   }
 
-  private addOutputProperties(cell: mxgraph.mxCell, property: DefaultProperty) {
+  private addOutputProperties(cell: Cell, property: DefaultProperty) {
     const cachedProperty = this.currentCachedFile.resolveInstance(property);
-    const operation = MxGraphHelper.getModelElement(cell);
-    const resolvedCell = this.mxGraphService.resolveCellByModelElement(cachedProperty);
+    const operation = MaxGraphHelper.getModelElement(cell);
+    const resolvedCell = this.maxgraphService.resolveCellByModelElement(cachedProperty);
     const propertyCell = resolvedCell
       ? resolvedCell
-      : this.mxGraphService.renderModelElement(this.filtersService.createNode(cachedProperty, {parent: operation}));
+      : this.maxgraphService.renderModelElement(this.filtersService.createNode(cachedProperty, {parent: operation}));
     this.shapeConnectorService.connectShapes(operation, cachedProperty, cell, propertyCell, ModelInfo.IS_OPERATION_OUTPUT);
   }
 }

@@ -12,12 +12,13 @@
  */
 
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogService, EntityInstanceUtil} from '@ame/editor';
-import {MxGraphHelper} from '@ame/mx-graph';
-import {NotificationsService, config} from '@ame/shared';
-import {Injectable, inject} from '@angular/core';
+import {MaxGraphHelper} from '@ame/max-graph';
+import {config, NotificationsService} from '@ame/shared';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, Entity, Value} from '@esmf/aspect-model-loader';
+import {ConfirmDialogService} from '../../../../confirm-dialog/confirm-dialog.service';
 import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
+import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
 @Injectable({providedIn: 'root'})
 export class EntityInstanceService {
@@ -29,10 +30,10 @@ export class EntityInstanceService {
     return this.loadedFilesService.currentLoadedFile.cachedFile;
   }
 
-  onPropertyRemove(property: DefaultProperty, acceptCallback: Function) {
-    const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(eInstance => {
-      eInstance.getTuples().some(([propertyUrn]) => property.aspectModelUrn === propertyUrn);
-    });
+  onPropertyRemove(property: DefaultProperty, acceptCallback: () => void) {
+    const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(eInstance =>
+      eInstance.getTuples().some(([propertyUrn]) => property.aspectModelUrn === propertyUrn),
+    );
 
     if (!entityValues.length) {
       acceptCallback?.();
@@ -78,17 +79,17 @@ export class EntityInstanceService {
         : new Value('', property.characteristic?.dataType, EntityInstanceUtil.isDefaultPropertyWithLangString(property) ? '' : undefined);
       entityValue.setAssertion(property.aspectModelUrn, newValue);
 
-      MxGraphHelper.establishRelation(entityValue, entity);
+      MaxGraphHelper.establishRelation(entityValue, entity);
     }
 
-    MxGraphHelper.establishRelation(entity, property);
+    MaxGraphHelper.establishRelation(entity, property);
     this.notifications.warning({
       title: `Property ${property.name} was added to ${entity.name} instances. Make sure to add a value to them!`,
       timeout: 5000,
     });
   }
 
-  onEntityRemove(entity: DefaultEntity, acceptCallback: Function) {
+  onEntityRemove(entity: DefaultEntity, acceptCallback: () => void) {
     const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance).filter(
       entityValue => entityValue.type.name === entity.name,
     );
@@ -114,7 +115,7 @@ export class EntityInstanceService {
     });
   }
 
-  onEntityDisconnect(characteristic: DefaultEnumeration, entity: DefaultEntity, acceptCallback: Function) {
+  onEntityDisconnect(characteristic: DefaultEnumeration, entity: DefaultEntity, acceptCallback: () => void) {
     const entityValues = CacheUtils.getCachedElements(this.currentCachedFile, DefaultEntityInstance)
       .filter(entityValue => entityValue.type.name === entity.name)
       .filter(entityValue => entityValue.parents.some(parent => parent.aspectModelUrn === characteristic.aspectModelUrn));
@@ -141,7 +142,7 @@ export class EntityInstanceService {
     });
   }
 
-  onCharacteristicRemove(characteristic: DefaultEnumeration, acceptCallback: Function) {
+  onCharacteristicRemove(characteristic: DefaultEnumeration, acceptCallback: () => void) {
     this.removeEntityValuesFromCharacteristic(characteristic);
     acceptCallback?.();
   }

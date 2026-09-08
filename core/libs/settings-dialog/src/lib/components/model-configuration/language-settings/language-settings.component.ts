@@ -11,20 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {LanguageTranslationService} from '@ame/translation';
-import {AsyncPipe} from '@angular/common';
-import {Component, inject, OnInit} from '@angular/core';
-import {AbstractControl, FormArray, FormGroup, ReactiveFormsModule} from '@angular/forms';
-import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
+import {Component, inject} from '@angular/core';
+import {FormField} from '@angular/forms/signals';
+import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatDivider} from '@angular/material/divider';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatInput, MatLabel} from '@angular/material/input';
+import {MatInput, MatLabel} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
-import {map, Observable, startWith} from 'rxjs';
-import {Langcode} from '../../../model';
+import {AspectModelLanguageEntry, Langcode} from '../../../model';
 import {SettingsFormService} from '../../../services';
 
 @Component({
@@ -32,7 +30,7 @@ import {SettingsFormService} from '../../../services';
   templateUrl: './language-settings.component.html',
   styleUrls: ['./language-settings.component.scss'],
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatFormFieldModule,
     MatLabel,
     MatSelect,
@@ -42,93 +40,89 @@ import {SettingsFormService} from '../../../services';
     MatInput,
     MatAutocomplete,
     MatIconModule,
-    AsyncPipe,
     MatIconButton,
-    MatError,
     MatButton,
-    TranslatePipe,
+    TranslocoDirective,
   ],
 })
-export class LanguageSettingsComponent implements OnInit {
-  private translate = inject(LanguageTranslationService);
-  private formService = inject(SettingsFormService);
+export class LanguageSettingsComponent {
+  private readonly translate = inject(LanguageTranslationService);
+  protected readonly formService = inject(SettingsFormService);
 
-  public form: FormGroup;
-  public filteredOptions: Observable<Langcode[]>[] = [];
+  readonly form = this.formService.settingsForm;
 
-  ngOnInit(): void {
-    this.form = this.formService.getForm().get('languageConfiguration') as FormGroup;
-    this.initializeFilteredOptions();
-  }
-
-  get aspectModelFormArray(): FormArray {
-    return this.form.get('aspectModel') as FormArray;
+  get aspectModelLanguages(): AspectModelLanguageEntry[] {
+    return this.formService.settingsModel().languageConfiguration.aspectModel;
   }
 
   get supportedLanguages(): {code: string; language: string}[] {
     return this.translate.supportedLanguages;
   }
 
-  getLanguageFormGroup(index: number): FormGroup {
-    return this.aspectModelFormArray.controls[index] as FormGroup;
-  }
-
   addLanguage(): void {
     this.formService.addNewLanguage();
-    this.initializeFilteredOptions();
-    this.markLanguagesAsTouched();
   }
 
-  private initializeFilteredOptions(): void {
-    this.filteredOptions = this.aspectModelFormArray.controls.map(control => this.getFilteredOptionsObservable(control.get('language')));
-  }
-
-  private getFilteredOptionsObservable(control: AbstractControl): Observable<Langcode[]> {
-    return control.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterOptions(this.getLanguageName(value))),
-    );
-  }
-
-  filterOptions(value: string): Langcode[] {
-    if (!value) {
+  filterOptions(value: string | Langcode | null): Langcode[] {
+    const query = typeof value === 'object' && value ? value.name : String(value || '');
+    if (!query) {
       return [];
     }
 
-    const filterValue = value.toLowerCase();
-
+    const filterValue = query.toLowerCase();
     return locale.all
-      .filter(locale => this.isLocaleMatch(locale, filterValue))
-      .map(locale => ({
-        name: locale.name,
-        tag: locale.tag,
+      .filter((loc: locale.ILocale) => loc.tag.toLowerCase().includes(filterValue) || loc.name.toLowerCase().includes(filterValue))
+      .map((loc: locale.ILocale) => ({
+        name: loc.name,
+        tag: loc.tag,
       }));
   }
 
-  private isLocaleMatch(locale: locale.ILocale, filterValue: string): boolean {
-    return locale.tag.toLowerCase().includes(filterValue) || locale.name.toLowerCase().includes(filterValue);
-  }
-
-  private getLanguageName(value: string | Langcode): string {
-    return typeof value === 'object' ? value.name : value;
-  }
-
-  displayLanguageWithTag(languageTag: Langcode): string {
+  displayLanguageWithTag = (languageTag: Langcode | string | null): string => {
     if (!languageTag) {
       return '';
     }
+    const tag = typeof languageTag === 'object' ? languageTag.tag : languageTag;
+    const language = locale.all.find((loc: locale.ILocale): boolean => loc.tag === tag);
+    return language
+      ? `${language.local ? language.local : language.name} (${language.tag})`
+      : typeof languageTag === 'object'
+        ? `${languageTag.name} (${languageTag.tag})`
+        : tag;
+  };
 
-    const language = locale.all.find((locale: locale.ILocale): boolean => locale.tag === languageTag.tag);
-    return language ? `${language.local ? language.local : language.name} (${language.tag})` : '';
+  onLanguageInput(index: number, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+    this.formService.settingsModel.update(model => {
+      const aspectModel = [...model.languageConfiguration.aspectModel];
+      aspectModel[index] = {language: value};
+      return {
+        ...model,
+        languageConfiguration: {
+          ...model.languageConfiguration,
+          aspectModel,
+        },
+      };
+    });
+  }
+
+  onOptionSelected(index: number, event: MatAutocompleteSelectedEvent): void {
+    const lang = event.option.value as Langcode;
+    this.formService.settingsModel.update(model => {
+      const aspectModel = [...model.languageConfiguration.aspectModel];
+      aspectModel[index] = {language: lang};
+      return {
+        ...model,
+        languageConfiguration: {
+          ...model.languageConfiguration,
+          aspectModel,
+        },
+      };
+    });
   }
 
   removeLanguage(index: number): void {
-    this.formService.addLanguageToBeRemove(this.aspectModelFormArray.at(index).value.language.tag);
-    this.aspectModelFormArray.removeAt(index);
-    this.filteredOptions.splice(index, 1);
-  }
-
-  private markLanguagesAsTouched(): void {
-    this.aspectModelFormArray.controls.forEach(control => control.get('language').markAsTouched());
+    this.formService.removeLanguage(index);
   }
 }

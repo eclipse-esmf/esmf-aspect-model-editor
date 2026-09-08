@@ -19,15 +19,17 @@ import {NamedNode, Triple, Util} from 'n3';
 
 @Injectable({providedIn: 'root'})
 export class InstantiatorService {
-  private loadedFilesService = inject(LoadedFilesService);
+  private readonly loadedFilesService = inject(LoadedFilesService);
 
-  public instantiateRemainingElements(mergedRdfModel: RdfModel, currentRdfModel: RdfModel, cache: CacheStrategy) {
-    const uniqueSubjects: string[] = currentRdfModel.store
-      .getSubjects(null, null, null)
-      .reduce(
-        (subjects, subject) => (!Util.isBlankNode(subject) && !cache.get(subject.value) ? [...subjects, subject.value] : subjects),
-        [],
-      );
+  public instantiateRemainingElements(mergedRdfModel: RdfModel, currentRdfModel: RdfModel, cache: CacheStrategy): void {
+    const subjects = currentRdfModel.store.getSubjects(null, null, null);
+    const uniqueSubjects = new Set<string>();
+
+    for (const subject of subjects) {
+      if (!Util.isBlankNode(subject) && !cache.get(subject.value)) {
+        uniqueSubjects.add(subject.value);
+      }
+    }
 
     for (const subject of uniqueSubjects) {
       const element = this.instantiateElement(mergedRdfModel, cache, subject);
@@ -35,7 +37,7 @@ export class InstantiatorService {
     }
   }
 
-  public instantiateElement(rdfModel: RdfModel, cache: CacheStrategy, subject: string): NamedElement {
+  public instantiateElement(rdfModel: RdfModel, cache: CacheStrategy, subject: string): NamedElement | null {
     const {
       createProperty,
       createOperation,
@@ -51,29 +53,29 @@ export class InstantiatorService {
     const {samm, sammC} = rdfModel;
     const elementType = rdfModel.store.getObjects(subject, rdfModel.samm.RdfType(), null)?.[0]?.value;
     if (samm.Property().value === elementType) {
-      return createProperty(new Triple(null, null, new NamedNode(subject))).property;
+      return createProperty(new Triple(null as never, null as never, new NamedNode(subject))).property;
     }
 
     if (samm.AbstractProperty().value === elementType) {
-      const {property} = createProperty(new Triple(null, null, new NamedNode(subject)));
+      const {property} = createProperty(new Triple(null as never, null as never, new NamedNode(subject)));
       property.isAbstract = true;
       return property;
     }
 
-    if (elementType.endsWith('Constraint')) {
-      return createConstraint(new Triple(new NamedNode(subject), null, new NamedNode(subject)));
+    if (elementType?.endsWith('Constraint')) {
+      return createConstraint(new Triple(new NamedNode(subject), null as never, new NamedNode(subject)));
     }
 
-    if (sammC.isStandardCharacteristic(elementType) || samm.Characteristic().value === elementType) {
-      return createCharacteristic(new Triple(null, null, new NamedNode(subject)));
+    if (elementType && (sammC.isStandardCharacteristic(elementType) || samm.Characteristic().value === elementType)) {
+      return createCharacteristic(new Triple(null as never, null as never, new NamedNode(subject)));
     }
 
     if (samm.Operation().value === elementType) {
-      return createOperation(new Triple(new NamedNode(subject), null, null));
+      return createOperation(new Triple(new NamedNode(subject), null as never, null as never));
     }
 
     if (samm.Event().value === elementType) {
-      return createEvent(new Triple(null, null, new NamedNode(subject)));
+      return createEvent(new Triple(null as never, null as never, new NamedNode(subject)));
     }
 
     if (samm.Unit().value === elementType) {
@@ -88,12 +90,12 @@ export class InstantiatorService {
       return createValue(rdfModel.store.getQuads(subject, null, null, null));
     }
 
-    if (samm.isAbstractEntity(subject)) {
+    if (samm.isAbstractEntity(elementType)) {
       return createEntity(rdfModel.store.getQuads(subject, null, null, null), true);
     }
 
     if (RdfModelUtil.isEntityInstance(subject, this.loadedFilesService)) {
-      return resolveEntityInstance(new Triple(null, null, new NamedNode(subject)));
+      return resolveEntityInstance(new Triple(null as never, null as never, new NamedNode(subject)));
     }
 
     return null;

@@ -13,18 +13,18 @@
 
 import {CacheUtils} from '@ame/cache';
 import {ENTER} from '@angular/cdk/keycodes';
-import {AsyncPipe} from '@angular/common';
-import {Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
+import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {disabled, form, FormField, validateAsync} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from '@angular/material/chips';
-import {ErrorStateMatcher, MatOptgroup, MatOption} from '@angular/material/core';
+import {MatOptgroup, MatOption} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
-import {MatError, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultOperation, DefaultProperty, Property, RdfModel} from '@esmf/aspect-model-loader';
-import {Observable} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -38,30 +38,63 @@ import {InputFieldComponent} from '../../input-field.component';
     MatChipGrid,
     MatChipRow,
     MatIconModule,
-    ReactiveFormsModule,
+    FormField,
     MatAutocompleteTrigger,
     MatChipInput,
     MatAutocomplete,
-    AsyncPipe,
     MatOptgroup,
     MatOption,
     MatError,
     MatChipsModule,
     MatIconModule,
+    MatInput,
+    TranslocoDirective,
   ],
 })
 export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOperation> implements OnInit, OnDestroy {
-  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
+  private readonly editorDialogValidators = inject(EditorDialogValidators);
+  private readonly searchModel = signal('');
+  private readonly inputModel = signal<Property[]>([]);
+  private readonly disabledState = signal(false);
 
-  private editorDialogValidators = inject(EditorDialogValidators);
+  private readonly createDuplicateNameResource = (name: Signal<string>) =>
+    rxResource({
+      params: () => name(),
+      stream: ({params}) =>
+        this.metaModelElement
+          ? this.editorDialogValidators.duplicateNameWithDifferentTypeValue(params, this.metaModelElement, DefaultProperty)
+          : of(null),
+    });
 
-  readonly separatorKeysCodes: number[] = [ENTER];
+  readonly searchField = form(this.searchModel, path => {
+    validateAsync(path, {
+      params: ({value}) => value(),
+      factory: this.createDuplicateNameResource,
+      onSuccess: result => {
+        const kind = result && Object.keys(result)[0];
+        return kind ? {kind, message: 'Property name is already used by another type'} : null;
+      },
+      onError: () => ({kind: 'duplicateNameValidation', message: 'Property name could not be validated'}),
+    });
+    disabled(path, {when: this.disabledState});
+  });
+  readonly filteredPropertyTypes = computed(() => {
+    const value = this.searchModel();
+    const properties = CacheUtils.getCachedElements(this.currentCachedFile, DefaultProperty)
+      .filter(property => !property.isAbstract)
+      .map(property => ({
+        name: property.name,
+        description: property.getDescription('en') || '',
+        urn: property.aspectModelUrn,
+        namespace: undefined as string | undefined,
+      }));
+    return [...properties, ...this.searchExtProperty(value)].filter(type => this.inSearchList(type, value));
+  });
+  public inputValues = this.inputModel.asReadonly();
+  readonly searchValue = this.searchModel.asReadonly();
 
-  public filteredPropertyTypes$: Observable<any[]>;
-  public removable = true;
-  public inputValues: Array<Property>;
-  public chipControl = new FormControl();
-  public searchControl: FormControl<string>;
+  readonly separatorKeysCodes = signal([ENTER]);
+  public removable = signal(true);
 
   get currentRdfModel(): RdfModel {
     return this.loadedFiles.currentLoadedFile.rdfModel;
@@ -71,49 +104,30 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.inputValues = [];
         this.setInputControl();
       });
   }
 
-  hasErrors(): ErrorStateMatcher {
-    return {
-      isErrorState: () => !!this.searchControl?.errors,
-    };
+  hasError(kind: string): boolean {
+    return this.searchField()
+      .errors()
+      .some(error => error.kind === kind);
   }
 
   ngOnDestroy() {
+    this.signalForm().remove('inputChipList');
     super.ngOnDestroy();
   }
 
   setInputControl() {
     const inputValueList = this.metaModelElement?.input;
 
-    if (inputValueList) {
-      this.inputValues.push(...inputValueList);
-    }
-
-    this.searchControl = new FormControl(
-      {
-        value: '',
-        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-      },
-      {
-        asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultProperty)],
-      },
-    );
-
-    this.parentForm.setControl(
-      'inputChipList',
-      new FormControl({
-        value: this.inputValues,
-        disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-      }),
-    );
-
-    if (this.loadedFiles.isElementExtern(this.metaModelElement)) this.chipControl.disable();
-
-    this.filteredPropertyTypes$ = this.initFilteredPropertyTypes(this.searchControl);
+    this.disabledState.set(this.loadedFiles.isElementExtern(this.metaModelElement));
+    this.removable.set(!this.disabledState());
+    const list = inputValueList ? [...inputValueList] : [];
+    this.inputModel.set(list);
+    this.signalForm().set('inputChipList', list);
+    this.searchModel.set('');
   }
 
   onSelectionChange(fieldPath: string, newValue: any) {
@@ -146,18 +160,18 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
   }
 
   remove(value: Property) {
-    const index = this.inputValues.indexOf(value);
+    const index = this.inputModel().indexOf(value);
 
     if (index >= 0) {
-      this.inputValues.splice(index, 1);
-      this.parentForm.get('inputChipList').setValue([...this.inputValues]);
+      this.inputModel.update(values => values.filter(input => input !== value));
+      this.signalForm().set('inputChipList', this.inputModel());
     }
   }
 
   private addProperty(property: DefaultProperty | Property) {
-    this.inputValues.push(property);
-    this.parentForm.get('inputChipList').setValue([...this.inputValues]);
-    this.searchInput.nativeElement.value = '';
-    this.searchControl.setValue(null);
+    if (!property || this.inputModel().includes(property)) return;
+    this.inputModel.update(values => [...values, property]);
+    this.signalForm().set('inputChipList', this.inputModel());
+    this.searchModel.set('');
   }
 }

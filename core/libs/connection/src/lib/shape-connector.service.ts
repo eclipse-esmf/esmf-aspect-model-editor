@@ -11,11 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {inject, Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
 import {ShapeConnectorUtil} from './shape-connector-util';
 
 import {LoadedFilesService} from '@ame/cache';
-import {ModelInfo, MxGraphAttributeService, MxGraphHelper, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphShapeOverlayService, ModelInfo} from '@ame/max-graph';
 import {cellRelations, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {
@@ -31,6 +30,7 @@ import {
   DefaultTrait,
   NamedElement,
 } from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
 import {environment} from 'environments/environment';
 import {MultiShapeConnector, SingleShapeConnector} from './models';
 import {
@@ -49,6 +49,7 @@ import {
   EntityEntityConnectionHandler,
   EntityPropertyConnectionHandler,
   EnumerationEntityValueConnectionHandler,
+  EnumerationValueConnectionHandler,
   EventPropertyConnectionHandler,
   OperationPropertyInputConnectionHandler,
   OperationPropertyOutputConnectionHandler,
@@ -56,11 +57,10 @@ import {
   PropertyCharacteristicConnectionHandler,
   PropertyPropertyConnectionHandler,
   PropertyStructuredValueConnectionHandler,
+  PropertyValueConnectionHandler,
   StructuredValueCharacteristicPropertyConnectionHandler,
   TraitWithCharacteristicOrConstraintConnectionHandler,
 } from './multi-shape-connection-handlers';
-import {EnumerationValueConnectionHandler} from './multi-shape-connection-handlers/enumeration--value.service';
-import {PropertyValueConnectionHandler} from './multi-shape-connection-handlers/property--value.service';
 import {
   AbstractEntityConnectionHandler,
   AspectConnectionHandler,
@@ -74,13 +74,12 @@ import {
   StructuredValueConnectionHandler,
   TraitConnectionHandler,
 } from './single-connection-handlers';
-import mxCell = mxgraph.mxCell;
 
 @Injectable({providedIn: 'root'})
 export class ShapeConnectorService {
   private notificationsService = inject(NotificationsService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
   private aspectConnectionHandler = inject(AspectConnectionHandler);
   private propertyConnectionHandler = inject(PropertyConnectionHandler);
   private operationConnectionHandler = inject(OperationConnectionHandler);
@@ -127,16 +126,16 @@ export class ShapeConnectorService {
     }
   }
 
-  connectSelectedElements(cells?: mxgraph.mxCell[]) {
-    const selectedCells = cells || [...this.mxGraphAttributeService.graph.selectionModel.cells];
+  connectSelectedElements(cells?: Cell[]) {
+    const selectedCells = cells || [...this.maxgraphAttributeService.graph.selectionModel.cells];
 
     if (selectedCells.length !== 2) {
-      return this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.ONLY_TWO_ELEMENTS_CONNECTION});
+      return this.notificationsService.error({title: this.translate.language.notificationService.onlyTwoElementsConnection});
     }
 
-    const firstElement = selectedCells[0].style.split(';')[0];
-    const secondElement = selectedCells[1].style.split(';')[0];
-    const modelElements = selectedCells.map(e => MxGraphHelper.getModelElement(e));
+    const firstElement = selectedCells[0].style.baseStyleNames[0];
+    const secondElement = selectedCells[1].style.baseStyleNames[0];
+    const modelElements = selectedCells.map(e => MaxGraphHelper.getModelElement(e));
 
     if (
       secondElement !== firstElement &&
@@ -148,18 +147,18 @@ export class ShapeConnectorService {
     }
 
     if (this.loadedFilesService.isElementExtern(modelElements[0])) {
-      return this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.REFERNECE_CONNECTION_ERROR});
+      return this.notificationsService.error({title: this.translate.language.notificationService.referneceConnectionError});
     }
 
     const newConnection = this.connectShapes(modelElements[0], modelElements[1], selectedCells[0], selectedCells[1]);
 
     if (newConnection && !(modelElements[1] instanceof DefaultEntity)) {
-      this.mxGraphShapeOverlayService.removeOverlaysByConnection(modelElements[0], selectedCells[0]);
-      this.mxGraphAttributeService.graph.clearSelection();
+      this.maxgraphShapeOverlayService.removeOverlaysByConnection(modelElements[0], selectedCells[0]);
+      this.maxgraphAttributeService.graph.clearSelection();
     }
   }
 
-  createAndConnectShape(metaModel: NamedElement, source: mxCell, modelInfo: ModelInfo = ModelInfo.IS_CHARACTERISTIC) {
+  createAndConnectShape(metaModel: NamedElement, source: Cell, modelInfo: ModelInfo = ModelInfo.IS_CHARACTERISTIC) {
     if (!metaModel) {
       console.info('No cell selected with a meta model to connect.');
       return;
@@ -211,8 +210,8 @@ export class ShapeConnectorService {
   connectShapes(
     parentModel: NamedElement,
     childModel: NamedElement,
-    parentSource: mxCell,
-    childSource: mxCell,
+    parentSource: Cell,
+    childSource: Cell,
     modelInfo?: ModelInfo,
   ): boolean {
     let connectionHandler: MultiShapeConnector<NamedElement, NamedElement>;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -31,6 +31,7 @@ export class HasExtends<T extends NamedElement = NamedElement> extends NamedElem
     this.extends_ = value;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   override accept<T, U>(_visitor: ModelVisitor<T, U>, _context: U): T {
     throw new Error('Method not implemented.');
   }

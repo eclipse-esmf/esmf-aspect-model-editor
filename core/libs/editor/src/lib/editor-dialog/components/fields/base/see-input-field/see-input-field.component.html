@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,55 +12,55 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field
-  [floatLabel]="searchControl?.disabled ? 'always' : 'auto'"
-  [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extends_?.name : ''"
-  [matTooltipPosition]="'left'"
-  appearance="fill"
-  subscriptSizing="dynamic"
->
-  <mat-label for="see">see</mat-label>
-  <mat-chip-grid #chipList [formControl]="chipControl">
-    @for (element of elements; track element.urn) {
-      <mat-chip-row
-        [matTooltip]="element.urn"
-        [attr.data-cy]="'chip__' + (element.name || element.urn)"
-        (removed)="removeElement(element)"
-        matTooltipClass="mat-tooltip--long"
-      >
-        <span class="chip-content">{{ element.name || element.urn }}</span>
-        <button data-cy="see-remove-chip" matChipRemove>
-          <mat-icon>cancel</mat-icon>
-        </button>
-      </mat-chip-row>
-    }
-  </mat-chip-grid>
+  <mat-form-field
+    [floatLabel]="searchField().disabled() ? 'always' : 'auto'"
+    [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extends_?.name : ''"
+    [matTooltipPosition]="'left'"
+    appearance="fill"
+    subscriptSizing="dynamic"
+  >
+    <mat-label>see</mat-label>
+    <mat-chip-grid #chipList>
+      @for (element of elements(); track element.urn) {
+        <mat-chip-row
+          [matTooltip]="element.urn"
+          [attr.data-cy]="'chip__' + (element.name || element.urn)"
+          (removed)="removeElement(element)"
+          matTooltipClass="mat-tooltip--long"
+        >
+          <span class="chip-content">{{ element.name || element.urn }}</span>
+          <button data-cy="see-remove-chip" type="button" matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      }
+    </mat-chip-grid>
 
-  <input
-    #see
-    [formControl]="searchControl"
-    [matAutocomplete]="auto"
-    [matChipInputFor]="chipList"
-    [placeholder]="'EDITOR_CANVAS.SHAPE_SETTING.FIELD.SEE_INPUT.TYPE_TO_SEARCH' | translate"
-    matInput
-    name="see"
-    data-cy="see"
-  />
+    <input
+      #see
+      [formField]="searchField"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [placeholder]="t('editorCanvas.shapeSetting.field.seeInput.typeToSearch')"
+      matInput
+      data-cy="see"
+    />
 
-  <mat-autocomplete #auto="matAutocomplete">
-    @if (!(shapes$ | async)?.length && see.value) {
-      <mat-option [value]="see.value" [attr.data-cy]="'option__' + see.value" (click)="addElementToList()">
-        <span>{{ see.value }}</span>
-      </mat-option>
-    }
-    @for (shape of shapes$ | async; track shape.aspectModelUrn) {
-      <mat-option [value]="shape.aspectModelUrn" [attr.data-cy]="'option__' + shape.name" (click)="addElementToList(shape.name)">
-        <span class="shape-name">{{ shape.name }}</span>
-        <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
-      </mat-option>
-    }
-    @if (searchControl.hasError('uri')) {
-      <mat-error class="error">Invalid URI '{{ searchControl?.errors.uri.invalidUris[0] }}'</mat-error>
-    }
-  </mat-autocomplete>
-</mat-form-field>
+    <mat-autocomplete #auto="matAutocomplete">
+      @if (!(shapes$ | async)?.length && see.value) {
+        <mat-option [value]="see.value" [attr.data-cy]="'option__' + see.value" (click)="addElementToList()">
+          <span>{{ see.value }}</span>
+        </mat-option>
+      }
+      @for (shape of shapes$ | async; track shape.aspectModelUrn) {
+        <mat-option [value]="shape.aspectModelUrn" [attr.data-cy]="'option__' + shape.name" (click)="addElementToList(shape.name)">
+          <span class="shape-name">{{ shape.name }}</span>
+          <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
+        </mat-option>
+      }
+      @if (hasSearchError('uri')) {
+        <mat-error class="error">{{ t('editorCanvas.shapeSetting.field.seeInput.invalidUri') }}</mat-error>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>

@@ -39,8 +39,8 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
@@ -50,8 +50,12 @@ jobs:
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # 6.1.0
         with:
           node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          version: latest
+          run_install: false
 
       - name: Set versions
         if: matrix.os == 'ubuntu-latest'
@@ -177,40 +181,40 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Clear npm cache
-        run: npm cache clean --force
+      - name: Clear pnpm cache
+        run: pnpm store prune
 
       - name: Install node modules
         run: |
-          npm ci --include=optional
-          npm rebuild nx --update-binary
+          pnpm install
+          pnpm rebuild nx
         working-directory: core
 
       - name: Set app version (Unix)
         if: matrix.os == 'macos-15-intel' || matrix.os == 'ubuntu-latest'
-        run: npm version ${{ env.RELEASE_VERSION }}
+        run: pnpm version ${{ env.RELEASE_VERSION }}
         working-directory: core
 
       - name: Set app version (Windows)
         if: matrix.os == 'windows-latest'
-        run: npm version ${{ env.RELEASE_VERSION }}
+        run: pnpm version ${{ env.RELEASE_VERSION }}
         working-directory: core
 
       - name: Build electron app (Mac)
         if: matrix.os == 'macos-15-intel'
-        run: npm run build:mac:prod
+        run: pnpm run build:mac:prod
         working-directory: core
 
       - name: Build electron app (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          npm run build:linux:prod
+          pnpm run build:linux:prod
           mv .electron/aspect-model-editor-v${RELEASE_VERSION}-linux.tar.gz .electron/aspect-model-editor-v${RELEASE_VERSION}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
         working-directory: core
 
       - name: Build electron app (Windows)
         if: matrix.os == 'windows-latest'
-        run: npm run build:win:prod
+        run: pnpm run build:win:prod
         working-directory: core
 
       - name: Install NSIS on Windows

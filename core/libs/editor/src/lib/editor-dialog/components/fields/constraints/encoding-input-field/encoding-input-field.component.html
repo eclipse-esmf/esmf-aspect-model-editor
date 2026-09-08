@@ -11,10 +11,10 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="value">value</mat-label>
-  <mat-select [formControl]="getControl('value')" name="value">
-    @for (encoding of encodingList; track encoding) {
+<mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
+  <mat-label>value *</mat-label>
+  <mat-select [formField]="field" data-cy="encodingValue">
+    @for (encoding of encodingList(); track encoding) {
       <mat-option [value]="encoding.value">
         {{ encoding.value }}
       </mat-option>

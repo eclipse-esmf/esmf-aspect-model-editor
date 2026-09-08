@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,52 +12,73 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ame-constraint-name-dropdown-field
-  [parentForm]="parentForm"
-  [previousDataSnapshot]="previousData"
-  (selectedConstraint)="onClassChange($event)"
-  (previousData)="onPreviousDataChange($event)"
-></ame-constraint-name-dropdown-field>
-<ame-base-input [previousData]="previousData || {}" [parentForm]="parentForm"></ame-base-input>
+  <ame-constraint-name-dropdown-field
+    [signalForm]="signalForm()"
+    [previousDataSnapshot]="previousData()"
+    (selectedConstraint)="onClassChange($event)"
+    (previousData)="onPreviousDataChange($event)"
+  ></ame-constraint-name-dropdown-field>
 
-@switch (selectedConstraint) {
-  @case ('EncodingConstraint') {
-    <ame-encoding-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-encoding-input-field>
+  @if (canBeAnonymous()) {
+    <div class="anonymous-toggle-card">
+      <div class="anonymous-toggle-card__content">
+        <div class="anonymous-toggle-card__title-row">
+          <mat-icon class="anonymous-toggle-card__icon">link_off</mat-icon>
+          <span class="anonymous-toggle-card__title">{{ t('editorCanvas.shapeSetting.anonymous') }}</span>
+        </div>
+        <p class="anonymous-toggle-card__hint">{{ t('editorCanvas.shapeSetting.anonymousHint') }}</p>
+      </div>
+      <mat-slide-toggle
+        [checked]="isAnonymous()"
+        [attr.aria-label]="t('editorCanvas.shapeSetting.anonymous')"
+        (change)="onAnonymousToggleChange($event.checked)"
+        color="primary"
+        data-cy="anonymousToggle"
+      />
+    </div>
   }
-  @case ('FixedPointConstraint') {
-    <ame-scale-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-scale-input-field>
-    <ame-integer-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-integer-input-field>
-  }
-  @case ('LanguageConstraint') {
-    <ame-language-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-language-code-input-field>
-  }
-  @case ('LengthConstraint') {
-    <ame-min-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-length-input-field>
-    <ame-max-length-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-length-input-field>
-  }
-  @case ('LocaleConstraint') {
-    <ame-locale-code-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-locale-code-input-field>
-  }
-  @case ('RangeConstraint') {
-    <ame-min-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-min-value-input-field>
-    <ame-max-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-max-value-input-field>
-    <ame-upper-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-upper-bound-input-field>
-    <ame-lower-bound-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-lower-bound-input-field>
-  }
-  @case ('RegularExpressionConstraint') {
-    <ame-regular-expression-value-input-field
-      [previousData]="previousData || {}"
-      [parentForm]="parentForm"
-    ></ame-regular-expression-value-input-field>
-  }
-}
 
-<ame-element-list
-  [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.INCOMING_EDGES' | translate"
-  [elements]="(element$ | async)?.parents"
-  iconRotation="rotate270"
-></ame-element-list>
-<ame-element-list
-  [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.OUTGOING_EDGES' | translate"
-  [elements]="(element$ | async)?.children"
-></ame-element-list>
+  <ame-base-input [previousData]="previousData()" [signalForm]="signalForm()"></ame-base-input>
+
+  @switch (selectedConstraint()) {
+    @case ('EncodingConstraint') {
+      <ame-encoding-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-encoding-input-field>
+    }
+    @case ('FixedPointConstraint') {
+      <ame-scale-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-scale-input-field>
+      <ame-integer-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-integer-input-field>
+    }
+    @case ('LanguageConstraint') {
+      <ame-language-code-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-language-code-input-field>
+    }
+    @case ('LengthConstraint') {
+      <ame-min-length-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-min-length-input-field>
+      <ame-max-length-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-max-length-input-field>
+    }
+    @case ('LocaleConstraint') {
+      <ame-locale-code-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-locale-code-input-field>
+    }
+    @case ('RangeConstraint') {
+      <ame-min-value-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-min-value-input-field>
+      <ame-max-value-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-max-value-input-field>
+      <ame-upper-bound-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-upper-bound-input-field>
+      <ame-lower-bound-input-field [previousData]="previousData()" [signalForm]="signalForm()"></ame-lower-bound-input-field>
+    }
+    @case ('RegularExpressionConstraint') {
+      <ame-regular-expression-value-input-field
+        [previousData]="previousData()"
+        [signalForm]="signalForm()"
+      ></ame-regular-expression-value-input-field>
+    }
+  }
+
+  <ame-element-list
+    [label]="t('editorCanvas.shapeSetting.ameElementListLabel.incomingEdges')"
+    [elements]="element()?.parents"
+    iconRotation="rotate270"
+  ></ame-element-list>
+  <ame-element-list
+    [label]="t('editorCanvas.shapeSetting.ameElementListLabel.outgoingEdges')"
+    [elements]="element()?.children"
+  ></ame-element-list>
+</ng-container>

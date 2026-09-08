@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Settings} from '@ame/settings-dialog';
 import {Injectable} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class CopyrightHeaderUpdateStrategy implements SettingsUpdateStrategy {
-  updateSettings(form: FormGroup, settings: Settings): void {
-    const copyrightHeaderConfiguration = form.get('copyrightHeaderConfiguration');
+  updateSettings(model: SettingsFormData, settings: Settings): void {
+    const copyrightHeaderConfiguration = model?.copyrightHeaderConfiguration;
     if (!copyrightHeaderConfiguration) return;
 
-    settings.copyrightHeader = copyrightHeaderConfiguration.get('copyright')?.value.split('\n');
+    const copyright = copyrightHeaderConfiguration.copyright;
+    settings.copyrightHeader = copyright ? copyright.split('\n') : [];
   }
 }

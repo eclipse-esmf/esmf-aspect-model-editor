@@ -13,6 +13,7 @@
 
 export * from './components';
 export * from './editor-model.service';
+export * from './forms/editor-signal-form-context';
 export * from './pipes';
 export * from './services';
 export * from './validators';

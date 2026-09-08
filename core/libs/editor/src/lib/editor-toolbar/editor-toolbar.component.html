@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,94 +12,103 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<!-- Toolbar -->
-<div class="menu-items" (click)="blurActiveButton()">
-  <div class="menu-items__group separator">
-    <ame-bar-item
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [disabled]="isModelEmpty || selectedCells?.length !== 1"
-      [matTooltip]="'TOOLBAR.EDIT_HIGHLIGHTED_CELL' | translate"
-      (click)="editSelectedCell()"
-    >
-      <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
-    </ame-bar-item>
-
-    <ame-bar-item
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [disabled]="isModelEmpty || selectedCells?.length === 0"
-      [matTooltip]="'TOOLBAR.DELETE' | translate"
-      (click)="onDelete()"
-      data-cy="tbDeleteButton"
-    >
-      <mat-icon class="material-icons">delete</mat-icon>
-    </ame-bar-item>
-
-    <ame-bar-item
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [disabled]="isModelEmpty || selectedCells?.length !== 2"
-      [matTooltip]="'TOOLBAR.CONNECT' | translate"
-      (click)="onConnect()"
-      data-cy="tbConnectButton"
-    >
-      <mat-icon class="material-icons">commit</mat-icon>
-    </ame-bar-item>
-
-    @if (isAllShapesExpanded$ | async) {
+  <!-- Toolbar -->
+  <div
+    class="menu-items"
+    (click)="blurActiveButton()"
+    (keyup.enter)="blurActiveButton()"
+    (keyup.space)="blurActiveButton()"
+    tabindex="0"
+    role="button"
+    aria-label="Menu"
+  >
+    <div class="menu-items__group separator">
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty"
-        [matTooltip]="'TOOLBAR.COLLAPSE_ALL' | translate"
-        (click)="onToggleExpand()"
-        data-cy="collapseExpandToggle"
+        [disabled]="isModelEmpty() || selectedCells()?.length !== 1"
+        [matTooltip]="t('toolbar.editHighlightedCell')"
+        (click)="editSelectedCell()"
       >
-        <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
+        <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
       </ame-bar-item>
-    } @else {
+
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty"
-        [matTooltip]="'TOOLBAR.EXPAND_ALL' | translate"
-        (click)="onToggleExpand()"
-        data-cy="collapseExpandToggle"
+        [disabled]="isModelEmpty() || selectedCells()?.length === 0"
+        [matTooltip]="t('toolbar.delete')"
+        (click)="onDelete()"
+        data-cy="tbDeleteButton"
       >
-        <mat-icon class="material-icons rotate-45 editor-icon-active">unfold_more</mat-icon>
+        <mat-icon class="material-icons">delete</mat-icon>
       </ame-bar-item>
-    }
 
-    <ame-bar-item
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [disabled]="isModelEmpty"
-      [matTooltip]="'TOOLBAR.FORMAT' | translate"
-      (click)="onFormat()"
-      data-cy="formatButton"
-    >
-      <mat-icon class="material-icons rotate-90">schema</mat-icon>
-    </ame-bar-item>
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isModelEmpty() || selectedCells()?.length !== 2"
+        [matTooltip]="t('toolbar.connect')"
+        (click)="onConnect()"
+        data-cy="tbConnectButton"
+      >
+        <mat-icon class="material-icons">commit</mat-icon>
+      </ame-bar-item>
 
-    <ame-bar-item
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="0"
-      [disabled]="isModelEmpty"
-      [matTooltip]="'TOOLBAR.VALIDATE' | translate"
-      (click)="validateFile()"
-      data-cy="tbValidateButton"
-    >
-      <mat-icon class="material-icons">task</mat-icon>
-    </ame-bar-item>
+      @if (isAllShapesExpanded()) {
+        <ame-bar-item
+          [matTooltipShowDelay]="0"
+          [matTooltipHideDelay]="0"
+          [disabled]="isModelEmpty()"
+          [matTooltip]="t('toolbar.collapseAll')"
+          (click)="onToggleExpand()"
+          data-cy="collapseExpandToggle"
+        >
+          <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
+        </ame-bar-item>
+      } @else {
+        <ame-bar-item
+          [matTooltipShowDelay]="0"
+          [matTooltipHideDelay]="0"
+          [disabled]="isModelEmpty()"
+          [matTooltip]="t('toolbar.expandAll')"
+          (click)="onToggleExpand()"
+          data-cy="collapseExpandToggle"
+        >
+          <mat-icon class="material-icons rotate-45 editor-icon-active">unfold_more</mat-icon>
+        </ame-bar-item>
+      }
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isModelEmpty()"
+        [matTooltip]="t('toolbar.format')"
+        (click)="onFormat()"
+        data-cy="formatButton"
+      >
+        <mat-icon class="material-icons rotate-90">schema</mat-icon>
+      </ame-bar-item>
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isModelEmpty()"
+        [matTooltip]="t('toolbar.validate')"
+        (click)="validateFile()"
+        data-cy="tbValidateButton"
+      >
+        <mat-icon class="material-icons">task</mat-icon>
+      </ame-bar-item>
+    </div>
+
+    <div class="menu-items__group">
+      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomInProgress')" (click)="zoomIn()">
+        <mat-icon>zoom_in</mat-icon>
+      </ame-bar-item>
+      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomOutProgress')" (click)="zoomOut()">
+        <mat-icon>zoom_out</mat-icon>
+      </ame-bar-item>
+    </div>
   </div>
-
-  <div class="menu-items__group">
-    <ame-bar-item [disabled]="isModelEmpty" [matTooltip]="'EDITOR_CANVAS.ZOOM_IN_PROGRESS' | translate" (click)="zoomIn()">
-      <mat-icon>zoom_in</mat-icon>
-    </ame-bar-item>
-    <ame-bar-item [disabled]="isModelEmpty" [matTooltip]="'EDITOR_CANVAS.ZOOM_OUT_PROGRESS' | translate" (click)="zoomOut()">
-      <mat-icon>zoom_out</mat-icon>
-    </ame-bar-item>
-  </div>
-</div>
+</ng-container>

@@ -11,19 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphHelper} from '@ame/mx-graph';
-import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
-import {ScalarValue} from '../../../../aspect-model-loader/src/lib/aspect-meta-model/scalar-value';
+import {MaxGraphHelper} from '@ame/max-graph';
+import {DefaultEntity, DefaultProperty, NamedElement, ScalarValue} from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
 import {InheritanceConnector} from './inheritance-connector';
-import mxCell = mxgraph.mxCell;
 
 export class PropertyInheritanceConnector extends InheritanceConnector {
-  public connect(parentMetaModel: NamedElement, childMetaModel: NamedElement, parentCell: mxCell, childCell: mxCell) {
-    if (
-      parentMetaModel instanceof DefaultProperty &&
-      ((childMetaModel instanceof DefaultProperty && childMetaModel.isAbstract) || childMetaModel instanceof DefaultProperty)
-    ) {
+  public connect(parentMetaModel: NamedElement, childMetaModel: NamedElement, parentCell: Cell, childCell: Cell) {
+    if (parentMetaModel instanceof DefaultProperty && childMetaModel instanceof DefaultProperty) {
       parentMetaModel.name = `[${childMetaModel.name}]`;
       parentMetaModel.preferredNames.clear();
       parentMetaModel.descriptions.clear();
@@ -38,7 +33,7 @@ export class PropertyInheritanceConnector extends InheritanceConnector {
     return element instanceof DefaultProperty || (element instanceof DefaultEntity && element.isAbstractEntity());
   }
 
-  protected hasEntityParent(cell: mxgraph.mxCell) {
-    return !this.mxGraphService.resolveParents(cell)?.some(cell => MxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
+  protected hasEntityParent(cell: Cell) {
+    return !this.maxgraphService.resolveParents(cell)?.some(cell => MaxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
   }
 }

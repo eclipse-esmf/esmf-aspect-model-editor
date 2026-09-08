@@ -18,8 +18,42 @@
   max-height: 500px;
 }
 
-::ng-deep .mat-horizontal-stepper-header {
-  pointer-events: none !important;
+::ng-deep {
+  .mat-step-header {
+    pointer-events: none !important;
+
+    .mat-step-icon {
+      background-color: var(--ame-surface-card, #e0e0e0);
+      color: var(--ame-font, #333333);
+      border: 1px solid var(--mat-stepper-line-color, var(--ame-border-color, #cfd0d1));
+
+      &.mat-step-icon-selected {
+        background-color: var(--ame-primary, #7599c8);
+        border-color: var(--ame-primary, #7599c8);
+        color: #ffffff;
+      }
+
+      &.mat-step-icon-state-done {
+        background-color: #4caf50;
+        border-color: #4caf50;
+        color: #ffffff;
+      }
+
+      &.mat-step-icon-state-error {
+        background-color: var(--ame-error, #f44336);
+        border-color: var(--ame-error, #f44336);
+        color: #ffffff;
+      }
+    }
+
+    .mat-step-label {
+      color: var(--ame-font, inherit);
+    }
+  }
+
+  .mat-stepper-horizontal-line {
+    border-top-color: var(--mat-stepper-line-color, #cfd0d1) !important;
+  }
 }
 
 h2[mat-dialog-title] {
@@ -50,11 +84,11 @@ mat-dialog-content {
       width: 100px;
       font-size: 100px;
       line-height: 100px;
-      color: green;
+      color: #4caf50;
     }
 
     &__banner {
-      background-color: #f44336;
+      background-color: var(--ame-error, #f44336);
       color: #fff;
       padding: 12px;
       border-radius: 4px;
@@ -63,6 +97,16 @@ mat-dialog-content {
       gap: 8px;
       margin-bottom: 8px;
     }
+  }
+
+  .icon {
+    height: 100px;
+    width: 100px;
+    font-size: 100px;
+    line-height: 100px;
+    color: var(--ame-error, #f44336);
+    margin: 0 auto;
+    display: block;
   }
 }
 

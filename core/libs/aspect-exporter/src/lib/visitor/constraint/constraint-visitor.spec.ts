@@ -11,12 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
+vi.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 import {TestBed} from '@angular/core/testing';
 
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {BoundDefinition} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
 import {
   DefaultConstraint,
   DefaultEncodingConstraint,
@@ -30,15 +35,10 @@ import {
   RdfModel,
   Samm,
 } from '@esmf/aspect-model-loader';
-import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MockProvider, MockProviders} from 'ng-mocks';
+import {MockProvider} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {ConstraintVisitor} from './constraint-visitor';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
 
 describe('Constraint Visitor', () => {
   let service: ConstraintVisitor;
@@ -46,8 +46,8 @@ describe('Constraint Visitor', () => {
   const rdfModel: RdfModel = {
     store: new Store(),
     samm: new Samm(''),
-    hasDependency: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    hasDependency: vi.fn(() => false),
+    addPrefix: vi.fn(() => {}),
   } as any;
 
   const constraint = new DefaultConstraint({metaModelVersion: '1', aspectModelUrn: 'samm#constraint1', name: 'constraint1'});
@@ -103,15 +103,12 @@ describe('Constraint Visitor', () => {
     TestBed.configureTestingModule({
       providers: [
         ConstraintVisitor,
-        MockProviders(MxGraphService),
-        MockProviders(MxGraphService),
-        MockProvider(MxGraphService),
         MockProvider(RdfListService, {
-          push: jest.fn(),
-          createEmpty: jest.fn(),
+          push: vi.fn(),
+          createEmpty: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
-          update: jest.fn(),
+          update: vi.fn(),
         }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),

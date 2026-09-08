@@ -29,6 +29,13 @@ html {
   --ame-primary: var(--ame-blue-100);
   --ame-accent: var(--ame-purple);
   --ame-error: var(--ame-red-400);
+  --ame-background: #ffffff;
+  --ame-surface: #ffffff;
+  --ame-surface-card: #f5f5f6;
+  --ame-surface-hover: #f3f3f3;
+  --ame-surface-selected: #ebebeb;
+  --ame-border-color: #cfd0d1;
+  --ame-border-light: #efeff0;
 
   // AME color palette
   // blue
@@ -79,6 +86,47 @@ html {
 
   // borders
   --ame-top-border: #f3f3f3;
+}
+
+html.dark-theme,
+[data-theme='dark'] {
+  // Inverted / dark mode graph element colors
+  --ame-aspect: #263765;
+  --ame-property: #333748;
+  --ame-abstractProperty: #333748;
+  --ame-operation: #482559;
+  --ame-event: #1b3f66;
+  --ame-value: #5c3e0f;
+  --ame-characteristic: #394e1c;
+  --ame-entity: #353366;
+  --ame-abstractEntity: #353366;
+  --ame-constraint: #154546;
+  --ame-trait: #154546;
+  --ame-unit: #524710;
+  --ame-entity-value: #353366;
+  --ame-font: #ffffff;
+  --ame-border: #ffffff;
+  --ame-primary: #7599c8;
+  --ame-accent: #bb86fc;
+  --ame-error: #f87171;
+  --ame-orange: #fbbf24;
+
+  // Dark mode surfaces and UI
+  --ame-background: #18181b;
+  --ame-surface: #222226;
+  --ame-surface-card: #2a2a30;
+  --ame-surface-hover: #33333b;
+  --ame-surface-selected: #3b3b45;
+  --ame-border-color: #3f3f46;
+  --ame-border-light: #2e2e34;
+  --ame-icons--gray: #d4d4d8;
+  --ame-gray-5: #27272a;
+  --ame-gray-10: #3f3f46;
+  --ame-gray-20: #52525b;
+  --ame-gray-600: #a1a1aa;
+  --ame-shadow--black-25: rgba(0, 0, 0, 0.5);
+  --ame-shadow--black-45: rgba(0, 0, 0, 0.7);
+  --ame-top-border: #27272a;
 }
 
 $characteristic-color: var(--ame-characteristic);

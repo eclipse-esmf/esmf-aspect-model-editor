@@ -12,34 +12,39 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {EditorService, EditorToolbarComponent, ShapeSettingsComponent, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
+import {
+  EditorFormModel,
+  EditorService,
+  EditorToolbarComponent,
+  ShapeSettingsComponent,
+  ShapeSettingsService,
+  ShapeSettingsStateService,
+} from '@ame/editor';
+import {MaxGraphService} from '@ame/max-graph';
 import {ElementModelService} from '@ame/meta-model';
-import {MxGraphService} from '@ame/mx-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
+import {SidebarComponent} from '@ame/sidebar';
 import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/utils';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
-import {AsyncPipe, CommonModule} from '@angular/common';
-import {AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormGroup} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild} from '@angular/core';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {MatIconModule} from '@angular/material/icon';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
-import {fromEvent, Observable} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {Cell} from '@maxgraph/core';
+import {fromEvent} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
-import {SidebarComponent} from '../../../../../../libs/sidebar/src/lib/sidebar/sidebar.component';
 
 const SIDEBAR_MIN_WIDTH = 480;
 const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
 
 @Component({
-  standalone: true,
   selector: 'ame-editor-canvas',
   templateUrl: './editor-canvas.component.html',
   styleUrls: ['./editor-canvas.component.scss'],
   imports: [
-    AsyncPipe,
     CommonModule,
     CdkDrag,
     CdkDragHandle,
@@ -49,55 +54,47 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
     EditorToolbarComponent,
     SidebarComponent,
     ShapeSettingsComponent,
+    TranslocoDirective,
   ],
 })
 export class EditorCanvasComponent implements AfterViewInit, OnInit {
-  @ViewChild('graph') public graph: ElementRef;
+  public readonly graph = viewChild<ElementRef>('graph');
 
   private destroyRef = inject(DestroyRef);
   private shapeSettingsService = inject(ShapeSettingsService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private loadedFiles = inject(LoadedFilesService);
   private elementModelService = inject(ElementModelService);
-  private changeDetector = inject(ChangeDetectorRef);
   private editorService = inject(EditorService);
   private configurationService = inject(ConfigurationService);
-  public searchesStateService = inject(SearchesStateService);
+  private searchesStateService = inject(SearchesStateService);
 
-  public sidebarWidth = SIDEBAR_MIN_WIDTH;
-  public sidebarDragPosition = {...SIDEBAR_DEFAULT_DRAG_POSITION};
-  public isShapeSettingsOpened$: Observable<boolean>;
+  public readonly sidebarWidth = signal(SIDEBAR_MIN_WIDTH);
+  public readonly sidebarDragPosition = signal({...SIDEBAR_DEFAULT_DRAG_POSITION});
 
-  get isMapVisible$() {
-    return this.configurationService.settings$.pipe(map(settings => settings.showEditorMap));
-  }
+  public readonly isMapVisible = toSignal(this.configurationService.settings$.pipe(map(settings => settings.showEditorMap)), {
+    initialValue: this.configurationService.getSettings()?.showEditorMap ?? true,
+  });
 
-  get isToolbarVisible$() {
-    return this.configurationService.settings$.pipe(map(settings => settings.toolbarVisibility));
-  }
+  public readonly isToolbarVisible = toSignal(this.configurationService.settings$.pipe(map(settings => settings.toolbarVisibility)), {
+    initialValue: this.configurationService.getSettings()?.toolbarVisibility ?? true,
+  });
 
-  get selectedShapeForUpdate(): mxgraph.mxCell | null {
-    return this.shapeSettingsStateService.selectedShapeForUpdate;
+  public readonly isShapeSettingsOpened = this.shapeSettingsStateService.isShapeSettingOpened;
+
+  public readonly isElementsSearchOpened = toSignal(this.searchesStateService.elementsSearch.opened$, {initialValue: false});
+  public readonly isFilesSearchOpened = toSignal(this.searchesStateService.filesSearch.opened$, {initialValue: false});
+  public readonly isModelEmpty = this.maxgraphService.isModelEmpty;
+
+  get selectedShapeForUpdate(): Cell | null {
+    return this.shapeSettingsStateService.selectedShapeForUpdate();
   }
 
   get modelElement(): NamedElement {
-    return this.shapeSettingsService.modelElement;
-  }
-
-  get isModelEmpty(): boolean {
-    return !this.mxGraphService.getAllCells()?.length;
-  }
-
-  constructor() {
-    this.isShapeSettingsOpened$ = this.shapeSettingsStateService.onSettingsOpened$.asObservable();
-    this.isShapeSettingsOpened$.subscribe(() =>
-      requestAnimationFrame(() => {
-        this.changeDetector.detectChanges();
-      }),
-    );
+    return this.shapeSettingsService.modelElement();
   }
 
   ngOnInit() {
@@ -107,7 +104,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
         map(params => params?.get('urn')),
         filter(urn => !!urn),
         tap(urn =>
-          this.mxGraphService.navigateToCellByUrn(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings(),
+          this.maxgraphService.navigateToCellByUrn(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings(),
         ),
         switchMap(() =>
           this.router.navigate([], {
@@ -138,16 +135,17 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   }
 
   onDragEnded(event: CdkDragEnd): void {
-    const newWidth = this.sidebarWidth - event.distance.x;
-    this.sidebarWidth = newWidth >= SIDEBAR_MIN_WIDTH ? newWidth : SIDEBAR_MIN_WIDTH;
+    const newWidth = this.sidebarWidth() - event.distance.x;
 
     if (newWidth < SIDEBAR_MIN_WIDTH) {
-      this.sidebarDragPosition = {...SIDEBAR_DEFAULT_DRAG_POSITION};
+      this.sidebarWidth.set(SIDEBAR_MIN_WIDTH);
+      this.sidebarDragPosition.set({...SIDEBAR_DEFAULT_DRAG_POSITION});
     } else {
-      this.sidebarDragPosition = {
-        x: this.sidebarDragPosition.x + event.distance.x,
-        y: this.sidebarDragPosition.y,
-      };
+      this.sidebarWidth.set(newWidth);
+      this.sidebarDragPosition.update(position => ({
+        x: position.x + event.distance.x,
+        y: position.y,
+      }));
     }
   }
 
@@ -157,13 +155,14 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
     }
 
     this.shapeSettingsStateService.closeShapeSettings();
-    this.changeDetector.detectChanges();
   }
 
-  onSave(formData: FormGroup) {
-    this.selectedShapeForUpdate
-      ? this.elementModelService.updateElement(this.selectedShapeForUpdate, formData)
-      : console.info('Skip shape update because nothing is selected.');
+  onShapeSettingsSave(formData: EditorFormModel) {
+    if (this.selectedShapeForUpdate) {
+      this.elementModelService.updateElement(this.selectedShapeForUpdate, formData);
+    } else {
+      console.info('Skip shape update because nothing is selected.');
+    }
 
     this.resetSelectedShapeForUpdate();
   }
@@ -174,11 +173,11 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   }
 
   watchScrollEvents(): void {
-    fromEvent<Event>(this.graph.nativeElement, 'scroll')
+    fromEvent<Event>(this.graph().nativeElement, 'scroll')
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         debounceTime(250),
-        tap(event => this.mxGraphService.setScrollPosition(event)),
+        tap(event => this.maxgraphService.setScrollPosition(event)),
       )
       .subscribe();
   }

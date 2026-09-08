@@ -13,7 +13,7 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {Injectable, computed, effect, inject, signal} from '@angular/core';
+import {computed, effect, inject, Injectable, signal} from '@angular/core';
 
 class SidebarState {
   readonly opened = signal(false);
@@ -38,13 +38,22 @@ class SidebarStateWithRefresh extends SidebarState {
   }
 }
 
-class Selection {
-  readonly selection = signal<{namespace: string; file: string; aspectModelUrn: string} | null>(null);
+export interface SelectionData {
+  namespace: string;
+  file: string;
+  aspectModelUrn: string;
+}
 
-  constructor(
-    public namespace?: string,
-    public file?: string,
-  ) {}
+export class Selection {
+  readonly selection = signal<SelectionData | null>(null);
+
+  public namespace: string | null = null;
+  public file: string | null = null;
+
+  constructor(namespace?: string, file?: string) {
+    if (namespace) this.namespace = namespace;
+    if (file) this.file = file;
+  }
 
   select(namespace: string, file: FileStatus) {
     if (namespace && file) {
@@ -53,37 +62,39 @@ class Selection {
       this.selection.set({namespace, file: file.name, aspectModelUrn: file.aspectModelUrn});
     }
   }
+
   reset() {
     this.namespace = null;
     this.file = null;
     this.selection.set(null);
   }
-  isSelected(namespace: string, file: string) {
-    return this.namespace === namespace && this.file === file;
+
+  isSelected(namespace?: string, file?: string) {
+    return !!namespace && !!file && this.namespace === namespace && this.file === file;
   }
 }
 
 export class FileStatus {
-  public loaded: boolean;
-  public outdated: boolean;
-  public errored: boolean;
-  public isLoadedInWorkspace: boolean;
-  public sammVersion: string;
-  public dependencies: string[];
-  public missingDependencies: string[];
-  public aspectModelUrn: string;
+  public loaded = false;
+  public outdated = false;
+  public errored = false;
+  public isLoadedInWorkspace = false;
+  public sammVersion = '';
+  public dependencies: string[] = [];
+  public missingDependencies: string[] = [];
+  public aspectModelUrn = '';
 
   constructor(public name: string) {}
 }
 
 export class NamespacesManager {
   private loadedFilesService = inject(LoadedFilesService);
-  readonly namespaces = signal<{[key: string]: FileStatus[]}>({});
+  readonly namespaces = signal<Record<string, FileStatus[]>>({});
   readonly hasOutdatedFiles = signal(false);
   readonly namespacesKeys = computed(() => Object.keys(this.namespaces()));
 
   get currentFile() {
-    return this.loadedFilesService.currentLoadedFile;
+    return this.loadedFilesService?.currentLoadedFile;
   }
 
   setFile(namespace: string, fileStatus: FileStatus) {
@@ -94,8 +105,21 @@ export class NamespacesManager {
     return fileStatus;
   }
 
-  getFile(namespace: string, file: string) {
+  getFile(namespace: string, file: string): FileStatus | undefined {
     return this.namespaces()[namespace]?.find(fs => fs.name === file);
+  }
+
+  removeFile(namespace: string, file: string) {
+    this.namespaces.update(map => {
+      const list = map[namespace];
+      if (!list) return map;
+      const filtered = list.filter(fs => fs.name !== file);
+      if (filtered.length === 0) {
+        const {[namespace]: _, ...rest} = map;
+        return rest;
+      }
+      return {...map, [namespace]: filtered};
+    });
   }
 
   clear() {
@@ -118,29 +142,31 @@ export class SidebarStateService {
   }
 
   public isCurrentFileLoaded(): boolean {
-    return !!this.loadedFilesService.currentLoadedFile;
+    return !!this.loadedFilesService?.currentLoadedFile;
   }
 
-  public isCurrentFile(namespace: string, fileName: string): boolean {
+  public isCurrentFile(namespace?: string, fileName?: string): boolean {
     if (this.isCurrentFileLoaded()) {
-      const {namespace: currentNamespace, name} = this.loadedFilesService.currentLoadedFile;
-      return currentNamespace === namespace && name === fileName;
+      const current = this.loadedFilesService.currentLoadedFile;
+      return current?.namespace === namespace && current?.name === fileName;
     }
 
     return false;
   }
 
-  updateWorkspace(fileStatus: FileStatus[]) {
-    let hasOutdated = false;
+  updateWorkspace(fileStatus: FileStatus[] = []) {
     for (const status of fileStatus) {
       status.isLoadedInWorkspace = true;
-      const [, , namespace, version] = RdfModelUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
+      const chunks = RdfModelUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
+      const namespace = chunks[2];
+      const version = chunks[3];
       this.namespacesState.setFile(`${namespace}:${version}`, status);
-      hasOutdated ||= status.outdated;
     }
 
+    const allNamespaces = this.namespacesState.namespaces();
+    const hasOutdated = Object.values(allNamespaces).some(files => files.some(f => f.outdated));
     this.namespacesState.hasOutdatedFiles.set(hasOutdated);
-    return this.namespacesState.namespaces();
+    return allNamespaces;
   }
 
   private manageSidebars() {

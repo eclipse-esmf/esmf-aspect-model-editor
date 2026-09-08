@@ -14,14 +14,13 @@
 import {HttpClient} from '@angular/common/http';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {LangChangeEvent, TranslateService} from '@ngx-translate/core';
+import {Translation, TranslocoService} from '@jsverse/transloco';
 import {Observable, switchMap, tap} from 'rxjs';
-import {Translation} from '../models/language.interface';
 
 @Injectable({providedIn: 'root'})
 export class LanguageTranslationService {
   private destroyRef = inject(DestroyRef);
-  private translate = inject(TranslateService);
+  private translate = inject(TranslocoService);
   private http = inject(HttpClient);
 
   private readonly _supportedLanguages = [
@@ -35,18 +34,18 @@ export class LanguageTranslationService {
     return this._supportedLanguages;
   }
 
-  get translateService(): TranslateService {
+  get translateService(): TranslocoService {
     return this.translate;
   }
 
   initTranslationService(language: string): void {
-    this.translate.addLangs(this._supportedLanguages.map(language => language.code));
-    this.translate.use(language);
+    this.translate.setAvailableLangs(this._supportedLanguages.map(language => language.code));
+    this.translate.setActiveLang(language);
 
-    this.translate.onLangChange
+    this.translate.langChanges$
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        switchMap((event: LangChangeEvent) => this.getTranslation(event.lang)),
+        switchMap((lang: string) => this.getTranslation(lang)),
       )
       .subscribe();
   }

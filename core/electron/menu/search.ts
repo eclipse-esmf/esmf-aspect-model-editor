@@ -21,7 +21,7 @@ export function search(translation: Translation): MenuItemConstructorOptions[] {
   return [
     {
       id: 'SEARCH_ELEMENTS',
-      label: translation.ELEMENTS,
+      label: translation.elements,
       enabled: false,
       icon: getIcon(icons.SEARCH_ELEMENTS.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -31,7 +31,7 @@ export function search(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'SEARCH_FILES',
-      label: translation.FILES,
+      label: translation.files,
       icon: getIcon(icons.SEARCH_FILES.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();

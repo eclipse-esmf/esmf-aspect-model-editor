@@ -34,9 +34,9 @@ export class UnitVisitor extends BaseVisitor<DefaultUnit> {
 
   visit(unit: DefaultUnit): DefaultUnit {
     this.setPrefix(unit.aspectModelUrn);
-    const oldAspectModelUrn = unit.aspectModelUrn;
+    const oldAspectModelUrn = unit.consumePreviousAspectModelUrn();
     this.addProperties(unit);
-    if (oldAspectModelUrn !== unit.aspectModelUrn) {
+    if (oldAspectModelUrn && oldAspectModelUrn !== unit.aspectModelUrn) {
       this.removeOldQuads(oldAspectModelUrn);
     }
     return unit;

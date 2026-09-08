@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {ElementIconComponent, sammElements} from '@ame/shared';
 import {CounterPipe} from '@ame/shared/pipes';
 import {NgClass} from '@angular/common';
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, computed, inject, input} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
 import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 import {ShapeSettingsService, ShapeSettingsStateService} from '../../services';
 import {ModelElementParserPipe} from './element-list.pipe';
@@ -42,43 +42,44 @@ import {ModelElementParserPipe} from './element-list.pipe';
     ElementIconComponent,
     MatTooltipModule,
     MatIconButton,
-    TranslatePipe,
+    TranslocoDirective,
   ],
 })
-export class ElementListComponent implements OnInit {
-  @Input() public label = '';
-  @Input() public iconRotation: 'rotate0' | 'rotate90' | 'rotate270' = 'rotate90';
-  @Input() public elements: NamedElement[] = [];
-  @Input() public isAspect? = false;
+export class ElementListComponent {
+  public readonly label = input('');
+  public readonly iconRotation = input<'rotate0' | 'rotate90' | 'rotate270'>('rotate90');
+  public readonly isAspect = input<boolean>(false);
+  public readonly elements = input<NamedElement[]>([]);
 
-  private mxGraphService = inject(MxGraphService);
+  public filteredElements = computed(() => {
+    const list = Array.from(this.elements() || []).filter(e => e instanceof NamedElement);
+    if (list.length > 1) {
+      return list.sort(this.compareByName);
+    }
+    return list;
+  });
+
+  private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private openReferencedElementService = inject(OpenReferencedElementService);
   public loadedFilesService = inject(LoadedFilesService);
 
-  ngOnInit() {
-    this.elements = Array.from(this.elements).filter(e => e instanceof NamedElement);
-    if (this.elements.length > 1) {
-      this.elements = this.elements.sort(this.compareByName);
-    }
-  }
-
   openElementModel(elementModel: NamedElement) {
-    const cell = this.mxGraphService.resolveCellByModelElement(elementModel);
+    const cell = this.maxgraphService.resolveCellByModelElement(elementModel);
     this.shapeSettingsService.editModel(elementModel);
     if (cell) {
-      this.mxGraphService.navigateToCell(cell, true);
-      this.shapeSettingsStateService.selectedShapeForUpdate = cell;
+      this.maxgraphService.navigateToCell(cell, true);
+      this.shapeSettingsStateService.setSelectedShapeForUpdate(cell);
     }
   }
 
   navigateToCell(elementModel: NamedElement) {
-    this.mxGraphService.navigateToCellByUrn(elementModel.aspectModelUrn);
+    this.maxgraphService.navigateToCellByUrn(elementModel.aspectModelUrn);
   }
 
   cellExists(elementModel: NamedElement): boolean {
-    return !!this.mxGraphService.resolveCellByModelElement(elementModel);
+    return !!this.maxgraphService.resolveCellByModelElement(elementModel);
   }
 
   openReferencedElement(element: NamedElement) {

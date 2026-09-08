@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
+import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {disabled, form, FormField, required, validate, validateAsync} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {
@@ -27,7 +27,8 @@ import {
   DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -35,10 +36,50 @@ import {InputFieldComponent} from '../../input-field.component';
   selector: 'ame-name-input-field',
   templateUrl: './name-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput, MatError, TranslatePipe],
+  imports: [MatFormFieldModule, MatLabel, FormField, MatInput, MatError, TranslocoDirective],
 })
 export class NameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
-  private editorDialogValidators = inject(EditorDialogValidators);
+  private readonly editorDialogValidators = inject(EditorDialogValidators);
+  private readonly model = signal('');
+  private readonly disabledState = signal(false);
+  private unregisterField = () => undefined;
+
+  private readonly createDuplicateNameResource = (name: Signal<string>) =>
+    rxResource({
+      params: () => name(),
+      stream: ({params}) =>
+        this.metaModelElement && !this.metaModelElement?.isAnonymous?.()
+          ? this.editorDialogValidators.duplicateNameValue(params, this.metaModelElement)
+          : of(null),
+    });
+
+  readonly field = form(this.model, path => {
+    required(path);
+    validate(path, ({value}) => {
+      const name = value();
+      if (!name || this.isDisabled() || this.metaModelElement instanceof DefaultUnit || this.metaModelElement?.isAnonymous?.()) return null;
+      if ([DefaultEntityInstance, DefaultValue].some(type => this.metaModelElement instanceof type)) {
+        return name.includes(' ') ? {kind: 'whitespace', message: 'Name must not contain whitespace'} : null;
+      }
+      const valid = this.isUpperCaseName() ? this.isUpperCase(name) : this.isLowerCase(name);
+      return valid
+        ? null
+        : {
+            kind: this.isUpperCaseName() ? 'namingUpperCase' : 'namingLowerCase',
+            message: 'Name has an invalid casing',
+          };
+    });
+    validateAsync(path, {
+      params: ({value}) => value(),
+      factory: this.createDuplicateNameResource,
+      onSuccess: result => {
+        const kind = result && Object.keys(result)[0];
+        return kind ? {kind, message: 'Name is already defined'} : null;
+      },
+      onError: () => ({kind: 'duplicateNameValidation', message: 'Name could not be validated'}),
+    });
+    disabled(path, {when: this.disabledState});
+  });
 
   public fieldName = 'name';
 
@@ -49,56 +90,35 @@ export class NameInputFieldComponent extends InputFieldComponent<NamedElement> i
   }
 
   ngOnDestroy() {
+    this.unregisterField();
     super.ngOnDestroy();
   }
 
-  private isDisabled() {
-    return this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.getExtends();
+  hasError(kind: string): boolean {
+    return this.field()
+      .errors()
+      .some(error => error.kind === kind);
+  }
+
+  public isDisabled() {
+    return (
+      (this.metaModelElement instanceof DefaultProperty && !!this.metaModelElement?.getExtends()) ||
+      Boolean(this.metaModelElement?.isAnonymous?.())
+    );
   }
 
   private setNameControl() {
-    let nameControl = this.parentForm.get('name');
-    if (nameControl?.value) {
-      nameControl.updateValueAndValidity();
+    if (!this.metaModelElement) {
+      return;
     }
-
-    this.parentForm.setControl(
-      'name',
-      new FormControl(
-        {
-          value: this.getCurrentValue('name'),
-          disabled:
-            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
-        },
-        {
-          validators: this.getNameValidators(),
-          asyncValidators: [this.editorDialogValidators.duplicateName(this.metaModelElement)],
-        },
-      ),
+    this.disabledState.set(
+      this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
     );
-    nameControl = this.parentForm.get('name');
-    nameControl.markAsTouched();
-  }
-
-  private getNameValidators(): any[] {
-    if (this.isDisabled()) {
-      return [];
-    }
-
-    const nameValidators = [Validators.required];
-
-    if (this.metaModelElement instanceof DefaultUnit) {
-      return nameValidators;
-    }
-
-    if (![DefaultEntityInstance, DefaultValue].some(el => this.metaModelElement instanceof el)) {
-      nameValidators.push(this.isUpperCaseName() ? EditorDialogValidators.namingUpperCase : EditorDialogValidators.namingLowerCase);
-    } else {
-      nameValidators.push(EditorDialogValidators.noWhiteSpace);
-      EditorDialogValidators.duplicateNameString(this.currentCachedFile, this.metaModelElement.aspectModelUrn.split('#')[0]);
-    }
-
-    return nameValidators;
+    const currentValue = this.getCurrentValue('name');
+    this.model.set(currentValue);
+    this.field().value.set(currentValue);
+    this.unregisterField = this.signalForm().register('name', this.field);
+    this.field().markAsTouched();
   }
 
   private isUpperCaseName(): boolean {

@@ -14,18 +14,7 @@
 import {ModelApiService, ModelData} from '@ame/api';
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilePayload, LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {
-  ConfirmDialogService,
-  DialogOptions,
-  EditorService,
-  FileTypes,
-  FileUploadOptions,
-  FileUploadService,
-  ModelLoaderService,
-  ModelSaverService,
-  ShapeSettingsStateService,
-} from '@ame/editor';
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {ConfigurationService} from '@ame/settings-dialog';
@@ -42,15 +31,22 @@ import {
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {decodeText, readFile} from '@ame/utils';
-import {DestroyRef, Injectable, inject} from '@angular/core';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {saveAs} from 'file-saver';
 import {BlankNode, NamedNode, Store} from 'n3';
-import {Observable, forkJoin, of, throwError} from 'rxjs';
+import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
+import {ConfirmDialogService, DialogOptions} from '../../confirm-dialog/confirm-dialog.service';
+import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
+import {EditorService} from '../../editor.service';
+import {ModelLoaderService} from '../../model-loader.service';
+import {ModelSaverService} from '../../model-saver.service';
 import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
+import {FileUploadOptions} from '../interfaces/file-upload-options';
+import {FileTypes, FileUploadService} from './file-upload.service';
 
 export interface FileInfo {
   content: BufferSource;
@@ -96,7 +92,7 @@ export class FileHandlingService {
   private modelSaveTracker = inject(ModelSavingTrackerService);
   private fileUploadService = inject(FileUploadService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private modelLoaderService = inject(ModelLoaderService);
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
@@ -121,8 +117,8 @@ export class FileHandlingService {
     if (!modelContent) return of(null);
 
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG?.LOADING,
-      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
+      title: this.translate.language?.notificationDialog?.LOADING,
+      content: this.translate.language?.notificationDialog?.CONTENT,
       hasCloseButton: true,
     };
     this.loadingScreenService.open(loadingScreenOptions);
@@ -136,7 +132,7 @@ export class FileHandlingService {
       }),
       catchError(httpError => {
         this.notificationsService.error({
-          title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
+          title: this.translate.language?.notificationService?.loadingError,
           message: httpError?.error?.error?.message,
           timeout: 5000,
         });
@@ -161,7 +157,7 @@ export class FileHandlingService {
         first(),
         tap(() => {
           const loadingScreenOptions: LoadingScreenOptions = {
-            title: this.translate.language.NOTIFICATION_DIALOG?.LOADING,
+            title: this.translate.language?.notificationDialog?.LOADING,
             hasCloseButton: true,
           };
           this.loadingScreenService.open(loadingScreenOptions);
@@ -178,7 +174,7 @@ export class FileHandlingService {
         first(),
         catchError(httpError => {
           this.notificationsService.error({
-            title: this.translate.language.NOTIFICATION_SERVICE.LOADING_ERROR,
+            title: this.translate.language.notificationService.loadingError,
             message: httpError?.error?.error?.message,
             timeout: 5000,
           });
@@ -186,7 +182,7 @@ export class FileHandlingService {
         }),
         finalize(() => {
           this.loadingScreenService.close();
-          if (this.shapeSettingsStateService.isShapeSettingOpened) {
+          if (this.shapeSettingsStateService.isShapeSettingOpened()) {
             this.shapeSettingsStateService.closeShapeSettings();
           }
         }),
@@ -202,8 +198,8 @@ export class FileHandlingService {
    */
   loadEmptyModel() {
     this.loadingScreenService.open({
-      title: this.translate.language.LOADING_SCREEN_DIALOG.ASPECT_MODEL_LOADING,
-      content: this.translate.language.LOADING_SCREEN_DIALOG.GENERAL_WAIT_MESSAGE,
+      title: this.translate.language.loadingScreenDialog.aspectModelLoading,
+      content: this.translate.language.loadingScreenDialog.generalWaitMessage,
     });
 
     this.loadedFilesService.removeAll();
@@ -228,8 +224,8 @@ export class FileHandlingService {
       map(() => {
         this.sidebarService.sammElements.open();
 
-        if (this.mxGraphService.graph?.model) {
-          this.mxGraphService.deleteAllShapes();
+        if (this.maxgraphService.graph?.model) {
+          this.maxgraphService.deleteAllShapes();
         }
 
         this.modelSaveTracker.updateSavedModel(true);
@@ -271,8 +267,8 @@ export class FileHandlingService {
       }),
       tap(() => {
         this.notificationsService.success({
-          title: this.translate.language.SAVE_MENU.COPIED_TO_CLIPBOARD,
-          message: this.translate.language.NOTIFICATION_SERVICE.COPIED_TO_CLIPBOARD_MESSAGE,
+          title: this.translate.language.saveMenu.copiedToClipboard,
+          message: this.translate.language.notificationService.copiedToClipboardMessage,
           timeout: 5000,
         });
       }),
@@ -319,8 +315,8 @@ export class FileHandlingService {
     }
 
     this.loadingScreenService.open({
-      title: this.translate.language.NOTIFICATION_DIALOG?.SAVING,
-      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
+      title: this.translate.language?.notificationDialog?.SAVING,
+      content: this.translate.language?.notificationDialog?.CONTENT,
       hasCloseButton: false,
     });
 
@@ -337,7 +333,7 @@ export class FileHandlingService {
       }),
       catchError(httpError => {
         this.notificationsService.error({
-          title: this.translate.language.NOTIFICATION_SERVICE.EXPORTING_TITLE_ERROR,
+          title: this.translate.language?.notificationService?.exportingTitleError,
           message: httpError?.error?.error?.message,
           timeout: 5000,
         });
@@ -406,17 +402,17 @@ export class FileHandlingService {
 
   importFilesToWorkspace(file: File): Observable<RdfModel[]> {
     const loadingOptions: LoadingScreenOptions = {
-      title: this.translate.language.LOADING_SCREEN_DIALOG.WORKSPACE_IMPORT,
+      title: this.translate.language.loadingScreenDialog.workspaceImport,
       hasCloseButton: false,
     };
 
     this.loadingScreenService.open(loadingOptions);
 
     return this.importFiles(file).pipe(
-      tap(() => this.notificationsService.success({title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_SUCCESS})),
+      tap(() => this.notificationsService.success({title: this.translate.language.notificationService.packageImportedSuccess})),
       catchError(httpError => {
         this.notificationsService.error({
-          title: this.translate.language.NOTIFICATION_SERVICE.PACKAGE_IMPORTED_ERROR,
+          title: this.translate.language.notificationService.packageImportedError,
           message: httpError.error?.error?.message,
         });
         return throwError(() => 'Importing files to workspace failed');
@@ -427,7 +423,7 @@ export class FileHandlingService {
 
   addFileToWorkspace(fileName: string, fileContent: string, uploadOptions: FileUploadOptions = {}): Observable<RdfModel> {
     const loadingOptions: LoadingScreenOptions = {
-      title: this.translate.language.LOADING_SCREEN_DIALOG.WORKSPACE_IMPORT,
+      title: this.translate.language.loadingScreenDialog.workspaceImport,
       hasCloseButton: false,
     };
     if (uploadOptions.showLoading) this.loadingScreenService.open(loadingOptions);
@@ -453,8 +449,8 @@ export class FileHandlingService {
       tap(() => {
         if (uploadOptions.showNotifications) {
           this.notificationsService.success({
-            title: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_SUCCESS_TITLE,
-            message: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_SUCCESS_MESSAGE,
+            title: this.translate.language.notificationService.fileAddedSuccessTitle,
+            message: this.translate.language.notificationService.fileAddedSuccessMessage,
           });
         }
         this.sidebarService.workspace.refresh();
@@ -463,8 +459,8 @@ export class FileHandlingService {
       catchError(httpError => {
         if (uploadOptions.showNotifications) {
           this.notificationsService.error({
-            title: this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_TITLE,
-            message: httpError?.error?.error?.message || this.translate.language.NOTIFICATION_SERVICE.FILE_ADDED_ERROR_MESSAGE,
+            title: this.translate.language.notificationService.fileAddedErrorTitle,
+            message: httpError?.error?.error?.message || this.translate.language.notificationService.fileAddedErrorMessage,
           });
         }
         return throwError(() => 'Adding file to workspace failed');
@@ -489,12 +485,12 @@ export class FileHandlingService {
     return this.confirmDialogService
       .open({
         phrases: [
-          `${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.VERSION_CHANGE_NOTICE} ${fileName} ${this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.WORKSPACE_LOAD_NOTICE}`,
-          this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.RELOAD_WARNING,
+          `${this.translate.language.confirmDialog.reloadConfirmation.versionChangeNotice} ${fileName} ${this.translate.language.confirmDialog.reloadConfirmation.workspaceLoadNotice}`,
+          this.translate.language.confirmDialog.reloadConfirmation.reloadWarning,
         ],
-        title: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.TITLE,
-        closeButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.CLOSE_BUTTON,
-        okButtonText: this.translate.language.CONFIRM_DIALOG.RELOAD_CONFIRMATION.OK_BUTTON,
+        title: this.translate.language.confirmDialog.reloadConfirmation.title,
+        closeButtonText: this.translate.language.confirmDialog.reloadConfirmation.closeButton,
+        okButtonText: this.translate.language.confirmDialog.reloadConfirmation.okButton,
       })
       .pipe(map(confirm => confirm === ConfirmDialogEnum.ok));
   }
@@ -502,7 +498,7 @@ export class FileHandlingService {
   onValidateFile() {
     if (!this.currentLoadedFile.cachedFile.getKeys().length) {
       this.notificationsService.info({
-        title: this.translate.language.NOTIFICATION_DIALOG?.NO_ASPECT_TITLE,
+        title: this.translate.language?.notificationDialog?.NO_ASPECT_TITLE,
         timeout: 5000,
       });
       return;
@@ -510,10 +506,11 @@ export class FileHandlingService {
     this.validateFile().pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   validateFile(callback?: Function) {
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG?.VALIDATING,
-      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
+      title: this.translate.language?.notificationDialog?.VALIDATING,
+      content: this.translate.language?.notificationDialog?.CONTENT,
       hasCloseButton: true,
     };
     this.loadingScreenService.open(loadingScreenOptions);
@@ -528,12 +525,12 @@ export class FileHandlingService {
       catchError(error => {
         this.loadingScreenService.close();
         if (error?.type === SaveValidateErrorsCodes.validationInProgress) {
-          this.notificationsService.error({title: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_IN_PROGRESS});
+          this.notificationsService.error({title: this.translate.language?.notificationService?.validationInProgress});
           return of(() => 'Validation in progress');
         }
         this.notificationsService.error({
-          title: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_TITLE,
-          message: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_MESSAGE,
+          title: this.translate.language?.notificationService?.validationErrorTitle,
+          message: this.translate.language?.notificationService?.validationErrorMessage,
           timeout: 5000,
         });
         console.error(`Error occurred while validating the current model (${JSON.stringify(error)})`);
@@ -568,34 +565,34 @@ export class FileHandlingService {
 
     const confirmationDialogConfig: DialogOptions = {
       phrases: [
-        this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE1', {
+        this.translate.translateService.translate('confirmDialog.namespaceChange.phrase1', {
           originalModelName: modelState.newFileName,
         }),
-        this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE2', {
+        this.translate.translateService.translate('confirmDialog.namespaceChange.phrase2', {
           originalModelNamespace: RdfModelUtil.getNamespaceFromRdf(modelState.originalModelName),
         }),
-        this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE3', {
+        this.translate.translateService.translate('confirmDialog.namespaceChange.phrase3', {
           newNamespace: RdfModelUtil.getNamespaceFromRdf(modelState.newModelName),
         }),
-        this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE4,
-        this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE5', {
+        this.translate.language.confirmDialog.namespaceChange.phrase4,
+        this.translate.translateService.translate('confirmDialog.namespaceChange.phrase5', {
           originalModelName: modelState.newFileName,
         }),
-        this.translate.translateService.instant('CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE6', {
+        this.translate.translateService.translate('confirmDialog.namespaceChange.phrase6', {
           originalModelName: modelState.newFileName,
         }),
-        this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.PHRASE7,
+        this.translate.language.confirmDialog.namespaceChange.phrase7,
       ],
-      title: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.TITLE,
-      okButtonText: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.OK_BUTTON,
-      actionButtonText: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.ACTION_BUTTON,
-      closeButtonText: this.translate.language.CONFIRM_DIALOG.NAMESPACE_CHANGE.CANCEL_BUTTON,
+      title: this.translate.language.confirmDialog.namespaceChange.title,
+      okButtonText: this.translate.language.confirmDialog.namespaceChange.okButton,
+      actionButtonText: this.translate.language.confirmDialog.namespaceChange.actionButton,
+      closeButtonText: this.translate.language.confirmDialog.namespaceChange.cancelButton,
     };
 
     const loadingDialogConfig: LoadingScreenOptions = {
       hasCloseButton: true,
-      title: this.translate.language.LOADING_SCREEN_DIALOG.SAVING_TO_WORKSPACE_TITLE,
-      content: this.translate.language.LOADING_SCREEN_DIALOG.SAVING_TO_WORKSPACE_CONTENT,
+      title: this.translate.language.loadingScreenDialog.savingToWorkspaceTitle,
+      content: this.translate.language.loadingScreenDialog.savingToWorkspaceContent,
     };
 
     return this.confirmDialogService.open(confirmationDialogConfig).pipe(
@@ -644,7 +641,13 @@ export class FileHandlingService {
   private updateAffectedModels(models: RdfModel[], originalNamespace: string, newNamespace: string): Observable<RdfModel[]> {
     const requests = models.map(model => {
       const alias = model.getAliasByNamespace(`${originalNamespace}#`);
-      alias ? model.updatePrefix(alias, originalNamespace, newNamespace) : model.addPrefix('ext-namespace', `${newNamespace}#`);
+
+      if (alias) {
+        model.updatePrefix(alias, originalNamespace, newNamespace);
+      } else {
+        model.addPrefix('ext-namespace', `${newNamespace}#`);
+      }
+
       return this.modelSaverService.saveModel(model);
     });
     return requests.length ? forkJoin(requests) : of([]);
@@ -670,8 +673,8 @@ export class FileHandlingService {
   }
 
   private showFileNameChangeNotification(modelState: ModelLoaderState): void {
-    const title = this.translate.language.NOTIFICATION_SERVICE.RENAMED_FILE_TITLE;
-    const message = this.translate.translateService.instant('NOTIFICATION_SERVICE.RENAMED_FILE_MESSAGE', {
+    const title = this.translate.language.notificationService.renamedFileTitle;
+    const message = this.translate.translateService.translate('notificationService.renamedFileMessage', {
       oldFile: modelState.oldFileName,
       newFile: modelState.newFileName,
     });
@@ -720,7 +723,7 @@ export class FileHandlingService {
   private loadNamespaceModels(namespace: string, modelsData: ModelData[]) {
     const workspaceModelsRequests = modelsData.map(modelData =>
       forkJoin([
-        of(`${namespace}:${modelData.model}`),
+        of(`${namespace}:${modelData.name}`),
         this.modelApiService.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(map(model => model.content)),
       ]),
     );
@@ -750,8 +753,8 @@ export class FileHandlingService {
    * @returns - a list of files info
    */
   private buildFilesInfo(models: Record<string, RdfModel>, modelsData: ModelData[]) {
-    return modelsData.map(({aspectModelUrn, model}) => {
-      const absoluteName = `${aspectModelUrn.substring('urn:samm:'.length, aspectModelUrn.indexOf('#'))}:${model}`;
+    return modelsData.map(({aspectModelUrn, name}) => {
+      const absoluteName = `${aspectModelUrn.substring('urn:samm:'.length, aspectModelUrn.indexOf('#'))}:${name}`;
       const rdfModel = models[absoluteName];
       if (!rdfModel) console.error(`Unable to find a model by key "${absoluteName}"`);
 
@@ -770,7 +773,7 @@ export class FileHandlingService {
 
   isFileExistOnWorkspace(namespaceName: string, namespaceVersion: string, fileName: string): Observable<boolean> {
     return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
-      map((models: ModelData[]) => models.some((model: ModelData) => model.model === fileName)),
+      map((models: ModelData[]) => models.some((model: ModelData) => model.name === fileName)),
     );
   }
 }

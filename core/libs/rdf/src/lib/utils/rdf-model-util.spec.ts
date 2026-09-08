@@ -11,39 +11,42 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {
   DefaultAspect,
   DefaultCharacteristic,
   DefaultEither,
   DefaultEntity,
   DefaultEnumeration,
+  DefaultEvent,
   DefaultFixedPointConstraint,
   DefaultLengthConstraint,
   DefaultOperation,
   DefaultProperty,
   DefaultRangeConstraint,
   DefaultState,
+  DefaultUnit,
+  DefaultValue,
+  NamedElement,
   RdfModel,
+  Samm,
+  SammC,
+  SammU,
   Type,
 } from '@esmf/aspect-model-loader';
-import {describe, expect} from '@jest/globals';
-import {Store} from 'n3';
+import {DataFactory, Store} from 'n3';
+import {describe, expect, test, vi} from 'vitest';
 import {RdfModelUtil} from './rdf-model-util';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
 
 describe('Test RDF Model Util', () => {
   describe('getDataType', () => {
     test('should return Urn', () => {
-      jest.fn().mockRestore();
       const expectedUrnResult = 'expectedUrnResult';
       const dataType = {
         getUrn: () => expectedUrnResult,
       } as Type;
       const result = RdfModelUtil.getDataType(dataType);
-      expect(result.id).toBe(expectedUrnResult);
+      expect(result?.value).toBe(expectedUrnResult);
     });
 
     test('should return null', () => {
@@ -53,11 +56,81 @@ describe('Test RDF Model Util', () => {
 
       const result = RdfModelUtil.getDataType(dataType);
 
-      expect(result.id).toBe(null);
+      expect(result?.value).toBe(null);
     });
 
     test('should return null because no dataType', () => {
       expect(RdfModelUtil.getDataType(null)).toBe(null);
+    });
+  });
+
+  describe('isSammUDefinition', () => {
+    test('should return true if urn contains sammU namespace', () => {
+      const samm = new Samm('2.2.0');
+      const sammU = new SammU(samm);
+      const urn = `${sammU.getNamespace()}metre`;
+
+      expect(RdfModelUtil.isSammUDefinition(urn, sammU)).toBe(true);
+    });
+
+    test('should return false if urn is falsy or does not contain sammU namespace', () => {
+      const samm = new Samm('2.2.0');
+      const sammU = new SammU(samm);
+
+      expect(RdfModelUtil.isSammUDefinition('', sammU)).toBeFalsy();
+      expect(RdfModelUtil.isSammUDefinition('urn:samm:custom#metre', sammU)).toBe(false);
+    });
+  });
+
+  describe('isCharacteristicInstance', () => {
+    test('should return true if urn contains sammC namespace', () => {
+      const samm = new Samm('2.2.0');
+      const sammC = new SammC(samm);
+      const urn = `${sammC.getNamespace()}Text`;
+
+      expect(RdfModelUtil.isCharacteristicInstance(urn, sammC)).toBe(true);
+    });
+
+    test('should return false if urn does not contain sammC namespace', () => {
+      const samm = new Samm('2.2.0');
+      const sammC = new SammC(samm);
+
+      expect(RdfModelUtil.isCharacteristicInstance('', sammC)).toBeFalsy();
+      expect(RdfModelUtil.isCharacteristicInstance('urn:samm:custom#Text', sammC)).toBe(false);
+    });
+  });
+
+  describe('getValueWithoutUrnDefinition and getValuesWithoutUrnDefinition', () => {
+    test('should return empty string for falsy value', () => {
+      expect(RdfModelUtil.getValueWithoutUrnDefinition(null as unknown as string)).toBe('');
+      expect(RdfModelUtil.getValueWithoutUrnDefinition('')).toBe('');
+    });
+
+    test('should return name when value is NamedElement', () => {
+      const element = new DefaultAspect({name: 'TestAspect', aspectModelUrn: 'urn#TestAspect', metaModelVersion: '2.2.0'});
+      expect(RdfModelUtil.getValueWithoutUrnDefinition(element)).toBe('TestAspect');
+    });
+
+    test('should return value string when value is a Value instance', () => {
+      const val = new DefaultValue({name: 'val', value: '42', aspectModelUrn: 'urn#val', metaModelVersion: '2.2.0'});
+      expect(RdfModelUtil.getValueWithoutUrnDefinition(val)).toBe('42');
+    });
+
+    test('should extract fragment when value is a URN string', () => {
+      expect(RdfModelUtil.getValueWithoutUrnDefinition('urn:samm:org.eclipse.esmf:test:1.0.0#TestProperty')).toBe('TestProperty');
+      expect(RdfModelUtil.getValueWithoutUrnDefinition(`${Samm.XSD_URI}#integer`)).toBe('integer');
+      expect(RdfModelUtil.getValueWithoutUrnDefinition(`${Samm.RDF_URI}#langString`)).toBe('langString');
+    });
+
+    test('should return plain string as is', () => {
+      expect(RdfModelUtil.getValueWithoutUrnDefinition('plainTextValue')).toBe('plainTextValue');
+    });
+
+    test('should join multiple values with comma', () => {
+      const element = new DefaultAspect({name: 'AspectA', aspectModelUrn: 'urn#AspectA', metaModelVersion: '2.2.0'});
+      const list = [element, 'urn:samm:org.eclipse.esmf:test:1.0.0#PropertyB', 'plain'];
+
+      expect(RdfModelUtil.getValuesWithoutUrnDefinition(list)).toBe('AspectA, PropertyB, plain');
     });
   });
 
@@ -71,7 +144,7 @@ describe('Test RDF Model Util', () => {
       expectedElementUrn = sammC.MinValueProperty().value;
       const metaModelElement = new DefaultLengthConstraint({name: '', aspectModelUrn: '', metaModelVersion: ''});
 
-      RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
+      RdfModelUtil.getDataType = vi.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
       expect(RdfModelUtil.getDataType).toHaveBeenCalled();
@@ -81,7 +154,7 @@ describe('Test RDF Model Util', () => {
       expectedElementUrn = sammC.ScaleProperty().value;
       const metaModelElement = new DefaultFixedPointConstraint({name: '', aspectModelUrn: '', metaModelVersion: '', scale: 0, integer: 0});
 
-      RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
+      RdfModelUtil.getDataType = vi.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
       expect(RdfModelUtil.getDataType).toHaveBeenCalled();
@@ -91,7 +164,7 @@ describe('Test RDF Model Util', () => {
       expectedElementUrn = samm.ExampleValueProperty().value;
       const metaModelElement = new DefaultProperty({name: '', aspectModelUrn: '', metaModelVersion: ''});
 
-      RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
+      RdfModelUtil.getDataType = vi.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
       expect(RdfModelUtil.getDataType).toHaveBeenCalled();
@@ -101,7 +174,7 @@ describe('Test RDF Model Util', () => {
       expectedElementUrn = sammC.MinValueProperty().value;
       const metaModelElement = new DefaultRangeConstraint({name: '', aspectModelUrn: '', metaModelVersion: ''});
 
-      RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
+      RdfModelUtil.getDataType = vi.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
       expect(RdfModelUtil.getDataType).toHaveBeenCalled();
@@ -111,7 +184,7 @@ describe('Test RDF Model Util', () => {
       expectedElementUrn = sammC.ValuesProperty().value;
       const metaModelElement = new DefaultEnumeration({name: '', aspectModelUrn: '', metaModelVersion: '', values: []});
 
-      RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
+      RdfModelUtil.getDataType = vi.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
       expect(RdfModelUtil.getDataType).toHaveBeenCalled();
@@ -121,7 +194,7 @@ describe('Test RDF Model Util', () => {
       expectedElementUrn = sammC.DefaultValueProperty().value;
       const metaModelElement = new DefaultState({name: '', aspectModelUrn: '', metaModelVersion: '', values: [], defaultValue: null});
 
-      RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(expectedElementUrn);
+      RdfModelUtil.getDataType = vi.fn().mockReturnValueOnce(expectedElementUrn);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(expectedElementUrn);
       expect(RdfModelUtil.getDataType).toHaveBeenCalled();
@@ -131,7 +204,7 @@ describe('Test RDF Model Util', () => {
       expectedElementUrn = null;
       const metaModelElement = new DefaultState({name: '', aspectModelUrn: '', metaModelVersion: '', values: [], defaultValue: null});
 
-      RdfModelUtil.getDataType = jest.fn().mockReturnValueOnce(null);
+      RdfModelUtil.getDataType = vi.fn().mockReturnValueOnce(null);
 
       expect(RdfModelUtil.resolveAccurateType(metaModelElement, expectedElementUrn, rdfModel, null)).toBe(null);
       expect(RdfModelUtil.getDataType).toHaveBeenCalledTimes(0);
@@ -210,6 +283,149 @@ describe('Test RDF Model Util', () => {
       child.aspectModelUrn = propertyUrn;
 
       expect(RdfModelUtil.resolvePredicate(child, parent, rdfModel)).toEqual(null);
+    });
+  });
+
+  describe('getFullQualifiedModelName', () => {
+    test('should return full qualified model name for various elements', () => {
+      const version = '2.2.0';
+      const aspect = new DefaultAspect({name: 'TestAspect', aspectModelUrn: 'urn#a', metaModelVersion: version});
+      expect(RdfModelUtil.getFullQualifiedModelName(aspect)).toContain('Aspect');
+
+      const operation = new DefaultOperation({
+        name: 'TestOp',
+        aspectModelUrn: 'urn#op',
+        metaModelVersion: version,
+        input: [],
+        output: null,
+      });
+      expect(RdfModelUtil.getFullQualifiedModelName(operation)).toContain('Operation');
+
+      const event = new DefaultEvent({name: 'TestEvent', aspectModelUrn: 'urn#ev', metaModelVersion: version});
+      expect(RdfModelUtil.getFullQualifiedModelName(event)).toContain('Event');
+
+      const val = new DefaultValue({name: 'val', value: '1', aspectModelUrn: 'urn#val', metaModelVersion: version});
+      expect(RdfModelUtil.getFullQualifiedModelName(val)).toContain('Value');
+
+      const prop = new DefaultProperty({name: 'TestProp', aspectModelUrn: 'urn#prop', metaModelVersion: version});
+      expect(RdfModelUtil.getFullQualifiedModelName(prop)).toContain('Property');
+
+      const abstractProp = new DefaultProperty({
+        name: 'AbsProp',
+        aspectModelUrn: 'urn#absprop',
+        metaModelVersion: version,
+        isAbstract: true,
+      });
+      expect(RdfModelUtil.getFullQualifiedModelName(abstractProp)).toContain('AbstractProperty');
+
+      const entity = new DefaultEntity({name: 'TestEntity', aspectModelUrn: 'urn#entity', metaModelVersion: version, properties: []});
+      expect(RdfModelUtil.getFullQualifiedModelName(entity)).toContain('Entity');
+
+      const unit = new DefaultUnit({name: 'second', aspectModelUrn: 'urn#unit', metaModelVersion: version, quantityKinds: []});
+      expect(RdfModelUtil.getFullQualifiedModelName(unit)).toBeDefined();
+
+      const unknownElement = {className: 'UnknownClass', metaModelVersion: version} as unknown as NamedElement;
+      expect(RdfModelUtil.getFullQualifiedModelName(unknownElement)).toBe(':UnknownClass');
+    });
+  });
+
+  describe('isPredefinedCharacteristic', () => {
+    test('should return true for predefined characteristics and false for custom ones', () => {
+      const samm = new Samm('2.2.0');
+      const sammC = new SammC(samm);
+
+      expect(RdfModelUtil.isPredefinedCharacteristic(`${sammC.getNamespace()}Timestamp`, sammC)).toBe(true);
+      expect(RdfModelUtil.isPredefinedCharacteristic(`${sammC.getNamespace()}Text`, sammC)).toBe(true);
+      expect(RdfModelUtil.isPredefinedCharacteristic(`${sammC.getNamespace()}CustomCharacteristic`, sammC)).toBe(false);
+    });
+  });
+
+  describe('isEntityInstance', () => {
+    test('should return false if store has no matching quads', () => {
+      const store = new Store();
+      const rdfModel = new RdfModel(store, '2.2.0', null);
+      const loadedFilesService = {
+        currentLoadedFile: {rdfModel},
+        filesAsList: [],
+      } as unknown as LoadedFilesService;
+
+      expect(RdfModelUtil.isEntityInstance('urn:test#Type', loadedFilesService)).toBe(false);
+    });
+
+    test('should return true if entity quads exist in current loaded file', () => {
+      const store = new Store();
+      const rdfModel = new RdfModel(store, '2.2.0', null);
+      store.addQuad(DataFactory.namedNode('urn:test#instance'), rdfModel.samm.RdfType(), DataFactory.namedNode('urn:test#EntityDef'));
+      store.addQuad(DataFactory.namedNode('urn:test#EntityDef'), rdfModel.samm.RdfType(), rdfModel.samm.Entity());
+
+      const loadedFilesService = {
+        currentLoadedFile: {rdfModel},
+        filesAsList: [],
+      } as unknown as LoadedFilesService;
+
+      expect(RdfModelUtil.isEntityInstance('urn:test#instance', loadedFilesService)).toBe(true);
+    });
+
+    test('should return true if entity quads exist in filesAsList', () => {
+      const store1 = new Store();
+      const rdfModel1 = new RdfModel(store1, '2.2.0', null);
+      store1.addQuad(DataFactory.namedNode('urn:test#instance'), rdfModel1.samm.RdfType(), DataFactory.namedNode('urn:test#EntityDef'));
+
+      const store2 = new Store();
+      const rdfModel2 = new RdfModel(store2, '2.2.0', null);
+      store2.addQuad(DataFactory.namedNode('urn:test#EntityDef'), rdfModel2.samm.RdfType(), rdfModel2.samm.Entity());
+
+      const loadedFilesService = {
+        currentLoadedFile: {rdfModel: rdfModel1},
+        filesAsList: [{rdfModel: rdfModel2} as NamespaceFile],
+      } as unknown as LoadedFilesService;
+
+      expect(RdfModelUtil.isEntityInstance('urn:test#instance', loadedFilesService)).toBe(true);
+    });
+  });
+
+  describe('resolveExternalNamespaces and resolveSpecificExternalNamespaces', () => {
+    test('should resolve external namespaces from rdfModel store entities', () => {
+      const store = new Store();
+      const rdfModel = new RdfModel(store, '2.2.0', null);
+      store['_entities'] = {
+        'urn:samm:com.external:model:1.0.0#ExtAspect': 'urn:samm:com.external:model:1.0.0#ExtAspect',
+      };
+
+      const result = RdfModelUtil.resolveExternalNamespaces(rdfModel, false);
+      expect(result).toContain('urn:samm:com.external:model:1.0.0#');
+    });
+
+    test('should resolve specific external namespaces excluding known subjects in store', () => {
+      const store = new Store();
+      const rdfModel = new RdfModel(store, '2.2.0', null);
+      store['_entities'] = {
+        'urn:samm:com.external:model:1.0.0#ExtProp': 'urn:samm:com.external:model:1.0.0#ExtProp',
+      };
+
+      const result = RdfModelUtil.resolveSpecificExternalNamespaces(rdfModel, false);
+      expect(result).toContain('urn:samm:com.external:model:1.0.0#ExtProp');
+    });
+  });
+
+  describe('splitAspectModelUrnIntoChunks', () => {
+    test('should split aspect model URN into 5 chunks', () => {
+      const urn = 'urn:samm:org.eclipse.esmf:1.0.0#AspectModel';
+      const chunks = RdfModelUtil.splitAspectModelUrnIntoChunks(urn);
+      expect(chunks).toEqual(['urn', 'samm', 'org.eclipse.esmf', '1.0.0', 'AspectModel']);
+    });
+
+    test('should throw on invalid aspect model URN format', () => {
+      expect(() => RdfModelUtil.splitAspectModelUrnIntoChunks('invalid:urn')).toThrow();
+    });
+  });
+
+  describe('extractCommentsFromRdfContent', () => {
+    test('should extract comments prior to @prefix declarations', () => {
+      const content = '# Copyright (c) 2026\n# License info\n@prefix : <urn:samm:...> .\n# Ignored comment\n';
+      const comments = RdfModelUtil.extractCommentsFromRdfContent(content);
+
+      expect(comments).toEqual(['# Copyright (c) 2026', '# License info']);
     });
   });
 

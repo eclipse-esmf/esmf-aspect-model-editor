@@ -17,6 +17,10 @@ import {FIELD_extends, SELECTOR_elementBtn, SELECTOR_tbDeleteButton} from '../..
 import {cyHelp} from '../../support/helpers';
 
 describe('Time Series Entity', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   function createTimeSeriesEntity() {
     return cy
       .then(() => cy.dbClickShape('Entity1'))
@@ -26,9 +30,7 @@ describe('Time Series Entity', () => {
   }
 
   it('should create TimeSeriesEntity with its properties', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => createTimeSeriesEntity())
@@ -138,12 +140,10 @@ describe('Time Series Entity', () => {
   });
 
   it('should import', () => {
-    cy.visitDefault();
     cy.startModelling();
     cy.fixture('time-series-entity')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.clickShape('Entity1'))
       .then(() => cy.getCellLabel('Entity1', 'preferredName').should('eq', 'Inherited\npreferredName = Time Series Entity @en'))
       .then(() =>

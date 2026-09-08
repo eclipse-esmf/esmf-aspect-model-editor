@@ -12,22 +12,22 @@
  */
 
 import {EntityInstanceService} from '@ame/editor';
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class EntityPropertyConnectionHandler implements MultiShapeConnector<DefaultEntity, DefaultProperty> {
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private entityInstanceService = inject(EntityInstanceService);
 
-  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
+  public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: Cell, childCell: Cell) {
     if (!parentMetaModel.properties.find(property => property.aspectModelUrn === childMetaModel.aspectModelUrn)) {
       parentMetaModel.properties.push(childMetaModel);
       this.entityInstanceService.onNewProperty(childMetaModel, parentMetaModel);
     }
-    this.mxGraphService.assignToParent(childCell, parentCell);
+    this.maxgraphService.assignToParent(childCell, parentCell);
   }
 }

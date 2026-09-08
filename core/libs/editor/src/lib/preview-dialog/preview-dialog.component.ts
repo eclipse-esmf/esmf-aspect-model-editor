@@ -10,15 +10,13 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {CdkTextareaAutosize} from '@angular/cdk/text-field';
-import {Component, inject, ViewChild} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {saveAs} from 'file-saver';
 
 interface PreviewDialogOptions {
@@ -28,26 +26,25 @@ interface PreviewDialogOptions {
 }
 
 @Component({
-  standalone: true,
-  selector: 'ame-preview--dialog',
+  selector: 'ame-preview-dialog',
   templateUrl: './preview-dialog.component.html',
   styleUrls: ['./preview-dialog.component.scss'],
-  imports: [MatDialogModule, MatIconModule, MatFormFieldModule, FormsModule, MatInputModule, MatButtonModule, TranslatePipe],
+  imports: [MatDialogModule, MatIconModule, MatFormFieldModule, MatInputModule, MatButtonModule, TranslocoDirective],
 })
 export class PreviewDialogComponent {
-  @ViewChild('autosize') autosize: CdkTextareaAutosize;
-
   private data = inject<PreviewDialogOptions>(MAT_DIALOG_DATA);
   private dialogRef = inject(MatDialogRef<PreviewDialogComponent>);
 
-  public initialContent: string;
-  public content: string;
-  public title: string;
-  public fileName: string;
+  private initialContent: string;
+  private fileName: string;
+
+  public content = signal('');
+  public title = signal('');
 
   constructor() {
-    this.title = this.data.title;
-    this.content = this.data.content;
+    this.title.set(this.data.title);
+    this.content.set(this.data.content);
+
     this.initialContent = this.data.content;
     this.fileName = this.data.fileName;
   }
@@ -58,7 +55,7 @@ export class PreviewDialogComponent {
 
   onDownload() {
     saveAs(
-      new Blob([this.content], {
+      new Blob([this.content()], {
         type: 'application/json;charset=utf-8',
       }),
       this.fileName,
@@ -66,10 +63,10 @@ export class PreviewDialogComponent {
   }
 
   onCopyToClipboard() {
-    navigator.clipboard.writeText(this.content);
+    navigator.clipboard.writeText(this.content());
   }
 
   reset() {
-    this.content = this.initialContent;
+    this.content.set(this.initialContent);
   }
 }

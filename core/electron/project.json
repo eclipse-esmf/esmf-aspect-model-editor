@@ -5,10 +5,11 @@
   "projectType": "application",
   "targets": {
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/coverage/electron"],
       "options": {
-        "jestConfig": "electron/jest.config.ts",
-        "passWithNoTests": true
+        "command": "vitest run --config electron/vitest.config.ts --passWithNoTests",
+        "cwd": "{workspaceRoot}"
       }
     }
   }

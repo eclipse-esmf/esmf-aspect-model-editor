@@ -12,11 +12,10 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {DataType, EditorDialogValidators, FormFieldHelper} from '@ame/editor';
-import {AsyncPipe, NgClass} from '@angular/common';
-import {ChangeDetectorRef, Component, DestroyRef, inject, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, UntypedFormGroup} from '@angular/forms';
+import {extractNamespace} from '@ame/utils';
+import {NgClass} from '@angular/common';
+import {Component, computed, effect, inject, input, signal, viewChildren} from '@angular/core';
+import {form, FormField, validate} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton, MatMiniFabButton} from '@angular/material/button';
 import {MatDivider} from '@angular/material/divider';
@@ -31,13 +30,21 @@ import {
   DefaultEntityInstance,
   DefaultEnumeration,
   DefaultProperty,
+  DefaultTrait,
   EntityInstanceProperty,
   PropertyPayload,
   Value,
 } from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
-import {map, Observable, of, startWith} from 'rxjs';
+import {DataType, FormFieldHelper} from '../../../../helpers/form-field.helper';
+import {
+  emptyEntityInstanceProperties,
+  entityInstanceProperties,
+  EntityInstancePropertiesModel,
+  EntityInstancePropertyLocks,
+  hasMissingRequiredEntityInstanceValue,
+} from '../utils/entity-instance-form';
 import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
 @Component({
@@ -45,7 +52,6 @@ import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
   templateUrl: './entity-instance-modal-table.component.html',
   styleUrls: ['./entity-instance-modal-table.component.scss'],
   imports: [
-    ReactiveFormsModule,
     MatDivider,
     MatIconModule,
     MatFormFieldModule,
@@ -56,175 +62,202 @@ import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
     MatOption,
     MatError,
     MatMiniFabButton,
-    TranslatePipe,
+    TranslocoDirective,
     MatAutocomplete,
-    AsyncPipe,
     MatOptgroup,
     NgClass,
+    FormField,
   ],
 })
-export class EntityInstanceModalTableComponent implements OnChanges {
-  @ViewChildren(MatAutocompleteTrigger) autocompleteTriggers: QueryList<MatAutocompleteTrigger>;
+export class EntityInstanceModalTableComponent {
+  readonly autocompleteTriggers = viewChildren(MatAutocompleteTrigger);
 
-  @Input() form: FormGroup;
-  @Input() entity: DefaultEntity;
-  @Input() enumeration: DefaultEnumeration;
-  @Input() entityValue: DefaultEntityInstance;
+  readonly entity = input<DefaultEntity>();
+  readonly enumeration = input<DefaultEnumeration>();
+  readonly entityValue = input<DefaultEntityInstance>();
 
-  private destroyRef = inject(DestroyRef);
   private loadedFiles = inject(LoadedFilesService);
-  private changeDetector = inject(ChangeDetectorRef);
-  private fb = inject(FormBuilder);
 
-  protected readonly EntityInstanceUtil = EntityInstanceUtil;
   protected readonly formFieldHelper = FormFieldHelper;
   protected readonly dataType = DataType;
 
-  sources: EntityInstanceProperty<DefaultProperty>[] = [];
-
-  filteredEntityValues$: {[key: string]: Observable<any[]>} = {};
-  filteredLanguageValues$: {[key: string]: Observable<any[]>} = {};
-
-  get propertiesForm(): FormGroup {
-    return this.form.get('properties') as FormGroup;
-  }
+  readonly sources = computed<EntityInstanceProperty<DefaultProperty>[]>(() => {
+    const entity = this.entity();
+    if (!entity) return [];
+    return entity.properties
+      .filter(property => !property.isAbstract)
+      .map(property => [
+        property,
+        new Value('', property.characteristic?.dataType, EntityInstanceUtil.isDefaultPropertyWithLangString(property) ? '' : undefined),
+      ]);
+  });
+  readonly propertiesModel = signal<EntityInstancePropertiesModel>({});
+  readonly locks = signal<EntityInstancePropertyLocks>({});
+  readonly newEntityValues = signal<DefaultEntityInstance[]>([]);
+  readonly propertiesForm = form(this.propertiesModel, path => {
+    validate(path, () =>
+      this.entity() && hasMissingRequiredEntityInstanceValue(this.entity(), this.propertiesModel())
+        ? {kind: 'required', message: 'Please define all required property values'}
+        : null,
+    );
+  });
 
   get currentCachedFile(): CacheStrategy {
     return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if ('entity' in changes && this.entity) {
-      this.sources = this.buildEntityValueArray();
+  constructor() {
+    effect(() => {
+      const entity = this.entity();
+      if (!entity) return;
 
-      this.entity.properties.forEach((property: DefaultProperty) => {
-        const propertyName = property.name;
-
-        this.filteredEntityValues$[propertyName] = of(this.getPropertyValues(property));
-
-        if (EntityInstanceUtil.isDefaultPropertyWithLangString(property)) {
-          this.filteredLanguageValues$[propertyName] = of(locale.all.filter(lang => lang.tag));
-        }
-      });
-    }
-  }
-
-  getFormArray(value: string): FormArray {
-    return this.propertiesForm.get(value) as FormArray;
+      const entityValue = this.entityValue();
+      if (entityValue) {
+        const initial = entityInstanceProperties(entityValue, urn => this.loadedFiles.getElement<DefaultProperty>(urn));
+        this.propertiesModel.set(initial.properties);
+        this.locks.set(initial.locks);
+      } else {
+        this.propertiesModel.set(emptyEntityInstanceProperties(entity));
+        this.locks.set(
+          Object.fromEntries(
+            entity.properties.filter(property => !property.isAbstract).map(property => [property.name, [{value: false, language: false}]]),
+          ),
+        );
+      }
+      this.newEntityValues.set([]);
+    });
   }
 
   getPropertyPayload(propertyUrn: string): PropertyPayload {
-    return this.entity.propertiesPayload[propertyUrn];
+    return this.entity().propertiesPayload[propertyUrn];
   }
 
-  private buildEntityValueArray(): EntityInstanceProperty<DefaultProperty>[] {
-    return this.entity.properties.map(prop => this.createEntityValueProp(prop));
+  rows(propertyName: string) {
+    return this.propertiesModel()[propertyName] || [];
   }
 
-  private createEntityValueProp(prop: DefaultProperty): EntityInstanceProperty<DefaultProperty> {
-    const valueControl = this.createFormControl(prop);
-    this.subscribeToEntityValueChanges(valueControl, prop);
-
-    const group = new UntypedFormGroup({value: valueControl});
-    this.addGroupToPropertiesForm(prop.name, group);
-
-    if (EntityInstanceUtil.isDefaultPropertyWithLangString(prop)) {
-      const languageControl = this.createFormControl(prop);
-      this.subscribeToLangValueChanges(languageControl, prop);
-      group.addControl('language', languageControl);
-    }
-
-    return [prop, new Value('', prop.characteristic?.dataType, EntityInstanceUtil.isDefaultPropertyWithLangString(prop) ? '' : undefined)];
+  isLocked(propertyName: string, index: number, control: 'value' | 'language'): boolean {
+    return !!this.locks()[propertyName]?.[index]?.[control];
   }
 
-  private createFormControl(prop: DefaultProperty): FormControl {
-    const propertyPayload = this.entity.propertiesPayload[prop.aspectModelUrn];
-    return new FormControl('', propertyPayload?.optional ? null : EditorDialogValidators.requiredObject);
+  unlockValue(propertyName: string, index: number, control: 'value' | 'language'): void {
+    this.propertiesModel.update(properties => ({
+      ...properties,
+      [propertyName]: properties[propertyName].map((row, rowIndex) => (rowIndex === index ? {...row, [control]: ''} : row)),
+    }));
+    this.locks.update(locks => ({
+      ...locks,
+      [propertyName]: locks[propertyName].map((row, rowIndex) => (rowIndex === index ? {...row, [control]: false} : row)),
+    }));
   }
 
-  private subscribeToEntityValueChanges(control: FormControl, prop: DefaultProperty): void {
-    control.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(value => this.changeEntityValueInput(prop as DefaultProperty, value));
-  }
-
-  private subscribeToLangValueChanges(control: FormControl, prop: DefaultProperty): void {
-    control.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => this.changeLanguageInput(prop.name, value));
-  }
-
-  private addGroupToPropertiesForm(propertyName: string, group: UntypedFormGroup): void {
-    const propertiesArray = this.propertiesForm.get(propertyName) as FormArray;
-    propertiesArray.push(group);
-  }
-
-  private changeEntityValueInput(property: DefaultProperty, value: string): void {
-    this.filteredEntityValues$[property.name] = of(this.getPropertyValues(property)).pipe(
-      map(ev => ev.filter(entityValue => entityValue.name.startsWith(value))),
+  filteredEntityValues(property: DefaultProperty, index: number): DefaultEntityInstance[] {
+    const search = String(this.rows(property.name)[index]?.value || '').toLowerCase();
+    return [...EntityInstanceUtil.existingEntityValues(this.currentCachedFile, property), ...this.entityValues(property)].filter(value =>
+      value.name.toLowerCase().startsWith(search),
     );
   }
 
-  private getPropertyValues(property: DefaultProperty): DefaultEntityInstance[] {
-    const existingEntityValues = EntityInstanceUtil.existingEntityValues(this.currentCachedFile, property);
-    const entityValues = EntityInstanceUtil.entityValues(this.form, property);
-    return [...existingEntityValues, ...entityValues];
+  filteredLanguageValues(propertyName: string, index: number) {
+    const search = String(this.rows(propertyName)[index]?.language || '').toLowerCase();
+    return locale.all.filter(language => language.tag?.toLowerCase().startsWith(search));
   }
 
-  changeSelection(controlName: string, propertyValue: any): void {
-    EntityInstanceUtil.changeSelection(this.propertiesForm, controlName, propertyValue);
+  showCreateNewEntityOption(property: DefaultProperty, index: number): boolean {
+    const name = String(this.rows(property.name)[index]?.value || '');
+    const values = this.filteredEntityValues(property, index);
+    if (!name || name.includes(' ') || values.some(value => value.name === name)) return false;
+
+    const namespace = extractNamespace(this.entity().aspectModelUrn);
+    return !this.currentCachedFile.get(`${namespace}#${name}`) && !this.newEntityValues().some(value => value.name === name);
+  }
+
+  changeSelection(propertyName: string, propertyValue: DefaultEntityInstance, index = 0): void {
+    this.propertiesModel.update(properties => ({
+      ...properties,
+      [propertyName]: properties[propertyName].map((row, rowIndex) => (rowIndex === index ? {...row, value: propertyValue.name} : row)),
+    }));
+    this.lock(propertyName, index, 'value');
     this.closeAllAutocompletePanels();
-    this.changeDetector.detectChanges();
   }
 
-  changeLanguageSelection(ev: EntityInstanceProperty<DefaultProperty>, propertyValue: string, index: number): void {
-    EntityInstanceUtil.changeLanguageSelection(this.propertiesForm, ev, propertyValue, index);
+  changeLanguageSelection([property]: EntityInstanceProperty<DefaultProperty>, language: string, index: number): void {
+    this.propertiesModel.update(properties => ({
+      ...properties,
+      [property.name]: properties[property.name].map((row, rowIndex) => (rowIndex === index ? {...row, language} : row)),
+    }));
+    this.lock(property.name, index, 'language');
     this.closeAllAutocompletePanels();
-    this.changeDetector.detectChanges();
   }
 
-  private closeAllAutocompletePanels() {
-    this.autocompleteTriggers.forEach(trigger => {
-      trigger.closePanel();
+  createNewEntityValue(property: DefaultProperty, entityValueName: string): void {
+    const characteristic: Characteristic =
+      property.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
+    const entityValue = new DefaultEntityInstance({
+      metaModelVersion: property.metaModelVersion,
+      name: entityValueName,
+      aspectModelUrn: `${property.aspectModelUrn.split('#')[0]}#${entityValueName}`,
+      type: characteristic?.dataType as DefaultEntity,
+      assertions: new Map(),
     });
-  }
+    for (const nestedProperty of entityValue.type?.properties || []) {
+      if (!nestedProperty.isAbstract) entityValue.assertions.set(nestedProperty.aspectModelUrn, []);
+    }
 
-  createNewEntityValue(property: DefaultProperty, entityValue: string) {
-    EntityInstanceUtil.createNewEntityValue(this.form, property, entityValue);
-    this.changeDetector.detectChanges();
+    this.newEntityValues.update(values => [...values.filter(value => this.selectedEntityNames().includes(value.name)), entityValue]);
+    this.changeSelection(property.name, entityValue);
   }
 
   addLanguage([property]: EntityInstanceProperty<DefaultProperty>): void {
-    const propertyPayload = this.entity.propertiesPayload[property.aspectModelUrn];
-
-    const fieldValidators = propertyPayload?.optional ? null : EditorDialogValidators.requiredObject;
-    const languagesFormArray = this.propertiesForm.get(property.name) as FormArray;
-
-    const languageInputControl = new FormControl('', fieldValidators);
-
-    languageInputControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
-      this.changeLanguageInput(property.name, value);
-    });
-
-    const languageFormGroup = this.fb.group({
-      value: ['', fieldValidators],
-      language: languageInputControl,
-    });
-
-    languagesFormArray.push(languageFormGroup);
-  }
-
-  private changeLanguageInput(name: string, value: string): void {
-    this.filteredLanguageValues$[name] = of(locale.all.filter(lang => lang.tag)).pipe(
-      startWith(locale.all),
-      map(local => local.filter(lang => lang.tag.startsWith(value))),
-    );
+    this.propertiesModel.update(properties => ({
+      ...properties,
+      [property.name]: [...properties[property.name], {value: '', language: ''}],
+    }));
+    this.locks.update(locks => ({
+      ...locks,
+      [property.name]: [...locks[property.name], {value: false, language: false}],
+    }));
   }
 
   removeLanguage([property]: EntityInstanceProperty<DefaultProperty>, index: number): void {
-    const languagesFormArray = this.propertiesForm.get(property.name) as FormArray;
-    languagesFormArray.removeAt(index);
+    this.propertiesModel.update(properties => ({
+      ...properties,
+      [property.name]: properties[property.name].filter((_, rowIndex) => rowIndex !== index),
+    }));
+    this.locks.update(locks => ({
+      ...locks,
+      [property.name]: locks[property.name].filter((_, rowIndex) => rowIndex !== index),
+    }));
+  }
+
+  isRequiredInvalid(property: DefaultProperty, index: number, control: 'value' | 'language'): boolean {
+    if (this.getPropertyPayload(property.aspectModelUrn)?.optional) return false;
+    const value = this.rows(property.name)[index]?.[control];
+    return value === '' || value === null || value === undefined;
   }
 
   isCharacteristicCollectionType(characteristic: Characteristic | undefined): boolean {
     return characteristic instanceof DefaultCollection;
+  }
+
+  private entityValues(property: DefaultProperty): DefaultEntityInstance[] {
+    const characteristic =
+      property.characteristic instanceof DefaultTrait ? property.characteristic.baseCharacteristic : property.characteristic;
+    return this.newEntityValues().filter(value => value.type.aspectModelUrn === characteristic?.dataType?.getUrn?.());
+  }
+
+  private selectedEntityNames(): string[] {
+    return Object.values(this.propertiesModel()).flatMap(rows => rows.map(row => row.value));
+  }
+
+  private lock(propertyName: string, index: number, control: 'value' | 'language'): void {
+    this.locks.update(locks => ({
+      ...locks,
+      [propertyName]: locks[propertyName].map((row, rowIndex) => (rowIndex === index ? {...row, [control]: true} : row)),
+    }));
+  }
+
+  private closeAllAutocompletePanels(): void {
+    this.autocompleteTriggers().forEach(trigger => trigger.closePanel());
   }
 }

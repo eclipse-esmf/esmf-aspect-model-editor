@@ -14,12 +14,12 @@
 import {Observable} from 'rxjs';
 import {StartupData, StartupPayload} from './startup-options';
 
-interface ElectronPayloadOnly {
+export interface ElectronPayloadOnly {
   updateWindowInfo: StartupPayload;
   openWindow: StartupPayload;
 }
 
-interface ElectronReturnDataOnly {
+export interface ElectronReturnDataOnly {
   isFirstWindow: Observable<boolean>;
   requestMaximizeWindow: void;
   requestWindowData: Observable<StartupData>;
@@ -27,14 +27,14 @@ interface ElectronReturnDataOnly {
 }
 
 export type ElectronEventKeys = keyof ElectronReturnDataOnly | keyof ElectronPayloadOnly;
-export type RegisteredELECTRON_EVENTS = Partial<Record<ElectronEventKeys, Function>>;
+export type RegisteredELECTRON_EVENTS = Partial<Record<ElectronEventKeys, (payload?: unknown) => unknown>>;
 
 export interface ElectronSignals {
   call<K extends keyof ElectronPayloadOnly>(listener: K, payload: ElectronPayloadOnly[K]): void;
   call<K extends keyof ElectronReturnDataOnly>(listener: K): ElectronReturnDataOnly[K];
 
   addListener<K extends keyof ElectronPayloadOnly>(listener: K, callback: (payload: ElectronPayloadOnly[K]) => void): void;
-  addListener<K extends ElectronEventKeys>(listener: K, callback: () => void): void;
+  addListener<K extends keyof ElectronReturnDataOnly>(listener: K, callback: () => ElectronReturnDataOnly[K]): void;
 
-  removeListener<K extends ElectronEventKeys>(listener: K, callback: Function): void;
+  removeListener<K extends ElectronEventKeys>(listener: K): void;
 }

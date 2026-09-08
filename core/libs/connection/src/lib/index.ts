@@ -11,6 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './base-connection-handler.service';
+export * from './models';
 export * from './multi-shape-connection-handlers';
 export * from './shape-connector-util';
 export * from './shape-connector.service';

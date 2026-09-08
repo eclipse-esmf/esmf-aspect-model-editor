@@ -14,13 +14,13 @@
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Component, DestroyRef, inject} from '@angular/core';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {Component, DestroyRef, inject, signal} from '@angular/core';
+import {form, FormField} from '@angular/forms/signals';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {saveAs} from 'file-saver';
 import * as locale from 'locale-codes';
-import {Observable, from, map, throwError} from 'rxjs';
+import {from, map, Observable, throwError} from 'rxjs';
 import {catchError, finalize, first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
@@ -34,19 +34,22 @@ import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
 
+export interface GenerateDocumentationData {
+  language: string;
+}
+
 @Component({
-  standalone: true,
   selector: 'ame-generate-documentation',
   templateUrl: './generate-documentation.component.html',
   styleUrls: ['./generate-documentation.component.scss'],
   imports: [
     MatDialogModule,
-    TranslatePipe,
+    TranslocoDirective,
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
     MatProgressSpinnerModule,
-    ReactiveFormsModule,
+    FormField,
     MatButtonModule,
     MatIcon,
   ],
@@ -62,28 +65,32 @@ export class GenerateDocumentationComponent {
 
   private browserService = inject(BrowserService);
 
-  public languages: locale.ILocale[] = [];
-  public languageControl: FormControl;
-  public isGenerating = false;
+  public docModel = signal<GenerateDocumentationData>({language: ''});
+  public docForm = form(this.docModel);
+  public languages = signal<locale.ILocale[]>([]);
+  public isGenerating = signal(false);
 
   private get currentFile() {
     return this.loadedFiles.currentLoadedFile;
   }
 
   constructor() {
-    this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
-    this.languageControl = new FormControl(this.languages[0].tag);
+    const sammLanguages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
+    this.languages.set(sammLanguages);
+    if (sammLanguages.length > 0) {
+      this.docModel.set({language: sammLanguages[0].tag});
+    }
   }
 
   openDocumentation(): void {
-    this.isGenerating = true;
+    this.isGenerating.set(true);
 
-    this.generateDocumentation(this.editorService.getSerializedModel(), this.languageControl.value)
+    this.generateDocumentation(this.editorService.getSerializedModel(), this.docModel().language)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         first(),
         finalize(() => {
-          this.isGenerating = false;
+          this.isGenerating.set(false);
           this.dialogRef.close();
         }),
       )
@@ -91,12 +98,12 @@ export class GenerateDocumentationComponent {
   }
 
   downloadDocumentation(): void {
-    this.isGenerating = true;
+    this.isGenerating.set(true);
 
     this.modelApiService
       .generateDocumentation(
         this.editorService.getSerializedModel(),
-        this.languageControl.value,
+        this.docModel().language,
         this.loadedFiles.currentLoadedFile.rdfModel.getSourceLocation(),
       )
       .pipe(
@@ -113,7 +120,7 @@ export class GenerateDocumentationComponent {
           ),
         ),
         finalize(() => {
-          this.isGenerating = false;
+          this.isGenerating.set(false);
           this.dialogRef.close();
         }),
       )

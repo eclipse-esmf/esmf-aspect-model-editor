@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -13,8 +12,6 @@
  */
 
 /// <reference types="cypress" />
-
-import {NAMESPACES_URL} from '../../support/api-mocks';
 
 import {
   FIELD_constraintName,
@@ -35,10 +32,11 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test load different characteristics', () => {
-  it('can load characteristic classes', () => {
-    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  before(() => {
     cy.visitDefault();
+  });
+
+  it('can load characteristic classes', () => {
     cy.fixture('all-characteristic')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
@@ -90,7 +88,8 @@ describe('Test load different characteristics', () => {
       cy.clickAddTraitPlusIcon('TestCode')
         .then(() => cy.dbClickShape('EncodingConstraint1'))
         .then(() => {
-          cy.get(FIELD_constraintName).click({force: true}).get('mat-option').contains('LengthConstraint').click({force: true});
+          cy.get(FIELD_constraintName).click({force: true});
+          cy.get('mat-option').contains('LengthConstraint').click({force: true});
           cy.get('[data-cy="minValue"]').type('1', {force: true}).click({force: true});
           cy.get('[data-cy="maxValue"]').type('10', {force: true}).click({force: true});
         })
@@ -111,12 +110,8 @@ describe('Test load different characteristics', () => {
       cy.dbClickShape('TestMeasurement')
         .then(() => {
           cy.get('[data-cy=clear-unit-button]').click({force: true});
-          cy.get(FIELD_unit)
-            .clear({force: true})
-            .type('amperePerM', {force: true})
-            .get('mat-option')
-            .contains('amperePerMetre')
-            .click({force: true});
+          cy.get(FIELD_unit).clear({force: true}).type('amperePerM', {force: true});
+          cy.get('mat-option').contains('amperePerMetre').click({force: true});
         })
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm-c:unit unit:amperePerMetre')));
@@ -125,9 +120,10 @@ describe('Test load different characteristics', () => {
     it('can modify dataType', () => {
       cy.dbClickShape('TestMeasurement')
         .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
-        .then(() =>
-          cy.get(FIELD_dataType).clear({force: true}).type('double', {force: true}).get(FIELD_dataTypeOption).eq(0).click({force: true}),
-        )
+        .then(() => {
+          cy.get(FIELD_dataType).clear({force: true}).type('double', {force: true});
+          cy.get(FIELD_dataTypeOption).eq(0).click({force: true});
+        })
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).to.contain('samm:dataType xsd:double')));
     });

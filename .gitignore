@@ -22,6 +22,7 @@ speed-measure-plugin.json
 .settings/
 *.sublime-workspace
 .log
+.package-lock.json
 
 # IDE - VSCode
 .vscode
@@ -64,3 +65,4 @@ junit.xml
 # nx
 core/.nx
 .nx
+migrations.json

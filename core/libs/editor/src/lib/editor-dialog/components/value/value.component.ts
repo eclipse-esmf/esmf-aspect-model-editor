@@ -11,23 +11,59 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AsyncPipe} from '@angular/common';
-import {Component, Input, inject} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {DefaultValue} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {LoadedFilesService} from '@ame/cache';
+import {Component, computed, effect, inject, input, signal} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {MatIcon} from '@angular/material/icon';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {ElementListComponent} from '../element-list';
 import {BaseInputComponent, ValueInputFieldComponent} from '../fields';
-import {ModelElementEditorComponent} from '../model-element-editor-component';
 
 @Component({
   selector: 'ame-value',
   templateUrl: './value.component.html',
-  imports: [BaseInputComponent, ElementListComponent, AsyncPipe, TranslatePipe, ValueInputFieldComponent],
+  styleUrls: ['../fields/field.scss'],
+  imports: [BaseInputComponent, ElementListComponent, TranslocoDirective, ValueInputFieldComponent, MatSlideToggle, MatIcon],
 })
-export class ValueComponent extends ModelElementEditorComponent<DefaultValue> {
-  @Input() parentForm: FormGroup;
+export class ValueComponent {
+  readonly signalForm = input(EditorSignalFormContext.create());
   public metaModelDialogService = inject(EditorModelService);
-  public element$ = this.metaModelDialogService.getMetaModelElement();
+  private loadedFilesService = inject(LoadedFilesService);
+  public element = toSignal(this.metaModelDialogService.getMetaModelElement());
+
+  public isAnonymous = signal(false);
+  public canBeAnonymous = computed(() => {
+    const el = this.element();
+    return Boolean(el && !el.isPredefined && !this.loadedFilesService.isElementExtern(el) && el.parents && el.parents.length > 0);
+  });
+
+  constructor() {
+    effect(() => {
+      const el = this.element();
+      if (el) {
+        this.isAnonymous.set(Boolean(el.isAnonymous?.()));
+      }
+    });
+  }
+
+  onAnonymousToggleChange(checked: boolean) {
+    this.isAnonymous.set(checked);
+    const elem = this.element();
+    if (elem) {
+      elem.anonymous = checked;
+      if (checked) {
+        elem.name = '[Value]';
+        this.signalForm().set('name', '[Value]');
+        this.signalForm().set('isAnonymous', true);
+      } else {
+        elem.name = 'Value';
+        this.signalForm().set('name', 'Value');
+        this.signalForm().set('isAnonymous', false);
+      }
+      this.metaModelDialogService.updateMetaModelElement(elem);
+    }
+  }
 }

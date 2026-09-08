@@ -20,12 +20,11 @@ export interface Settings {
   autoValidationEnabled: boolean;
   autoFormatEnabled: boolean;
   enableHierarchicalLayout: boolean;
+  darkMode?: boolean;
   validationTimerSeconds: number;
   saveTimerSeconds: number;
-  showEntityValueEntityEdge: boolean;
   showConnectionLabels: boolean;
   useSaturatedColors: boolean;
-  showAbstractPropertyConnection: boolean;
   copyrightHeader: Array<string>;
   aspectModelLanguages: Array<string>;
   toolbarVisibility: boolean;

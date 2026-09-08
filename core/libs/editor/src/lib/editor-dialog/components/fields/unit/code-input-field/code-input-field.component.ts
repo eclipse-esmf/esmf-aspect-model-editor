@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {disabled, form, FormField} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultUnit} from '@esmf/aspect-model-loader';
@@ -22,9 +22,19 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-code-input-field',
   templateUrl: './code-input-field.component.html',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatLabel, MatInput],
+  imports: [MatFormFieldModule, FormField, MatLabel, MatInput],
 })
-export class CodeInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
+export class CodeInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
+  private readonly model = signal('');
+  private unregisterField = () => undefined;
+
+  readonly field = form(this.model, path =>
+    disabled(path, {
+      when: () =>
+        !!this.metaModelElement && (this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement)),
+    }),
+  );
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -32,12 +42,12 @@ export class CodeInputFieldComponent extends InputFieldComponent<DefaultUnit> im
   }
 
   initCodeForm() {
-    this.parentForm.setControl(
-      'code',
-      new FormControl({
-        value: this.metaModelElement?.code,
-        disabled: this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement),
-      }),
-    );
+    this.model.set(this.metaModelElement?.code || '');
+    this.unregisterField = this.signalForm().register('code', this.field);
+  }
+
+  ngOnDestroy(): void {
+    this.unregisterField();
+    super.ngOnDestroy();
   }
 }

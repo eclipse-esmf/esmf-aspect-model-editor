@@ -11,40 +11,59 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 
-const mockIpcMainOn = jest.fn();
-const mockIpcMainHandle = jest.fn();
-const mockIpcMainEmit = jest.fn();
-const mockMenuSetApplicationMenu = jest.fn();
-const mockMenuBuildFromTemplate = jest.fn();
-const mockMenuPopup = jest.fn();
-const mockShellOpenExternal = jest.fn();
-const mockClipboardWriteText = jest.fn();
+const {
+  mockIpcMainOn,
+  mockIpcMainHandle,
+  mockIpcMainEmit,
+  mockMenuSetApplicationMenu,
+  mockMenuBuildFromTemplate,
+  mockMenuPopup,
+  mockShellOpenExternal,
+  mockClipboardWriteText,
+  makeMockWindow,
+  state,
+} = vi.hoisted(() => {
+  const makeMockWindow = () => ({
+    webContents: {
+      id: Math.floor(Math.random() * 1000) + 1,
+      send: vi.fn(),
+      openDevTools: vi.fn(),
+      setWindowOpenHandler: vi.fn(),
+    },
+    show: vi.fn(),
+    focus: vi.fn(),
+    destroy: vi.fn(),
+    maximize: vi.fn(),
+    removeMenu: vi.fn(),
+    loadURL: (vi.fn() as any).mockResolvedValue(undefined),
+    loadFile: (vi.fn() as any).mockResolvedValue(undefined),
+    on: vi.fn(),
+  });
 
-const makeMockWindow = () => ({
-  webContents: {
-    id: Math.floor(Math.random() * 1000) + 1,
-    send: jest.fn(),
-    openDevTools: jest.fn(),
-    setWindowOpenHandler: jest.fn(),
-  },
-  show: jest.fn(),
-  focus: jest.fn(),
-  destroy: jest.fn(),
-  maximize: jest.fn(),
-  removeMenu: jest.fn(),
-  loadURL: (jest.fn() as unknown as jest.MockedFunction<(...args: any[]) => any>).mockResolvedValue(undefined),
-  loadFile: (jest.fn() as unknown as jest.MockedFunction<(...args: any[]) => any>).mockResolvedValue(undefined),
-  on: jest.fn(),
+  return {
+    mockIpcMainOn: vi.fn(),
+    mockIpcMainHandle: vi.fn(),
+    mockIpcMainEmit: vi.fn(),
+    mockMenuSetApplicationMenu: vi.fn(),
+    mockMenuBuildFromTemplate: vi.fn(),
+    mockMenuPopup: vi.fn(),
+    mockShellOpenExternal: vi.fn(),
+    mockClipboardWriteText: vi.fn(),
+    makeMockWindow,
+    state: {mockWindowInstance: makeMockWindow()},
+  };
 });
 
-let mockWindowInstance = makeMockWindow();
+let mockWindowInstance = state.mockWindowInstance;
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   BrowserWindow: Object.assign(
-    jest.fn().mockImplementation(() => mockWindowInstance),
-    {fromWebContents: jest.fn()},
+    vi.fn().mockImplementation(function () {
+      return state.mockWindowInstance;
+    }),
+    {fromWebContents: vi.fn()},
   ),
   ipcMain: {
     on: mockIpcMainOn,
@@ -55,16 +74,16 @@ jest.mock('electron', () => ({
     setApplicationMenu: mockMenuSetApplicationMenu,
     buildFromTemplate: mockMenuBuildFromTemplate.mockReturnValue({items: [], popup: mockMenuPopup}),
   },
-  MenuItem: jest.fn(),
+  MenuItem: vi.fn(),
   shell: {openExternal: mockShellOpenExternal},
   clipboard: {writeText: mockClipboardWriteText},
 }));
 
-jest.mock('./const/icons', () => ({
+vi.mock('./const/icons', () => ({
   icons: new Proxy({}, {get: () => ({enabled: 'icon-on', disabled: 'icon-off'})}),
 }));
 
-jest.mock('./events/events', () => ({
+vi.mock('./events/events', () => ({
   EVENTS: {
     REQUEST: {
       CREATE_WINDOW: 'CREATE_WINDOW',
@@ -94,34 +113,34 @@ jest.mock('./events/events', () => ({
   },
 }));
 
-jest.mock('./menu/app', () => ({
-  appMenuTemplate: jest.fn().mockReturnValue([]),
+vi.mock('./menu/app', () => ({
+  appMenuTemplate: vi.fn().mockReturnValue([]),
 }));
 
-jest.mock('./utils/icon-utils', () => ({
-  getIcon: jest.fn().mockReturnValue('mock-icon'),
+vi.mock('./utils/icon-utils', () => ({
+  getIcon: vi.fn().mockReturnValue('mock-icon'),
 }));
 
-jest.mock('./utils/mode', () => ({
-  inDevMode: jest.fn().mockReturnValue(true),
+vi.mock('./utils/mode', () => ({
+  inDevMode: vi.fn().mockReturnValue(true),
 }));
 
-jest.mock('fs', () => ({
-  existsSync: jest.fn().mockReturnValue(true),
-  mkdirSync: jest.fn(),
-  promises: {writeFile: (jest.fn() as unknown as jest.MockedFunction<(...args: any[]) => any>).mockResolvedValue(undefined)},
+vi.mock('fs', () => ({
+  existsSync: vi.fn().mockReturnValue(true),
+  mkdirSync: vi.fn(),
+  promises: {writeFile: (vi.fn() as unknown as MockedFunction<(...args: any[]) => any>).mockResolvedValue(undefined)},
 }));
 
-jest.mock('os', () => ({homedir: jest.fn().mockReturnValue('/home/user')}));
+vi.mock('os', () => ({homedir: vi.fn().mockReturnValue('/home/user')}));
 
-import {BrowserWindow, ipcMain, Menu} from 'electron';
-import {windowsManager} from './windows-manager';
-import {inDevMode} from './utils/mode';
+import {BrowserWindow} from 'electron';
 import {EVENTS} from './events/events';
+import {inDevMode} from './utils/mode';
+import {windowsManager} from './windows-manager';
 
-const mockedInDevMode = inDevMode as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedBrowserWindow = BrowserWindow as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedFromWebContents = BrowserWindow.fromWebContents as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedInDevMode = inDevMode as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedBrowserWindow = BrowserWindow as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedFromWebContents = BrowserWindow.fromWebContents as unknown as MockedFunction<(...args: any[]) => any>;
 
 function getIpcHandler(event: string): (...args: any[]) => any {
   const call = mockIpcMainOn.mock.calls.find((c: any[]) => c[0] === event);
@@ -135,9 +154,11 @@ function getIpcHandleHandler(event: string): (...args: any[]) => any {
 
 describe('WindowsManager', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockWindowInstance = makeMockWindow();
-    mockedBrowserWindow.mockImplementation(() => mockWindowInstance);
+    mockedBrowserWindow.mockImplementation(function () {
+      return mockWindowInstance;
+    });
     mockMenuBuildFromTemplate.mockReturnValue({items: [], popup: mockMenuPopup});
   });
 
@@ -268,7 +289,7 @@ describe('WindowsManager', () => {
 
     describe('IS_FIRST_WINDOW', () => {
       it('should respond with boolean indicating if only one window is active', () => {
-        const mockSend = jest.fn();
+        const mockSend = vi.fn();
         const event = {sender: {id: mockWindowInstance.webContents.id, send: mockSend}};
 
         const handler = getIpcHandler(EVENTS.REQUEST.IS_FIRST_WINDOW);
@@ -319,9 +340,7 @@ describe('WindowsManager', () => {
         const handler = getIpcHandler(EVENTS.SIGNAL.SHOW_CONTEXT_MENU);
         handler({sender: {}}, {href: 'mailto:test@example.com'});
 
-        expect(mockMenuBuildFromTemplate).toHaveBeenCalledWith(
-          expect.arrayContaining([expect.objectContaining({label: 'Send email'})]),
-        );
+        expect(mockMenuBuildFromTemplate).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({label: 'Send email'})]));
       });
 
       it('should show empty context menu when href is null', () => {
@@ -360,13 +379,16 @@ describe('WindowsManager', () => {
     describe('WINDOW_DATA', () => {
       it('should send window data back to requesting window', () => {
         windowsManager.createNewWindow();
-        const mockSend = jest.fn();
+        const mockSend = vi.fn();
         const event = {sender: {id: mockWindowInstance.webContents.id, send: mockSend}};
 
         const handler = getIpcHandler(EVENTS.REQUEST.WINDOW_DATA);
         handler(event);
 
-        expect(mockSend).toHaveBeenCalledWith(EVENTS.RESPONSE.WINDOW_DATA, expect.objectContaining({id: mockWindowInstance.webContents.id}));
+        expect(mockSend).toHaveBeenCalledWith(
+          EVENTS.RESPONSE.WINDOW_DATA,
+          expect.objectContaining({id: mockWindowInstance.webContents.id}),
+        );
       });
     });
   });

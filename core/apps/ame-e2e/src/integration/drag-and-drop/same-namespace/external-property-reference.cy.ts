@@ -13,97 +13,36 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL, SAMM_VERSION_ACTUAL} from '../../../support/api-mocks';
-import {
-  SELECTOR_ecProperty,
-  SELECTOR_openNamespacesButton,
-  SELECTOR_searchElementsInp,
-  SELECTOR_workspaceBtn,
-} from '../../../support/constants';
-import {cyHelp} from '../../../support/helpers';
-import {checkRelationParentChild, connectElements} from '../../../support/utils';
+import {SELECTOR_ecProperty} from '../../../support/constants';
+import {checkRelationParentChild, connectElements, setupAndDragExternalReference} from '../../../support/utils';
 
 describe('Test drag and drop ext properties', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   const fileName = 'external-property-reference.ttl';
   it('can add Property from external reference with same namespace', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept('GET', NAMESPACES_URL, {
-      statusCode: 200,
-      body: {
-        'org.eclipse.examples.aspect': [
-          {
-            version: '1.0.0',
-            models: [
-              {
-                model: fileName,
-                aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalProperty',
-                version: SAMM_VERSION_ACTUAL,
-                existing: true,
-              },
-            ],
-          },
-        ],
-      },
-    });
-
-    cy.fixture(`/external-reference/same-namespace/without-childrens/${fileName}`).then(fixtureContent => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: 'http://localhost:9090/ame/api/models/batch',
-        },
-        {
-          statusCode: 200,
-          body: [
-            {
-              aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalProperty',
-              aspectModel: fixtureContent,
-              absoluteName: `org.eclipse.examples.aspect:1.0.0:${fileName}`,
-              fileName: fileName,
-              modelVersion: '2.2.0',
-            },
-          ],
-        },
-      );
-    });
-
-    cy.fixture(`/external-reference/same-namespace/without-childrens/${fileName}`).then(fixtureContent => {
-      cy.intercept(
-        {
-          method: 'GET',
-          url: 'http://localhost:9090/ame/api/models',
-          headers: {'Aspect-Model-Urn': 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalProperty'},
-        },
-        {
-          statusCode: 200,
-          body: {
-            content: fixtureContent,
-            sourceLocation: `file:/path/to/${fileName}`,
-          },
-        },
-      );
-    });
-
-    cy.visitDefault().then(() =>
-      cy
-        .startModelling(true)
-        .then(() => cyHelp.checkAspectDefaultExists())
-        .then(() => cy.get(SELECTOR_workspaceBtn).click())
-        .then(() => cy.get(SELECTOR_openNamespacesButton).contains(fileName).click({force: true}))
-        .then(() => cy.get(SELECTOR_searchElementsInp).type('property'))
-        .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300))
-        .then(() => cy.clickShape('externalProperty'))
-        .then(() => connectElements('AspectDefault', 'externalProperty', true))
-        .then(() => cy.getAspect())
-        .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
-        .then(() => cy.getUpdatedRDF())
-        .then(rdf => {
-          expect(rdf).to.contain('samm:properties (:property1 :externalProperty)');
-          expect(rdf).to.contain(':property1 a samm:Property');
-          expect(rdf).to.contain('samm:characteristic :Characteristic1');
-          expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
-          expect(rdf).not.contain(':externalProperty a samm:Property');
-        }),
-    );
+    setupAndDragExternalReference({
+      fileName,
+      elementName: 'externalProperty',
+      elementSelector: SELECTOR_ecProperty,
+      isSameNamespace: true,
+      searchTerm: 'property',
+      x: 100,
+      y: 300,
+    })
+      .then(() => cy.clickShape('externalProperty'))
+      .then(() => connectElements('AspectDefault', 'externalProperty', true))
+      .then(() => cy.getAspect())
+      .then(aspect => checkRelationParentChild(aspect, 'AspectDefault', 'externalProperty'))
+      .then(() => cy.getUpdatedRDF())
+      .then(rdf => {
+        expect(rdf).to.contain('samm:properties (:property1 :externalProperty)');
+        expect(rdf).to.contain(':property1 a samm:Property');
+        expect(rdf).to.contain('samm:characteristic :Characteristic1');
+        expect(rdf).to.contain(':Characteristic1 a samm:Characteristic');
+        expect(rdf).not.contain(':externalProperty a samm:Property');
+      });
   });
 });

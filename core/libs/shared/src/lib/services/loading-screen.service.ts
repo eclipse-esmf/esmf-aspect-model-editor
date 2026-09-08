@@ -19,14 +19,14 @@ export type LoadingScreenOptions = Omit<MatDialogConfig, 'data'> & {
   title?: string;
   content?: string;
   hasCloseButton?: boolean;
-  closeButtonAction?: Function;
+  closeButtonAction?: () => void;
 };
 
 @Injectable({providedIn: 'root'})
 export class LoadingScreenService {
   private matDialog = inject(MatDialog);
 
-  public dialog: MatDialogRef<LoadingScreenComponent>;
+  public dialog: MatDialogRef<LoadingScreenComponent> | null = null;
 
   open(options: LoadingScreenOptions): MatDialogRef<LoadingScreenComponent> {
     this.dialog = this.matDialog.open(LoadingScreenComponent, {

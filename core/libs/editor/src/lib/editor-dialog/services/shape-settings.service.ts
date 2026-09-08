@@ -12,37 +12,34 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {mxEvent, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeSelectorService, mxUtils} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeSelectorService} from '@ame/max-graph';
 import {BindingsService} from '@ame/shared';
-import {inject, Injectable, NgZone} from '@angular/core';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {BehaviorSubject} from 'rxjs';
+import {InternalEvent} from '@maxgraph/core';
 import {EditorService} from '../../editor.service';
 import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
 import {ShapeSettingsStateService} from './shape-settings-state.service';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsService {
-  private ngZone = inject(NgZone);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private mxGraphService = inject(MxGraphService);
-  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private maxgraphService = inject(MaxGraphService);
+  private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
   private bindingsService = inject(BindingsService);
   private editorService = inject(EditorService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private openReferencedElementService = inject(OpenReferencedElementService);
   private loadedFiles = inject(LoadedFilesService);
 
-  private selectedCellsSubject = new BehaviorSubject([]);
+  private readonly _modelElement = signal<NamedElement | null>(null);
+  public readonly modelElement = this._modelElement.asReadonly();
 
-  public modelElement: NamedElement = null;
-  public hasCellsSubject = new BehaviorSubject(false);
-  public selectedCells$ = this.selectedCellsSubject.asObservable();
-  public hasCellsSubject$ = this.hasCellsSubject.asObservable();
+  public readonly selectedCells$ = toObservable(this.maxgraphShapeSelectorService.selectedCells);
+  public readonly hasCellsSubject$ = toObservable(computed(() => !this.maxgraphService.isModelEmpty()));
 
   setGraphListeners() {
-    this.setCellAddedListener();
-    this.setSelectCellListener();
     this.setMoveCellsListener();
     this.setFoldListener();
     this.setDblClickListener();
@@ -54,67 +51,44 @@ export class ShapeSettingsService {
   }
 
   setHotKeysActions() {
-    this.editorService.bindAction(
-      'deleteElement',
-      mxUtils.bind(this, () => this.ngZone.run(() => this.editorService.deleteSelectedElements())),
-    );
-
-    this.mxGraphService.graph.container.addEventListener('wheel', evt => {
+    this.maxgraphService.graph.container.addEventListener('wheel', evt => {
       if (evt.altKey) {
         evt.preventDefault();
       }
     });
   }
 
-  setCellAddedListener(): void {
-    const graph = this.mxGraphAttributeService.graph;
-    graph.addListener(mxEvent.CELLS_ADDED, () => {
-      const graph = this.mxGraphAttributeService.graph;
-      const hasAnyChildren = graph.getModel().getChildCount(graph.getDefaultParent()) > 0;
-
-      this.ngZone.run(() => this.hasCellsSubject.next(hasAnyChildren));
+  setMoveCellsListener() {
+    this.maxgraphAttributeService.graph.addListener(InternalEvent.MOVE_CELLS, () => {
+      this.maxgraphAttributeService.graph.resetEdgesOnMove = true;
     });
   }
 
-  setSelectCellListener() {
-    this.mxGraphAttributeService.graph
-      .getSelectionModel()
-      .addListener(mxEvent.CHANGE, selectionModel => this.ngZone.run(() => this.selectedCellsSubject.next(selectionModel.cells)));
-  }
-
-  setMoveCellsListener() {
-    this.mxGraphAttributeService.graph.addListener(
-      mxEvent.MOVE_CELLS,
-      mxUtils.bind(this, () => {
-        this.ngZone.run(() => (this.mxGraphAttributeService.graph.resetEdgesOnMove = true));
-      }),
-    );
-  }
-
   setFoldListener() {
-    this.mxGraphAttributeService.graph.addListener(mxEvent.FOLD_CELLS, () => this.mxGraphService.formatShapes());
+    this.maxgraphAttributeService.graph.addListener(InternalEvent.FOLD_CELLS, () => this.maxgraphService.formatShapes());
   }
 
   setDblClickListener() {
-    this.mxGraphAttributeService.graph.addListener(mxEvent.DOUBLE_CLICK, () => this.ngZone.run(() => this.editSelectedCell()));
+    this.maxgraphAttributeService.graph.addListener(InternalEvent.DOUBLE_CLICK, () => this.editSelectedCell());
   }
 
   unselectShapeForUpdate() {
-    this.shapeSettingsStateService.selectedShapeForUpdate = null;
+    this.shapeSettingsStateService.setSelectedShapeForUpdate(null);
   }
 
   editSelectedCell() {
-    this.shapeSettingsStateService.selectedShapeForUpdate = this.mxGraphShapeSelectorService.getSelectedShape();
-    const selectedElement = this.shapeSettingsStateService.selectedShapeForUpdate;
+    this.shapeSettingsStateService.setSelectedShapeForUpdate(this.maxgraphShapeSelectorService.getSelectedShape());
+    const selectedElement = this.shapeSettingsStateService.selectedShapeForUpdate();
 
     if (!selectedElement || selectedElement?.isEdge()) {
-      this.shapeSettingsStateService.selectedShapeForUpdate = null;
+      this.shapeSettingsStateService.setSelectedShapeForUpdate(null);
       return;
     }
 
-    this.modelElement = MxGraphHelper.getModelElement(selectedElement);
-    if (this.loadedFiles.isElementExtern(this.modelElement) && !this.modelElement.isPredefined) {
-      this.openReferencedElementService.openReferencedElement(this.modelElement);
+    const modelElem = MaxGraphHelper.getModelElement(selectedElement);
+    this._modelElement.set(modelElem);
+    if (this.loadedFiles.isElementExtern(modelElem) && !modelElem.isPredefined) {
+      this.openReferencedElementService.openReferencedElement(modelElem);
       return;
     }
 
@@ -123,6 +97,6 @@ export class ShapeSettingsService {
 
   editModel(elementModel: NamedElement) {
     this.shapeSettingsStateService.openShapeSettings();
-    this.modelElement = elementModel;
+    this._modelElement.set(elementModel);
   }
 }

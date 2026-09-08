@@ -15,15 +15,15 @@ import {Injectable} from '@angular/core';
 
 @Injectable({providedIn: 'root'})
 export class SammLanguageSettingsService {
-  private readonly LANG_CODE_ITEM_KEY: string = 'languageCodes';
-  private languages: Array<string> = [];
+  private readonly LANG_CODE_ITEM_KEY = 'languageCodes';
+  private languages: string[] = [];
 
   constructor() {
     this.loadInitialLanguages();
   }
 
   private loadInitialLanguages(): void {
-    const storedLanguages = localStorage.getItem(this.LANG_CODE_ITEM_KEY);
+    const storedLanguages = typeof localStorage !== 'undefined' ? localStorage.getItem(this.LANG_CODE_ITEM_KEY) : null;
     if (storedLanguages) {
       this.languages = JSON.parse(storedLanguages);
     } else {
@@ -33,6 +33,9 @@ export class SammLanguageSettingsService {
   }
 
   private updateLocalStorage(): void {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
     if (this.languages.length > 0) {
       localStorage.setItem(this.LANG_CODE_ITEM_KEY, JSON.stringify(this.languages));
     } else {
@@ -40,7 +43,7 @@ export class SammLanguageSettingsService {
     }
   }
 
-  setSammLanguageCodes(languages: Array<string>): void {
+  setSammLanguageCodes(languages: string[]): void {
     if (languages && languages.length > 0) {
       this.languages = languages;
     } else {
@@ -56,7 +59,7 @@ export class SammLanguageSettingsService {
     }
   }
 
-  getSammLanguageCodes(): Array<string> {
+  getSammLanguageCodes(): string[] {
     return this.languages;
   }
 }

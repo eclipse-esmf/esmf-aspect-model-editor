@@ -13,14 +13,11 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL} from '../../../support/api-mocks';
-
+import {SELECTOR_editorCancelButton} from '../../../support/constants';
 import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support/utils';
 
 describe('Loading Entity value with lang string properties', () => {
-  beforeEach(() => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
+  before(() => {
     cy.visitDefault();
   });
 
@@ -71,6 +68,7 @@ describe('Loading Entity value with lang string properties', () => {
         ],
       },
     ]);
+    cy.get(SELECTOR_editorCancelButton).click({force: true});
   });
 
   it('should have two entity values with rdf lang string in two Collections', () => {
@@ -122,5 +120,6 @@ describe('Loading Entity value with lang string properties', () => {
         ],
       },
     ]);
+    cy.get(SELECTOR_editorCancelButton).click({force: true});
   });
 });

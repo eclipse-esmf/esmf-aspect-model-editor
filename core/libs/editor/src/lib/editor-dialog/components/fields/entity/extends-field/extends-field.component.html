@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -10,94 +11,95 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<mat-form-field [floatLabel]="getControl('extendsValue')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-  <mat-label for="extendsValue">extends</mat-label>
-  <input #extends [matAutocomplete]="auto" [formControl]="getControl('extendsValue')" matInput name="extendsValue" data-cy="extendsValue" />
-  @if (extendsValueControl?.disabled && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
-    <button (click)="unlockExtends()" data-cy="clear-extends-button" matSuffix mat-icon-button tabindex="-1">
-      <mat-icon>close</mat-icon>
-    </button>
-  }
+  <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label>extends</mat-label>
+    <input #extends [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="extendsValue" />
+    @if (displayField().disabled() && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
+      <button (click)="unlockExtends()" data-cy="clear-extends-button" type="button" matSuffix mat-icon-button tabindex="-1">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
 
-  <mat-autocomplete class="extendsValue" #auto="matAutocomplete">
-    <mat-optgroup label="Predefined Elements">
-      @for (element of predefinedEntities; track element) {
-        @if (element.name.includes(getControl('extendsValue').value)) {
-          <mat-option [attr.data-cy]="element.name" [value]="element.name" (click)="onSelectionChange(element)">
-            <div class="result">
-              <div class="ellipsis">
-                {{ element.name }}<br />
-                @if (element.description) {
-                  <span class="option-description" [title]="element.description"> {{ element.description }}</span>
-                }
-                @if (element.namespace) {
-                  <p class="namespace-prefix" [title]="element.namespace">
-                    {{ element.namespace }}
-                  </p>
-                }
-              </div>
-            </div></mat-option
-          >
-        }
-      }
-    </mat-optgroup>
-
-    @if (filteredAbstractEntities$ | async; as filteredAbstractEntities) {
-      <mat-optgroup label="Elements">
-        @if (extends.value && !getControl('extendsValue')?.errors?.foundModel) {
-          @if (!isAlreadyDefined(filteredAbstractEntities, extends.value)) {
-            <mat-option
-              [disabled]="!isUpperCase(extends.value)"
-              [value]="!isUpperCase(extends.value) ? '' : extends.value"
-              (click)="createNewAbstractEntity(extends.value)"
+    <mat-autocomplete class="extendsValue" #auto="matAutocomplete">
+      <mat-optgroup label="Predefined Elements">
+        @for (element of predefinedEntities; track element) {
+          @if (element.name.includes(displayValue())) {
+            <mat-option [attr.data-cy]="element.name" [value]="element.name" (click)="onSelectionChange(element)">
+              <div class="result">
+                <div class="ellipsis">
+                  {{ element.name }}<br />
+                  @if (element.description) {
+                    <span class="option-description" [title]="element.description"> {{ element.description }}</span>
+                  }
+                  @if (element.namespace) {
+                    <p class="namespace-prefix" [title]="element.namespace">
+                      {{ element.namespace }}
+                    </p>
+                  }
+                </div>
+              </div></mat-option
             >
-              @if (isUpperCase(extends.value)) {
-                <span>
-                  + Create new Abstract Entity: <strong>{{ extends.value }}</strong>
-                </span>
-              } @else {
-                <span>Abstract Entity should be upper case</span>
-              }
-            </mat-option>
           }
-          @if (!isAlreadyDefined(filteredEntities$ | async, extends.value)) {
-            <mat-option
-              [disabled]="!isUpperCase(extends.value)"
-              [value]="!isUpperCase(extends.value) ? '' : extends.value"
-              (click)="createEntity(extends.value)"
-            >
-              @if (isUpperCase(extends.value)) {
-                <span>
-                  + Create new Entity: <strong>{{ extends.value }}</strong>
-                </span>
-              } @else {
-                <span>Entity should be upper case</span>
-              }
-            </mat-option>
-          }
-        }
-
-        @for (abstractEntity of filteredAbstractEntities; track abstractEntity) {
-          <mat-option [value]="abstractEntity.name" (onSelectionChange)="onSelectionChange(abstractEntity)">
-            <div class="result">
-              <div class="ellipsis">
-                {{ abstractEntity.name }}
-                @if (abstractEntity.description) {
-                  <span class="option-description" [title]="abstractEntity.description">- {{ abstractEntity.description }}</span>
-                }
-                @if (abstractEntity.namespace) {
-                  <p class="namespace-prefix" [title]="abstractEntity.namespace">
-                    {{ abstractEntity.namespace }}
-                  </p>
-                }
-              </div>
-            </div>
-          </mat-option>
         }
       </mat-optgroup>
+
+      @if (filteredAbstractEntities(); as filteredAbstractEntities) {
+        <mat-optgroup label="Elements">
+          @if (displayValue() && !hasError('foundModel')) {
+            @if (!isAlreadyDefined(filteredAbstractEntities, displayValue())) {
+              <mat-option
+                [disabled]="!isUpperCase(displayValue())"
+                [value]="!isUpperCase(displayValue()) ? '' : displayValue()"
+                (click)="createNewAbstractEntity(displayValue())"
+              >
+                @if (isUpperCase(displayValue())) {
+                  <span>
+                    + Create new Abstract Entity: <strong>{{ displayValue() }}</strong>
+                  </span>
+                } @else {
+                  <span>Abstract Entity should be upper case</span>
+                }
+              </mat-option>
+            }
+            @if (!isAlreadyDefined(filteredEntities(), displayValue())) {
+              <mat-option
+                [disabled]="!isUpperCase(displayValue())"
+                [value]="!isUpperCase(displayValue()) ? '' : displayValue()"
+                (click)="createEntity(displayValue())"
+              >
+                @if (isUpperCase(displayValue())) {
+                  <span>
+                    + Create new Entity: <strong>{{ displayValue() }}</strong>
+                  </span>
+                } @else {
+                  <span>Entity should be upper case</span>
+                }
+              </mat-option>
+            }
+          }
+
+          @for (abstractEntity of filteredAbstractEntities; track abstractEntity) {
+            <mat-option [value]="abstractEntity.name" (onSelectionChange)="$event.isUserInput && onSelectionChange(abstractEntity)">
+              <div class="result">
+                <div class="ellipsis">
+                  {{ abstractEntity.name }}
+                  @if (abstractEntity.description) {
+                    <span class="option-description" [title]="abstractEntity.description">- {{ abstractEntity.description }}</span>
+                  }
+                  @if (abstractEntity.namespace) {
+                    <p class="namespace-prefix" [title]="abstractEntity.namespace">
+                      {{ abstractEntity.namespace }}
+                    </p>
+                  }
+                </div>
+              </div>
+            </mat-option>
+          }
+        </mat-optgroup>
+      }
+    </mat-autocomplete>
+    @if (hasError('required')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.entity.pleaseDefineAbstractEntity') }}</mat-error>
     }
-  </mat-autocomplete>
-  @if (getControl('extendsValue')?.errors?.required) {
-    <mat-error>Please define an Abstract Entity</mat-error>
-  }
-</mat-form-field>
+  </mat-form-field>
+</ng-container>

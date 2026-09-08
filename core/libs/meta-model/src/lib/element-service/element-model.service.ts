@@ -12,73 +12,70 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {EntityInstanceService, RenameModelDialogService} from '@ame/editor';
-import {MxGraphCharacteristicHelper, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService, MxGraphVisitorHelper} from '@ame/mx-graph';
+import {ConfirmDialogEnum, ConfirmDialogService, RenameModelDialogService} from '@ame/editor';
+import {MaxGraphHelper, MaxGraphService, ModelStyleResolver, ThemeService} from '@ame/max-graph';
 import {ModelService} from '@ame/rdf/services';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {useUpdater} from '@ame/utils';
-import {inject, Injectable, Injector, NgZone} from '@angular/core';
-import {
-  DefaultAspect,
-  DefaultEntity,
-  DefaultEntityInstance,
-  DefaultEnumeration,
-  DefaultProperty,
-  DefaultStructuredValue,
-  NamedElement,
-} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {inject, Injectable, Injector} from '@angular/core';
+import {DefaultAspect, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
+import {ModelElementNamingService} from '../services/model-element-naming.service';
 import {CharacteristicModelService} from './characteristic-model.service';
 import {ModelRootService} from './model-root.service';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
-  private injector = inject(Injector);
-  private titleService = inject(TitleService);
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
-  private mxGraphService = inject(MxGraphService);
-  private entityInstanceService = inject(EntityInstanceService);
-  private sammLangService = inject(SammLanguageSettingsService);
-  private modelRootService = inject(ModelRootService);
-  private modelService = inject(ModelService);
-  private renameModelService = inject(RenameModelDialogService);
-  private notificationService = inject(NotificationsService);
-  private translate = inject(LanguageTranslationService);
-  private loadedFilesService = inject(LoadedFilesService);
-  private zone = inject(NgZone);
+  private readonly injector = inject(Injector);
+  private readonly titleService = inject(TitleService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly modelRootService = inject(ModelRootService);
+  private readonly modelService = inject(ModelService);
+  private readonly renameModelService = inject(RenameModelDialogService);
+  private readonly confirmDialogService = inject(ConfirmDialogService, {optional: true});
+  private readonly modelElementNamingService = inject(ModelElementNamingService);
+  private readonly sammLangService = inject(SammLanguageSettingsService, {optional: true});
+  private readonly themeService = inject(ThemeService, {optional: true});
+  private readonly notificationService = inject(NotificationsService);
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly loadedFilesService = inject(LoadedFilesService);
 
   get currentCachedFile() {
     return this.loadedFilesService.currentLoadedFile.cachedFile;
   }
 
-  updateElement(cell: mxgraph.mxCell, form: {[key: string]: any}) {
+  updateElement(cell: Cell, form: {[key: string]: any}): void {
     if (!cell || cell.isEdge()) {
       return;
     }
     const characteristicModelService = this.injector.get(CharacteristicModelService);
-    const modelElement = MxGraphHelper.getModelElement(cell);
+    const modelElement = MaxGraphHelper.getModelElement(cell);
 
     const modelService =
       modelElement instanceof DefaultEnumeration ? characteristicModelService : this.modelRootService.getElementModelService(modelElement);
     modelService.update(cell, form);
   }
 
-  deleteElement(cell: mxgraph.mxCell) {
+  deleteElement(cell: Cell): void {
     if (!cell) {
       return;
     }
 
     if (cell?.isEdge()) {
-      this.decoupleElements(cell);
+      this.notificationService.warning({
+        title: this.translate.language.notificationService.cannotDeleteEdgeTitle,
+        message: this.translate.language.notificationService.cannotDeleteEdgeMessage,
+        timeout: 5000,
+      });
       return;
     }
 
-    if (this.mxGraphService.getAllCells().length === 1) {
+    if (this.maxgraphService.getAllCells().length === 1) {
       this.notificationService.warning({
-        title: this.translate.language.NOTIFICATION_SERVICE.MODEL_EMPTY_MESSAGE,
-        message: this.translate.language.NOTIFICATION_SERVICE.MODEL_MINIMUM_ELEMENT_REQUIREMENT,
+        title: this.translate.language.notificationService.modelEmptyMessage,
+        message: this.translate.language.notificationService.modelMinimumElementRequirement,
         timeout: 5000,
       });
       return;
@@ -88,7 +85,7 @@ export class ElementModelService {
       return;
     }
 
-    const elementModel = MxGraphHelper.getModelElement(cell);
+    const elementModel = MaxGraphHelper.getModelElement(cell);
     if (elementModel.isPredefined) {
       const service = this.modelRootService.getPredefinedService(elementModel);
       if (service?.delete && service?.delete?.(cell)) {
@@ -96,237 +93,177 @@ export class ElementModelService {
       }
     }
 
+    const anonymousChildren = this.collectAnonymousChildren(elementModel);
+    if (anonymousChildren.length > 0 && this.confirmDialogService) {
+      const dialogTexts = this.translate.language?.confirmDialog?.deleteAnonymousElement;
+      const title = dialogTexts?.title || 'Delete Element with Anonymous Children';
+      const phrase1 =
+        this.translate.translateService?.translate?.('confirmDialog.deleteAnonymousElement.phrase1', {
+          elementName: elementModel.name,
+          count: anonymousChildren.length,
+        }) ||
+        `The element "${elementModel.name}" contains ${anonymousChildren.length} anonymous (inline) element(s). Deleting this element will also delete these anonymous elements.`;
+      const phrase2 = dialogTexts?.phrase2 || 'Do you want to delete them, convert them to named elements first, or cancel?';
+      const okButtonText = dialogTexts?.deleteWithAnonymousBtn || 'Delete All';
+      const actionButtonText = dialogTexts?.convertToNamedBtn || 'Convert to Named Elements';
+      const closeButtonText = dialogTexts?.cancelBtn || 'Cancel';
+
+      this.confirmDialogService
+        .open({
+          title,
+          phrases: [phrase1, phrase2],
+          okButtonText,
+          actionButtonText,
+          closeButtonText,
+        })
+        .subscribe(result => {
+          if (result === ConfirmDialogEnum.ok) {
+            for (const anon of anonymousChildren) {
+              const anonCell = this.maxgraphService.resolveCellByModelElement(anon);
+              if (anonCell) {
+                this.removeElementData(anonCell);
+              } else {
+                this.currentCachedFile.removeElement(anon.aspectModelUrn);
+              }
+            }
+            this.removeElementData(cell);
+          } else if (result === ConfirmDialogEnum.action) {
+            for (const anon of anonymousChildren) {
+              this.convertAnonymousToNamed(anon);
+            }
+            this.removeElementData(cell);
+          }
+        });
+      return;
+    }
+
     this.removeElementData(cell);
   }
 
-  decoupleElements(edge: mxgraph.mxCell) {
-    const sourceModelElement = MxGraphHelper.getModelElement(edge.source);
-    const targetModelElement = MxGraphHelper.getModelElement(edge.target);
-
-    MxGraphHelper.removeRelation(sourceModelElement, targetModelElement);
-
-    if (this.loadedFilesService.isElementExtern(sourceModelElement)) {
-      return;
+  private collectAnonymousChildren(element: NamedElement): NamedElement[] {
+    if (!element) {
+      return [];
     }
 
-    if (this.handleAbstractEntityRemoval(edge)) {
-      return;
-    }
+    const deletedSet = new Set<NamedElement>([element]);
+    const deletedUrns = new Set<string>(element.aspectModelUrn ? [element.aspectModelUrn] : []);
+    const orphanedAnonymous: NamedElement[] = [];
 
-    if (this.handleAbstractPropertyRemoval(edge, sourceModelElement, targetModelElement)) {
-      return;
-    }
-
-    if (this.modelRootService.isPredefined(sourceModelElement)) {
-      const service = this.modelRootService.getPredefinedService(sourceModelElement);
-      if (service?.decouple && service?.decouple?.(edge, sourceModelElement)) {
-        return;
+    let addedNew = true;
+    while (addedNew) {
+      addedNew = false;
+      for (const el of Array.from(deletedSet)) {
+        for (const child of el.children || []) {
+          if (child instanceof NamedElement && child.isAnonymous?.() && !deletedSet.has(child)) {
+            const parents = Array.from(child.parents || []);
+            const remainingParents = parents.filter(
+              p => p instanceof NamedElement && !deletedSet.has(p) && (!p.aspectModelUrn || !deletedUrns.has(p.aspectModelUrn)),
+            );
+            if (remainingParents.length === 0) {
+              deletedSet.add(child);
+              if (child.aspectModelUrn) {
+                deletedUrns.add(child.aspectModelUrn);
+              }
+              orphanedAnonymous.push(child);
+              addedNew = true;
+            }
+          }
+        }
       }
     }
 
-    if (this.handleAbstractElementsDecoupling(edge, sourceModelElement, targetModelElement)) {
-      return;
-    }
-
-    if (this.handleEntityPropertyDecoupling(edge, sourceModelElement, targetModelElement)) {
-      return;
-    }
-
-    this.decoupleEnumerationFromEntityValue(sourceModelElement, targetModelElement, edge);
-
-    if (this.handleEnumerationEntityDecoupling(edge, sourceModelElement, targetModelElement)) {
-      return;
-    }
-
-    if (sourceModelElement instanceof DefaultEntityInstance && targetModelElement instanceof DefaultEntity) {
-      this.mxGraphService.updateEnumerationsWithEntityValue(sourceModelElement);
-      this.mxGraphService.updateEntityValuesWithCellReference([edge.source]);
-      this.mxGraphService.removeCells([edge.source]);
-    }
-
-    if (targetModelElement instanceof DefaultEntityInstance) {
-      this.mxGraphService.updateEnumerationsWithEntityValue(targetModelElement);
-      this.mxGraphService.removeCells([edge.target]);
-    }
-
-    if (sourceModelElement instanceof DefaultStructuredValue && targetModelElement instanceof DefaultProperty) {
-      useUpdater(sourceModelElement).delete(targetModelElement);
-      MxGraphHelper.updateLabel(edge.source, this.mxGraphService.graph, this.sammLangService);
-    }
-
-    this.removeConnectionBetweenElements(edge, sourceModelElement, targetModelElement);
-    this.mxGraphService.removeCells([edge]);
+    return orphanedAnonymous;
   }
 
-  private handleAspectRemoval(cell: mxgraph.mxCell) {
-    const modelElement = MxGraphHelper.getModelElement(cell);
+  private convertAnonymousToNamed(element: NamedElement): void {
+    const rawName = element.className ? element.className.replace('Default', '') : 'Characteristic';
+    element.name = rawName;
+    element.anonymous = false;
+    element.syntheticName = false;
+
+    const oldUrn = element.aspectModelUrn;
+    this.modelElementNamingService.resolveElementNaming(element);
+    const newUrn = element.aspectModelUrn;
+    this.currentCachedFile.updateElementKey(oldUrn, newUrn);
+
+    const cell = this.maxgraphService.resolveCellByModelElement(element);
+    if (cell) {
+      cell.setId(element.name);
+      cell.setAttribute('name', element.name);
+      if (this.themeService) {
+        const style = this.themeService.generateThemeStyle(ModelStyleResolver.resolve(element));
+        this.maxgraphService.graph.setCellStyle(style, [cell]);
+      }
+      if (this.sammLangService) {
+        MaxGraphHelper.updateLabel(cell, this.maxgraphService.graph, this.sammLangService);
+      }
+      this.maxgraphService.formatCell(cell);
+    }
+  }
+
+  private handleAspectRemoval(cell: Cell): boolean {
+    const modelElement = MaxGraphHelper.getModelElement(cell);
     if (!(modelElement instanceof DefaultAspect)) {
       return false;
     }
-    this.zone.run(() => {
-      this.renameModelService.open().subscribe(data => {
-        if (!data?.name) {
-          return;
-        }
+    this.renameModelService.open().subscribe(data => {
+      const fileName = data?.fileName || (data as any)?.name;
+      if (!fileName) {
+        return;
+      }
 
-        const loadedFile = this.loadedFilesService.currentLoadedFile;
-        const oldAbsoluteName = loadedFile.absoluteName;
-        this.modelService.removeAspect();
-        this.removeElementData(cell);
+      const loadedFile = this.loadedFilesService.currentLoadedFile;
+      const oldAbsoluteName = loadedFile.absoluteName;
+      this.modelService.removeAspect();
+      this.removeElementData(cell);
 
-        this.loadedFilesService.updateAbsoluteName(oldAbsoluteName, `${loadedFile.namespace}:${data.name}`);
-        this.titleService.updateTitle(loadedFile.absoluteName);
-      });
+      this.loadedFilesService.updateAbsoluteName(oldAbsoluteName, `${loadedFile.namespace}:${fileName}`);
+      this.titleService.updateTitle(loadedFile.absoluteName);
     });
 
     return true;
   }
 
-  private handleAbstractEntityRemoval(edge: mxgraph.mxCell) {
-    const target = MxGraphHelper.getModelElement(edge.target);
-    if (!(target instanceof DefaultEntity && target.isAbstractEntity())) {
-      return false;
+  private removeElementData(cell: Cell): void {
+    const modelElement = MaxGraphHelper.getModelElement(cell);
+    if (!modelElement) {
+      this.maxgraphService.removeCells([cell]);
+      this.maxgraphService.formatShapes(true);
+      return;
     }
 
-    const parents = this.mxGraphService.resolveParents(edge.target)?.filter(c => MxGraphHelper.getModelElement(c) instanceof DefaultEntity);
-    const toRemove = [edge];
-
-    for (const parent of parents) {
-      const properties = this.mxGraphService.graph
-        .getOutgoingEdges(parent)
-        .map(e => e.target)
-        .filter(c => !!MxGraphHelper.getModelElement<DefaultProperty>(c)?.extends_);
-
-      for (const property of properties) {
-        MxGraphHelper.removeRelation(MxGraphHelper.getModelElement(parent), MxGraphHelper.getModelElement(property));
-      }
-
-      toRemove.push(...properties);
-    }
-
-    this.mxGraphService.removeCells(toRemove);
-    const source = MxGraphHelper.getModelElement<DefaultEntity>(edge.source);
-    source.extends_ = null;
-    MxGraphHelper.updateLabel(edge.source, this.mxGraphService.graph, this.sammLangService);
-    return true;
-  }
-
-  private handleAbstractPropertyRemoval(edge: mxgraph.mxCell, source: NamedElement, target: NamedElement) {
-    if (
-      (source instanceof DefaultProperty && target instanceof DefaultProperty && target.isAbstract) ||
-      (source instanceof DefaultProperty && target instanceof DefaultProperty)
-    ) {
-      const sourceElement = MxGraphHelper.getModelElement(edge.source);
-      MxGraphHelper.removeRelation(sourceElement, MxGraphHelper.getModelElement(edge.target));
-      this.currentCachedFile.removeElement(sourceElement.aspectModelUrn);
-      this.mxGraphService.removeCells([edge, edge.source]);
-      return true;
-    }
-
-    return false;
-  }
-
-  private handleAbstractElementsDecoupling(edge: mxgraph.mxCell, source: NamedElement, target: NamedElement) {
-    if (
-      (source instanceof DefaultEntity && target instanceof DefaultEntity && target.isAbstractEntity()) ||
-      (source instanceof DefaultEntity && source.isAbstractEntity() && target instanceof DefaultEntity && target.isAbstractEntity()) ||
-      (source instanceof DefaultEntity && target instanceof DefaultEntity) ||
-      (source instanceof DefaultProperty && source.isAbstract && target instanceof DefaultProperty && target.isAbstract)
-    ) {
-      source.extends_ = null;
-      edge.source['configuration'].fields = MxGraphVisitorHelper.getElementProperties(
-        MxGraphHelper.getModelElement(edge.source),
-        this.sammLangService,
-      );
-      this.mxGraphService.graph.labelChanged(edge.source, MxGraphHelper.createPropertiesLabel(edge.source));
-      this.removeConnectionBetweenElements(edge, source, target);
-      this.mxGraphService.removeCells([edge]);
-      return true;
-    }
-
-    return false;
-  }
-
-  private handleEntityPropertyDecoupling(edge: mxgraph.mxCell, source: NamedElement, target: NamedElement) {
-    if (source instanceof DefaultEntity && target instanceof DefaultProperty) {
-      if (target.extends_) {
-        this.mxGraphService.removeCells([edge.target]);
-      }
-
-      this.entityInstanceService.onPropertyRemove(target, () => {
-        this.removeConnectionBetweenElements(edge, source, target);
-        this.mxGraphService.removeCells([edge]);
-      });
-
-      return true;
-    }
-
-    return false;
-  }
-
-  private handleEnumerationEntityDecoupling(edge: mxgraph.mxCell, source: NamedElement, target: NamedElement) {
-    if (source instanceof DefaultEnumeration && target instanceof DefaultEntity) {
-      return this.entityInstanceService.onEntityDisconnect(source, target, () => {
-        const obsoleteEntityValues = MxGraphCharacteristicHelper.findObsoleteEntityValues(edge);
-        this.removeConnectionBetweenElements(edge, source, target);
-        this.mxGraphService.updateEntityValuesWithCellReference(obsoleteEntityValues);
-        this.mxGraphService.removeCells([edge, ...obsoleteEntityValues]);
-      });
-    }
-
-    return false;
-  }
-
-  private removeConnectionBetweenElements(edge: mxgraph.mxCell, source: NamedElement, target: NamedElement) {
-    if (MxGraphHelper.isComplexEnumeration(source)) {
-      this.mxGraphShapeOverlayService.removeComplexTypeShapeOverlays(edge.source);
-    }
-    MxGraphHelper.removeRelation(source, target);
-    useUpdater(source).delete(target);
-    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(new Array(edge), source);
-    edge.target.removeEdge(edge, false);
-    edge.source.removeEdge(edge, true);
-  }
-
-  /**
-   * Decouple enumeration - entityValue when the edge between them will be deleted
-   *
-   * @param sourceModelElement - source enumeration
-   * @param targetModelElement - target entity value
-   * @param edge - deleted edge
-   */
-  private decoupleEnumerationFromEntityValue(
-    sourceModelElement: NamedElement,
-    targetModelElement: NamedElement,
-    edge: mxgraph.mxCell,
-  ): void {
-    if (sourceModelElement instanceof DefaultEnumeration && targetModelElement instanceof DefaultEntityInstance) {
-      const entityValueIndex = sourceModelElement.values.indexOf(targetModelElement);
-      const enumerationIndex = targetModelElement.parents.indexOf(sourceModelElement);
-
-      sourceModelElement.values.splice(entityValueIndex, 1);
-      targetModelElement.parents.splice(enumerationIndex, 1);
-
-      this.currentCachedFile.removeElement(targetModelElement.aspectModelUrn);
-      this.mxGraphService.removeCells([edge.target]);
-    }
-  }
-
-  private removeElementData(cell: mxgraph.mxCell) {
-    const modelElement = MxGraphHelper.getModelElement(cell);
     const elementModelService = this.modelRootService.getElementModelService(modelElement);
+    const parentCells = (this.maxgraphService.resolveParents(cell) || []).filter(p => p && !p.isEdge());
+
+    for (const parent of modelElement.parents || []) {
+      if (parent instanceof NamedElement && !(parent instanceof DefaultEnumeration)) {
+        useUpdater(parent).delete(modelElement);
+      }
+    }
 
     for (const parent of modelElement.parents) {
       if (!(parent instanceof NamedElement)) continue;
-      MxGraphHelper.removeRelation(parent, modelElement);
+      MaxGraphHelper.removeRelation(parent, modelElement);
     }
 
     for (const child of modelElement.children) {
       if (!(child instanceof NamedElement)) continue;
-      MxGraphHelper.removeRelation(modelElement, child);
+      MaxGraphHelper.removeRelation(modelElement, child);
     }
 
     elementModelService?.delete(cell);
-    this.currentCachedFile.removeElement(MxGraphHelper.getModelElement(cell).aspectModelUrn);
+    this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
+
+    for (const parentCell of parentCells) {
+      const parentModel = MaxGraphHelper.getModelElement(parentCell);
+      if (parentModel) {
+        if (this.sammLangService) {
+          MaxGraphHelper.updateLabel(parentCell, this.maxgraphService.graph, this.sammLangService);
+        }
+        this.maxgraphService.formatCell(parentCell);
+      }
+    }
+
+    this.maxgraphService.formatShapes(true);
   }
 }

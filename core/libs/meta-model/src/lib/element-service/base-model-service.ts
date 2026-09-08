@@ -13,20 +13,18 @@
 
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {EditorService} from '@ame/editor';
-import {MxGraphHelper} from '@ame/mx-graph';
+import {MaxGraphHelper} from '@ame/max-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {useUpdater} from '@ame/utils';
 import {inject} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultEnumeration, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 
 export abstract class BaseModelService {
-  protected rdfService: RdfService = inject(RdfService);
-  protected modelService: ModelService = inject(ModelService);
-  protected editorService: EditorService = inject(EditorService);
-  protected modelApiService: ModelApiService = inject(ModelApiService);
-  protected loadedFilesService: LoadedFilesService = inject(LoadedFilesService);
+  protected readonly rdfService: RdfService = inject(RdfService);
+  protected readonly modelService: ModelService = inject(ModelService);
+  protected readonly modelApiService: ModelApiService = inject(ModelApiService);
+  protected readonly loadedFilesService: LoadedFilesService = inject(LoadedFilesService);
 
   get currentCachedFile() {
     return this.loadedFile.cachedFile;
@@ -38,8 +36,8 @@ export abstract class BaseModelService {
 
   abstract isApplicable(metaModelElement: NamedElement): boolean;
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const modelElement = MxGraphHelper.getModelElement(cell);
+  update(cell: Cell, form: {[key: string]: any}) {
+    const modelElement = MaxGraphHelper.getModelElement(cell);
     if (!modelElement) {
       return;
     }
@@ -47,11 +45,32 @@ export abstract class BaseModelService {
 
     // update name
     const aspectModelUrn = this.loadedFile.rdfModel.getAspectModelUrn();
+    const oldUrn = modelElement.aspectModelUrn || `${aspectModelUrn}${modelElement.name}`;
 
-    this.currentCachedFile.updateElementKey(`${aspectModelUrn}${modelElement.name}`, `${aspectModelUrn}${form.name}`);
+    if (form.isAnonymous !== undefined) {
+      modelElement.anonymous = Boolean(form.isAnonymous);
+    }
 
-    modelElement.name = form.name;
-    modelElement.aspectModelUrn = `${aspectModelUrn}${form.name}`;
+    if (modelElement.isAnonymous?.()) {
+      const typeName = modelElement.className ? modelElement.className.replace('Default', '') : 'Characteristic';
+      const anonName = `[${typeName}]`;
+      modelElement.name = anonName;
+      if (!modelElement.aspectModelUrn || !modelElement.aspectModelUrn.includes('[')) {
+        const newUrn = `${aspectModelUrn}${anonName}_${Math.floor(Math.random() * 9000) + 1000}`;
+        this.currentCachedFile.updateElementKey(oldUrn, newUrn);
+        modelElement.aspectModelUrn = newUrn;
+      }
+    } else if (form.name !== undefined) {
+      const newName = form.name?.startsWith('[')
+        ? modelElement.className
+          ? modelElement.className.replace('Default', '')
+          : 'Characteristic'
+        : form.name;
+      const newUrn = `${aspectModelUrn}${newName}`;
+      this.currentCachedFile.updateElementKey(oldUrn, newUrn);
+      modelElement.name = newName;
+      modelElement.aspectModelUrn = newUrn;
+    }
 
     if (modelElement instanceof DefaultAspect) {
       this.loadedFilesService.currentLoadedFile.aspect = modelElement;
@@ -67,11 +86,11 @@ export abstract class BaseModelService {
     this.updateSee(modelElement, form);
   }
 
-  delete(cell: mxgraph.mxCell) {
+  delete(cell: Cell) {
     // Add common operations
-    const modelElement = MxGraphHelper.getModelElement(cell);
+    const modelElement = MaxGraphHelper.getModelElement(cell);
     for (const edge of (cell.edges?.length && cell.edges) || []) {
-      const sourceNode = MxGraphHelper.getModelElement<NamedElement>(edge.source);
+      const sourceNode = MaxGraphHelper.getModelElement<NamedElement>(edge.source);
       if (sourceNode && !(sourceNode instanceof DefaultEnumeration) && this.loadedFilesService.isElementInCurrentFile(sourceNode)) {
         this.currentCachedFile.removeElement(modelElement.aspectModelUrn);
         useUpdater(sourceNode).delete(modelElement);
@@ -138,13 +157,13 @@ export abstract class BaseModelService {
 
   protected addNewEntityValues(newEntityValues: DefaultEntityInstance[], parent: NamedElement) {
     for (const entityValue of newEntityValues) {
-      MxGraphHelper.establishRelation(parent, entityValue);
+      MaxGraphHelper.establishRelation(parent, entityValue);
       this.currentCachedFile.resolveInstance(entityValue);
     }
   }
 
   protected deleteEntityValue(entityValue: DefaultEntityInstance, parent: NamedElement) {
-    MxGraphHelper.removeRelation(parent, entityValue);
+    MaxGraphHelper.removeRelation(parent, entityValue);
     // delete the element
     this.loadedFile.cachedFile.removeElement(entityValue.aspectModelUrn);
     // now delete other underlying entity values that don't belong to an enumeration

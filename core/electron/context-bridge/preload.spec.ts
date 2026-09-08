@@ -11,42 +11,42 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   contextBridge: {
-    exposeInMainWorld: jest.fn(),
+    exposeInMainWorld: vi.fn(),
   },
   ipcRenderer: {
-    send: jest.fn(),
-    on: jest.fn(),
-    removeListener: jest.fn(),
-    invoke: jest.fn(),
+    send: vi.fn(),
+    on: vi.fn(),
+    removeListener: vi.fn(),
+    invoke: vi.fn(),
   },
   shell: {
-    openExternal: jest.fn(),
+    openExternal: vi.fn(),
   },
 }));
 
 import {contextBridge, ipcRenderer, shell} from 'electron';
 
-const mockedExposeInMainWorld = contextBridge.exposeInMainWorld as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedSend = ipcRenderer.send as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedOn = ipcRenderer.on as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedRemoveListener = ipcRenderer.removeListener as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedInvoke = ipcRenderer.invoke as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedOpenExternal = shell.openExternal as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedExposeInMainWorld = contextBridge.exposeInMainWorld as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedSend = ipcRenderer.send as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedOn = ipcRenderer.on as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedRemoveListener = ipcRenderer.removeListener as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedInvoke = ipcRenderer.invoke as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedOpenExternal = shell.openExternal as unknown as MockedFunction<(...args: any[]) => any>;
 
 // Capture the exposed API once at module load time
 let electronAPI: Record<string, any>;
 mockedExposeInMainWorld.mockImplementation((_name: any, api: any) => {
   electronAPI = api;
 });
-require('./preload');
+await import('./preload');
 
 describe('preload', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should expose electronAPI in main world', () => {
@@ -70,14 +70,14 @@ describe('preload', () => {
 
   describe('on', () => {
     it('should register a listener on ipcRenderer', () => {
-      const cb = jest.fn();
+      const cb = vi.fn();
       electronAPI.on('some-channel', cb);
 
       expect(mockedOn).toHaveBeenCalledWith('some-channel', expect.any(Function));
     });
 
     it('should call the callback with forwarded args (without event)', () => {
-      const cb = jest.fn();
+      const cb = vi.fn();
       electronAPI.on('some-channel', cb);
 
       const registeredHandler = mockedOn.mock.calls[0][1] as Function;
@@ -87,7 +87,7 @@ describe('preload', () => {
     });
 
     it('should strip the ipcRenderer event object before calling callback', () => {
-      const cb = jest.fn();
+      const cb = vi.fn();
       electronAPI.on('chan', cb);
 
       const handler = mockedOn.mock.calls[0][1] as Function;
@@ -100,7 +100,7 @@ describe('preload', () => {
 
   describe('removeListener', () => {
     it('should call ipcRenderer.removeListener with listener name and callback', () => {
-      const cb = jest.fn();
+      const cb = vi.fn();
       electronAPI.removeListener('some-listener', cb);
 
       expect(mockedRemoveListener).toHaveBeenCalledWith('some-listener', cb);

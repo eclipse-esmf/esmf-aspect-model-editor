@@ -11,26 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {dialog} from 'electron';
 import * as fs from 'fs';
 import * as pathOs from 'path';
-import {dialog} from 'electron';
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
-import {openFile, getFileInfo} from './file-utils';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
+import {getFileInfo, openFile} from './file-utils';
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   dialog: {
-    showOpenDialog: jest.fn(),
+    showOpenDialog: vi.fn(),
   },
 }));
 
-jest.mock('fs');
+vi.mock('fs');
 
-const mockedShowOpenDialog = dialog.showOpenDialog as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedReadFile = fs.readFile as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedShowOpenDialog = dialog.showOpenDialog as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedReadFile = fs.readFile as unknown as MockedFunction<(...args: any[]) => any>;
 
 describe('file-utils', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('getFileInfo', () => {

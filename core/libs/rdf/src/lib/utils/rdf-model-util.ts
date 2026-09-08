@@ -52,17 +52,17 @@ export class RdfModelUtil {
     return urn && urn.includes(sammC.getNamespace());
   }
 
-  static getValueWithoutUrnDefinition(value: Value | string): string {
+  static getValueWithoutUrnDefinition(value: Value | string | NamedElement): string {
     if (!value) {
       return '';
     }
 
-    if (value instanceof NamedElement) {
-      return value.name;
+    if (value instanceof Value || value instanceof DefaultValue) {
+      return `${value.value}`;
     }
 
-    if (value instanceof Value) {
-      return `${value.value}`;
+    if (value instanceof NamedElement) {
+      return value.name;
     }
 
     if (`${value}`.startsWith('urn:samm') || `${value}`.startsWith(Samm.XSD_URI) || `${value}`.startsWith(Samm.RDF_URI)) {
@@ -71,7 +71,7 @@ export class RdfModelUtil {
     return `${value}`;
   }
 
-  static getValuesWithoutUrnDefinition(values: Array<Value | string>): string {
+  static getValuesWithoutUrnDefinition(values: Array<Value | string | NamedElement>): string {
     return values.map(value => this.getValueWithoutUrnDefinition(value)).join(', ');
   }
 
@@ -150,7 +150,8 @@ export class RdfModelUtil {
     } else if (modelElement instanceof DefaultCharacteristic || modelElement instanceof DefaultConstraint) {
       namespace = sammC.getNamespace();
     } else if (modelElement instanceof DefaultUnit) {
-      namespace = modelElement.name in sammUDefinition.units ? sammU.getNamespace() : samm.getNamespace();
+      const isKnownUnit = typeof sammUDefinition !== 'undefined' && sammUDefinition?.units && modelElement.name in sammUDefinition.units;
+      namespace = isKnownUnit ? sammU.getNamespace() : samm.getNamespace();
     } else if (modelElement instanceof DefaultEntity) {
       if (modelElement.isAbstractEntity()) return samm.AbstractEntity().value;
       namespace = samm.getNamespace();
@@ -189,7 +190,7 @@ export class RdfModelUtil {
     return null;
   }
 
-  static getDataType(dataType?: Type) {
+  static getDataType(dataType?: Type): NamedNode | null {
     return dataType ? DataFactory.namedNode(dataType.getUrn()) : null;
   }
 
@@ -215,28 +216,32 @@ export class RdfModelUtil {
   }
 
   static isEntityInstance(elementType: string, loadedFilesService: LoadedFilesService): boolean {
-    const rdfModel = loadedFilesService.currentLoadedFile.rdfModel;
+    const rdfModel = loadedFilesService?.currentLoadedFile?.rdfModel;
+    if (!rdfModel?.store) return false;
     const quads = rdfModel.store.getQuads(DataFactory.namedNode(elementType), rdfModel.samm.RdfType(), null, null);
 
     if (!quads.length) return false;
 
     const entityQuads = rdfModel.store.getQuads(quads[0].object, rdfModel.samm.RdfType(), rdfModel.samm.Entity(), null);
     if (!entityQuads.length) {
-      return loadedFilesService.filesAsList.some(
-        file => file.rdfModel.store.getQuads(quads[0].object, rdfModel.samm.RdfType(), rdfModel.samm.Entity(), null)?.length > 0,
+      return (
+        loadedFilesService.filesAsList?.some(
+          file => file?.rdfModel?.store?.getQuads(quads[0].object, rdfModel.samm.RdfType(), rdfModel.samm.Entity(), null)?.length > 0,
+        ) ?? false
       );
     }
 
     return true;
   }
 
-  static resolveExternalNamespaces(rdfModel: RdfModel, selfExclude = true) {
+  static resolveExternalNamespaces(rdfModel: RdfModel, selfExclude = true): string[] {
     const sammNamespaces = getSammNamespaces();
 
     // Extracting all namespaces since the prefixes are not all returned by the rdfModel.getPrefixes()
-    const values: string[] = Object.values<string>(rdfModel.store['_entities']).reduce((acc: string[], item: string) => {
+    const entities = rdfModel?.store?.['_entities'] || {};
+    const values: string[] = Object.values<string>(entities).reduce((acc: string[], item: string) => {
       // skipping the blank nodes and other non-like urns
-      if (!item.startsWith('urn:samm:') || !item.includes('#')) {
+      if (!item || !item.startsWith('urn:samm:') || !item.includes('#')) {
         return acc;
       }
 
@@ -245,17 +250,19 @@ export class RdfModelUtil {
 
     const prefixes = Array.from(new Set(values)).filter(item => !sammNamespaces.includes(item));
 
-    const checkItself = (prefix: string) => (selfExclude ? prefix != rdfModel.getPrefixes()[''] : true);
+    const defaultPrefix = rdfModel?.getPrefixes?.()?.[''];
+    const checkItself = (prefix: string) => (selfExclude ? prefix !== defaultPrefix : true);
     return prefixes.filter(prefix => checkItself(prefix));
   }
 
-  static resolveSpecificExternalNamespaces(rdfModel: RdfModel, selfExclude = true) {
+  static resolveSpecificExternalNamespaces(rdfModel: RdfModel, selfExclude = true): string[] {
     const sammNamespaces = getSammNamespaces();
 
     // Extracting all namespaces since the prefixes are not all returned by the rdfModel.getPrefixes()
-    const values: string[] = Object.values<string>(rdfModel.store['_entities']).reduce((acc: string[], item: string) => {
+    const entities = rdfModel?.store?.['_entities'] || {};
+    const values: string[] = Object.values<string>(entities).reduce((acc: string[], item: string) => {
       // skipping the blank nodes and other non-like urns
-      if (!item.startsWith('urn:samm:') || !item.includes('#')) {
+      if (!item || !item.startsWith('urn:samm:') || !item.includes('#')) {
         return acc;
       }
 
@@ -269,7 +276,8 @@ export class RdfModelUtil {
 
     const prefixes = Array.from(new Set(values)).filter(item => !sammNamespaces.some(n => item.includes(n)));
 
-    const checkItself = (prefix: string) => (selfExclude ? prefix != rdfModel.getPrefixes()[''] : true);
+    const defaultPrefix = rdfModel?.getPrefixes?.()?.[''];
+    const checkItself = (prefix: string) => (selfExclude ? prefix !== defaultPrefix : true);
     return prefixes.filter(prefix => checkItself(prefix));
   }
 

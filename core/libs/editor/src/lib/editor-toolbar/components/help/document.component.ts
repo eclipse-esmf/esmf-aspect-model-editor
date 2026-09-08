@@ -12,27 +12,24 @@
  */
 
 import {APP_CONFIG, AppConfig, BrowserService, IPC_RENDERER} from '@ame/shared';
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {TranslatePipe} from '@ngx-translate/core';
-import {ToastrService} from 'ngx-toastr';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
-  standalone: true,
   selector: 'ame-document',
   templateUrl: './document.component.html',
   styleUrls: ['./document.component.scss'],
-  imports: [MatButtonModule, MatIconModule, MatDialogModule, TranslatePipe],
+  imports: [MatButtonModule, MatIconModule, MatDialogModule, TranslocoDirective],
 })
 export class DocumentComponent {
   private ipcRenderer = inject(IPC_RENDERER);
   private browserService = inject(BrowserService);
-  private toastr = inject(ToastrService);
   public config = inject(APP_CONFIG) as AppConfig;
 
-  AMEDocumentationLink = 'https://eclipse-esmf.github.io/ame-guide/introduction.html';
+  AMEDocumentationLink = signal('https://eclipse-esmf.github.io/ame-guide/introduction.html');
 
   openLink(event: MouseEvent) {
     event.preventDefault();

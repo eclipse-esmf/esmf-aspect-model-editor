@@ -22,19 +22,16 @@ import {RdfSerializerService} from './rdf-serializer.service';
 
 @Injectable({providedIn: 'root'})
 export class RdfService {
-  private modelApiService = inject(ModelApiService);
-  public config = inject(APP_CONFIG);
-
-  private _rdfSerializer: RdfSerializerService;
+  private readonly modelApiService = inject(ModelApiService);
+  private readonly _rdfSerializer = inject(RdfSerializerService);
+  public readonly config = inject(APP_CONFIG);
 
   public externalRdfModels: Array<RdfModel> = [];
 
   constructor() {
-    if (!environment.production) {
+    if (!environment.production && typeof window !== 'undefined') {
       window['angular.rdfService'] = this;
     }
-
-    this._rdfSerializer = new RdfSerializerService();
   }
 
   serializeModel(rdfModel: RdfModel): string {
@@ -42,9 +39,11 @@ export class RdfService {
   }
 
   isSameModelContent(absoluteFileName: string, fileContent: string, fileToCompare: NamespaceFile): Observable<boolean> {
-    if (fileToCompare.absoluteName !== absoluteFileName) return of(false);
+    if (fileToCompare?.absoluteName !== absoluteFileName) return of(false);
 
-    const rdfModel = fileToCompare.rdfModel;
+    const rdfModel = fileToCompare?.rdfModel;
+    if (!rdfModel) return of(false);
+
     const serializedModel: string = this.serializeModel(rdfModel);
     return this.modelApiService
       .fetchFormatedAspectModel(serializedModel, rdfModel.getSourceLocation())

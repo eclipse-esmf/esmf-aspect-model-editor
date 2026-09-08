@@ -11,32 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject, OnInit} from '@angular/core';
-import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Component, inject} from '@angular/core';
+import {FormField} from '@angular/forms/signals';
 import {MatError} from '@angular/material/input';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {SettingsFormService} from '../../../services';
 
 @Component({
   selector: 'ame-copyright',
   templateUrl: './header-copyright.component.html',
   styleUrls: ['./header-copyright.component.scss'],
-  imports: [ReactiveFormsModule, MatError, TranslatePipe],
+  imports: [FormField, MatError, TranslocoDirective],
 })
-export class HeaderCopyrightComponent implements OnInit {
-  private formService = inject(SettingsFormService);
+export class HeaderCopyrightComponent {
+  protected readonly formService = inject(SettingsFormService);
 
-  public form: FormGroup;
-
-  ngOnInit(): void {
-    this.form = this.formService.getForm().get('copyrightHeaderConfiguration') as FormGroup;
-  }
-
-  get copyrightControl() {
-    return this.form.get('copyright');
-  }
-
-  onTextChange() {
-    this.copyrightControl.updateValueAndValidity();
-  }
+  readonly form = this.formService.settingsForm;
 }

@@ -10,6 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {LoadedFilesService} from '@ame/cache';
 import {
   BaseInputComponent,
   CharacteristicClassType,
@@ -22,19 +23,21 @@ import {
   UnitInputFieldComponent,
   ValuesInputFieldComponent,
 } from '@ame/editor';
-import {AsyncPipe} from '@angular/common';
-import {ChangeDetectorRef, Component, DestroyRef, Input, OnInit, inject} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormGroup} from '@angular/forms';
-import {TranslatePipe} from '@ngx-translate/core';
+import {Component, computed, DestroyRef, inject, input, OnInit, signal} from '@angular/core';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
+import {MatIcon} from '@angular/material/icon';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {StateCharacteristicComponent} from '../../components/characteristics/state-characteristic/state-characteristic.component';
 import {StructuredValueComponent} from '../../components/characteristics/structured-value/structured-value.component';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 
 @Component({
   selector: 'ame-characteristic',
   templateUrl: './characteristic.component.html',
+  styleUrls: ['../fields/field.scss'],
   imports: [
     CharacteristicNameDropdownFieldComponent,
     BaseInputComponent,
@@ -47,64 +50,91 @@ import {PreviousFormDataSnapshot} from '../../interfaces';
     LeftInputFieldComponent,
     RightInputFieldComponent,
     ElementListComponent,
-    AsyncPipe,
-    TranslatePipe,
+    TranslocoDirective,
+    MatSlideToggle,
+    MatIcon,
   ],
 })
 export class CharacteristicComponent implements OnInit {
-  @Input() parentForm: FormGroup;
+  readonly signalForm = input.required<EditorSignalFormContext>();
 
   private destroyRef = inject(DestroyRef);
-  private changeDetector = inject(ChangeDetectorRef);
+  private loadedFilesService = inject(LoadedFilesService);
 
-  public property = false;
-  public selectedCharacteristic: CharacteristicClassType;
-  public previousData: PreviousFormDataSnapshot = {};
   public metaModelDialogService = inject(EditorModelService);
-  public element$ = this.metaModelDialogService.getMetaModelElement();
 
-  public characteristicClassType = CharacteristicClassType;
-  allowedClassesForElementCharacteristic: CharacteristicClassType[] = [
-    this.characteristicClassType.Collection,
-    this.characteristicClassType.Set,
-    this.characteristicClassType.SortedSet,
-    this.characteristicClassType.List,
-    this.characteristicClassType.TimeSeries,
-  ];
-  allowedClassesForUnit: CharacteristicClassType[] = [
-    this.characteristicClassType.Measurement,
-    this.characteristicClassType.Quantifiable,
-    this.characteristicClassType.Duration,
-  ];
+  public property = signal(false);
+  public selectedCharacteristic = signal<CharacteristicClassType>(undefined);
+  public previousData = signal<PreviousFormDataSnapshot>({});
+  public element = toSignal(this.metaModelDialogService.getMetaModelElement());
+
+  public isAnonymous = signal(false);
+  public canBeAnonymous = computed(() => {
+    const el = this.element();
+    return Boolean(el && !el.isPredefined && !this.loadedFilesService.isElementExtern(el) && el.parents && el.parents.length > 0);
+  });
+
+  public characteristicClassType = signal(CharacteristicClassType);
+  allowedClassesForElementCharacteristic = signal<CharacteristicClassType[]>([
+    this.characteristicClassType().Collection,
+    this.characteristicClassType().Set,
+    this.characteristicClassType().SortedSet,
+    this.characteristicClassType().List,
+    this.characteristicClassType().TimeSeries,
+  ]);
+  allowedClassesForUnit = signal<CharacteristicClassType[]>([
+    this.characteristicClassType().Measurement,
+    this.characteristicClassType().Quantifiable,
+    this.characteristicClassType().Duration,
+  ]);
 
   ngOnInit(): void {
     this.metaModelDialogService
       .getMetaModelElement()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        // TODO Should be solved better. Form does not seem to update correctly.
-        this.property = false;
-        requestAnimationFrame(() => (this.property = true));
-        this.changeDetector.detectChanges();
+      .subscribe(el => {
+        if (el) {
+          this.isAnonymous.set(Boolean(el.isAnonymous?.()));
+          this.property.set(true);
+        }
       });
   }
 
+  onAnonymousToggleChange(checked: boolean) {
+    this.isAnonymous.set(checked);
+    const elem = this.element();
+    if (elem) {
+      elem.anonymous = checked;
+      const typeName = elem.className ? elem.className.replace('Default', '') : 'Characteristic';
+      if (checked) {
+        elem.name = `[${typeName}]`;
+        this.signalForm().set('name', `[${typeName}]`);
+        this.signalForm().set('isAnonymous', true);
+      } else {
+        elem.name = typeName;
+        this.signalForm().set('name', typeName);
+        this.signalForm().set('isAnonymous', false);
+      }
+      this.metaModelDialogService.updateMetaModelElement(elem);
+    }
+  }
+
   onPreviousDataChange(previousData: PreviousFormDataSnapshot) {
-    requestAnimationFrame(() => {
-      this.previousData = previousData;
-      this.changeDetector.detectChanges();
-    });
+    this.previousData.set(previousData);
   }
 
   onClassChange(characteristic: CharacteristicClassType) {
-    this.selectedCharacteristic = characteristic;
+    if (this.selectedCharacteristic() === characteristic) {
+      return;
+    }
+    this.selectedCharacteristic.set(characteristic);
   }
 
   isElementCharacteristicAllowed(): boolean {
-    return this.allowedClassesForElementCharacteristic.includes(this.selectedCharacteristic);
+    return this.allowedClassesForElementCharacteristic().includes(this.selectedCharacteristic());
   }
 
   isUnitAllowed(): boolean {
-    return this.allowedClassesForUnit.includes(this.selectedCharacteristic);
+    return this.allowedClassesForUnit().includes(this.selectedCharacteristic());
   }
 }

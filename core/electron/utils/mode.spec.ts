@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, afterEach} from '@jest/globals';
+import {afterEach, beforeEach, describe, expect, it} from 'vitest';
 import {inDevMode, inProdMode} from './mode';
 
 describe('mode', () => {

@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphHelper} from '@ame/mx-graph';
+import {MaxGraphHelper} from '@ame/max-graph';
 import {NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {Injectable, inject} from '@angular/core';
 import {DefaultProperty, DefaultValue} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 
 @Injectable({providedIn: 'root'})
@@ -24,16 +24,16 @@ export class PropertyValueConnectionHandler extends BaseConnectionHandler {
   private notificationService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);
 
-  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultValue, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
+  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultValue, parentCell: Cell, childCell: Cell) {
     if (parentMetaModel.isPredefined) {
-      this.notificationService.warning({title: this.translate.language.NOTIFICATION_SERVICE.CHILD_FOR_PREDEFINED_ELEMENT_ERROR});
+      this.notificationService.warning({title: this.translate.language.notificationService.childForPredefinedElementError});
       return;
     }
 
-    if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
+    if (MaxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.maxgraphService.graph)) {
       this.notificationService.warning({
-        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
-        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
+        title: this.translate.language.notificationService.recursiveElements,
+        message: this.translate.language.notificationService.circularConnectionMessage,
         timeout: 5000,
       });
       return;
@@ -42,15 +42,15 @@ export class PropertyValueConnectionHandler extends BaseConnectionHandler {
     const currentExampleValue = parentMetaModel.exampleValue as DefaultValue;
 
     if (currentExampleValue && currentExampleValue.aspectModelUrn !== childMetaModel.aspectModelUrn) {
-      const obsoleteEdge = this.mxGraphService.graph
-        .getOutgoingEdges(parentCell)
-        .find(edge => MxGraphHelper.getModelElement(edge.target) instanceof DefaultValue);
+      const obsoleteEdge = this.maxgraphService.graph
+        .getOutgoingEdges(parentCell, null)
+        .find(edge => MaxGraphHelper.getModelElement(edge.target) instanceof DefaultValue);
 
       if (obsoleteEdge) {
-        const exampleValue = MxGraphHelper.getModelElement<DefaultValue>(obsoleteEdge.target);
-        MxGraphHelper.removeRelation(parentMetaModel, exampleValue);
+        const exampleValue = MaxGraphHelper.getModelElement<DefaultValue>(obsoleteEdge.target);
+        MaxGraphHelper.removeRelation(parentMetaModel, exampleValue);
 
-        this.mxGraphService.removeCells([obsoleteEdge]);
+        this.maxgraphService.removeCells([obsoleteEdge]);
       }
     }
 
@@ -59,6 +59,6 @@ export class PropertyValueConnectionHandler extends BaseConnectionHandler {
 
     this.refreshPropertiesLabel(parentCell, parentMetaModel);
 
-    this.mxGraphService.assignToParent(childCell, parentCell);
+    this.maxgraphService.assignToParent(childCell, parentCell);
   }
 }

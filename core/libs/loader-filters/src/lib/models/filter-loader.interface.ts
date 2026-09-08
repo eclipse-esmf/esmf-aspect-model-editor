@@ -21,11 +21,11 @@ export type ClassReference<T = NamedElement, Args extends any[] = any[]> = new (
 
 export type ArrowStyle = 'entityValueEntityEdge' | 'optionalPropertyEdge' | 'abstractPropertyEdge' | 'abstractElementEdge' | 'defaultEdge';
 
-export class ChildrenArray<T extends ModelTree<NamedElement>> extends Array<ModelTree<NamedElement>> {
-  push(...items: T[]): number {
+export class ChildrenArray<T extends ModelTree<NamedElement> = ModelTree<NamedElement>> extends Array<T> {
+  override push(...items: T[]): number {
     let pushed = 0;
     for (const item of items) {
-      if (this.some(i => i.element.aspectModelUrn === item.element.aspectModelUrn)) {
+      if (!item || this.some(i => i?.element?.aspectModelUrn === item.element?.aspectModelUrn)) {
         continue;
       }
 
@@ -36,13 +36,13 @@ export class ChildrenArray<T extends ModelTree<NamedElement>> extends Array<Mode
   }
 }
 
-export interface ModelTree<T extends NamedElement> {
+export interface ModelTree<T extends NamedElement = NamedElement> {
   /**
    * The meta model element which will be rendered
    */
   element: T;
   /**
-   * Geometrical shape the element will have in the mxGraph
+   * Geometrical shape the element will have in the maxGraph
    *
    * `default` - rectangle shape |
    * `connector` - small circle shape
@@ -83,13 +83,13 @@ export enum ModelFilter {
 }
 
 export interface FilterLoader<T extends NamedElement = NamedElement> {
-  cache: {[key: string]: boolean};
+  cache: Record<string, boolean>;
   filterType: ModelFilter;
   visibleElements: ClassReference<T>[];
   filter(rootElements: T[]): ModelTree<T>[];
   generateTree(element: T, options?: ModelTreeOptions): ModelTree<T>;
   getArrowStyle(element: T, parent: T): ArrowStyle;
   getShapeGeometry(element: T): ShapeGeometry;
-  getMxGraphStyle(element: T): string;
+  getMaxgraphStyle(element: T): string;
   hasOverlay(element?: T): boolean;
 }

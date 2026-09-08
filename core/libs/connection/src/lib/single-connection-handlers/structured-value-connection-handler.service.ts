@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/cache';
 import {Injectable, inject} from '@angular/core';
 import {DefaultProperty, StructuredValue} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
@@ -26,17 +26,17 @@ export class StructuredValueConnectionHandler extends BaseConnectionHandler impl
     return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
-  public connect(structuredValue: StructuredValue, source: mxgraph.mxCell) {
+  public connect(structuredValue: StructuredValue, source: Cell) {
     const property = this.elementCreator.createEmptyElement(DefaultProperty);
     structuredValue.elements.push(property);
     structuredValue.deconstructionRule = `${structuredValue.deconstructionRule}(regex)`;
     const child = this.renderTree(property, source);
 
     this.refreshPropertiesLabel(child, property);
-    this.mxGraphService.assignToParent(child, source);
+    this.maxgraphService.assignToParent(child, source);
     this.currentCachedFile.resolveInstance(property);
 
-    this.mxGraphService.formatCell(source);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.formatCell(source);
+    this.maxgraphService.formatShapes();
   }
 }

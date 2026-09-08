@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, Injector, OnDestroy, OnInit, runInInjectionContext, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {disabled, FieldTree, form, FormField} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -23,9 +23,13 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-preferred-name-input-field',
   templateUrl: './preferred-name-input-field.component.html',
-  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, FormField, MatInput],
 })
-export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
+export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
+  private readonly injector = inject(Injector);
+  private readonly unregisterFields: Array<() => void> = [];
+
+  readonly fields = signal<Record<string, FieldTree<string>>>({});
   public fieldName = 'preferredName';
 
   ngOnInit(): void {
@@ -42,28 +46,36 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedE
     const extending = this.metaModelElement as HasExtends;
 
     if ((extending as HasExtends)?.extends_) {
-      return this.previousData?.[key] || extending?.getPreferredName(locale) || extending.extends_.preferredNames?.get(locale) || '';
+      return this.previousData()?.[key] || extending?.getPreferredName(locale) || extending.extends_.preferredNames?.get(locale) || '';
     }
 
-    return this.previousData?.[key] || this.metaModelElement?.getPreferredName(locale) || '';
+    return this.previousData()?.[key] || this.metaModelElement?.getPreferredName(locale) || '';
   }
 
   isInherited(locale: string): boolean {
-    const control = this.parentForm.get(this.fieldName + locale);
     const extending = this.metaModelElement as HasExtends;
     return (
       extending.extends_ &&
       extending.extends_?.preferredNames?.get(locale) &&
-      control.value === extending.extends_?.preferredNames?.get(locale)
+      this.field(locale)?.().value() === extending.extends_?.preferredNames?.get(locale)
     );
   }
 
+  field(locale: string): FieldTree<string> {
+    return this.fields()[locale];
+  }
+
+  ngOnDestroy(): void {
+    this.unregisterFields.forEach(unregister => unregister());
+    super.ngOnDestroy();
+  }
+
   getPreferredNamesLocales(): string[] {
-    return Array.from(this.metaModelElement?.preferredNames?.keys());
+    return Array.from(this.metaModelElement?.preferredNames?.keys() ?? []);
   }
 
   getDescriptionsLocales(): string[] {
-    return Array.from(this.metaModelElement?.preferredNames?.keys());
+    return Array.from(this.metaModelElement?.preferredNames?.keys() ?? []);
   }
 
   private isDisabled() {
@@ -71,36 +83,34 @@ export class PreferredNameInputFieldComponent extends InputFieldComponent<NamedE
   }
 
   private setPreferredNameNameControls() {
-    const allLocalesPreferredNames = Array.from(this.metaModelElement?.preferredNames?.keys());
+    this.unregisterFields.forEach(unregister => unregister());
+    this.unregisterFields.length = 0;
 
-    if (!allLocalesPreferredNames.length) {
+    if (!this.metaModelElement) {
+      return;
+    }
+
+    const allLocalesPreferredNames = Array.from(this.metaModelElement?.preferredNames?.keys() ?? []);
+
+    if (!allLocalesPreferredNames.length && this.metaModelElement?.preferredNames) {
       this.metaModelElement.preferredNames.set('en', '');
     }
 
-    Array.from(this.metaModelElement?.preferredNames?.keys())?.forEach(locale => {
+    const fields: Record<string, FieldTree<string>> = {};
+    Array.from(this.metaModelElement?.preferredNames?.keys() ?? []).forEach(locale => {
       const key = `preferredName${locale}`;
-      const control = this.parentForm.get(key);
-      const previousDisabled = control?.disabled;
-      const isNowPredefined = this.metaModelElement?.isPredefined;
-
-      if (previousDisabled && !isNowPredefined) {
-        control?.patchValue(this.getCurrentValue(key, locale));
-      }
-
-      this.removePreferredNameControl(locale);
-
-      this.parentForm.setControl(
-        key,
-        new FormControl({
-          value: this.getCurrentValue(key, locale),
-          disabled:
-            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
-        }),
+      const model = signal<string>(String(this.getCurrentValue(key, locale) ?? ''));
+      const field = runInInjectionContext(this.injector, () =>
+        form(model, path =>
+          disabled(path, {
+            when: () =>
+              this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
+          }),
+        ),
       );
+      fields[locale] = field;
+      this.unregisterFields.push(this.signalForm().register(key, field));
     });
-  }
-
-  private removePreferredNameControl(locale: string): void {
-    this.parentForm.removeControl(`preferredName${locale}`);
+    this.fields.set(fields);
   }
 }

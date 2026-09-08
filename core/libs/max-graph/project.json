@@ -1,0 +1,29 @@
+{
+  "name": "max-graph",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/max-graph/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/max-graph"],
+      "options": {
+        "tsConfig": "libs/max-graph/tsconfig.spec.json",
+        "buildTarget": "max-graph:build",
+        "watch": false
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/libs/max-graph"],
+      "options": {
+        "project": "libs/max-graph/ng-package.json"
+      },
+      "dependsOn": []
+    }
+  }
+}

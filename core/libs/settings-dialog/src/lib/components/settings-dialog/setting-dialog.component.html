@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,88 +12,89 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="settings__header">
-  <h2 mat-dialog-title>{{ 'SETTINGS_DIALOG.TITLE' | translate }}</h2>
-  <button
-    class="settings__close-button"
-    [mat-dialog-close]="true"
-    (click)="onClose()"
-    mat-icon-button
-    tabindex="-1"
-    data-cy="settingsModalCloseButton"
-  >
-    <mat-icon>close</mat-icon>
-  </button>
-</div>
+  <div class="settings__header">
+    <h2 mat-dialog-title>{{ t('settingsDialog.title') }}</h2>
+    <button
+      class="settings__close-button"
+      [mat-dialog-close]="true"
+      (click)="onClose()"
+      mat-icon-button
+      tabindex="-1"
+      data-cy="settingsModalCloseButton"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-<mat-dialog-content class="settings__dialog-content">
-  <div class="settings__split-layout">
-    <mat-tree class="settings__tree" [dataSource]="dataSource" [treeControl]="treeControl">
-      <mat-tree-node
-        class="settings__tree-node"
-        *matTreeNodeDef="let node"
-        [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type, 'settings__node-name--error': isNodeInvalid(node)}"
-        (click)="onNodeSelected(node.type)"
-        matTreeNodePaddingIndent="15"
-      >
-        <li class="settings__node settings__node-without-icon">
-          <span class="settings__node-name settings__node-name--aligned">{{ node.name | translate }}</span>
-        </li>
-      </mat-tree-node>
+  <mat-dialog-content class="settings__dialog-content">
+    <div class="settings__split-layout">
+      <mat-tree class="settings__tree" [dataSource]="dataSource" [treeControl]="treeControl">
+        <mat-tree-node
+          class="settings__tree-node"
+          *matTreeNodeDef="let node"
+          [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type, 'settings__node-name--error': isNodeInvalid(node)}"
+          (click)="onNodeSelected(node.type)"
+          matTreeNodePaddingIndent="15"
+        >
+          <li class="settings__node settings__node-without-icon">
+            <span class="settings__node-name settings__node-name--aligned">{{ t(node.name) }}</span>
+          </li>
+        </mat-tree-node>
 
-      <mat-tree-node
-        class="settings__tree-node"
-        *matTreeNodeDef="let node; when: hasChild"
-        [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type}"
-        (click)="onNodeSelected(node.type)"
-      >
-        <li class="settings__node">
-          <button class="settings__toggle-button" mat-icon-button matTreeNodeToggle>
-            <mat-icon class="settings__icon">
-              {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
-            </mat-icon>
-          </button>
-          <span class="settings__node-name">{{ node.name | translate }}</span>
-        </li>
-      </mat-tree-node>
-    </mat-tree>
+        <mat-tree-node
+          class="settings__tree-node"
+          *matTreeNodeDef="let node; when: hasChild"
+          [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type}"
+          (click)="onNodeSelected(node.type)"
+        >
+          <li class="settings__node">
+            <button class="settings__toggle-button" mat-icon-button matTreeNodeToggle>
+              <mat-icon class="settings__icon">
+                {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+              </mat-icon>
+            </button>
+            <span class="settings__node-name">{{ t(node.name) }}</span>
+          </li>
+        </mat-tree-node>
+      </mat-tree>
 
-    <div class="settings__divider"></div>
+      <div class="settings__divider"></div>
 
-    <div class="settings__content">
-      @if (selectedNodeType === NodeNames.AUTOMATED_WORKFLOW || selectedNodeType === NodeNames.CONFIGURATION) {
-        <ame-automated-workflow-config></ame-automated-workflow-config>
-      }
-      @if (selectedNodeType === NodeNames.EDITOR) {
-        <ame-editor-configuration></ame-editor-configuration>
-      }
-      @if (selectedNodeType === NodeNames.LANGUAGES) {
-        <ame-language-settings></ame-language-settings>
-      }
-      @if (selectedNodeType === NodeNames.NAMESPACES) {
-        <ame-namespace></ame-namespace>
-      }
-      @if (selectedNodeType === NodeNames.COPYRIGHT) {
-        <ame-copyright></ame-copyright>
-      }
+      <div class="settings__content">
+        @if (selectedNodeType === NodeNames.AUTOMATED_WORKFLOW || selectedNodeType === NodeNames.CONFIGURATION) {
+          <ame-automated-workflow-config></ame-automated-workflow-config>
+        }
+        @if (selectedNodeType === NodeNames.EDITOR) {
+          <ame-editor-configuration></ame-editor-configuration>
+        }
+        @if (selectedNodeType === NodeNames.LANGUAGES) {
+          <ame-language-settings></ame-language-settings>
+        }
+        @if (selectedNodeType === NodeNames.NAMESPACES) {
+          <ame-namespace></ame-namespace>
+        }
+        @if (selectedNodeType === NodeNames.COPYRIGHT) {
+          <ame-copyright></ame-copyright>
+        }
+      </div>
     </div>
-  </div>
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<mat-dialog-actions class="dialog-actions" align="end">
-  <div>
-    <button (click)="onCancel()" mat-raised-button data-cy="settingsDialogCancelButton">
-      {{ 'SETTINGS_DIALOG.CANCEL' | translate }}
-    </button>
-  </div>
-  <div matTooltip="{{ settingsForm.invalid ? ('SETTINGS_DIALOG.ERROR_MESSAGE' | translate) : '' }}">
-    <button [disabled]="settingsForm.invalid" (click)="applySettings()" mat-raised-button data-cy="settingsDialogApplyButton">
-      {{ 'SETTINGS_DIALOG.APPLY' | translate }}
-    </button>
-  </div>
-  <div matTooltip="{{ settingsForm.invalid ? ('SETTINGS_DIALOG.ERROR_MESSAGE' | translate) : '' }}">
-    <button [disabled]="settingsForm.invalid" (click)="onOk()" mat-raised-button color="primary" data-cy="settingsDialogOkButton">
-      {{ 'SETTINGS_DIALOG.OK' | translate }}
-    </button>
-  </div>
-</mat-dialog-actions>
+  <mat-dialog-actions class="dialog-actions" align="end">
+    <div>
+      <button (click)="onCancel()" mat-raised-button data-cy="settingsDialogCancelButton">
+        {{ t('settingsDialog.cancel') }}
+      </button>
+    </div>
+    <div matTooltip="{{ settingsForm().invalid() ? t('settingsDialog.errorMessage') : '' }}">
+      <button [disabled]="settingsForm().invalid()" (click)="applySettings()" mat-raised-button data-cy="settingsDialogApplyButton">
+        {{ t('settingsDialog.apply') }}
+      </button>
+    </div>
+    <div matTooltip="{{ settingsForm().invalid() ? t('settingsDialog.errorMessage') : '' }}">
+      <button [disabled]="settingsForm().invalid()" (click)="onOk()" mat-raised-button color="primary" data-cy="settingsDialogOkButton">
+        {{ t('settingsDialog.ok') }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+</ng-container>

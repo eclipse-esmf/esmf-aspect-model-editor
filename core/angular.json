@@ -1,0 +1,291 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "libs",
+  "projects": {
+    "ame": {
+      "projectType": "application",
+      "root": "apps/ame",
+      "sourceRoot": "apps/ame/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": {
+              "base": "dist/apps/ame",
+              "browser": ""
+            },
+            "index": "apps/ame/src/index.html",
+            "browser": "apps/ame/src/main.ts",
+            "polyfills": [],
+            "tsConfig": "apps/ame/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": ["apps/ame/src/assets"],
+            "styles": ["node_modules/ngx-toastr/toastr.css", "apps/ame/src/styles.scss"],
+            "scripts": ["apps/ame/src/assets/samm-units.js"]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [{"replace": "environments/environment.ts", "with": "environments/environment.prod.ts"}],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": true,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "defaultConfiguration": "development",
+          "configurations": {
+            "production": {
+              "buildTarget": "ame:build:production"
+            },
+            "development": {
+              "buildTarget": "ame:build:development"
+            }
+          }
+        },
+        "serve-coverage": {
+          "builder": "@angular/build:dev-server",
+          "defaultConfiguration": "development",
+          "configurations": {
+            "production": {
+              "buildTarget": "ame:build:production"
+            },
+            "development": {
+              "buildTarget": "ame:build:development"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n",
+          "options": {
+            "buildTarget": "ame:build"
+          }
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "apps/ame/tsconfig.spec.json",
+            "buildTarget": "ame:build:development"
+          }
+        }
+      }
+    },
+    "aspect-exporter": {
+      "projectType": "library",
+      "root": "libs/aspect-exporter",
+      "sourceRoot": "libs/aspect-exporter/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/aspect-exporter/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/aspect-exporter/tsconfig.spec.json",
+            "buildTarget": "aspect-exporter:build"
+          }
+        }
+      }
+    },
+    "connection": {
+      "projectType": "library",
+      "root": "libs/connection",
+      "sourceRoot": "libs/connection/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/connection/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/connection/tsconfig.spec.json",
+            "buildTarget": "connection:build"
+          }
+        }
+      }
+    },
+    "editor": {
+      "projectType": "library",
+      "root": "libs/editor",
+      "sourceRoot": "libs/editor/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/editor/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/editor/tsconfig.spec.json",
+            "buildTarget": "editor:build"
+          }
+        }
+      }
+    },
+    "rdf": {
+      "projectType": "library",
+      "root": "libs/rdf",
+      "sourceRoot": "libs/rdf/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/rdf/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/rdf/tsconfig.spec.json",
+            "buildTarget": "rdf:build"
+          }
+        }
+      }
+    },
+    "shared": {
+      "projectType": "library",
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/shared/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/shared/tsconfig.spec.json",
+            "buildTarget": "shared:build"
+          }
+        }
+      }
+    },
+    "sidebar": {
+      "projectType": "library",
+      "root": "libs/sidebar",
+      "sourceRoot": "libs/sidebar/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/sidebar/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/sidebar/tsconfig.spec.json",
+            "buildTarget": "sidebar:build"
+          }
+        }
+      }
+    },
+    "utils": {
+      "projectType": "library",
+      "root": "libs/utils",
+      "sourceRoot": "libs/utils/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/utils/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/utils/tsconfig.spec.json",
+            "buildTarget": "utils:build"
+          }
+        }
+      }
+    },
+    "loader-filters": {
+      "projectType": "library",
+      "root": "libs/loader-filters",
+      "sourceRoot": "libs/loader-filters/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/loader-filters/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/loader-filters/tsconfig.spec.json",
+            "buildTarget": "loader-filters:build"
+          }
+        }
+      }
+    },
+    "translation": {
+      "projectType": "library",
+      "root": "libs/translation",
+      "sourceRoot": "libs/translation/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/translation/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/translation/tsconfig.spec.json",
+            "buildTarget": "translation:build"
+          }
+        }
+      }
+    },
+    "namespace-manager": {
+      "projectType": "library",
+      "root": "libs/namespace-manager",
+      "sourceRoot": "libs/namespace-manager/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/namespace-manager/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/namespace-manager/tsconfig.spec.json",
+            "buildTarget": "namespace-manager:build"
+          }
+        }
+      }
+    },
+    "settings-dialog": {
+      "projectType": "library",
+      "root": "libs/settings-dialog",
+      "sourceRoot": "libs/settings-dialog/src",
+      "prefix": "ame",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {"project": "libs/settings-dialog/ng-package.json"}
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "libs/settings-dialog/tsconfig.spec.json",
+            "buildTarget": "settings-dialog:build"
+          }
+        }
+      }
+    }
+  }
+}

@@ -13,13 +13,12 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL} from '../../support/api-mocks';
-
 describe('Test load aspect model with anonymous elements', () => {
-  it('load aspect model with anonymous elements', () => {
-    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  before(() => {
     cy.visitDefault();
+  });
+
+  it('load aspect model with anonymous elements', () => {
     cy.fixture('anonymous-elements')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
@@ -32,13 +31,13 @@ describe('Test load aspect model with anonymous elements', () => {
             expect(aspect.properties[0].characteristic.name).to.equal('Characteristic1');
 
             expect(aspect.properties[1].name).to.equal('property2');
-            expect(aspect.properties[1].characteristic.name).to.include('Characteristic');
+            expect(aspect.properties[1].characteristic.name).to.equal('[Characteristic]');
 
             expect(aspect.properties[2].name).to.equal('property3');
-            expect(aspect.properties[2].characteristic.name).to.include('Characteristic');
-            expect(aspect.properties[2].characteristic.baseCharacteristic.name).to.include('Characteristic');
-            expect(aspect.properties[2].characteristic.constraints[0].name).to.include('Constraint');
-            expect(aspect.properties[2].characteristic.constraints[1].name).to.include('Constraint');
+            expect(aspect.properties[2].characteristic.name).to.equal('[Trait]');
+            expect(aspect.properties[2].characteristic.baseCharacteristic.name).to.equal('[Characteristic]');
+            expect(aspect.properties[2].characteristic.constraints[0].name).to.equal('[Constraint]');
+            expect(aspect.properties[2].characteristic.constraints[1].name).to.equal('[Constraint]');
           });
         });
       });

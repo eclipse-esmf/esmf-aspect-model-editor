@@ -11,8 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
+vi.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {RdfModelUtil} from '@ame/rdf/utils';
+import {simpleDataTypes} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultAspect,
@@ -21,35 +27,49 @@ import {
   DefaultOperation,
   DefaultProperty,
   DefaultStructuredValue,
+  DefaultValue,
   ModelElementCache,
   RdfModel,
 } from '@esmf/aspect-model-loader';
 import {DataFactory, NamedNode, Quad_Object, Store, Util} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {RdfNodeService} from '../rdf-node';
+import {ValueVisitor} from '../visitor/value/value-visitor';
 import {RdfListService} from './rdf-list.service';
 import {ListProperties} from './rdf-list.types';
 
+/**
+ * `NamedElement`'s `name` setter recomputes `aspectModelUrn` as `${namespace}#${name}`, where
+ * `namespace` is derived by splitting the *current* `aspectModelUrn` on `#`. That means a bare
+ * identifier used as both `name` and `aspectModelUrn` (e.g. `{name: 'subject', aspectModelUrn: 'subject'}`)
+ * silently gets mangled into `subject#subject` once the constructor assigns `name`. Always build test
+ * fixtures through this helper so the produced `aspectModelUrn` is stable and matches `name`.
+ */
+const urn = (name: string) => `urn:samm:test:1.0.0#${name}`;
+
+/** A minimal `Type` stand-in so raw string/number/boolean values can be serialized as RDF literals. */
+const stringDataType = {urn: simpleDataTypes.string.isDefinedBy} as any;
+
 class MockSamm {
-  isRdfNill = jest.fn((namedNode: string) => namedNode === 'nill');
-  isRdfFirst = jest.fn((namedNode: string) => namedNode === 'first');
-  isRdfRest = jest.fn((namedNode: string) => namedNode === 'rest');
-  RdfNil = jest.fn(() => DataFactory.namedNode('nill'));
-  RdfFirst = jest.fn(() => DataFactory.namedNode('first'));
-  RdfRest = jest.fn(() => DataFactory.namedNode('rest'));
-  NameProperty = jest.fn(() => DataFactory.namedNode('sammName'));
-  PropertiesProperty = jest.fn(() => DataFactory.namedNode('properties'));
-  OperationsProperty = jest.fn(() => DataFactory.namedNode('operations'));
-  EventsProperty = jest.fn(() => DataFactory.namedNode('events'));
-  InputProperty = jest.fn(() => DataFactory.namedNode('input'));
-  ElementsProperty = jest.fn(() => DataFactory.namedNode('elements'));
-  QuantityKindsProperty = jest.fn(() => DataFactory.namedNode('quantityKinds'));
-  ParametersProperty = jest.fn(() => DataFactory.namedNode('parameters'));
+  isRdfNill = vi.fn((namedNode: string) => namedNode === 'nill');
+  isRdfFirst = vi.fn((namedNode: string) => namedNode === 'first');
+  isRdfRest = vi.fn((namedNode: string) => namedNode === 'rest');
+  RdfNil = vi.fn(() => DataFactory.namedNode('nill'));
+  RdfFirst = vi.fn(() => DataFactory.namedNode('first'));
+  RdfRest = vi.fn(() => DataFactory.namedNode('rest'));
+  NameProperty = vi.fn(() => DataFactory.namedNode('sammName'));
+  PropertiesProperty = vi.fn(() => DataFactory.namedNode('properties'));
+  OperationsProperty = vi.fn(() => DataFactory.namedNode('operations'));
+  EventsProperty = vi.fn(() => DataFactory.namedNode('events'));
+  InputProperty = vi.fn(() => DataFactory.namedNode('input'));
+  ElementsProperty = vi.fn(() => DataFactory.namedNode('elements'));
+  QuantityKindsProperty = vi.fn(() => DataFactory.namedNode('quantityKinds'));
+  ParametersProperty = vi.fn(() => DataFactory.namedNode('parameters'));
 }
 
 class MockSammC {
-  ValuesProperty = jest.fn(() => DataFactory.namedNode('values'));
-  ElementsProperty = jest.fn(() => DataFactory.namedNode('elements'));
+  ValuesProperty = vi.fn(() => DataFactory.namedNode('values'));
+  ElementsProperty = vi.fn(() => DataFactory.namedNode('elements'));
 }
 
 class MockRDFModel {
@@ -58,26 +78,26 @@ class MockRDFModel {
   sammC = new MockSammC();
 }
 
-jest.mock('../../../../rdf/src/lib/utils/rdf-model-util');
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
-// test aren't working as expected but works with real data
-// TODO to check if the functionality works on every scenario
-describe.skip('RDF Helper', () => {
-  const rdfModel = new MockRDFModel() as any;
+describe('RDF Helper', () => {
+  // A fresh model/store is created for every test so that quads created by one test
+  // (e.g. lists for the same subject/predicate) can never leak into another test.
+  let rdfModel: any;
   let service: RdfListService;
   let predicate: NamedNode;
   const subjectName = 'subject';
+  const subjectUrn = urn(subjectName);
 
   beforeEach(() => {
+    rdfModel = new MockRDFModel();
+
     TestBed.configureTestingModule({
       declarations: [],
       providers: [
         RdfListService,
         MockProvider(RdfNodeService),
+        MockProvider(ValueVisitor, {
+          visit: vi.fn(),
+        }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel as RdfModel, new ModelElementCache(), null),
         }),
@@ -136,7 +156,7 @@ describe.skip('RDF Helper', () => {
   };
 
   const getList = (): Quad_Object => {
-    const quads = rdfModel.store.getQuads(DataFactory.namedNode(subjectName), predicate, null, null);
+    const quads = rdfModel.store.getQuads(DataFactory.namedNode(subjectUrn), predicate, null, null);
     return quads[0]?.object;
   };
 
@@ -154,7 +174,7 @@ describe.skip('RDF Helper', () => {
   const createEmptyList = () => {
     const samm = rdfModel.samm;
     const list = DataFactory.blankNode();
-    rdfModel.store.addQuad(DataFactory.namedNode(subjectName), predicate, list);
+    rdfModel.store.addQuad(DataFactory.namedNode(subjectUrn), predicate, list);
     rdfModel.store.addQuad(DataFactory.triple(list, samm.RdfRest(), samm.RdfNil()));
   };
 
@@ -163,21 +183,20 @@ describe.skip('RDF Helper', () => {
     shouldBeListAndHave({first: 0, rest: 1, list: getList()});
   };
 
+  const newProperty = (name: string) => new DefaultProperty({metaModelVersion: '1', name, aspectModelUrn: urn(name), characteristic: null});
+
+  const newOperation = (name: string) => new DefaultOperation({metaModelVersion: '1', name, aspectModelUrn: urn(name), input: null});
+
   describe('push()', () => {
     describe('Aspect -> Properties', () => {
       beforeEach(() => {
         setPredicate(rdfModel.samm.PropertiesProperty());
-        RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.samm.PropertiesProperty());
-        // RdfListConstants.getRelations = jest.fn(() => null);
       });
 
       let aspect: DefaultAspect;
       const createAspectAndCreateElements = () => {
-        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-        ];
+        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+        const elements = [newProperty('property1'), newProperty('property2')];
 
         service.push(aspect, ...elements);
       };
@@ -201,13 +220,7 @@ describe.skip('RDF Helper', () => {
         expect(getList()).toBeDefined();
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
 
-        service.push(
-          aspect,
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property3', aspectModelUrn: 'property3', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property4', aspectModelUrn: 'property4', characteristic: null}),
-        );
+        service.push(aspect, newProperty('property1'), newProperty('property2'), newProperty('property3'), newProperty('property4'));
         shouldBeListAndHave({first: 4, rest: 4, list: getList()});
       });
 
@@ -217,21 +230,13 @@ describe.skip('RDF Helper', () => {
         expect(getList()).toBeDefined();
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
 
-        service.push(
-          aspect,
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-        );
+        service.push(aspect, newProperty('property2'), newProperty('property1'));
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
 
       it('should not add any element', () => {
         createEmptyList();
-        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = ['example', 1, true];
-        service.push(aspect, ...elements);
-        shouldBeListAndHave({first: 0, rest: 1, list: getList()});
-        checkForFakeElements(new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName}), [
+        checkForFakeElements(new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn}), [
           'example',
           1,
           true,
@@ -240,22 +245,16 @@ describe.skip('RDF Helper', () => {
 
       it('should not add any fake element', () => {
         createEmptyList();
-        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [{random: 'object'}, {random: 'object'}];
-        service.push(aspect, ...elements);
-        shouldBeListAndHave({first: 0, rest: 1, list: getList()});
+        checkForFakeElements(new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn}), [
+          {random: 'object'},
+          {random: 'object'},
+        ]);
       });
 
       it('should add only properties', () => {
         createEmptyList();
-        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [
-          'example',
-          1,
-          true,
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-        ];
+        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+        const elements = ['example', 1, true, newProperty('property1'), newProperty('property2')];
         service.push(aspect, ...elements);
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
@@ -264,16 +263,12 @@ describe.skip('RDF Helper', () => {
     describe('Aspect -> Operations', () => {
       beforeEach(() => {
         setPredicate(rdfModel.samm.OperationsProperty());
-        RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
       let aspect: DefaultAspect;
       const createAspectAndCreateElements = () => {
-        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [
-          new DefaultOperation({metaModelVersion: '1', name: 'operation1', aspectModelUrn: 'operation1', input: null}),
-          new DefaultOperation({metaModelVersion: '1', name: 'operation2', aspectModelUrn: 'operation2', input: null}),
-        ];
+        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+        const elements = [newOperation('operation1'), newOperation('operation2')];
 
         service.push(aspect, ...elements);
       };
@@ -286,13 +281,7 @@ describe.skip('RDF Helper', () => {
 
       it('should create the list and add 2 elements', () => {
         expect(getList()).toBeUndefined();
-        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [
-          new DefaultOperation({metaModelVersion: '1', name: 'operation1', aspectModelUrn: 'operation1', input: null}),
-          new DefaultOperation({metaModelVersion: '1', name: 'operation2', aspectModelUrn: 'operation2', input: null}),
-        ];
-
-        service.push(aspect, ...elements);
+        createAspectAndCreateElements();
         expect(getList()).toBeDefined();
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
@@ -305,10 +294,10 @@ describe.skip('RDF Helper', () => {
 
         service.push(
           aspect,
-          new DefaultOperation({metaModelVersion: '1', name: 'operation1', aspectModelUrn: 'operation1', input: null}),
-          new DefaultOperation({metaModelVersion: '1', name: 'operation2', aspectModelUrn: 'operation2', input: null}),
-          new DefaultOperation({metaModelVersion: '1', name: 'operation3', aspectModelUrn: 'operation3', input: null}),
-          new DefaultOperation({metaModelVersion: '1', name: 'operation4', aspectModelUrn: 'operation4', input: null}),
+          newOperation('operation1'),
+          newOperation('operation2'),
+          newOperation('operation3'),
+          newOperation('operation4'),
         );
         shouldBeListAndHave({first: 4, rest: 4, list: getList()});
       });
@@ -319,17 +308,13 @@ describe.skip('RDF Helper', () => {
         expect(getList()).toBeDefined();
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
 
-        service.push(
-          aspect,
-          new DefaultOperation({metaModelVersion: '1', name: 'operation2', aspectModelUrn: 'operation2', input: null}),
-          new DefaultOperation({metaModelVersion: '1', name: 'operation1', aspectModelUrn: 'operation1', input: null}),
-        );
+        service.push(aspect, newOperation('operation2'), newOperation('operation1'));
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
 
       it('should not add any element', () => {
         createEmptyList();
-        checkForFakeElements(new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName}), [
+        checkForFakeElements(new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn}), [
           'example',
           1,
           true,
@@ -338,7 +323,7 @@ describe.skip('RDF Helper', () => {
 
       it('should not add any fake element', () => {
         createEmptyList();
-        checkForFakeElements(new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName}), [
+        checkForFakeElements(new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn}), [
           {random: 'object'},
           {random: 'object'},
         ]);
@@ -346,14 +331,8 @@ describe.skip('RDF Helper', () => {
 
       it('should add only operations', () => {
         createEmptyList();
-        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [
-          'example',
-          1,
-          true,
-          new DefaultOperation({metaModelVersion: '1', name: 'operation1', aspectModelUrn: 'operation1', input: null}),
-          new DefaultOperation({metaModelVersion: '1', name: 'operation2', aspectModelUrn: 'operation2', input: null}),
-        ];
+        aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+        const elements = ['example', 1, true, newOperation('operation1'), newOperation('operation2')];
         service.push(aspect, ...elements);
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
@@ -362,16 +341,12 @@ describe.skip('RDF Helper', () => {
     describe('Entity -> Properties', () => {
       beforeEach(() => {
         setPredicate(rdfModel.samm.PropertiesProperty());
-        RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
       let entity: DefaultEntity;
       const createEntityAndCreateElements = () => {
-        entity = new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-        ];
+        entity = new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+        const elements = [newProperty('property1'), newProperty('property2')];
 
         service.push(entity, ...elements);
       };
@@ -395,13 +370,7 @@ describe.skip('RDF Helper', () => {
         expect(getList()).toBeDefined();
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
 
-        service.push(
-          entity,
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property3', aspectModelUrn: 'property3', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property4', aspectModelUrn: 'property4', characteristic: null}),
-        );
+        service.push(entity, newProperty('property1'), newProperty('property2'), newProperty('property3'), newProperty('property4'));
         shouldBeListAndHave({first: 4, rest: 4, list: getList()});
       });
 
@@ -411,17 +380,13 @@ describe.skip('RDF Helper', () => {
         expect(getList()).toBeDefined();
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
 
-        service.push(
-          entity,
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-        );
+        service.push(entity, newProperty('property2'), newProperty('property1'));
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
 
       it('should not add any element', () => {
         createEmptyList();
-        checkForFakeElements(new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName}), [
+        checkForFakeElements(new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn}), [
           'example',
           1,
           true,
@@ -430,7 +395,7 @@ describe.skip('RDF Helper', () => {
 
       it('should not add any fake element', () => {
         createEmptyList();
-        checkForFakeElements(new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName}), [
+        checkForFakeElements(new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn}), [
           {random: 'object'},
           {random: 'object'},
         ]);
@@ -438,14 +403,8 @@ describe.skip('RDF Helper', () => {
 
       it('should add only properties', () => {
         createEmptyList();
-        entity = new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-        const elements = [
-          'example',
-          1,
-          true,
-          new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-          new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-        ];
+        entity = new DefaultEntity({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+        const elements = ['example', 1, true, newProperty('property1'), newProperty('property2')];
         service.push(entity, ...elements);
         shouldBeListAndHave({first: 2, rest: 2, list: getList()});
       });
@@ -454,12 +413,17 @@ describe.skip('RDF Helper', () => {
     describe('DefaultEnumeration -> number, string, boolean', () => {
       beforeEach(() => {
         setPredicate(rdfModel.sammC.ValuesProperty());
-        RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
       let enumeration: DefaultEnumeration;
       const createEnumerationAndCreateElements = () => {
-        enumeration = new DefaultEnumeration({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName, values: []});
+        enumeration = new DefaultEnumeration({
+          metaModelVersion: '1',
+          name: subjectName,
+          aspectModelUrn: subjectUrn,
+          values: [],
+          dataType: stringDataType,
+        });
         const elements = [1, 'value', true];
         service.push(enumeration, ...elements);
       };
@@ -477,47 +441,68 @@ describe.skip('RDF Helper', () => {
         shouldBeListAndHave({first: 3, rest: 3, list: getList()});
       });
 
-      // TODO Test should be adjusted.
-      // it('should create the list and add 3 elements an then 3 more others', () => {
-      //   expect(getList()).toBeUndefined();
-      //   createEnumerationAndCreateElements();
-      //   expect(getList()).toBeDefined();
-      //   shouldBeListAndHave({first: 3, rest: 3, list: getList()});
-      //
-      //   service.push(enumeration, 1, 'value', true, 2, 'element', false);
-      //   shouldBeListAndHave({first: 6, rest: 6, list: getList()});
-      // });
-      //
-      // it('should create the list and add duplicates', () => {
-      //   expect(getList()).toBeUndefined();
-      //   createEnumerationAndCreateElements();
-      //   shouldBeListAndHave({first: 3, rest: 3, list: getList()});
-      //
-      //   service.push(enumeration, 2, 'value', true);
-      //   shouldBeListAndHave({first: 6, rest: 6, list: getList()});
-      // });
-
       it('should not add any fake element', () => {
         createEmptyList();
-        checkForFakeElements(new DefaultEnumeration({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName, values: []}), [
-          {random: 'object'},
-          {random: 'object'},
-        ]);
+        checkForFakeElements(
+          new DefaultEnumeration({
+            metaModelVersion: '1',
+            name: subjectName,
+            aspectModelUrn: subjectUrn,
+            values: [],
+            dataType: stringDataType,
+          }),
+          [{random: 'object'}, {random: 'object'}],
+        );
       });
 
       it('should add only string, number, boolean', () => {
         createEmptyList();
-        const aspect = new DefaultEnumeration({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName, values: []});
+        const aspect = new DefaultEnumeration({
+          metaModelVersion: '1',
+          name: subjectName,
+          aspectModelUrn: subjectUrn,
+          values: [],
+          dataType: stringDataType,
+        });
         const elements = ['example', 1, true, {random: 'object'}, {random: 'object'}];
         service.push(aspect, ...elements);
         shouldBeListAndHave({first: 3, rest: 3, list: getList()});
+      });
+
+      it('should add named and anonymous DefaultValue to enumeration list', () => {
+        createEmptyList();
+        const namedVal = new DefaultValue({
+          metaModelVersion: '1',
+          aspectModelUrn: urn('GreenLight'),
+          name: 'GreenLight',
+          value: 'green',
+          isAnonymous: false,
+        } as any);
+        const anonVal = new DefaultValue({
+          metaModelVersion: '1',
+          aspectModelUrn: urn('[Value]_1234'),
+          name: '[Value]',
+          value: 'red',
+          isAnonymous: true,
+        } as any);
+        const enumeration = new DefaultEnumeration({
+          metaModelVersion: '1',
+          name: subjectName,
+          aspectModelUrn: subjectUrn,
+          values: [namedVal, anonVal],
+          dataType: stringDataType,
+        });
+
+        service.push(enumeration, namedVal, anonVal);
+
+        shouldBeListAndHave({first: 2, rest: 2, list: getList()});
+        expect(service.valueVisitor.visit).toHaveBeenCalledWith(anonVal, expect.anything(), stringDataType.urn);
       });
     });
 
     describe('DefaultStructuredValue -> number, string, boolean', () => {
       beforeEach(() => {
         setPredicate(rdfModel.sammC.ElementsProperty());
-        RdfModelUtil.resolvePredicate = jest.fn(() => predicate);
       });
 
       let structuredValue: DefaultStructuredValue;
@@ -525,9 +510,10 @@ describe.skip('RDF Helper', () => {
         structuredValue = new DefaultStructuredValue({
           metaModelVersion: '1',
           name: subjectName,
-          aspectModelUrn: subjectName,
+          aspectModelUrn: subjectUrn,
           elements: [],
           deconstructionRule: null,
+          dataType: stringDataType,
         });
         const elements = [1, 'value', true];
         service.push(structuredValue, ...elements);
@@ -546,36 +532,16 @@ describe.skip('RDF Helper', () => {
         shouldBeListAndHave({first: 3, rest: 3, list: getList()});
       });
 
-      // TODO Test should be adjusted.
-      // it('should create the list and add 3 elements an then 3 more others', () => {
-      //   expect(getList()).toBeUndefined();
-      //   createStructuredValueAndCreateElements();
-      //   expect(getList()).toBeDefined();
-      //   shouldBeListAndHave({first: 3, rest: 3, list: getList()});
-      //
-      //   service.push(structuredValue, 2, 'element', false);
-      //   shouldBeListAndHave({first: 6, rest: 6, list: getList()});
-      // });
-      //
-      // it('should create the list and add duplicates', () => {
-      //   expect(getList()).toBeUndefined();
-      //   createStructuredValueAndCreateElements();
-      //   expect(getList()).toBeDefined();
-      //   shouldBeListAndHave({first: 3, rest: 3, list: getList()});
-      //
-      //   service.push(structuredValue, 2, 'value', true);
-      //   shouldBeListAndHave({first: 6, rest: 6, list: getList()});
-      // });
-
       it('should not add any fake element', () => {
         createEmptyList();
         checkForFakeElements(
           new DefaultStructuredValue({
             metaModelVersion: '1',
             name: subjectName,
-            aspectModelUrn: subjectName,
+            aspectModelUrn: subjectUrn,
             deconstructionRule: null,
             elements: [],
+            dataType: stringDataType,
           }),
           [{random: 'object'}, {random: 'object'}],
         );
@@ -586,9 +552,10 @@ describe.skip('RDF Helper', () => {
         structuredValue = new DefaultStructuredValue({
           metaModelVersion: '1',
           name: subjectName,
-          aspectModelUrn: subjectName,
+          aspectModelUrn: subjectUrn,
           deconstructionRule: null,
           elements: [],
+          dataType: stringDataType,
         });
         const elements = ['example', 1, true, {random: 'object'}, {random: 'object'}];
         service.push(structuredValue, ...elements);
@@ -602,11 +569,8 @@ describe.skip('RDF Helper', () => {
       setPredicate(rdfModel.samm.PropertiesProperty());
       createEmptyList();
 
-      const source = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-      const elements = [
-        new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-        new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-      ];
+      const source = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+      const elements = [newProperty('property1'), newProperty('property2')];
       service.push(source, ...elements);
 
       const list = getList();
@@ -616,20 +580,16 @@ describe.skip('RDF Helper', () => {
       shouldBeListAndHave({first: 1, rest: 1, list});
 
       const remainingQuads = rdfModel.store.getQuads(null, rdfModel.samm.RdfFirst(), null, null);
-      expect(remainingQuads.find(quad => quad?.object.value === 'property1')).not.toBeDefined();
+      expect(remainingQuads.find(quad => quad?.object.value === urn('property1'))).not.toBeDefined();
+      expect(remainingQuads.find(quad => quad?.object.value === urn('property2'))).toBeDefined();
     });
 
     it('should remove property1 and property2', () => {
       setPredicate(rdfModel.samm.PropertiesProperty());
       createEmptyList();
 
-      const source = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-      const elements = [
-        new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-        new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-        new DefaultProperty({metaModelVersion: '1', name: 'property3', aspectModelUrn: 'property3', characteristic: null}),
-        new DefaultProperty({metaModelVersion: '1', name: 'property4', aspectModelUrn: 'property4', characteristic: null}),
-      ];
+      const source = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+      const elements = [newProperty('property1'), newProperty('property2'), newProperty('property3'), newProperty('property4')];
       service.push(source, ...elements);
 
       const list = getList();
@@ -639,18 +599,27 @@ describe.skip('RDF Helper', () => {
       shouldBeListAndHave({first: 2, rest: 2, list});
 
       const remainingQuads = rdfModel.store.getQuads(null, rdfModel.samm.RdfFirst(), null, null);
-      expect(remainingQuads.find(quad => quad?.object.value === 'property1')).not.toBeDefined();
-      expect(remainingQuads.find(quad => quad?.object.value === 'property2')).not.toBeDefined();
+      expect(remainingQuads.find(quad => quad?.object.value === urn('property1'))).not.toBeDefined();
+      expect(remainingQuads.find(quad => quad?.object.value === urn('property2'))).not.toBeDefined();
+      expect(remainingQuads.find(quad => quad?.object.value === urn('property3'))).toBeDefined();
+      expect(remainingQuads.find(quad => quad?.object.value === urn('property4'))).toBeDefined();
+    });
+
+    it('should do nothing when there is no list for the given source/property', () => {
+      setPredicate(rdfModel.samm.PropertiesProperty());
+
+      const source = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+      // getFilteredElements() eagerly creates an (empty) list via getListOrCreateNew() even when
+      // called from remove(); remove() only skips *removing* elements from a freshly created list.
+      expect(() => service.remove(source, newProperty('property1'))).not.toThrow();
+      shouldBeListAndHave({first: 0, rest: 1, list: getList()});
     });
   });
 
   let sourceAspect: DefaultAspect;
   const createSourceAspectAndCreateElements = () => {
-    sourceAspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectName});
-    const elements = [
-      new DefaultProperty({metaModelVersion: '1', name: 'property1', aspectModelUrn: 'property1', characteristic: null}),
-      new DefaultProperty({metaModelVersion: '1', name: 'property2', aspectModelUrn: 'property2', characteristic: null}),
-    ];
+    sourceAspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+    const elements = [newProperty('property1'), newProperty('property2')];
 
     service.push(sourceAspect, ...elements);
   };
@@ -658,17 +627,27 @@ describe.skip('RDF Helper', () => {
   describe('emptyList', () => {
     beforeEach(() => {
       setPredicate(rdfModel.samm.PropertiesProperty());
-      RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.samm.PropertiesProperty());
     });
 
     it('should empty the properties list', () => {
       createEmptyList();
       createSourceAspectAndCreateElements();
+      shouldBeListAndHave({first: 2, rest: 2, list: getList()});
 
       service.emptyList(sourceAspect, ListProperties.properties);
 
-      const list = rdfModel.store.getQuads(DataFactory.namedNode(subjectName), rdfModel.samm.PropertiesProperty(), null, null)?.[0]?.object;
+      const list = rdfModel.store.getQuads(DataFactory.namedNode(subjectUrn), rdfModel.samm.PropertiesProperty(), null, null)?.[0]?.object;
       expect(list).not.toBeUndefined();
+      expect(list.value).toBe(rdfModel.samm.RdfNil().value);
+    });
+
+    it('should do nothing when the list is already empty', () => {
+      createEmptyList();
+      const aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+
+      service.emptyList(aspect, ListProperties.properties);
+
+      const list = rdfModel.store.getQuads(DataFactory.namedNode(subjectUrn), rdfModel.samm.PropertiesProperty(), null, null)?.[0]?.object;
       expect(list.value).toBe(rdfModel.samm.RdfNil().value);
     });
   });
@@ -676,7 +655,6 @@ describe.skip('RDF Helper', () => {
   describe('createEmpty()', () => {
     beforeEach(() => {
       setPredicate(rdfModel.samm.PropertiesProperty());
-      RdfModelUtil.resolvePredicate = jest.fn(() => rdfModel.samm.PropertiesProperty());
     });
 
     it('should create empty list', () => {
@@ -684,6 +662,15 @@ describe.skip('RDF Helper', () => {
       createSourceAspectAndCreateElements();
 
       service.createEmpty(sourceAspect, ListProperties.properties);
+
+      shouldBeListAndHave({first: 0, rest: 1, list: getList()});
+    });
+
+    it('should create a new list from scratch when none exists yet', () => {
+      const aspect = new DefaultAspect({metaModelVersion: '1', name: subjectName, aspectModelUrn: subjectUrn});
+      expect(getList()).toBeUndefined();
+
+      service.createEmpty(aspect, ListProperties.properties);
 
       shouldBeListAndHave({first: 0, rest: 1, list: getList()});
     });

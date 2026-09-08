@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,83 +12,113 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<form [formGroup]="form">
-  <h3>
-    Model Namespace
-    <mat-icon
-      [matTooltipShowDelay]="0"
-      [matTooltipHideDelay]="100"
-      [matTooltip]="'SETTINGS_DIALOG.NAMESPACES.ASPECT_NAMESPACE_TOOLTIP' | translate"
-      >info
-    </mat-icon>
-  </h3>
+  <div>
+    <h3>
+      Model Namespace
+      <mat-icon [matTooltipShowDelay]="0" [matTooltipHideDelay]="100" [matTooltip]="t('settingsDialog.namespaces.aspectNamespaceTooltip')"
+        >info
+      </mat-icon>
+    </h3>
 
-  <div class="namespace-fields">
-    <mat-form-field class="namespace-setting-field">
-      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</mat-label>
-      <input class="form-control" matInput spellcheck="false" formControlName="aspectUri" data-cy="namespaceTabValueInput" />
-      @if (form.get('aspectUri').errors?.required) {
-        <mat-error>Namespace is required</mat-error>
-      }
-      @if (form.get('aspectUri').errors?.invalidPattern) {
-        <mat-error>Not a valid namespace</mat-error>
-      }
-    </mat-form-field>
+    <div class="namespace-fields">
+      <mat-form-field class="namespace-setting-field">
+        <mat-label class="label-top">{{ t('settingsDialog.namespaces.value') }}</mat-label>
+        <input
+          class="form-control"
+          [formField]="form.namespaceConfiguration.aspectUri"
+          matInput
+          spellcheck="false"
+          data-cy="namespaceTabValueInput"
+        />
+        @if (form.namespaceConfiguration.aspectUri().invalid()) {
+          @for (error of form.namespaceConfiguration.aspectUri().errors(); track error) {
+            @if (error.kind === 'required') {
+              <mat-error>{{ t('settingsDialog.namespaces.errors.requiredNamespace') }}</mat-error>
+            }
+            @if (error.kind === 'pattern') {
+              <mat-error>{{ t('settingsDialog.namespaces.errors.invalidNamespace') }}</mat-error>
+            }
+          }
+        }
+      </mat-form-field>
 
-    <mat-form-field class="namespace-setting-field">
-      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</mat-label>
-      <input class="form-control" matInput spellcheck="false" formControlName="aspectVersion" data-cy="namespaceTabVersionInput" />
-      @if (form.get('aspectVersion').errors?.required) {
-        <mat-error>Version is required</mat-error>
-      }
-      @if (form.get('aspectVersion').errors?.invalidVersionFormat) {
-        <mat-error>Not a valid version</mat-error>
-      }
-    </mat-form-field>
+      <mat-form-field class="namespace-setting-field">
+        <mat-label class="label-top">{{ t('settingsDialog.namespaces.version') }}</mat-label>
+        <input
+          class="form-control"
+          [formField]="form.namespaceConfiguration.aspectVersion"
+          matInput
+          spellcheck="false"
+          data-cy="namespaceTabVersionInput"
+        />
+        @if (form.namespaceConfiguration.aspectVersion().invalid()) {
+          @for (error of form.namespaceConfiguration.aspectVersion().errors(); track error) {
+            @if (error.kind === 'required') {
+              <mat-error>{{ t('settingsDialog.namespaces.errors.requiredVersion') }}</mat-error>
+            }
+            @if (error.kind === 'pattern') {
+              <mat-error>{{ t('settingsDialog.namespaces.errors.invalidVersion') }}</mat-error>
+            }
+          }
+        }
+      </mat-form-field>
 
-    <mat-form-field class="namespace-setting-field">
-      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</mat-label>
-      <input class="form-control" matInput spellcheck="false" formControlName="aspectName" data-cy="namespaceTabFileNameInput" />
-    </mat-form-field>
+      <mat-form-field class="namespace-setting-field">
+        <mat-label class="label-top">{{ t('settingsDialog.namespaces.name') }}</mat-label>
+        <input
+          class="form-control"
+          [formField]="form.namespaceConfiguration.aspectName"
+          matInput
+          spellcheck="false"
+          data-cy="namespaceTabFileNameInput"
+        />
+      </mat-form-field>
 
-    <mat-form-field class="namespace-setting-field">
-      <mat-label class="label-top">{{ 'SETTINGS_DIALOG.NAMESPACES.SAMM_VERSION' | translate }}</mat-label>
-      <input class="form-control" matInput spellcheck="false" formControlName="sammVersion" data-cy="namespaceTabSammVersionInput" />
-    </mat-form-field>
+      <mat-form-field class="namespace-setting-field">
+        <mat-label class="label-top">{{ t('settingsDialog.namespaces.sammVersion') }}</mat-label>
+        <input
+          class="form-control"
+          [formField]="form.namespaceConfiguration.sammVersion"
+          matInput
+          spellcheck="false"
+          data-cy="namespaceTabSammVersionInput"
+        />
+      </mat-form-field>
+    </div>
   </div>
-</form>
 
-<mat-accordion>
-  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        {{ 'SETTINGS_DIALOG.NAMESPACES.PREDEFINED_NAMESPACES' | translate }}
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <table [dataSource]="predefinedNamespaces" mat-table>
-      <caption></caption>
-      <ng-container matColumnDef="name">
-        <th id="name" *matHeaderCellDef mat-header-cell>{{ 'SETTINGS_DIALOG.NAMESPACES.NAME' | translate }}</th>
-        <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
-      </ng-container>
+  <mat-accordion>
+    <mat-expansion-panel (opened)="panelOpenState.set(true)" (closed)="panelOpenState.set(false)">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ t('settingsDialog.namespaces.predefinedNamespaces') }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <table [dataSource]="predefinedNamespaces()" mat-table>
+        <caption></caption>
+        <ng-container matColumnDef="name">
+          <th id="name" *matHeaderCellDef mat-header-cell>{{ t('settingsDialog.namespaces.name') }}</th>
+          <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="value">
-        <th id="value" *matHeaderCellDef mat-header-cell>{{ 'SETTINGS_DIALOG.NAMESPACES.VALUE' | translate }}</th>
-        <td *matCellDef="let element" mat-cell>{{ element.value }}</td>
-      </ng-container>
+        <ng-container matColumnDef="value">
+          <th id="value" *matHeaderCellDef mat-header-cell>{{ t('settingsDialog.namespaces.value') }}</th>
+          <td *matCellDef="let element" mat-cell>{{ element.value }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="version">
-        <th id="version" *matHeaderCellDef mat-header-cell>{{ 'SETTINGS_DIALOG.NAMESPACES.VERSION' | translate }}</th>
-        <td *matCellDef="let element" mat-cell>{{ element.version }}</td>
-      </ng-container>
-      <tr *matHeaderRowDef="columns" mat-header-row></tr>
-      <tr *matRowDef="let row; columns: columns" mat-row></tr>
-    </table>
-  </mat-expansion-panel>
-</mat-accordion>
+        <ng-container matColumnDef="version">
+          <th id="version" *matHeaderCellDef mat-header-cell>{{ t('settingsDialog.namespaces.version') }}</th>
+          <td *matCellDef="let element" mat-cell>{{ element.version }}</td>
+        </ng-container>
+        <tr *matHeaderRowDef="columns()" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: columns()" mat-row></tr>
+      </table>
+    </mat-expansion-panel>
+  </mat-accordion>
 
-<br />
+  <br />
 
-<a href="https://eclipse-esmf.github.io/samm-specification/snapshot/namespaces.html#prefixes" target="_blank" rel="noopener"
-  >Link: Predefined namespace prefixes</a
->
+  <a href="https://eclipse-esmf.github.io/samm-specification/snapshot/namespaces.html#prefixes" target="_blank" rel="noopener"
+    >Link: Predefined namespace prefixes</a
+  >
+</ng-container>

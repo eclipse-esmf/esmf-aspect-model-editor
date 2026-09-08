@@ -11,23 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
 import {BrowserWindow, globalShortcut} from 'electron';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 import {registerWindowsLinuxShortcuts} from './windows-linux';
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   BrowserWindow: {
-    getFocusedWindow: jest.fn(),
+    getFocusedWindow: vi.fn(),
   },
   globalShortcut: {
-    register: jest.fn(),
+    register: vi.fn(),
   },
 }));
 
-const mockedRegister = globalShortcut.register as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedGetFocusedWindow = BrowserWindow.getFocusedWindow as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedRegister = globalShortcut.register as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedGetFocusedWindow = BrowserWindow.getFocusedWindow as unknown as MockedFunction<(...args: any[]) => any>;
 
-const mockOpenDevTools = jest.fn();
+const mockOpenDevTools = vi.fn();
 const mockWin = {
   webContents: {
     openDevTools: mockOpenDevTools,
@@ -36,7 +36,7 @@ const mockWin = {
 
 describe('registerWindowsLinuxShortcuts', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockedGetFocusedWindow.mockReturnValue(mockWin);
   });
 

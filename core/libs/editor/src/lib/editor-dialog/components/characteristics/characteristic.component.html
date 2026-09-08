@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -10,51 +11,68 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-@if (property) {
-  <ame-characteristic-name-dropdown-field
-    [parentForm]="parentForm"
-    [previousDataSnapshot]="previousData"
-    (selectedCharacteristic)="onClassChange($event)"
-    (previousData)="onPreviousDataChange($event)"
-  />
+  @if (property()) {
+    <ame-characteristic-name-dropdown-field
+      [signalForm]="signalForm()"
+      [previousDataSnapshot]="previousData()"
+      (selectedCharacteristic)="onClassChange($event)"
+      (previousData)="onPreviousDataChange($event)"
+    />
 
-  <ame-base-input [previousData]="previousData || {}" [parentForm]="parentForm" />
-  @if (selectedCharacteristic !== characteristicClassType.Either) {
-    <ame-data-type-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
+    @if (canBeAnonymous()) {
+      <div class="anonymous-toggle-card">
+        <div class="anonymous-toggle-card__content">
+          <div class="anonymous-toggle-card__title-row">
+            <mat-icon class="anonymous-toggle-card__icon">link_off</mat-icon>
+            <span class="anonymous-toggle-card__title">{{ t('editorCanvas.shapeSetting.anonymous') }}</span>
+          </div>
+          <p class="anonymous-toggle-card__hint">{{ t('editorCanvas.shapeSetting.anonymousHint') }}</p>
+        </div>
+        <mat-slide-toggle
+          [checked]="isAnonymous()"
+          [attr.aria-label]="t('editorCanvas.shapeSetting.anonymous')"
+          (change)="onAnonymousToggleChange($event.checked)"
+          color="primary"
+          data-cy="anonymousToggle"
+        />
+      </div>
+    }
+
+    <ame-base-input [previousData]="previousData()" [signalForm]="signalForm()" />
+    @if (selectedCharacteristic() !== characteristicClassType().Either) {
+      <ame-data-type-input-field [previousData]="previousData()" [signalForm]="signalForm()" />
+    }
+
+    @if (isElementCharacteristicAllowed()) {
+      <ame-element-characteristic-input-field [previousData]="previousData()" [signalForm]="signalForm()" />
+    }
+
+    @if (selectedCharacteristic() === characteristicClassType().Enumeration) {
+      <ame-values-input-field [previousData]="previousData()" [signalForm]="signalForm()" />
+    }
+
+    @if (isUnitAllowed()) {
+      <ame-unit-input-field [previousData]="previousData()" [signalForm]="signalForm()" />
+    }
+
+    @if (selectedCharacteristic() === characteristicClassType().State) {
+      <ame-state-characteristic [previousData]="previousData()" [signalForm]="signalForm()" />
+    }
+
+    @if (selectedCharacteristic() === characteristicClassType().StructuredValue) {
+      <ame-structured-value [signalForm]="signalForm()"></ame-structured-value>
+    }
+
+    @if (selectedCharacteristic() === characteristicClassType().Either) {
+      <ame-left-input-field [previousData]="previousData() || {}" [signalForm]="signalForm()" />
+      <ame-right-input-field [previousData]="previousData() || {}" [signalForm]="signalForm()" />
+    }
+
+    <ame-element-list
+      [label]="t('editorCanvas.shapeSetting.ameElementListLabel.incomingEdges')"
+      [elements]="element()?.parents"
+      iconRotation="rotate270"
+    />
+    <ame-element-list [label]="t('editorCanvas.shapeSetting.ameElementListLabel.outgoingEdges')" [elements]="element()?.children" />
   }
-
-  @if (isElementCharacteristicAllowed()) {
-    <ame-element-characteristic-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
-  }
-
-  @if (selectedCharacteristic === characteristicClassType.Enumeration) {
-    <ame-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
-  }
-
-  @if (isUnitAllowed()) {
-    <ame-unit-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
-  }
-
-  @if (selectedCharacteristic === characteristicClassType.State) {
-    <ame-state-characteristic [previousData]="previousData || {}" [parentForm]="parentForm" />
-  }
-
-  @if (selectedCharacteristic === characteristicClassType.StructuredValue) {
-    <ame-structured-value [parentForm]="parentForm"></ame-structured-value>
-  }
-
-  @if (selectedCharacteristic === characteristicClassType.Either) {
-    <ame-left-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
-    <ame-right-input-field [previousData]="previousData || {}" [parentForm]="parentForm" />
-  }
-
-  <ame-element-list
-    [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.INCOMING_EDGES' | translate"
-    [elements]="(element$ | async)?.parents"
-    iconRotation="rotate270"
-  />
-  <ame-element-list
-    [label]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_LABEL.OUTGOING_EDGES' | translate"
-    [elements]="(element$ | async)?.children"
-  />
-}
+</ng-container>

@@ -13,19 +13,19 @@
 
 import {Injectable} from '@angular/core';
 import {Aspect, DefaultProperty} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class AspectConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Aspect> {
-  public connect(aspect: Aspect, source: mxgraph.mxCell) {
+  public connect(aspect: Aspect, source: Cell) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
     const child = this.renderTree(defaultProperty, source);
     aspect.properties.push(defaultProperty);
 
-    this.mxGraphService.assignToParent(child, source);
-    this.mxGraphService.formatCell(source);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.assignToParent(child, source);
+    this.maxgraphService.formatCell(source);
+    this.maxgraphService.formatShapes();
   }
 }

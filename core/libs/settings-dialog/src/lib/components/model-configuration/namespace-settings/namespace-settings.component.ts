@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject, OnInit} from '@angular/core';
-import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {FormField} from '@angular/forms/signals';
 import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle} from '@angular/material/expansion';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -31,7 +31,7 @@ import {
 } from '@angular/material/table';
 import {MatTooltip} from '@angular/material/tooltip';
 import {Samm} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {SettingsFormService} from '../../../services';
 
 @Component({
@@ -39,7 +39,7 @@ import {SettingsFormService} from '../../../services';
   templateUrl: './namespace-settings.component.html',
   styleUrls: ['./namespace-settings.component.scss'],
   imports: [
-    ReactiveFormsModule,
+    FormField,
     MatIconModule,
     MatTooltip,
     MatFormFieldModule,
@@ -60,28 +60,30 @@ import {SettingsFormService} from '../../../services';
     MatRowDef,
     MatHeaderRow,
     MatRow,
-    TranslatePipe,
+    TranslocoDirective,
   ],
 })
 export class NamespaceSettingsComponent implements OnInit {
-  private formService = inject(SettingsFormService);
+  protected readonly formService = inject(SettingsFormService);
 
-  public form: FormGroup;
-  public columns: string[] = ['name', 'value', 'version'];
-  public panelOpenState = false;
-  public predefinedNamespaces: Array<{name?: string; value?: string; version?: string}> = [];
+  readonly form = this.formService.settingsForm;
+
+  public columns = signal(['name', 'value', 'version']);
+  public panelOpenState = signal(false);
+  public predefinedNamespaces = signal<{name: string; value: string; version: string}[]>([]);
 
   ngOnInit(): void {
-    this.form = this.formService.getForm().get('namespaceConfiguration') as FormGroup;
     this.initializePredefinedNamespaces();
   }
 
   private initializePredefinedNamespaces(): void {
     const loadedRdfModel = this.formService.getLoadedRdfModel();
-    const namespaces = loadedRdfModel ? loadedRdfModel.getNamespaces() : '';
-    this.predefinedNamespaces = Object.keys(namespaces)
-      .filter(key => this.isValidNamespaceKey(key, namespaces[key]))
-      .map(key => this.createNamespaceEntry(namespaces[key]));
+    const namespaces = loadedRdfModel ? loadedRdfModel.getNamespaces() : {};
+    this.predefinedNamespaces.set(
+      Object.keys(namespaces || {})
+        .filter(key => this.isValidNamespaceKey(key, namespaces[key]))
+        .map(key => this.createNamespaceEntry(namespaces[key])),
+    );
   }
 
   private isValidNamespaceKey(key: string, uri: string): boolean {
@@ -108,9 +110,9 @@ export class NamespaceSettingsComponent implements OnInit {
     const namespaceParts = uri.split(':');
 
     return {
-      name: namespaceParts[3],
+      name: namespaceParts[3] || '',
       value: `${namespaceParts[0]}:${namespaceParts[1]}:${namespaceParts[2]}`,
-      version: namespaceParts[4].replace('#', ''),
+      version: namespaceParts[4] ? namespaceParts[4].replace('#', '') : '',
     };
   }
 

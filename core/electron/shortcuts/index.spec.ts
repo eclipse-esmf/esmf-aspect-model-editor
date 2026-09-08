@@ -11,29 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
 import {globalShortcut} from 'electron';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './index';
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   globalShortcut: {
-    unregisterAll: jest.fn(),
+    unregisterAll: vi.fn(),
   },
 }));
 
-jest.mock('./common', () => ({
-  registerCommonShortcuts: jest.fn(),
+vi.mock('./common', () => ({
+  registerCommonShortcuts: vi.fn(),
 }));
 
-jest.mock('./mac', () => ({
-  registerMacShortcuts: jest.fn(),
+vi.mock('./mac', () => ({
+  registerMacShortcuts: vi.fn(),
 }));
 
-jest.mock('./windows-linux', () => ({
-  registerWindowsLinuxShortcuts: jest.fn(),
+vi.mock('./windows-linux', () => ({
+  registerWindowsLinuxShortcuts: vi.fn(),
 }));
 
-jest.mock('../platform/platform', () => ({
+vi.mock('../platform/platform', () => ({
   default: {
     isMac: false,
     isWin: false,
@@ -41,20 +41,20 @@ jest.mock('../platform/platform', () => ({
   },
 }));
 
+import platformData from '../platform/platform';
 import {registerCommonShortcuts} from './common';
 import {registerMacShortcuts} from './mac';
 import {registerWindowsLinuxShortcuts} from './windows-linux';
-import platformData from '../platform/platform';
 
-const mockedUnregisterAll = globalShortcut.unregisterAll as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedRegisterCommon = registerCommonShortcuts as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedRegisterMac = registerMacShortcuts as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedRegisterWindowsLinux = registerWindowsLinuxShortcuts as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedUnregisterAll = globalShortcut.unregisterAll as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedRegisterCommon = registerCommonShortcuts as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedRegisterMac = registerMacShortcuts as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedRegisterWindowsLinux = registerWindowsLinuxShortcuts as unknown as MockedFunction<(...args: any[]) => any>;
 const mockedPlatform = platformData as {isMac: boolean; isWin: boolean; isLinux: boolean};
 
 describe('shortcuts/index', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockedPlatform.isMac = false;
     mockedPlatform.isWin = false;
     mockedPlatform.isLinux = false;

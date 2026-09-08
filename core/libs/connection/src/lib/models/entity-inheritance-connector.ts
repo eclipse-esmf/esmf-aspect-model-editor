@@ -11,21 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
-import {ElementCreatorService} from '@ame/shared';
 import {inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
-import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
+import {Cell} from '@maxgraph/core';
+import {EntityPropertyConnectionHandler} from '../multi-shape-connection-handlers/entity--property.service';
+import {PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers/property--abstract-property.service';
 import {InheritanceConnector} from './inheritance-connector';
 
 export class EntityInheritanceConnector extends InheritanceConnector {
-  protected filtersService = inject(FiltersService);
-  protected propertyAbstractPropertyConnector? = inject(PropertyAbstractPropertyConnectionHandler);
+  protected propertyAbstractPropertyConnector = inject(PropertyAbstractPropertyConnectionHandler);
   protected entityPropertyConnector = inject(EntityPropertyConnectionHandler);
-  protected elementCreator = inject(ElementCreatorService);
 
-  connectWithAbstract(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
+  connectWithAbstract(parentMetaModel: DefaultEntity, childMetaModel: DefaultEntity, parent: Cell, child: Cell) {
     if (parentMetaModel.getExtends()?.aspectModelUrn === childMetaModel.aspectModelUrn) {
       return;
     }
@@ -60,13 +57,13 @@ export class EntityInheritanceConnector extends InheritanceConnector {
         newProperties[i],
         abstractProperties[i],
         propertyCell,
-        this.mxGraphService.resolveCellByModelElement(abstractProperties[i]),
+        this.maxgraphService.resolveCellByModelElement(abstractProperties[i]),
       );
     }
 
-    this.mxGraphService.formatCell(parent);
-    this.mxGraphService.formatCell(child);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.formatCell(parent);
+    this.maxgraphService.formatCell(child);
+    this.maxgraphService.formatShapes();
   }
 
   isInheritedElement(element: NamedElement): boolean {

@@ -15,6 +15,7 @@
 export const SELECTOR_tbDeleteButton = '[data-cy="tbDeleteButton"]';
 export const SELECTOR_tbConnectButton = '[data-cy="tbConnectButton"]';
 export const SELECTOR_tbCollapseToggle = '[data-cy="collapseExpandToggle"]';
+export const SELECTOR_tbValidateButton = '[data-cy="tbValidateButton"]';
 export const SELECTOR_overrideNamespace = '[data-cy="overrideNamespace"]';
 
 // Workspace (sidebar)
@@ -22,6 +23,14 @@ export const SIDEBAR_CLOSE_BUTTON = '[data-cy="sidebar-close"]';
 export const SELECTOR_elementBtn = '[data-cy="elementsBtn"]';
 export const SELECTOR_workspaceBtn = '[data-cy="workspaceBtn"]';
 export const SELECTOR_searchElementsInp = '[data-cy="searchElements"]';
+export const SELECTOR_workspaceSearchInput = '[data-cy="workspaceSearchInput"]';
+export const SELECTOR_workspaceToggleFold = '[data-cy="workspaceToggleFold"]';
+export const SELECTOR_workspaceRefreshButton = '[data-cy="workspaceRefreshButton"]';
+export const SELECTOR_openFileMenu = '[data-cy="openFileMenu"]';
+export const SELECTOR_fileMenuDeleteButton = '[data-cy="fileMenuDeleteButton"]';
+export const SELECTOR_fileMenuLoadAspectModelButton = '[data-cy="fileMenuLoadAspectModelButton"]';
+export const SELECTOR_fileMenuFindElements = '[data-cy="fileMenuFindElements"]';
+export const SELECTOR_fileMenuCopyToClipboardButton = '[data-cy="fileMenuCopyToClipboardButton"]';
 
 // Settings -> Namespace
 export const SELECTOR_namespaceTabValueInput = '[data-cy="namespaceTabValueInput"]';
@@ -53,6 +62,7 @@ export const BUTTON_renameModelConfirm = '[data-cy="file-rename-confirm"]';
 export const SELECTOR_editorSaveButton = '[data-cy="editorSaveButton"]';
 export const SELECTOR_propertiesCancelButton = '[data-cy="propertiesCancelButton"]';
 export const SELECTOR_editorCancelButton = '[data-cy="editorCancelButton"]';
+export const SELECTOR_anonymousToggle = '[data-cy="anonymousToggle"]';
 export const FIELD_name = '[data-cy="name"]';
 export const FIELD_value = '[data-cy="valueElement"]';
 export const FIELD_entityValueName = '[data-cy="entityValueName"]';
@@ -74,6 +84,14 @@ export const FIELD_preferredNameen = '[data-cy="preferredName"]';
 export const FIELD_descriptionen = '[data-cy="description"]';
 export const FIELD_characteristicName = '[data-cy="characteristicName"]';
 export const FIELD_constraintName = '[data-cy="constraintName"]';
+export const FIELD_encodingValue = '[data-cy="encodingValue"]';
+export const FIELD_upperBoundDefinition = '[data-cy="upperBoundDefinition"]';
+export const FIELD_lowerBoundDefinition = '[data-cy="lowerBoundDefinition"]';
+export const FIELD_minValue = '[data-cy="minValue"]';
+export const FIELD_maxValue = '[data-cy="maxValue"]';
+export const FIELD_scale = '[data-cy="scale"]';
+export const FIELD_integer = '[data-cy="integer"]';
+export const FIELD_valueConstraint = '[data-cy="value"]';
 export const FIELD_localeCode = '[data-cy="localeCode"]';
 export const FIELD_languageCode = '[data-cy="languageCode"]';
 export const FIELD_values = '[data-cy="values"]';
@@ -146,6 +164,8 @@ export const GENERATION_tbGenerateAsyncApiButton = '[data-cy="tbGenerateAsyncApi
 export const GENERATION_tbOutputButton = '[data-cy="tbOutputButton"]';
 export const GENERATION_tbOutputButton_YAML = '[data-cy="tbOutputButton-yaml"]';
 export const GENERATION_tbOutputButton_JSON = '[data-cy="tbOutputButton-json"]';
+export const GENERATION_tbOutputButton_AASX = '[data-cy="tbOutputButton-aasx"]';
+export const GENERATION_tbOutputButton_XML = '[data-cy="tbOutputButton-xml"]';
 export const GENERATION_tbBaseUrlInput = '[data-cy="tbBaseUrlInput"]';
 export const GENERATION_tbBaseUrlInputError = '[data-cy="tbBaseUrlInputError"]';
 export const GENERATION_tbApplicationIdInput = '[data-cy="tbApplicationIdInput"]';

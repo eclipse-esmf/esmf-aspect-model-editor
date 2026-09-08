@@ -21,11 +21,11 @@ export class NotificationsService {
   private toastr = inject(ToastrService);
 
   private notifications: NotificationModel[] = [];
-  private lastErrorDate: Date = null;
-  private errorTimeout;
+  private lastErrorDate: Date | null = null;
+  private errorTimeout: any;
   private nbValidationErrors = 0;
 
-  badgeText = new EventEmitter<string>();
+  badgeText = new EventEmitter<string | null>();
 
   clearNotifications(notificationsToDelete?: NotificationModel[]) {
     if (!notificationsToDelete) {
@@ -33,7 +33,7 @@ export class NotificationsService {
     } else {
       this.notifications = this.notifications.filter(notification => !notificationsToDelete.includes(notification));
     }
-    this.badgeText.emit(this.notifications.length == 0 ? null : `${this.notifications.length}`);
+    this.badgeText.emit(this.notifications.length === 0 ? null : `${this.notifications.length}`);
   }
 
   getNotifications() {
@@ -73,7 +73,7 @@ export class NotificationsService {
       if (this.nbValidationErrors < 2 && !hidePopup) {
         this.toastr.error(message, title, {timeOut: timeout});
       } else if (!hidePopup) {
-        this.toastr.error('Validation completed with errors', null, {timeOut: timeout});
+        this.toastr.error('Validation completed with errors', undefined, {timeOut: timeout});
       }
       this.nbValidationErrors = 0;
     };

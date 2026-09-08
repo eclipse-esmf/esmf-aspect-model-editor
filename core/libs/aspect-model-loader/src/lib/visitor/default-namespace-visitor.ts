@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -32,7 +32,7 @@ import {ModelVisitor} from './model-visitor';
 /**
  * Default visitor to traverse alle concepts defined within the different namespaces.
  */
-export class DefaultNamespaceVisitor implements ModelVisitor<NamedElement, Map<string, Array<NamedElement>>> {
+export class DefaultNamespaceVisitor implements ModelVisitor<NamedElement | void, Map<string, Array<NamedElement>>> {
   /**
    * Visits each element in the provided map and performs an operation on it.
    *
@@ -40,62 +40,64 @@ export class DefaultNamespaceVisitor implements ModelVisitor<NamedElement, Map<s
    */
   public visit(map: Map<string, Array<NamedElement>>): void {
     for (const mapKey of map.keys()) {
-      const modelElements: Array<NamedElement> = map.get(mapKey);
-      for (const element of modelElements) {
-        element.accept(this, map);
+      const modelElements = map.get(mapKey);
+      if (modelElements) {
+        for (const element of modelElements) {
+          element.accept(this, map);
+        }
       }
     }
   }
 
-  visitAspect(aspect: Aspect, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitAspect(aspect: Aspect, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitCharacteristic(characteristic: Characteristic, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitCharacteristic(characteristic: Characteristic, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitConstraint(constraint: Constraint, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitConstraint(constraint: Constraint, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitEntity(entity: Entity, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitEntity(entity: Entity, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitOperation(operation: Operation, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitOperation(operation: Operation, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitEvent(unit: Event, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitEvent(unit: Event, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitValue(value: ValueElement, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitValue(value: ValueElement, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitProperty(property: Property, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitProperty(property: Property, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitQuantityKind(quantityKind: QuantityKind, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitQuantityKind(quantityKind: QuantityKind, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitUnit(unit: Unit, context: Map<string, Array<NamedElement>>): NamedElement {
+  visitUnit(unit: Unit, context: Map<string, Array<NamedElement>>): void {
     return undefined;
   }
 
-  visitScalar(scalar: DefaultScalar, context: Map<string, NamedElement[]>) {
+  visitScalar(scalar: DefaultScalar, context: Map<string, NamedElement[]>): void {
     return undefined;
   }
 
-  visitScalarValue(scalarValue: ScalarValue, context: Map<string, NamedElement[]>) {
+  visitScalarValue(scalarValue: ScalarValue, context: Map<string, NamedElement[]>): void {
     return undefined;
   }
 
-  visitEntityInstance(scalarValue: EntityInstance, context: Map<string, NamedElement[]>) {
+  visitEntityInstance(scalarValue: EntityInstance, context: Map<string, NamedElement[]>): void {
     return undefined;
   }
 }

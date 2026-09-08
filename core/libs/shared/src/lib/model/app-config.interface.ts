@@ -15,7 +15,6 @@ export interface AppConfig {
   environment: string;
   ameService: string;
   ameVersion: string;
-  editorConfiguration: string;
   assetLocation: string;
   minSammVersion: string;
   currentSammVersion: string;

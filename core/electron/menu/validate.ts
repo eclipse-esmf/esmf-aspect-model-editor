@@ -21,7 +21,7 @@ export function validate(translation: Translation): MenuItemConstructorOptions[]
   return [
     {
       id: 'VALIDATE_MODEL',
-      label: translation.CURRENT_MODEL,
+      label: translation.currentModel,
       enabled: false,
       icon: getIcon(icons.VALIDATE_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {

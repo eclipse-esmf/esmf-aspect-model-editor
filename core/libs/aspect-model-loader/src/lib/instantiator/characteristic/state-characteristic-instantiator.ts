@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -46,7 +46,7 @@ export function stateCharacteristicFactory(initProps: BaseInitProps) {
             ? new ScalarValue({value: `${propertyQuad.object.value}`, type: characteristic.dataType})
             : resolveEntityInstance(propertyQuad);
 
-          characteristic.defaultValue instanceof DefaultEntityInstance && characteristic.defaultValue.addParent(characteristic);
+          if (characteristic.defaultValue instanceof DefaultEntityInstance) characteristic.defaultValue.addParent(characteristic);
         }
       }
       return characteristic;

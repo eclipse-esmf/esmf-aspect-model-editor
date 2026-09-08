@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,12 +12,15 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div>
-  <h3>{{ 'SETTINGS_DIALOG.SUB_NODE.COPYRIGHT' | translate }}</h3>
-  <form [formGroup]="form">
-    <textarea (keyup)="onTextChange()" formControlName="copyright" data-cy="copyright"></textarea>
-    @if (copyrightControl.errors?.startsWithoutHash) {
-      <mat-error>All lines must begin with a #</mat-error>
-    }
-  </form>
-</div>
+  <div>
+    <h3>{{ t('settingsDialog.subNode.copyright') }}</h3>
+    <div>
+      <textarea [formField]="form.copyrightHeaderConfiguration.copyright" data-cy="copyright"></textarea>
+      @if (form.copyrightHeaderConfiguration.copyright().invalid()) {
+        @for (error of form.copyrightHeaderConfiguration.copyright().errors(); track error) {
+          <mat-error>{{ error.message }}</mat-error>
+        }
+      }
+    </div>
+  </div>
+</ng-container>

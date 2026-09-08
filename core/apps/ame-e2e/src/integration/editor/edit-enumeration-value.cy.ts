@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -15,13 +14,24 @@
 /// <reference types="cypress" />
 
 import 'cypress-real-events';
-import {FIELD_characteristicName, FIELD_chipIcon, FIELD_values, SELECTOR_ecValue, SELECTOR_elementBtn} from '../../support/constants';
+import {
+  FIELD_characteristicName,
+  FIELD_chipIcon,
+  FIELD_see,
+  FIELD_values,
+  SELECTOR_ecValue,
+  SELECTOR_elementBtn,
+} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Value', () => {
-  it('can add new aspect model', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling().then(() => cy.get(SELECTOR_elementBtn).click());
+    cy.startModelling();
+  });
+
+  it('can add new aspect model', () => {
+    cy.get(SELECTOR_elementBtn).click();
   });
 
   it('can add new Value', () => cy.dragElement(SELECTOR_ecValue, 350, 300).then(() => cy.clickShape('Value1')));
@@ -61,16 +71,27 @@ describe('Test editing Value', () => {
 
   it('can remove Value elements from values', () => {
     cy.dbClickShape('Characteristic1')
-      .then(() => cy.get(FIELD_chipIcon).each(chip => cy.wrap(chip).click()))
+      .then(() => {
+        cy.get(FIELD_chipIcon).each(chip => cy.wrap(chip).click());
+      })
+      .then(() => cy.get(FIELD_see).click())
+      .then(() => cy.get(FIELD_values).closest('mat-form-field').find('mat-error').should('be.visible').and('contain.text', 'required'))
+      .then(() => {
+        // Add a replacement value so the form becomes valid again.
+        cy.get(FIELD_values).click().type('Value3').get('mat-option').eq(1).click();
+      })
+      .then(() => {
+        // The validation error must disappear after adding a value.
+        cy.get(FIELD_values).closest('mat-form-field').find('mat-error').should('not.exist');
+      })
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(':Characteristic1 a samm-c:Enumeration');
-        expect(rdf).not.contain('amm-c:values (:Value1 "a" "b" :Value2 :Value3)');
+        expect(rdf).not.to.contain('samm-c:values (:Value1 "a" "b" :Value2 :Value3)');
         expect(rdf).to.contain('Value1 a samm:Value');
         expect(rdf).to.contain('Value2 a samm:Value');
         expect(rdf).to.contain('Value3 a samm:Value');
-        expect(rdf).to.contain('samm:value "Value"');
       });
   });
 });

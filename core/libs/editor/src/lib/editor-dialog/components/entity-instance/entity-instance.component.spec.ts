@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {MaxGraphService} from '@ame/max-graph';
+import {RdfService} from '@ame/rdf/services';
+import {NotificationsService, SearchService} from '@ame/shared';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {DefaultAspect, DefaultEntity, DefaultEntityInstance, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
+import {Store} from 'n3';
+import {MockProvider} from 'ng-mocks';
+import {of} from 'rxjs';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {EditorModelService} from '../../editor-model.service';
+import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
+import {EditorDialogValidators} from '../../validators';
+import {EntityInstanceComponent} from './entity-instance.component';
+
+describe('EntityInstanceComponent', () => {
+  let component: EntityInstanceComponent;
+  let fixture: ComponentFixture<EntityInstanceComponent>;
+
+  const dummyAspect = new DefaultAspect({
+    aspectModelUrn: 'urn:test:1.0.0#Aspect',
+    name: 'Aspect',
+    metaModelVersion: '2.0.0',
+  });
+
+  const entity = new DefaultEntity({
+    aspectModelUrn: 'urn:test:1.0.0#Entity',
+    name: 'Entity',
+    metaModelVersion: '2.0.0',
+  });
+
+  const entityInstance = new DefaultEntityInstance({
+    aspectModelUrn: 'urn:test:1.0.0#Instance1',
+    name: 'Instance1',
+    metaModelVersion: '2.0.0',
+    type: entity,
+  });
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        EntityInstanceComponent,
+        BrowserAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
+      providers: [
+        MockProvider(EditorModelService, {
+          getMetaModelElement: vi.fn(() => of(entityInstance)),
+          isReadOnly: vi.fn(() => false),
+        }),
+        MockProvider(LoadedFilesService, {
+          currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), dummyAspect),
+          isElementExtern: vi.fn(() => false),
+        }),
+        EditorDialogValidators,
+        MockProvider(MaxGraphService),
+        MockProvider(NotificationsService),
+        MockProvider(RdfService),
+        MockProvider(SearchService),
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(EntityInstanceComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput(
+      'signalForm',
+      TestBed.runInInjectionContext(() => EditorSignalFormContext.create()),
+    );
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

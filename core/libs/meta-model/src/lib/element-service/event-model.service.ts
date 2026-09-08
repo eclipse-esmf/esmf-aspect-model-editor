@@ -11,28 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EventRenderService, MxGraphService} from '@ame/mx-graph';
+import {EventRenderService, MaxGraphService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEvent, NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class EventModelService extends BaseModelService {
-  private mxGraphService = inject(MxGraphService);
-  private aspectRenderer = inject(EventRenderService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly aspectRenderer = inject(EventRenderService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultEvent;
   }
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
+  update(cell: Cell, form: {[key: string]: any}) {
     super.update(cell, form);
     this.aspectRenderer.update({cell});
   }
 
-  delete(cell: mxgraph.mxCell) {
+  delete(cell: Cell) {
     super.delete(cell);
-    this.mxGraphService.removeCells([cell]);
+    this.maxgraphService.removeCells([cell]);
   }
 }

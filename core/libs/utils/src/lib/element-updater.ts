@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
- * See the AUTHORS file(s) distributed with aspect work for
+ * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public

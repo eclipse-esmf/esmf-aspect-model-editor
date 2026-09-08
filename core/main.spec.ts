@@ -11,46 +11,48 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, jest, beforeAll} from '@jest/globals';
+import {beforeAll, describe, expect, it, MockedFunction, vi} from 'vitest';
 
-const mockOn = jest.fn();
-const mockQuit = jest.fn();
-const mockGetAllWindows = jest.fn();
-const mockSetUserTasks = jest.fn();
+const {mockOn, mockQuit, mockGetAllWindows, mockSetUserTasks} = vi.hoisted(() => ({
+  mockOn: vi.fn(),
+  mockQuit: vi.fn(),
+  mockGetAllWindows: vi.fn(),
+  mockSetUserTasks: vi.fn(),
+}));
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   app: {
     on: mockOn,
     quit: mockQuit,
     setUserTasks: mockSetUserTasks,
   },
-  BrowserWindow: Object.assign(jest.fn(), {
+  BrowserWindow: Object.assign(vi.fn(), {
     getAllWindows: mockGetAllWindows,
   }),
 }));
 
-jest.mock('./electron/core', () => ({
-  cleanUpProcesses: jest.fn(),
-  startService: (jest.fn() as unknown as jest.MockedFunction<(...args: any[]) => any>).mockResolvedValue(undefined),
+vi.mock('./electron/core', () => ({
+  cleanUpProcesses: vi.fn(),
+  startService: (vi.fn() as unknown as MockedFunction<(...args: any[]) => any>).mockResolvedValue(undefined),
 }));
 
-jest.mock('./electron/platform/platform', () => ({
+vi.mock('./electron/platform/platform', () => ({
   isWin: false,
 }));
 
-jest.mock('./electron/shortcuts', () => ({
-  registerGlobalShortcuts: jest.fn(),
-  unregisterGlobalShortcuts: jest.fn(),
+vi.mock('./electron/shortcuts', () => ({
+  registerGlobalShortcuts: vi.fn(),
+  unregisterGlobalShortcuts: vi.fn(),
 }));
 
-jest.mock('./electron/utils/mode', () => ({
-  inProdMode: jest.fn().mockReturnValue(false),
+vi.mock('./electron/utils/mode', () => ({
+  inProdMode: vi.fn().mockReturnValue(false),
 }));
 
-jest.mock('./electron/windows-manager', () => ({
+vi.mock('./electron/windows-manager', () => ({
   windowsManager: {
-    createNewWindow: jest.fn(),
-    activateCommunicationProtocol: jest.fn(),
+    createNewWindow: vi.fn(),
+    activateCommunicationProtocol: vi.fn(),
   },
 }));
 
@@ -58,12 +60,12 @@ import {cleanUpProcesses, startService} from './electron/core';
 import {registerGlobalShortcuts, unregisterGlobalShortcuts} from './electron/shortcuts';
 import {windowsManager} from './electron/windows-manager';
 
-const mockedStartService = startService as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedCleanUpProcesses = cleanUpProcesses as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedRegisterShortcuts = registerGlobalShortcuts as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedUnregisterShortcuts = unregisterGlobalShortcuts as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedCreateNewWindow = windowsManager.createNewWindow as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedActivate = windowsManager.activateCommunicationProtocol as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedStartService = startService as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedCleanUpProcesses = cleanUpProcesses as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedRegisterShortcuts = registerGlobalShortcuts as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedUnregisterShortcuts = unregisterGlobalShortcuts as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedCreateNewWindow = windowsManager.createNewWindow as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedActivate = windowsManager.activateCommunicationProtocol as unknown as MockedFunction<(...args: any[]) => any>;
 
 function getAppHandler(event: string): (...args: any[]) => any {
   const call = mockOn.mock.calls.find((c: any[]) => c[0] === event);
@@ -71,8 +73,8 @@ function getAppHandler(event: string): (...args: any[]) => any {
 }
 
 describe('main', () => {
-  beforeAll(() => {
-    require('./main');
+  beforeAll(async () => {
+    await import('./main');
   });
 
   describe('app event registration', () => {

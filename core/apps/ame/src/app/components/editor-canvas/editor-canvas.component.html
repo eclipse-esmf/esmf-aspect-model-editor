@@ -11,17 +11,17 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (isToolbarVisible$ | async) {
+@if (isToolbarVisible()) {
   <ame-editor-toolbar class="toolbar"></ame-editor-toolbar>
 }
 
 <ame-sidebar class="sidebar"></ame-sidebar>
 
-@if (isShapeSettingsOpened$ | async; as isOpened) {
-  <section class="info-section" [style.width.px]="sidebarWidth" cdkDragLockAxis="x" cdkDrag>
+@if (isShapeSettingsOpened(); as isOpened) {
+  <section class="info-section" [style.width.px]="sidebarWidth()" cdkDragLockAxis="x" cdkDrag>
     <div
       class="info-section__gutter"
-      [cdkDragFreeDragPosition]="sidebarDragPosition"
+      [cdkDragFreeDragPosition]="sidebarDragPosition()"
       (cdkDragEnded)="onDragEnded($event)"
       data-cy="info-section-drag"
       cdkDrag
@@ -34,30 +34,38 @@
     <ame-shape-settings
       [modelElement]="modelElement"
       [isOpened]="isOpened"
-      (save)="onSave($event)"
+      (save)="onShapeSettingsSave($event)"
       (afterClose)="resetSelectedShapeForUpdate()"
     >
     </ame-shape-settings>
   </section>
-} @else if (searchesStateService.elementsSearch.opened$ | async) {
+} @else if (isElementsSearchOpened()) {
   <ame-elements-search></ame-elements-search>
-} @else if (searchesStateService.filesSearch.opened$ | async) {
+} @else if (isFilesSearchOpened()) {
   <ame-files-search></ame-files-search>
 }
 
 <div id="graph" #graph></div>
 
-@if (isModelEmpty) {
-  <div class="empty-model">
+@if (isModelEmpty()) {
+  <div class="empty-model" *transloco="let t">
     <span>
-      Drag an element <br />
-      to start creating a model
+      {{ t('editorCanvas.dragElementLine1') }} <br />
+      {{ t('editorCanvas.dragElementLine2') }}
     </span>
   </div>
 }
 
-<div class="map-graph" id="outline" [class.hidden]="(isMapVisible$ | async) === false">
-  <div class="map" (click)="toggleMap()">
+<div class="map-graph" id="outline" [class.hidden]="isMapVisible() === false">
+  <div
+    class="map"
+    (click)="toggleMap()"
+    (keyup.enter)="toggleMap()"
+    (keyup.space)="toggleMap()"
+    tabindex="0"
+    role="button"
+    aria-label="Toggle map visibility"
+  >
     <mat-icon>map</mat-icon>
   </div>
 </div>

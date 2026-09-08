@@ -16,7 +16,7 @@ export enum SammVersion {
 }
 
 export class KnownVersion {
-  public static fromVersionString(version: string): SammVersion {
+  public static fromVersionString(version: string): SammVersion | null {
     if (SammVersion.SAMM_2_2_0 === version) {
       return SammVersion.SAMM_2_2_0;
     }

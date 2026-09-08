@@ -29,12 +29,12 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
   return [
     {
       id: 'MENU_NEW',
-      label: translation.NEW.LABEL,
+      label: translation.new.label,
       icon: getIcon(icons.MENU_NEW.enabled),
       submenu: [
         {
           id: 'NEW_EMPTY_MODEL',
-          label: translation.NEW.SUBMENU.EMPTY_MODEL,
+          label: translation.new.submenu.emptyModel,
           enabled: false,
           icon: getIcon(icons.NEW_WINDOW.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -44,7 +44,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
         },
         {
           id: 'LOAD_FILE',
-          label: translation.NEW.SUBMENU.LOAD_FILE,
+          label: translation.new.submenu.loadFile,
           icon: getIcon(icons.LOAD_FILE.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -55,7 +55,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
         },
         {
           id: 'LOAD_FROM_TEXT',
-          label: translation.NEW.SUBMENU.COPY_PASTE,
+          label: translation.new.submenu.copyPaste,
           icon: getIcon(icons.LOAD_FROM_TEXT.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -66,7 +66,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
           type: 'separator',
         },
         {
-          label: translation.NEW.SUBMENU.EXAMPLES,
+          label: translation.new.submenu.examples,
           enabled: false,
         },
         {
@@ -95,7 +95,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'NEW_WINDOW',
-      label: translation.NEW_WINDOW,
+      label: translation.newWindow,
       icon: getIcon(icons.NEW_WINDOW.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -104,7 +104,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'IMPORT_MODEL',
-      label: translation.IMPORT_MODEL,
+      label: translation.importModel,
       icon: getIcon(icons.IMPORT_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -115,7 +115,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'IMPORT_PACKAGE',
-      label: translation.IMPORT_PACKAGE,
+      label: translation.importPackage,
       icon: getIcon(icons.IMPORT_PACKAGE.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -129,7 +129,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'COPY_TO_CLIPBOARD',
-      label: translation.COPY_TO_CLIPBOARD,
+      label: translation.copyToClipboard,
       enabled: false,
       icon: getIcon(icons.COPY_TO_CLIPBOARD.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -139,7 +139,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'SAVE_TO_WORKSPACE',
-      label: translation.SAVE_TO_WORKSPACE,
+      label: translation.saveToWorkspace,
       enabled: false,
       icon: getIcon(icons.SAVE_TO_WORKSPACE.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -149,7 +149,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'EXPORT_MODEL',
-      label: translation.EXPORT_MODEL,
+      label: translation.exportModel,
       enabled: false,
       icon: getIcon(icons.EXPORT_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -159,7 +159,7 @@ export function file(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'EXPORT_PACKAGE',
-      label: translation.EXPORT_PACKAGE,
+      label: translation.exportPackage,
       icon: getIcon(icons.EXPORT_PACKAGE.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();

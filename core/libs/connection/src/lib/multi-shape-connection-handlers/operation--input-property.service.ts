@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
 import {DefaultOperation, DefaultProperty} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnectorWithProperty} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class OperationPropertyInputConnectionHandler implements MultiShapeConnectorWithProperty<DefaultOperation, DefaultProperty> {
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
 
-  public connect(parentMetaModel: DefaultOperation, childMetaModel: DefaultProperty, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
+  public connect(parentMetaModel: DefaultOperation, childMetaModel: DefaultProperty, parent: Cell, child: Cell) {
     const isInputAlreadyDefined = parentMetaModel.input.some(value => value.aspectModelUrn === childMetaModel.aspectModelUrn);
     if (!isInputAlreadyDefined) {
       parentMetaModel.input.push(childMetaModel);
     }
-    this.mxGraphService.assignToParent(child, parent);
+    this.maxgraphService.assignToParent(child, parent);
   }
 }

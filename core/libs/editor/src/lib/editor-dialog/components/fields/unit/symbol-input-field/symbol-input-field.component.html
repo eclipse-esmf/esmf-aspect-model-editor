@@ -13,9 +13,9 @@
 
 @if (metaModelElement?.symbol || !metaModelElement?.isPredefined) {
   <div>
-    <mat-form-field [floatLabel]="getControl('symbol')?.disabled ? 'always' : 'auto'" appearance="fill">
-      <mat-label for="symbol">symbol</mat-label>
-      <input [formControl]="getControl('symbol')" matInput name="symbol" />
+    <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
+      <mat-label>symbol</mat-label>
+      <input [formField]="field" matInput />
     </mat-form-field>
   </div>
 }

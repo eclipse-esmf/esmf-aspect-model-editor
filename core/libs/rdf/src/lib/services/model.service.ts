@@ -19,29 +19,31 @@ import {Observable, Observer, Subject, throwError} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ModelService {
-  private loadedFilesService = inject(LoadedFilesService);
-  private visitorAnnouncerSubject$ = new Subject<{observer: Observer<void>}>();
+  private readonly loadedFilesService = inject(LoadedFilesService);
+  private readonly visitorAnnouncerSubject$ = new Subject<{observer: Observer<void>}>();
 
-  get visitorAnnouncer$() {
+  get visitorAnnouncer$(): Observable<{observer: Observer<void>}> {
     return this.visitorAnnouncerSubject$.asObservable();
   }
 
   constructor() {
-    if (!environment.production) {
+    if (!environment.production && typeof window !== 'undefined') {
       window['angular.modelService'] = this;
     }
   }
 
-  removeAspect() {
-    this.loadedFilesService.currentLoadedFile.aspect = null;
+  removeAspect(): void {
+    if (this.loadedFilesService.currentLoadedFile) {
+      this.loadedFilesService.currentLoadedFile.aspect = null;
+    }
   }
 
-  finishStoreUpdate(observer: Observer<void>) {
-    observer.next();
-    observer.complete();
+  finishStoreUpdate(observer: Observer<void>): void {
+    observer?.next();
+    observer?.complete();
   }
 
-  synchronizeModelToRdf() {
+  synchronizeModelToRdf(): Observable<void> {
     if (!this.loadedFilesService?.currentLoadedFile?.rdfModel) {
       return throwError(() => ({type: SaveValidateErrorsCodes.emptyModel}));
     }

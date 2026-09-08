@@ -11,22 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
+import {AsyncApi, ModelApiService, OpenApi, ViolationError} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
-import {ElementModelService} from '@ame/meta-model';
 import {
-  MxGraphAttributeService,
-  MxGraphHelper,
-  MxGraphRenderer,
-  MxGraphService,
-  MxGraphShapeOverlayService,
-  MxGraphShapeSelectorService,
+  MaxGraphAttributeService,
+  MaxGraphHelper,
+  MaxGraphRenderer,
+  MaxGraphService,
+  MaxGraphSetupService,
+  MaxGraphShapeOverlayService,
+  MaxGraphShapeSelectorService,
   ShapeConfiguration,
-  mxConstants,
-  mxEvent,
-  mxUtils,
-} from '@ame/mx-graph';
+  ThemeService,
+} from '@ame/max-graph';
+import {ElementModelService} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {
@@ -34,21 +33,21 @@ import {
   ElementCreatorService,
   LoadingScreenService,
   NotificationsService,
+  sammElements,
   SaveValidateErrorsCodes,
   TitleService,
   ValidateStatus,
-  sammElements,
 } from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {useUpdater} from '@ame/utils';
-import {Injectable, Injector, NgZone, inject} from '@angular/core';
+import {inject, Injectable, Injector, signal} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
+import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, InternalEvent} from '@maxgraph/core';
 import {environment} from 'environments/environment';
-import {mxgraph} from 'mxgraph-factory';
-import {BehaviorSubject, Observable, Subscription, catchError, delayWhen, first, of, retry, switchMap, tap, throwError, timer} from 'rxjs';
+import {catchError, delayWhen, first, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsService, ShapeSettingsStateService} from './editor-dialog';
-import {AsyncApi, OpenApi, ViolationError} from './editor-toolbar';
 import {ModelSaverService} from './model-saver.service';
 import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
 
@@ -58,10 +57,11 @@ export class EditorService {
   private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
   private configurationService: ConfigurationService = inject(ConfigurationService);
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
-  private mxGraphService = inject(MxGraphService);
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
-  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private maxgraphService = inject(MaxGraphService);
+  private maxgraphSetupService = inject(MaxGraphSetupService);
+  private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
+  private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private notificationsService = inject(NotificationsService);
   private modelApiService = inject(ModelApiService);
   private modelService = inject(ModelService);
@@ -75,15 +75,13 @@ export class EditorService {
   private loadingScreenService = inject(LoadingScreenService);
   private translate = inject(LanguageTranslationService);
   private injector = inject(Injector);
-  private ngZone = inject(NgZone);
   private loadedFilesService = inject(LoadedFilesService);
   private elementCreator = inject(ElementCreatorService);
+  private themeService = inject(ThemeService);
 
   private validateModelSubscription$: Subscription;
-  private isAllShapesExpandedSubject = new BehaviorSubject<boolean>(true);
-
-  public isAllShapesExpanded$ = this.isAllShapesExpandedSubject.asObservable();
-  public delayedBindings: Array<any> = [];
+  public readonly isAllShapesExpanded = signal<boolean>(true);
+  public readonly isAllShapesExpanded$ = toObservable(this.isAllShapesExpanded);
 
   private get settings() {
     return this.configurationService.getSettings();
@@ -104,76 +102,55 @@ export class EditorService {
   }
 
   initCanvas(): void {
-    this.mxGraphService.initGraph();
+    this.maxgraphService.initGraph();
 
     this.enableAutoValidation();
     this.modelSaverService.enableAutoSave();
 
-    mxEvent.addMouseWheelListener(
-      mxUtils.bind(this, (evt, up) => {
-        this.ngZone.run(() => {
-          if (!mxEvent.isConsumed(evt) && evt.altKey) {
-            if (up) {
-              this.mxGraphAttributeService.graph.zoomIn();
-            } else {
-              this.mxGraphAttributeService.graph.zoomOut();
-            }
-            mxEvent.consume(evt);
-          }
-        });
-      }),
-      null,
-    );
+    const container = this.maxgraphAttributeService.graph.getContainer();
+    const onWheel = (evt: WheelEvent) => {
+      if (!evt.defaultPrevented && evt.altKey) {
+        evt.preventDefault();
+        if (evt.deltaY < 0) {
+          this.maxgraphAttributeService.graph.zoomIn();
+        } else {
+          this.maxgraphAttributeService.graph.zoomOut();
+        }
+      }
+    };
 
-    // TODO Check this when refactoring editor service
-    // enforce parent domain object will be updated if an cell e.g. unit will be deleted
-    this.mxGraphAttributeService.graph.addListener(
-      mxEvent.CELLS_REMOVED,
-      mxUtils.bind(this, (_source: mxgraph.mxGraph, event: mxgraph.mxEventObject) => {
-        this.ngZone.run(() => {
-          if (this.filterAttributes.isFiltering) {
-            return;
-          }
+    container.addEventListener('wheel', onWheel, {passive: false});
 
-          const changedCells: Array<mxgraph.mxCell> = event.getProperty('cells');
-          changedCells.forEach(cell => {
-            if (!MxGraphHelper.getModelElement(cell)) {
-              return;
-            }
+    // Enforce parent domain object will be updated if a cell e.g. unit will be deleted
+    this.maxgraphAttributeService.graph.addListener(InternalEvent.CELLS_REMOVED, (_source: Graph, event: EventObject) => {
+      if (this.filterAttributes.isFiltering) {
+        return;
+      }
 
-            const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
-            if (!edgeParent) {
-              return;
-            }
+      const changedCells: Array<Cell> = event.getProperty('cells');
+      changedCells.forEach(cell => {
+        if (!MaxGraphHelper.getModelElement(cell)) {
+          return;
+        }
 
-            const sourceElement = MxGraphHelper.getModelElement<NamedElement>(edgeParent.source);
-            if (sourceElement && this.loadedFilesService.isElementInCurrentFile(sourceElement)) {
-              useUpdater(sourceElement).delete(MxGraphHelper.getModelElement(cell));
-            }
-          });
-        });
-      }),
-    );
+        const edgeParent = changedCells.find(edge => edge.isEdge() && edge.target && edge.target.id === cell.id);
+        if (!edgeParent) {
+          return;
+        }
 
-    // increase performance by not passing the event to the parent(s)
-    this.mxGraphAttributeService.graph.getModel().addListener(mxEvent.CHANGE, function (sender, evt) {
+        const sourceElement = MaxGraphHelper.getModelElement<NamedElement>(edgeParent.source);
+        if (sourceElement && this.loadedFilesService.isElementInCurrentFile(sourceElement)) {
+          useUpdater(sourceElement).delete(MaxGraphHelper.getModelElement(cell));
+        }
+      });
+    });
+
+    // Increase performance by not passing the event to the parent(s)
+    this.maxgraphAttributeService.graph.getDataModel().addListener(InternalEvent.CHANGE, (_sender: GraphDataModel, evt: EventObject) => {
       evt.consume();
     });
 
-    this.delayedBindings.forEach(binding => this.bindAction(binding.actionname, binding.funct));
-    this.delayedBindings = [];
-    this.mxGraphAttributeService.graph.view.setTranslate(0, 0);
-  }
-
-  bindAction(actionName: string, callback: Function) {
-    if (!this.mxGraphAttributeService.graph) {
-      this.delayedBindings.push({
-        actionname: actionName,
-        funct: callback,
-      });
-      return;
-    }
-    this.mxGraphAttributeService.editor.addAction(actionName, callback);
+    this.maxgraphAttributeService.graph.view.setTranslate(0, 0);
   }
 
   generateJsonSample(rdfModel: RdfModel): Observable<string> {
@@ -191,7 +168,7 @@ export class EditorService {
     return this.modelApiService.generateOpenApiSpec(serializedModel, openApi, rdfModel.getSourceLocation()).pipe(
       catchError(err => {
         this.notificationsService.error({
-          title: this.translate.language.GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_ERROR,
+          title: this.translate.language.generateOpenapiSpecDialog.resourcePathError,
           message: err.error.message,
           timeout: 5000,
         });
@@ -206,13 +183,13 @@ export class EditorService {
   }
 
   makeDraggable(element: HTMLDivElement, dragElement: HTMLDivElement) {
-    const ds = mxUtils.makeDraggable(
+    const ds = gestureUtils.makeDraggable(
       element,
-      this.mxGraphAttributeService.graph,
+      this.maxgraphAttributeService.graph,
       (_graph, _evt, _cell, x, y) => {
         const elementType: string = element.dataset.type;
         const urn: string = element.dataset.urn;
-        this.ngZone.run(() => this.createElement(x, y, elementType, urn));
+        this.createElement(x, y, elementType, urn);
       },
       dragElement,
     );
@@ -220,6 +197,9 @@ export class EditorService {
   }
 
   createElement(x: number, y: number, elementType: string, aspectModelUrn?: string) {
+    const isGraphEmpty = this.maxgraphService.isModelEmpty();
+    const targetPos = isGraphEmpty ? {x: 40, y: 40} : {x, y};
+
     // in case of new element (no urn passed)
     if (!aspectModelUrn) {
       let newInstance = null;
@@ -238,26 +218,41 @@ export class EditorService {
       }
 
       if (newInstance instanceof DefaultAspect) {
-        this.createAspect(newInstance, {x, y});
+        this.createAspect(newInstance, targetPos);
         return;
       }
-      const mxGraphRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
+      const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
 
       const node = this.filtersService.createNode(newInstance);
-      this.mxGraphService.setCoordinatesForNextCellRender(x, y);
-      const cell = mxGraphRenderer.render(node, null);
-      this.mxGraphService.formatCell(cell, true);
+      this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
+      const cell = maxgraphRenderer.render(node, null);
+      this.maxgraphService.formatCell(cell, true);
+      if (cell) {
+        if (isGraphEmpty) {
+          this.maxgraphSetupService.centerGraph();
+        } else {
+          this.maxgraphService.navigateToCell(cell, true);
+        }
+      }
     } else {
       const element: NamedElement = this.loadedFilesService.findElementOnExtReferences(aspectModelUrn);
-      if (!this.mxGraphService.resolveCellByModelElement(element)) {
-        const mxGraphRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlayService, this.sammLangService, null);
-
-        this.mxGraphService.setCoordinatesForNextCellRender(x, y);
+      if (!this.maxgraphService.resolveCellByModelElement(element)) {
+        const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
 
         const filteredElements = this.filtersService.filter([element]);
-        const cell = mxGraphRenderer.render(filteredElements[0], null);
+        const node = filteredElements[0];
+        this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
 
-        this.mxGraphService.formatCell(cell);
+        const cell = maxgraphRenderer.render(node, null);
+
+        this.maxgraphService.formatCell(cell);
+        if (cell) {
+          if (isGraphEmpty) {
+            this.maxgraphSetupService.centerGraph();
+          } else {
+            this.maxgraphService.navigateToCell(cell, true);
+          }
+        }
       } else {
         this.notificationsService.warning({
           title: 'Element is already used',
@@ -272,12 +267,12 @@ export class EditorService {
     this.confirmDialogService
       .open({
         phrases: [
-          this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.ASPECT_CREATION_WARNING,
-          this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.NAME_REPLACEMENT_NOTICE,
+          this.translate.language.confirmDialog.createAspect.aspectCreationWarning,
+          this.translate.language.confirmDialog.createAspect.nameReplacementNotice,
         ],
-        title: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.TITLE,
-        closeButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.CLOSE_BUTTON,
-        okButtonText: this.translate.language.CONFIRM_DIALOG.CREATE_ASPECT.OK_BUTTON,
+        title: this.translate.language.confirmDialog.createAspect.title,
+        closeButtonText: this.translate.language.confirmDialog.createAspect.closeButton,
+        okButtonText: this.translate.language.confirmDialog.createAspect.okButton,
       })
       .subscribe(confirm => {
         if (confirm === ConfirmDialogEnum.cancel) {
@@ -286,24 +281,29 @@ export class EditorService {
 
         this.loadedFilesService.updateFileNaming(this.currentLoadedFile, {aspect: aspectInstance, name: `${aspectInstance.name}.ttl`});
 
-        aspectInstance
-          ? this.mxGraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
-              shapeAttributes: [],
-              geometry,
-            })
-          : this.openAlertBox();
+        if (aspectInstance) {
+          const cell = this.maxgraphService.renderModelElement(this.filtersService.createNode(aspectInstance), {
+            shapeAttributes: [],
+            geometry,
+          });
+          if (cell) {
+            this.maxgraphSetupService.centerGraph();
+          }
+        } else {
+          this.openAlertBox();
+        }
         this.titleService.updateTitle(this.currentLoadedFile.absoluteName);
       });
   }
 
   deleteSelectedElements() {
-    const result: mxgraph.mxCell[] = [];
-    const selectedCells = this.mxGraphShapeSelectorService.getSelectedCells();
+    const result: Cell[] = [];
+    const selectedCells = this.maxgraphShapeSelectorService.getSelectedCells();
 
     result.push(...selectedCells);
 
-    const externElements = result.filter((cell: mxgraph.mxCell) => {
-      const element = MxGraphHelper.getModelElement(cell);
+    const externElements = result.filter((cell: Cell) => {
+      const element = MaxGraphHelper.getModelElement(cell);
       if (!element) {
         return false;
       }
@@ -314,19 +314,19 @@ export class EditorService {
     this.deleteElements(result);
   }
 
-  private deletePrefixForExternalNamespaceReference(cell: mxgraph.mxCell) {
+  private deletePrefixForExternalNamespaceReference(cell: Cell) {
     if (!cell || cell.isVertex()) {
       return;
     }
 
-    const element = MxGraphHelper.getModelElement(cell);
+    const element = MaxGraphHelper.getModelElement(cell);
     if (!element || !element.aspectModelUrn) {
       return;
     }
 
     const rdfModel = this.loadedFilesService.currentLoadedFile?.rdfModel;
 
-    const aspectModelUrnToBeRemoved = MxGraphHelper.getModelElement(cell).aspectModelUrn;
+    const aspectModelUrnToBeRemoved = MaxGraphHelper.getModelElement(cell).aspectModelUrn;
     const urnToBeChecked = aspectModelUrnToBeRemoved.substring(0, aspectModelUrnToBeRemoved.indexOf('#'));
 
     const nodeNames = rdfModel.store.getObjects(null, null, null).map((el: any) => el.id);
@@ -356,30 +356,37 @@ export class EditorService {
     return resultArray;
   }
 
-  private deleteElements(cells: mxgraph.mxCell[]): void {
-    if (this.shapeSettingsStateService.isShapeSettingOpened && cells.includes(this.shapeSettingsStateService.selectedShapeForUpdate)) {
+  private deleteElements(cells: Cell[]): void {
+    if (this.shapeSettingsStateService.isShapeSettingOpened() && cells.includes(this.shapeSettingsStateService.selectedShapeForUpdate())) {
       this.shapeSettingsStateService.closeShapeSettings();
     }
 
-    cells.forEach((cell: mxgraph.mxCell) => {
-      this.mxGraphAttributeService.graph.setCellStyles(
-        mxConstants.STYLE_STROKECOLOR,
-        'black',
-        this.mxGraphService.graph.getOutgoingEdges(cell).map(edge => edge.target),
-      );
-      this.elementModelService.deleteElement(cell);
-    });
+    const vertexCells = cells.filter(cell => !cell?.isEdge?.());
+    const edgeCells = cells.filter(cell => cell?.isEdge?.());
+
+    if (vertexCells.length > 0) {
+      vertexCells.forEach((cell: Cell) => {
+        this.maxgraphAttributeService.graph.setCellStyles(
+          'strokeColor',
+          this.themeService.currentColors.border,
+          this.maxgraphService.graph.getOutgoingEdges(cell, null).map(edge => edge.target),
+        );
+        this.elementModelService.deleteElement(cell);
+      });
+    } else if (edgeCells.length > 0) {
+      this.elementModelService.deleteElement(edgeCells[0]);
+    }
   }
 
   zoomIn() {
     this.loadingScreenService
       .open({
-        title: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT,
+        title: this.translate.language.loadingScreenDialog.zoomInProgress,
+        content: this.translate.language.loadingScreenDialog.zoomInWait,
       })
       .afterOpened()
       .subscribe(() => {
-        this.mxGraphAttributeService.graph.zoomIn();
+        this.maxgraphAttributeService.graph.zoomIn();
         this.loadingScreenService.close();
       });
   }
@@ -387,12 +394,12 @@ export class EditorService {
   zoomOut() {
     this.loadingScreenService
       .open({
-        title: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_OUT_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.ZOOM_IN_WAIT,
+        title: this.translate.language.loadingScreenDialog.zoomOutProgress,
+        content: this.translate.language.loadingScreenDialog.zoomInWait,
       })
       .afterOpened()
       .subscribe(() => {
-        this.mxGraphAttributeService.graph.zoomOut();
+        this.maxgraphAttributeService.graph.zoomOut();
         this.loadingScreenService.close();
       });
   }
@@ -400,12 +407,12 @@ export class EditorService {
   fit() {
     this.loadingScreenService
       .open({
-        title: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT,
+        title: this.translate.language.loadingScreenDialog.fittingProgress,
+        content: this.translate.language.loadingScreenDialog.fittingWait,
       })
       .afterOpened()
       .subscribe(() => {
-        this.mxGraphAttributeService.graph.fit();
+        this.maxgraphAttributeService.graph.getPlugin<FitPlugin>('FitPlugin').fit();
         this.loadingScreenService.close();
       });
   }
@@ -413,28 +420,28 @@ export class EditorService {
   actualSize() {
     this.loadingScreenService
       .open({
-        title: this.translate.language.LOADING_SCREEN_DIALOG.FIT_TO_VIEW_PROGRESS,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.FITTING_WAIT,
+        title: this.translate.language.loadingScreenDialog.fitToViewProgress,
+        content: this.translate.language.loadingScreenDialog.fittingWait,
       })
       .afterOpened()
       .subscribe(() => {
-        this.mxGraphAttributeService.graph.zoomActual();
+        this.maxgraphAttributeService.graph.zoomActual();
         this.loadingScreenService.close();
       });
   }
 
   toggleExpand() {
-    const isExpanded = this.isAllShapesExpandedSubject.getValue();
+    const isExpanded = this.isAllShapesExpanded();
     this.loadingScreenService
       .open({
-        title: isExpanded ? this.translate.language.LOADING_SCREEN_DIALOG.FOLDING : this.translate.language.LOADING_SCREEN_DIALOG.EXPANDING,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.ACTION_WAIT,
+        title: isExpanded ? this.translate.language.loadingScreenDialog.folding : this.translate.language.loadingScreenDialog.expanding,
+        content: this.translate.language.loadingScreenDialog.actionWait,
       })
       .afterOpened()
-      .pipe(switchMap(() => (isExpanded ? this.mxGraphService.foldCells() : this.mxGraphService.expandCells())))
+      .pipe(switchMap(() => (isExpanded ? this.maxgraphService.foldCells() : this.maxgraphService.expandCells())))
       .subscribe(() => {
-        this.isAllShapesExpandedSubject.next(!isExpanded);
-        this.mxGraphService.formatShapes(true);
+        this.isAllShapesExpanded.set(!isExpanded);
+        this.maxgraphService.formatShapes(true);
         this.loadingScreenService.close();
       });
   }
@@ -442,18 +449,22 @@ export class EditorService {
   formatModel() {
     this.loadingScreenService
       .open({
-        title: this.translate.language.LOADING_SCREEN_DIALOG.FORMATTING,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.WAIT_FORMAT,
+        title: this.translate.language.loadingScreenDialog.formatting,
+        content: this.translate.language.loadingScreenDialog.waitFormat,
       })
       .afterOpened()
       .subscribe(() => {
-        this.mxGraphService.formatShapes(true, true);
+        this.maxgraphService.formatShapes(true, true);
         this.loadingScreenService.close();
       });
   }
 
   enableAutoValidation() {
-    this.settings.autoValidationEnabled ? this.startValidateModel() : this.stopValidateModel();
+    if (this.settings.autoValidationEnabled) {
+      this.startValidateModel();
+    } else {
+      this.stopValidateModel();
+    }
   }
 
   startValidateModel() {
@@ -480,8 +491,8 @@ export class EditorService {
           if (!Object.values(SaveValidateErrorsCodes).includes(error?.type)) {
             console.error(`Error occurred while validating the current model (${error})`);
             this.notificationsService.error({
-              title: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_TITLE,
-              message: this.translate.language.NOTIFICATION_SERVICE.VALIDATION_ERROR_MESSAGE,
+              title: this.translate.language.notificationService.validationErrorTitle,
+              message: this.translate.language.notificationService.validationErrorMessage,
               timeout: 5000,
             });
           }
@@ -494,7 +505,7 @@ export class EditorService {
   }
 
   validate(): Observable<Array<ViolationError>> {
-    this.mxGraphService.resetValidationErrorOnAllShapes();
+    this.maxgraphService.resetValidationErrorOnAllShapes();
 
     return this.modelService.synchronizeModelToRdf().pipe(
       switchMap(value =>
@@ -519,8 +530,8 @@ export class EditorService {
   openAlertBox() {
     this.alertService.open({
       data: {
-        title: this.translate.language.NOTIFICATION_SERVICE.ASPECT_MISSING_TITLE,
-        content: this.translate.language.NOTIFICATION_SERVICE.ASPECT_MISSING_CONTENT,
+        title: this.translate.language.notificationService.aspectMissingTitle,
+        content: this.translate.language.notificationService.aspectMissingContent,
       },
     });
   }

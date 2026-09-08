@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,63 +12,60 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('left')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-  <mat-label for="left">left</mat-label>
-  <input #left [matAutocomplete]="auto" [formControl]="getControl('left')" matInput name="left" data-cy="left" required />
-  @if (leftControl?.disabled && !loadedFiles.isElementExtern(metaModelElement)) {
-    <button (click)="unlockLeft()" data-cy="clear-left-button" matSuffix mat-icon-button tabindex="-1">
-      <mat-icon>close</mat-icon>
-    </button>
-  }
-
-  <mat-autocomplete class="left" #auto="matAutocomplete">
-    @if (filteredCharacteristicTypes$ | async; as filteredCharacteristicTypes) {
-      <div>
-        @if (!isAlreadyDefined(filteredCharacteristicTypes, left.value) && !getControl('left')?.errors?.foundModel) {
-          <mat-option
-            [disabled]="!isUpperCase(left.value)"
-            [value]="!isUpperCase(left.value) ? '' : left.value"
-            (click)="createNewCharacteristic(left.value)"
-          >
-            @if (isUpperCase(left.value)) {
-              <span>
-                + Create new characteristic: <strong>{{ left.value }}</strong>
-              </span>
-            }
-            @if (!isUpperCase(left.value)) {
-              <span>Characteristic should be upper case</span>
-            }
-          </mat-option>
-        }
-        @for (left of filteredCharacteristicTypes; track left.aspectModelUrn) {
-          <mat-option [value]="left.name" (onSelectionChange)="onSelectionChange('left', left)">
-            <div class="result">
-              <div class="ellipsis">
-                {{ left.name }}
-                @if (left.description) {
-                  <span class="option-description" [title]="left.description">- {{ left.description }}</span>
-                }
-                @if (left.namespace) {
-                  <p class="namespace-prefix" [title]="left.namespace">
-                    {{ left.namespace }}
-                  </p>
-                }
-              </div>
-            </div>
-          </mat-option>
-        }
-      </div>
+  <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label>left *</mat-label>
+    <input #left [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="left" />
+    @if (displayField().disabled() && !loadedFiles.isElementExtern(metaModelElement)) {
+      <button (click)="unlockLeft()" data-cy="clear-left-button" type="button" matSuffix mat-icon-button tabindex="-1">
+        <mat-icon>close</mat-icon>
+      </button>
     }
-  </mat-autocomplete>
-  @if (getControl('left')?.errors?.required) {
-    <mat-error>Please define a left characteristic</mat-error>
-  }
 
-  @if (getControl('left')?.errors?.disabled) {
-    <mat-error>Please select a left characteristic</mat-error>
-  }
+    <mat-autocomplete class="left" #auto="matAutocomplete">
+      @if (filteredCharacteristicTypes(); as filteredCharacteristicTypes) {
+        <div>
+          @if (!isAlreadyDefined(filteredCharacteristicTypes, displayValue()) && !hasError('foundModel')) {
+            <mat-option
+              [disabled]="!isUpperCase(displayValue())"
+              [value]="!isUpperCase(displayValue()) ? '' : displayValue()"
+              (click)="createNewCharacteristic(displayValue())"
+            >
+              @if (isUpperCase(displayValue())) {
+                <span>
+                  + {{ t('editorCanvas.shapeSetting.field.characteristic.createNew') }}: <strong>{{ displayValue() }}</strong>
+                </span>
+              }
+              @if (!isUpperCase(displayValue())) {
+                <span>{{ t('editorCanvas.shapeSetting.field.characteristic.upperCaseNotice') }}</span>
+              }
+            </mat-option>
+          }
+          @for (left of filteredCharacteristicTypes; track left.urn) {
+            <mat-option [value]="left.name" (onSelectionChange)="$event.isUserInput && onSelectionChange('left', left)">
+              <div class="result">
+                <div class="ellipsis">
+                  {{ left.name }}
+                  @if (left.description) {
+                    <span class="option-description" [title]="left.description">- {{ left.description }}</span>
+                  }
+                  @if (left.namespace) {
+                    <p class="namespace-prefix" [title]="left.namespace">
+                      {{ left.namespace }}
+                    </p>
+                  }
+                </div>
+              </div>
+            </mat-option>
+          }
+        </div>
+      }
+    </mat-autocomplete>
+    @if (hasError('required')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.characteristic.pleaseDefineLeft') }}</mat-error>
+    }
 
-  @if (getControl('left')?.errors?.checkShapeNameExtRef) {
-    <mat-error>{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.ALREADY_DEFINED_IN_SAME_NAMESPACE' | translate }}</mat-error>
-  }
-</mat-form-field>
+    @if (hasError('checkShapeNameExtRef')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.name.alreadyDefinedInSameNamespace') }}</mat-error>
+    }
+  </mat-form-field>
+</ng-container>

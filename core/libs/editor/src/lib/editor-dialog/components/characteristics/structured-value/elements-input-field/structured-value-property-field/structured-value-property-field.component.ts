@@ -12,18 +12,19 @@
  */
 
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
-import {EditorDialogValidators} from '@ame/editor';
 import {ElementCreatorService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
-import {Component, Input, OnInit, inject} from '@angular/core';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, inject, input, OnInit, output, signal} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
+import {disabled, form, FormField, required, validate} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
-import {DefaultCharacteristic, DefaultProperty, RdfModel} from '@esmf/aspect-model-loader';
-import {Observable, debounceTime, map, startWith} from 'rxjs';
+import {DefaultCharacteristic, DefaultProperty, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {debounceTime, map, Observable} from 'rxjs';
 
 @Component({
   selector: 'ame-structured-value-property-field',
@@ -33,7 +34,7 @@ import {Observable, debounceTime, map, startWith} from 'rxjs';
     MatFormFieldModule,
     MatLabel,
     MatAutocompleteTrigger,
-    ReactiveFormsModule,
+    FormField,
     MatInput,
     MatIconButton,
     MatIconModule,
@@ -42,17 +43,37 @@ import {Observable, debounceTime, map, startWith} from 'rxjs';
     MatOptgroup,
     MatOption,
     MatError,
+    TranslocoDirective,
   ],
 })
 export class StructuredValuePropertyFieldComponent implements OnInit {
-  @Input() public defaultProperty: DefaultProperty = null;
-  @Input() public fieldControl: FormControl;
+  public defaultProperty = input<DefaultProperty>(null);
+  public excludedProperties = input<NamedElement[]>([]);
+  readonly propertyChange = output<DefaultProperty | null>();
 
   private elementCreator = inject(ElementCreatorService);
   public loadedFiles = inject(LoadedFilesService);
 
-  public filteredProperties$: Observable<any>;
-  public control: FormControl;
+  public locked = signal(false);
+  public displayModel = signal('');
+  public filteredProperties$: Observable<any> = toObservable(this.displayModel).pipe(
+    debounceTime(250),
+    map(value => {
+      const excludedUrns = new Set(this.excludedProperties().map(p => p.aspectModelUrn));
+      return CacheUtils.getCachedElements(this.currentCacheFile, DefaultProperty).filter(
+        property => !excludedUrns.has(property.aspectModelUrn) && property.name.includes(value),
+      );
+    }),
+  );
+  public displayForm = form(this.displayModel, path => {
+    required(path);
+    validate(path, ({value}) =>
+      !value() || this.isLowerCase(value())
+        ? null
+        : {kind: 'namingLowerCase', message: 'Property names must start with a lowercase letter'},
+    );
+    disabled(path, {when: () => this.locked()});
+  });
 
   get currentCacheFile() {
     return this.loadedFiles.currentLoadedFile.cachedFile;
@@ -63,31 +84,21 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.control = new FormControl(
-      {
-        value: this.defaultProperty?.name || '',
-        disabled:
-          this.defaultProperty instanceof DefaultProperty &&
-          (!!this.defaultProperty?.aspectModelUrn || this.loadedFiles.isElementExtern(this.defaultProperty)),
-      },
-      [Validators.required, EditorDialogValidators.namingLowerCase],
-    );
-    this.filteredProperties$ = this.control.valueChanges.pipe(
-      startWith([]),
-      debounceTime(250),
-      map(value => CacheUtils.getCachedElements(this.currentCacheFile, DefaultProperty).filter(property => property.name.includes(value))),
+    const defaultProperty = this.defaultProperty();
+    this.displayModel.set(defaultProperty?.name || '');
+    this.locked.set(
+      defaultProperty instanceof DefaultProperty && (!!defaultProperty.aspectModelUrn || this.loadedFiles.isElementExtern(defaultProperty)),
     );
   }
 
   unlock() {
-    this.control.enable();
-    this.control.patchValue('');
-    this.fieldControl.setValue('');
-    this.defaultProperty = null;
+    this.locked.set(false);
+    this.displayModel.set('');
+    this.propertyChange.emit(null);
   }
 
   isLowerCase(value: string) {
-    return /[a-z]/.test(value?.[0] || '');
+    return /^[a-z][a-zA-Z0-9]*$/.test(value);
   }
 
   createNewProperty(name: string) {
@@ -105,12 +116,19 @@ export class StructuredValuePropertyFieldComponent implements OnInit {
       name,
       characteristic,
     });
-    this.fieldControl.setValue(newProperty);
-    this.control.disable();
+    this.locked.set(true);
+    this.propertyChange.emit(newProperty);
   }
 
   onSelectionChange(property: DefaultProperty) {
-    this.fieldControl.setValue(property);
-    this.control.disable();
+    this.displayModel.set(property.name);
+    this.locked.set(true);
+    this.propertyChange.emit(property);
+  }
+
+  hasError(kind: string): boolean {
+    return this.displayForm()
+      .errors()
+      .some(error => error.kind === kind);
   }
 }

@@ -12,10 +12,9 @@
  */
 
 import {DefaultEntityInstance} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
 
-export interface SearchResult {
-  cell?: mxgraph.mxCell;
+export interface SearchResult<T = any> {
+  cell?: T;
   entityValue?: DefaultEntityInstance;
   namespacePrefix?: string;
 }

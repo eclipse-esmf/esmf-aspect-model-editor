@@ -6,15 +6,24 @@
   "prefix": "ame",
   "targets": {
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{workspaceRoot}/coverage/libs/rdf"],
       "options": {
-        "jestConfig": "libs/rdf/jest.config.ts",
-        "tsConfig": "libs/rdf/tsconfig.spec.json"
+        "tsConfig": "libs/rdf/tsconfig.spec.json",
+        "buildTarget": "rdf:build",
+        "watch": false
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/libs/rdf"],
+      "options": {
+        "project": "libs/rdf/ng-package.json"
+      },
+      "dependsOn": []
     }
   }
 }

@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,35 +12,36 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ 'GENERATE_HTML_DOC_DIALOG.TITLE' | translate }}</h2>
-<button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
-  <mat-icon>close</mat-icon>
-</button>
-
-<mat-dialog-content>
-  @if (!isGenerating) {
-    <mat-form-field appearance="fill">
-      <mat-label>{{ 'GENERATE_HTML_DOC_DIALOG.LANGUAGE' | translate }}</mat-label>
-      <mat-select [formControl]="languageControl" data-cy="htmlGenerationLanguage">
-        @for (language of languages; track language) {
-          <mat-option [value]="language.tag">{{ language.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  } @else {
-    <div class="loading">
-      <h3>{{ 'GENERATE_HTML_DOC_DIALOG.GENERATING' | translate }}</h3>
-      <mat-spinner></mat-spinner>
-    </div>
-  }
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button mat-flat-button mat-dialog-close>{{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.CANCEL' | translate }}</button>
-  <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbOpenDoc">
-    {{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.OPEN_DOC' | translate }}
+  <h2 mat-dialog-title>{{ t('generateHtmlDocDialog.title') }}</h2>
+  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
+    <mat-icon>close</mat-icon>
   </button>
-  <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbDownloadDoc">
-    {{ 'GENERATE_HTML_DOC_DIALOG.BUTTON.DOWNLOAD_DOC' | translate }}
-  </button>
-</mat-dialog-actions>
+
+  <mat-dialog-content>
+    @if (!isGenerating()) {
+      <mat-form-field appearance="fill">
+        <mat-label>{{ t('generateHtmlDocDialog.language') }}</mat-label>
+        <mat-select [formField]="docForm.language" data-cy="htmlGenerationLanguage">
+          @for (language of languages(); track language) {
+            <mat-option [value]="language.tag">{{ language.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <div class="loading">
+        <h3>{{ t('generateHtmlDocDialog.generating') }}</h3>
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close>{{ t('generateHtmlDocDialog.button.cancel') }}</button>
+    <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbOpenDoc">
+      {{ t('generateHtmlDocDialog.button.openDoc') }}
+    </button>
+    <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbDownloadDoc">
+      {{ t('generateHtmlDocDialog.button.downloadDoc') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, Injector, OnDestroy, OnInit, runInInjectionContext, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {disabled, FieldTree, form, FormField} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -31,9 +31,13 @@ import {InputFieldComponent} from '../../input-field.component';
       }
     `,
   ],
-  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, ReactiveFormsModule, MatInput],
+  imports: [MatFormFieldModule, MatTooltipModule, MatLabel, FormField, MatInput],
 })
-export class DescriptionInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
+export class DescriptionInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
+  private readonly injector = inject(Injector);
+  private readonly unregisterFields: Array<() => void> = [];
+
+  readonly fields = signal<Record<string, FieldTree<string>>>({});
   public destroyRef = inject(DestroyRef);
   public metaModelDialogService = inject(EditorModelService);
 
@@ -52,37 +56,45 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<NamedEle
 
   getCurrentValue(key: string, locale: string) {
     if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined) {
-      return this.metaModelElement?.[key] || '';
+      return this.metaModelElement?.getDescription(locale) || '';
     }
 
     if (this.metaModelElement['extends_']) {
       return (
-        this.previousData?.[key] ||
+        this.previousData()?.[key] ||
         this.metaModelElement?.getDescription(locale) ||
         this.metaModelElement['extends_']?.getDescription(locale) ||
         ''
       );
     }
 
-    return this.previousData?.[key] || this.metaModelElement?.getDescription(locale) || '';
+    return this.previousData()?.[key] || this.metaModelElement?.getDescription(locale) || '';
   }
 
   isInherited(locale: string): boolean {
-    const control = this.parentForm.get('description' + locale);
     const extending = this.metaModelElement as HasExtends;
     return (
       extending.extends_ &&
       extending.getExtends()?.getDescription(locale) &&
-      control.value === extending.getExtends()?.getDescription(locale)
+      this.field(locale)?.().value() === extending.getExtends()?.getDescription(locale)
     );
   }
 
+  field(locale: string): FieldTree<string> {
+    return this.fields()[locale];
+  }
+
+  ngOnDestroy(): void {
+    this.unregisterFields.forEach(unregister => unregister());
+    super.ngOnDestroy();
+  }
+
   getPreferredNamesLocales(): string[] {
-    return Array.from(this.metaModelElement?.preferredNames?.keys());
+    return Array.from(this.metaModelElement?.preferredNames?.keys() ?? []);
   }
 
   getDescriptionsLocales(): string[] {
-    return Array.from(this.metaModelElement?.descriptions?.keys());
+    return Array.from(this.metaModelElement?.descriptions?.keys() ?? []);
   }
 
   private isDisabled() {
@@ -90,36 +102,34 @@ export class DescriptionInputFieldComponent extends InputFieldComponent<NamedEle
   }
 
   private setDescriptionControls() {
-    const allLocalesDescriptions = [...this.metaModelElement.descriptions.keys()];
+    this.unregisterFields.forEach(unregister => unregister());
+    this.unregisterFields.length = 0;
 
-    if (!allLocalesDescriptions.length) {
+    if (!this.metaModelElement) {
+      return;
+    }
+
+    const allLocalesDescriptions = Array.from(this.metaModelElement?.descriptions?.keys() ?? []);
+
+    if (!allLocalesDescriptions.length && this.metaModelElement?.descriptions) {
       this.metaModelElement.descriptions.set('en', '');
     }
 
-    [...this.metaModelElement.descriptions.keys()].forEach(locale => {
+    const fields: Record<string, FieldTree<string>> = {};
+    Array.from(this.metaModelElement?.descriptions?.keys() ?? []).forEach(locale => {
       const key = `description${locale}`;
-
-      const control = this.parentForm.get(key);
-      const previousDisabled = control?.disabled;
-      const isNowPredefined = (this.metaModelElement as DefaultCharacteristic)?.isPredefined;
-
-      if (previousDisabled && !isNowPredefined) {
-        control?.patchValue(this.getCurrentValue(key, locale));
-      }
-
-      this.removeDescriptionControl(locale);
-      this.parentForm.setControl(
-        key,
-        new FormControl({
-          value: this.getCurrentValue(key, locale) || this.metaModelElement?.getDescription(locale),
-          disabled:
-            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
-        }),
+      const model = signal<string>(String(this.getCurrentValue(key, locale) || this.metaModelElement?.getDescription(locale) || ''));
+      const field = runInInjectionContext(this.injector, () =>
+        form(model, path =>
+          disabled(path, {
+            when: () =>
+              this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
+          }),
+        ),
       );
+      fields[locale] = field;
+      this.unregisterFields.push(this.signalForm().register(key, field));
     });
-  }
-
-  private removeDescriptionControl(locale: string): void {
-    this.parentForm.removeControl(`description${locale}`);
+    this.fields.set(fields);
   }
 }

@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -10,78 +11,96 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-@if (selection; as currentSelection) {
-  <div class="header">
-    <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">
-      {{ currentSelection?.file }}
-    </h2>
+  @if (sidebarService.selection.selection(); as currentSelection) {
+    <div class="header">
+      <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">
+        {{ currentSelection?.file }}
+      </h2>
 
-    <button (click)="sidebarService.fileElements.close()" mat-mini-fab>
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
-  <div class="search">
-    <mat-form-field appearance="outline">
-      <mat-icon matPrefix>search</mat-icon>
-      <input [placeholder]="'SIDEBAR.ACTIONS.SEARCH_ELEMENTS' | translate" (keyup)="search($event)" matInput data-cy="searchElements" />
-    </mat-form-field>
-
-    <button class="filter" [matMenuTriggerFor]="filter" mat-mini-fab>
-      <mat-icon>filter_list</mat-icon>
-    </button>
-  </div>
-
-  @if (loadingElements()) {
-    <div class="loading">
-      <mat-spinner></mat-spinner>
-      <p>Loading elements...</p>
+      <button (click)="sidebarService.fileElements.close()" mat-mini-fab>
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
-  } @else {
-    <div class="elements">
-      @for (key of elementsOrder; track key) {
-        @if (searched[key].length && elements[key].displayed) {
-          <div class="elements__section" [class.expanded]="!elements[key].hidden">
-            <div class="elements__header">
-              <h3 class="elements__title">{{ elements[key].plural }} ({{ searched[key].length }})</h3>
-              @if (searched[key].length > 4) {
-                <span class="show-elements" (click)="elements[key].hidden = !elements[key].hidden">{{
-                  elements[key].hidden ? ('SIDEBAR.ACTIONS.SHOW_ALL' | translate) : ('SIDEBAR.ACTIONS.SHOW_LESS' | translate)
-                }}</span>
-              }
+
+    <div class="search">
+      <mat-form-field appearance="outline">
+        <mat-icon matPrefix>search</mat-icon>
+        <input [placeholder]="t('sidebar.actions.searchElements')" (keyup)="search($event)" matInput data-cy="searchElements" />
+      </mat-form-field>
+
+      <button class="filter" [matMenuTriggerFor]="filter" mat-mini-fab data-cy="elementsFilterBtn">
+        <mat-icon>filter_list</mat-icon>
+      </button>
+    </div>
+
+    @if (loadingElements()) {
+      <div class="loading">
+        <mat-spinner></mat-spinner>
+        <p>{{ t('sidebar.loadingElements') }}</p>
+      </div>
+    } @else {
+      <div class="elements" data-cy="fileElementsList">
+        @for (key of elementsOrder; track key) {
+          @if (searched()[key]?.length && elements()[key]?.displayed) {
+            <div class="elements__section" [class.expanded]="!elements()[key]?.hidden" [attr.data-cy]="'section-' + key">
+              <div class="elements__header">
+                <h3 class="elements__title">{{ elements()[key]?.plural }} ({{ searched()[key]?.length }})</h3>
+                @if (searched()[key]?.length > 4) {
+                  <button
+                    class="show-elements"
+                    [attr.aria-expanded]="!elements()[key]?.hidden"
+                    (click)="toggleSectionExpand(key)"
+                    (keyup.enter)="toggleSectionExpand(key)"
+                    (keyup.space)="toggleSectionExpand(key)"
+                    type="button"
+                    aria-label="Toggle show elements"
+                  >
+                    {{ elements()[key]?.hidden ? t('sidebar.actions.showAll') : t('sidebar.actions.showLess') }}
+                  </button>
+                }
+              </div>
+
+              <ng-container>
+                @for (element of elements()[key]?.hidden ? searched()[key].slice(0, 5) : searched()[key]; track element.aspectModelUrn) {
+                  <ame-draggable-element
+                    class="element"
+                    [class.disabled]="elementImported(element)"
+                    [class.readonly]="element.isAnonymous?.()"
+                    [type]="key"
+                    [urn]="element.aspectModelUrn"
+                    [readonly]="element.isAnonymous?.()"
+                    [matTooltip]="element.isAnonymous?.() ? getElementDescription(element) || '' : t('sidebar.dragIntoView')"
+                  >
+                    <ame-element
+                      [type]="sammElements[key]"
+                      [name]="element.name"
+                      [description]="getElementDescription(element)"
+                    ></ame-element>
+                  </ame-draggable-element>
+                }
+              </ng-container>
             </div>
-
-            <ng-container>
-              @for (element of elements[key].hidden ? searched[key].slice(0, 5) : searched[key]; track element.aspectModelUrn) {
-                <ame-draggable-element
-                  class="element"
-                  [class.disabled]="elementImported(element)"
-                  [type]="key"
-                  [urn]="element.aspectModelUrn"
-                  [matTooltip]="'SIDEBAR.DRAG_INTO_VIEW' | translate"
-                >
-                  <!-- TODO Language to be replaced with language translation key  -->
-                  <ame-element
-                    [type]="sammElements[key]"
-                    [name]="element.name"
-                    [description]="element.descriptions.get('en')"
-                  ></ame-element>
-                </ame-draggable-element>
-              }
-            </ng-container>
-          </div>
+          }
         }
-      }
-    </div>
-  }
-
-  <mat-menu class="filter-menu" #filter>
-    @for (key of elementsOrder; track key) {
-      @if (searched[key].length) {
-        <mat-checkbox class="mat-menu-item" [checked]="elements[key].displayed" (click)="toggleFilter($event, key)" labelPosition="before"
-          >{{ elements[key].plural }}
-        </mat-checkbox>
-      }
+      </div>
     }
-  </mat-menu>
-}
+
+    <mat-menu class="filter-menu" #filter="matMenu">
+      <div (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0" role="presentation">
+        @for (key of elementsOrder; track key) {
+          @if (elements()[key]?.elements?.length) {
+            <mat-checkbox
+              class="filter-menu-item"
+              [checked]="elements()[key]?.displayed"
+              [attr.data-cy]="'filterCheckbox-' + key"
+              (change)="toggleFilter($event.checked, key)"
+              labelPosition="before"
+            >
+              {{ elements()[key]?.plural }}
+            </mat-checkbox>
+          }
+        }
+      </div>
+    </mat-menu>
+  }
+</ng-container>

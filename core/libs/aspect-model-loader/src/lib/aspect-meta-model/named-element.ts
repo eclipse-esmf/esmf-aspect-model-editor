@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -28,26 +28,46 @@ export abstract class NamedElement extends ModelElement {
   descriptions: Map<LangString, string> = new Map();
   see: string[] = [];
   parents: ElementSet = new ElementSet();
+  previousAspectModelUrn?: string;
 
   set name(value: string) {
     this._name = value;
+    if (this.anonymous || !this.aspectModelUrn) {
+      return;
+    }
     const [namespace] = this.aspectModelUrn.split('#');
-    this.aspectModelUrn = `${namespace}#${value}`;
+    const newAspectModelUrn = `${namespace}#${value}`;
+    if (this.aspectModelUrn && newAspectModelUrn !== this.aspectModelUrn) {
+      this.previousAspectModelUrn = this.aspectModelUrn;
+    }
+    this.aspectModelUrn = newAspectModelUrn;
   }
   get name() {
     return this._name;
   }
 
+  /**
+   * Returns the aspectModelUrn the element had before its last rename (if any) and
+   * clears the tracked value so it is only reported once.
+   */
+  consumePreviousAspectModelUrn(): string | undefined {
+    const previous = this.previousAspectModelUrn;
+    this.previousAspectModelUrn = undefined;
+    return previous;
+  }
+
   constructor(props: NamedElementProps) {
     super(props);
     this.aspectModelUrn = props.aspectModelUrn;
+    this.anonymous = Boolean(props.isAnonymous);
+    this.isPredefined = Boolean(props.isPredefined);
     this.name = props.name;
     this.syntheticName = Boolean(props.hasSyntheticName);
     this.see = props.see || [];
     this.descriptions = props.descriptions || new Map();
     this.preferredNames = props.preferredNames || new Map();
-    this.anonymous = Boolean(props.isAnonymous);
-    this.isPredefined = Boolean(props.isPredefined);
+
+    this.previousAspectModelUrn = undefined;
   }
 
   get namespace(): string {

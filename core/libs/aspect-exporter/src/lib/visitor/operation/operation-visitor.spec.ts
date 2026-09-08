@@ -11,20 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {TestBed} from '@angular/core/testing';
 import {DefaultOperation, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
-import {describe, expect, it} from '@jest/globals';
 import {Store} from 'n3';
-import {MockProvider, MockProviders} from 'ng-mocks';
+import {MockProvider} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {OperationVisitor} from './operation-visitor';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
 
 describe('Operation Visitor', () => {
   let service: OperationVisitor;
@@ -35,22 +31,20 @@ describe('Operation Visitor', () => {
     store: new Store(),
     samm: new Samm(''),
     sammC: {ConstraintProperty: () => 'constraintProperty'} as any,
-    hasDependency: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    hasDependency: vi.fn(() => false),
+    addPrefix: vi.fn(() => {}),
   } as any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         OperationVisitor,
-        MockProviders(MxGraphService),
-        MockProvider(MxGraphService),
         MockProvider(RdfListService, {
-          push: jest.fn(),
-          createEmpty: jest.fn(),
+          push: vi.fn(),
+          createEmpty: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
-          update: jest.fn(),
+          update: vi.fn(),
         }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),

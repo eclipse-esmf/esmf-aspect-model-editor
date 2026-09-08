@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,83 +12,86 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<ame-entity-instance-search-bar
-  [count]="(complexValues() | entityInstance: searchFilter)?.length"
-  [disableAddNewEntityValue]="loadedFiles.isElementExtern(enumeration())"
-  (add)="onNew()"
-  (newSearch)="searchFilter = $event"
-></ame-entity-instance-search-bar>
+  <ame-entity-instance-search-bar
+    [count]="(displayedValues() | entityInstance: searchFilter())?.length"
+    [disableAddNewEntityValue]="loadedFiles.isElementExtern(enumeration())"
+    (add)="onNew()"
+    (newSearch)="searchFilter.set($event)"
+  ></ame-entity-instance-search-bar>
 
-@for (complexValue of complexValues() | entityInstance: searchFilter; track complexValue.aspectModelUrn) {
-  <mat-expansion-panel class="complex-value-items" [attr.data-cy]="complexValue.name" expanded="true">
-    <mat-expansion-panel-header class="complex-value-header">
-      <mat-panel-title class="complex-value-bar">
-        <span class="value-name">{{ complexValue.name }}</span>
-        <div class="complex-value-toolbox">
-          @if (loadedFiles.isElementInCurrentFile(enumeration())) {
-            <mat-icon
-              (click)="onDelete(complexValue, $event)"
-              matTooltip="Delete complex value {{ complexValue.name }}"
-              data-cy="remove-entity-value"
-              >delete
-            </mat-icon>
-          }
-        </div>
-      </mat-panel-title>
-    </mat-expansion-panel-header>
-    <mat-action-row class="complex-value-table">
-      @if (tuples[complexValue.aspectModelUrn]?.length) {
-        <mat-table class="table-values" [dataSource]="tuples[complexValue.aspectModelUrn]" [trackBy]="trackProperty">
-          <!-- Property Name Column -->
-          <ng-container matColumnDef="key">
-            <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.PROPERTY' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              <span
-                class="property-key"
-                matTooltip="{{ element.property.name }}{{ element.value.language ? '(' + element.value.language + ')' : '' }}"
-              >
-                <span class="property-key__field">
-                  {{ element.property.name }}
-                  @if (element.value.language) {
-                    ({{ element.value.language }})
-                  }
+  @for (complexValue of displayedValues() | entityInstance: searchFilter(); track complexValue.aspectModelUrn) {
+    <mat-expansion-panel class="complex-value-items" [attr.data-cy]="complexValue.name" expanded="true">
+      <mat-expansion-panel-header class="complex-value-header">
+        <mat-panel-title class="complex-value-bar">
+          <span class="value-name">{{ complexValue.name }}</span>
+          <div class="complex-value-toolbox">
+            @if (loadedFiles.isElementInCurrentFile(enumeration())) {
+              <mat-icon
+                [matTooltip]="t('entityValue.view.deleteComplexValue', {name: complexValue.name})"
+                (click)="onDelete(complexValue, $event)"
+                data-cy="remove-entity-value"
+                >delete
+              </mat-icon>
+            }
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-action-row class="complex-value-table">
+        @if (tuples()[complexValue.aspectModelUrn]?.length) {
+          <mat-table class="table-values" [dataSource]="tuples()[complexValue.aspectModelUrn]" [trackBy]="trackProperty">
+            <!-- Property Name Column -->
+            <ng-container matColumnDef="key">
+              <mat-header-cell *matHeaderCellDef>{{ t('entityValue.property') }}</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span
+                  class="property-key"
+                  matTooltip="{{ element.property.name }}{{ element.value.language ? '(' + element.value.language + ')' : '' }}"
+                >
+                  <span class="property-key__field">
+                    {{ element.property.name }}
+                    @if (element.value.language) {
+                      ({{ element.value.language }})
+                    }
+                  </span>
                 </span>
-              </span>
-            </mat-cell>
-          </ng-container>
+              </mat-cell>
+            </ng-container>
 
-          <!-- Value Column -->
-          <ng-container matColumnDef="value">
-            <mat-header-cell *matHeaderCellDef>{{ 'ENTITY_VALUE.VALUE' | translate }}</mat-header-cell>
-            <mat-cell *matCellDef="let element">
-              @if (element.value.type?.isComplexType()) {
-                <mat-icon class="material-icons complex-value-icon" matTooltip="Complex Data type">view_module</mat-icon>
-                {{ element.value.name }}
-              } @else {
-                {{ element.value.value }}
-              }
-            </mat-cell>
-          </ng-container>
+            <!-- Value Column -->
+            <ng-container matColumnDef="value">
+              <mat-header-cell *matHeaderCellDef>{{ t('entityValue.value') }}</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                @if (element.value.type?.isComplexType()) {
+                  <mat-icon class="material-icons complex-value-icon" [matTooltip]="t('entityValue.view.complexDataType')"
+                    >view_module</mat-icon
+                  >
+                  {{ element.value.name }}
+                } @else {
+                  {{ element.value.value }}
+                }
+              </mat-cell>
+            </ng-container>
 
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row
-            *matRowDef="let row; columns: displayedColumns"
-            [class.selected]="selection.isSelected(row)"
-            (click)="selection.toggle(row)"
-          ></mat-row>
-        </mat-table>
-      } @else {
-        <div class="empty-state">
-          <p>No data</p>
-        </div>
-      }
-    </mat-action-row>
-  </mat-expansion-panel>
-}
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              [class.selected]="selection().isSelected(row)"
+              (click)="selection().toggle(row)"
+            ></mat-row>
+          </mat-table>
+        } @else {
+          <div class="empty-state">
+            <p>{{ t('entityValue.view.noData') }}</p>
+          </div>
+        }
+      </mat-action-row>
+    </mat-expansion-panel>
+  }
 
-@if (complexValues()?.length === 0) {
-  <div class="text--center">No entity values</div>
-}
-@if ((complexValues() | entityInstance: searchFilter)?.length === 0) {
-  <div class="text--center">Entity values are filtered out.</div>
-}
+  @if (displayedValues()?.length === 0) {
+    <div class="text--center">{{ t('entityValue.view.noEntityValues') }}</div>
+  }
+  @if ((displayedValues() | entityInstance: searchFilter())?.length === 0) {
+    <div class="text--center">{{ t('entityValue.view.filteredOut') }}</div>
+  }
+</ng-container>

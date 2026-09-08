@@ -1,0 +1,30 @@
+allowBuilds:
+  '@compodoc/compodoc': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  core-js: true
+  cypress: true
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  less: true
+  lmdb: true
+  msgpackr-extract: true
+  nx: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - electron@44.1.0
+onlyBuiltDependencies:
+  - '@compodoc/compodoc'
+  - '@parcel/watcher'
+  - '@swc/core'
+  - 'core-js'
+  - 'cypress'
+  - 'electron'
+  - 'electron-winstaller'
+  - 'esbuild'
+  - 'less'
+  - 'lmdb'
+  - 'msgpackr-extract'
+  - 'nx'
+  - 'unrs-resolver'

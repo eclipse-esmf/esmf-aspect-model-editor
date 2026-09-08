@@ -17,8 +17,11 @@ import {FIELD_characteristicName, FIELD_name, FIELD_unit, SELECTOR_tbDeleteButto
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Unit', () => {
-  it('can change to class Quantifiable', () => {
+  before(() => {
     cy.visitDefault();
+  });
+
+  it('can change to class Quantifiable', () => {
     cy.startModelling()
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Quantifiable').click({force: true}))
@@ -236,7 +239,6 @@ describe('Test editing Unit', () => {
   });
 
   it('can filter predefined units', () => {
-    cy.visitDefault();
     cy.startModelling()
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Quantifiable').click({force: true}))

@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,48 +12,48 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h3 mat-dialog-title>{{ title }}</h3>
+  <h3 mat-dialog-title>{{ title() }}</h3>
 
-<button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
-  <mat-icon>close</mat-icon>
-</button>
+  <button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
 
-<form (ngSubmit)="onSave()">
-  <mat-dialog-content>
-    <mat-form-field class="entity-form-field" appearance="fill">
-      <mat-label for="entityValueName">{{ 'ENTITY_VALUE.NAME' | translate }}</mat-label>
-      <input
-        [formControl]="entityValueName"
-        [ngClass]="entityValueName.hasError('checkShapeName') || entityValueName.hasError('whitespace') ? 'ng-invalid-error' : ''"
-        matInput
-        type="text"
-        name="entityValueName"
-        data-cy="entityValueName"
-      />
-      @if (entityValueName.hasError('required')) {
-        <mat-error class="entity-form-field__error">{{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_DEFINE' | translate }}</mat-error>
-      }
-      @if (entityValueName.hasError('checkShapeName')) {
-        <mat-error class="entity-form-field__error">
-          {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.PLEASE_SELECT_DIFFERENT_NAME_NAMESPACE' | translate }}
-        </mat-error>
-      }
-      @if (entityValueName.hasError('whitespace')) {
-        <mat-error class="entity-form-field__error">
-          {{ 'EDITOR_CANVAS.SHAPE_SETTING.FIELD.NAME.NO_CONTAIN_WHITESPACES' | translate }}
-        </mat-error>
-      }
-    </mat-form-field>
+  <form (submit)="$event.preventDefault(); onSave()">
+    <mat-dialog-content>
+      <mat-form-field class="entity-form-field" appearance="fill">
+        <mat-label for="entityValueName">{{ t('entityValue.name') }} *</mat-label>
+        <input
+          [formField]="entityValueName"
+          [ngClass]="hasNameError('checkShapeName') || hasNameError('whitespace') ? 'ng-invalid-error' : ''"
+          matInput
+          type="text"
+          data-cy="entityValueName"
+        />
+        @if (hasNameError('required')) {
+          <mat-error class="entity-form-field__error">{{ t('editorCanvas.shapeSetting.field.name.pleaseDefine') }}</mat-error>
+        }
+        @if (hasNameError('checkShapeName') || hasNameError('nameAlreadyExists')) {
+          <mat-error class="entity-form-field__error">
+            {{ t('editorCanvas.shapeSetting.field.name.pleaseSelectDifferentNameNamespace') }}
+          </mat-error>
+        }
+        @if (hasNameError('whitespace')) {
+          <mat-error class="entity-form-field__error">
+            {{ t('editorCanvas.shapeSetting.field.name.noContainWhitespaces') }}
+          </mat-error>
+        }
+      </mat-form-field>
 
-    <ame-entity-instance-modal-table [form]="form" [entity]="entity" [entityValue]="entityValue" [enumeration]="enumeration" />
-  </mat-dialog-content>
+      <ame-entity-instance-modal-table [entity]="entity()" [entityValue]="entityValue()" [enumeration]="enumeration()" />
+    </mat-dialog-content>
 
-  <mat-dialog-actions class="sticky-dialog-actions" align="end">
-    <button (click)="onClose()" type="button" mat-raised-button data-cy="entityCancelButton">
-      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
-    </button>
-    <button [disabled]="form.invalid" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">
-      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
-    </button>
-  </mat-dialog-actions>
-</form>
+    <mat-dialog-actions class="sticky-dialog-actions" align="end">
+      <button (click)="onClose()" type="button" mat-raised-button data-cy="entityCancelButton">
+        {{ t('editorCanvas.shapeSetting.propertiesModal.cancel') }}
+      </button>
+      <button [disabled]="!valid()" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">
+        {{ t('editorCanvas.shapeSetting.propertiesModal.save') }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</ng-container>

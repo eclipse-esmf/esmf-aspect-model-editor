@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
@@ -25,14 +25,14 @@ import {
   DefaultStructuredValue,
   DefaultUnit,
 } from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicEntityConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultEntity> {
-  private mxGraphService = inject(MxGraphService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private maxgraphService = inject(MaxGraphService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
   private sammLangService = inject(SammLanguageSettingsService);
   private notificationsService = inject(NotificationsService);
   private loadedFiles = inject(LoadedFilesService);
@@ -41,7 +41,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     return this.loadedFiles.currentLoadedFile.cachedFile;
   }
 
-  connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
+  connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultEntity, parent: Cell, child: Cell): void {
     if (parentMetaModel instanceof DefaultStructuredValue) {
       return this.notificationsService.warning({
         title: 'Unable to connect elements',
@@ -51,8 +51,8 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
     }
 
     parentMetaModel.dataType = childMetaModel;
-    this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => this.removeCells(outEdge, null));
-    this.mxGraphShapeOverlayService.removeOverlay(parent, MxGraphHelper.getNewShapeOverlayButton(parent));
+    this.maxgraphAttributeService.graph.getOutgoingEdges(parent, null).forEach(outEdge => this.removeCells(outEdge, parent));
+    this.maxgraphShapeOverlayService.removeOverlay(parent, MaxGraphHelper.getNewShapeOverlayButton(parent));
 
     // Add icon when you simply connect an enumeration with an entity.
     if (parentMetaModel instanceof DefaultEnumeration) {
@@ -61,58 +61,58 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
       // if (!parentMetaModel.createdFromEditor) {
       //   parentMetaModel.values = [];
       // }
-      this.mxGraphShapeOverlayService.removeOverlay(parent, MxGraphHelper.getRightOverlayButton(parent));
-      this.mxGraphShapeOverlayService.addComplexEnumerationShapeOverlay(parent);
-      this.mxGraphShapeOverlayService.addBottomShapeOverlay(parent);
+      this.maxgraphShapeOverlayService.removeOverlay(parent, MaxGraphHelper.getRightOverlayButton(parent));
+      this.maxgraphShapeOverlayService.addComplexEnumerationShapeOverlay(parent);
+      this.maxgraphShapeOverlayService.addBottomShapeOverlay(parent);
     }
 
     if (parentMetaModel.dataType) {
-      MxGraphHelper.updateLabel(parent, this.mxGraphAttributeService.graph, this.sammLangService);
+      MaxGraphHelper.updateLabel(parent, this.maxgraphAttributeService.graph, this.sammLangService);
     }
 
     if (parentMetaModel.dataType?.isComplexType()) {
       this.updateChildPropertiesLabels(parent);
     }
 
-    this.mxGraphService.assignToParent(child, parent);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.assignToParent(child, parent);
+    this.maxgraphService.formatShapes();
   }
 
-  private updateChildPropertiesLabels(parent: mxgraph.mxCell): void {
-    const parentIncomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(parent);
+  private updateChildPropertiesLabels(parent: Cell): void {
+    const parentIncomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(parent, null);
     parentIncomingEdges.forEach(edge => {
-      const edgeSourceMetaModelElement = MxGraphHelper.getModelElement(edge.source);
+      const edgeSourceMetaModelElement = MaxGraphHelper.getModelElement(edge.source);
       if (edgeSourceMetaModelElement instanceof DefaultProperty) {
         // Remove example value for complex datatypes
         edgeSourceMetaModelElement.exampleValue = null;
-        MxGraphHelper.updateLabel(edge.source, this.mxGraphAttributeService.graph, this.sammLangService);
+        MaxGraphHelper.updateLabel(edge.source, this.maxgraphAttributeService.graph, this.sammLangService);
       }
     });
   }
 
-  private removeCells(edge: mxgraph.mxCell, parent: mxgraph.mxCell): void {
-    const metaModel = MxGraphHelper.getModelElement(edge.target);
+  private removeCells(edge: Cell, parent: Cell): void {
+    const metaModel = MaxGraphHelper.getModelElement(edge.target);
 
     if (metaModel instanceof DefaultUnit) return;
 
     // Remove icon if we delete the edge between enumeration and entity.
     if (metaModel instanceof DefaultEnumeration) {
-      this.mxGraphShapeOverlayService.removeComplexTypeShapeOverlays(parent);
+      this.maxgraphShapeOverlayService.removeComplexTypeShapeOverlays(parent);
     }
 
     // TODO Should be defined in more details
     if (metaModel instanceof DefaultEntityInstance) {
       for (const child of metaModel.children) {
-        MxGraphHelper.removeRelation(metaModel, child);
+        MaxGraphHelper.removeRelation(metaModel, child);
       }
 
-      this.mxGraphAttributeService.graph.getOutgoingEdges(edge.target).forEach(outEdge => this.removeCells(outEdge, null));
-      this.mxGraphService.removeCells([edge.target]);
+      this.maxgraphAttributeService.graph.getOutgoingEdges(edge.target, null).forEach(outEdge => this.removeCells(outEdge, edge.target));
+      this.maxgraphService.removeCells([edge.target]);
       this.currentCachedFile.removeElement(metaModel.aspectModelUrn);
     }
 
-    const parentModel = MxGraphHelper.getModelElement(edge.source);
-    MxGraphHelper.removeRelation(parentModel, metaModel);
-    this.mxGraphService.removeCells([edge]);
+    const parentModel = MaxGraphHelper.getModelElement(edge.source);
+    MaxGraphHelper.removeRelation(parentModel, metaModel);
+    this.maxgraphService.removeCells([edge]);
   }
 }

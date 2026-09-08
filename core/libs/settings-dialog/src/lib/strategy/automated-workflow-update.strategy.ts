@@ -12,25 +12,24 @@
  */
 
 import {EditorService, ModelSaverService} from '@ame/editor';
-import {Settings} from '@ame/settings-dialog';
-import {Injectable, inject} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {inject, Injectable} from '@angular/core';
+import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class AutomatedWorkflowUpdateStrategy implements SettingsUpdateStrategy {
-  private modelSaverService: ModelSaverService = inject(ModelSaverService);
-  private editorService = inject(EditorService);
+  private readonly modelSaverService = inject(ModelSaverService);
+  private readonly editorService = inject(EditorService);
 
-  updateSettings(form: FormGroup, settings: Settings): void {
-    const automatedWorkflow = form.get('automatedWorkflow');
+  updateSettings(model: SettingsFormData, settings: Settings): void {
+    const automatedWorkflow = model?.automatedWorkflow;
     if (!automatedWorkflow) return;
 
-    settings.autoSaveEnabled = automatedWorkflow.get('autoSaveEnabled')?.value;
-    settings.saveTimerSeconds = automatedWorkflow.get('saveTimerSeconds')?.value;
-    settings.autoValidationEnabled = automatedWorkflow.get('autoValidationEnabled')?.value;
-    settings.validationTimerSeconds = automatedWorkflow.get('validationTimerSeconds')?.value;
-    settings.autoFormatEnabled = automatedWorkflow.get('autoFormatEnabled')?.value;
+    settings.autoSaveEnabled = automatedWorkflow.autoSaveEnabled;
+    settings.saveTimerSeconds = automatedWorkflow.saveTimerSeconds;
+    settings.autoValidationEnabled = automatedWorkflow.autoValidationEnabled;
+    settings.validationTimerSeconds = automatedWorkflow.validationTimerSeconds;
+    settings.autoFormatEnabled = automatedWorkflow.autoFormatEnabled;
 
     if (settings.autoValidationEnabled) this.editorService.enableAutoValidation();
     if (settings.autoSaveEnabled) this.modelSaverService.enableAutoSave();

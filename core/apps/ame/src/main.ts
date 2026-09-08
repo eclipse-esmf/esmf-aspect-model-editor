@@ -14,15 +14,17 @@
 import {AppComponent} from '@ame/app/app.component';
 import {APP_ROUTES} from '@ame/app/app.routes';
 import {APP_CONFIG, config} from '@ame/shared';
-import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {enableProdMode, importProvidersFrom} from '@angular/core';
+import {TranslocoHttpLoader} from '@ame/translation';
+import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {enableProdMode, importProvidersFrom, provideZonelessChangeDetection} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
-import {provideAnimations} from '@angular/platform-browser/animations';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {PreloadAllModules, provideRouter, withPreloading} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
-import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
+import {provideTransloco} from '@jsverse/transloco';
 import {environment} from 'environments/environment';
 import {ToastrModule} from 'ngx-toastr';
+
+(window as any)['global'] = window;
 
 if (environment.production) {
   enableProdMode();
@@ -34,16 +36,21 @@ if (environment.production) {
 const bootstrap = () =>
   bootstrapApplication(AppComponent, {
     providers: [
+      provideZonelessChangeDetection(),
       provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
-      provideHttpClient(withInterceptorsFromDi()),
-      provideAnimations(),
-      importProvidersFrom(
-        ToastrModule.forRoot(),
-        TranslateModule.forRoot({
+      provideHttpClient(withXhr(), withInterceptorsFromDi()),
+      provideAnimationsAsync(),
+      importProvidersFrom(ToastrModule.forRoot()),
+      provideTransloco({
+        config: {
+          availableLangs: ['en', 'zh'],
+          defaultLang: 'en',
           fallbackLang: 'en',
-          loader: provideTranslateHttpLoader({prefix: './assets/i18n/', suffix: '.json'}),
-        }),
-      ),
+          reRenderOnLangChange: true,
+          prodMode: environment.production,
+        },
+        loader: TranslocoHttpLoader,
+      }),
       {provide: APP_CONFIG, useValue: config},
     ],
   });

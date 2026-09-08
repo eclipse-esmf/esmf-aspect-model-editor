@@ -11,21 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {form, FormField, required} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultValue} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-value-input-field',
   templateUrl: './value-input-field.component.html',
-  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatInput, TranslatePipe],
+  imports: [MatFormFieldModule, MatLabel, FormField, MatInput, TranslocoDirective],
 })
-export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> implements OnInit {
+export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> implements OnInit, OnDestroy {
+  private readonly model = signal('');
+  private unregisterField = () => undefined;
+
+  readonly field = form(this.model, path => required(path));
+
   ngOnInit() {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -33,9 +38,18 @@ export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> 
   }
 
   initForm() {
-    this.parentForm.setControl(
-      'value',
-      new FormControl({value: this.metaModelElement?.value || '', disabled: false}, {validators: [Validators.required]}),
-    );
+    this.model.set(this.metaModelElement?.value || '');
+    this.unregisterField = this.signalForm().register('value', this.field);
+  }
+
+  ngOnDestroy(): void {
+    this.unregisterField();
+    super.ngOnDestroy();
+  }
+
+  hasError(kind: string): boolean {
+    return this.field()
+      .errors()
+      .some(error => error.kind === kind);
   }
 }

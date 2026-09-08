@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,17 +12,18 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ 'SEARCHES.FILES.OPEN_DIALOG.TITLE' | translate: {fileName: fileData.file} }}</h2>
+  <h2 mat-dialog-title>{{ t('searches.files.openDialog.title', {fileName: fileData.file}) }}</h2>
 
-<mat-dialog-content>
-  <p [innerHTML]="'SEARCHES.FILES.OPEN_DIALOG.CONTENT' | translate: {fileName: fileData.file, namespace: fileData.namespace}"></p>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>{{ 'SEARCHES.FILES.OPEN_DIALOG.CANCEL' | translate }}</button>
-  <button mat-flat-button mat-dialog-close="open-in" color="primary">
-    {{ 'SEARCHES.FILES.OPEN_DIALOG.OPEN_IN_THIS_WINDOW' | translate }}
-  </button>
-  <button mat-flat-button mat-dialog-close="open-out" color="primary">
-    {{ 'SEARCHES.FILES.OPEN_DIALOG.OPEN_IN_NEW_WINDOW' | translate }}
-  </button>
-</mat-dialog-actions>
+  <mat-dialog-content>
+    <p [innerHTML]="t('searches.files.openDialog.content', {fileName: fileData.file, namespace: fileData.namespace})"></p>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>{{ t('searches.files.openDialog.cancel') }}</button>
+    <button mat-flat-button mat-dialog-close="open-in" color="primary">
+      {{ t('searches.files.openDialog.openInThisWindow') }}
+    </button>
+    <button mat-flat-button mat-dialog-close="open-out" color="primary">
+      {{ t('searches.files.openDialog.openInNewWindow') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

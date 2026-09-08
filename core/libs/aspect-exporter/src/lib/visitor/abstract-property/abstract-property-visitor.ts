@@ -34,10 +34,10 @@ export class AbstractPropertyVisitor extends BaseVisitor<DefaultProperty> {
     }
 
     this.setPrefix(abstractProperty.aspectModelUrn);
-    const oldAspectModelUrn = abstractProperty.aspectModelUrn;
+    const oldAspectModelUrn = abstractProperty.consumePreviousAspectModelUrn();
     this.addExtends(abstractProperty);
     this.addProperties(abstractProperty);
-    if (oldAspectModelUrn !== abstractProperty.aspectModelUrn) {
+    if (oldAspectModelUrn && oldAspectModelUrn !== abstractProperty.aspectModelUrn) {
       this.removeOldQuads(oldAspectModelUrn);
     }
     return abstractProperty;

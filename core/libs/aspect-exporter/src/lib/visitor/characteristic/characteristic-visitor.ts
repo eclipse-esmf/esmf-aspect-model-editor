@@ -12,6 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
+import {simpleDataTypes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
@@ -33,20 +34,23 @@ import {
   DefaultStructuredValue,
   DefaultTimeSeries,
   DefaultTrait,
+  DefaultValue,
   NamedElement,
   Samm,
   SammC,
 } from '@esmf/aspect-model-loader';
-import {DataFactory, Literal, NamedNode, Store} from 'n3';
+import {DataFactory, Literal, NamedNode, Quad_Subject, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
+import {ConstraintVisitor} from '../constraint/constraint-visitor';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   public rdfNodeService = inject(RdfNodeService);
   public rdfListService = inject(RdfListService);
   public loadedFilesService = inject(LoadedFilesService);
+  public constraintVisitor = inject(ConstraintVisitor);
 
   private get store(): Store {
     return this.loadedFilesService.currentLoadedFile.rdfModel.store;
@@ -61,161 +65,184 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   }
 
   private readonly characteristicsCallback = {
-    DefaultTrait: (characteristic: DefaultTrait) => this.updateTrait(characteristic),
-    DefaultQuantifiable: (characteristic: DefaultQuantifiable) => this.updateQuantifiable(characteristic),
-    DefaultMeasurement: (characteristic: DefaultMeasurement) => this.updateMeasurement(characteristic),
-    DefaultEnumeration: (characteristic: DefaultEnumeration) => this.updateEnumeration(characteristic),
-    DefaultState: (characteristic: DefaultState) => this.updateState(characteristic),
-    DefaultDuration: (characteristic: DefaultDuration) => this.updateDuration(characteristic),
-    DefaultCollection: (characteristic: DefaultCollection) => this.updateCollection(characteristic),
-    DefaultList: (characteristic: DefaultList) => this.updateCollection(characteristic),
-    DefaultSet: (characteristic: DefaultSet) => this.updateCollection(characteristic),
-    DefaultSortedSet: (characteristic: DefaultSortedSet) => this.updateCollection(characteristic),
-    DefaultTimeSeries: (characteristic: DefaultTimeSeries) => this.updateCollection(characteristic),
-    DefaultCode: (characteristic: DefaultCode) => this.updateCode(characteristic),
-    DefaultEither: (characteristic: DefaultEither) => this.updateEither(characteristic),
-    DefaultSingleEntity: (characteristic: DefaultSingleEntity) => this.updateSingleEntity(characteristic),
-    DefaultStructuredValue: (characteristic: DefaultStructuredValue) => this.updateStructuredValue(characteristic),
+    DefaultTrait: (characteristic: DefaultTrait, subject?: Quad_Subject) => this.updateTrait(characteristic, subject),
+    DefaultQuantifiable: (characteristic: DefaultQuantifiable, subject?: Quad_Subject) => this.updateQuantifiable(characteristic, subject),
+    DefaultMeasurement: (characteristic: DefaultMeasurement, subject?: Quad_Subject) => this.updateMeasurement(characteristic, subject),
+    DefaultEnumeration: (characteristic: DefaultEnumeration, subject?: Quad_Subject) => this.updateEnumeration(characteristic, subject),
+    DefaultState: (characteristic: DefaultState, subject?: Quad_Subject) => this.updateState(characteristic, subject),
+    DefaultDuration: (characteristic: DefaultDuration, subject?: Quad_Subject) => this.updateDuration(characteristic, subject),
+    DefaultCollection: (characteristic: DefaultCollection, subject?: Quad_Subject) => this.updateCollection(characteristic, subject),
+    DefaultList: (characteristic: DefaultList, subject?: Quad_Subject) => this.updateCollection(characteristic, subject),
+    DefaultSet: (characteristic: DefaultSet, subject?: Quad_Subject) => this.updateCollection(characteristic, subject),
+    DefaultSortedSet: (characteristic: DefaultSortedSet, subject?: Quad_Subject) => this.updateCollection(characteristic, subject),
+    DefaultTimeSeries: (characteristic: DefaultTimeSeries, subject?: Quad_Subject) => this.updateCollection(characteristic, subject),
+    DefaultCode: (characteristic: DefaultCode, subject?: Quad_Subject) => this.updateCode(characteristic, subject),
+    DefaultEither: (characteristic: DefaultEither, subject?: Quad_Subject) => this.updateEither(characteristic, subject),
+    DefaultSingleEntity: (characteristic: DefaultSingleEntity, subject?: Quad_Subject) => this.updateSingleEntity(characteristic, subject),
+    DefaultStructuredValue: (characteristic: DefaultStructuredValue, subject?: Quad_Subject) =>
+      this.updateStructuredValue(characteristic, subject),
   };
 
-  visit(characteristic: DefaultCharacteristic): DefaultCharacteristic {
-    this.setPrefix(characteristic.aspectModelUrn);
-    this.updateParents(characteristic);
+  visit(characteristic: DefaultCharacteristic, customSubject?: Quad_Subject): DefaultCharacteristic {
+    if (!customSubject && characteristic.isAnonymous?.()) {
+      return characteristic;
+    }
+
+    if (!customSubject) {
+      this.setPrefix(characteristic.aspectModelUrn);
+      this.updateParents(characteristic);
+    }
 
     if (characteristic.isPredefined) {
       return characteristic;
     }
 
-    this.updateProperties(characteristic);
-    this.characteristicsCallback[characteristic.className]?.(characteristic);
+    this.updateProperties(characteristic, customSubject);
+    this.characteristicsCallback[characteristic.className]?.(characteristic, customSubject);
 
     return characteristic;
   }
 
   // Types of characteristics
-  private updateTrait(characteristic: DefaultTrait) {
+  private updateTrait(characteristic: DefaultTrait, customSubject?: Quad_Subject) {
+    const subject = customSubject || DataFactory.namedNode(characteristic.aspectModelUrn);
     // update baseCharacteristic
-    if (characteristic.baseCharacteristic?.aspectModelUrn) {
-      this.store.addQuad(
-        DataFactory.namedNode(characteristic.aspectModelUrn),
-        this.sammC.BaseCharacteristicProperty(),
-        DataFactory.namedNode(characteristic.baseCharacteristic.aspectModelUrn),
-      );
-      this.setPrefix(characteristic.baseCharacteristic.aspectModelUrn);
+    if (characteristic.baseCharacteristic) {
+      if (characteristic.baseCharacteristic.isAnonymous?.()) {
+        const baseBlank = DataFactory.blankNode();
+        this.store.addQuad(DataFactory.triple(subject, this.sammC.BaseCharacteristicProperty(), baseBlank));
+        this.visit(characteristic.baseCharacteristic, baseBlank);
+      } else if (characteristic.baseCharacteristic.aspectModelUrn) {
+        this.store.addQuad(
+          DataFactory.triple(
+            subject,
+            this.sammC.BaseCharacteristicProperty(),
+            DataFactory.namedNode(characteristic.baseCharacteristic.aspectModelUrn),
+          ),
+        );
+        this.setPrefix(characteristic.baseCharacteristic.aspectModelUrn);
+      }
     }
 
     // update constraints
-    this.store.removeQuads(
-      this.store.getQuads(DataFactory.namedNode(characteristic.aspectModelUrn), this.sammC.ConstraintProperty(), null, null),
-    );
+    this.store.removeQuads(this.store.getQuads(subject, this.sammC.ConstraintProperty(), null, null));
 
     for (const constraint of characteristic.constraints || []) {
-      if (!constraint?.aspectModelUrn) {
+      if (!constraint) {
         continue;
       }
 
-      this.store.addQuad(
-        DataFactory.triple(
-          DataFactory.namedNode(characteristic.aspectModelUrn),
-          this.sammC.ConstraintProperty(),
-          DataFactory.namedNode(constraint.aspectModelUrn),
-        ),
-      );
-      this.setPrefix(constraint.aspectModelUrn);
+      if (constraint.isAnonymous?.()) {
+        const constraintBlank = DataFactory.blankNode();
+        this.store.addQuad(DataFactory.triple(subject, this.sammC.ConstraintProperty(), constraintBlank));
+        this.constraintVisitor.visit(constraint, characteristic.baseCharacteristic?.dataType, constraintBlank);
+      } else if (constraint.aspectModelUrn) {
+        this.store.addQuad(DataFactory.triple(subject, this.sammC.ConstraintProperty(), DataFactory.namedNode(constraint.aspectModelUrn)));
+        this.setPrefix(constraint.aspectModelUrn);
+      }
     }
   }
 
-  private updateQuantifiable(characteristic: DefaultQuantifiable) {
+  private updateQuantifiable(characteristic: DefaultQuantifiable, customSubject?: Quad_Subject) {
     if (!characteristic.unit?.aspectModelUrn) {
       return;
     }
 
-    this.updateUnit(characteristic);
+    this.updateUnit(characteristic, customSubject);
   }
 
-  private updateMeasurement(characteristic: DefaultMeasurement) {
-    this.updateUnit(characteristic);
+  private updateMeasurement(characteristic: DefaultMeasurement, customSubject?: Quad_Subject) {
+    this.updateUnit(characteristic, customSubject);
   }
 
-  private updateEnumeration(characteristic: DefaultEnumeration) {
+  private updateEnumeration(characteristic: DefaultEnumeration, _customSubject?: Quad_Subject) {
     this.rdfListService.push(characteristic, ...characteristic.values);
-    if (!(characteristic.dataType instanceof DefaultEntity)) {
-      return;
-    }
-
     for (const value of characteristic.values) {
-      if (value instanceof DefaultEntityInstance) {
+      if (value instanceof DefaultValue) {
+        if (!value.isAnonymous?.()) {
+          this.setPrefix(value.aspectModelUrn);
+        }
+      } else if (value instanceof DefaultEntityInstance) {
         this.setPrefix(value.aspectModelUrn);
       }
     }
   }
 
-  private updateState(characteristic: DefaultState) {
-    this.updateEnumeration(characteristic);
+  private updateState(characteristic: DefaultState, customSubject?: Quad_Subject) {
+    this.updateEnumeration(characteristic, customSubject);
 
+    const subject = customSubject || DataFactory.namedNode(characteristic.aspectModelUrn);
     let object = null;
+    const dataTypeUrn =
+      characteristic.dataType?.urn ||
+      characteristic.dataType?.aspectModelUrn ||
+      (typeof (characteristic.dataType as any)?.getUrn === 'function' ? (characteristic.dataType as any).getUrn() : null) ||
+      simpleDataTypes.string.isDefinedBy;
     if (characteristic.defaultValue instanceof NamedElement) {
       object = DataFactory.namedNode(characteristic.defaultValue.aspectModelUrn);
-    } else {
-      object = DataFactory.literal(
-        characteristic.defaultValue.value as string,
-        characteristic.dataType ? DataFactory.namedNode(characteristic.dataType?.getUrn()) : undefined,
-      );
+    } else if (characteristic.defaultValue) {
+      object = DataFactory.literal(characteristic.defaultValue.value as string, DataFactory.namedNode(dataTypeUrn));
     }
 
-    this.removeOldAndAddNewReference(DataFactory.namedNode(characteristic.aspectModelUrn), this.sammC.DefaultValueProperty(), object);
+    this.removeOldAndAddNewReference(subject, this.sammC.DefaultValueProperty(), object);
   }
 
-  private updateDuration(characteristic: DefaultDuration) {
-    this.updateUnit(characteristic);
+  private updateDuration(characteristic: DefaultDuration, customSubject?: Quad_Subject) {
+    this.updateUnit(characteristic, customSubject);
   }
 
-  private updateCollection(characteristic: DefaultCollection) {
+  private updateCollection(characteristic: DefaultCollection, customSubject?: Quad_Subject) {
     if (!characteristic.elementCharacteristic) {
       return;
     }
 
-    this.updateElementCharacteristic(characteristic);
+    this.updateElementCharacteristic(characteristic, customSubject);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private updateCode(_characteristic: DefaultCode) {
+  private updateCode(_characteristic: DefaultCode, _customSubject?: Quad_Subject) {
     // To be discussed
   }
 
-  private updateEither(characteristic: DefaultEither) {
+  private updateEither(characteristic: DefaultEither, customSubject?: Quad_Subject) {
+    const subject = customSubject || DataFactory.namedNode(characteristic.aspectModelUrn);
     if (characteristic.left) {
-      // Updating Left
-      this.store.addQuad(
-        DataFactory.namedNode(characteristic.aspectModelUrn),
-        this.sammC.EitherLeftProperty(),
-        DataFactory.namedNode(characteristic.left.aspectModelUrn),
-      );
-      this.setPrefix(characteristic.left.aspectModelUrn);
+      if (characteristic.left.isAnonymous?.()) {
+        const leftBlank = DataFactory.blankNode();
+        this.store.addQuad(DataFactory.triple(subject, this.sammC.EitherLeftProperty(), leftBlank));
+        this.visit(characteristic.left, leftBlank);
+      } else {
+        this.store.addQuad(
+          DataFactory.triple(subject, this.sammC.EitherLeftProperty(), DataFactory.namedNode(characteristic.left.aspectModelUrn)),
+        );
+        this.setPrefix(characteristic.left.aspectModelUrn);
+      }
     }
 
     if (characteristic.right) {
-      // Updating Right
-      this.store.addQuad(
-        DataFactory.namedNode(characteristic.aspectModelUrn),
-        this.sammC.EitherRightProperty(),
-        DataFactory.namedNode(characteristic.right.aspectModelUrn),
-      );
-      this.setPrefix(characteristic.right.aspectModelUrn);
+      if (characteristic.right.isAnonymous?.()) {
+        const rightBlank = DataFactory.blankNode();
+        this.store.addQuad(DataFactory.triple(subject, this.sammC.EitherRightProperty(), rightBlank));
+        this.visit(characteristic.right, rightBlank);
+      } else {
+        this.store.addQuad(
+          DataFactory.triple(subject, this.sammC.EitherRightProperty(), DataFactory.namedNode(characteristic.right.aspectModelUrn)),
+        );
+        this.setPrefix(characteristic.right.aspectModelUrn);
+      }
     }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private updateSingleEntity(_characteristic: DefaultSingleEntity) {
+  private updateSingleEntity(_characteristic: DefaultSingleEntity, _customSubject?: Quad_Subject) {
     // nothing to add
   }
 
-  private updateStructuredValue(characteristic: DefaultStructuredValue) {
+  private updateStructuredValue(characteristic: DefaultStructuredValue, customSubject?: Quad_Subject) {
+    const subject = customSubject || DataFactory.namedNode(characteristic.aspectModelUrn);
     // remove deconstructionRule
     this.store.addQuad(
-      DataFactory.namedNode(characteristic.aspectModelUrn),
-      this.sammC.DeconstructionRuleProperty(),
-      DataFactory.literal(characteristic.deconstructionRule),
+      DataFactory.triple(subject, this.sammC.DeconstructionRuleProperty(), DataFactory.literal(characteristic.deconstructionRule)),
     );
 
     // update elements
@@ -229,8 +256,8 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
   }
 
   // base functions
-  private updateProperties(characteristic: DefaultCharacteristic) {
-    this.rdfNodeService.update(characteristic, {
+  private updateProperties(characteristic: DefaultCharacteristic, subject?: Quad_Subject) {
+    const properties = {
       preferredName: Array.from(characteristic.preferredNames.keys())?.map(language => ({
         language,
         value: characteristic.getPreferredName(language),
@@ -241,14 +268,20 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
       })),
       see: characteristic.getSee() || [],
       dataType: characteristic.dataType?.getUrn(),
-    });
+    };
+
+    if (subject) {
+      this.rdfNodeService.update(characteristic, properties, subject);
+    } else {
+      this.rdfNodeService.update(characteristic, properties);
+    }
 
     if (characteristic.dataType instanceof DefaultEntity) {
       this.setPrefix(characteristic.dataType.aspectModelUrn);
     }
   }
 
-  private removeOldAndAddNewReference(subject: NamedNode, predicate: NamedNode, object: NamedNode | Literal) {
+  private removeOldAndAddNewReference(subject: Quad_Subject, predicate: NamedNode, object: NamedNode | Literal) {
     const existing = this.store.getQuads(subject, predicate, object, null);
     if (existing.length) {
       return;
@@ -258,28 +291,35 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.store.addQuad(DataFactory.triple(subject, predicate, object));
   }
 
-  private updateUnit(characteristic: DefaultMeasurement | DefaultQuantifiable | DefaultDuration) {
+  private updateUnit(characteristic: DefaultMeasurement | DefaultQuantifiable | DefaultDuration, customSubject?: Quad_Subject) {
     if (!characteristic.unit) {
       return;
     }
 
-    this.store.addQuad(
-      DataFactory.namedNode(characteristic.aspectModelUrn),
-      this.sammC.UnitProperty(),
-      DataFactory.namedNode(characteristic.unit.aspectModelUrn),
-    );
+    const subject = customSubject || DataFactory.namedNode(characteristic.aspectModelUrn);
+    this.store.addQuad(DataFactory.triple(subject, this.sammC.UnitProperty(), DataFactory.namedNode(characteristic.unit.aspectModelUrn)));
     this.setPrefix(characteristic.unit.aspectModelUrn);
   }
 
-  private updateElementCharacteristic(characteristic: DefaultCollection) {
+  private updateElementCharacteristic(characteristic: DefaultCollection, customSubject?: Quad_Subject) {
     if (!characteristic.elementCharacteristic) {
       return;
     }
 
+    const subject = customSubject || DataFactory.namedNode(characteristic.aspectModelUrn);
+    if (characteristic.elementCharacteristic.isAnonymous?.()) {
+      const blankNode = DataFactory.blankNode();
+      this.store.addQuad(DataFactory.triple(subject, this.sammC.ElementCharacteristicProperty(), blankNode));
+      this.visit(characteristic.elementCharacteristic, blankNode);
+      return;
+    }
+
     this.store.addQuad(
-      DataFactory.namedNode(characteristic.aspectModelUrn),
-      this.sammC.ElementCharacteristicProperty(),
-      DataFactory.namedNode(characteristic.elementCharacteristic.aspectModelUrn),
+      DataFactory.triple(
+        subject,
+        this.sammC.ElementCharacteristicProperty(),
+        DataFactory.namedNode(characteristic.elementCharacteristic.aspectModelUrn),
+      ),
     );
     this.setPrefix(characteristic.elementCharacteristic.aspectModelUrn);
   }
@@ -300,13 +340,13 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
         this.rdfNodeService.update(parent, {exampleValue: null});
       }
 
-      parent instanceof DefaultProperty &&
-        !parent.isPredefined &&
+      if (parent instanceof DefaultProperty && !parent.isPredefined) {
         this.removeOldAndAddNewReference(
           DataFactory.namedNode(parent.aspectModelUrn),
           parent instanceof DefaultCollection ? this.sammC.ElementCharacteristicProperty() : this.samm.CharacteristicProperty(),
           DataFactory.namedNode(characteristic.aspectModelUrn),
         );
+      }
     }
 
     return characteristic.aspectModelUrn;

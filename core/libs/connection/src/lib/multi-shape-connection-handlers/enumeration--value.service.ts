@@ -13,7 +13,7 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultEnumeration, DefaultValue} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {MultiShapeConnector} from '../models';
 
@@ -22,11 +22,11 @@ export class EnumerationValueConnectionHandler
   extends BaseConnectionHandler
   implements MultiShapeConnector<DefaultEnumeration, DefaultValue>
 {
-  connect(parentMetaModel: DefaultEnumeration, childMetaModel: DefaultValue, parent: mxgraph.mxCell, child: mxgraph.mxCell): void {
+  connect(parentMetaModel: DefaultEnumeration, childMetaModel: DefaultValue, parent: Cell, child: Cell): void {
     childMetaModel.addParent(parentMetaModel);
     parentMetaModel.values.push(childMetaModel);
 
-    this.mxGraphService.assignToParent(child, parent);
+    this.maxgraphService.assignToParent(child, parent);
     this.refreshPropertiesLabel(parent, parentMetaModel);
   }
 }

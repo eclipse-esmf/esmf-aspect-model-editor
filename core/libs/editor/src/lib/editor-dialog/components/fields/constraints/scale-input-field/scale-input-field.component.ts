@@ -10,21 +10,44 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {disabled, form, FormField, required, validate} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultFixedPointConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-scale-input-field',
   templateUrl: './scale-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [MatFormFieldModule, MatLabel, ReactiveFormsModule, MatError, MatInput],
+  imports: [MatFormFieldModule, MatLabel, FormField, MatError, MatInput, TranslocoDirective],
 })
 export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPointConstraint> implements OnInit, OnDestroy {
+  private readonly model = signal<number | string | null>(null);
+  private unregisterField = () => undefined;
+
+  readonly field = form(this.model, path => {
+    required(path);
+    validate(path, ({value}) => {
+      const scale = value();
+      if (scale === null || scale === undefined || scale === '') {
+        return null;
+      }
+      if (typeof scale === 'number') {
+        return Number.isInteger(scale) && scale > 0 ? null : {kind: 'pattern', message: 'Please provide a positive number'};
+      }
+      if (typeof scale === 'string') {
+        const trimmed = scale.trim();
+        return trimmed === '' || /^[1-9]\d*$/.test(trimmed) ? null : {kind: 'pattern', message: 'Please provide a positive number'};
+      }
+      return {kind: 'pattern', message: 'Please provide a positive number'};
+    });
+    disabled(path, {when: () => !!this.metaModelElement && this.loadedFiles.isElementExtern(this.metaModelElement)});
+  });
+
   constructor() {
     super();
     this.resetFormOnDestroy = false;
@@ -41,19 +64,18 @@ export class ScaleInputFieldComponent extends InputFieldComponent<DefaultFixedPo
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.parentForm.removeControl(this.fieldName);
+    this.unregisterField();
   }
 
   initForm() {
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl(
-        {
-          value: this.getCurrentValue(this.fieldName),
-          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-        },
-        Validators.required,
-      ),
-    );
+    const currentValue = this.getCurrentValue(this.fieldName);
+    this.model.set(currentValue === '' ? null : Number(currentValue));
+    this.unregisterField = this.signalForm().register(this.fieldName, this.field);
+  }
+
+  hasError(kind: string): boolean {
+    return this.field()
+      .errors()
+      .some(error => error.kind === kind);
   }
 }

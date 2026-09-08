@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -22,9 +21,6 @@ import {
   FIELD_entityValueName,
   FIELD_error,
   FIELD_name,
-  FIELD_notInPayload,
-  FIELD_optional,
-  FIELD_payloadName,
   FIELD_preferredNameen,
   FIELD_see,
   META_MODEL_description,
@@ -43,11 +39,13 @@ import {cyHelp} from '../../support/helpers';
 
 // These tests are for the special case that the name of the shape is changed and the turtle file is generated correctly.
 describe('Test edit property', () => {
-  it('should rename first property and new property', () => {
+  before(() => {
     cy.visitDefault();
+  });
+
+  it('should rename first property and new property', () => {
     cy.startModelling()
-      .wait(500)
-      .then(() => cy.get(SELECTOR_elementBtn).click())
+      .then(() => cy.get(SELECTOR_elementBtn).click({force: true}))
       .then(() => cy.shapeExists('property1'))
       .then(() => cy.dbClickShape('property1'))
       .then(() => {
@@ -77,7 +75,6 @@ describe('Test edit property', () => {
   it('should get error on renaming first property same as property from same namespace', () => {
     const fileNameOne = 'external-property-reference.ttl';
 
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.examples.aspect:1.0.0': [fileNameOne],
     });
@@ -93,12 +90,10 @@ describe('Test edit property', () => {
       },
     );
 
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.shapeExists('property1'))
       .then(() => cy.dbClickShape('property1'))
-      .then(() => cy.get(FIELD_name).clear({force: true}).type('externalPropertyWithChildren ', {force: true}).wait(1000))
+      .then(() => cy.get(FIELD_name).clear({force: true}).type('externalPropertyWithChildren ', {force: true}))
       .then(() =>
         cy.get('ame-name-input-field mat-error').contains('Please start with a lower case character followed by letters/numerals.'),
       );
@@ -226,9 +221,7 @@ describe('Test edit property', () => {
   });
 
   it('should rename first property and rename new added property', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('property1'))
       .then(() => cy.dbClickShape('property1'))
@@ -252,9 +245,7 @@ describe('Test edit property', () => {
   });
 
   it('should rename first property and rename second added second property and add new default property', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('property1'))
       .then(() => cy.dbClickShape('property1'))
@@ -280,9 +271,7 @@ describe('Test edit property', () => {
   });
 
   it('should rename property and rename second added property and rename third added default property', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('property1'))
       .then(() => cy.dbClickShape('property1'))
@@ -314,9 +303,7 @@ describe('Test edit property', () => {
   it('should not allow to put 2 properties with the same name', () => {
     cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}});
 
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       // create a
       .then(() => cy.shapeExists('property1'))
@@ -365,9 +352,7 @@ describe('Test edit property', () => {
   });
 
   it('should rename aspect after rename property and create new default property', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('property1'))
       .then(() => cy.dbClickShape('property1'))
@@ -395,9 +380,7 @@ describe('Test edit property', () => {
   });
 
   it('should create entity rename new created property and create new default entity property', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))
@@ -424,9 +407,7 @@ describe('Test edit property', () => {
   });
 
   it('should rename entity after rename new created property and create new default entity property', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))
@@ -459,9 +440,7 @@ describe('Test edit property', () => {
   });
 
   it('should rename entity property and create new default property and then create aspect property and rename the aspect', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))
@@ -506,19 +485,17 @@ describe('Test edit property', () => {
 
   describe('property optionality', () => {
     it('should overwrite property with optional and notInPayload should not be present', () => {
-      cy.visitDefault();
       cy.startModelling()
-        .wait(500)
-        .then(() => cy.get(SELECTOR_elementBtn).click())
+        .then(() => cy.get(SELECTOR_elementBtn).click({force: true}))
         .then(() => cy.dbClickShape('AspectDefault'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => {
-          cy.get(`input[type="checkbox"][name="property1_${FIELD_notInPayload}"]`).should('not.exist');
-          cy.get(`input[type="checkbox"][name="property1_${FIELD_optional}"]`).click({force: true});
-          return cy.wait(500);
+          cy.get('[data-cy="property-property1-notInPayload"]').should('not.exist');
+          cy.get('[data-cy="property-property1-optional"]').click({
+            force: true,
+          });
         })
-        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}))
-        .then(() => cy.wait(500))
+        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).should('not.exist'))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
@@ -531,28 +508,24 @@ describe('Test edit property', () => {
     });
 
     it('should overwrite property of complex enumeration with notInPayload', () => {
-      cy.visitDefault();
       cy.startModelling()
-        .wait(500)
-        .then(() => cy.get(SELECTOR_elementBtn).click())
+        .then(() => cy.get(SELECTOR_elementBtn).click({force: true}))
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
         .then(() => cy.shapeExists('Entity1'))
         .then(() => cy.dbClickShape('Characteristic1'))
         .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
         .then(() => cy.get(SELECTOR_searchEntityValueInputField).should('exist'))
-        .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}).wait(200))
+        .then(() => cy.get(SELECTOR_addEntityValue).click({force: true}))
         .then(() => cy.get(FIELD_entityValueName).should('exist').type('EntityValue', {force: true}))
-        .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).wait(200))
+        .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).should('not.exist'))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
         .then(() => cy.dbClickShape('Entity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => {
-          cy.get(`input[type="checkbox"][name="property2_${FIELD_notInPayload}"]`).click({force: true});
-          return cy.wait(500);
+          cy.get('[data-cy="property-property2-notInPayload"]').click({force: true});
         })
         .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).should('not.exist'))
-        .then(() => cy.wait(500))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
@@ -564,16 +537,12 @@ describe('Test edit property', () => {
     });
 
     it('should overwrite property with payloadName', () => {
-      cy.visitDefault();
       cy.startModelling()
-        .wait(500)
-        .then(() => cy.get(SELECTOR_elementBtn).click())
+        .then(() => cy.get(SELECTOR_elementBtn).click({force: true}))
         .then(() => cy.dbClickShape('AspectDefault'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
-        .then(() => cy.get(`[name="property1_${FIELD_payloadName}"]`).clear({force: true}).type('payloadName', {force: true}))
-        .then(() => cy.wait(500))
-        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}))
-        .then(() => cy.wait(500))
+        .then(() => cy.get('[data-cy="property-property1-payloadName"]').clear({force: true}).type('payloadName', {force: true}))
+        .then(() => cy.get('[data-cy="propertiesSaveButton"]').click({force: true}).should('not.exist'))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {

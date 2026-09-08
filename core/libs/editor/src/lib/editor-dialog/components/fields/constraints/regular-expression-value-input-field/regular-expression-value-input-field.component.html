@@ -11,12 +11,12 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div [formGroup]="parentForm">
-  <mat-form-field [floatLabel]="getControl('value')?.disabled ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-    <mat-label for="value">value</mat-label>
-    <input [formControl]="getControl('value')" matInput name="value" data-cy="value" />
-    @if (getControl('value').errors?.required) {
-      <mat-error>Value is required</mat-error>
+<ng-container *transloco="let t">
+  <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
+    <mat-label for="value">value *</mat-label>
+    <input [formField]="field" matInput data-cy="value" />
+    @if (hasError('required')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.constraints.valueRequired') }}</mat-error>
     }
   </mat-form-field>
-</div>
+</ng-container>

@@ -11,28 +11,33 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {inject, Injectable} from '@angular/core';
-import {mxgraph} from 'mxgraph-factory';
-import {BehaviorSubject} from 'rxjs';
+import {inject, Injectable, signal} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
+import {Cell} from '@maxgraph/core';
 import {EditorModelService} from '../editor-model.service';
 
 @Injectable({providedIn: 'root'})
 export class ShapeSettingsStateService {
   private editorModelService = inject(EditorModelService);
 
-  public selectedShapeForUpdate: mxgraph.mxCell | null;
-  public isShapeSettingOpened = false;
+  private readonly _selectedShapeForUpdate = signal<Cell | null>(null);
+  public readonly selectedShapeForUpdate = this._selectedShapeForUpdate.asReadonly();
 
-  onSettingsOpened$ = new BehaviorSubject(this.isShapeSettingOpened);
+  private readonly _isShapeSettingOpened = signal<boolean>(false);
+  public readonly isShapeSettingOpened = this._isShapeSettingOpened.asReadonly();
 
-  openShapeSettings() {
-    this.isShapeSettingOpened = true;
-    this.onSettingsOpened$.next(this.isShapeSettingOpened);
+  public readonly onSettingsOpened$ = toObservable(this._isShapeSettingOpened);
+
+  setSelectedShapeForUpdate(cell: Cell | null): void {
+    this._selectedShapeForUpdate.set(cell);
   }
 
-  closeShapeSettings() {
-    this.isShapeSettingOpened = false;
-    this.onSettingsOpened$.next(this.isShapeSettingOpened);
+  openShapeSettings(): void {
+    this._isShapeSettingOpened.set(true);
+  }
+
+  closeShapeSettings(): void {
+    this._isShapeSettingOpened.set(false);
     this.editorModelService.updateMetaModelElement(null);
   }
 }

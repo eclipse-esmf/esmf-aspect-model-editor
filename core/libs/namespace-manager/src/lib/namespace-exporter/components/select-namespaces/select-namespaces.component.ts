@@ -13,10 +13,10 @@
 
 import {ModelApiService} from '@ame/api';
 import {ModelCheckerService} from '@ame/editor';
-import {APP_CONFIG, NotificationsService} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -25,11 +25,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {finalize} from 'rxjs';
 
 @Component({
-  standalone: true,
   templateUrl: './select-namespaces.component.html',
   styleUrls: ['select-namespaces.component.scss'],
   imports: [
@@ -43,27 +42,25 @@ import {finalize} from 'rxjs';
     MatRadioGroup,
     MatRadioButton,
     FormsModule,
-    TranslatePipe,
+    TranslocoDirective,
   ],
 })
 export class SelectNamespacesComponent implements OnInit {
-  private modelApiService = inject(ModelApiService);
-  private modelCheckerService = inject(ModelCheckerService);
-  private notificationService = inject(NotificationsService);
-  private translate = inject(LanguageTranslationService);
-  private dialogRef = inject(MatDialogRef<SelectNamespacesComponent>);
+  private readonly modelApiService = inject(ModelApiService);
+  private readonly modelCheckerService = inject(ModelCheckerService);
+  private readonly notificationService = inject(NotificationsService);
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly dialogRef = inject(MatDialogRef<SelectNamespacesComponent>);
 
-  public config = inject(APP_CONFIG);
-
-  public entries = undefined;
-  public extracting = false;
-  public selectedKey: string | null = null;
+  public readonly entries = signal<Record<string, {namespace: string; model: string; version: string}> | undefined>(undefined);
+  public readonly extracting = signal(false);
+  public readonly selectedKey = signal('');
 
   ngOnInit(): void {
-    this.extracting = true;
+    this.extracting.set(true);
     this.modelCheckerService
       .detectWorkspace(true)
-      .pipe(finalize(() => (this.extracting = false)))
+      .pipe(finalize(() => this.extracting.set(false)))
       .subscribe({
         next: values => {
           if (values && Object.keys(values).length === 0) {
@@ -74,7 +71,7 @@ export class SelectNamespacesComponent implements OnInit {
 
             this.dialogRef.close();
           }
-          this.entries = values;
+          this.entries.set(values);
         },
         error: err => {
           this.notificationService.error({
@@ -86,8 +83,12 @@ export class SelectNamespacesComponent implements OnInit {
       });
   }
 
-  export() {
-    this.modelApiService.fetchExportPackage(this.selectedKey).subscribe({
+  export(): void {
+    const key = this.selectedKey();
+    if (!key) {
+      return;
+    }
+    this.modelApiService.fetchExportPackage(key).subscribe({
       next: response => {
         const url = URL.createObjectURL(response);
         this.downloadFile(url);
@@ -95,14 +96,14 @@ export class SelectNamespacesComponent implements OnInit {
       },
       error: () => {
         this.notificationService.error({
-          title: this.translate.language.NOTIFICATION_SERVICE.NAMESPACE_EXPORT_FAILURE,
-          message: this.translate.language.NOTIFICATION_SERVICE.INTERNAL_EXPORT_ERROR,
+          title: this.translate?.language?.notificationService?.namespaceExportFailure ?? 'Export Failed',
+          message: this.translate?.language?.notificationService?.internalExportError ?? 'Internal export error occurred.',
         });
       },
     });
   }
 
-  private downloadFile(url: string) {
+  private downloadFile(url: string): void {
     const a = document.createElement('a');
     a.href = url;
     a.download = 'namespaces.zip';

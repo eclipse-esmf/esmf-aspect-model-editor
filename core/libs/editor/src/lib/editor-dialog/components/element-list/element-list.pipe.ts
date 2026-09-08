@@ -15,7 +15,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 
 @Pipe({
-  standalone: true,
   name: 'modelElementParser',
 })
 export class ModelElementParserPipe implements PipeTransform {
@@ -24,9 +23,9 @@ export class ModelElementParserPipe implements PipeTransform {
       Object.entries(sammElements).find(([key, value]) => {
         const isAbstract =
           (element instanceof DefaultProperty && element.isAbstract) || (element instanceof DefaultEntity && element.isAbstractEntity());
-        const isOfClass = element instanceof value.class;
 
-        return isAbstract ? key.includes('abstract') && isOfClass : isOfClass;
+        const matchesClass = element instanceof value.class;
+        return isAbstract ? key.includes('abstract') && matchesClass : !value.type.includes('abstract') && matchesClass;
       }) || (['', null] as any)
     );
   }

@@ -13,21 +13,20 @@
 
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
+import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
-import {ChangeDetectorRef, Component, NgZone, effect, inject} from '@angular/core';
+import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {filter, finalize, switchMap} from 'rxjs';
-import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
+import {FileStatus, SidebarStateService} from '../../sidebar-state.service';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
 @Component({
@@ -44,7 +43,7 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
     MatMenu,
     MatMenuItem,
     WorkspaceMigrateComponent,
-    TranslatePipe,
+    TranslocoDirective,
     KeyValuePipe,
   ],
 })
@@ -55,17 +54,17 @@ export class WorkspaceFileListComponent {
   private confirmDialogService = inject(ConfirmDialogService);
   private modelApiService = inject(ModelApiService);
   private fileHandlingService = inject(FileHandlingService);
-  private changeDetector = inject(ChangeDetectorRef);
   private translate = inject(LanguageTranslationService);
   private loadedFiles = inject(LoadedFilesService);
-  private ngZone = inject(NgZone);
+  private destroyRef = inject(DestroyRef);
 
   public sidebarService = inject(SidebarStateService);
-  public menuSelection: {namespace: string; file: FileStatus} = null;
-  public foldedStatus = false;
-  public searched: Record<string, FileStatus[]> = {};
-  public folded: Record<string, boolean> = {};
-  public searchString = '';
+
+  public readonly menuSelection = signal<{namespace: string; file: FileStatus} | null>(null);
+  public readonly foldedStatus = signal(false);
+  public readonly searched = signal<Record<string, FileStatus[]>>({});
+  public readonly folded = signal<Record<string, boolean>>({});
+  public readonly searchString = signal('');
 
   public get namespaces() {
     return this.sidebarService.namespacesState.namespaces();
@@ -75,45 +74,71 @@ export class WorkspaceFileListComponent {
     return this.sidebarService.selection;
   }
 
-  private searchThrottle: NodeJS.Timeout;
+  private searchThrottle: NodeJS.Timeout | null = null;
 
   constructor() {
+    this.destroyRef.onDestroy(() => {
+      if (this.searchThrottle) {
+        clearTimeout(this.searchThrottle);
+      }
+    });
+
     effect(() => {
       const namespaces = this.sidebarService.namespacesState.namespaces();
+      const currentFolded = this.foldedStatus();
+
+      const newSearched: Record<string, FileStatus[]> = {};
+      const newFolded: Record<string, boolean> = {};
 
       for (const namespace in namespaces) {
-        this.searched[namespace] = namespaces[namespace];
-        this.folded[namespace] = this.foldedStatus;
+        newSearched[namespace] = namespaces[namespace];
+        newFolded[namespace] = currentFolded;
       }
+
+      this.searched.set(newSearched);
+      this.folded.set(newFolded);
     });
   }
 
   public toggleFold() {
-    this.foldedStatus = !this.foldedStatus;
-    for (const namespace in this.folded) {
-      this.folded[namespace] = this.foldedStatus;
+    const newFoldedStatus = !this.foldedStatus();
+    this.foldedStatus.set(newFoldedStatus);
+
+    const currentFolded = this.folded();
+    const newFolded: Record<string, boolean> = {};
+
+    for (const namespace in currentFolded) {
+      newFolded[namespace] = newFoldedStatus;
     }
+
+    this.folded.set(newFolded);
   }
 
   public search($event: KeyboardEvent) {
     const target = $event.target as HTMLInputElement;
-    this.searchString = target.value.toLowerCase();
+    const newSearchString = target.value.toLowerCase();
+    this.searchString.set(newSearchString);
 
     if (this.searchThrottle) {
-      clearInterval(this.searchThrottle);
+      clearTimeout(this.searchThrottle);
     }
 
     this.searchThrottle = setTimeout(() => {
-      for (const namespace in this.namespaces) {
-        if (namespace.toLowerCase().includes(this.searchString)) {
-          this.searched[namespace] = this.namespaces[namespace];
+      const namespaces = this.namespaces;
+      const newSearched: Record<string, FileStatus[]> = {};
+
+      for (const namespace in namespaces) {
+        if (namespace.toLowerCase().includes(newSearchString)) {
+          newSearched[namespace] = namespaces[namespace];
           continue;
         }
 
-        this.searched[namespace] = this.searchString
-          ? this.namespaces[namespace].filter(file => file.name.toLowerCase().includes(this.searchString))
-          : this.namespaces[namespace];
+        newSearched[namespace] = newSearchString
+          ? namespaces[namespace].filter(file => file.name.toLowerCase().includes(newSearchString))
+          : namespaces[namespace];
       }
+
+      this.searched.set(newSearched);
     }, 100);
   }
 
@@ -124,8 +149,8 @@ export class WorkspaceFileListComponent {
 
     if (!this.sidebarService.isCurrentFileLoaded()) {
       this.notificationService.info({
-        title: this.translate.language.NOTIFICATION_SERVICE.LOAD_MODEL_INFO_TITLE,
-        message: this.translate.language.NOTIFICATION_SERVICE.LOAD_MODEL_INFO_MESSAGE,
+        title: this.translate.language.notificationService.loadModelInfoTitle,
+        message: this.translate.language.notificationService.loadModelInfoMessage,
       });
       return;
     }
@@ -135,16 +160,22 @@ export class WorkspaceFileListComponent {
     }
 
     this.sidebarService.selection.select(namespace, file);
-    this.changeDetector.detectChanges();
   }
 
   public isOpenable() {
-    const {namespace, file} = this.menuSelection;
+    const selection = this.menuSelection();
+    if (!selection) return false;
+
+    const {namespace, file} = selection;
     return !(this.sidebarService.isCurrentFile(namespace, file.name) || file.outdated || file.errored);
   }
 
   public loadInNewWindow() {
-    const {namespace, file} = this.menuSelection;
+    const selection = this.menuSelection();
+    if (!selection) return;
+
+    const {namespace, file} = selection;
+
     if (file.outdated || file.errored) {
       return;
     }
@@ -156,20 +187,30 @@ export class WorkspaceFileListComponent {
       aspectModelUrn: file.aspectModelUrn,
     });
 
-    this.menuSelection = null;
+    this.menuSelection.set(null);
   }
 
   public isLoadDisabled() {
     return !this.isOpenable();
   }
 
+  public isCurrentFile(namespace?: string, fileName?: string): boolean {
+    return this.sidebarService.isCurrentFile(namespace, fileName);
+  }
+
   public isDeleteDisabled() {
-    const {namespace, file} = this.menuSelection;
+    const selection = this.menuSelection();
+    if (!selection) return true;
+
+    const {namespace, file} = selection;
     return this.sidebarService.isCurrentFile(namespace, file.name);
   }
 
   public openFile() {
-    const {namespace, file} = this.menuSelection;
+    const selection = this.menuSelection();
+    if (!selection) return;
+
+    const {namespace, file} = selection;
     const absoluteFileName = `${namespace}:${file.name}`;
 
     if (file.outdated || file.errored) {
@@ -179,12 +220,12 @@ export class WorkspaceFileListComponent {
     this.confirmDialogService
       .open({
         phrases: [
-          this.translate.translateService.instant('CONFIRM_DIALOG.SAVE_BEFORE_LOAD.PHRASE1', {fileName: file.name}),
-          this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.PHRASE2,
+          this.translate.translateService.translate('confirmDialog.saveBeforeLoad.phrase1', {fileName: file.name}),
+          this.translate.language.confirmDialog.saveBeforeLoad.phrase2,
         ],
-        title: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.TITLE,
-        closeButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.CANCEL_BUTTON,
-        okButtonText: this.translate.language.CONFIRM_DIALOG.SAVE_BEFORE_LOAD.OK_BUTTON,
+        title: this.translate.language.confirmDialog.saveBeforeLoad.title,
+        closeButtonText: this.translate.language.confirmDialog.saveBeforeLoad.cancelButton,
+        okButtonText: this.translate.language.confirmDialog.saveBeforeLoad.okButton,
       })
       .pipe(
         filter((confirmed: ConfirmDialogEnum) => confirmed !== ConfirmDialogEnum.cancel),
@@ -195,59 +236,71 @@ export class WorkspaceFileListComponent {
   }
 
   public deleteFile() {
-    const {namespace, file} = this.menuSelection;
+    const selection = this.menuSelection();
+    if (!selection) return;
+
+    const {namespace, file} = selection;
     const aspectModelFileName = `${namespace}:${file.name}`;
+
     this.confirmDialogService
       .open({
         phrases: [
-          this.translate.translateService.instant('CONFIRM_DIALOG.DELETE_FILE.PHRASE1', {fileName: file.name}),
-          this.translate.language.CONFIRM_DIALOG.DELETE_FILE.PHRASE2,
+          this.translate.translateService.translate('confirmDialog.deleteFile.phrase1', {fileName: file.name}),
+          this.translate.language.confirmDialog.deleteFile.phrase2,
         ],
-        title: this.translate.language.CONFIRM_DIALOG.DELETE_FILE.TITLE,
+        title: this.translate.language.confirmDialog.deleteFile.title,
       })
       .subscribe(confirm => {
         if (confirm !== ConfirmDialogEnum.cancel) {
-          this.modelApiService.deleteAspectModel(this.menuSelection.file.aspectModelUrn).subscribe(() => {
+          this.sidebarService.namespacesState.removeFile(namespace, file.name);
+          this.sidebarService.selection.reset();
+          this.loadedFiles.removeFile(aspectModelFileName);
+          this.modelApiService.deleteAspectModel(selection.file.aspectModelUrn).subscribe(() => {
+            this.sidebarService.namespacesState.clear();
             this.sidebarService.workspace.refresh();
             this.electronSignalsService.call('requestRefreshWorkspaces');
           });
-          this.sidebarService.selection.reset();
-          this.loadedFiles.removeFile(aspectModelFileName);
         }
       });
   }
 
   public copyNamespace() {
-    navigator.clipboard.writeText(`${this.menuSelection.namespace}/${this.menuSelection.file.name}`);
+    const selection = this.menuSelection();
+    if (!selection) return;
+
+    navigator.clipboard.writeText(`${selection.namespace}/${selection.file.name}`);
   }
 
   public prepare(namespace: string, file: FileStatus) {
-    this.menuSelection = {namespace, file};
+    this.menuSelection.set({namespace, file});
   }
 
   public sortNamespaces(namespaces: {key: string; value: any}[]) {
     return namespaces.sort((n1, n2) => (n1.key >= n2.key ? 1 : -1));
   }
 
-  public isCurrentFile(key: string, file: FileStatus): string {
-    return this.ngZone.run(() => {
-      if (file.outdated) {
-        return this.translate.translateService.instant('TOOLTIPS.OUTDATED_FILE', {sammVersion: file.sammVersion});
-      }
-
-      if (file.errored) {
-        return file.sammVersion === 'unknown'
-          ? 'Detected unknown SAMM version'
-          : file.missingDependencies.length
-            ? 'Missing dependencies ' + file.missingDependencies.join('\n')
-            : this.translate.language.TOOLTIPS.ERRORED_FILE;
-      }
-
-      if (file.loaded) {
-        return this.translate.language.TOOLTIPS.CURRENT_FILE;
-      }
-
-      return '';
+  public toggleNamespaceFold(namespaceKey: string) {
+    const currentFolded = this.folded();
+    this.folded.set({
+      ...currentFolded,
+      [namespaceKey]: !currentFolded[namespaceKey],
     });
+  }
+
+  public getFileTooltip(namespaceKey: string, file: FileStatus): string {
+    if (this.isCurrentFile(namespaceKey, file.name)) {
+      const tooltip = this.translate.language.tooltips?.currentFile || 'Currently opened file';
+      return `${file.name} (${tooltip})`;
+    }
+    if (file.outdated) {
+      const sammVersion = file.sammVersion || '';
+      const tooltip = this.translate.translateService.translate('tooltips.outdatedFile', {sammVersion: sammVersion || 'older'});
+      return `${file.name} (${tooltip})`;
+    }
+    if (file.errored) {
+      const tooltip = this.translate.language.tooltips?.erroredFile || 'File has errors';
+      return `${file.name} (${tooltip})`;
+    }
+    return file.name;
   }
 }

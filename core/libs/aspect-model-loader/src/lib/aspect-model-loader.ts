@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {Store} from 'n3';
 import {map, Observable, Subject} from 'rxjs';
 import {Aspect} from './aspect-meta-model';
 import {BaseModelLoader} from './base-model-loader';
@@ -25,6 +26,13 @@ type InstantiatorResult = {
   aspect: Aspect;
   initProps: BaseInitProps;
 };
+
+export interface LoadedAspectModelResult {
+  aspect: Aspect;
+  rdfModel: RdfModel;
+  store: Store;
+  cachedElements: ModelElementCache;
+}
 
 export class AspectModelLoader extends BaseModelLoader {
   constructor() {
@@ -54,15 +62,14 @@ export class AspectModelLoader extends BaseModelLoader {
    */
   public load(modelAspectUrn: string, ...rdfContent: string[]): Observable<InstantiatorResult> {
     const subject = new Subject<InstantiatorResult>();
-    const initProps: BaseInitProps = {rdfModel: null, cache: null};
 
     const rdfModels = rdfContent.map(r => ({rdfAspectModel: r, sourceLocation: ''}));
 
     new RdfLoader().loadModel(rdfModels).subscribe({
       next: (rdfModel: RdfModel) => {
-        initProps.rdfModel = rdfModel;
-        initProps.cache = new ModelElementCache();
-        this.cacheService = initProps.cache;
+        const cache = new ModelElementCache();
+        const initProps: BaseInitProps = {rdfModel, cache};
+        this.cacheService = cache;
 
         try {
           RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);
@@ -85,7 +92,7 @@ export class AspectModelLoader extends BaseModelLoader {
   }
 }
 
-export function loadAspectModel(model: {filesContent: string[]; aspectModelUrn?: string}) {
+export function loadAspectModel(model: {filesContent: string[]; aspectModelUrn?: string}): Observable<LoadedAspectModelResult> {
   const aspectModelLoader = new AspectModelLoader();
 
   return aspectModelLoader.load(model.aspectModelUrn || '', ...model.filesContent).pipe(
@@ -93,7 +100,7 @@ export function loadAspectModel(model: {filesContent: string[]; aspectModelUrn?:
       aspect,
       rdfModel: initProps.rdfModel,
       store: initProps.rdfModel.store,
-      cachedElements: initProps.cache,
+      cachedElements: initProps.cache as ModelElementCache,
     })),
   );
 }

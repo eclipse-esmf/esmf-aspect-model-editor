@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,21 +12,30 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="background" (click)="closeSearch()"></div>
-<mat-form-field class="search">
-  <mat-label>{{ 'SEARCHES.FILES.LABEL' | translate }}</mat-label>
-  <input [matAutocomplete]="auto" [formControl]="searchControl" type="text" matInput autofocus />
-  <mat-icon [class.rotate]="loading" matSuffix>{{ loading ? 'refresh' : 'description' }}</mat-icon>
+  <div
+    class="background"
+    (click)="closeSearch()"
+    (keyup.enter)="closeSearch()"
+    (keyup.space)="closeSearch()"
+    tabindex="0"
+    role="button"
+    aria-label="Close search overlay"
+  ></div>
+  <mat-form-field class="search">
+    <mat-label>{{ t('searches.files.label') }}</mat-label>
+    <input [matAutocomplete]="auto" [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" type="text" matInput />
+    <mat-icon [class.rotate]="loading()" matSuffix>{{ loading() ? 'refresh' : 'description' }}</mat-icon>
 
-  <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
-    @for (entry of searchableFiles; track entry) {
-      <mat-option class="list-option" (click)="openFile(entry)">
-        <mat-icon>description</mat-icon>
-        <div class="file-element">
-          <span>{{ entry.file }}</span>
-          <span>{{ entry.namespace }}</span>
-        </div>
-      </mat-option>
-    }
-  </mat-autocomplete>
-</mat-form-field>
+    <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
+      @for (entry of searchableFiles(); track entry.aspectModelUrn || entry.file + entry.namespace) {
+        <mat-option class="list-option" (click)="openFile(entry)">
+          <mat-icon>description</mat-icon>
+          <div class="file-element">
+            <span>{{ entry.file }}</span>
+            <span>{{ entry.namespace }}</span>
+          </div>
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>

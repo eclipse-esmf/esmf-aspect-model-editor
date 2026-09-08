@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {valueFactory} from '@esmf/aspect-model-loader';
 import {Literal, Quad, Quad_Object, Util} from 'n3';
 import {DefaultValue, NamedElement, Type} from '../../aspect-meta-model';
 import {DefaultEnumeration, Enumeration} from '../../aspect-meta-model/characteristic/default-enumeration';
@@ -20,6 +19,7 @@ import {Value} from '../../aspect-meta-model/value';
 import {BaseInitProps} from '../../shared/base-init-props';
 import {Samm} from '../../vocabulary';
 import {entityFactory} from '../entity-instantiator';
+import {valueFactory} from '../value-instantiator';
 import {characteristicFactory} from './characteristic-instantiator';
 import {CharacteristicInstantiatorUtil} from './characteristic-instantiator-util';
 
@@ -49,21 +49,37 @@ export function enumerationCharacteristicFactory(initProps: BaseInitProps) {
   }
 
   function getEnumerationValues(quad: Quad, dataType: Type): Value[] {
-    const quads = rdfModel.resolveBlankNodes(quad.object.value);
-    return quads.map(quadValue =>
-      Util.isLiteral(quadValue.object)
-        ? new ScalarValue({
-            value: CharacteristicInstantiatorUtil.resolveValues(quadValue, dataType.urn),
-            type: dataType,
-          })
-        : resolveQuad(quadValue, dataType),
-    );
+    const {samm, store} = rdfModel;
+    const values: Value[] = [];
+
+    let currentListHead: Quad_Object = quad.object;
+    while (currentListHead && !samm.isRdfNill(currentListHead.value)) {
+      const firstQuad = store.getQuads(currentListHead, samm.RdfFirst(), null, null)?.[0];
+      if (firstQuad) {
+        if (Util.isLiteral(firstQuad.object)) {
+          values.push(
+            new ScalarValue({
+              value: CharacteristicInstantiatorUtil.resolveValues(firstQuad, dataType?.urn || ''),
+              type: dataType,
+            }),
+          );
+        } else {
+          values.push(resolveQuad(firstQuad, dataType));
+        }
+      }
+      const restQuad = store.getQuads(currentListHead, samm.RdfRest(), null, null)?.[0];
+      currentListHead = restQuad ? restQuad.object : null;
+    }
+
+    return values;
   }
 
   function resolveQuad(quad: Quad, dataType?: Type): DefaultEntityInstance | DefaultValue {
     const {samm, store} = rdfModel;
 
-    const quads = store.getQuads(quad.object, null, null, null);
+    const quads = Util.isBlankNode(quad.object)
+      ? rdfModel.resolveBlankNodes(quad.object.value)
+      : store.getQuads(quad.object, null, null, null);
     const typeQuad = quads.find(entityInstanceQuad => entityInstanceQuad.predicate.value === `${Samm.RDF_URI}#type`);
 
     if (samm.Value().value === typeQuad?.object.value) {

@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -16,10 +15,12 @@
 
 import {NAMESPACES_URL} from '../../support/api-mocks';
 
-// TODO redo all interceptors
 describe.skip('Test drag and drop', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   it('Loading property element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
@@ -35,11 +36,9 @@ describe.skip('Test drag and drop', () => {
       },
     );
 
-    cy.visitDefault();
     cy.fixture('/external-reference/different-namespace/model-with-external-property-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -75,7 +74,6 @@ describe.skip('Test drag and drop', () => {
   });
 
   it('Loading model with "Entity" -> "Property (external, with children, different namespace)" relations', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-property-reference.txt'],
     });
@@ -91,11 +89,9 @@ describe.skip('Test drag and drop', () => {
       },
     );
 
-    cy.visitDefault();
     cy.fixture('/external-reference/different-namespace/entity-external-property-with-children-reference')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         const aspectParams = {name: 'AspectDefault'};
@@ -125,7 +121,6 @@ describe.skip('Test drag and drop', () => {
   });
 
   it('Loading operation element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-operation-reference-with-children.txt'],
     });
@@ -144,11 +139,9 @@ describe.skip('Test drag and drop', () => {
       },
     );
 
-    cy.visitDefault();
     cy.fixture('/external-reference/different-namespace/model-with-external-operation-reference-with-children')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -203,7 +196,6 @@ describe.skip('Test drag and drop', () => {
   });
 
   it('Loading characteristic element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-characteristic-reference.txt'],
     });
@@ -219,11 +211,9 @@ describe.skip('Test drag and drop', () => {
       },
     );
 
-    cy.visitDefault();
     cy.fixture('/external-reference/different-namespace/model-with-external-characteristic-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -260,7 +250,6 @@ describe.skip('Test drag and drop', () => {
   });
 
   it('Loading entity element with there children from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-entity-reference.txt'],
     });
@@ -276,11 +265,9 @@ describe.skip('Test drag and drop', () => {
       },
     );
 
-    cy.visitDefault();
     cy.fixture('/external-reference/different-namespace/model-with-external-entity-reference-with-childrens')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -316,7 +303,6 @@ describe.skip('Test drag and drop', () => {
   });
 
   it('Loading unit element from external file with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': ['external-unit-reference.txt'],
     });
@@ -332,11 +318,9 @@ describe.skip('Test drag and drop', () => {
       },
     );
 
-    cy.visitDefault();
     cy.fixture('/external-reference/different-namespace/model-with-external-unit-reference')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');
@@ -362,7 +346,6 @@ describe.skip('Test drag and drop', () => {
   });
 
   it('Loading different elements from several external files with different namespace', () => {
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
     cy.intercept('GET', NAMESPACES_URL, {
       'org.eclipse.different:1.0.0': [
         'external-entity-reference.txt',
@@ -440,11 +423,9 @@ describe.skip('Test drag and drop', () => {
       },
     );
 
-    cy.visitDefault();
     cy.fixture('/external-reference/different-namespace/model-with-several-external-reference')
       .as('rdfString')
       .then(rdfString => cy.loadModel(rdfString))
-      .wait(500)
       .then(() => cy.getAspect())
       .then(aspect => {
         expect(aspect.name).to.equal('AspectDefault');

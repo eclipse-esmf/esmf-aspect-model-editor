@@ -11,9 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface ViolationError {
-  message: string;
-  focusNode: string;
-  fix: string[];
-  errorCode?: string;
-}
+export type {ViolationError} from '@ame/api';

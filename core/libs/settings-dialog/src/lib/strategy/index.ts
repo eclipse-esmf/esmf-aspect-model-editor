@@ -12,6 +12,7 @@
  */
 
 export * from './automated-workflow-update.strategy';
+export * from './copyright-header-update.strategy';
 export * from './editor-configuration-update.strategy';
 export * from './language-configuration-update.strategy';
 export * from './namespace-configuration-update.strategy';

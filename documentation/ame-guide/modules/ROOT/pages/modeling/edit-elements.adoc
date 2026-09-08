@@ -48,6 +48,13 @@ For adding or removing languages, see xref:getting-started/settings.adoc#_langua
 The Aspect Model Editor takes care of valid names.
 For more information, see https://eclipse-esmf.github.io/samm-specification/2.2.0/modeling-guidelines.html#naming-rules[Naming rules (SAMM 2.2.0)^,opts=nofollow].
 
+[[anonymous-elements-overview]]
+== Anonymous elements
+
+Certain elements (Characteristics, Constraints, and SAMM Values) can be modeled as **anonymous elements** (RDF Blank Nodes) without a dedicated element name.
+To make an element anonymous, toggle the **Anonymous** switch in the Edit dialog.
+For more details on supported element types, visual representation, and deletion behavior, see xref:modeling/anonymous-elements.adoc[Anonymous Elements].
+
 [[samm-see-attribute]]
 == The `samm:see` attribute
 

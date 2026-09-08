@@ -16,7 +16,7 @@ export interface StartupPayload {
   file: string;
   editElement?: string;
   fromWorkspace?: boolean;
-  aspectModelUrn: string;
+  aspectModelUrn?: string;
 }
 
 export interface StartupData {

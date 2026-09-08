@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ValueModelService} from '@ame/meta-model';
 import {inject, Injectable, Injector, ProviderToken} from '@angular/core';
 import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {AbstractEntityModelService} from './abstract-entity-model.service';
@@ -27,10 +26,11 @@ import {FileResourceRemoveService, Point3dRemoveService, PredefinedRemove, TimeS
 import {PropertyModelService} from './property-model.service';
 import {TraitModelService} from './trait-model.service';
 import {UnitModelService} from './unit-model.service';
+import {ValueModelService} from './value-model.service';
 
 @Injectable({providedIn: 'root'})
 export class ModelRootService {
-  private injector = inject(Injector);
+  private readonly injector = inject(Injector);
   private readonly predefinedModels: {[key: string]: ProviderToken<PredefinedRemove>} = {};
 
   constructor() {

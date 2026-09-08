@@ -12,23 +12,15 @@
  */
 
 import {InjectionToken} from '@angular/core';
+import {ElectronApi} from './model/electron-api.model';
 
 declare global {
   interface Window {
-    electronAPI?: {
-      send?: void;
-      on?: void;
-      removeListener?: void;
-      getBackendPort?: Promise<number>;
-      openPrintWindow?: Promise<any>;
-      writePrintFile?: Promise<any>;
-      openExternalLink?: Promise<void> | boolean;
-      showContextMenu?: void;
-    };
+    electronAPI?: ElectronApi;
   }
 }
 
-export const IPC_RENDERER = new InjectionToken<any>('ElectronIpcRenderer', {
+export const IPC_RENDERER = new InjectionToken<ElectronApi | undefined>('ElectronIpcRenderer', {
   providedIn: 'root',
   factory: () => {
     if (typeof window !== 'undefined' && window.electronAPI) {

@@ -13,11 +13,11 @@
 
 import {ModelApiService} from '@ame/api';
 import {Component, inject, signal} from '@angular/core';
-import {AbstractControl, FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {form, FormField, pattern, required, validate} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 import {LoadedFilesService} from '@ame/cache';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -26,15 +26,18 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {finalize} from 'rxjs/operators';
 
+export interface RenameModelFormData {
+  fileName: string;
+}
+
 @Component({
-  standalone: true,
   templateUrl: './rename-model.component.html',
   styleUrls: ['./rename-model.component.scss'],
   imports: [
     MatIconModule,
     MatDialogModule,
-    TranslatePipe,
-    ReactiveFormsModule,
+    TranslocoDirective,
+    FormField,
     MatInputModule,
     MatDialogActions,
     MatButtonModule,
@@ -49,7 +52,28 @@ export class RenameModelComponent {
 
   public data = inject(MAT_DIALOG_DATA) as {namespaces: string; rdfModel: RdfModel};
 
-  public fileNameControl: FormControl;
+  public renameModel = signal<RenameModelFormData>({fileName: ''});
+  private namespaceMap = signal<Record<string, boolean>>({});
+
+  public renameForm = form(this.renameModel, schemaPath => {
+    required(schemaPath.fileName);
+    pattern(schemaPath.fileName, /^[0-9a-zA-Z_. -]+$/);
+    validate(schemaPath.fileName, ({value}) => {
+      const fileName = value();
+      if (!fileName) {
+        return null;
+      }
+      const currentLoadedFile = this.loadedFilesService.currentLoadedFile;
+      const searchTerm = `${currentLoadedFile?.namespace}:${fileName}.ttl`.toLowerCase();
+      if (this.namespaceMap()[searchTerm]) {
+        return {kind: 'sameFile', message: 'File exists in namespace'};
+      }
+      if (this.loadedFilesService.files[`${currentLoadedFile?.originalNamespace}:${fileName}.ttl`]) {
+        return {kind: 'fileExists', message: 'File already defined'};
+      }
+      return null;
+    });
+  });
 
   public loading = signal(true);
 
@@ -60,8 +84,7 @@ export class RenameModelComponent {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe(files => {
         const namespaces = this.buildNamespaceMap(files);
-        this.fileNameControl = this.createFileNameControl(namespaces);
-        this.fileNameControl.markAsTouched();
+        this.namespaceMap.set(namespaces);
       });
   }
 
@@ -76,29 +99,12 @@ export class RenameModelComponent {
     );
   }
 
-  private createFileNameControl(namespaces: Record<string, boolean>): FormControl {
-    return new FormControl('', [
-      Validators.required,
-      Validators.pattern('[0-9a-zA-Z_. -]+'),
-      (control: AbstractControl) => {
-        const searchTerm = `${this.loadedFilesService.currentLoadedFile.namespace}:${control.value}.ttl`.toLowerCase();
-        return namespaces[searchTerm] ? {sameFile: true} : null;
-      },
-      (control: AbstractControl) => {
-        const fileName = control.value;
-        if (this.loadedFilesService.files[`${this.loadedFilesService.currentLoadedFile.originalNamespace}:${fileName}.ttl`]) {
-          return {fileExists: true};
-        }
-        return null;
-      },
-    ]);
-  }
-
   closeAndGiveResult(result: boolean) {
     this.loadedFilesService.currentLoadedFile.originalAspectModelUrn = this.loadedFilesService.currentLoadedFile.aspect.getAspectModelUrn();
+    const fileName = this.renameModel().fileName;
     return this.dialogRef.close(
       result && {
-        name: this.fileNameControl.value.endsWith('.ttl') ? this.fileNameControl.value : `${this.fileNameControl.value}.ttl`,
+        name: fileName.endsWith('.ttl') ? fileName : `${fileName}.ttl`,
       },
     );
   }

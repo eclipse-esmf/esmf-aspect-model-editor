@@ -16,8 +16,11 @@
 import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
 import {SELECTOR_enNamespaceList} from '../../support/constants';
 
-// TODO redo interceptors
 describe.skip('Export namespace', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   it('should have all namespaces ready for export from the very start', () => {
     const namespacesConfig = {
       aspectDefault: {
@@ -43,7 +46,6 @@ describe.skip('Export namespace', () => {
     setUpStaticModellingInterceptors();
     setUpDynamicModellingInterceptors(namespacesConfig);
 
-    cy.visitDefault();
     cy.startModelling().then(() => {
       cy.namespacesManagerService();
       cy.get(SELECTOR_enNamespaceList).should('have.length', 2);
@@ -77,7 +79,6 @@ describe.skip('Export namespace', () => {
     setUpStaticModellingInterceptors();
     setUpDynamicModellingInterceptors(namespacesConfig);
 
-    cy.visitDefault();
     cy.fixture(namespacesConfig.aspectDefault.files[0].response.fixture)
       .then(rdfString => cy.loadModel(rdfString))
       .then(() => cy.startModelling())

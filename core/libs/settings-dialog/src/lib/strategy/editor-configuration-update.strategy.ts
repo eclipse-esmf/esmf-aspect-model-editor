@@ -11,25 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphService} from '@ame/mx-graph';
-import {Settings} from '@ame/settings-dialog';
+import {MaxGraphService, ThemeService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  private mxGraphService = inject(MxGraphService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly themeService = inject(ThemeService);
 
-  updateSettings(form: FormGroup, settings: Settings): void {
-    const editorConfiguration = form.get('editorConfiguration');
+  updateSettings(model: SettingsFormData, settings: Settings): void {
+    const editorConfiguration = model?.editorConfiguration;
     if (!editorConfiguration) return;
 
-    settings.enableHierarchicalLayout = editorConfiguration.get('enableHierarchicalLayout')?.value;
-    settings.showEntityValueEntityEdge = editorConfiguration.get('showEntityValueEntityEdge')?.value;
-    settings.showConnectionLabels = editorConfiguration.get('showConnectionLabels')?.value;
-    settings.showAbstractPropertyConnection = editorConfiguration.get('showAbstractPropertyConnection')?.value;
+    settings.enableHierarchicalLayout = editorConfiguration.enableHierarchicalLayout;
+    settings.showConnectionLabels = editorConfiguration.showConnectionLabels;
+    settings.darkMode = editorConfiguration.darkMode;
 
-    this.mxGraphService.formatShapes(true);
+    this.themeService.applyTheme(settings.darkMode ? 'dark' : 'light');
+    this.maxgraphService.formatShapes(true);
   }
 }

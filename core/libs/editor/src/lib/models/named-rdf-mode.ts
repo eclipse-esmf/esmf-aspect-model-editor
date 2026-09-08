@@ -11,10 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {RdfModel} from 'libs/aspect-model-loader/src/lib';
-
-export interface NamedRdfModel {
-  name: string;
-  version: string;
-  rdfModel: RdfModel;
-}
+export type {NamedRdfModel} from '@ame/api';

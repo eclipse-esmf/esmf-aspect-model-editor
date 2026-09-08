@@ -16,7 +16,11 @@
 import {FIELD_extends, SELECTOR_tbDeleteButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
-describe('Time Series Entity', () => {
+describe('Point3d Entity', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   function createPoint3dEntity() {
     return cy
       .then(() => cy.dbClickShape('Entity1'))
@@ -26,7 +30,6 @@ describe('Time Series Entity', () => {
   }
 
   it('should create Point3d with its properties', () => {
-    cy.visitDefault();
     cy.startModelling()
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => createPoint3dEntity())

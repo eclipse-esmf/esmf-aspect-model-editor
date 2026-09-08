@@ -1,5 +1,3 @@
-import {Component, inject} from '@angular/core';
-
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -14,50 +12,39 @@ import {Component, inject} from '@angular/core';
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogService, ShapeSettingsService} from '@ame/editor';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {ConfirmDialogEnum, ConfirmDialogService, ShapeSettingsService} from '@ame/editor';
+import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {
   ElectronSignals,
   ElectronSignalsService,
+  ElementIconComponent,
   ElementInfo,
   ElementType,
-  SearchService,
   mxCellSearchOption,
   sammElements,
+  SearchService,
 } from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Component, computed, inject, signal} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
-import {mxgraph} from 'mxgraph-factory';
-import {startWith, throttleTime} from 'rxjs';
-import {ConfirmDialogEnum} from '../../../../../editor/src/lib/models/confirm-dialog.enum';
-import {ElementIconComponent} from '../../../../../shared/src/lib/components/element/element.component';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {Cell} from '@maxgraph/core';
 import {SearchesStateService} from '../../search-state.service';
 
 @Component({
-  standalone: true,
   selector: 'ame-elements-search',
   templateUrl: './elements-search.component.html',
   styleUrls: ['./elements-search.component.scss'],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatIconModule,
-    ElementIconComponent,
-    TranslatePipe,
-  ],
+  imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, ElementIconComponent, TranslocoDirective],
 })
 export class ElementsSearchComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
   private searchesStateService = inject(SearchesStateService);
   private confirmDialogService = inject(ConfirmDialogService);
@@ -66,14 +53,27 @@ export class ElementsSearchComponent {
 
   public loadedFiles = inject(LoadedFilesService);
 
-  public searchControl = new FormControl('');
-  public elements: NamedElement[] = [];
+  public searchQuery = signal('');
+  public elements = signal<NamedElement[]>([]);
+
+  public readonly transformedElements = computed(() => {
+    return this.elements().map(element => {
+      const [type, elementData] = this.getElementType(element);
+      return {
+        element,
+        symbol: elementData?.symbol,
+        type,
+      };
+    });
+  });
 
   constructor() {
-    this.searchControl.valueChanges.pipe(startWith(''), throttleTime(150)).subscribe(value => {
-      this.elements = this.searchService
-        .search<mxgraph.mxCell>(value, this.mxGraphService.getAllCells(), mxCellSearchOption)
-        ?.map(cell => MxGraphHelper.getModelElement(cell));
+    toObservable(this.searchQuery).subscribe(value => {
+      this.elements.set(
+        this.searchService
+          .search<Cell>(value, this.maxgraphService.getAllCells(), mxCellSearchOption)
+          ?.map(cell => MaxGraphHelper.getModelElement(cell)),
+      );
     });
   }
 
@@ -81,30 +81,30 @@ export class ElementsSearchComponent {
     if (this.loadedFiles.isElementExtern(element) && !element.isPredefined) {
       this.confirmDialogService
         .open({
-          phrases: [this.translate.translateService.instant('CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.PHRASE1', {elementName: element.name})],
-          title: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.TITLE,
-          closeButtonText: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.CANCEL_BUTTON,
-          okButtonText: this.translate.language.CONFIRM_DIALOG.NEW_WINDOW_ELEMENT.OK_BUTTON,
+          phrases: [this.translate.translateService.translate('confirmDialog.newWindowElement.phrase1', {elementName: element.name})],
+          title: this.translate.language.confirmDialog.newWindowElement.title,
+          closeButtonText: this.translate.language.confirmDialog.newWindowElement.cancelButton,
+          okButtonText: this.translate.language.confirmDialog.newWindowElement.okButton,
         })
         .subscribe(confirm => {
-          confirm !== ConfirmDialogEnum.cancel
-            ? this.electronSignalsService.call('openWindow', {
-                file: this.loadedFiles.getFileFromElement(element),
-                namespace: element.aspectModelUrn.replace('urn:samm:', '').split('#')[0],
-                editElement: element.aspectModelUrn,
-                fromWorkspace: true,
-                aspectModelUrn: element.aspectModelUrn,
-              })
-            : null;
+          if (confirm !== ConfirmDialogEnum.cancel) {
+            this.electronSignalsService.call('openWindow', {
+              file: this.loadedFiles.getFileFromElement(element),
+              namespace: element.aspectModelUrn.replace('urn:samm:', '').split('#')[0],
+              editElement: element.aspectModelUrn,
+              fromWorkspace: true,
+              aspectModelUrn: element.aspectModelUrn,
+            });
+          }
         });
     } else {
       this.shapeSettingsService.editModel(element);
       requestAnimationFrame(() => {
-        this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn);
+        this.maxgraphService.navigateToCellByUrn(element.aspectModelUrn);
       });
     }
 
-    this.searchControl.patchValue('');
+    this.searchQuery.set('');
     this.closeSearch();
   }
 
@@ -112,19 +112,7 @@ export class ElementsSearchComponent {
     this.searchesStateService.elementsSearch.close();
   }
 
-  // TODO workaround for modelElementParser pipe because it does  not work in the template
-  transform(element: NamedElement) {
-    const [type, elementData] = this.getElementType(element);
-    return {
-      element,
-      symbol: elementData?.symbol,
-      type,
-    };
-  }
-
   private getElementType(element: NamedElement): [ElementType, ElementInfo[ElementType]] {
     return Object.entries(sammElements).find(([, value]) => element instanceof value.class) || (['', null] as any);
   }
-
-  protected readonly sammElements = sammElements;
 }

@@ -16,7 +16,8 @@ import {Component, DestroyRef, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
-import {TranslatePipe} from '@ngx-translate/core';
+import {MatIconModule} from '@angular/material/icon';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {of, switchMap, tap} from 'rxjs';
 import {SidebarStateService} from '../../sidebar-state.service';
 import {MigrationDialogComponent} from './migration-dialog';
@@ -25,11 +26,11 @@ import {MigrationDialogComponent} from './migration-dialog';
   selector: 'ame-workspace-migrate',
   templateUrl: './workspace-migrate.component.html',
   styleUrls: ['./workspace-migrate.component.scss'],
-  imports: [MatButtonModule, TranslatePipe],
+  imports: [MatButtonModule, MatIconModule, TranslocoDirective],
 })
 export class WorkspaceMigrateComponent {
   private dialog = inject(MatDialog);
-  private destroRef = inject(DestroyRef);
+  private destroyRef = inject(DestroyRef);
   private migratorApiService = inject(MigratorApiService);
   private sidebarService = inject(SidebarStateService);
 
@@ -37,13 +38,20 @@ export class WorkspaceMigrateComponent {
     return this.migratorApiService
       .hasFilesToMigrate()
       .pipe(
-        takeUntilDestroyed(this.destroRef),
+        takeUntilDestroyed(this.destroyRef),
         switchMap(hasFiles =>
           hasFiles
             ? this.dialog
                 .open(MigrationDialogComponent, {disableClose: true})
                 .afterClosed()
-                .pipe(tap(() => this.sidebarService.workspace.refresh()))
+                .pipe(
+                  tap(migrated => {
+                    if (migrated) {
+                      this.sidebarService.namespacesState.clear();
+                      this.sidebarService.workspace.refresh();
+                    }
+                  }),
+                )
             : of({}),
         ),
       )

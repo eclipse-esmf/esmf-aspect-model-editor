@@ -13,19 +13,18 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {ModelService} from '@ame/rdf/services';
-import {RdfModelUtil} from '@ame/rdf/utils';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Directive, EventEmitter, inject, Input, Output} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Directive, inject, input, output} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement} from '@esmf/aspect-model-loader';
-import {tap} from 'rxjs/operators';
+import {filter, tap} from 'rxjs/operators';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 
 @Directive()
 export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | DefaultConstraint> {
-  @Input() parentForm: FormGroup;
-  @Input() previousDataSnapshot: PreviousFormDataSnapshot = {};
+  readonly signalForm = input.required<EditorSignalFormContext>();
+  readonly previousDataSnapshot = input<PreviousFormDataSnapshot>({});
 
   public editorModelService = inject(EditorModelService);
   public modelService = inject(ModelService);
@@ -41,31 +40,32 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
 
   protected _previousData: PreviousFormDataSnapshot = {};
 
-  @Output() previousData = new EventEmitter<PreviousFormDataSnapshot>();
+  readonly previousData = output<PreviousFormDataSnapshot>();
 
   protected setPreviousData() {
     if (this.metaModelElement instanceof DefaultCharacteristic && this.metaModelElement.isPredefined) {
       return;
     }
 
+    const formValue = this.signalForm().value();
     this._previousData = {
-      ...this.previousDataSnapshot,
+      ...this.previousDataSnapshot(),
       ...this._previousData,
-      ...(this.parentForm.value || {}),
+      ...formValue,
       value: {
-        ...(this.previousDataSnapshot.value || {}),
+        ...(this.previousDataSnapshot().value || {}),
         ...(this._previousData.value || {}),
-        [this.metaModelElement.className]: this.parentForm.value?.value || '',
+        [this.metaModelElement.className]: formValue.value || '',
       },
       minValue: {
-        ...(this.previousDataSnapshot.minValue || {}),
+        ...(this.previousDataSnapshot().minValue || {}),
         ...(this._previousData.minValue || {}),
-        [this.metaModelElement.className]: this.parentForm.value?.minValue || '',
+        [this.metaModelElement.className]: formValue.minValue || '',
       },
       maxValue: {
-        ...(this.previousDataSnapshot.maxValue || {}),
+        ...(this.previousDataSnapshot().maxValue || {}),
         ...(this._previousData.maxValue || {}),
-        [this.metaModelElement.className]: this.parentForm.value?.maxValue || '',
+        [this.metaModelElement.className]: formValue.maxValue || '',
       },
     };
 
@@ -74,6 +74,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
 
   public getMetaModelData() {
     return this.editorModelService.getMetaModelElement().pipe(
+      filter((metaModelElement): metaModelElement is T => Boolean(metaModelElement)),
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
       }),
@@ -81,15 +82,16 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   }
 
   public setMetaModelClassName(): void {
-    if (
-      RdfModelUtil.isCharacteristicInstance(
-        this.selectedMetaModelElement.aspectModelUrn,
-        this.loadedFilesService.currentLoadedFile.rdfModel.sammC,
-      )
-    ) {
-      this.metaModelClassName = this.selectedMetaModelElement.aspectModelUrn.split('#')[1].replace('Default', '');
+    if (!this.selectedMetaModelElement) {
+      this.metaModelClassName = '';
+      return;
+    }
+
+    if ((this.selectedMetaModelElement as DefaultCharacteristic).isPredefined) {
+      this.metaModelClassName =
+        this.selectedMetaModelElement.name || this.selectedMetaModelElement.aspectModelUrn?.split('#')?.[1]?.replace('Default', '') || '';
     } else {
-      this.metaModelClassName = this.selectedMetaModelElement.className.replace('Default', '');
+      this.metaModelClassName = this.selectedMetaModelElement.className?.replace('Default', '') || '';
     }
   }
 
@@ -107,6 +109,6 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
   public updateFields(modelElement: T) {
     this.metaModelElement.metaModelVersion = this.loadedFilesService.currentLoadedFile.rdfModel.getMetaModelVersion();
     this.editorModelService.updateMetaModelElement(this.metaModelElement);
-    this.parentForm.get('changedMetaModel').setValue(modelElement);
+    this.signalForm().set('changedMetaModel', modelElement);
   }
 }

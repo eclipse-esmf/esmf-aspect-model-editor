@@ -11,25 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EntityInstancePipe} from '@ame/editor';
 import {DefaultEntityInstance} from '@esmf/aspect-model-loader';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-  EntityInstancePipe: class {
-    transform(value: any, search: string) {
-      if (!value || value.length === 0) {
-        return null;
-      }
-
-      if (!search) {
-        return value;
-      }
-
-      return value.filter(item => item.name && item.name.includes(search));
-    }
-  },
-}));
+import {beforeEach, describe, expect, test} from 'vitest';
+import {EntityInstancePipe} from './entity-instance.pipe';
 
 describe('EntityInstancePipe', () => {
   let pipe: EntityInstancePipe;

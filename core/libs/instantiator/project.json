@@ -6,15 +6,24 @@
   "prefix": "ame",
   "targets": {
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@angular/build:unit-test",
       "outputs": ["{workspaceRoot}/coverage/libs/instantiator"],
       "options": {
-        "jestConfig": "libs/instantiator/jest.config.ts",
-        "tsConfig": "libs/instantiator/tsconfig.spec.json"
+        "tsConfig": "libs/instantiator/tsconfig.spec.json",
+        "buildTarget": "instantiator:build",
+        "watch": false
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "outputs": ["{workspaceRoot}/dist/libs/instantiator"],
+      "options": {
+        "project": "libs/instantiator/ng-package.json"
+      },
+      "dependsOn": []
     }
   }
 }

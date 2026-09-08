@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -14,14 +13,13 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL} from '../../support/api-mocks';
-
 describe('Test models with intersected names', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   describe('PredefinedAndCustomCharacteristicsSameName', () => {
     it('should load "PredefinedAndCustomCharacteristicsSameName" model', () => {
-      cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-      cy.visitDefault();
       cy.fixture('predefined-and-custom-characteristics-same-name')
         .as('rdfString')
         .then(rdfString => cy.loadModel(rdfString))

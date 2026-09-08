@@ -13,11 +13,11 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {EditorService} from '@ame/editor';
-import {MxGraphAttributeService, MxGraphHelper, MxGraphRenderer, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphRenderer, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
+import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {switchMap} from 'rxjs';
 import {FILTER_ATTRIBUTES} from './active-filter.session';
@@ -37,29 +37,31 @@ export type FilteredTrees = {
 
 @Injectable({providedIn: 'root'})
 export class FiltersService {
-  private injector = inject(Injector);
-  private loadingScreen = inject(LoadingScreenService);
-  private translate = inject(LanguageTranslationService);
-  private filterAttributesService = inject(FILTER_ATTRIBUTES);
+  private readonly injector = inject(Injector);
+  private readonly loadingScreen = inject(LoadingScreenService);
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly filterAttributesService = inject(FILTER_ATTRIBUTES);
 
-  private filtersMethods = {
+  private readonly filtersMethods: Record<ModelFilter, () => void> = {
     [ModelFilter.DEFAULT]: () => this.selectDefaultFilter(),
     [ModelFilter.PROPERTIES]: () => this.selectPropertiesFilter(),
   };
   public filteredTree: Partial<FilteredTrees> = {};
-  public currentFilter: FilterLoader<any>;
+  public currentFilter: FilterLoader<NamedElement>;
 
   constructor() {
-    window['_filter'] = this;
+    if (typeof window !== 'undefined') {
+      (window as unknown as Record<string, unknown>)['_filter'] = this;
+    }
     this.selectDefaultFilter();
   }
 
-  selectDefaultFilter() {
-    this.currentFilter = new DefaultFilter(runInInjectionContext(this.injector, () => inject(LoadedFilesService)));
+  selectDefaultFilter(): void {
+    this.currentFilter = new DefaultFilter(this.injector.get(LoadedFilesService));
     this.filterAttributesService.activeFilter = ModelFilter.DEFAULT;
   }
 
-  selectPropertiesFilter() {
+  selectPropertiesFilter(): void {
     this.currentFilter = new PropertiesFilterLoader(this.injector);
     this.filterAttributesService.activeFilter = ModelFilter.PROPERTIES;
   }
@@ -77,7 +79,10 @@ export class FiltersService {
 
   updateNodeInfo<T extends NamedElement = NamedElement>(node: ModelTree<T>, options?: ModelTreeOptions): ModelTree<T> {
     node.fromParentArrow = options?.parent ? this.currentFilter.getArrowStyle(node.element, options.parent) : null;
-    node.shape = {...this.currentFilter.getShapeGeometry(node.element), mxGraphStyle: this.currentFilter.getMxGraphStyle(node.element)};
+    node.shape = {
+      ...this.currentFilter.getShapeGeometry(node.element),
+      maxgraphStyle: {baseStyleNames: [this.currentFilter.getMaxgraphStyle(node.element)]},
+    };
     node.filterType = this.currentFilter.filterType;
     return node;
   }
@@ -85,57 +90,61 @@ export class FiltersService {
   updateNodeTree<T extends NamedElement = NamedElement>(node: ModelTree<T>, options?: ModelTreeOptions): ModelTree<T> {
     const generatedNode = this.currentFilter.generateTree(node.element, options);
     this.currentFilter.cache = {};
-    return generatedNode;
+    return generatedNode as ModelTree<T>;
   }
 
-  renderByFilter(filter: ModelFilter) {
-    const mxGraphService = runInInjectionContext(this.injector, () => inject(MxGraphService));
-    const editorService = runInInjectionContext(this.injector, () => inject(EditorService));
-    let selectedCell = mxGraphService.graph.selectionModel.cells?.[0];
-    const selectedModelElement = selectedCell && MxGraphHelper.getModelElement(selectedCell);
+  renderByFilter(filter: ModelFilter): void {
+    const maxgraphService = this.injector.get(MaxGraphService);
+    const editorService = this.injector.get(EditorService);
+    let selectedCell = maxgraphService.graph.selectionModel.cells?.[0];
+    const selectedModelElement = selectedCell && MaxGraphHelper.getModelElement(selectedCell);
 
     this.loadingScreen
       .open({
-        title: this.translate.language.LOADING_SCREEN_DIALOG.FILTER_CHANGE,
-        content: this.translate.language.LOADING_SCREEN_DIALOG.FILTER_WAIT,
+        title: this.translate.language.loadingScreenDialog.filterChange,
+        content: this.translate.language.loadingScreenDialog.filterWait,
       })
       .afterOpened()
       .pipe(
         switchMap(() => {
-          MxGraphHelper.filterMode = filter;
+          MaxGraphHelper.filterMode = filter;
           this.filterAttributesService.isFiltering = true;
           this.filtersMethods[filter]?.();
-          const loadedFilesService = runInInjectionContext(this.injector, () => inject(LoadedFilesService));
-          const mxGraphRenderer = new MxGraphRenderer(
-            mxGraphService,
-            runInInjectionContext(this.injector, () => inject(MxGraphShapeOverlayService)),
-            runInInjectionContext(this.injector, () => inject(SammLanguageSettingsService)),
-            runInInjectionContext(this.injector, () => inject(LoadedFilesService))?.currentLoadedFile?.rdfModel,
+          const loadedFilesService = this.injector.get(LoadedFilesService);
+          const maxgraphRenderer = new MaxGraphRenderer(
+            maxgraphService,
+            this.injector.get(MaxGraphShapeOverlayService),
+            this.injector.get(SammLanguageSettingsService),
+            loadedFilesService?.currentLoadedFile?.rdfModel,
           );
 
           const cachedFile = loadedFilesService.currentLoadedFile.cachedFile;
-          const rootElements = cachedFile.getKeys().reduce((acc, e) => {
-            if (cachedFile.get<NamedElement>(e).parents.length <= 0) {
-              acc.push(cachedFile.get<NamedElement>(e));
+          const rootElements = cachedFile.getKeys().reduce<NamedElement[]>((acc, e) => {
+            const cachedElement = cachedFile.get<NamedElement>(e);
+            if (cachedElement && cachedElement.parents.length <= 0) {
+              acc.push(cachedElement);
             }
             return acc;
           }, []);
           const filteredElements = this.filter(rootElements);
 
-          mxGraphService.deleteAllShapes();
+          maxgraphService.deleteAllShapes();
 
-          return mxGraphService.updateGraph(() => {
+          return maxgraphService.updateGraph(() => {
             for (const elementTree of filteredElements) {
-              mxGraphRenderer.render(elementTree, null);
+              maxgraphRenderer.render(elementTree, null);
             }
-            this.injector.get(MxGraphAttributeService).inCollapsedMode && mxGraphService.foldCells();
+
+            if (this.injector.get(MaxGraphAttributeService).inCollapsedMode) {
+              maxgraphService.foldCells();
+            }
           });
         }),
         switchMap(() => {
-          mxGraphService.formatShapes(true);
+          maxgraphService.formatShapes(true);
           this.filterAttributesService.isFiltering = false;
-          selectedCell = selectedModelElement && mxGraphService.resolveCellByModelElement(selectedModelElement);
-          if (selectedCell) mxGraphService.navigateToCellByUrn(selectedModelElement.aspectModelUrn);
+          selectedCell = selectedModelElement && maxgraphService.resolveCellByModelElement(selectedModelElement);
+          if (selectedCell) maxgraphService.navigateToCellByUrn(selectedModelElement.aspectModelUrn);
 
           return editorService.validate();
         }),

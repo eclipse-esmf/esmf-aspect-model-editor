@@ -12,14 +12,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {ElectronEventKeys, ElectronSignals, RegisteredELECTRON_EVENTS} from '../model';
+import {ElectronEventKeys, ElectronPayloadOnly, ElectronReturnDataOnly, ElectronSignals, RegisteredELECTRON_EVENTS} from '../model';
 
 @Injectable({providedIn: 'root'})
 export class ElectronSignalsService implements ElectronSignals {
   private listeners: RegisteredELECTRON_EVENTS = {};
 
-  addListener(listener: ElectronEventKeys, callback: Function) {
+  addListener<K extends keyof ElectronPayloadOnly>(listener: K, callback: (payload: ElectronPayloadOnly[K]) => void): void;
+  addListener<K extends keyof ElectronReturnDataOnly>(listener: K, callback: () => ElectronReturnDataOnly[K]): void;
+  addListener<K extends ElectronEventKeys>(listener: K, callback: (payload?: unknown) => unknown): void {
     if (typeof callback === 'function') {
       this.listeners[listener] = callback;
       return;
@@ -28,7 +29,9 @@ export class ElectronSignalsService implements ElectronSignals {
     throw new Error('callback parameter should be of type Function');
   }
 
-  call(action: ElectronEventKeys, data?: any): Observable<any> {
+  call<K extends keyof ElectronPayloadOnly>(action: K, payload: ElectronPayloadOnly[K]): void;
+  call<K extends keyof ElectronReturnDataOnly>(action: K): ElectronReturnDataOnly[K];
+  call(action: ElectronEventKeys, data?: unknown): unknown {
     if (!this.listeners[action]) {
       console.error('No listener registered for ' + action);
       return null;
@@ -37,7 +40,7 @@ export class ElectronSignalsService implements ElectronSignals {
     return this.listeners[action](data);
   }
 
-  removeListener<K extends ElectronEventKeys>(listener: K) {
-    this.listeners[listener] = null;
+  removeListener<K extends ElectronEventKeys>(listener: K): void {
+    delete this.listeners[listener];
   }
 }

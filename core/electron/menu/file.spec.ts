@@ -11,63 +11,63 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
 import {BrowserWindow} from 'electron';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 import {EVENTS} from '../events/events';
 import {file} from './file';
 
-jest.mock('electron', () => ({
-  BrowserWindow: Object.assign(jest.fn(), {getFocusedWindow: jest.fn()}),
+vi.mock('electron', () => ({
+  BrowserWindow: Object.assign(vi.fn(), {getFocusedWindow: vi.fn()}),
 }));
 
-jest.mock('../utils/icon-utils', () => ({
-  getIcon: jest.fn(() => 'mock-icon'),
+vi.mock('../utils/icon-utils', () => ({
+  getIcon: vi.fn(() => 'mock-icon'),
 }));
 
-jest.mock('../const/icons', () => ({
+vi.mock('../const/icons', () => ({
   icons: new Proxy({}, {get: () => ({enabled: 'icon-path', disabled: 'icon-path-disabled'})}),
 }));
 
-jest.mock('../const/paths', () => ({
+vi.mock('../const/paths', () => ({
   paths: {models: '/mock/models'},
 }));
 
-jest.mock('../utils/file-utils', () => ({
-  openFile: jest.fn(),
-  getFileInfo: jest.fn(),
+vi.mock('../utils/file-utils', () => ({
+  openFile: vi.fn(),
+  getFileInfo: vi.fn(),
 }));
 
-import {openFile, getFileInfo} from '../utils/file-utils';
+import {getFileInfo, openFile} from '../utils/file-utils';
 
-const mockedOpenFile = openFile as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedGetFileInfo = getFileInfo as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedGetFocusedWindow = BrowserWindow.getFocusedWindow as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedOpenFile = openFile as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedGetFileInfo = getFileInfo as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedGetFocusedWindow = BrowserWindow.getFocusedWindow as unknown as MockedFunction<(...args: any[]) => any>;
 
-const mockSend = jest.fn();
+const mockSend = vi.fn();
 const mockWin = {webContents: {send: mockSend}};
 
 const translation = {
-  NEW: {
-    LABEL: 'New',
-    SUBMENU: {
-      EMPTY_MODEL: 'Empty Model',
-      LOAD_FILE: 'Load File',
-      COPY_PASTE: 'Copy/Paste',
-      EXAMPLES: 'Examples',
+  new: {
+    label: 'New',
+    submenu: {
+      emptyModel: 'Empty Model',
+      loadFile: 'Load File',
+      copyPaste: 'Copy/Paste',
+      examples: 'Examples',
     },
   },
-  NEW_WINDOW: 'New Window',
-  IMPORT_MODEL: 'Import Model',
-  IMPORT_PACKAGE: 'Import Package',
-  COPY_TO_CLIPBOARD: 'Copy to Clipboard',
-  SAVE_TO_WORKSPACE: 'Save to Workspace',
-  EXPORT_MODEL: 'Export Model',
-  EXPORT_PACKAGE: 'Export Package',
+  newWindow: 'New Window',
+  importModel: 'Import Model',
+  importPackage: 'Import Package',
+  copyToClipboard: 'Copy to Clipboard',
+  saveToWorkspace: 'Save to Workspace',
+  exportModel: 'Export Model',
+  exportPackage: 'Export Package',
 };
 
 describe('file menu', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockedGetFocusedWindow.mockReturnValue(mockWin);
   });
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -30,7 +30,7 @@ import {NamedElement} from '../aspect-meta-model/named-element';
 import {ScalarValue} from '../aspect-meta-model/scalar-value';
 import {ModelVisitor} from './model-visitor';
 
-export class DefaultAspectModelVisitor<T extends NamedElement, U> implements ModelVisitor<T, U> {
+export class DefaultAspectModelVisitor<T extends NamedElement | void, U> implements ModelVisitor<T, U> {
   skipProperties: Array<string> = ['_wrappedProperty', '_parents', 'parents'];
 
   /**
@@ -56,7 +56,7 @@ export class DefaultAspectModelVisitor<T extends NamedElement, U> implements Mod
         }
       }
     }
-    return null;
+    return undefined as unknown as T;
   }
 
   private getObjectKeys(element: NamedElement): Array<string> {
@@ -64,7 +64,7 @@ export class DefaultAspectModelVisitor<T extends NamedElement, U> implements Mod
   }
 
   private getValue(key: string, element: NamedElement): any {
-    return element[key];
+    return (element as any)[key];
   }
 
   private isPropertyInstanceDefinition(attributeValue: any): boolean {
@@ -72,54 +72,54 @@ export class DefaultAspectModelVisitor<T extends NamedElement, U> implements Mod
   }
 
   visitAspect(aspect: Aspect, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitCharacteristic(characteristic: Characteristic, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitConstraint(constraint: Constraint, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitEntity(entity: Entity, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitOperation(operation: Operation, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitEvent(unit: Event, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitValue(value: ValueElement, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitProperty(property: Property, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitQuantityKind(quantityKind: QuantityKind, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitUnit(unit: Unit, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitScalar(scalar: DefaultScalar, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitScalarValue(scalarValue: ScalarValue, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 
   visitEntityInstance(scalarValue: EntityInstance, context: U): T {
-    return undefined;
+    return undefined as unknown as T;
   }
 }

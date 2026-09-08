@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -42,12 +42,10 @@ export function aspectFactory(initProps: BaseInitProps) {
     return aspectQuad;
   }
 
-  return (aspectModelUrn?: string): Aspect => {
-    if (!aspectModelUrn) return null;
-
+  return (aspectModelUrn?: string): Aspect | null => {
     let aspectQuad: Quad;
     try {
-      aspectQuad = getAspectQuad(aspectModelUrn);
+      aspectQuad = getAspectQuad(aspectModelUrn || undefined);
     } catch {
       return null;
     }
@@ -64,19 +62,19 @@ export function aspectFactory(initProps: BaseInitProps) {
     const events = getEvents(initProps)(aspectNode);
 
     const properties = propertiesData.map(({property}) => property);
-    const propertiesPayload: Record<PropertyUrn, PropertyPayload> = propertiesData.reduce((acc, {property, payload}) => {
-      acc[property.aspectModelUrn] = payload;
-      return acc;
-    }, {});
+    const propertiesPayload: Record<PropertyUrn, PropertyPayload> = propertiesData.reduce<Record<PropertyUrn, PropertyPayload>>(
+      (acc, {property, payload}) => {
+        acc[property.aspectModelUrn] = payload;
+        return acc;
+      },
+      {},
+    );
 
     const aspect = new DefaultAspect({
-      metaModelVersion: baseProperties.metaModelVersion,
-      aspectModelUrn: baseProperties.aspectModelUrn,
-      hasSyntheticName: baseProperties.hasSyntheticName,
+      ...baseProperties,
       properties,
       operations,
       events,
-      name: baseProperties.name,
       isCollectionAspect: properties.some(property => property.characteristic instanceof DefaultCollection),
     });
 

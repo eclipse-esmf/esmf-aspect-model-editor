@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -49,10 +49,11 @@ export function constraintFactory(initProps: BaseInitProps) {
 
   function generateConstraintName(constraint: Constraint) {
     const initialUrn: string = constraint.aspectModelUrn;
+    const typeName = constraint.className ? constraint.className.replace('Default', '') : 'Constraint';
 
-    // assign a unique random name
-    constraint.name = constraint.name ? constraint.name : 'Constraint' + String(Math.floor(Math.random() * 900) + 100);
-    constraint.aspectModelUrn = `${rdfModel.getAspectModelUrn()}${constraint.name}`;
+    constraint.name = constraint.name ? constraint.name : `[${typeName}]`;
+    constraint.aspectModelUrn =
+      initialUrn || `${rdfModel.getAspectModelUrn()}${constraint.name}_${Math.floor(Math.random() * 9000) + 1000}`;
     constraint.syntheticName = true;
     cache.addElement(initialUrn, constraint);
   }

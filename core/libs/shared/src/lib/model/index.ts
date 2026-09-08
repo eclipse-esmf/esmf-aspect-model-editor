@@ -12,6 +12,7 @@
  */
 
 export * from './app-config.interface';
+export * from './electron-api.model';
 export * from './electron-signals.model';
 export * from './element.model';
 export * from './file-content.model';

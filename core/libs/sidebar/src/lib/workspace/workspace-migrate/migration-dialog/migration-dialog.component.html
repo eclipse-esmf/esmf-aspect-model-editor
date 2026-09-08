@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,82 +12,83 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.TITLE' | translate }} {{ config.currentSammVersion }}</h2>
+  <h2 mat-dialog-title>{{ t('sammMigration.workspaceMigrationDialog.title') }} {{ config.currentSammVersion }}</h2>
 
-<mat-dialog-content class="migration">
-  <mat-stepper #stepper linear>
-    <mat-step [editable]="false">
-      <p>
-        {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.FILE_VERSION_WARNING' | translate }}
-        <strong>{{ config.currentSammVersion }}</strong> {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATION_NEEDED' | translate }}
-        <br />
-        {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATE_INSTRUCTION' | translate }}
-      </p>
-      <mat-checkbox [checked]="increaseNamespaceVersion" (change)="changeVersionCheck($event)">
-        {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.VERSION_AUTO_UPGRADE' | translate }}
-      </mat-checkbox>
-      <p class="version-description">
-        {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.UPGRADE_EFFECT' | translate }}
-      </p>
-    </mat-step>
-    <mat-step [editable]="false">
-      @if (migrationStatus()?.success) {
-        <div class="content">
-          <mat-icon class="content__icon">done</mat-icon>
-          <p>{{ 'SAMM_MIGRATION.MIGRATION_DIALOG.SUCCESS_CONTENT' | translate }}</p>
-        </div>
-        @if (migrationStatus()?.errors?.length) {
-          <mat-divider></mat-divider>
-          <div class="content__banner">
-            <mat-icon>warning</mat-icon>
-            {{ 'SAMM_MIGRATION.MIGRATION_DIALOG.WARNING_CONTENT' | translate }}
+  <mat-dialog-content class="migration">
+    <mat-stepper #stepper linear>
+      <mat-step [editable]="false">
+        <p>
+          {{ t('sammMigration.workspaceMigrationDialog.fileVersionWarning') }}
+          <strong>{{ config.currentSammVersion }}</strong> {{ t('sammMigration.workspaceMigrationDialog.migrationNeeded') }}
+          <br />
+          {{ t('sammMigration.workspaceMigrationDialog.migrateInstruction') }}
+        </p>
+        <mat-checkbox [checked]="increaseNamespaceVersion()" (change)="changeVersionCheck($event)">
+          {{ t('sammMigration.workspaceMigrationDialog.versionAutoUpgrade') }}
+        </mat-checkbox>
+        <p class="version-description">
+          {{ t('sammMigration.workspaceMigrationDialog.upgradeEffect') }}
+        </p>
+      </mat-step>
+      <mat-step [editable]="false">
+        @if (migrationStatus()?.success) {
+          <div class="content">
+            <mat-icon class="content__icon">done</mat-icon>
+            <p>{{ t('sammMigration.migrationDialog.successContent') }}</p>
           </div>
-          <label>Migration Message:</label>
-          <ul>
-            @for (error of migrationStatus().errors; track error) {
-              <li>{{ error }}</li>
-            }
-          </ul>
+          @if (migrationStatus()?.errors?.length) {
+            <mat-divider></mat-divider>
+            <div class="content__banner">
+              <mat-icon>warning</mat-icon>
+              {{ t('sammMigration.migrationDialog.warningContent') }}
+            </div>
+            <span>{{ t('sammMigration.migrationDialog.migrationMessage') }}:</span>
+            <ul>
+              @for (error of migrationStatus().errors; track error) {
+                <li>{{ error }}</li>
+              }
+            </ul>
+          }
+        } @else {
+          <mat-icon class="icon">error</mat-icon>
+          <p>{{ t('sammMigration.migrationDialog.errorContent') }}</p>
+          @if (migrationStatus()?.errors?.length) {
+            <mat-divider></mat-divider>
+            <div class="content__banner">
+              <mat-icon>warning</mat-icon>
+              {{ t('sammMigration.migrationDialog.warningContent') }}
+            </div>
+            <ul>
+              @for (error of migrationStatus().errors; track error) {
+                <li>{{ error }}</li>
+              }
+            </ul>
+          }
         }
-      } @else {
-        <mat-icon class="icon">error</mat-icon>
-        <p>{{ 'SAMM_MIGRATION.MIGRATION_DIALOG.ERROR_CONTENT' | translate }}</p>
-        @if (migrationStatus()?.errors?.length) {
-          <mat-divider></mat-divider>
-          <div class="content__banner">
-            <mat-icon>warning</mat-icon>
-            {{ 'SAMM_MIGRATION.MIGRATION_DIALOG.WARNING_CONTENT' | translate }}
-          </div>
-          <ul>
-            @for (error of migrationStatus().errors; track error) {
-              <li>{{ error }}</li>
-            }
-          </ul>
-        }
+      </mat-step>
+    </mat-stepper>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    @if (currentStep() === 0) {
+      @if (!loading()) {
+        <button (click)="closeDialog()" mat-flat-button>
+          {{ t('sammMigration.workspaceMigrationDialog.cancel') }}
+        </button>
       }
-    </mat-step>
-  </mat-stepper>
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  @if (currentStep() === 0) {
-    @if (!loading()) {
-      <button (click)="closeDialog()" mat-flat-button>
-        {{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.CANCEL' | translate }}
+      <button [disabled]="loading()" (click)="migrate()" mat-flat-button color="primary">
+        @if (!loading()) {
+          <span>{{ t('sammMigration.workspaceMigrationDialog.migrate') }}</span>
+        }
+        @if (loading()) {
+          <mat-spinner class="spinner" diameter="20"></mat-spinner>
+        }
       </button>
     }
-    <button [disabled]="loading()" (click)="migrate()" mat-flat-button color="primary">
-      @if (!loading()) {
-        <span>{{ 'SAMM_MIGRATION.WORKSPACE_MIGRATION_DIALOG.MIGRATE' | translate }}</span>
-      }
-      @if (loading()) {
-        <mat-spinner class="spinner" diameter="20"></mat-spinner>
-      }
-    </button>
-  }
-  @if (currentStep() === 1) {
-    <button (click)="closeDialog()" mat-flat-button>
-      {{ 'SAMM_MIGRATION.MIGRATION_DIALOG.CLOSE' | translate }}
-    </button>
-  }
-</mat-dialog-actions>
+    @if (currentStep() === 1) {
+      <button (click)="closeDialog()" mat-flat-button>
+        {{ t('sammMigration.migrationDialog.close') }}
+      </button>
+    }
+  </mat-dialog-actions>
+</ng-container>

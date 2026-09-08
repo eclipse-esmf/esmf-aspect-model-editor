@@ -18,10 +18,11 @@
   flex-direction: column;
   width: 350px;
   height: 100%;
-  background-color: #e1e1e1;
+  background-color: var(--ame-surface-card, #e1e1e1);
+  color: var(--ame-font, inherit);
   padding: 16px;
   padding-bottom: 0;
-  box-shadow: 8px 4px 8px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 8px 4px 8px 0 var(--ame-shadow--black-25, rgba(0, 0, 0, 0.25));
 
   [mat-mini-fab] {
     background-color: transparent;
@@ -30,7 +31,7 @@
 
   ::ng-deep {
     mat-form-field .mdc-text-field {
-      background-color: white;
+      background-color: var(--ame-surface, white);
     }
   }
 }
@@ -93,10 +94,21 @@
   .show-elements {
     color: #007bc0;
     font-size: 12px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    display: inline;
 
     &:hover {
       text-decoration: underline;
-      cursor: pointer;
+    }
+
+    &:focus {
+      outline: 2px solid #007bc0;
+      outline-offset: 2px;
     }
   }
 
@@ -125,26 +137,34 @@
       opacity: 0.5;
       pointer-events: none;
     }
+
+    &.readonly {
+      cursor: default;
+      opacity: 0.65;
+    }
   }
 }
 
-.mat-menu-item {
+.filter-menu-item {
   display: block;
+  width: 100%;
 
   ::ng-deep {
     .mdc-form-field {
       display: flex;
       justify-content: space-between;
-      padding: 0 10px;
+      width: 100%;
+      padding: 6px 16px;
 
       .mdc-label {
         margin-left: 0;
         flex: 1;
-      }
-
-      .mdc-checkbox__checkmark {
-        color: white !important;
+        color: var(--ame-font, inherit);
       }
     }
+  }
+
+  &:hover {
+    background-color: var(--ame-surface-hover, #f3f3f3);
   }
 }

@@ -13,7 +13,7 @@
 
 import {EditorService} from '@ame/editor';
 import {basicShapeGeometry, circleShapeGeometry, ElementType} from '@ame/shared';
-import {AfterViewInit, Component, ElementRef, inject, Input, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, input, Renderer2} from '@angular/core';
 
 @Component({
   selector: 'ame-draggable-element',
@@ -21,8 +21,9 @@ import {AfterViewInit, Component, ElementRef, inject, Input, Renderer2} from '@a
   styleUrls: ['./draggable-element.component.scss'],
 })
 export class DraggableElementComponent implements AfterViewInit {
-  @Input() type: ElementType;
-  @Input() urn?: string = '';
+  readonly type = input<ElementType>();
+  readonly urn = input<string>('');
+  readonly readonly = input<boolean>(false);
 
   private elementRef = inject(ElementRef<HTMLDivElement>);
   private renderer = inject(Renderer2);
@@ -30,22 +31,35 @@ export class DraggableElementComponent implements AfterViewInit {
   public editorService = inject(EditorService);
 
   ngAfterViewInit(): void {
-    this.elementRef.nativeElement.dataset.type = this.type;
-    this.elementRef.nativeElement.dataset.urn = this.urn;
+    if (this.readonly()) {
+      return;
+    }
+
+    const type = this.type();
+    if (type) {
+      this.elementRef.nativeElement.dataset.type = type;
+    }
+    const urn = this.urn();
+    if (urn) {
+      this.elementRef.nativeElement.dataset.urn = urn;
+    }
 
     this.editorService.makeDraggable(this.elementRef.nativeElement, this.createShadowElement());
   }
 
   private createShadowElement() {
     const dragElement = this.renderer.createElement('div');
-    dragElement.classList.add(this.type);
+    const type = this.type();
+    if (type) {
+      dragElement.classList.add(type);
+    }
     dragElement.style.display = 'block';
-    dragElement.style.height = (this.type === 'trait' ? circleShapeGeometry.expandedHeight : basicShapeGeometry.expandedHeight) + 'px';
-    dragElement.style.width = (this.type === 'trait' ? circleShapeGeometry.expandedWith : basicShapeGeometry.expandedWith) + 'px';
+    dragElement.style.height = (type === 'trait' ? circleShapeGeometry.expandedHeight : basicShapeGeometry.expandedHeight) + 'px';
+    dragElement.style.width = (type === 'trait' ? circleShapeGeometry.expandedWith : basicShapeGeometry.expandedWith) + 'px';
     dragElement.style.border = '2px solid #000';
     dragElement.style.marginTop = '-15px';
 
-    if (this.type === 'trait') {
+    if (type === 'trait') {
       dragElement.style.borderRadius = '50%';
     }
 

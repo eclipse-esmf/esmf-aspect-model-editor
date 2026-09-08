@@ -24,10 +24,14 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test edit operation', () => {
-  it('can add input and output properties', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_elementBtn).click())
+    cy.startModelling();
+  });
+
+  it('can add input and output properties', () => {
+    cy.get(SELECTOR_elementBtn)
+      .click()
       .then(() => cy.dragElement(SELECTOR_ecOperation, 100, 300))
       .then(() => cy.clickConnectShapes('AspectDefault', 'operation1'))
       .then(() => cyHelp.hasAddInputAndOutputShapeOverlay('operation1'))

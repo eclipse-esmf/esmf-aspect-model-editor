@@ -10,11 +10,11 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {AsyncPipe} from '@angular/common';
-import {Component, Input, inject} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {TranslatePipe} from '@ngx-translate/core';
+import {Component, inject, input} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {ElementListComponent} from '../element-list';
 import {BaseInputComponent, EntityExtendsFieldComponent} from '../fields';
 import {PropertiesButtonComponent, UpdatedProperties} from '../properties';
@@ -22,14 +22,14 @@ import {PropertiesButtonComponent, UpdatedProperties} from '../properties';
 @Component({
   selector: 'ame-entity',
   templateUrl: './entity.component.html',
-  imports: [BaseInputComponent, EntityExtendsFieldComponent, PropertiesButtonComponent, ElementListComponent, AsyncPipe, TranslatePipe],
+  imports: [BaseInputComponent, EntityExtendsFieldComponent, PropertiesButtonComponent, ElementListComponent, TranslocoDirective],
 })
 export class EntityComponent {
-  @Input() parentForm: FormGroup;
+  readonly signalForm = input(EditorSignalFormContext.create());
   public metaModelDialogService = inject(EditorModelService);
-  public element$ = this.metaModelDialogService.getMetaModelElement();
+  public element = toSignal(this.metaModelDialogService.getMetaModelElement());
 
   overwriteProperties(data: UpdatedProperties) {
-    this.parentForm.setControl('editedProperties', new FormControl(data));
+    this.signalForm().set('editedProperties', data);
   }
 }

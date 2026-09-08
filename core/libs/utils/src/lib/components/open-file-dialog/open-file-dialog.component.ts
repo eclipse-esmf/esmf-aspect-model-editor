@@ -15,12 +15,11 @@ import {DIALOG_DATA} from '@angular/cdk/dialog';
 import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
   templateUrl: './open-file-dialog.component.html',
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule, TranslatePipe],
+  imports: [MatDialogModule, MatButtonModule, TranslocoDirective],
   styles: [
     `
       :host {

@@ -11,26 +11,56 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AbstractPropertyRenderService, MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphVisitorHelper} from '@ame/mx-graph';
+import {
+  AbstractPropertyRenderService,
+  MaxGraphAttributeService,
+  MaxGraphHelper,
+  MaxGraphService,
+  MaxGraphVisitorHelper,
+} from '@ame/max-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {inject, Injectable} from '@angular/core';
-import {DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {DefaultProperty, DefaultValue, HasExtends, NamedElement, ScalarValue} from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AbstractPropertyModelService extends BaseModelService {
-  private mxGraphService = inject(MxGraphService);
-  private abstractPropertyRenderer = inject(AbstractPropertyRenderService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private languageService = inject(SammLanguageSettingsService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly abstractPropertyRenderer = inject(AbstractPropertyRenderService);
+  private readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private readonly languageService = inject(SammLanguageSettingsService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultProperty && metaModelElement.isAbstract;
   }
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement = MxGraphHelper.getModelElement<DefaultProperty>(cell);
+  update(cell: Cell, form: {[key: string]: any}) {
+    const metaModelElement = MaxGraphHelper.getModelElement<DefaultProperty>(cell);
+
+    if (form.exampleValue instanceof ScalarValue && form.exampleValue.value === '') {
+      form.exampleValue = null;
+    }
+
+    const previousExampleValue = metaModelElement.exampleValue;
+
+    if (form.exampleValue instanceof DefaultValue) {
+      this.currentCachedFile.addElement(form.exampleValue.aspectModelUrn, form.exampleValue);
+    }
+
+    if (
+      previousExampleValue instanceof DefaultValue &&
+      previousExampleValue.isAnonymous?.() &&
+      previousExampleValue !== form.exampleValue
+    ) {
+      this.currentCachedFile.removeElement(previousExampleValue.aspectModelUrn);
+      MaxGraphHelper.removeRelation(metaModelElement, previousExampleValue);
+      const prevCell = this.maxgraphService.resolveCellByModelElement(previousExampleValue);
+      if (prevCell) {
+        this.maxgraphService.removeCells([prevCell]);
+      }
+    }
+
     metaModelElement.exampleValue = form.exampleValue;
 
     super.update(cell, form);
@@ -39,34 +69,43 @@ export class AbstractPropertyModelService extends BaseModelService {
     this.abstractPropertyRenderer.update({cell});
   }
 
-  delete(cell: mxgraph.mxCell) {
+  delete(cell: Cell) {
+    const node = MaxGraphHelper.getModelElement<DefaultProperty>(cell);
     this.updateExtends(cell);
+    if (node?.exampleValue instanceof DefaultValue && node.exampleValue.isAnonymous?.()) {
+      const anonValue = node.exampleValue;
+      this.currentCachedFile.removeElement(anonValue.aspectModelUrn);
+      const anonCell = this.maxgraphService.resolveCellByModelElement(anonValue);
+      if (anonCell) {
+        this.maxgraphService.removeCells([anonCell]);
+      }
+    }
     super.delete(cell);
-    this.mxGraphService.removeCells([cell]);
+    this.maxgraphService.removeCells([cell]);
   }
 
-  private updatePropertiesNames(cell: mxgraph.mxCell) {
+  private updatePropertiesNames(cell: Cell) {
     const parents =
-      this.mxGraphService.resolveParents(cell)?.filter(e => MxGraphHelper.getModelElement(e) instanceof DefaultProperty) || [];
-    const modelElement = MxGraphHelper.getModelElement(cell);
+      this.maxgraphService.resolveParents(cell)?.filter(e => MaxGraphHelper.getModelElement(e) instanceof DefaultProperty) || [];
+    const modelElement = MaxGraphHelper.getModelElement(cell);
 
     for (const parentCell of parents) {
-      const parentElement = MxGraphHelper.getModelElement(parentCell);
+      const parentElement = MaxGraphHelper.getModelElement(parentCell);
       parentElement.name = `[${modelElement.name}]`;
       parentElement.aspectModelUrn = `${parentElement.aspectModelUrn.split('#')[0]}#${parentElement.name}`;
       this.updateCell(parentCell);
     }
   }
 
-  private updateExtends(cell: mxgraph.mxCell, isDeleting = true) {
-    const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
+  private updateExtends(cell: Cell, isDeleting = true) {
+    const incomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(cell, null);
+    const modelElement = MaxGraphHelper.getModelElement(cell);
 
     for (const edge of incomingEdges) {
-      const element = MxGraphHelper.getModelElement<HasExtends>(edge.source);
+      const element = MaxGraphHelper.getModelElement<HasExtends>(edge.source);
       if (element instanceof DefaultProperty && isDeleting) {
-        MxGraphHelper.removeRelation(element, modelElement);
-        this.mxGraphService.removeCells([edge.source]);
+        MaxGraphHelper.removeRelation(element, modelElement);
+        this.maxgraphService.removeCells([edge.source]);
         continue;
       }
 
@@ -75,8 +114,8 @@ export class AbstractPropertyModelService extends BaseModelService {
     }
   }
 
-  private updateCell(cell: mxgraph.mxCell) {
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(MxGraphHelper.getModelElement(cell), this.languageService);
-    this.mxGraphService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
+  private updateCell(cell: Cell) {
+    cell['configuration'].fields = MaxGraphVisitorHelper.getElementProperties(MaxGraphHelper.getModelElement(cell), this.languageService);
+    this.maxgraphService.graph.labelChanged(cell, MaxGraphHelper.createPropertiesLabel(cell), null);
   }
 }

@@ -19,7 +19,6 @@ import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
 import {DialogOptions} from './confirm-dialog.service';
 
 @Component({
-  standalone: true,
   templateUrl: './confirm-dialog.component.html',
   styles: ['.dialog-title { font-size: 24px !important; }'],
   imports: [MatDialogModule, MatIconModule, MatButtonModule],

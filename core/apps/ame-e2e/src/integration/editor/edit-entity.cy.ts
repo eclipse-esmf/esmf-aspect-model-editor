@@ -28,10 +28,14 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Entity', () => {
-  it('should add new entity', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_elementBtn).click())
+    cy.startModelling();
+  });
+
+  it('should add new entity', () => {
+    cy.get(SELECTOR_elementBtn)
+      .click()
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => cy.shapeExists('Entity1'))

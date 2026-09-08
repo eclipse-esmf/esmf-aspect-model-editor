@@ -11,28 +11,30 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphService} from '@ame/mx-graph';
-import {Component, DestroyRef, inject} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {MaxGraphService} from '@ame/max-graph';
+import {Component, inject} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {MatIconButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {NamedElement} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../../../editor-model.service';
 
 @Component({
   selector: 'ame-locate-element',
-  template: `@if (element) {
-    <button
-      [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.LOCATE_ELEMENT' | translate"
-      (click)="locate()"
-      mat-icon-button
-      matTooltipPosition="above"
-    >
-      <mat-icon>gps_fixed</mat-icon>
-    </button>
-  }`,
+  template: `<ng-container *transloco="let t">
+    @if (element()) {
+      <button
+        [matTooltip]="t('editorCanvas.shapeSetting.locateElement')"
+        (click)="locate()"
+        type="button"
+        mat-icon-button
+        matTooltipPosition="above"
+      >
+        <mat-icon>gps_fixed</mat-icon>
+      </button>
+    }
+  </ng-container> `,
   styles: [
     `
       :host {
@@ -40,23 +42,16 @@ import {EditorModelService} from '../../../../editor-model.service';
       }
     `,
   ],
-  imports: [MatTooltipModule, MatIconModule, MatIconButton, TranslatePipe],
+  imports: [MatTooltipModule, MatIconModule, MatIconButton, TranslocoDirective],
 })
 export class LocateElementComponent {
-  public destroyRef = inject(DestroyRef);
   public metaModelDialogService = inject(EditorModelService);
-  private mxgraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
 
-  public element: NamedElement;
-
-  constructor() {
-    this.metaModelDialogService
-      .getMetaModelElement()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(element => (this.element = element));
-  }
+  public element = toSignal(this.metaModelDialogService.getMetaModelElement());
 
   locate() {
-    if (this.element) this.mxgraphService.navigateToCellByUrn(this.element.aspectModelUrn);
+    const el = this.element();
+    if (el) this.maxgraphService.navigateToCellByUrn(el.aspectModelUrn);
   }
 }

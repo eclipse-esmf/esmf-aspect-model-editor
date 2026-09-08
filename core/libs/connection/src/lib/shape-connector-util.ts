@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelInfo} from '@ame/mx-graph';
+import {ModelInfo} from '@ame/max-graph';
 import {
   DefaultAspect,
   DefaultCharacteristic,

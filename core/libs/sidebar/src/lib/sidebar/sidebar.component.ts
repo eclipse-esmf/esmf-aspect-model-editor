@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SidebarStateService} from '@ame/sidebar';
 import {ChangeDetectorRef, Component, DestroyRef, OnInit, inject} from '@angular/core';
 import {SidebarMenuComponent} from '../sidebar-menu/sidebar-menu.component';
 import {SidebarSAMMElementsComponent} from '../sidebar-samm-elements/sidebar-samm-elements.component';
+import {SidebarStateService} from '../sidebar-state.service';
 import {WorkspaceComponent} from '../workspace/workspace.component';
 
 @Component({

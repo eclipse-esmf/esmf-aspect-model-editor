@@ -11,14 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AlertOptions} from '@ame/shared';
 import {Component, inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-
 import {MatButtonModule} from '@angular/material/button';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {AlertOptions} from '../../services/alert.service';
 
 @Component({
-  standalone: true,
   selector: 'ame-alert',
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.scss'],

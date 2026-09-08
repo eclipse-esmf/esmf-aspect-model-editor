@@ -30,6 +30,7 @@ import 'cypress-real-events';
 import './constants';
 
 import './api-mocks';
+import {setUpDefaultInterceptors} from './api-mocks';
 import './commands';
 import './helpers';
 import './utils';
@@ -37,19 +38,14 @@ import './utils';
 before(function before() {
   // Do not truncate assertion outputs of arrays and objects
   (<any>window).chai.config.truncateThreshold = 0;
+  setUpDefaultInterceptors();
 });
 
 beforeEach(() => {
-  cy.intercept(
-    {
-      method: 'GET',
-      url: 'http://localhost:9090/ame/api/models/check-element**',
-    },
-    {statusCode: 200, body: false},
-  ).as('checkElement');
+  setUpDefaultInterceptors();
 });
 
-Cypress.on('uncaught:exception', (err, runnable) => {
+Cypress.on('uncaught:exception', () => {
   // returning false here prevents Cypress from failing the test
   return false;
 });

@@ -11,31 +11,30 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultCollection, DefaultEntity} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class CollectionCharacteristicConnectionHandler implements MultiShapeConnector<DefaultCollection, DefaultCharacteristic> {
-  private mxGraphService = inject(MxGraphService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-
-  public connect(parentMetaModel: DefaultCollection, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
-    this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => {
-      if (outEdge.target && !(outEdge.target.getMetaModelElement() instanceof DefaultEntity)) {
-        const entity = outEdge.target.getMetaModelElement();
-        MxGraphHelper.removeRelation(parentMetaModel, entity);
-        this.mxGraphService.removeCells([parent.removeEdge(outEdge, true)]);
+  private maxgraphService = inject(MaxGraphService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
+  public connect(parentMetaModel: DefaultCollection, childMetaModel: DefaultCharacteristic, parent: Cell, child: Cell) {
+    this.maxgraphAttributeService.graph.getOutgoingEdges(parent, null).forEach(outEdge => {
+      const targetModel = MaxGraphHelper.getModelElement(outEdge?.target);
+      if (outEdge.target && !(targetModel instanceof DefaultEntity)) {
+        MaxGraphHelper.removeRelation(parentMetaModel, targetModel);
+        this.maxgraphService.removeCells([parent.removeEdge(outEdge, true)]);
       }
     });
 
     parentMetaModel.elementCharacteristic = childMetaModel;
-    this.mxGraphService.assignToParent(child, parent);
+    this.maxgraphService.assignToParent(child, parent);
 
     if (parentMetaModel.elementCharacteristic) {
-      this.mxGraphService.graph.labelChanged(parent, MxGraphHelper.createPropertiesLabel(parent));
+      this.maxgraphService.graph.labelChanged(parent, MaxGraphHelper.createPropertiesLabel(parent), null);
     }
   }
 }

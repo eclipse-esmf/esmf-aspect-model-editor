@@ -23,18 +23,18 @@ import {SelectNamespacesComponent} from '../../namespace-exporter/components';
 
 @Injectable({providedIn: 'root'})
 export class NamespacesManagerService {
-  private matDialog = inject(MatDialog);
-  private fileHandlingService = inject(FileHandlingService);
-  private electronSignalsService = inject(ElectronSignalsService);
-  private fileUploadService = inject(FileUploadService);
+  private readonly matDialog = inject(MatDialog);
+  private readonly fileHandlingService = inject(FileHandlingService);
+  private readonly electronSignalsService = inject(ElectronSignalsService);
+  private readonly fileUploadService = inject(FileUploadService);
 
   constructor() {
-    if (!environment.production) {
+    if (!environment.production && typeof window !== 'undefined') {
       window['angular.namespacesManagerService'] = this;
     }
   }
 
-  onImportNamespaces(fileInfo?: FileInfo) {
+  onImportNamespaces(fileInfo?: FileInfo): void {
     this.resolveNamespacesFile(fileInfo)
       .pipe(switchMap(file => this.importNamespaces(file)))
       .subscribe(() => this.electronSignalsService.call('requestRefreshWorkspaces'));
@@ -44,11 +44,11 @@ export class NamespacesManagerService {
     return fileInfo ? of(createFile(fileInfo.content, fileInfo.name, FileTypes.ZIP)) : this.fileUploadService.selectFile([FileTypes.ZIP]);
   }
 
-  importNamespaces(zip: File) {
+  importNamespaces(zip: File): Observable<unknown> {
     return this.fileHandlingService.importFilesToWorkspace(zip).pipe(take(1));
   }
 
-  onExportNamespaces() {
+  onExportNamespaces(): void {
     this.matDialog.open(SelectNamespacesComponent, {disableClose: true});
   }
 }

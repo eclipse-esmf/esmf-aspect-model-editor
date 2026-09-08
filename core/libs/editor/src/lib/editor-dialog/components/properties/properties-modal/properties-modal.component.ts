@@ -13,8 +13,8 @@
 
 import {CacheUtils, LoadedFilesService} from '@ame/cache';
 import {NgClass} from '@angular/common';
-import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {AfterViewInit, Component, inject, OnInit, signal, viewChild} from '@angular/core';
+import {form} from '@angular/forms/signals';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
@@ -43,7 +43,7 @@ import {
   PropertyPayload,
   PropertyUrn,
 } from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 export interface PropertiesDialogData {
   metaModelElement?: DefaultEntity | DefaultAspect;
@@ -58,6 +58,15 @@ export interface PropertyStatus {
   inherited?: boolean;
   disabled?: boolean;
 }
+
+export interface PropertyItemForm {
+  name: string;
+  optional: boolean;
+  notInPayload: boolean;
+  payloadName: string;
+}
+
+export type PropertiesFormModel = Record<string, PropertyItemForm>;
 
 @Component({
   templateUrl: './properties-modal.component.html',
@@ -74,7 +83,6 @@ export interface PropertyStatus {
     MatCellDef,
     MatHeaderCellDef,
     NgClass,
-    ReactiveFormsModule,
     MatFormFieldModule,
     MatLabel,
     MatInput,
@@ -84,27 +92,30 @@ export interface PropertyStatus {
     MatPaginator,
     MatDialogActions,
     MatButton,
-    TranslatePipe,
+    TranslocoDirective,
     MatHeaderRowDef,
     MatRowDef,
   ],
 })
 export class PropertiesModalComponent implements OnInit, AfterViewInit {
   private loadedFilesService = inject(LoadedFilesService);
-  private formBuilder = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<PropertiesModalComponent>);
 
   public data = inject(MAT_DIALOG_DATA) as PropertiesDialogData;
 
-  public form: FormGroup;
-  public keys: string[] = [];
+  public propertiesModel = signal<PropertiesFormModel>({});
+  public propertiesForm = form(this.propertiesModel);
 
-  public headers = [];
+  public keys: string[] = [];
+  public isReadonly = signal(false);
+
   public standardHeaders = ['name', 'optional', 'payloadName'];
   public enumerationEntityHeaders = ['name', 'optional', 'notInPayload', 'payloadName'];
+
+  public headers = signal(['name', 'optional', 'payloadName']);
   public dataSource: MatTableDataSource<PropertyStatus>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  readonly paginator = viewChild(MatPaginator);
 
   public get extendedProperties(): DefaultProperty[] {
     return (this.data.metaModelElement as DefaultEntity)?.extends_?.properties || [];
@@ -134,58 +145,71 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
 
     this.dataSource = new MatTableDataSource(allProperties);
 
-    const group = allProperties.reduce((acc, status) => {
+    const initialModel: PropertiesFormModel = {};
+    for (const status of allProperties) {
       this.keys.push(status.property.aspectModelUrn);
-      acc[status.property.aspectModelUrn] = this.formBuilder.group({
-        name: this.formBuilder.control({
-          value: status.property.name,
-          disabled: status.inherited || status.disabled,
-        }),
-        optional: this.formBuilder.control({
-          value: status.propertyPayload?.optional || false,
-          disabled: status.inherited || status.disabled,
-        }),
-        notInPayload: this.formBuilder.control({
-          value: status.propertyPayload?.notInPayload || false,
-          disabled: status.inherited || status.disabled,
-        }),
-        payloadName: this.formBuilder.control({
-          value: status.propertyPayload?.payloadName || '',
-          disabled: status.inherited || status.disabled,
-        }),
-      });
-      return acc;
-    }, {});
+      initialModel[status.property.aspectModelUrn] = {
+        name: status.property.name,
+        optional: status.propertyPayload?.optional || false,
+        notInPayload: status.propertyPayload?.notInPayload || false,
+        payloadName: status.propertyPayload?.payloadName || '',
+      };
+    }
+    this.propertiesModel.set(initialModel);
 
-    this.form = this.formBuilder.group(group);
     if (this.data.isExternalRef || this.data.isPredefined) {
-      this.form.disable();
+      this.isReadonly.set(true);
     }
 
-    this.headers = this.standardHeaders;
+    this.headers.set(this.standardHeaders);
     if (this.data.metaModelElement instanceof DefaultEntity) {
       const entityValues = CacheUtils.getCachedElements(this.loadedFilesService.currentLoadedFile.cachedFile, DefaultEntityInstance);
       entityValues.forEach((entityValue: DefaultEntityInstance) => {
         if (entityValue.type.aspectModelUrn === this.data.metaModelElement.aspectModelUrn) {
-          this.headers = this.enumerationEntityHeaders;
+          this.headers.set(this.enumerationEntityHeaders);
         }
       });
     }
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
-
-  getControl(path: string | string[]): FormControl {
-    return this.form.get(path) as FormControl;
+    this.dataSource.paginator = this.paginator();
   }
 
   closeModal() {
     this.dialogRef.close();
   }
 
+  updateOptional(urn: string, checked?: boolean) {
+    this.propertiesModel.update(model => {
+      const current = model[urn]?.optional || false;
+      const next = checked !== undefined ? checked : !current;
+      return {
+        ...model,
+        [urn]: {...model[urn], optional: next},
+      };
+    });
+  }
+
+  updateNotInPayload(urn: string, checked?: boolean) {
+    this.propertiesModel.update(model => {
+      const current = model[urn]?.notInPayload || false;
+      const next = checked !== undefined ? checked : !current;
+      return {
+        ...model,
+        [urn]: {...model[urn], notInPayload: next},
+      };
+    });
+  }
+
+  updatePayloadName(urn: string, value: string) {
+    this.propertiesModel.update(model => ({
+      ...model,
+      [urn]: {...model[urn], payloadName: value},
+    }));
+  }
+
   saveChanges() {
-    this.dialogRef.close(this.form.value);
+    this.dialogRef.close(this.propertiesModel());
   }
 }

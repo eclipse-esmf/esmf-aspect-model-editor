@@ -28,9 +28,16 @@ interface InterceptorConfigNamespaceFile {
 }
 
 /**
- * URL pattern for intercepting "namespaces" requests.
+ * API URLs for mocking backend endpoints in E2E tests.
  */
-export const NAMESPACES_URL = 'http://localhost:9090/ame/api/models/namespaces*';
+export const API_BASE_URL = 'http://localhost:9090/ame/api';
+export const MODELS_API_URL = `${API_BASE_URL}/models`;
+export const NAMESPACES_URL = `${API_BASE_URL}/models/namespaces*`;
+export const VALIDATE_API_URL = `${API_BASE_URL}/models/validate`;
+export const FORMAT_API_URL = `${API_BASE_URL}/models/format`;
+export const CHECK_ELEMENT_API_URL = `${API_BASE_URL}/models/check-element*`;
+export const MODELS_BATCH_API_URL = `${API_BASE_URL}/models/batch`;
+
 /**
  * SAMM version number to be used in e2e tests.
  * Affects only "version" fields of models loaded via interceptors, doesn't impact actual functionality.
@@ -38,15 +45,23 @@ export const NAMESPACES_URL = 'http://localhost:9090/ame/api/models/namespaces*'
  */
 export const SAMM_VERSION_ACTUAL = '2.2.0';
 
+export function setUpDefaultInterceptors(): void {
+  cy.intercept('GET', CHECK_ELEMENT_API_URL, {statusCode: 200, body: false}).as('checkElement');
+  cy.intercept('POST', VALIDATE_API_URL, {fixture: 'model-validation-response.json'}).as('validateModel');
+  cy.intercept('POST', FORMAT_API_URL, {}).as('formatModel');
+  cy.intercept('GET', MODELS_API_URL, {statusCode: 200, body: {content: '', sourceLocation: null}}).as('getModels');
+  cy.intercept('POST', MODELS_API_URL, {});
+  cy.intercept('POST', MODELS_BATCH_API_URL, {statusCode: 200, body: []}).as('batchModelsDefault');
+  cy.intercept('DELETE', MODELS_API_URL, {});
+  cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}}).as('getNamespaces');
+}
+
 export function setUpStaticModellingInterceptors(): void {
-  cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'}).as('validateModel');
-  cy.intercept('POST', 'http://localhost:9090/ame/api/models/format', {}).as('formatModel');
-  cy.intercept('POST', 'http://localhost:9090/ame/api/models', {});
-  cy.intercept('DELETE', 'http://localhost:9090/ame/api/models', {});
+  setUpDefaultInterceptors();
 }
 
 export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorConfigNamespaces): void {
-  const values: any[] = Object.values(namespacesConfig);
+  const values: InterceptorConfigNamespace[] = Object.values(namespacesConfig);
 
   // Set up namespaces structure to return
   cy.intercept(
@@ -59,16 +74,15 @@ export function setUpDynamicModellingInterceptors(namespacesConfig: InterceptorC
       }),
       {},
     ),
-  );
+  ).as('getNamespacesDynamic');
 
   // Set up files content to return
   values.forEach(value => {
     value.files.forEach(file => {
-      console.warn('file', file);
       cy.intercept(
         {
           method: 'GET',
-          url: 'http://localhost:9090/ame/api/models',
+          url: MODELS_API_URL,
           headers: {namespace: value.name, 'file-name': file.name},
         },
         file.response,

@@ -11,11 +11,11 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('defaultValue')?.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="dataType">defaultValue</mat-label>
-  <input [formControl]="getControl('defaultValue')" [matAutocomplete]="auto" matInput data-cy="defaultValue" />
+<mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
+  <mat-label>defaultValue</mat-label>
+  <input [formField]="field" [matAutocomplete]="auto" matInput data-cy="defaultValue" />
   <mat-autocomplete #auto="matAutocomplete">
-    @for (entityValue of entityValues; track entityValue.aspectModelUrn) {
+    @for (entityValue of entityValues(); track entityValue.aspectModelUrn) {
       <mat-option [value]="entityValue.name">
         {{ entityValue.name }}
       </mat-option>

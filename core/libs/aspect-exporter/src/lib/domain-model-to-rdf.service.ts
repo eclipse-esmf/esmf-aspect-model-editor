@@ -12,7 +12,6 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {MxGraphAttributeService} from '@ame/mx-graph';
 import {ModelService} from '@ame/rdf/services';
 import {Injectable, inject} from '@angular/core';
 import {
@@ -28,7 +27,6 @@ import {
   DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
 import {filter, tap} from 'rxjs/operators';
 import {
   AspectVisitor,
@@ -46,7 +44,6 @@ import {
 
 @Injectable({providedIn: 'root'})
 export class DomainModelToRdfService {
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
   private loadedFiles = inject(LoadedFilesService);
   private aspectVisitorService = inject(AspectVisitor);
   private propertyVisitorService = inject(PropertyVisitor);
@@ -60,10 +57,6 @@ export class DomainModelToRdfService {
   private unitVisitorService = inject(UnitVisitor);
   private modelService = inject(ModelService);
   private cleanupVisitorService = inject(CleanupVisitor);
-
-  get graph(): mxgraph.mxGraph {
-    return this.mxGraphAttributeService.graph;
-  }
 
   get currentCachedFile() {
     return this.loadedFiles.currentLoadedFile.cachedFile;

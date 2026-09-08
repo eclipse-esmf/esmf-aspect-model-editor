@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,22 +12,29 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ title }}</h2>
-<button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
-  <mat-icon>close</mat-icon>
-</button>
-
-<mat-dialog-content>
-  <mat-form-field appearance="outline">
-    <textarea [(ngModel)]="content" data-cy="dialogContent" spellcheck="false" matInput></textarea>
-  </mat-form-field>
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button mat-flat-button mat-dialog-close>{{ 'PREVIEW_DIALOG.CANCEL' | translate }}</button>
-  <button (click)="reset()" mat-raised-button>{{ 'PREVIEW_DIALOG.RESET_CONTENT' | translate }}</button>
-  <button (click)="onCopyToClipboard()" mat-raised-button>{{ 'PREVIEW_DIALOG.COPY_TO_CLIPBOARD' | translate }}</button>
-  <button (click)="onDownload()" mat-raised-button color="primary" data-cy="downloadFileButton">
-    {{ 'PREVIEW_DIALOG.DOWNLOAD_FILE' | translate }}
+  <h2 mat-dialog-title>{{ title() }}</h2>
+  <button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
+    <mat-icon>close</mat-icon>
   </button>
-</mat-dialog-actions>
+
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <textarea
+        [value]="content()"
+        (input)="content.set($any($event.target).value)"
+        data-cy="dialogContent"
+        spellcheck="false"
+        matInput
+      ></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close>{{ t('previewDialog.cancel') }}</button>
+    <button (click)="reset()" mat-raised-button>{{ t('previewDialog.resetContent') }}</button>
+    <button (click)="onCopyToClipboard()" mat-raised-button>{{ t('previewDialog.copyToClipboard') }}</button>
+    <button (click)="onDownload()" mat-raised-button color="primary" data-cy="downloadFileButton">
+      {{ t('previewDialog.downloadFile') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

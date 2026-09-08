@@ -21,14 +21,13 @@ import {MatDivider} from '@angular/material/divider';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatStep, MatStepper} from '@angular/material/stepper';
-import {TranslateModule} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {finalize, switchMap, tap} from 'rxjs';
 
 @Component({
   selector: 'ame-migration-dialog',
   templateUrl: './migration-dialog.component.html',
   styleUrls: ['./migration-dialog.component.scss'],
-  standalone: true,
   imports: [
     MatDialogTitle,
     MatDialogContent,
@@ -36,7 +35,7 @@ import {finalize, switchMap, tap} from 'rxjs';
     MatDialogActions,
     MatButton,
     MatProgressSpinner,
-    TranslateModule,
+    TranslocoDirective,
     MatStepper,
     MatStep,
     MatDivider,
@@ -56,10 +55,10 @@ export class MigrationDialogComponent {
   public loading = signal(false);
 
   public migrationStatus = signal<MigrationStatus>(undefined);
-  public increaseNamespaceVersion = true;
+  public increaseNamespaceVersion = signal(true);
 
   changeVersionCheck(event: MatCheckboxChange) {
-    this.increaseNamespaceVersion = event.checked;
+    this.increaseNamespaceVersion.set(event.checked);
   }
 
   migrate(): void {
@@ -67,7 +66,7 @@ export class MigrationDialogComponent {
     this.migratorApiService
       .createBackup()
       .pipe(
-        switchMap(() => this.migratorApiService.migrateWorkspace(this.increaseNamespaceVersion)),
+        switchMap(() => this.migratorApiService.migrateWorkspace(this.increaseNamespaceVersion())),
         tap((migrationStatus: MigrationStatus) => this.migrationStatus.set(migrationStatus)),
         finalize(() => this.loading.set(false)),
       )
@@ -75,14 +74,14 @@ export class MigrationDialogComponent {
         next: () => this.stepper()?.next(),
         error: err =>
           this.notificationsService.error({
-            title: this.translate.language.SAMM_MIGRATION?.MIGRATION_DIALOG?.MIGRATION_FAILED_TITLE,
+            title: this.translate.language.sammMigration?.MIGRATION_DIALOG?.MIGRATION_FAILED_TITLE,
             message: err,
           }),
       });
   }
 
   closeDialog() {
-    this.dialogRef.close();
+    this.dialogRef.close(!!this.migrationStatus()?.success);
   }
 
   currentStep() {

@@ -10,31 +10,31 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-@if (type) {
-  <span class="element-icon" [class.rounded]="type.type === 'trait'" [ngClass]="className" matTooltipPosition="before">{{
-    type.symbol
+@if (type()) {
+  <span class="element-icon" [class.rounded]="type().type === 'trait'" [ngClass]="className()" matTooltipPosition="before">{{
+    type().symbol
   }}</span>
 }
 
-@if (size !== 'small' && name) {
+@if (size() !== 'small' && name()) {
   <div class="element-info">
-    @if (name) {
+    @if (name()) {
       <span
         class="element-name"
         [class.new-value]="isNewValue()"
-        [matTooltip]="name"
-        [matTooltipDisabled]="name.length < disabledTooltipNameLength"
+        [matTooltip]="name()"
+        [matTooltipDisabled]="name().length < disabledTooltipNameLength()"
         matTooltipPosition="right"
-        >{{ name }}</span
+        >{{ name() }}</span
       >
     }
-    @if (description) {
+    @if (description()) {
       <span
         class="element-description"
-        [matTooltip]="description"
-        [matTooltipDisabled]="description.length < disabledTooltipDescriptionLength"
+        [matTooltip]="description()"
+        [matTooltipDisabled]="description().length < disabledTooltipDescriptionLength()"
         matTooltipPosition="right"
-        >{{ description }}</span
+        >{{ description() }}</span
       >
     }
   </div>

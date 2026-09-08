@@ -10,40 +10,39 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<mat-form-field [floatLabel]="inputControl?.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="input">quantityKinds</mat-label>
-  <mat-chip-grid #chipList [formControl]="chipListControl">
-    @for (input of quantityKindValues; track input) {
-      <mat-chip-row [disabled]="!editable" [removable]="editable" (removed)="remove(input)">
-        {{ input }}
-        @if (editable) {
-          <button matChipRemove data-cy="input">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        }
-      </mat-chip-row>
-    }
-    <input
-      #input
-      [formControl]="inputControl"
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [placeholder]="editable ? 'Search quantity kinds...' : ''"
-      matInput
-      name="quantityKindValues"
-      data-cy="quantityKindValues"
-    />
-  </mat-chip-grid>
-  <mat-autocomplete #auto="matAutocomplete">
-    @if (filteredQuantityKinds$ | async; as filteredQuantityKinds) {
+<ng-container *transloco="let t">
+  <mat-form-field [floatLabel]="inputField().disabled() ? 'always' : 'auto'" appearance="fill">
+    <mat-label>quantityKinds</mat-label>
+    <mat-chip-grid #chipList>
+      @for (input of quantityKindValues(); track input) {
+        <mat-chip-row [disabled]="!editable()" [removable]="editable()" (removed)="remove(input)">
+          {{ input }}
+          @if (editable()) {
+            <button matChipRemove data-cy="input">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          }
+        </mat-chip-row>
+      }
+      <input
+        #input
+        [formField]="inputField"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes()"
+        [placeholder]="editable() ? t('editorCanvas.shapeSetting.field.unit.searchQuantityKinds') : ''"
+        matInput
+        data-cy="quantityKindValues"
+      />
+    </mat-chip-grid>
+    <mat-autocomplete #auto="matAutocomplete">
       <mat-optgroup label="Quantity Kind">
-        @for (qk of filteredQuantityKinds; track qk) {
-          <mat-option [value]="qk" (onSelectionChange)="onSelectionChange(qk)">
+        @for (qk of filteredQuantityKinds(); track qk) {
+          <mat-option [value]="qk" (onSelectionChange)="$event.isUserInput && onSelectionChange(qk)">
             {{ qk }}
           </mat-option>
         }
       </mat-optgroup>
-    }
-  </mat-autocomplete>
-</mat-form-field>
+    </mat-autocomplete>
+  </mat-form-field>
+</ng-container>

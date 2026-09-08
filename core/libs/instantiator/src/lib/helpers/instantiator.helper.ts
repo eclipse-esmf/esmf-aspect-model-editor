@@ -13,6 +13,6 @@
 
 import {NamedElement} from '@esmf/aspect-model-loader';
 
-export function syncElementWithChildren(element: NamedElement) {
-  element.children.forEach(child => child.parents.push(element));
+export function syncElementWithChildren(element: NamedElement): void {
+  element?.children?.forEach((child: NamedElement) => child?.parents?.push(element));
 }

@@ -12,28 +12,24 @@
   -->
 
 @if (metaModelElement?.referenceUnit || !metaModelElement.isPredefined) {
-  <mat-form-field [floatLabel]="unitDisplayControl?.disabled ? 'always' : 'auto'" appearance="fill">
-    <mat-label for="referenceUnit">referenceUnit</mat-label>
-    <input #unit [matAutocomplete]="auto" [formControl]="unitDisplayControl" matInput name="referenceUnit" data-cy="referenceUnit" />
-    @if (unitDisplayControl?.disabled && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
-      <button (click)="unlockUnit()" data-cy="clear-unit-button" matSuffix mat-icon-button tabindex="-1">
+  <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill">
+    <mat-label>referenceUnit</mat-label>
+    <input #unit [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="referenceUnit" />
+    @if (displayField().disabled() && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
+      <button (click)="unlockUnit()" data-cy="clear-unit-button" type="button" matSuffix mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>
       </button>
     }
 
     <mat-autocomplete #auto="matAutocomplete">
-      @if (filteredPredefinedUnits$ | async; as filteredPredefinedUnits) {
-        <ng-container #predefinedUnits>
-          @if (filteredPredefinedUnits?.length) {
-            <mat-optgroup label="Predefined Units">
-              @for (unit of filteredPredefinedUnits; track unit) {
-                <mat-option [title]="unit.name" [value]="unit.name" (onSelectionChange)="onPredefinedUnitChange(unit, $event)">
-                  {{ unit.name }}
-                </mat-option>
-              }
-            </mat-optgroup>
+      @if (filteredPredefinedUnits().length) {
+        <mat-optgroup label="Predefined Units">
+          @for (unit of filteredPredefinedUnits(); track unit) {
+            <mat-option [title]="unit.name" [value]="unit.name" (onSelectionChange)="onPredefinedUnitChange(unit, $event)">
+              {{ unit.name }}
+            </mat-option>
           }
-        </ng-container>
+        </mat-optgroup>
       }
     </mat-autocomplete>
   </mat-form-field>

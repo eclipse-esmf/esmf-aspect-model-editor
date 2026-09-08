@@ -11,6 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, Mock, vi} from 'vitest';
+
+vi.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {TestBed} from '@angular/core/testing';
 import {DefaultValue, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
@@ -19,66 +25,18 @@ import {MockProvider} from 'ng-mocks';
 import {RdfNodeService} from '../../rdf-node';
 import {ValueVisitor} from './value-visitor';
 
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
-jest.mock('@esmf/aspect-model-loader', () => {
-  class NamedElement {}
-  class Samm {
-    constructor(public base: string) {}
-    ValueProperty() {
-      return DataFactory.namedNode('http://samm/value');
-    }
-  }
-  class DefaultValue extends NamedElement {
-    metaModelVersion!: string;
-    aspectModelUrn!: string;
-    name!: string;
-    value!: string;
-    isPredefined?: boolean;
-
-    constructor(data: any) {
-      super();
-      Object.assign(this, data);
-    }
-    getPreferredName(lang: string) {
-      if (lang === 'en') return 'Value EN';
-      return undefined;
-    }
-    getDescription(lang: string) {
-      if (lang === 'en') return 'Description EN';
-      return undefined;
-    }
-    getSee() {
-      return [];
-    }
-
-    getValue() {
-      return this.value;
-    }
-  }
-  class ModelElementCache {}
-  return {DefaultValue, Samm, ModelElementCache};
-});
-
-jest.mock('@ame/utils', () => ({
-  getPreferredNamesLocales: (v: any) => ['en'],
-  getDescriptionsLocales: (v: any) => ['en'],
-}));
-
 describe('ValueVisitor', () => {
   let service: ValueVisitor;
-  let rdfNodeServiceUpdate: jest.Mock;
+  let rdfNodeServiceUpdate: Mock;
 
   const store = new Store();
-  const addQuadSpy = jest.spyOn(store, 'addQuad');
+  const addQuadSpy = vi.spyOn(store, 'addQuad');
 
   const rdfModel: RdfModel = {
     store,
     samm: new Samm(''),
-    hasDependency: jest.fn(() => false),
-    addPrefix: jest.fn(),
+    hasDependency: vi.fn(() => false),
+    addPrefix: vi.fn(),
   } as any;
 
   const defaultValue = new DefaultValue({
@@ -87,10 +45,12 @@ describe('ValueVisitor', () => {
     name: 'value1',
     value: 'http://example.com/value_test',
     isPredefined: false,
-  });
+    preferredNames: new Map([['en', 'Value EN']]),
+    descriptions: new Map([['en', 'Description EN']]),
+  } as any);
 
   beforeEach(() => {
-    rdfNodeServiceUpdate = jest.fn();
+    rdfNodeServiceUpdate = vi.fn();
 
     TestBed.configureTestingModule({
       providers: [
@@ -118,5 +78,75 @@ describe('ValueVisitor', () => {
       description: [{language: 'en', value: 'Description EN'}],
       see: [],
     });
+    expect(addQuadSpy).toHaveBeenCalledWith(
+      DataFactory.namedNode('samm#value1'),
+      rdfModel.samm.ValueProperty(),
+      DataFactory.literal('http://example.com/value_test', DataFactory.namedNode('http://www.w3.org/2001/XMLSchema#string')),
+    );
+  });
+
+  it('should skip export when value is anonymous and no customSubject is provided', () => {
+    const anonValue = new DefaultValue({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#[Value]_1234',
+      name: '[Value]',
+      value: '42',
+      isAnonymous: true,
+    } as any);
+
+    const result = service.visit(anonValue);
+
+    expect(result).toBe(anonValue);
+    expect(rdfNodeServiceUpdate).not.toHaveBeenCalled();
+    expect(addQuadSpy).not.toHaveBeenCalled();
+  });
+
+  it('should export with customSubject when value is anonymous', () => {
+    const anonValue = new DefaultValue({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#[Value]_1234',
+      name: '[Value]',
+      value: '42',
+      isAnonymous: true,
+      preferredNames: new Map([['en', 'The Answer']]),
+    } as any);
+
+    const blankNode = DataFactory.blankNode();
+    const result = service.visit(anonValue, blankNode);
+
+    expect(result).toBe(anonValue);
+    expect(rdfNodeServiceUpdate).toHaveBeenCalledWith(
+      anonValue,
+      {
+        preferredName: [{language: 'en', value: 'The Answer'}],
+        description: [],
+        see: [],
+      },
+      blankNode,
+    );
+    expect(addQuadSpy).toHaveBeenCalledWith(
+      blankNode,
+      rdfModel.samm.ValueProperty(),
+      DataFactory.literal('42', DataFactory.namedNode('http://www.w3.org/2001/XMLSchema#string')),
+    );
+  });
+
+  it('should export with integer datatype when customDataTypeUrn is integer', () => {
+    const anonValue = new DefaultValue({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#[Value]_1234',
+      name: '[Value]',
+      value: '42',
+      isAnonymous: true,
+    } as any);
+
+    const blankNode = DataFactory.blankNode();
+    service.visit(anonValue, blankNode, 'http://www.w3.org/2001/XMLSchema#integer');
+
+    expect(addQuadSpy).toHaveBeenCalledWith(
+      blankNode,
+      rdfModel.samm.ValueProperty(),
+      DataFactory.literal('42', DataFactory.namedNode('http://www.w3.org/2001/XMLSchema#integer')),
+    );
   });
 });

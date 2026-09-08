@@ -31,9 +31,9 @@ export class EventVisitor extends BaseVisitor<DefaultEvent> {
 
   visit(event: DefaultEvent): DefaultEvent {
     this.setPrefix(event.aspectModelUrn);
-    const oldAspectModelUrn = event.aspectModelUrn;
+    const oldAspectModelUrn = event.consumePreviousAspectModelUrn();
     this.addProperties(event);
-    if (oldAspectModelUrn !== event.aspectModelUrn) {
+    if (oldAspectModelUrn && oldAspectModelUrn !== event.aspectModelUrn) {
       this.removeOldQuads(oldAspectModelUrn);
     }
     return event;

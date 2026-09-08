@@ -14,5 +14,8 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
+  },
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0"
   }
 }

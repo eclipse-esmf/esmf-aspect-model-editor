@@ -14,13 +14,13 @@
 import {LoadedFilesService} from '@ame/cache';
 import {FiltersService} from '@ame/loader-filters';
 import {
-  MxGraphAttributeService,
-  MxGraphHelper,
-  MxGraphRenderer,
-  MxGraphService,
-  MxGraphSetupService,
-  MxGraphShapeOverlayService,
-} from '@ame/mx-graph';
+  MaxGraphAttributeService,
+  MaxGraphHelper,
+  MaxGraphRenderer,
+  MaxGraphService,
+  MaxGraphSetupService,
+  MaxGraphShapeOverlayService,
+} from '@ame/max-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {LoadingScreenService, NotificationsService, ValidateStatus} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
@@ -34,17 +34,17 @@ import {LargeFileWarningService} from './large-file-warning-dialog/large-file-wa
 @Injectable({providedIn: 'root'})
 export class ModelRendererService {
   private destroyRef = inject(DestroyRef);
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private largeFileWarningService = inject(LargeFileWarningService);
   private loadingScreenService = inject(LoadingScreenService);
   private filtersService = inject(FiltersService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private shapeSettingsService = inject(ShapeSettingsService);
-  private mxGraphSetupService = inject(MxGraphSetupService);
+  private maxgraphSetupService = inject(MaxGraphSetupService);
   private translate = inject(LanguageTranslationService);
   private loadedFilesService = inject(LoadedFilesService);
   private notificationsService = inject(NotificationsService);
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
+  private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
   private sammLanguageSettingsService = inject(SammLanguageSettingsService);
 
   private get rdfModel() {
@@ -56,18 +56,18 @@ export class ModelRendererService {
   }
 
   renderModel(editElementUrn?: string) {
-    this.mxGraphService.deleteAllShapes();
+    this.maxgraphService.deleteAllShapes();
 
     try {
-      const mxGraphRenderer = new MxGraphRenderer(
-        this.mxGraphService,
-        this.mxGraphShapeOverlayService,
+      const maxgraphRenderer = new MaxGraphRenderer(
+        this.maxgraphService,
+        this.maxgraphShapeOverlayService,
         this.sammLanguageSettingsService,
         this.rdfModel,
       );
 
       const elements = this.cachedFile.getKeys().map(key => this.cachedFile.get<NamedElement>(key));
-      return this.prepareGraphUpdate(mxGraphRenderer, elements, editElementUrn);
+      return this.prepareGraphUpdate(maxgraphRenderer, elements, editElementUrn);
     } catch (error) {
       console.groupCollapsed('editor.service', error);
       console.groupEnd();
@@ -75,32 +75,32 @@ export class ModelRendererService {
     }
   }
 
-  private prepareGraphUpdate(mxGraphRenderer: MxGraphRenderer, elements: NamedElement[], editElementUrn?: string) {
+  private prepareGraphUpdate(maxgraphRenderer: MaxGraphRenderer, elements: NamedElement[], editElementUrn?: string) {
     return this.largeFileWarningService.openDialog(elements.length).pipe(
       takeUntilDestroyed(this.destroyRef),
       first(),
       filter(response => response !== 'cancel'),
       tap(() => this.toggleLoadingScreen()),
       delay(500), // Wait for modal animation
-      switchMap(() => this.graphUpdateWorkflow(mxGraphRenderer, elements)),
+      switchMap(() => this.graphUpdateWorkflow(maxgraphRenderer, elements)),
       tap(() => this.finalizeGraphUpdate(editElementUrn)),
       catchError(() => [this.loadingScreenService.close()]),
     );
   }
 
-  private graphUpdateWorkflow(mxGraphRenderer: MxGraphRenderer, elements: NamedElement[]): Observable<boolean> {
-    return this.mxGraphService.updateGraph(() => {
-      this.mxGraphService.firstTimeFold = true;
-      MxGraphHelper.filterMode = this.filtersService.currentFilter.filterType;
+  private graphUpdateWorkflow(maxgraphRenderer: MaxGraphRenderer, elements: NamedElement[]): Observable<boolean> {
+    return this.maxgraphService.updateGraph(() => {
+      this.maxgraphService.firstTimeFold.set(true);
+      MaxGraphHelper.filterMode = this.filtersService.currentFilter.filterType;
       const rootElements = elements.filter(e => !e.parents.length);
       const filtered = this.filtersService.filter(rootElements.length ? rootElements : elements);
 
       for (const elementTree of filtered) {
-        mxGraphRenderer.render(elementTree, null);
+        maxgraphRenderer.render(elementTree, null);
       }
 
-      if (this.mxGraphAttributeService.inCollapsedMode) {
-        this.mxGraphService.foldCells();
+      if (this.maxgraphAttributeService.inCollapsedMode) {
+        this.maxgraphService.foldCells();
       }
     });
   }
@@ -108,12 +108,12 @@ export class ModelRendererService {
   private toggleLoadingScreen(): void {
     this.loadingScreenService.close();
     requestAnimationFrame(() => {
-      this.loadingScreenService.open({title: this.translate.language.LOADING_SCREEN_DIALOG.MODEL_GENERATION});
+      this.loadingScreenService.open({title: this.translate.language.loadingScreenDialog.modelGeneration});
     });
   }
 
   private finalizeGraphUpdate(editElementUrn?: string): void {
-    this.mxGraphService.formatShapes(true);
+    this.maxgraphService.formatShapes(true);
     this.handleEditOrCenterView(editElementUrn);
     localStorage.removeItem(ValidateStatus.validating);
     this.loadingScreenService.close();
@@ -122,9 +122,9 @@ export class ModelRendererService {
   private handleEditOrCenterView(editElementUrn: string | null): void {
     if (editElementUrn) {
       this.editModelByUrn(editElementUrn);
-      this.mxGraphService.navigateToCellByUrn(editElementUrn);
+      this.maxgraphService.navigateToCellByUrn(editElementUrn);
     } else {
-      this.mxGraphSetupService.centerGraph();
+      this.maxgraphSetupService.centerGraph();
     }
   }
 
@@ -132,8 +132,8 @@ export class ModelRendererService {
     const element = this.cachedFile?.get<NamedElement>(elementUrn);
     if (!element) {
       this.notificationsService.error({
-        title: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE,
-        message: this.translate.language.EDITOR_CANVAS.SHAPE_SETTING.NOTIFICATION.EDIT_VIEW_UNAVAILABLE_MESSAGE,
+        title: this.translate.language.editorCanvas.shapeSetting.notification.editViewUnavailable,
+        message: this.translate.language.editorCanvas.shapeSetting.notification.editViewUnavailableMessage,
       });
 
       return;

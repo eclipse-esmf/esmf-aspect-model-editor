@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -29,9 +28,12 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test namespace settings dialog', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   describe('Test changing model namespace version', () => {
     it('should open namespace settings', () => {
-      cy.visitDefault();
       cy.startModelling();
       openNamespaceSettings().then(() => verifyNamespaceSettings('org.eclipse.examples.aspect', '1.0.0'));
     });
@@ -49,7 +51,6 @@ describe('Test namespace settings dialog', () => {
     it('should change namespace and version and save aspect model', () => {
       cy.intercept('GET', NAMESPACES_URL, {statusCode: 200, body: {}});
 
-      cy.visitDefault();
       cy.fixture('/change-namespace/aspect-workspace-one')
         .as('rdfString')
         .then(rdfString => cy.loadModel(rdfString));
@@ -229,7 +230,8 @@ describe('Test namespace settings dialog', () => {
   });
 
   function openNamespaceSettings() {
-    return cy.get(SELECTOR_settingsButton).click().wait(1000).get(':nth-child(6) > .settings__node').click();
+    cy.get(SELECTOR_settingsButton).click();
+    return cy.get(':nth-child(6) > .settings__node').should('be.visible').click();
   }
 
   function verifyNamespaceSettings(namespace: string, version: string): void {

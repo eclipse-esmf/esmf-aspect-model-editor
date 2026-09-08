@@ -11,19 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {AsyncPipe} from '@angular/common';
-import {Component, inject, OnInit, ViewChild} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {Component, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {disabled, form, FormField, validate} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
+import {DefaultCharacteristic, DefaultConstraint, DefaultProperty, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {map, Observable} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
@@ -42,7 +42,7 @@ interface SeeElement {
     MatTooltipModule,
     MatLabel,
     MatChipGrid,
-    ReactiveFormsModule,
+    FormField,
     MatChipRow,
     MatIconModule,
     MatAutocompleteTrigger,
@@ -52,51 +52,99 @@ interface SeeElement {
     AsyncPipe,
     MatOption,
     MatError,
-    TranslatePipe,
+    TranslocoDirective,
     MatChipsModule,
   ],
 })
-export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit {
-  @ViewChild('see', {static: true}) seeInput;
-  @ViewChild('chipList', {static: true, read: MatChipGrid}) chipList: MatChipGrid;
+export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
+  public readonly seeInput = viewChild<ElementRef>('see');
+  public readonly chipList = viewChild('chipList', {read: MatChipGrid});
 
-  public shapes$: Observable<NamedElement[]>;
-  public searchControl = new FormControl('', {
-    validators: [EditorDialogValidators.seeURI],
-    updateOn: 'change',
+  private readonly seeModel = signal('');
+  private readonly searchModel = signal('');
+  private readonly disabledState = signal(false);
+  private unregisterField = () => undefined;
+
+  readonly seeField = form(this.seeModel, path => disabled(path, {when: this.disabledState}));
+  readonly searchField = form(this.searchModel, path => {
+    validate(path, ({value}) => {
+      const errors = EditorDialogValidators.seeURIValue(value());
+      const uriError = errors?.['uri'] as {invalidUris: string[]} | undefined;
+      return uriError ? {kind: 'uri', message: 'Invalid URI', invalidUris: uriError.invalidUris} : null;
+    });
+    disabled(path, {when: this.disabledState});
   });
-  public chipControl = new FormControl();
-  public elements: SeeElement[] = [];
+  public shapes$: Observable<NamedElement[]> = toObservable(this.searchModel).pipe(
+    map(fieldValue =>
+      !fieldValue
+        ? []
+        : this.modelElements.filter(
+            ({name, aspectModelUrn}) =>
+              name?.toLowerCase().includes(fieldValue.toLowerCase()) && !this.elements().find(el => el.urn === aspectModelUrn),
+          ),
+    ),
+  );
+
+  public elements = signal<SeeElement[]>([]);
 
   get isInherited(): boolean {
-    const control = this.parentForm.get(this.fieldName);
     const extending = this.metaModelElement as HasExtends;
-    return extending.extends_ && extending.extends_?.see && control.value === extending.extends_?.see?.join(',');
+    return extending.extends_ && extending.extends_?.see && this.seeModel() === extending.extends_?.see?.join(',');
   }
 
   get modelElements() {
-    return this.mxGraphService.getAllCells().map(cell => MxGraphHelper.getModelElement(cell));
+    return this.maxgraphService.getAllCells().map(cell => MaxGraphHelper.getModelElement(cell));
   }
 
   constructor() {
     super();
     this.fieldName = 'see';
-    this.mxGraphService = inject(MxGraphService);
+    this.maxgraphService = inject(MaxGraphService);
+
+    effect(() => {
+      this.previousData();
+      if (
+        !this.fieldName ||
+        !(this.metaModelElement instanceof DefaultCharacteristic || this.metaModelElement instanceof DefaultConstraint)
+      ) {
+        return;
+      }
+
+      const seeValue = this.getCurrentValue();
+      const decodedValue = this.decodeUriComponent(seeValue);
+      this.elements.set(
+        [...(decodedValue?.split(',') || [])].filter(Boolean).map(urn => ({
+          name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
+          urn,
+        })),
+      );
+    });
   }
 
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.setSeeControl());
+  }
 
-    this.searchControl.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(status => {
-      this.chipList.errorState = status === 'INVALID';
-    });
+  ngOnDestroy(): void {
+    this.unregisterField();
+    super.ngOnDestroy();
+  }
+
+  hasSearchError(kind: string): boolean {
+    return this.searchField()
+      .errors()
+      .some(error => error.kind === kind);
   }
 
   getCurrentValue() {
+    if (this.metaModelElement?.isPredefined) {
+      return this.metaModelElement?.see?.join(',') || '';
+    }
+
     return (
-      this.previousData?.[this.fieldName] ||
+      this.previousData()?.[this.fieldName] ||
       this.metaModelElement?.see?.join(',') ||
       (this.metaModelElement as HasExtends)?.extends_?.see?.join(',') ||
       ''
@@ -104,21 +152,20 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
   }
 
   removeElement(element: SeeElement) {
-    this.elements = this.elements.filter(e => e !== element);
-    this.parentForm.get(this.fieldName).setValue(this.elements.map(({urn}) => urn).join(','));
+    this.elements.set(this.elements().filter(e => e !== element));
+    this.syncSeeValue();
   }
 
   addElementToList(elementName?: string) {
-    if (this.searchControl.valid) {
-      this.elements.push({urn: this.searchControl.value, name: elementName || ''});
-      this.seeInput.nativeElement.value = '';
-      this.searchControl.setValue('');
-
-      this.parentForm.get(this.fieldName).setValue(this.elements.map(({urn}) => urn).join(','));
-      this.chipList.errorState = false;
+    if (this.searchField().valid()) {
+      this.elements.update(elements => [...elements, {urn: this.searchModel(), name: elementName || ''}]);
+      this.seeInput().nativeElement.value = '';
+      this.searchModel.set('');
+      this.syncSeeValue();
+      this.chipList().errorState = false;
     } else {
-      this.chipList.errorState = true;
-      this.seeInput.nativeElement.blur();
+      this.chipList().errorState = true;
+      this.seeInput().nativeElement.blur();
     }
   }
 
@@ -127,39 +174,33 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
   }
 
   private setSeeControl() {
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl(
-        {
-          value: this.decodeUriComponent(this.getCurrentValue()),
-          disabled:
-            this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
-        },
-        {
-          validators: [EditorDialogValidators.seeURI],
-        },
-      ),
-    );
-
-    if (this.parentForm.get(this.fieldName).disabled) {
-      this.searchControl.disable();
-      this.chipControl.disable();
+    if (!this.metaModelElement) {
+      return;
     }
-    this.elements = [...(this.decodeUriComponent(this.getCurrentValue())?.split(',') || [])].map(urn => ({
-      name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
-      urn,
-    }));
-
-    this.shapes$ = this.searchControl.valueChanges.pipe(
-      map((fieldValue: string) =>
-        !fieldValue
-          ? []
-          : this.modelElements.filter(
-              ({name, aspectModelUrn}) =>
-                name?.toLowerCase().includes(fieldValue?.toLowerCase()) && !this.elements.find(el => el.urn === aspectModelUrn),
-            ),
-      ),
+    this.disabledState.set(
+      this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
     );
+    const currentValue = this.getCurrentValue();
+    const decodedValue = this.decodeUriComponent(currentValue);
+    this.seeModel.set(decodedValue || '');
+    this.unregisterField = this.signalForm().register(this.fieldName, this.seeField);
+    this.elements.set(
+      [...(decodedValue?.split(',') || [])].filter(Boolean).map(urn => ({
+        name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
+        urn,
+      })),
+    );
+  }
+
+  private syncSeeValue(): void {
+    this.seeModel.set(
+      this.elements()
+        .map(({urn}) => urn)
+        .join(','),
+    );
+    if (this.metaModelElement) {
+      this.metaModelElement.see = this.elements().map(({urn}) => urn);
+    }
   }
 
   private decodeUriComponent(seeReference: string): string {

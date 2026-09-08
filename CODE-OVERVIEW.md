@@ -18,7 +18,7 @@ To start contributing you need to have a basic knowledge about:
   - [N3 Writer](https://rdf.js.org/N3.js/docs/N3Writer.html) - Takes a N3 Store and parses it into RDF text
   - [N3 Util](https://rdf.js.org/N3.js/docs/N3Util.html) - Utils to easy work with what n3 and RDF offers
 - [SAMM](https://eclipse-esmf.github.io/samm-specification/2.2.0/index.html) - Library upon RDF
-- MxGraph - Library to create interactive UI graphs
+- MaxGraph - Library to create interactive UI graphs
   - [Deprecated Github Repository](https://github.com/jgraph/mxgraph?tab=readme-ov-file) - here can be fund examples on how things are done
   - [MaxGraph Github Repository](https://github.com/maxGraph/maxGraph) - this repository is open source and was taken by the community. The progress is slow but at least there is a progress
 - [Aspect Model Loader]() - _Documentation to be made_
@@ -38,7 +38,7 @@ The main structure of interest is
   - electron
   - libs
     - aspect-explorer
-    - aspect-model-loader _(library extracted from [Aspect Model Loader]() which will be removed in the future from this project and be imported as a npm library)_
+    - aspect-model-loader _(library extracted from [Aspect Model Loader]() which will be removed in the future from this project and be imported as a library)_
     - cache
       - src/lib
         - [loaded-files.service.ts](#loaded-filesservicets)
@@ -50,7 +50,7 @@ The main structure of interest is
     - instantiator _(will be removed and it's files will be moved in other appropriate service)_
     - loader-filters
     - meta-model _(which is not an appropriate name now. it's contents should be moved or the library renamed)_
-    - mx-graph
+    - max-graph
     - namespace-manager
     - rdf _(should be checked and if possible, removed)_
     - settings-dialog
@@ -81,8 +81,8 @@ This service it's a cache for the loaded files. It contains helper functions bas
 
 ### libs -> connection
 
-- `multi-shape-connection-handlers` contains the services responsible with the connection between 2 elements in MxGraph and in the elements from `aspect-model-loader`
-- `single-shape-connection-handlers` contains the services responsible for the +(plus) button from an MxGraph element.
+- `multi-shape-connection-handlers` contains the services responsible with the connection between 2 elements in MaxGraph and in the elements from `aspect-model-loader`
+- `single-shape-connection-handlers` contains the services responsible for the +(plus) button from an MaxGraph element.
 
 ### libs -> editor
 
@@ -98,13 +98,13 @@ This library contains the functionalities for the filtered graphs.
 - One of the filters is `property-filter` which displays only `properties` and `entities`.
 - The `default-filter` is the base one where all elements are displayed
 
-### libs -> mxGraph
+### libs -> maxGraph
 
 - `services -> render-models`: services used when an element is updated.
-- `mx-graph.service.ts`: services which services as a wrapper for mxGraph with functionalities created for SAMM elements
-- `mx-graph-shape-overlay.service.ts`: service which creates and updates the `+` button(s) from an element
-- `mx-graph-setup.service.ts`: this services serve a an init for mxGraph. Sets the layout and the boundaries of the graph scene
-- `mxgraph-renderer.service.ts`: used when a model is loaded. It is based on BFS to get on every element and render them and their connections
+- `max-graph.service.ts`: services which services as a wrapper for maxGraph with functionalities created for SAMM elements
+- `max-graph-shape-overlay.service.ts`: service which creates and updates the `+` button(s) from an element
+- `max-graph-setup.service.ts`: this services serve a an init for maxGraph. Sets the layout and the boundaries of the graph scene
+- `maxgraph-renderer.service.ts`: used when a model is loaded. It is based on BFS to get on every element and render them and their connections
 
 ### namespace-manager
 

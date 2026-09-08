@@ -13,13 +13,13 @@
 
 import {Injectable} from '@angular/core';
 import {DefaultConstraint} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class ConstraintConnectionHandler implements SingleShapeConnector<DefaultConstraint> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public connect(_constraint: DefaultConstraint, _source: mxgraph.mxCell) {
+  public connect(_constraint: DefaultConstraint, _source: Cell) {
     // This method is intentionally left empty as any type of constraint - child connection is not allowed
   }
 }

@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -10,31 +11,32 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<h2 mat-dialog-title>{{ 'GENERATE_AASX_DIALOG.TITLE' | translate }}</h2>
-<button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
-  <mat-icon>close</mat-icon>
-</button>
-
-<mat-dialog-content>
-  @if (!isGenerating) {
-    <mat-form-field appearance="fill">
-      <mat-label>{{ 'GENERATE_AASX_DIALOG.OUTPUT_FILE_FORMAT' | translate }}</mat-label>
-      <mat-select [formControl]="control" data-cy="tbOutputButton">
-        <mat-option data-cy="tbOutputButton-aasx" value="aasx">AASX</mat-option>
-        <mat-option data-cy="tbOutputButton-xml" value="xml">XML</mat-option>
-      </mat-select>
-    </mat-form-field>
-  } @else {
-    <div class="loading">
-      <h3>{{ 'GENERATE_AASX_DIALOG.GENERATING' | translate }}</h3>
-      <mat-spinner></mat-spinner>
-    </div>
-  }
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button [disabled]="isGenerating" mat-flat-button mat-dialog-close>{{ 'GENERATE_AASX_DIALOG.CANCEL' | translate }}</button>
-  <button [disabled]="isGenerating" (click)="generate()" mat-flat-button color="primary">
-    {{ 'GENERATE_AASX_DIALOG.GENERATE' | translate }}
+  <h2 mat-dialog-title>{{ t('generateAasxDialog.title') }}</h2>
+  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
+    <mat-icon>close</mat-icon>
   </button>
-</mat-dialog-actions>
+
+  <mat-dialog-content>
+    @if (!isGenerating()) {
+      <mat-form-field appearance="fill">
+        <mat-label>{{ t('generateAasxDialog.outputFileFormat') }}</mat-label>
+        <mat-select [formField]="formatForm.format" data-cy="tbOutputButton">
+          <mat-option data-cy="tbOutputButton-aasx" value="aasx">AASX</mat-option>
+          <mat-option data-cy="tbOutputButton-xml" value="xml">XML</mat-option>
+        </mat-select>
+      </mat-form-field>
+    } @else {
+      <div class="loading">
+        <h3>{{ t('generateAasxDialog.generating') }}</h3>
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button [disabled]="isGenerating()" mat-flat-button mat-dialog-close>{{ t('generateAasxDialog.cancel') }}</button>
+    <button [disabled]="isGenerating()" (click)="generate()" mat-flat-button color="primary">
+      {{ t('generateAasxDialog.generate') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

@@ -127,3 +127,25 @@ export const getDeepLookupDataType = (characteristic: DefaultCharacteristic): Ty
   }
   return characteristic ? characteristic.dataType : null;
 };
+
+/**
+ * Checks if a semantic version is older than current SAMM version.
+ *
+ * @param fileVersion - Version of the file/model
+ * @param currentSammVersion - Current target SAMM version
+ */
+export const isVersionOutdated = (fileVersion?: string, currentSammVersion?: string): boolean => {
+  if (!fileVersion || !currentSammVersion) {
+    return false;
+  }
+  const [b1 = 0, b2 = 0, b3 = 0] = currentSammVersion.split('.').map(x => Number(x) || 0);
+  const [f1 = 0, f2 = 0, f3 = 0] = fileVersion.split('.').map(x => Number(x) || 0);
+
+  if (b1 !== f1) {
+    return b1 > f1;
+  }
+  if (b2 !== f2) {
+    return b2 > f2;
+  }
+  return b3 > f3;
+};

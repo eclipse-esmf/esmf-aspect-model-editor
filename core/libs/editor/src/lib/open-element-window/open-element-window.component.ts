@@ -13,15 +13,15 @@
 import {ModelApiService} from '@ame/api';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
 import {DialogRef} from '@angular/cdk/dialog';
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {NamedNode} from 'n3';
 import {catchError, map, of, switchMap, tap} from 'rxjs';
 import {ModelLoaderService} from '../model-loader.service';
 
 @Component({
-  standalone: true,
   templateUrl: 'open-element-window.component.html',
   styles: [
     `
@@ -42,7 +42,7 @@ import {ModelLoaderService} from '../model-loader.service';
       }
     `,
   ],
-  imports: [MatDialogModule, MatProgressSpinnerModule],
+  imports: [MatDialogModule, MatProgressSpinnerModule, TranslocoDirective],
 })
 export class OpenElementWindowComponent implements OnInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);

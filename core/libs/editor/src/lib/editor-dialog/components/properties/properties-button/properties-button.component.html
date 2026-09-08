@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,12 +12,13 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="properties-button">
-  <p [class.predefined]="isPredefined">
-    <mat-icon>tune</mat-icon>
-    <span>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_CONFIGURATION' | translate }}</span>
-  </p>
-  <button (click)="openPropertiesTable()" color="primary" mat-button data-cy="properties-modal-button">
-    <span>{{ 'EDITOR_CANVAS.SHAPE_SETTING.CONFIGURE' | translate }}</span>
-  </button>
-</div>
+  <div class="properties-button">
+    <p [class.predefined]="isPredefined">
+      <mat-icon>tune</mat-icon>
+      <span>{{ t('editorCanvas.shapeSetting.propertiesConfiguration') }}</span>
+    </p>
+    <button (click)="openPropertiesTable()" color="primary" mat-button type="button" data-cy="properties-modal-button">
+      <span>{{ t('editorCanvas.shapeSetting.configure') }}</span>
+    </button>
+  </div>
+</ng-container>

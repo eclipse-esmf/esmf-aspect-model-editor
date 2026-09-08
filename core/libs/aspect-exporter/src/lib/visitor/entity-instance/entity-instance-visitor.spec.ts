@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
 import {EntityInstanceVisitor, RdfListService, RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultCharacteristic,
@@ -26,13 +27,8 @@ import {
   Samm,
   Value,
 } from '@esmf/aspect-model-loader';
-import {describe, expect, it} from '@jest/globals';
 import {Quad, Store} from 'n3';
-import {MockProvider, MockProviders} from 'ng-mocks';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
+import {MockProvider} from 'ng-mocks';
 
 describe('Entity instance visitor', () => {
   let service: EntityInstanceVisitor;
@@ -42,8 +38,8 @@ describe('Entity instance visitor', () => {
     store: new Store(),
     samm: new Samm(''),
     sammC: {ConstraintProperty: () => 'constraintProperty'} as any,
-    hasDependency: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    hasDependency: vi.fn(() => false),
+    addPrefix: vi.fn(() => {}),
   } as any;
 
   const property1 = new DefaultProperty({
@@ -99,14 +95,12 @@ describe('Entity instance visitor', () => {
     TestBed.configureTestingModule({
       providers: [
         EntityInstanceVisitor,
-        MockProviders(MxGraphService),
-        MockProvider(MxGraphService),
         MockProvider(RdfListService, {
-          push: jest.fn(),
-          createEmpty: jest.fn(),
+          push: vi.fn(),
+          createEmpty: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
-          update: jest.fn(),
+          update: vi.fn(),
         }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),

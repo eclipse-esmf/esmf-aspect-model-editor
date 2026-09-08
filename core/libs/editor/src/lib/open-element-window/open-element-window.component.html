@@ -11,7 +11,9 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-dialog-content>
-  <mat-spinner></mat-spinner>
-  <h2>Opening model</h2>
-</mat-dialog-content>
+<ng-container *transloco="let t">
+  <mat-dialog-content>
+    <mat-spinner></mat-spinner>
+    <h2>{{ t('openElementWindow.openingModel') }}</h2>
+  </mat-dialog-content>
+</ng-container>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Samm, SammC, SammE, SammU} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
 import {DataFactory, NamedNode, Prefixes, Quad, Store, Util} from 'n3';
+import {Samm, SammC, SammE, SammU} from '../vocabulary';
 import {KnownVersion, SammVersion} from './known-version';
 import {RdfModelUtil} from './rdf-model-util';
 import {XsdDataTypes} from './xsd-datatypes';
@@ -48,6 +48,8 @@ export class RdfModel {
       this.addPrefix('', `${aspectModelUrn}#`);
     }
     this.addPrefix('xsd', this.samm.getXSDNameSpace());
+    this.addPrefix('rdf', this.samm.getRdfSyntaxNameSpace());
+    this.addPrefix('rdfs', `${Samm.RDFS_URI}#`);
     this.addPrefix(this.samm.getAlias(), this.samm.getNamespace());
     this.addPrefix(this.sammU.getAlias(), this.sammU.getNamespace());
     this.addPrefix(this.sammC.getAlias(), this.sammC.getNamespace());
@@ -105,7 +107,7 @@ export class RdfModel {
 
     const inPrefixes = Object.values(this.prefixes).some(value => value === namespace);
     if ((alias === '' || alias === undefined) && !inPrefixes) {
-      const matched = namespace.match(/[a-zA-Z]+/gi); //NOSONAR
+      const matched = namespace.match(/[a-zA-Z]+/gi);
       if (matched.length) {
         let newAlias = `ext-${matched[matched.length - 1]}`;
         if (this.prefixes[newAlias]) {
@@ -137,7 +139,16 @@ export class RdfModel {
   }
 
   public setPrefixes(prefixes: Record<string, string>) {
-    this.prefixes = prefixes;
+    this.prefixes = {
+      xsd: this.samm.getXSDNameSpace(),
+      rdf: this.samm.getRdfSyntaxNameSpace(),
+      rdfs: `${Samm.RDFS_URI}#`,
+      [this.samm.getAlias()]: this.samm.getNamespace(),
+      [this.sammU.getAlias()]: this.sammU.getNamespace(),
+      [this.sammC.getAlias()]: this.sammC.getNamespace(),
+      [this.sammE.getAlias()]: this.sammE.getNamespace(),
+      ...prefixes,
+    };
   }
 
   public setSourceLocation(sourceLocation: string) {

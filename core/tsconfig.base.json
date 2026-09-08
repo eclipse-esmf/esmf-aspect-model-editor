@@ -5,7 +5,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -19,7 +19,7 @@
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
-    "ignoreDeprecations": "5.0",
+    "ignoreDeprecations": "6.0",
     "strictNullChecks": false,
     "esModuleInterop": true,
     "paths": {
@@ -32,19 +32,22 @@
       "@ame/instantiator": ["libs/instantiator/src/index.ts"],
       "@ame/loader-filters": ["libs/loader-filters/src/index.ts"],
       "@ame/meta-model": ["libs/meta-model/src/index.ts"],
-      "@ame/mx-graph": ["libs/mx-graph/src/index.ts"],
+      "@ame/max-graph": ["libs/max-graph/src/index.ts"],
       "@ame/namespace-manager": ["libs/namespace-manager/src/index.ts"],
       "@ame/rdf/*": ["libs/rdf/src/lib/*"],
       "@ame/settings-dialog": ["libs/settings-dialog/src/index.ts"],
       "@ame/shared": ["libs/shared/src/index.ts"],
       "@ame/shared/pipes": ["libs/shared/src/lib/pipes/index.ts"],
       "@ame/sidebar": ["libs/sidebar/src/index.ts"],
+      "@ame/test-helpers": ["test-helpers/index.ts"],
       "@ame/translation": ["libs/translation/src/index.ts"],
       "@ame/utils": ["libs/utils/src/index.ts"],
       "@esmf/aspect-model-loader": ["libs/aspect-model-loader/src/index.ts"]
     },
-    "typeRoots": ["node_modules/@types", "node_modules/@typed-mxgraph"],
-    "lib": ["es2018", "dom"]
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"],
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"]
   },
   "exclude": ["node_modules", "tmp"]
 }

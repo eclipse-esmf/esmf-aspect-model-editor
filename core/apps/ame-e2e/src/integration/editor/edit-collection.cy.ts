@@ -26,6 +26,10 @@ import {
 } from '../../support/constants';
 
 describe('Test editing different Collections', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   context('Type Collection', () => {
     it('can add new', () => {
       addNewTestingShape('Characteristic1', 'Collection');

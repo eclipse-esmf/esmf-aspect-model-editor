@@ -12,7 +12,7 @@
  */
 
 import {ShapeConnectorService} from '@ame/connection';
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {inject, Injectable} from '@angular/core';
@@ -20,22 +20,22 @@ import {DefaultEntity} from '@esmf/aspect-model-loader';
 
 @Injectable({providedIn: 'root'})
 export class BaseEntityModelService {
-  private notificationService = inject(NotificationsService);
-  private shapeConnectorService = inject(ShapeConnectorService);
-  private mxGraphService = inject(MxGraphService);
-  private translate = inject(LanguageTranslationService);
+  private readonly notificationService = inject(NotificationsService);
+  private readonly shapeConnectorService = inject(ShapeConnectorService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly translate = inject(LanguageTranslationService);
 
   checkExtendedElement(metaModelElement: DefaultEntity, extendedElement: DefaultEntity) {
     if (!(extendedElement instanceof DefaultEntity)) {
       return;
     }
 
-    const resolvedCell = extendedElement && this.mxGraphService.resolveCellByModelElement(extendedElement);
+    const resolvedCell = extendedElement && this.maxgraphService.resolveCellByModelElement(extendedElement);
 
-    if (resolvedCell && MxGraphHelper.isEntityCycleInheritance(resolvedCell, metaModelElement, this.mxGraphService.graph)) {
+    if (resolvedCell && MaxGraphHelper.isEntityCycleInheritance(resolvedCell, metaModelElement, this.maxgraphService.graph)) {
       this.notificationService.warning({
-        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
-        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
+        title: this.translate.language.notificationService.recursiveElements,
+        message: this.translate.language.notificationService.circularConnectionMessage,
         timeout: 5000,
       });
       return;
@@ -50,7 +50,7 @@ export class BaseEntityModelService {
       this.shapeConnectorService.connectShapes(
         metaModelElement,
         extendedElement,
-        this.mxGraphService.resolveCellByModelElement(metaModelElement),
+        this.maxgraphService.resolveCellByModelElement(metaModelElement),
         resolvedCell,
       );
     }

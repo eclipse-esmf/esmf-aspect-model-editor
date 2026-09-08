@@ -11,32 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphService} from '@ame/mx-graph';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
+import {MaxGraphService} from '@ame/max-graph';
+import {provideMockObject} from '@ame/test-helpers';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {DefaultAspect, DefaultCharacteristic, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
-import {provideMockObject} from 'jest-helpers';
-import {mxgraph} from 'mxgraph-factory';
+import {DefaultAspect, DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
+import {TranslocoTestingModule} from '@jsverse/transloco';
 import {ModelElementParserPipe} from '../editor-dialog';
 import {ConnectWithDialogComponent} from './connect-with-dialog.component';
 
-jest.mock('../editor-dialog/components/entity-instance/entity-instance-table/entity-instance-table.component', () => ({
-  EntityInstanceTableComponent: class {},
-}));
-
-type Cell = Partial<mxgraph.mxCell & {getMetaModelElement: () => {element: NamedElement}}>;
-
-const cell: Cell = {
+const cell: any = {
   getMetaModelElement: () =>
     new DefaultAspect({name: 'aspect', aspectModelUrn: 'urn#aspect', metaModelVersion: 'aspect', properties: [], events: []}) as any,
-  style: 'aspect',
+  style: {
+    baseStyleNames: ['aspect'],
+  },
 };
 
-const cells: Cell[] = [
+const cells: any[] = [
   {
-    style: 'property',
     getMetaModelElement: () =>
       ({
         element: new DefaultProperty({
@@ -48,7 +45,7 @@ const cells: Cell[] = [
       }) as any,
   },
   {
-    style: 'characteristic',
+    style: {baseStyleNames: ['characteristic']},
     getMetaModelElement: () =>
       ({
         element: new DefaultCharacteristic({
@@ -59,7 +56,7 @@ const cells: Cell[] = [
       }) as any,
   },
   {
-    style: 'entity',
+    style: {baseStyleNames: ['entity']},
     getMetaModelElement: () =>
       ({element: new DefaultEntity({name: 'entity', aspectModelUrn: 'urn#entity', metaModelVersion: 'entity', properties: []})}) as any,
   },
@@ -68,17 +65,22 @@ const cells: Cell[] = [
 describe('RdfNodeService', () => {
   let component: ConnectWithDialogComponent;
   let fixture: ComponentFixture<ConnectWithDialogComponent>;
-  let mxGraphService: MxGraphService;
+  let maxgraphService: MaxGraphService;
   let dialogRef: MatDialogRef<ConnectWithDialogComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ConnectWithDialogComponent, MatFormFieldModule, MatInputModule],
+      imports: [
+        ConnectWithDialogComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
       providers: [
         ModelElementParserPipe,
         {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          provide: MaxGraphService,
+          useValue: provideMockObject(MaxGraphService),
         },
         {
           provide: MatDialogRef,
@@ -91,8 +93,8 @@ describe('RdfNodeService', () => {
       ],
     });
 
-    mxGraphService = TestBed.inject(MxGraphService);
-    mxGraphService.getAllCells = jest.fn(() => cells as any[]);
+    maxgraphService = TestBed.inject(MaxGraphService);
+    maxgraphService.getAllCells = vi.fn(() => cells as any[]);
 
     dialogRef = TestBed.inject(MatDialogRef);
 
@@ -154,10 +156,10 @@ describe('RdfNodeService', () => {
 
   describe('isSelected', () => {
     it('should return false', () => {
-      component.selectedElement = {
+      component.selectedElement.set({
         model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
         cell: {} as any,
-      };
+      });
       const result = component.isSelected({
         model: new DefaultProperty({
           name: 'non-property',
@@ -171,11 +173,11 @@ describe('RdfNodeService', () => {
     });
 
     it('should return true', () => {
-      component.selectedElement = {
+      component.selectedElement.set({
         model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
         cell: {} as any,
-      };
-      const result = component.isSelected(component.selectedElement);
+      });
+      const result = component.isSelected(component.selectedElement());
       expect(result).toBe(true);
     });
   });
@@ -187,10 +189,10 @@ describe('RdfNodeService', () => {
     });
 
     it('should call close', () => {
-      component.selectedElement = {
+      component.selectedElement.set({
         model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),
         cell: {} as any,
-      };
+      });
       component.connect();
       expect(dialogRef.close).toHaveBeenCalledWith({
         model: new DefaultProperty({name: 'property', aspectModelUrn: 'property', metaModelVersion: 'property', characteristic: null}),

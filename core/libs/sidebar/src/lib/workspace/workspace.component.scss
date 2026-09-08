@@ -18,9 +18,10 @@ $first-column-width: 450px;
   flex-direction: column;
   width: $first-column-width;
   height: 100%;
-  background-color: #f3f3f3;
+  background-color: var(--ame-surface-card, #f3f3f3);
+  color: var(--ame-font, inherit);
   padding: 16px;
-  box-shadow: 8px 4px 8px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 8px 4px 8px 0 var(--ame-shadow--black-25, rgba(0, 0, 0, 0.25));
 
   [mat-mini-fab] {
     background-color: transparent;

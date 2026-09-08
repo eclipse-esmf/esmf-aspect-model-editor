@@ -24,12 +24,11 @@ const DEFAULT_SETTINGS: Settings = {
   autoValidationEnabled: true,
   autoFormatEnabled: true,
   enableHierarchicalLayout: true,
+  darkMode: false,
   validationTimerSeconds: 400,
   saveTimerSeconds: 60,
-  showEntityValueEntityEdge: false,
   showConnectionLabels: true,
   useSaturatedColors: false,
-  showAbstractPropertyConnection: true,
   copyrightHeader: [],
   aspectModelLanguages: [],
   toolbarVisibility: true,
@@ -37,25 +36,28 @@ const DEFAULT_SETTINGS: Settings = {
 
 @Injectable({providedIn: 'root'})
 export class ConfigurationService {
-  private readonly SETTINGS_ITEM_KEY: string = 'settings';
+  private readonly SETTINGS_ITEM_KEY = 'settings';
   private settings: Settings;
-  private _settings$: BehaviorSubject<Settings>;
-  public settings$: Observable<Settings>;
+  private readonly _settings$: BehaviorSubject<Settings>;
+  public readonly settings$: Observable<Settings>;
 
   constructor() {
     try {
-      this.settings = JSON.parse(localStorage.getItem(this.SETTINGS_ITEM_KEY)) || DEFAULT_SETTINGS;
+      const stored = typeof localStorage !== 'undefined' ? localStorage.getItem(this.SETTINGS_ITEM_KEY) : null;
+      this.settings = stored ? JSON.parse(stored) : DEFAULT_SETTINGS;
 
       // Default to english if no languages are set
-      this.settings.aspectModelLanguages = ['en'];
+      if (!this.settings.aspectModelLanguages || this.settings.aspectModelLanguages.length === 0) {
+        this.settings.aspectModelLanguages = ['en'];
+      }
     } catch {
       this.settings = DEFAULT_SETTINGS;
     }
-    this._settings$ = new BehaviorSubject({...this.settings});
+    this._settings$ = new BehaviorSubject<Settings>({...this.settings});
     this.settings$ = this._settings$.asObservable();
   }
 
-  dispatchSettings$() {
+  dispatchSettings$(): void {
     this._settings$.next({...this.settings});
   }
 
@@ -63,12 +65,16 @@ export class ConfigurationService {
     this.settings = settings;
     this._settings$.next({...settings});
     this.setLocalStorageItem();
-    localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(this.settings));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(this.settings));
+    }
   }
 
   setLocalStorageItem(settings?: Settings): void {
     const settingsToSave = settings || this.settings;
-    localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(settingsToSave));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(this.SETTINGS_ITEM_KEY, JSON.stringify(settingsToSave));
+    }
     this.dispatchSettings$();
   }
 
@@ -85,20 +91,23 @@ export class ConfigurationService {
       return this.settings;
     }
 
-    if (localStorage.getItem(this.SETTINGS_ITEM_KEY)) {
-      this.settings = JSON.parse(localStorage.getItem(this.SETTINGS_ITEM_KEY));
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem(this.SETTINGS_ITEM_KEY);
+      if (stored) {
+        this.settings = JSON.parse(stored);
+      }
     }
 
     return this.settings || DEFAULT_SETTINGS;
   }
 
-  toggleEditorMap() {
+  toggleEditorMap(): void {
     // Mutates the original object. Can be removed once all components start relying on Observable stream.
     this.settings.showEditorMap = !this.settings.showEditorMap;
     this.setSettings(this.settings);
   }
 
-  toggleToolbar() {
+  toggleToolbar(): void {
     this.settings.toolbarVisibility = !this.settings.toolbarVisibility;
     this.setSettings(this.settings);
   }

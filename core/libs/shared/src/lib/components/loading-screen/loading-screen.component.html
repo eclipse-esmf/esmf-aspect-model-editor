@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,15 +12,16 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ data.title }}</h2>
+  <h2 mat-dialog-title>{{ data.title }}</h2>
 
-<mat-dialog-content>
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  <p>{{ data.content || ('LOADING_SCREEN_DIALOG.GENERAL_WAIT_MESSAGE' | translate) }}</p>
-</mat-dialog-content>
+  <mat-dialog-content>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>{{ data.content || t('loadingScreenDialog.generalWaitMessage') }}</p>
+  </mat-dialog-content>
 
-@if (data.hasCloseButton) {
-  <mat-dialog-actions align="end">
-    <button (click)="close()" mat-button data-cy="close-loading-modal">Close</button>
-  </mat-dialog-actions>
-}
+  @if (data.hasCloseButton) {
+    <mat-dialog-actions align="end">
+      <button (click)="close()" mat-button data-cy="close-loading-modal">{{ t('sammMigration.migrationDialog.close') }}</button>
+    </mat-dialog-actions>
+  }
+</ng-container>

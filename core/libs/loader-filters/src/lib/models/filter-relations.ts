@@ -33,9 +33,9 @@ import {ClassReference, ModelFilter} from './filter-loader.interface';
 
 export class FilterRelation {
   constructor(
-    public from: ClassReference<NamedElement>,
-    public to: ClassReference<NamedElement>[],
-    public exceptInFilter: {
+    public readonly from: ClassReference<NamedElement>,
+    public readonly to: ClassReference<NamedElement>[],
+    public readonly exceptInFilter: {
       [ModelFilter.DEFAULT]?: ClassReference<NamedElement>[];
       [ModelFilter.PROPERTIES]?: ClassReference<NamedElement>[];
     } = {},
@@ -49,8 +49,8 @@ export class FilterRelation {
     }
   }
 
-  isExceptions(element: NamedElement, filterMode: ModelFilter) {
-    return this.exceptInFilter[filterMode].some(c => element instanceof c);
+  isExceptions(element: NamedElement, filterMode: ModelFilter): boolean {
+    return Boolean(this.exceptInFilter[filterMode]?.some(c => element instanceof c));
   }
 }
 

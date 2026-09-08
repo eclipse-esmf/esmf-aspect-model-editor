@@ -13,21 +13,20 @@
 
 import {NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
 import {CommonModule} from '@angular/common';
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTableModule} from '@angular/material/table';
 import {ActivatedRoute, Router} from '@angular/router';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
-  standalone: true,
   selector: 'ame-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
-  imports: [CommonModule, MatIconModule, TranslatePipe, MatDialogModule, MatButtonModule, MatTableModule, MatMenuModule],
+  imports: [CommonModule, MatIconModule, TranslocoDirective, MatDialogModule, MatButtonModule, MatTableModule, MatMenuModule],
 })
 export class NotificationsComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<NotificationsComponent>);
@@ -36,8 +35,8 @@ export class NotificationsComponent implements OnInit {
   public notificationsService = inject(NotificationsService);
   public router = inject(Router);
 
-  currentItem = null;
-  displayedColumns: string[] = ['expand', 'date', 'type', 'message', 'options'];
+  currentItem = signal(null);
+  displayedColumns = signal(['expand', 'date', 'type', 'message', 'options']);
 
   ngOnInit() {
     this.notificationsService.getNotifications().forEach(notification => {

@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -32,8 +31,11 @@ import {cyHelp} from '../../support/helpers';
 
 describe('Create and Edit Abstract Property', () => {
   describe('Property -> Abstract Property', () => {
-    it('should create', () => {
+    before(() => {
       cy.visitDefault();
+    });
+
+    it('should create', () => {
       cy.startModelling()
         .then(() => cy.get(SELECTOR_elementBtn).click())
         .then(() => {
@@ -59,8 +61,11 @@ describe('Create and Edit Abstract Property', () => {
   });
 
   describe('Edit abstract property fields', () => {
-    it('should edit preferred name field', () => {
+    before(() => {
       cy.visitDefault();
+    });
+
+    it('should edit preferred name field', () => {
       cy.startModelling()
         .then(() => cy.get(SELECTOR_elementBtn).click())
         .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300))
@@ -128,12 +133,10 @@ describe('Create and Edit Abstract Property', () => {
   // TODO fix the entry file
   describe.skip('Abstract Property import', () => {
     it('should import', () => {
-      cy.visitDefault();
       cy.startModelling();
       cy.fixture('abstract-property')
         .as('rdfString')
         .then(rdfString => cy.loadModel(rdfString))
-        .wait(500)
         .then(() => cy.clickShape('abstractProperty1'));
     });
 
@@ -155,10 +158,12 @@ describe('Create and Edit Abstract Property', () => {
   });
 
   describe('Abstract Property export', () => {
-    it('should create model', () => {
+    before(() => {
       cy.visitDefault();
+    });
+
+    it('should create model', () => {
       cy.startModelling()
-        .wait(500)
         .then(() => cy.get(SELECTOR_elementBtn).click())
         .then(() => cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300))
         .then(() => cy.clickShape('AbstractEntity1'));
@@ -179,13 +184,13 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 1', {force: true}))
         .then(() => cy.addSeeElements('http://test1.com'))
-        .then(() => cyHelp.clickSaveButton().wait(500))
+        .then(() => cyHelp.clickSaveButton())
 
         .then(() => cy.dbClickShape('abstractProperty2'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 2', {force: true}))
         .then(() => cy.get(FIELD_descriptionen).type('Description 2', {force: true}))
         .then(() => cy.addSeeElements('http://test2.com'))
-        .then(() => cyHelp.clickSaveButton().wait(500));
+        .then(() => cyHelp.clickSaveButton());
 
       cy.getCellLabel('[abstractProperty1]', 'extends').should('eq', 'extends = abstractProperty1');
       cy.getCellLabel('[abstractProperty1]', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name 1 @en');
@@ -212,18 +217,21 @@ describe('Create and Edit Abstract Property', () => {
         expect(rdf).to.contain('samm:preferredName "Preferred Name 1"@en;');
         expect(rdf).to.contain('samm:description "Description 1"@en;');
         expect(rdf).to.contain('samm:preferredName "Preferred Name 1"@en;');
-        expect(rdf).to.contain('samm:see <http://test1.com>;');
+        expect(rdf).to.contain('samm:see <http://test1.com>.');
         expect(rdf).to.contain(':abstractProperty2 a samm:AbstractProperty;');
         expect(rdf).to.contain('samm:preferredName "Preferred Name 2"@en');
         expect(rdf).to.contain('samm:description "Description 2"@en;');
-        expect(rdf).to.contain('samm:see <http://test2.com>;');
+        expect(rdf).to.contain('samm:see <http://test2.com>.');
       });
     });
   });
 
   describe('Abstract Property can be connected to another shape only if it is connected to AbstractEntity', () => {
-    it('should not be able to connect abstract property to a property', () => {
+    before(() => {
       cy.visitDefault();
+    });
+
+    it('should not be able to connect abstract property to a property', () => {
       cy.startModelling()
         .then(() => cy.get(SELECTOR_elementBtn).click())
         .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300))

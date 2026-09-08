@@ -47,39 +47,39 @@ If you want to run the aspect model editor from repositories, please ensure to c
 # enter the core directory where the package.json is located
 cd core
 
-npm install
-npm run start
+pnpm install
+pnpm run start
 ```
 
 #### Run As Electron
 
-After running `npm start` run one of the following commands:
+After running `pnpm start` run one of the following commands:
 
 Windows:
 
 ```bash
-npm run start:win # DEV
-npm run start:win:prod # PROD
+pnpm run start:win # DEV
+pnpm run start:win:prod # PROD
 ```
 
 Mac:
 
 ```bash
-npm run start:mac # DEV
-npm run start:mac:prod # PROD
+pnpm run start:mac # DEV
+pnpm run start:mac:prod # PROD
 ```
 
 Unix:
 
 ```bash
-npm run start:linux # DEV
-npm run start:linux:prod # PROD
+pnpm run start:linux # DEV
+pnpm run start:linux:prod # PROD
 ```
 
 #### Running E2E (Cypress) Test
 
 ```bash
-npm run cypress
+pnpm run cypress
 ```
 
 ## Documentation

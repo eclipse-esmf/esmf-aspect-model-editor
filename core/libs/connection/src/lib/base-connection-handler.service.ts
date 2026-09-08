@@ -13,36 +13,38 @@
 
 import {FiltersService} from '@ame/loader-filters';
 import {
-  MxGraphAttributeService,
-  MxGraphHelper,
-  MxGraphRenderer,
-  MxGraphService,
-  MxGraphShapeOverlayService,
-  MxGraphVisitorHelper,
-} from '@ame/mx-graph';
+  MaxGraphAttributeService,
+  MaxGraphHelper,
+  MaxGraphRenderer,
+  MaxGraphService,
+  MaxGraphShapeOverlayService,
+  MaxGraphVisitorHelper,
+} from '@ame/max-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ElementCreatorService} from '@ame/shared';
 import {Directive, inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 
 @Directive()
 export class BaseConnectionHandler {
   protected readonly sammLangService = inject(SammLanguageSettingsService);
-  protected readonly mxGraphAttributeService = inject(MxGraphAttributeService);
+  protected readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
   protected readonly elementCreator = inject(ElementCreatorService);
-  protected readonly mxGraphService = inject(MxGraphService);
+  protected readonly maxgraphService = inject(MaxGraphService);
   protected readonly filtersService = inject(FiltersService);
-  protected mxGraphShapeOverlay = inject(MxGraphShapeOverlayService);
+  protected readonly maxgraphShapeOverlay = inject(MaxGraphShapeOverlayService);
 
-  refreshPropertiesLabel(cell: mxgraph.mxCell, modelElement: NamedElement) {
-    cell['configuration'].fields = MxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
-    this.mxGraphAttributeService.graph.labelChanged(cell, MxGraphHelper.createPropertiesLabel(cell));
+  refreshPropertiesLabel(cell: Cell, modelElement: NamedElement) {
+    if (cell && (cell as any).configuration) {
+      (cell as any).configuration.fields = MaxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
+    }
+    this.maxgraphAttributeService.graph.labelChanged(cell, MaxGraphHelper.createPropertiesLabel(cell), null);
   }
 
-  renderTree(modelElement: NamedElement, parent: mxgraph.mxCell): mxgraph.mxCell {
-    const node = this.filtersService.createNode(modelElement, {parent: MxGraphHelper.getModelElement(parent)});
-    const mxGraphRenderer = new MxGraphRenderer(this.mxGraphService, this.mxGraphShapeOverlay, this.sammLangService, null);
-    return mxGraphRenderer.render(node, parent);
+  renderTree(modelElement: NamedElement, parent: Cell): Cell {
+    const node = this.filtersService.createNode(modelElement, {parent: MaxGraphHelper.getModelElement(parent)});
+    const mxRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlay, this.sammLangService, null);
+    return mxRenderer.render(node, parent);
   }
 }

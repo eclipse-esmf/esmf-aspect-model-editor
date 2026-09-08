@@ -23,18 +23,18 @@ import {
   TextModelLoaderModalComponent,
 } from '@ame/editor';
 import {FiltersService, ModelFilter} from '@ame/loader-filters';
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {NamespacesManagerService} from '@ame/namespace-manager';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {IPC_RENDERER} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
-import {DestroyRef, Injectable, NgZone, inject} from '@angular/core';
+import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {BehaviorSubject, Observable, distinctUntilChanged, filter, map, of, switchMap, take, tap} from 'rxjs';
+import {IPC_RENDERER} from '../electron-ipc.provider';
 import {ELECTRON_EVENTS} from '../enums';
 import {ElectronSignals, StartupData, StartupPayload} from '../model';
 import {ElectronSignalsService} from './electron-signals.service';
@@ -50,7 +50,7 @@ export class ElectronTunnelService {
   private notificationsService = inject(NotificationsService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private saveModelDialogService = inject(SaveModelDialogService);
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
   private namespacesManagerService = inject(NamespacesManagerService);
   private sidebarService = inject(SidebarStateService);
@@ -63,7 +63,6 @@ export class ElectronTunnelService {
   private matDialog = inject(MatDialog);
   private searchesStateService = inject(SearchesStateService);
   private translate = inject(LanguageTranslationService);
-  private ngZone = inject(NgZone);
 
   public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
 
@@ -144,7 +143,7 @@ export class ElectronTunnelService {
 
   private sendMenuUpdate(ids: string[], enabled: boolean): void {
     this.translate
-      .getTranslation(this.translate.translateService.getCurrentLang())
+      .getTranslation(this.translate.translateService.getActiveLang())
       .pipe(takeUntilDestroyed(this.destroyRef), take(1))
       .subscribe(translation => {
         this.ipcRenderer?.send(ELECTRON_EVENTS.SIGNAL.UPDATE_MENU_ITEM, {
@@ -171,7 +170,7 @@ export class ElectronTunnelService {
 
   private onNotificationRequest(): void {
     this.ipcRenderer.on(ELECTRON_EVENTS.REQUEST.SHOW_NOTIFICATION, (message: string) => {
-      this.ngZone.run(() => this.notificationsService.info({title: message}));
+      this.notificationsService.info({title: message});
     });
   }
 
@@ -181,7 +180,7 @@ export class ElectronTunnelService {
       const element = this.currentFile.cachedFile.get<NamedElement>(modelUrn);
       if (element) {
         this.shapeSettingsService.editModel(element);
-        requestAnimationFrame(() => this.mxGraphService.navigateToCellByUrn(element.aspectModelUrn));
+        requestAnimationFrame(() => this.maxgraphService.navigateToCellByUrn(element.aspectModelUrn));
       }
     });
   }
@@ -193,84 +192,59 @@ export class ElectronTunnelService {
   }
 
   private onAppMenuInteraction(): void {
-    const runNgZone = (fn: () => void) => this.ngZone.run(fn);
-
     this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.NEW_EMPTY_MODEL, () => {
-      runNgZone(() => {
-        this.modelSavingTracker.isSaved$
-          .pipe(
-            switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())),
-            filter(result => result),
-            switchMap(() => this.fileHandlingService.loadEmptyModel()),
-            tap(() => this.shapeSettingsService.hasCellsSubject.next(false)),
-          )
-          .subscribe();
-      });
+      this.modelSavingTracker.isSaved$
+        .pipe(
+          switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())),
+          filter(result => result),
+          switchMap(() => this.fileHandlingService.loadEmptyModel()),
+        )
+        .subscribe();
     });
 
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.LOAD_FILE, (fileInfo: FileInfo) =>
-      runNgZone(() => this.fileHandlingService.onLoadModel(fileInfo)),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.LOAD_FROM_TEXT, () => runNgZone(() => this.matDialog.open(TextModelLoaderModalComponent)));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.LOAD_SPECIFIC_FILE, (fileInfo: FileInfo) =>
-      runNgZone(() => this.fileHandlingService.onLoadModel(fileInfo)),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.NEW_WINDOW, () => runNgZone(() => this.electronSignalsService.call('openWindow', null)));
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.LOAD_FILE, (fileInfo: FileInfo) => this.fileHandlingService.onLoadModel(fileInfo));
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.LOAD_FROM_TEXT, () => this.matDialog.open(TextModelLoaderModalComponent));
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.LOAD_SPECIFIC_FILE, (fileInfo: FileInfo) => this.fileHandlingService.onLoadModel(fileInfo));
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.NEW_WINDOW, () => this.electronSignalsService.call('openWindow', null));
     this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.IMPORT_TO_WORKSPACE, (fileInfo: FileInfo) =>
-      runNgZone(() => this.fileHandlingService.onAddFileToNamespace(fileInfo)),
+      this.fileHandlingService.onAddFileToNamespace(fileInfo),
     );
     this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.IMPORT_NAMESPACES, (fileInfo: FileInfo) =>
-      runNgZone(() => this.namespacesManagerService.onImportNamespaces(fileInfo)),
+      this.namespacesManagerService.onImportNamespaces(fileInfo),
     );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.COPY_TO_CLIPBOARD, () => runNgZone(() => this.fileHandlingService.onCopyToClipboard()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SAVE_TO_WORKSPACE, () =>
-      runNgZone(() => this.fileHandlingService.onSaveAspectModelToWorkspace()),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.EXPORT_MODEL, () => runNgZone(() => this.fileHandlingService.onExportAsAspectModelFile()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.EXPORT_NAMESPACES, () =>
-      runNgZone(() => this.namespacesManagerService.onExportNamespaces()),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SHOW_HIDE_TOOLBAR, () => runNgZone(() => this.configurationService.toggleToolbar()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SHOW_HIDE_MINIMAP, () => runNgZone(() => this.configurationService.toggleEditorMap()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.FILTER_MODEL_BY, (rule: ModelFilter) =>
-      runNgZone(() => this.filtersService.renderByFilter(rule)),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_IN, () => runNgZone(() => this.editorService.zoomIn()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_OUT, () => runNgZone(() => this.editorService.zoomOut()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_TO_FIT, () => runNgZone(() => this.editorService.fit()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_TO_ACTUAL, () => runNgZone(() => this.editorService.actualSize()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.OPEN_SELECTED_ELEMENT, () => runNgZone(() => this.shapeSettingsService.editSelectedCell()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.REMOVE_SELECTED_ELEMENT, () => runNgZone(() => this.editorService.deleteSelectedElements()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.COLLAPSE_EXPAND_MODEL, () => runNgZone(() => this.editorService.toggleExpand()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.FORMAT_MODEL, () => runNgZone(() => this.editorService.formatModel()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.CONNECT_ELEMENTS, () =>
-      runNgZone(() => this.shapeConnectorService.connectSelectedElements()),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.VALIDATE_MODEL, () => runNgZone(() => this.fileHandlingService.onValidateFile()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_HTML_DOCUMENTATION, () =>
-      runNgZone(() => this.generateHandlingService.onGenerateDocumentation()),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_OPEN_API_SPECIFICATION, () =>
-      runNgZone(() => this.generateHandlingService.onGenerateOpenApiSpec()),
-    );
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.COPY_TO_CLIPBOARD, () => this.fileHandlingService.onCopyToClipboard());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SAVE_TO_WORKSPACE, () => this.fileHandlingService.onSaveAspectModelToWorkspace());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.EXPORT_MODEL, () => this.fileHandlingService.onExportAsAspectModelFile());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.EXPORT_NAMESPACES, () => this.namespacesManagerService.onExportNamespaces());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SHOW_HIDE_TOOLBAR, () => this.configurationService.toggleToolbar());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SHOW_HIDE_MINIMAP, () => this.configurationService.toggleEditorMap());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.FILTER_MODEL_BY, (rule: ModelFilter) => this.filtersService.renderByFilter(rule));
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_IN, () => this.editorService.zoomIn());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_OUT, () => this.editorService.zoomOut());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_TO_FIT, () => this.editorService.fit());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.ZOOM_TO_ACTUAL, () => this.editorService.actualSize());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.OPEN_SELECTED_ELEMENT, () => this.shapeSettingsService.editSelectedCell());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.REMOVE_SELECTED_ELEMENT, () => this.editorService.deleteSelectedElements());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.COLLAPSE_EXPAND_MODEL, () => this.editorService.toggleExpand());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.FORMAT_MODEL, () => this.editorService.formatModel());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.CONNECT_ELEMENTS, () => this.shapeConnectorService.connectSelectedElements());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.VALIDATE_MODEL, () => this.fileHandlingService.onValidateFile());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_HTML_DOCUMENTATION, () => this.generateHandlingService.onGenerateDocumentation());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_OPEN_API_SPECIFICATION, () => this.generateHandlingService.onGenerateOpenApiSpec());
     this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_ASYNC_API_SPECIFICATION, () =>
-      runNgZone(() => this.generateHandlingService.onGenerateAsyncApiSpec()),
+      this.generateHandlingService.onGenerateAsyncApiSpec(),
     );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_AASX_XML, () => runNgZone(() => this.generateHandlingService.onGenerateAASXFile()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_JSON_PAYLOAD, () =>
-      runNgZone(() => this.generateHandlingService.onGenerateJsonSample()),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_JSON_SCHEMA, () =>
-      runNgZone(() => this.generateHandlingService.onGenerateJsonSchema()),
-    );
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SEARCH_ELEMENTS, () => runNgZone(() => this.searchesStateService.elementsSearch.open()));
-    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SEARCH_FILES, () => runNgZone(() => this.searchesStateService.filesSearch.open()));
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_AASX_XML, () => this.generateHandlingService.onGenerateAASXFile());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_JSON_PAYLOAD, () => this.generateHandlingService.onGenerateJsonSample());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.GENERATE_JSON_SCHEMA, () => this.generateHandlingService.onGenerateJsonSchema());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SEARCH_ELEMENTS, () => this.searchesStateService.elementsSearch.open());
+    this.ipcRenderer.on(ELECTRON_EVENTS.SIGNAL.SEARCH_FILES, () => this.searchesStateService.filesSearch.open());
   }
 
   private onWindowClose(): void {
     this.ipcRenderer.on(ELECTRON_EVENTS.REQUEST.IS_FILE_SAVED, (windowId: string) => {
       this.modelSavingTracker.isSaved$
-        .pipe(switchMap(isSaved => (isSaved ? of(true) : this.ngZone.run(() => this.saveModelDialogService.openDialog()))))
+        .pipe(switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialogService.openDialog())))
         .subscribe((close: boolean) => {
           if (close) this.ipcRenderer.send(ELECTRON_EVENTS.REQUEST.CLOSE_WINDOW, windowId);
         });

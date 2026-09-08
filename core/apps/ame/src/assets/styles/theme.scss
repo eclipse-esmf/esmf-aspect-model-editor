@@ -79,6 +79,16 @@ $ame-light-theme: mat.m2-define-light-theme(
   )
 );
 
+$ame-dark-theme: mat.m2-define-dark-theme(
+  (
+    color: (
+      primary: $ame-primary,
+      accent: $ame-accent,
+      warn: $ame-warn,
+    ),
+  )
+);
+
 .mat-mdc-mini-fab.mat-accent {
   --mat-fab-small-foreground-color: map.get($ame-colors, font) !important;
 }
@@ -95,4 +105,19 @@ $ame-light-theme: mat.m2-define-light-theme(
   right: -13px !important;
 }
 
+:root {
+  --mat-stepper-line-color: #cfd0d1;
+}
+
 @include mat.all-component-themes($ame-light-theme);
+
+.dark-theme {
+  @include mat.all-component-colors($ame-dark-theme);
+
+  --mat-stepper-line-color: rgba(255, 255, 255, 0.35);
+  --mat-stepper-header-icon-unselected-background-color: var(--ame-surface-card, #2a2a30);
+  --mat-stepper-header-icon-unselected-foreground-color: var(--ame-font, #ffffff);
+  --mat-stepper-header-icon-selected-background-color: var(--ame-primary, #7599c8);
+  --mat-stepper-header-icon-selected-foreground-color: #ffffff;
+  --mat-stepper-header-label-text-color: var(--ame-font, #ffffff);
+}

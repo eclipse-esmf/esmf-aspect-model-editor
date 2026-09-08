@@ -12,34 +12,37 @@
  */
 
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Component, inject} from '@angular/core';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {Component, inject, signal} from '@angular/core';
+import {form, FormField} from '@angular/forms/signals';
 import {MatOptionModule} from '@angular/material/core';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
 
 import {MatButtonModule} from '@angular/material/button';
 
 @Component({
-  standalone: true,
   templateUrl: './language-selector-modal.component.html',
-  imports: [MatButtonModule, MatDialogModule, TranslatePipe, MatSelectModule, MatOptionModule, ReactiveFormsModule],
+  imports: [MatButtonModule, MatDialogModule, TranslocoDirective, MatSelectModule, MatOptionModule, FormField],
 })
 export class LanguageSelectorModalComponent {
   private dialogRef = inject(MatDialogRef<LanguageSelectorModalComponent>);
   private languageService = inject(SammLanguageSettingsService);
 
-  public languages: locale.ILocale[] = [];
-  public languageControl: FormControl;
+  public languages = signal<locale.ILocale[]>([]);
+  public languageModel = signal<{language: string}>({language: ''});
+  public languageForm = form(this.languageModel);
 
   constructor() {
-    this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
-    this.languageControl = new FormControl(this.languages[0].tag);
+    const sammLanguages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
+    this.languages.set(sammLanguages);
+    if (sammLanguages.length > 0) {
+      this.languageModel.set({language: sammLanguages[0].tag});
+    }
 
-    if (this.languages.length === 1) {
-      this.dialogRef.close(this.languages[0].tag);
+    if (sammLanguages.length === 1) {
+      this.dialogRef.close(sammLanguages[0].tag);
     }
   }
 
@@ -48,6 +51,6 @@ export class LanguageSelectorModalComponent {
   }
 
   selectLanguage() {
-    this.dialogRef.close(this.languageControl.value);
+    this.dialogRef.close(this.languageModel().language);
   }
 }

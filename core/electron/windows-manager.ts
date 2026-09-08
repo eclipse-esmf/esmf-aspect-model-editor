@@ -102,7 +102,11 @@ class WindowsManager {
   activateCommunicationProtocol() {
     ipcMain.on(EVENTS.REQUEST.CREATE_WINDOW, (_, options) => {
       const activeWindow = this._isWindowAlreadyDefined(options);
-      activeWindow ? this.createWindow(activeWindow, options) : this.createNewWindow(options);
+      if (activeWindow) {
+        this.createWindow(activeWindow, options);
+      } else {
+        this.createNewWindow(options);
+      }
     });
 
     ipcMain.on(EVENTS.REQUEST.UPDATE_DATA, (event, options) => {

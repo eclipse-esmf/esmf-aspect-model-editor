@@ -11,6 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, Mocked, test, vi} from 'vitest';
+
+vi.mock('@ame/loader-filters', () => ({
+  ModelFilter: {
+    DEFAULT: 'mock-default',
+  },
+}));
+
+vi.mock('@ame/editor', () => ({
+  ModelElementEditorComponent: class {},
+}));
+
 import {
   AbstractEntityAbstractEntityConnectionHandler,
   AbstractEntityAbstractPropertyConnectionHandler,
@@ -34,6 +46,7 @@ import {
   EntityPropertyConnectionHandler,
   EntityValueConnectionHandler,
   EnumerationEntityValueConnectionHandler,
+  EnumerationValueConnectionHandler,
   EventConnectionHandler,
   EventPropertyConnectionHandler,
   OperationConnectionHandler,
@@ -43,15 +56,17 @@ import {
   PropertyCharacteristicConnectionHandler,
   PropertyConnectionHandler,
   PropertyPropertyConnectionHandler,
+  PropertyValueConnectionHandler,
   ShapeConnectorService,
   StructuredValueCharacteristicPropertyConnectionHandler,
   StructuredValueConnectionHandler,
   TraitConnectionHandler,
   TraitWithCharacteristicOrConstraintConnectionHandler,
 } from '@ame/connection';
-import {MxGraphAttributeService, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
 import {NotificationsService} from '@ame/shared';
-import {provideHttpClient} from '@angular/common/http';
+import {provideMockObject} from '@ame/test-helpers';
+import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {
@@ -63,60 +78,46 @@ import {
   DefaultProperty,
   DefaultTrait,
 } from '@esmf/aspect-model-loader';
-import {describe, expect} from '@jest/globals';
-import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
-import {provideMockObject} from 'jest-helpers/utils';
-import {EnumerationValueConnectionHandler} from './multi-shape-connection-handlers/enumeration--value.service';
-import {PropertyValueConnectionHandler} from './multi-shape-connection-handlers/property--value.service';
-
-jest.mock('@ame/loader-filters', () => ({
-  ModelFilter: {
-    DEFAULT: 'mock-default',
-  },
-}));
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
+import {TranslocoTestingModule} from '@jsverse/transloco';
 
 describe('Test Shape connector service', () => {
   let service: ShapeConnectorService;
-  let notificationsService: jest.Mocked<NotificationsService>;
-  let aspectConnectionHandler: jest.Mocked<AspectConnectionHandler>;
-  let propertyConnectionHandler: jest.Mocked<PropertyConnectionHandler>;
-  let characteristicConnectionHandler: jest.Mocked<CharacteristicConnectionHandler>;
-  let entityConnectionHandler: jest.Mocked<EntityConnectionHandler>;
-  let aspectPropertyConnectionHandler: jest.Mocked<AspectPropertyConnectionHandler>;
-  let propertyCharacteristicConnectionHandler: jest.Mocked<PropertyCharacteristicConnectionHandler>;
-  let characteristicEntityConnectionHandler: jest.Mocked<CharacteristicEntityConnectionHandler>;
-  let traitWithCharacteristicOrConstraintConnectionHandler: jest.Mocked<TraitWithCharacteristicOrConstraintConnectionHandler>;
-  let collectionCharacteristicConnectionHandler: jest.Mocked<CollectionCharacteristicConnectionHandler>;
-  let entityPropertyConnectionHandler: jest.Mocked<EntityPropertyConnectionHandler>;
-  let traitConnectionHandler: jest.Mocked<TraitConnectionHandler>;
-  let abstractEntityConnectionHandler: jest.Mocked<AbstractEntityConnectionHandler>;
+  let notificationsService: Mocked<NotificationsService>;
+  let aspectConnectionHandler: Mocked<AspectConnectionHandler>;
+  let propertyConnectionHandler: Mocked<PropertyConnectionHandler>;
+  let characteristicConnectionHandler: Mocked<CharacteristicConnectionHandler>;
+  let entityConnectionHandler: Mocked<EntityConnectionHandler>;
+  let aspectPropertyConnectionHandler: Mocked<AspectPropertyConnectionHandler>;
+  let propertyCharacteristicConnectionHandler: Mocked<PropertyCharacteristicConnectionHandler>;
+  let characteristicEntityConnectionHandler: Mocked<CharacteristicEntityConnectionHandler>;
+  let traitWithCharacteristicOrConstraintConnectionHandler: Mocked<TraitWithCharacteristicOrConstraintConnectionHandler>;
+  let collectionCharacteristicConnectionHandler: Mocked<CollectionCharacteristicConnectionHandler>;
+  let entityPropertyConnectionHandler: Mocked<EntityPropertyConnectionHandler>;
+  let traitConnectionHandler: Mocked<TraitConnectionHandler>;
+  let abstractEntityConnectionHandler: Mocked<AbstractEntityConnectionHandler>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), TranslatePipe],
+      imports: [TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}})],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         ShapeConnectorService,
         {
-          provide: MxGraphShapeOverlayService,
-          useValue: provideMockObject(MxGraphShapeOverlayService),
+          provide: MaxGraphShapeOverlayService,
+          useValue: provideMockObject(MaxGraphShapeOverlayService),
         },
         {
           provide: NotificationsService,
           useValue: provideMockObject(NotificationsService),
         },
         {
-          provide: MxGraphService,
-          useValue: provideMockObject(MxGraphService),
+          provide: MaxGraphService,
+          useValue: provideMockObject(MaxGraphService),
         },
         {
-          provide: MxGraphAttributeService,
-          useValue: provideMockObject(MxGraphAttributeService),
+          provide: MaxGraphAttributeService,
+          useValue: provideMockObject(MaxGraphAttributeService),
         },
         {
           provide: AspectConnectionHandler,
@@ -269,27 +270,27 @@ describe('Test Shape connector service', () => {
       ],
     });
 
-    notificationsService = TestBed.inject(NotificationsService) as jest.Mocked<NotificationsService>;
-    aspectConnectionHandler = TestBed.inject(AspectConnectionHandler) as jest.Mocked<AspectConnectionHandler>;
-    aspectPropertyConnectionHandler = TestBed.inject(AspectPropertyConnectionHandler) as jest.Mocked<AspectPropertyConnectionHandler>;
-    propertyConnectionHandler = TestBed.inject(PropertyConnectionHandler) as jest.Mocked<PropertyConnectionHandler>;
-    characteristicConnectionHandler = TestBed.inject(CharacteristicConnectionHandler) as jest.Mocked<CharacteristicConnectionHandler>;
-    entityConnectionHandler = TestBed.inject(EntityConnectionHandler) as jest.Mocked<EntityConnectionHandler>;
-    abstractEntityConnectionHandler = TestBed.inject(AbstractEntityConnectionHandler) as jest.Mocked<AbstractEntityConnectionHandler>;
+    notificationsService = TestBed.inject(NotificationsService) as Mocked<NotificationsService>;
+    aspectConnectionHandler = TestBed.inject(AspectConnectionHandler) as Mocked<AspectConnectionHandler>;
+    aspectPropertyConnectionHandler = TestBed.inject(AspectPropertyConnectionHandler) as Mocked<AspectPropertyConnectionHandler>;
+    propertyConnectionHandler = TestBed.inject(PropertyConnectionHandler) as Mocked<PropertyConnectionHandler>;
+    characteristicConnectionHandler = TestBed.inject(CharacteristicConnectionHandler) as Mocked<CharacteristicConnectionHandler>;
+    entityConnectionHandler = TestBed.inject(EntityConnectionHandler) as Mocked<EntityConnectionHandler>;
+    abstractEntityConnectionHandler = TestBed.inject(AbstractEntityConnectionHandler) as Mocked<AbstractEntityConnectionHandler>;
     propertyCharacteristicConnectionHandler = TestBed.inject(
       PropertyCharacteristicConnectionHandler,
-    ) as jest.Mocked<PropertyCharacteristicConnectionHandler>;
+    ) as Mocked<PropertyCharacteristicConnectionHandler>;
     characteristicEntityConnectionHandler = TestBed.inject(
       CharacteristicEntityConnectionHandler,
-    ) as jest.Mocked<CharacteristicEntityConnectionHandler>;
+    ) as Mocked<CharacteristicEntityConnectionHandler>;
     traitWithCharacteristicOrConstraintConnectionHandler = TestBed.inject(
       TraitWithCharacteristicOrConstraintConnectionHandler,
-    ) as jest.Mocked<TraitWithCharacteristicOrConstraintConnectionHandler>;
+    ) as Mocked<TraitWithCharacteristicOrConstraintConnectionHandler>;
     collectionCharacteristicConnectionHandler = TestBed.inject(
       CollectionCharacteristicConnectionHandler,
-    ) as jest.Mocked<CollectionCharacteristicConnectionHandler>;
-    entityPropertyConnectionHandler = TestBed.inject(EntityPropertyConnectionHandler) as jest.Mocked<EntityPropertyConnectionHandler>;
-    traitConnectionHandler = TestBed.inject(TraitConnectionHandler) as jest.Mocked<TraitConnectionHandler>;
+    ) as Mocked<CollectionCharacteristicConnectionHandler>;
+    entityPropertyConnectionHandler = TestBed.inject(EntityPropertyConnectionHandler) as Mocked<EntityPropertyConnectionHandler>;
+    traitConnectionHandler = TestBed.inject(TraitConnectionHandler) as Mocked<TraitConnectionHandler>;
 
     service = TestBed.inject(ShapeConnectorService);
   });

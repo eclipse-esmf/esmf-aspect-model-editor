@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {NotificationsService} from '@ame/shared';
-import {Injectable, inject} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
@@ -24,13 +24,13 @@ export class StructuredValueCharacteristicPropertyConnectionHandler implements M
   DefaultStructuredValue,
   DefaultProperty
 > {
-  private mxGraphService = inject(MxGraphService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
+  private maxgraphService = inject(MaxGraphService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private sammLangService = inject(SammLanguageSettingsService);
   private notificationsService = inject(NotificationsService);
 
-  connect(parentMetaModel: DefaultStructuredValue, childMetaModel: DefaultProperty, first: mxgraph.mxCell, second: mxgraph.mxCell): void {
-    const isRecursiveConnection = MxGraphHelper.isChildOf(childMetaModel, parentMetaModel);
+  connect(parentMetaModel: DefaultStructuredValue, childMetaModel: DefaultProperty, first: Cell, second: Cell): void {
+    const isRecursiveConnection = MaxGraphHelper.isChildOf(childMetaModel, parentMetaModel);
 
     if (isRecursiveConnection) {
       return this.notificationsService.warning({
@@ -47,10 +47,10 @@ export class StructuredValueCharacteristicPropertyConnectionHandler implements M
       this.addPropertyElement(childMetaModel, parentMetaModel);
     }
 
-    MxGraphHelper.updateLabel(parentCell, this.mxGraphAttributeService.graph, this.sammLangService);
-    this.mxGraphService.assignToParent(childCell, parentCell);
-    this.mxGraphService.formatCell(parentCell);
-    this.mxGraphService.formatShapes();
+    MaxGraphHelper.updateLabel(parentCell, this.maxgraphAttributeService.graph, this.sammLangService);
+    this.maxgraphService.assignToParent(childCell, parentCell);
+    this.maxgraphService.formatCell(parentCell);
+    this.maxgraphService.formatShapes();
   }
 
   private isPropertyElementIncluded(childMetaModel: DefaultProperty, parentMetaModel: DefaultStructuredValue): boolean {
@@ -64,10 +64,12 @@ export class StructuredValueCharacteristicPropertyConnectionHandler implements M
     const isStartsWithDelimiter = typeof parentMetaModel.elements[0] === 'string';
     const isEndsWithDelimiter = typeof parentMetaModel.elements[parentMetaModel.elements.length - 1] === 'string';
 
-    isStartsWithDelimiter
-      ? parentMetaModel.elements.unshift(childMetaModel)
-      : isEndsWithDelimiter
-        ? parentMetaModel.elements.push(childMetaModel)
-        : undefined;
+    if (isStartsWithDelimiter) {
+      parentMetaModel.elements.unshift(childMetaModel);
+    } else {
+      if (isEndsWithDelimiter) {
+        parentMetaModel.elements.push(childMetaModel);
+      }
+    }
   }
 }

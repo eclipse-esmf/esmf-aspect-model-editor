@@ -11,20 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+
 import {RdfNodeService} from '@ame/aspect-exporter';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MxGraphService} from '@ame/mx-graph';
 import {TestBed} from '@angular/core/testing';
-import {DefaultEntity, DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
-import {describe, expect, it} from '@jest/globals';
+import {DefaultCharacteristic, DefaultEntity, DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
-import {MockProvider, MockProviders} from 'ng-mocks';
+import {MockProvider} from 'ng-mocks';
 import {RdfListService} from '../../rdf-list';
 import {EntityVisitor} from './entity-visitor';
-
-jest.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
 
 describe('Entity Visitor', () => {
   let service: EntityVisitor;
@@ -33,8 +29,8 @@ describe('Entity Visitor', () => {
     store: new Store(),
     samm: new Samm(''),
     sammC: {ConstraintProperty: () => 'constraintProperty'} as any,
-    hasDependency: jest.fn(() => false),
-    addPrefix: jest.fn(() => {}),
+    hasDependency: vi.fn(() => false),
+    addPrefix: vi.fn(() => {}),
   } as any;
 
   const property = new DefaultProperty({metaModelVersion: '1', aspectModelUrn: 'samm#property1', name: 'property1', characteristic: null});
@@ -44,14 +40,12 @@ describe('Entity Visitor', () => {
     TestBed.configureTestingModule({
       providers: [
         EntityVisitor,
-        MockProviders(MxGraphService),
-        MockProvider(MxGraphService),
         MockProvider(RdfListService, {
-          push: jest.fn(),
-          createEmpty: jest.fn(),
+          push: vi.fn(),
+          createEmpty: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
-          update: jest.fn(),
+          update: vi.fn(),
         }),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(rdfModel, new ModelElementCache(), null),
@@ -72,5 +66,44 @@ describe('Entity Visitor', () => {
       see: [],
     });
     expect(service.rdfListService.push).toHaveBeenCalledWith(entity, property);
+  });
+
+  it('should update parent named characteristic with entity dataType', () => {
+    const namedChar = new DefaultCharacteristic({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#char1',
+      name: 'char1',
+    });
+    const entityWithParent = new DefaultEntity({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#entity1',
+      name: 'entity1',
+      properties: [],
+    });
+    entityWithParent.addParent(namedChar);
+
+    service.visit(entityWithParent);
+
+    expect(service.rdfNodeService.update).toHaveBeenCalledWith(namedChar, {dataType: 'samm#entity1'});
+  });
+
+  it('should not update parent anonymous characteristic as named node', () => {
+    const anonChar = new DefaultCharacteristic({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#[Characteristic]_1234',
+      name: '[Characteristic]',
+      isAnonymous: true,
+    });
+    const entityWithAnonParent = new DefaultEntity({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#entity1',
+      name: 'entity1',
+      properties: [],
+    });
+    entityWithAnonParent.addParent(anonChar);
+
+    service.visit(entityWithAnonParent);
+
+    expect(service.rdfNodeService.update).not.toHaveBeenCalledWith(anonChar, expect.anything());
   });
 });

@@ -16,9 +16,9 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-  background-color: white;
-  box-shadow: 4px 8px 8px 0 rgba($color: #000000, $alpha: 0.25);
-  grid-template-rows: repeat(2, 50px) auto repeat(3, 50px);
+  background-color: var(--ame-surface, white);
+  box-shadow: 4px 8px 8px 0 var(--ame-shadow--black-25, rgba(0, 0, 0, 0.25));
+  grid-template-rows: repeat(2, 50px) auto repeat(4, 50px);
   padding-bottom: 10px;
 }
 
@@ -32,24 +32,28 @@
 
     &:hover {
       cursor: pointer;
-      background-color: #f3f3f3;
+      background-color: var(--ame-surface-hover, #f3f3f3);
     }
 
     &.selected {
-      background-color: #f3f3f3;
+      background-color: var(--ame-surface-hover, #f3f3f3);
       cursor: default;
     }
   }
 
-  &__settings {
+  &__theme {
     grid-row-start: 4;
   }
 
-  &__notifications {
+  &__settings {
     grid-row-start: 5;
   }
 
-  &__help {
+  &__notifications {
     grid-row-start: 6;
+  }
+
+  &__help {
+    grid-row-start: 7;
   }
 }

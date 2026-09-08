@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -17,8 +16,7 @@ import {ConstraintProps} from '../../shared/props';
 import {ModelVisitor} from '../../visitor/model-visitor';
 import {NamedElement} from '../named-element';
 
-export interface Constraint extends NamedElement {}
-
+export type Constraint = NamedElement;
 export class DefaultConstraint extends NamedElement implements Constraint {
   className = 'DefaultConstraint';
   override get children(): ElementSet {

@@ -11,16 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, computed, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {disabled, form, FormField, required} from '@angular/forms/signals';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultLocaleConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
-import {Observable, of} from 'rxjs';
 import {InputFieldComponent} from '../../input-field.component';
 
-import {AsyncPipe} from '@angular/common';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -40,34 +39,36 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   imports: [
     MatFormFieldModule,
     MatLabel,
-    ReactiveFormsModule,
+    FormField,
     MatAutocompleteTrigger,
     MatInput,
     MatAutocomplete,
     MatOption,
-    AsyncPipe,
     MatError,
+    TranslocoDirective,
   ],
 })
 export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLocaleConstraint> implements OnInit, OnDestroy {
-  public filteredLanguages: Observable<Array<locale.ILocale>>;
+  private readonly model = signal('');
+  private unregisterField = () => undefined;
+
+  readonly field = form(this.model, path => {
+    required(path);
+    disabled(path, {when: () => !!this.metaModelElement && this.loadedFiles.isElementExtern(this.metaModelElement)});
+  });
+  readonly filteredLanguages = computed<Array<locale.ILocale>>(() => {
+    const enteredLang = this.model().toLowerCase();
+    return enteredLang
+      ? locale.all.filter(
+          lang => lang.location != null && (lang.tag.toLowerCase().includes(enteredLang) || lang.name.toLowerCase().includes(enteredLang)),
+        )
+      : [];
+  });
 
   constructor() {
     super();
     this.resetFormOnDestroy = false;
     this.fieldName = 'localeCode';
-  }
-
-  doFilterLanguages(enteredLang: string) {
-    this.filteredLanguages = enteredLang
-      ? of(
-          locale.all.filter(
-            lang =>
-              lang.location != null &&
-              (lang.tag.toLowerCase().includes(enteredLang.toLowerCase()) || lang.name.toLowerCase().includes(enteredLang.toLowerCase())),
-          ),
-        )
-      : null;
   }
 
   ngOnInit() {
@@ -79,28 +80,18 @@ export class LocaleCodeInputFieldComponent extends InputFieldComponent<DefaultLo
   }
 
   ngOnDestroy() {
+    this.unregisterField();
     super.ngOnDestroy();
-
-    this.parentForm.removeControl(this.fieldName);
   }
 
   initForm() {
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl(
-        {
-          value: RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)),
-          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-        },
-        Validators.required,
-      ),
-    );
+    this.model.set(RdfModelUtil.getValueWithoutUrnDefinition(this.getCurrentValue(this.fieldName)));
+    this.unregisterField = this.signalForm().register(this.fieldName, this.field);
+  }
 
-    const localeCodeControl = this.parentForm.get(this.fieldName);
-    this.formSubscription.add(
-      localeCodeControl.valueChanges.subscribe(value => {
-        this.doFilterLanguages(value);
-      }),
-    );
+  hasError(kind: string): boolean {
+    return this.field()
+      .errors()
+      .some(error => error.kind === kind);
   }
 }

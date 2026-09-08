@@ -12,51 +12,52 @@
  */
 
 import {ElementIconComponent} from '@ame/shared';
-import {Component, computed, inject, Injector, OnDestroy, OnInit, runInInjectionContext, Signal, viewChild} from '@angular/core';
-import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, computed, effect, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {disabled, form, FormField, required} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {MatInput, MatLabel} from '@angular/material/input';
-import {DefaultEntity, DefaultEntityInstance, DefaultState, DefaultValue, ScalarValue} from '@esmf/aspect-model-loader';
-import {map} from 'rxjs';
+import {DefaultEntity, DefaultEntityInstance, DefaultState, DefaultValue, ScalarValue, Value} from '@esmf/aspect-model-loader';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-default-value-input-field',
   templateUrl: './default-value-input-field.component.html',
-  imports: [
-    MatFormFieldModule,
-    MatLabel,
-    ReactiveFormsModule,
-    MatInput,
-    MatAutocompleteModule,
-    ElementIconComponent,
-    MatIcon,
-    MatIconButton,
-  ],
+  imports: [MatFormFieldModule, MatLabel, FormField, MatInput, MatAutocompleteModule, ElementIconComponent, MatIcon, MatIconButton],
 })
 export class DefaultValueInputFieldComponent extends InputFieldComponent<DefaultState> implements OnInit, OnDestroy {
-  private injector = inject(Injector);
   private autoComplete = viewChild.required(MatAutocomplete);
+  private readonly displayModel = signal('');
+  private readonly defaultValueModel = signal<Value | DefaultValue | DefaultEntityInstance | null>(null);
+  private readonly locked = signal(false);
+  private readonly blocked = signal(false);
+  private unregisterField = () => undefined;
 
-  public displayControl = new FormControl<string>('');
-  public displaySignalValue = toSignal(this.displayControl.valueChanges, {initialValue: ''});
-
-  public createdValues: Signal<DefaultValue[]>;
-  public createdEntityValues: Signal<DefaultEntityInstance[]>;
-  public isComplexDatatype: Signal<boolean>;
+  readonly displayField = form(this.displayModel, path => disabled(path, {when: () => this.locked() || this.blocked()}));
+  readonly defaultValueField = form(this.defaultValueModel, path => {
+    required(path);
+    disabled(path, {when: () => this.locked() || this.blocked()});
+  });
+  readonly displayValue = this.displayModel.asReadonly();
+  readonly createdValues = computed(() =>
+    ((this.signalForm()?.value().enumValues as unknown[]) || []).filter(value => value instanceof DefaultValue),
+  );
+  readonly createdEntityValues = computed(() =>
+    ((this.signalForm()?.value().chipList as unknown[]) || []).filter(value => value instanceof DefaultEntityInstance),
+  );
+  readonly isComplexDatatype = computed(() => this.signalForm()?.value().dataTypeEntity instanceof DefaultEntity);
 
   public filteredValues = computed(() => {
-    return this.createdValues().filter(v => v instanceof DefaultValue && v.name.match(new RegExp(this.displaySignalValue(), 'i')));
+    const value = this.displayModel().toLowerCase();
+    return this.createdValues().filter(v => v.name.toLowerCase().includes(value));
   });
 
   public filteredEntityValues = computed(() => {
-    return this.createdEntityValues().filter(
-      v => v instanceof DefaultEntityInstance && v.name.match(new RegExp(this.displaySignalValue(), 'i')),
-    );
+    const value = this.displayModel().toLowerCase();
+    return this.createdEntityValues().filter(v => v.name.toLowerCase().includes(value));
   });
 
   private get samm() {
@@ -70,6 +71,13 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
   constructor() {
     super();
     this.fieldName = 'defaultValue';
+    effect(() => {
+      if (this.metaModelElement && this.isComplexDatatype()) {
+        this.defaultValueModel.set(null);
+        this.displayModel.set('');
+        this.locked.set(false);
+      }
+    });
   }
 
   ngOnInit() {
@@ -79,39 +87,22 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
   }
 
   ngOnDestroy() {
+    this.unregisterField();
     super.ngOnDestroy();
-    this.parentForm.removeControl(this.fieldName);
   }
 
   initForm() {
     const defaultValue = this.metaModelElement.defaultValue;
 
-    this.displayControl.setValue(defaultValue?.['name'] || defaultValue?.['value'] || '');
-    this.displayControl.value && this.displayControl.disable();
-
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl(
-        {
-          value: defaultValue || new ScalarValue({value: '', type: this.dataType || null}),
-          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-        },
-        Validators.required,
-      ),
-    );
-
-    this.formSubscription.add(
-      this.parentForm.get('dataTypeEntity').valueChanges.subscribe(dataType => {
-        if (dataType instanceof DefaultEntity) {
-          this.parentForm.get(this.fieldName).patchValue('');
-        }
-      }),
-    );
-
-    this.setValueSignals();
+    const displayValue = defaultValue?.['name'] || defaultValue?.['value'] || '';
+    this.blocked.set(this.loadedFiles.isElementExtern(this.metaModelElement));
+    this.locked.set(!!displayValue);
+    this.displayModel.set(displayValue);
+    this.defaultValueModel.set(defaultValue || new ScalarValue({value: '', type: this.dataType || null}));
+    this.unregisterField = this.signalForm().register(this.fieldName, this.defaultValueField);
   }
 
-  addValue(value: ScalarValue | DefaultValue | string, isLiteral = true) {
+  addValue(value: ScalarValue | DefaultValue | DefaultEntityInstance | string, isLiteral = true) {
     if (isLiteral && typeof value === 'string') {
       value = new ScalarValue({value, type: this.metaModelElement.dataType || null});
     } else if (typeof value === 'string') {
@@ -123,39 +114,16 @@ export class DefaultValueInputFieldComponent extends InputFieldComponent<Default
       });
     }
 
-    this.displayControl.disable();
-    this.parentForm.get(this.fieldName).setValue(value);
-    this.parentForm.get(this.fieldName).disable();
+    this.displayModel.set(value instanceof DefaultValue || value instanceof DefaultEntityInstance ? value.name : String(value.value));
+    this.defaultValueModel.set(value);
+    this.locked.set(true);
   }
 
   unlockDefaultValue() {
-    this.displayControl.enable();
-    this.displayControl.setValue('');
-    this.parentForm.get(this.fieldName).enable();
-    this.parentForm.get(this.fieldName).setValue(new ScalarValue({value: '', type: this.dataType || null}));
+    this.locked.set(false);
+    this.displayModel.set('');
+    this.defaultValueModel.set(new ScalarValue({value: '', type: this.dataType || null}));
 
     this.autoComplete().options.forEach(option => option.deselect());
-  }
-
-  private setValueSignals() {
-    const filterByType =
-      <T>(type: {new (...x: any[]): T}) =>
-      (values: T[]) =>
-        values.filter(value => value instanceof type);
-
-    runInInjectionContext(this.injector, () => {
-      this.createdValues = toSignal(this.parentForm.get<string>('enumValues').valueChanges.pipe(map(filterByType(DefaultValue))), {
-        initialValue: filterByType(DefaultValue)(this.parentForm.get<string>('enumValues').value || []),
-      });
-
-      this.createdEntityValues = toSignal(
-        this.parentForm.get<string>('chipList').valueChanges.pipe(map(filterByType(DefaultEntityInstance))),
-        {initialValue: filterByType(DefaultEntityInstance)(this.parentForm.get<string>('chipList').value || [])},
-      );
-
-      this.isComplexDatatype = toSignal(this.parentForm.get('dataTypeEntity').valueChanges, {
-        initialValue: this.dataType instanceof DefaultEntity,
-      });
-    });
   }
 }

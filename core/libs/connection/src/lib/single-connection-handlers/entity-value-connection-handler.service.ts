@@ -12,31 +12,31 @@
  */
 
 import {FiltersService} from '@ame/loader-filters';
-import {EdgeStyles, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {EdgeStyles, MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEntityInstance, DefaultEnumeration} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class EntityValueConnectionHandler implements SingleShapeConnector<DefaultEntityInstance> {
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
   private filtersService = inject(FiltersService);
 
-  public connect(entityValue: DefaultEntityInstance, source: mxgraph.mxCell) {
-    const child = this.mxGraphService.renderModelElement(
-      this.filtersService.createNode(entityValue, {parent: MxGraphHelper.getModelElement(source)}),
+  public connect(entityValue: DefaultEntityInstance, source: Cell) {
+    const child = this.maxgraphService.renderModelElement(
+      this.filtersService.createNode(entityValue, {parent: MaxGraphHelper.getModelElement(source)}),
     );
 
     // connect: EntityValue - Enumeration
-    if (MxGraphHelper.getModelElement(source) instanceof DefaultEnumeration) {
-      this.mxGraphService.assignToParent(child, source);
+    if (MaxGraphHelper.getModelElement(source) instanceof DefaultEnumeration) {
+      this.maxgraphService.assignToParent(child, source);
     }
-    const entityCell = this.mxGraphService.resolveCellByModelElement(entityValue.type);
+    const entityCell = this.maxgraphService.resolveCellByModelElement(entityValue.type);
 
     // connect: EntityValue - Entity
-    this.mxGraphService.assignToParent(entityCell, child, EdgeStyles.entityValueEntityEdge);
-    this.mxGraphService.formatCell(source);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.assignToParent(entityCell, child, EdgeStyles.entityValueEntityEdge);
+    this.maxgraphService.formatCell(source);
+    this.maxgraphService.formatShapes();
   }
 }

@@ -6,7 +6,6 @@
     "sourceMap": true,
     "noImplicitAny": true
   },
-  "include": [
-    "main.ts", "electron/**/*.ts"],
-  "exclude": ["node_modules", "tmp"]
+  "include": ["main.ts", "electron/**/*.ts"],
+  "exclude": ["node_modules", "tmp", "electron/**/*.spec.ts", "main.spec.ts"]
 }

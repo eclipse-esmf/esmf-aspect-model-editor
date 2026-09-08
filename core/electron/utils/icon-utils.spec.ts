@@ -12,23 +12,23 @@
  */
 
 import {nativeImage} from 'electron';
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 import {getIcon} from './icon-utils';
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   nativeImage: {
-    createFromPath: jest.fn(),
+    createFromPath: vi.fn(),
   },
 }));
 
-const mockedCreateFromPath = nativeImage.createFromPath as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedCreateFromPath = nativeImage.createFromPath as unknown as MockedFunction<(...args: any[]) => any>;
 
-const mockResize = jest.fn();
+const mockResize = vi.fn();
 const mockNativeImage = {resize: mockResize};
 
 describe('icon-utils', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockedCreateFromPath.mockReturnValue(mockNativeImage);
   });
 
@@ -63,7 +63,7 @@ describe('icon-utils', () => {
     });
 
     it('should return the resized NativeImage', () => {
-      const resizedImage = {resize: jest.fn()};
+      const resizedImage = {resize: vi.fn()};
       mockResize.mockReturnValue(resizedImage);
 
       const result = getIcon('/some/path/icon.png');

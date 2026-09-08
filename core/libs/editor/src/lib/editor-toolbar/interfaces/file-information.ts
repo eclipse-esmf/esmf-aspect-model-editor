@@ -11,12 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface FileInformation {
-  aspectModelUrn: string;
-  aspectModel: string;
-  absoluteName?: string;
-  fileName?: string;
-  modelVersion?: string;
-}
-
-export type FileEntry = Omit<FileInformation, 'aspectModel'>;
+export type {FileEntry, FileInformation} from '@ame/api';

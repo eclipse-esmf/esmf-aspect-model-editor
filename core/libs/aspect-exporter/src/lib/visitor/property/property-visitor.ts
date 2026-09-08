@@ -12,19 +12,24 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
+import {simpleDataTypes} from '@ame/shared';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/utils';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultTrait, DefaultValue} from '@esmf/aspect-model-loader';
-import {DataFactory, Literal, NamedNode, Store} from 'n3';
+import {DataFactory, Store} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';
+import {CharacteristicVisitor} from '../characteristic/characteristic-visitor';
+import {ValueVisitor} from '../value/value-visitor';
 
 @Injectable({providedIn: 'root'})
 export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
   public rdfNodeService = inject(RdfNodeService);
   public rdfListService = inject(RdfListService);
   public loadedFilesService = inject(LoadedFilesService);
+  public characteristicVisitor = inject(CharacteristicVisitor);
+  public valueVisitor = inject(ValueVisitor);
 
   private get store(): Store {
     return this.loadedFilesService.currentLoadedFile?.rdfModel?.store;
@@ -52,22 +57,62 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
       return;
     }
 
-    const exampleValueNode = this.getExampleValueNode(property);
+    const dataTypeUrn = this.resolveDataTypeUrn(property);
 
-    this.store.addQuad(DataFactory.namedNode(property.aspectModelUrn), this.samm.ExampleValueProperty(), exampleValueNode);
-  }
-
-  private getExampleValueNode(property: DefaultProperty): NamedNode<string> | Literal {
     if (property.exampleValue instanceof DefaultValue) {
-      return DataFactory.namedNode(property.exampleValue.aspectModelUrn);
+      if (property.exampleValue.isAnonymous?.()) {
+        const blankNode = DataFactory.blankNode();
+        this.store.addQuad(DataFactory.namedNode(property.aspectModelUrn), this.samm.ExampleValueProperty(), blankNode);
+        this.valueVisitor.visit(property.exampleValue, blankNode, dataTypeUrn);
+        return;
+      }
+
+      this.setPrefix(property.exampleValue.aspectModelUrn);
+      this.store.addQuad(
+        DataFactory.namedNode(property.aspectModelUrn),
+        this.samm.ExampleValueProperty(),
+        DataFactory.namedNode(property.exampleValue.aspectModelUrn),
+      );
+      return;
     }
 
-    const dataTypeUrn =
-      property.characteristic instanceof DefaultTrait
-        ? property.characteristic.baseCharacteristic?.dataType?.aspectModelUrn
-        : property.characteristic?.dataType?.aspectModelUrn;
+    this.store.addQuad(
+      DataFactory.namedNode(property.aspectModelUrn),
+      this.samm.ExampleValueProperty(),
+      DataFactory.literal(property.exampleValue.value.toString(), DataFactory.namedNode(dataTypeUrn)),
+    );
+  }
 
-    return DataFactory.literal(property.exampleValue.value.toString(), DataFactory.namedNode(dataTypeUrn));
+  private resolveDataTypeUrn(property: DefaultProperty): string {
+    const defaultType = simpleDataTypes.string.isDefinedBy;
+    if (!property?.characteristic) {
+      return defaultType;
+    }
+    const char = property.characteristic;
+    let typeObj: any = null;
+    if (char instanceof DefaultTrait) {
+      typeObj = char.baseCharacteristic?.dataType;
+    } else {
+      typeObj = (char as any)?.dataType;
+    }
+
+    if (!typeObj) {
+      return defaultType;
+    }
+
+    if (typeof typeObj === 'string') {
+      return typeObj;
+    }
+    if (typeObj.aspectModelUrn) {
+      return typeObj.aspectModelUrn;
+    }
+    if (typeObj.urn) {
+      return typeObj.urn;
+    }
+    if (typeof typeObj.getUrn === 'function') {
+      return typeObj.getUrn();
+    }
+    return defaultType;
   }
 
   private addProperties(property: DefaultProperty) {
@@ -86,6 +131,13 @@ export class PropertyVisitor extends BaseVisitor<DefaultProperty> {
 
   private addCharacteristic(property: DefaultProperty) {
     if (!property.characteristic) {
+      return;
+    }
+
+    if (property.characteristic.isAnonymous?.()) {
+      const blankNode = DataFactory.blankNode();
+      this.store.addQuad(DataFactory.namedNode(property.aspectModelUrn), this.samm.CharacteristicProperty(), blankNode);
+      this.characteristicVisitor.visit(property.characteristic, blankNode);
       return;
     }
 

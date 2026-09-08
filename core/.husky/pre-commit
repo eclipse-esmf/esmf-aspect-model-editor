@@ -1,9 +1,52 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# GUI git clients (JetBrains, GitKraken, SourceTree, etc.) run hooks with a minimal
+# PATH that does not include the PATH additions from ~/.zshrc/~/.bash_profile.
+# Resolve node (nvm) and pnpm explicitly so the hook also works outside a login shell.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh" --no-use >/dev/null 2>&1
+  nvm use default --silent >/dev/null 2>&1
+fi
+
+export PNPM_HOME="${PNPM_HOME:-}"
+if [ -z "$PNPM_HOME" ] || [ ! -d "$PNPM_HOME" ]; then
+  # No PNPM_HOME set (or it points to a non-existing dir) - probe the common
+  # install locations of the pnpm standalone script across platforms.
+  # macOS: ~/Library/pnpm | Linux (XDG): ~/.local/share/pnpm
+  # Windows (Git Bash inherits real env vars, so $LOCALAPPDATA is usually set): $LOCALAPPDATA/pnpm
+  for candidate in "$HOME/Library/pnpm" "$HOME/.local/share/pnpm" "${LOCALAPPDATA:-}/pnpm" "$HOME/.pnpm"; do
+    if [ -n "$candidate" ] && [ -d "$candidate" ]; then
+      PNPM_HOME="$candidate"
+      break
+    fi
+  done
+fi
+
+if [ -n "$PNPM_HOME" ]; then
+  export PNPM_HOME
+  case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
+  esac
+fi
+
+if ! command -v pnpm >/dev/null 2>&1 && command -v corepack >/dev/null 2>&1; then
+  # Fallback: enable pnpm via corepack if it's shipped with the resolved node version
+  corepack enable pnpm >/dev/null 2>&1
+fi
+
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "husky (pre-commit): 'pnpm' not found in PATH." >&2
+  echo "PATH=$PATH" >&2
+  echo "-> Install pnpm (https://pnpm.io/installation) or adjust PNPM_HOME/PATH resolution in .husky/pre-commit." >&2
+  exit 1
+fi
+
 cd core
-npm run lint -- --uncommited
-npm run format -- --uncommited
+pnpm run lint:uncommitted
+pnpm run format:uncommitted
 
 if [ -n "$(git status --porcelain)" ]; then
   git add .

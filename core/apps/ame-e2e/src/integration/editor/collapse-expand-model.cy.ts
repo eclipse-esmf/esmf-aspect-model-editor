@@ -17,10 +17,14 @@ import {FIELD_descriptionen, FIELD_preferredNameen, SELECTOR_editorSaveButton, S
 import {cyHelp} from '../../support/helpers';
 
 describe('Test collapse/expand model', () => {
-  it('should collapse the entire model', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_tbCollapseToggle).click({force: true}).wait(500))
+    cy.startModelling();
+  });
+
+  it('should collapse the entire model', () => {
+    cy.get(SELECTOR_tbCollapseToggle)
+      .click({force: true})
       .then(() => cyHelp.testShapeInCollapsedMode('AspectDefault'))
       .then(() => cyHelp.testShapeInCollapsedMode('property1'))
       .then(() => cyHelp.testShapeInCollapsedMode('Characteristic1'));

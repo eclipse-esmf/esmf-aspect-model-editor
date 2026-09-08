@@ -5,30 +5,36 @@
   "sourceRoot": "apps/ame/src",
   "prefix": "ame",
   "targets": {
-    "build": {
-      "executor": "@angular-devkit/build-angular:browser-esbuild",
-      "outputs": ["{options.outputPath}"],
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/apps/ame"],
       "options": {
-        "outputPath": "dist/apps/ame",
+        "tsConfig": "apps/ame/tsconfig.spec.json",
+        "buildTarget": "ame:build:development",
+        "watch": false
+      }
+    },
+    "build": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath.base}"],
+      "defaultConfiguration": "production",
+      "dependsOn": [],
+      "options": {
+        "outputPath": {
+          "base": "dist/apps/ame",
+          "browser": ""
+        },
         "index": "apps/ame/src/index.html",
-        "main": "apps/ame/src/main.ts",
-        "polyfills": ["apps/ame/src/polyfills.ts"],
+        "browser": "apps/ame/src/main.ts",
+        "polyfills": [],
         "tsConfig": "apps/ame/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/ame/src/assets",
-          {
-            "glob": "**/*",
-            "input": "./node_modules/mxgraph/javascript/src",
-            "output": "apps/ame/src/assets/mxgraph"
-          }
-        ],
+        "assets": ["apps/ame/src/assets"],
         "styles": ["node_modules/ngx-toastr/toastr.css", "apps/ame/src/styles.scss"],
-        "scripts": ["node_modules/mxgraph/javascript/mxClient.js", "apps/ame/src/assets/samm-units.js"],
+        "scripts": ["apps/ame/src/assets/samm-units.js"],
         "allowedCommonJsDependencies": [
           "file-saver",
           "urn-lib",
-          "mxgraph-factory",
           "locale-codes",
           "rdf-parse",
           "streamify-string",
@@ -69,11 +75,12 @@
           "sourceMap": true,
           "namedChunks": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
-      "executor": "@nx/angular:dev-server",
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
+      "continuous": true,
       "configurations": {
         "production": {
           "buildTarget": "ame:build:production"
@@ -81,12 +88,11 @@
         "development": {
           "buildTarget": "ame:build:development"
         }
-      },
-      "defaultConfiguration": "development",
-      "continuous": true
+      }
     },
     "serve-coverage": {
-      "executor": "ngx-build-plus:dev-server",
+      "executor": "@angular/build:dev-server",
+      "defaultConfiguration": "development",
       "configurations": {
         "production": {
           "buildTarget": "ame:build:production"
@@ -94,24 +100,16 @@
         "development": {
           "buildTarget": "ame:build:development"
         }
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "@angular/build:extract-i18n",
       "options": {
         "buildTarget": "ame:build"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/ame"],
-      "options": {
-        "jestConfig": "apps/ame/jest.config.ts"
-      }
     }
   }
 }

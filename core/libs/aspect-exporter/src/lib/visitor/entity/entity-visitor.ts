@@ -62,7 +62,9 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
     if (entity.properties?.length) {
       this.rdfListService.push(entity, ...entity.properties);
       for (const property of entity.properties) {
-        !property?.extends_ && this.setPrefix(property.aspectModelUrn);
+        if (!property?.extends_) {
+          this.setPrefix(property.aspectModelUrn);
+        }
       }
     } else {
       this.rdfListService.createEmpty(entity, ListProperties.properties);
@@ -71,7 +73,9 @@ export class EntityVisitor extends BaseVisitor<DefaultEntity> {
 
   private updateParents(entity: DefaultEntity) {
     for (const parent of entity.parents || []) {
-      parent instanceof DefaultCharacteristic && this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
+      if (parent instanceof DefaultCharacteristic && !parent.isAnonymous?.()) {
+        this.rdfNodeService.update(parent, {dataType: entity.aspectModelUrn});
+      }
     }
   }
 

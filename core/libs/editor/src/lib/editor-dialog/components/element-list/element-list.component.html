@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,57 +12,61 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (elements.length) {
-  <mat-accordion>
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title class="title">
-          <mat-icon [ngClass]="iconRotation">account_tree</mat-icon>
-          <h3>{{ label | counter: elements.length }}</h3>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="elements" [class.max-height-200]="!isAspect">
-        @for (element of elements; track element.aspectModelUrn) {
-          <div class="model-element">
-            @if (element | modelElementParser; as parsedElement) {
-              <div class="model-element__name">
-                <ame-element [type]="sammElements[parsedElement.type]" [name]="parsedElement.element.name" size="medium"></ame-element>
+  @if (filteredElements()) {
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title class="title">
+            <mat-icon [ngClass]="iconRotation()">account_tree</mat-icon>
+            <h3>{{ label() | counter: filteredElements().length }}</h3>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="elements" [class.max-height-200]="!isAspect()">
+          @for (element of filteredElements(); track element.aspectModelUrn) {
+            <div class="model-element">
+              @if (element | modelElementParser; as parsedElement) {
+                <div class="model-element__name">
+                  <ame-element [type]="sammElements[parsedElement.type]" [name]="parsedElement.element.name" size="medium"></ame-element>
+                </div>
+              }
+              <div class="model-element__actions">
+                @if (cellExists(element)) {
+                  <button
+                    [matTooltip]="t('editorCanvas.shapeSetting.ameElementListButton.locateElement')"
+                    (click)="navigateToCell(element)"
+                    type="button"
+                    mat-icon-button
+                    matTooltipPosition="below"
+                  >
+                    <mat-icon>gps_fixed</mat-icon>
+                  </button>
+                }
+                @if (loadedFilesService.isElementExtern(element)) {
+                  <button
+                    [matTooltip]="t('editorCanvas.shapeSetting.ameElementListButton.openElementInNewWindow')"
+                    (click)="openReferencedElement(element)"
+                    type="button"
+                    mat-icon-button
+                    matTooltipPosition="left"
+                  >
+                    <mat-icon>open_in_new</mat-icon>
+                  </button>
+                } @else {
+                  <button
+                    [matTooltip]="t('editorCanvas.shapeSetting.ameElementListButton.openElement')"
+                    (click)="openElementModel(element)"
+                    type="button"
+                    mat-icon-button
+                    matTooltipPosition="below"
+                  >
+                    <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
+                  </button>
+                }
               </div>
-            }
-            <div class="model-element__actions">
-              @if (cellExists(element)) {
-                <button
-                  [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_BUTTON.LOCATE_ELEMENT' | translate"
-                  (click)="navigateToCell(element)"
-                  mat-icon-button
-                  matTooltipPosition="below"
-                >
-                  <mat-icon>gps_fixed</mat-icon>
-                </button>
-              }
-              @if (loadedFilesService.isElementExtern(element)) {
-                <button
-                  [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_BUTTON.OPEN_ELEMENT_IN_NEW_WINDOW' | translate"
-                  (click)="openReferencedElement(element)"
-                  mat-icon-button
-                  matTooltipPosition="left"
-                >
-                  <mat-icon>open_in_new</mat-icon>
-                </button>
-              } @else {
-                <button
-                  [matTooltip]="'EDITOR_CANVAS.SHAPE_SETTING.AME_ELEMENT_LIST_BUTTON.OPEN_ELEMENT' | translate"
-                  (click)="openElementModel(element)"
-                  mat-icon-button
-                  matTooltipPosition="below"
-                >
-                  <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
-                </button>
-              }
             </div>
-          </div>
-        }
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-}
+          }
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  }
+</ng-container>

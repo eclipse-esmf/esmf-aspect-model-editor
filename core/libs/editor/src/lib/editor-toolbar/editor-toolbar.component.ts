@@ -13,70 +13,54 @@
 
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
-import {MxGraphService, MxGraphShapeSelectorService} from '@ame/mx-graph';
-import {ConfigurationService, Settings} from '@ame/settings-dialog';
-import {BindingsService, NotificationsService} from '@ame/shared';
-import {AsyncPipe, CommonModule} from '@angular/common';
-import {AfterViewInit, Component, DestroyRef, OnDestroy, OnInit, inject} from '@angular/core';
+import {MaxGraphService, MaxGraphShapeSelectorService} from '@ame/max-graph';
+import {BarItemComponent, BindingsService, NotificationsService} from '@ame/shared';
+import {CommonModule} from '@angular/common';
+import {AfterViewInit, Component, DestroyRef, inject, OnDestroy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslatePipe} from '@ngx-translate/core';
-import {Observable} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {first} from 'rxjs/operators';
-import {BarItemComponent} from '../../../../shared/src/lib/components/bar-item/bar-item.component';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
 import {ShapeSettingsService} from '../editor-dialog';
 import {EditorService} from '../editor.service';
 import {FileHandlingService} from './services';
 
 @Component({
-  standalone: true,
   selector: 'ame-editor-toolbar',
   templateUrl: './editor-toolbar.component.html',
   styleUrls: ['./editor-toolbar.component.scss'],
-  imports: [BarItemComponent, CommonModule, MatTooltipModule, TranslatePipe, MatIconModule, AsyncPipe],
+  imports: [BarItemComponent, CommonModule, MatTooltipModule, TranslocoDirective, MatIconModule],
 })
-export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy {
+export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
   private destroyRef = inject(DestroyRef);
   private fileHandlingService = inject(FileHandlingService);
   private editorService = inject(EditorService);
   private shapeConnectorService = inject(ShapeConnectorService);
-  private configurationService = inject(ConfigurationService);
   private bindingsService = inject(BindingsService);
-  private mxGraphShapeSelectorService = inject(MxGraphShapeSelectorService);
+  private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
   private matDialog = inject(MatDialog);
   private shapeSettingsService = inject(ShapeSettingsService);
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
 
   public notificationsService = inject(NotificationsService);
 
   public filtersService = inject(FiltersService);
-  public isAllShapesExpanded$: Observable<boolean>;
-  public settings$: Observable<Settings>;
+  public isAllShapesExpanded = this.editorService.isAllShapesExpanded;
 
-  public get isModelEmpty() {
-    return !this.mxGraphService.getAllCells()?.length;
-  }
-
-  public get selectedCells() {
-    return this.mxGraphShapeSelectorService.getSelectedCells();
-  }
+  protected isModelEmpty = this.maxgraphService.isModelEmpty;
+  protected selectedCells = this.maxgraphShapeSelectorService.selectedCells;
 
   private checkChangesInterval: NodeJS.Timeout;
-
-  ngOnInit(): void {
-    this.settings$ = this.configurationService.settings$;
-    this.isAllShapesExpanded$ = this.editorService.isAllShapesExpanded$;
-  }
 
   ngAfterViewInit(): void {
     this.bindingsService.registerAction('connectElements', () => this.onConnect());
     this.bindingsService.registerAction('format', () => this.onFormat());
-    this.bindingsService.registerAction('copy-to-clipboard', () => this.fileHandlingService.copyToClipboard());
+    this.bindingsService.registerAction('copy-to-clipboard', () => this.fileHandlingService.onCopyToClipboard());
     this.bindingsService.registerAction('connect-with', () => this.openConnectWithDialog());
-    this.bindingsService.registerAction('select-tree', () => this.mxGraphShapeSelectorService.selectTree());
+    this.bindingsService.registerAction('select-tree', () => this.maxgraphShapeSelectorService.selectTree());
   }
 
   ngOnDestroy() {
@@ -109,7 +93,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnInit, OnDestroy 
   }
 
   openConnectWithDialog() {
-    const [selectedCell] = this.selectedCells;
+    const [selectedCell] = this.selectedCells();
     if (!selectedCell) {
       this.notificationsService.error({
         title: 'No element selected',

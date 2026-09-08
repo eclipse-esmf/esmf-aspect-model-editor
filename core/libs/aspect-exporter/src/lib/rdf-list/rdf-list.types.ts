@@ -14,6 +14,7 @@
 import {
   Aspect,
   DefaultProperty,
+  DefaultValue,
   Entity,
   Enumeration,
   Event,
@@ -82,8 +83,8 @@ export interface EmptyRdfList {
 }
 
 export interface PropertyListElement {
-  metaModelElement: DefaultProperty;
-  propertyPayload: PropertyPayload;
+  metaModelElement: DefaultProperty | DefaultValue;
+  propertyPayload?: PropertyPayload;
   blankNode: BlankNode;
 }
 

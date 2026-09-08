@@ -11,5 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './models/language.interface';
+export * from './loaders/transloco-http.loader';
 export * from './services/language-translation.service';

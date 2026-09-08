@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-/* eslint-disable @typescript-eslint/no-empty-interface */
 
 import {
   Characteristic,
@@ -83,7 +82,8 @@ export interface PropertyProps extends NamedElementProps {
   extends_?: Property;
 }
 
-export interface EventProps extends StructuredElementProps {}
+// Event props
+export type EventProps = StructuredElementProps;
 
 export interface EntityInstanceProps extends NamedElementProps {
   type?: Entity;
@@ -148,7 +148,7 @@ export interface TraitProps extends CharacteristicProps {
 }
 
 // Constraint props
-export interface ConstraintProps extends NamedElementProps {}
+export type ConstraintProps = NamedElementProps;
 
 export interface EncodingConstraintProps extends ConstraintProps {
   value: string;
@@ -185,4 +185,5 @@ export interface RangeConstraintProps extends ConstraintProps {
 
 export interface ValueProps extends NamedElementProps {
   value: string;
+  type?: Type;
 }

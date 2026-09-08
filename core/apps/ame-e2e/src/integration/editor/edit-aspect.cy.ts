@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -41,9 +40,13 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Aspect', () => {
-  it('can add new aspect model', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling().then(() => cy.get(SELECTOR_elementBtn).click());
+    cy.startModelling();
+  });
+
+  it('can add new aspect model', () => {
+    cy.get(SELECTOR_elementBtn).click();
   });
 
   it('can add properties', () => {
@@ -232,7 +235,8 @@ describe('Test editing Aspect', () => {
       .then(() => cy.clickShape('NewAspect'))
       .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
       .then(() => cy.get(FIELD_renameModelInput).type('sharedModel'))
-      .then(() => cy.get(BUTTON_renameModelConfirm).click().wait(500))
+      .then(() => cy.get(BUTTON_renameModelConfirm).click())
+      .then(() => cy.get(BUTTON_renameModelConfirm).should('not.exist'))
       .then(() => cy.getUpdatedRDF().then(rdf => expect(rdf).not.to.contain('NewAspect')));
   });
 });

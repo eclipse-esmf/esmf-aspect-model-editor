@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AsyncPipe} from '@angular/common';
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
+import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {disabled, form, FormField, required, validateAsync} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
@@ -22,12 +21,12 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultDuration, DefaultMeasurement, DefaultQuantifiable, DefaultUnit, Unit, useLoader} from '@esmf/aspect-model-loader';
-import {TranslatePipe} from '@ngx-translate/core';
-import {Observable} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {of} from 'rxjs';
 import {EditorDialogValidators} from '../../../../validators';
 import {InputFieldComponent} from '../../input-field.component';
 
-declare const sammUDefinition: any;
+declare const sammUDefinition: {units: Record<string, Unit>};
 
 @Component({
   selector: 'ame-unit-input-field',
@@ -37,16 +36,15 @@ declare const sammUDefinition: any;
     MatFormFieldModule,
     MatLabel,
     MatAutocompleteTrigger,
-    ReactiveFormsModule,
+    FormField,
     MatInput,
     MatIconModule,
     MatIconButton,
     MatError,
     MatAutocomplete,
-    AsyncPipe,
     MatOptgroup,
     MatOption,
-    TranslatePipe,
+    TranslocoDirective,
   ],
 })
 export class UnitInputFieldComponent
@@ -55,12 +53,47 @@ export class UnitInputFieldComponent
 {
   private editorDialogValidators = inject(EditorDialogValidators);
 
-  unitRequired = false;
-
-  filteredPredefinedUnits$: Observable<Array<any>>;
-  filteredUnits$: Observable<Array<DefaultUnit>>;
+  unitRequired = signal(false);
   units: Array<Unit> = [];
-  unitDisplayControl: FormControl;
+  private readonly displayModel = signal('');
+  private readonly unitModel = signal<Unit | null>(null);
+  private readonly changedUnitModel = signal<Unit | null>(null);
+  private readonly locked = signal(false);
+  private readonly blocked = signal(false);
+  private unregisterDisplay = () => undefined;
+
+  private readonly createDuplicateNameResource = (name: Signal<string>) =>
+    rxResource({
+      params: () => name(),
+      stream: ({params}) =>
+        this.metaModelElement
+          ? this.editorDialogValidators.duplicateNameWithDifferentTypeValue(params, this.metaModelElement, DefaultUnit)
+          : of(null),
+    });
+
+  readonly displayField = form(this.displayModel, path => {
+    required(path, {when: () => this.unitRequired()});
+    validateAsync(path, {
+      params: ({value}) => value(),
+      factory: this.createDuplicateNameResource,
+      onSuccess: result => {
+        const kind = result?.['checkShapeNameExtRef'] ? 'checkShapeNameExtRef' : result?.['checkShapeName'] ? 'checkShapeName' : undefined;
+        return kind ? {kind, message: 'Unit name is already used by another type'} : null;
+      },
+      onError: () => ({kind: 'duplicateNameValidation', message: 'Unit name could not be validated'}),
+    });
+    disabled(path, {when: () => this.locked() || this.blocked()});
+  });
+  readonly displayValue = this.displayModel.asReadonly();
+  readonly filteredUnits = computed(() => {
+    const value = this.displayModel();
+    const units = this.currentCachedFile.filter<DefaultUnit>(element => element instanceof DefaultUnit);
+    return units.filter(unit => this.inSearchList(unit, value));
+  });
+  readonly filteredPredefinedUnits = computed(() => {
+    const value = this.displayModel();
+    return (this.units || []).filter(unit => this.inSearchList(unit, value));
+  });
 
   constructor() {
     super();
@@ -75,15 +108,16 @@ export class UnitInputFieldComponent
         if (this.metaModelElement instanceof DefaultDuration) {
           this.units = this.units.filter(unit => unit.quantityKinds && unit.quantityKinds.includes('time'));
         }
-        this.unitRequired = metaModelElement instanceof DefaultDuration || metaModelElement instanceof DefaultMeasurement;
+        this.unitRequired.set(metaModelElement instanceof DefaultDuration || metaModelElement instanceof DefaultMeasurement);
         this.initUnitFormControl();
       });
   }
 
   ngOnDestroy() {
+    this.unregisterDisplay();
+    this.signalForm().remove('unit');
+    this.signalForm().remove('changedUnit');
     super.ngOnDestroy();
-    this.parentForm.removeControl(this.fieldName);
-    this.parentForm.removeControl('changedUnit');
   }
 
   onPredefinedUnitChange(predefinedUnit: Unit, event: MatOptionSelectionChange) {
@@ -94,43 +128,26 @@ export class UnitInputFieldComponent
       });
 
       const newPredefinedUnit = createUnit(predefinedUnit.name);
-      this.parentForm.get('unit').setValue(newPredefinedUnit);
-      this.unitDisplayControl.patchValue(newPredefinedUnit.name);
-      this.unitDisplayControl.disable();
+      this.selectUnit(newPredefinedUnit);
     }
   }
 
-  onExistingUnitChange(existingUnit) {
-    this.unitDisplayControl.patchValue(existingUnit.name);
-    this.parentForm.get('unit').setValue(existingUnit);
-    this.unitDisplayControl.disable();
+  onExistingUnitChange(existingUnit: Unit) {
+    this.selectUnit(existingUnit);
   }
 
   initUnitFormControl() {
     const unit = this.getCurrentValue(this.fieldName);
     const unitName = unit instanceof DefaultUnit ? unit.name : unit;
-    this.unitDisplayControl = new FormControl(
-      {value: unitName, disabled: !!unit},
-      {
-        validators: [...(this.unitRequired ? [Validators.required] : [])],
-        asyncValidators: [this.editorDialogValidators.duplicateNameWithDifferentType(this.metaModelElement, DefaultUnit)],
-      },
-    );
-
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl(
-        {
-          value: unit,
-          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-        },
-        this.unitRequired ? Validators.required : null,
-      ),
-    );
-
-    this.parentForm.setControl('changedUnit', new FormControl(this.getPredefinedUnit(unitName) || unit));
-    this.filteredUnits$ = this.initFilteredUnits(this.unitDisplayControl, this.searchService);
-    this.filteredPredefinedUnits$ = this.initFilteredPredefinedUnits(this.unitDisplayControl, this.units, this.searchService);
+    this.blocked.set(this.loadedFiles.isElementExtern(this.metaModelElement));
+    this.locked.set(!!unit);
+    this.displayModel.set(unitName || '');
+    this.unitModel.set(unit || null);
+    const changedUnit = (unitName && this.getPredefinedUnit(unitName)) || unit || null;
+    this.changedUnitModel.set(changedUnit);
+    this.unregisterDisplay = this.signalForm().register('unitDisplay', this.displayField);
+    this.signalForm().set(this.fieldName, unit || null);
+    this.signalForm().set('changedUnit', changedUnit);
   }
 
   createNewUnit(unitName: string) {
@@ -142,17 +159,17 @@ export class UnitInputFieldComponent
       quantityKinds: [],
     });
 
-    // set the control of newDatatype
-    this.unitDisplayControl.patchValue(unitName);
-    this.parentForm.get('unit').setValue(newUnit);
-    this.unitDisplayControl.disable();
+    this.selectUnit(newUnit);
   }
 
   unlockUnit() {
-    this.unitDisplayControl.enable();
-    this.unitDisplayControl.patchValue('');
-    this.parentForm.get('unit').setValue(null);
-    this.parentForm.get('unit').markAllAsTouched();
+    this.locked.set(false);
+    this.displayModel.set('');
+    this.unitModel.set(null);
+    this.changedUnitModel.set(null);
+    this.signalForm().set('unit', null);
+    this.signalForm().set('changedUnit', null);
+    this.displayField().markAsTouched();
   }
 
   getPredefinedUnit(unitName: string) {
@@ -162,5 +179,20 @@ export class UnitInputFieldComponent
     });
 
     return createUnit(unitName);
+  }
+
+  hasError(kind: string): boolean {
+    return this.displayField()
+      .errors()
+      .some(error => error.kind === kind);
+  }
+
+  private selectUnit(unit: Unit): void {
+    this.displayModel.set(unit.name);
+    this.unitModel.set(unit);
+    this.changedUnitModel.set(unit);
+    this.signalForm().set('unit', unit);
+    this.signalForm().set('changedUnit', unit);
+    this.locked.set(true);
   }
 }

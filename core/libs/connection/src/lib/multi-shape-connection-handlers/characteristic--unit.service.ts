@@ -11,36 +11,36 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultQuantifiable, DefaultUnit} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicUnitConnectionHandler implements MultiShapeConnector<DefaultCharacteristic, DefaultUnit> {
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
 
-  public connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultUnit, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
+  public connect(parentMetaModel: DefaultCharacteristic, childMetaModel: DefaultUnit, parent: Cell, child: Cell) {
     if (!(parentMetaModel instanceof DefaultQuantifiable)) {
       return;
     }
 
     if (parentMetaModel.unit && parentMetaModel.unit !== childMetaModel) {
-      const obsoleteEdge = this.mxGraphService.graph
-        .getOutgoingEdges(parent)
-        .find(edge => MxGraphHelper.getModelElement(edge.target) instanceof DefaultUnit);
+      const obsoleteEdge = this.maxgraphService.graph
+        .getOutgoingEdges(parent, null)
+        .find(edge => MaxGraphHelper.getModelElement(edge.target) instanceof DefaultUnit);
 
-      const unit = MxGraphHelper.getModelElement<DefaultUnit>(obsoleteEdge.target);
-      MxGraphHelper.removeRelation(parentMetaModel, unit);
+      const unit = MaxGraphHelper.getModelElement<DefaultUnit>(obsoleteEdge.target);
+      MaxGraphHelper.removeRelation(parentMetaModel, unit);
 
       if (unit.isPredefined) {
-        this.mxGraphService.removeCells([obsoleteEdge.target], true);
+        this.maxgraphService.removeCells([obsoleteEdge.target], true);
       } else {
-        this.mxGraphService.removeCells([obsoleteEdge]);
+        this.maxgraphService.removeCells([obsoleteEdge]);
       }
     }
     parentMetaModel.unit = childMetaModel;
-    this.mxGraphService.assignToParent(child, parent);
+    this.maxgraphService.assignToParent(child, parent);
   }
 }

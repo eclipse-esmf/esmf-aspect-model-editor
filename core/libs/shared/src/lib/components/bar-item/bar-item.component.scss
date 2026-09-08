@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-$selectedColor: #f3f3f3;
+$selectedColor: var(--ame-surface-hover, #f3f3f3);
 
 :host {
   display: flex;
@@ -24,7 +24,7 @@ $selectedColor: #f3f3f3;
 
   &:hover {
     cursor: pointer;
-    background-color: $selectedColor;
+    background-color: var(--ame-surface-hover, #f3f3f3);
   }
 
   &.disabled {
@@ -33,7 +33,7 @@ $selectedColor: #f3f3f3;
   }
 
   &.selected {
-    background-color: $selectedColor;
+    background-color: var(--ame-surface-hover, #f3f3f3);
     cursor: default;
   }
 }

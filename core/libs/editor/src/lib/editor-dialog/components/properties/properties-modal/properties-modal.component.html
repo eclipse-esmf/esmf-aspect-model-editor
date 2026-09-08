@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,84 +12,100 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<button class="close-button" (click)="closeModal()" mat-icon-button tabindex="-1">
-  <mat-icon>close</mat-icon>
-</button>
+  <button class="close-button" (click)="closeModal()" type="button" mat-icon-button tabindex="-1">
+    <mat-icon>close</mat-icon>
+  </button>
 
-<h2 mat-dialog-title>{{ data.metaModelElement.name }} {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_CONFIGURATION' | translate }}</h2>
+  <h2 mat-dialog-title>{{ data.metaModelElement.name }} {{ t('editorCanvas.shapeSetting.propertiesConfiguration') }}</h2>
 
-<mat-dialog-content class="dialog-content">
-  @if (form) {
-    <mat-table [dataSource]="dataSource" [formGroup]="form">
+  <mat-dialog-content class="dialog-content">
+    <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.NAME' | translate }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ t('editorCanvas.shapeSetting.propertiesModal.name') }}</mat-header-cell>
         <mat-cell *matCellDef="let overwritten" [ngClass]="{inherited: overwritten.inherited, disabled: overwritten.disabled}">
           <span>{{ overwritten.property.name }}</span>
           @if (overwritten.inherited) {
-            <span>Inherited</span>
+            <span>{{ t('editorCanvas.shapeSetting.propertiesModal.inherited') }}</span>
           }
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="payloadName">
-        <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.PAYLOAD_NAME' | translate }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ t('editorCanvas.shapeSetting.propertiesModal.payloadName') }}</mat-header-cell>
         <mat-cell *matCellDef="let overwritten">
           @if (!(overwritten.disabled || overwritten.inherited)) {
-            <mat-form-field>
-              <mat-label for="refines">Payload Name</mat-label>
-              <input
-                [formControl]="getControl([overwritten.property.aspectModelUrn, 'payloadName'])"
-                matInput
-                name="{{ overwritten.property.name }}_payloadName"
-              />
-            </mat-form-field>
+            @if (!isReadonly()) {
+              <mat-form-field>
+                <mat-label for="refines">{{ t('editorCanvas.shapeSetting.propertiesModal.payloadName') }}</mat-label>
+                <input
+                  [value]="propertiesModel()[overwritten.property.aspectModelUrn]?.payloadName || ''"
+                  [attr.data-cy]="'property-' + overwritten.property.name + '-payloadName'"
+                  [attr.name]="overwritten.property.aspectModelUrn + '.payloadName'"
+                  (input)="updatePayloadName(overwritten.property.aspectModelUrn, $any($event.target).value)"
+                  matInput
+                />
+              </mat-form-field>
+            } @else {
+              <span>{{ propertiesModel()[overwritten.property.aspectModelUrn]?.payloadName }}</span>
+            }
           }
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="optional">
-        <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.OPTIONAL' | translate }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ t('editorCanvas.shapeSetting.propertiesModal.optional') }}</mat-header-cell>
         <mat-cell *matCellDef="let overwritten" [class.hidden]="overwritten.abstract">
-          <mat-checkbox
-            [formControl]="getControl([overwritten.property.aspectModelUrn, 'optional'])"
-            name="{{ overwritten.property.name }}_optional"
-            >Optional
-          </mat-checkbox>
+          @if (!isReadonly() && !(overwritten.disabled || overwritten.inherited)) {
+            <mat-checkbox
+              [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.optional || false"
+              [attr.data-cy]="'property-' + overwritten.property.name + '-optional'"
+              [attr.name]="overwritten.property.aspectModelUrn + '.optional'"
+              (change)="updateOptional(overwritten.property.aspectModelUrn, $event.checked)"
+              (click)="updateOptional(overwritten.property.aspectModelUrn)"
+            >
+              {{ t('editorCanvas.shapeSetting.propertiesModal.optional') }}
+            </mat-checkbox>
+          } @else {
+            <mat-checkbox [disabled]="true" [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.optional">
+              {{ t('editorCanvas.shapeSetting.propertiesModal.optional') }}
+            </mat-checkbox>
+          }
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="notInPayload">
-        <mat-header-cell *matHeaderCellDef>{{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.NOT_IN_PAYLOAD' | translate }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>{{ t('editorCanvas.shapeSetting.propertiesModal.notInPayload') }}</mat-header-cell>
         <mat-cell *matCellDef="let overwritten">
-          <mat-checkbox
-            [formControl]="getControl([overwritten.property.aspectModelUrn, 'notInPayload'])"
-            name="{{ overwritten.property.name }}_notInPayload"
-            >Not In Payload
-          </mat-checkbox>
+          @if (!isReadonly() && !(overwritten.disabled || overwritten.inherited)) {
+            <mat-checkbox
+              [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.notInPayload || false"
+              [attr.data-cy]="'property-' + overwritten.property.name + '-notInPayload'"
+              [attr.name]="overwritten.property.aspectModelUrn + '.notInPayload'"
+              (change)="updateNotInPayload(overwritten.property.aspectModelUrn, $event.checked)"
+              (click)="updateNotInPayload(overwritten.property.aspectModelUrn)"
+            >
+              {{ t('editorCanvas.shapeSetting.propertiesModal.notInPayload') }}
+            </mat-checkbox>
+          } @else {
+            <mat-checkbox [disabled]="true" [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.notInPayload">
+              {{ t('editorCanvas.shapeSetting.propertiesModal.notInPayload') }}
+            </mat-checkbox>
+          }
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="headers"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: headers"></mat-row>
+      <mat-header-row *matHeaderRowDef="headers()"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: headers()"></mat-row>
     </mat-table>
-  }
-  <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" showFirstLastButtons aria-label="Select page of properties"></mat-paginator>
-</mat-dialog-content>
+    <mat-paginator [pageSizeOptions]="[5, 10, 15, 20]" showFirstLastButtons aria-label="Select page of properties"></mat-paginator>
+  </mat-dialog-content>
 
-@if (form) {
   <mat-dialog-actions align="end">
     <button (click)="closeModal()" type="button" mat-flat-button data-cy="propertiesCancelButton">
-      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.CANCEL' | translate }}
+      {{ t('editorCanvas.shapeSetting.propertiesModal.cancel') }}
     </button>
-    <button
-      [disabled]="form.invalid || form.disabled"
-      (click)="saveChanges()"
-      mat-flat-button
-      type="submit"
-      color="primary"
-      data-cy="propertiesSaveButton"
-    >
-      {{ 'EDITOR_CANVAS.SHAPE_SETTING.PROPERTIES_MODAL.SAVE' | translate }}
+    <button [disabled]="isReadonly()" (click)="saveChanges()" mat-flat-button type="button" color="primary" data-cy="propertiesSaveButton">
+      {{ t('editorCanvas.shapeSetting.propertiesModal.save') }}
     </button>
   </mat-dialog-actions>
-}
+</ng-container>

@@ -12,21 +12,22 @@
  */
 
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {form, FormField, pattern} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatOptionModule} from '@angular/material/core';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {saveAs} from 'file-saver';
 import * as locale from 'locale-codes';
 import {finalize, map} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
+import {AsyncApi} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -34,27 +35,19 @@ import {MatIcon} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
-export interface AsyncApi {
-  language: string;
-  output: string;
-  applicationId: string;
-  channelAddress: string;
-  useSemanticVersion: boolean;
-  writeSeparateFiles: boolean;
-}
+export type {AsyncApi};
 
 @Component({
-  standalone: true,
   selector: 'ame-generate-async-api',
   templateUrl: './generate-async-api.component.html',
   styleUrls: ['./generate-async-api.component.scss'],
   imports: [
     MatDialogModule,
-    TranslatePipe,
+    TranslocoDirective,
     MatFormFieldModule,
     MatProgressSpinnerModule,
     MatButtonModule,
-    ReactiveFormsModule,
+    FormField,
     MatSelectModule,
     MatOptionModule,
     MatCheckboxModule,
@@ -67,40 +60,43 @@ export class GenerateAsyncApiComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private languageService = inject(SammLanguageSettingsService);
   private editorService = inject(EditorService);
-  private dialogRef = inject(MatDialogRef<AssignedNodesOptions>);
+  private dialogRef = inject(MatDialogRef<GenerateAsyncApiComponent>);
   private loadedFilesService = inject(LoadedFilesService);
 
-  form: FormGroup;
-  languages: locale.ILocale[];
-  isGenerating = false;
+  languages = signal<locale.ILocale[]>([]);
+  isGenerating = signal(false);
 
-  public get output(): FormControl {
-    return this.form.get('output') as FormControl;
-  }
+  asyncApiModel = signal<AsyncApi>({
+    language: '',
+    output: 'yaml',
+    applicationId: '',
+    channelAddress: '',
+    useSemanticVersion: false,
+    writeSeparateFiles: false,
+  });
 
-  public get file(): FormControl {
-    return this.form.get('file') as FormControl;
-  }
+  asyncApiForm = form(this.asyncApiModel, schemaPath => {
+    pattern(schemaPath.channelAddress, /^(?:[a-zA-Z]+:\/\/|\/)?[^\s]*$/);
+  });
 
   ngOnInit(): void {
     this.initializeForm();
   }
 
   private initializeForm(): void {
-    this.languages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
-    this.form = new FormGroup({
-      language: new FormControl(this.languages[0].tag),
-      output: new FormControl('yaml'),
-      applicationId: new FormControl(''),
-      channelAddress: new FormControl('', Validators.pattern(/^(?:[a-zA-Z]+:\/\/|\/)?[^\s]*$/)),
-      useSemanticVersion: new FormControl(false),
-      writeSeparateFiles: new FormControl(false),
-    });
+    const sammLanguages = this.languageService.getSammLanguageCodes().map(tag => locale.getByTag(tag));
+    this.languages.set(sammLanguages);
+    if (sammLanguages.length > 0) {
+      this.asyncApiModel.update(model => ({
+        ...model,
+        language: sammLanguages[0].tag,
+      }));
+    }
   }
 
   generateAsyncApiSpec(): void {
-    this.isGenerating = true;
-    const asyncApiSpec = this.form.value as AsyncApi;
+    this.isGenerating.set(true);
+    const asyncApiSpec = this.asyncApiModel();
     this.editorService
       .generateAsyncApiSpec(this.loadedFilesService.currentLoadedFile?.rdfModel, asyncApiSpec)
       .pipe(
@@ -108,7 +104,7 @@ export class GenerateAsyncApiComponent implements OnInit {
         first(),
         map(data => this.handleGeneratedSpec(data, asyncApiSpec)),
         finalize(() => {
-          this.isGenerating = false;
+          this.isGenerating.set(false);
           this.dialogRef.close();
         }),
       )
@@ -122,9 +118,5 @@ export class GenerateAsyncApiComponent implements OnInit {
     const formattedAspectName = `${aspectName}-async-api`;
     const fileName = `${formattedAspectName}.${spec.writeSeparateFiles ? 'zip' : spec.output}`;
     saveAs(new Blob([fileData], {type: fileType}), fileName);
-  }
-
-  getControl(path: string): FormControl {
-    return this.form.get(path) as FormControl;
   }
 }

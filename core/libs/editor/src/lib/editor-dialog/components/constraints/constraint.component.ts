@@ -10,11 +10,14 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {AsyncPipe} from '@angular/common';
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, inject} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {TranslatePipe} from '@ngx-translate/core';
+import {LoadedFilesService} from '@ame/cache';
+import {AfterViewInit, ChangeDetectorRef, Component, computed, effect, inject, input, OnDestroy, signal} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {MatIcon} from '@angular/material/icon';
+import {MatSlideToggle} from '@angular/material/slide-toggle';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorFormModel, EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {PreviousFormDataSnapshot} from '../../interfaces';
 import {ElementListComponent} from '../element-list';
 import {
@@ -37,10 +40,10 @@ import {
 @Component({
   selector: 'ame-constraint',
   templateUrl: './constraint.component.html',
+  styleUrls: ['../fields/field.scss'],
   imports: [
     ElementListComponent,
-    AsyncPipe,
-    TranslatePipe,
+    TranslocoDirective,
     ConstraintNameDropdownFieldComponent,
     BaseInputComponent,
     EncodingInputFieldComponent,
@@ -55,33 +58,80 @@ import {
     UpperBoundInputFieldComponent,
     LowerBoundInputFieldComponent,
     RegularExpressionValueInputFieldComponent,
+    MatSlideToggle,
+    MatIcon,
   ],
 })
 export class ConstraintComponent implements OnDestroy, AfterViewInit {
-  @Input() parentForm: FormGroup;
+  readonly signalForm = input(new EditorSignalFormContext<EditorFormModel>({changedMetaModel: null}));
 
   private changeDetector = inject(ChangeDetectorRef);
+  private loadedFilesService = inject(LoadedFilesService);
 
-  public selectedConstraint: string;
-  public previousData: PreviousFormDataSnapshot = {};
   public metaModelDialogService = inject(EditorModelService);
-  public element$ = this.metaModelDialogService.getMetaModelElement();
+
+  public selectedConstraint = signal<string>(undefined);
+  public previousData = signal<PreviousFormDataSnapshot>({});
+  public element = toSignal(this.metaModelDialogService.getMetaModelElement());
+
+  public isAnonymous = signal(false);
+  public canBeAnonymous = computed(() => {
+    const el = this.element();
+    return Boolean(el && !el.isPredefined && !this.loadedFilesService.isElementExtern(el) && el.parents && el.parents.length > 0);
+  });
+
+  constructor() {
+    effect(() => {
+      const el = this.element();
+      if (el) {
+        this.isAnonymous.set(Boolean(el.isAnonymous?.()));
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.changeDetector.detectChanges();
   }
 
   ngOnDestroy() {
-    this.previousData = {};
+    this.previousData.set({});
+  }
+
+  onAnonymousToggleChange(checked: boolean) {
+    this.isAnonymous.set(checked);
+    const elem = this.element();
+    if (elem) {
+      elem.anonymous = checked;
+      const typeName = elem.className ? elem.className.replace('Default', '') : 'Constraint';
+      if (checked) {
+        elem.name = `[${typeName}]`;
+        this.signalForm().set('name', `[${typeName}]`);
+        this.signalForm().set('isAnonymous', true);
+      } else {
+        elem.name = typeName;
+        this.signalForm().set('name', typeName);
+        this.signalForm().set('isAnonymous', false);
+      }
+      this.metaModelDialogService.updateMetaModelElement(elem);
+    }
   }
 
   onPreviousDataChange(previousData: PreviousFormDataSnapshot) {
-    this.previousData = previousData;
+    this.previousData.set(previousData);
     this.changeDetector.detectChanges();
   }
 
   onClassChange(constraint: string) {
-    this.selectedConstraint = constraint;
+    this.selectedConstraint.set(constraint);
+    if (this.isAnonymous()) {
+      const elem = this.element();
+      if (elem) {
+        const typeName = constraint || (elem.className ? elem.className.replace('Default', '') : 'Constraint');
+        elem.name = `[${typeName}]`;
+        this.signalForm().set('name', `[${typeName}]`);
+        this.signalForm().set('isAnonymous', true);
+      }
+    }
     this.changeDetector.detectChanges();
   }
 }

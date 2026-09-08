@@ -11,13 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject, Input} from '@angular/core';
+import {Component, inject, input} from '@angular/core';
 import {MatRipple} from '@angular/material/core';
 
 @Component({
-  standalone: true,
   host: {
-    '[class.disabled]': 'disabled',
+    '[class.disabled]': 'disabled()',
     '(mousedown)': 'onmousedown($event)',
   },
   selector: 'ame-bar-item',
@@ -26,7 +25,7 @@ import {MatRipple} from '@angular/material/core';
   providers: [MatRipple],
 })
 export class BarItemComponent {
-  @Input() disabled = false;
+  readonly disabled = input(false);
 
   private ripple = inject(MatRipple);
 

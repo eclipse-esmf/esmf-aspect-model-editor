@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {EdgeStyles, MxGraphHelper} from '@ame/mx-graph';
+import {EdgeStyles, MaxGraphHelper} from '@ame/max-graph';
 import {ShapeGeometry, basicShapeGeometry, circleShapeGeometry, smallBasicShapeGeometry} from '@ame/shared';
 import {
   DefaultAspect,
@@ -30,7 +30,7 @@ import {
 } from '@esmf/aspect-model-loader';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 
-const abstractRelations = {
+const abstractRelations: Record<string, string[]> = {
   DefaultAbstractEntity: ['DefaultAbstractEntity'],
   DefaultEntity: ['DefaultAbstractEntity', 'DefaultEntity'],
   DefaultProperty: ['DefaultAbstractProperty', 'DefaultProperty'],
@@ -57,9 +57,9 @@ export enum ModelStyle {
 }
 
 export class DefaultFilter implements FilterLoader {
-  cache = {};
-  filterType: ModelFilter = ModelFilter.DEFAULT;
-  visibleElements = [
+  cache: Record<string, boolean> = {};
+  readonly filterType: ModelFilter = ModelFilter.DEFAULT;
+  readonly visibleElements = [
     DefaultAspect,
     DefaultCharacteristic,
     DefaultConstraint,
@@ -73,10 +73,10 @@ export class DefaultFilter implements FilterLoader {
     DefaultValue,
   ];
 
-  constructor(public loadedFiles: LoadedFilesService) {}
+  constructor(public readonly loadedFiles: LoadedFilesService) {}
 
   filter(rootElements: NamedElement[]): ModelTree<NamedElement>[] {
-    return rootElements.map(element => this.generateTree(element));
+    return (rootElements || []).map(element => this.generateTree(element));
   }
 
   generateTree(element: NamedElement, options?: ModelTreeOptions): ModelTree<NamedElement> {
@@ -88,19 +88,20 @@ export class DefaultFilter implements FilterLoader {
       element,
       fromParentArrow: this.getArrowStyle(element, options?.parent),
       children: new ChildrenArray(),
-      shape: {...this.getShapeGeometry(element), mxGraphStyle: this.getMxGraphStyle(element)},
+      shape: {...this.getShapeGeometry(element), maxgraphStyle: {baseStyleNames: [this.getMaxgraphStyle(element)]}},
       filterType: this.filterType,
     };
 
-    for (const child of element.children) {
+    for (const child of element.children || []) {
       if (this.loadedFiles.isElementExtern(child) && this.loadedFiles.isElementExtern(element)) {
         continue;
       }
 
-      if (this.cache[`${element.aspectModelUrn} - ${child.aspectModelUrn}`]) {
+      const cacheKey = `${element.aspectModelUrn} - ${child.aspectModelUrn}`;
+      if (this.cache[cacheKey]) {
         continue;
       }
-      this.cache[`${element.aspectModelUrn} - ${child.aspectModelUrn}`] = true;
+      this.cache[cacheKey] = true;
       elementTree.children.push(this.generateTree(child, {parent: element}));
     }
 
@@ -112,15 +113,23 @@ export class DefaultFilter implements FilterLoader {
       return null;
     }
 
-    return parent instanceof DefaultEntityInstance && !(element instanceof DefaultEntityInstance)
-      ? EdgeStyles.entityValueEntityEdge
-      : MxGraphHelper.isOptionalProperty(element as DefaultProperty, parent)
-        ? EdgeStyles.optionalPropertyEdge
-        : element instanceof DefaultProperty && element.isAbstract && parent instanceof DefaultProperty
-          ? EdgeStyles.abstractPropertyEdge
-          : abstractRelations[parent?.className]?.includes(element?.className)
-            ? EdgeStyles.abstractElementEdge
-            : EdgeStyles.defaultEdge;
+    if (parent instanceof DefaultEntityInstance && !(element instanceof DefaultEntityInstance)) {
+      return EdgeStyles.entityValueEntityEdge;
+    }
+
+    if (MaxGraphHelper.isOptionalProperty(element as DefaultProperty, parent)) {
+      return EdgeStyles.optionalPropertyEdge;
+    }
+
+    if (element instanceof DefaultProperty && element.isAbstract && parent instanceof DefaultProperty) {
+      return EdgeStyles.abstractPropertyEdge;
+    }
+
+    if (abstractRelations[parent?.className]?.includes(element?.className)) {
+      return EdgeStyles.abstractElementEdge;
+    }
+
+    return EdgeStyles.defaultEdge;
   }
 
   getShapeGeometry(element: NamedElement): ShapeGeometry {
@@ -135,7 +144,7 @@ export class DefaultFilter implements FilterLoader {
     return basicShapeGeometry;
   }
 
-  getMxGraphStyle(element: NamedElement): string {
+  getMaxgraphStyle(element: NamedElement): string {
     if (element instanceof DefaultAspect) {
       return ModelStyle.ASPECT;
     } else if (element instanceof DefaultProperty && !element.isAbstract) {

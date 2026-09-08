@@ -12,7 +12,7 @@
  */
 
 import {CommonModule} from '@angular/common';
-import {Component, inject, input, Input, OnChanges} from '@angular/core';
+import {Component, effect, inject, input, signal} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltip, MatTooltipModule} from '@angular/material/tooltip';
 import {ElementSymbols, ElementType} from '../../model';
@@ -23,7 +23,6 @@ interface ElementInfo {
 }
 
 @Component({
-  standalone: true,
   selector: 'ame-element',
   templateUrl: './element.component.html',
   styleUrls: ['./element.component.scss'],
@@ -33,25 +32,34 @@ interface ElementInfo {
   hostDirectives: [MatTooltip],
   imports: [CommonModule, MatTooltipModule, MatIconModule],
 })
-export class ElementIconComponent implements OnChanges {
-  @Input() type!: ElementInfo;
-  @Input() size: 'small' | 'medium' | 'large' = 'large';
-  @Input() name = '';
-  @Input() description = '';
-  @Input() disabledTooltipNameLength = 30;
-  @Input() disabledTooltipDescriptionLength = 40;
+export class ElementIconComponent {
+  readonly type = input.required<ElementInfo>();
+  readonly size = input<'small' | 'medium' | 'large'>('large');
+  readonly name = input('');
+  readonly description = input('');
+  readonly disabledTooltipNameLength = input(30);
+  readonly disabledTooltipDescriptionLength = input(40);
 
   private matTooltip = inject(MatTooltip);
 
   public isNewValue = input(false);
-  public className = '';
+  public className = signal('');
 
-  ngOnChanges(): void {
-    if (this.type) {
-      this.className = `${this.type.type.toLowerCase()} ame-${this.size}`;
-    }
+  constructor() {
+    effect(() => {
+      const type = this.type();
 
-    this.matTooltip.message = `${this.isNewValue() ? 'New ' : ''}${this.type.type === 'text' ? 'Simple value' : 'Element'}`;
-    this.matTooltip.position = 'before';
+      if (type) {
+        this.className.set(`${type.type.toLowerCase()} ame-${this.size()}`);
+      }
+
+      if (this.isNewValue()) {
+        this.matTooltip.message = 'New';
+        this.matTooltip.position = 'before';
+      } else if (type?.type === 'text') {
+        this.matTooltip.message = 'Simple value';
+        this.matTooltip.position = 'before';
+      }
+    });
   }
 }

@@ -11,7 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultAspect, DefaultEntity, DefaultProperty, PropertyPayload, PropertyUrn, Samm, SammC, Type} from '@esmf/aspect-model-loader';
+import {simpleDataTypes} from '@ame/shared';
+import {
+  DefaultAspect,
+  DefaultEntity,
+  DefaultProperty,
+  DefaultValue,
+  PropertyPayload,
+  PropertyUrn,
+  Samm,
+  SammC,
+  Type,
+} from '@esmf/aspect-model-loader';
 import {ScalarValue} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/scalar-value';
 import {DataFactory, NamedNode} from 'n3';
 import {ListElement, ListElementType, ListProperties, PropertyListElement, ResolvedListElements, SourceElementType} from '.';
@@ -25,6 +36,12 @@ export class RdfListHelper {
     if (source instanceof DefaultEntity || source instanceof DefaultAspect) {
       propertiesPayload = source.propertiesPayload;
     }
+
+    const defaultDataTypeUrn =
+      source?.dataType?.urn ||
+      source?.dataType?.aspectModelUrn ||
+      (typeof source?.dataType === 'string' ? source.dataType : null) ||
+      simpleDataTypes.string.isDefinedBy;
 
     const listElements = elements.map(metaModelElement => {
       const property: DefaultProperty = metaModelElement;
@@ -43,6 +60,16 @@ export class RdfListHelper {
         return blankNode;
       }
 
+      if (metaModelElement instanceof DefaultValue && metaModelElement.isAnonymous?.()) {
+        const blankNode = DataFactory.blankNode();
+        overWrittenListElements.push({
+          metaModelElement,
+          propertyPayload,
+          blankNode,
+        });
+        return blankNode;
+      }
+
       if (metaModelElement.aspectModelUrn) {
         return DataFactory.namedNode(metaModelElement.aspectModelUrn);
       } else if (metaModelElement?.value && !(metaModelElement instanceof ScalarValue)) {
@@ -50,10 +77,11 @@ export class RdfListHelper {
       }
 
       if (metaModelElement instanceof ScalarValue) {
-        return DataFactory.literal(`${metaModelElement.value}`, DataFactory.namedNode(source.dataType.urn));
+        const dtUrn = metaModelElement.type?.urn || metaModelElement.type?.aspectModelUrn || defaultDataTypeUrn;
+        return DataFactory.literal(`${metaModelElement.value}`, DataFactory.namedNode(dtUrn));
       }
 
-      return DataFactory.literal(metaModelElement, DataFactory.namedNode(source.dataType.urn));
+      return DataFactory.literal(metaModelElement, DataFactory.namedNode(defaultDataTypeUrn));
     });
 
     return {

@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,219 +12,214 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<form [formGroup]="form">
-  <h2 mat-dialog-title>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.TITLE' | translate }}</h2>
-  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
-    <mat-icon>close</mat-icon>
-  </button>
+  <form (submit)="$event.preventDefault(); openApiForm().valid() && generateOpenApiSpec()" novalidate>
+    <h2 mat-dialog-title>{{ t('generateOpenapiSpecDialog.title') }}</h2>
+    <button class="close-button" type="button" mat-icon-button tabindex="-1" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
 
-  <mat-dialog-content>
-    @if (!isGenerating) {
-      <p>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.CONFIGURATION' | translate }}</p>
-      <mat-form-field appearance="fill">
-        <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.LANGUAGE' | translate }}</mat-label>
-        <mat-select [formControl]="getControl('language')" data-cy="tbLanguageButton">
-          @for (language of languages; track language) {
-            <mat-option [value]="language.tag">{{ language.name }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <section>
+    <mat-dialog-content>
+      @if (!isGenerating()) {
+        <p>{{ t('generateOpenapiSpecDialog.configuration') }}</p>
         <mat-form-field appearance="fill">
-          <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.OUTPUT_FILE_FORMAT' | translate }}</mat-label>
-          <mat-select [formControl]="getControl('output')" data-cy="tbOutputButton">
-            <mat-option data-cy="tbOutputButton-json" value="json">JSON</mat-option>
-            <mat-option data-cy="tbOutputButton-yaml" value="yaml">YAML</mat-option>
+          <mat-label>{{ t('generateOpenapiSpecDialog.language') }}</mat-label>
+          <mat-select [formField]="openApiForm.language" data-cy="tbLanguageButton">
+            @for (language of languages(); track language) {
+              <mat-option [value]="language.tag">{{ language.name }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
-          <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BASEURL' | translate }}</mat-label>
-          <input [formControl]="getControl('baseUrl')" matInput placeholder="https://example.com" data-cy="tbBaseUrlInput" />
-          @if (getControl('baseUrl')?.errors?.invalidUrl) {
-            <mat-error data-cy="tbBaseUrlInputError">
-              {{ 'GENERATE_OPENAPI_SPEC_DIALOG.PLEASE_ADD_VALID_URL' | translate }}
-            </mat-error>
-          }
-        </mat-form-field>
-
-        <mat-form-field appearance="fill">
-          <mat-label>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.PAGING_TYPE_OPTION' | translate }}</mat-label>
-          <mat-select [formControl]="getControl('paging')">
-            <mat-option value="NO_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.NO_PAGING' | translate }}</mat-option>
-            <mat-option value="CURSOR_BASED_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.CURSOR_BASED_PAGING' | translate }}</mat-option>
-            <mat-option value="OFFSET_BASED_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.OFFSET_BASED_PAGING' | translate }}</mat-option>
-            <mat-option value="TIME_BASED_PAGING">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.TIME_BASED_PAGING' | translate }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </section>
-
-      <section>
-        <mat-checkbox
-          class="dialog__checkbox"
-          [formControl]="getControl('includeQueryApi')"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API_TOOLTIP' | translate"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.INCLUDE_QUERY_API' | translate }}
-        </mat-checkbox>
-
-        <mat-checkbox
-          class="dialog__checkbox"
-          [formControl]="getControl('useSemanticVersion')"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION_TOOLTIP' | translate"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.USE_SEMANTIC_VERSION' | translate }}
-        </mat-checkbox>
-
-        <mat-checkbox
-          class="dialog__checkbox"
-          [formControl]="activateResourcePath"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ACTIVATE_RESOURCE_PATH' | translate"
-          data-cy="activateResourcePathCheckbox"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ACTIVATE_RESOURCE_PATH_TOOLTIP' | translate }}
-        </mat-checkbox>
-      </section>
-
-      @if (activateResourcePath.value) {
         <section>
           <mat-form-field appearance="fill">
-            <mat-label data-cy="resourcePathTitle">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH' | translate }}</mat-label>
-            <input [formControl]="getControl('resourcePath')" matInput placeholder="/resource/{resourceId}" data-cy="resourcePathInput" />
-            @if (getControl('resourcePath')?.errors?.required) {
-              <mat-error data-cy="resourcePathRequiredError">
-                {{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_REQUIRED' | translate }}
-              </mat-error>
-            }
-            @if (getControl('resourcePath')?.errors?.pattern) {
-              <mat-error data-cy="resourcePathPatternError">
-                {{ 'GENERATE_OPENAPI_SPEC_DIALOG.RESOURCE_PATH_PATTERN' | translate }}
+            <mat-label>{{ t('generateOpenapiSpecDialog.outputFileFormat') }}</mat-label>
+            <mat-select [formField]="openApiForm.output" data-cy="tbOutputButton">
+              <mat-option data-cy="tbOutputButton-json" value="json">JSON</mat-option>
+              <mat-option data-cy="tbOutputButton-yaml" value="yaml">YAML</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>{{ t('generateOpenapiSpecDialog.baseurl') }}</mat-label>
+            <input [formField]="openApiForm.baseUrl" matInput placeholder="https://example.com" data-cy="tbBaseUrlInput" />
+            @if (openApiForm.baseUrl().invalid()) {
+              <mat-error data-cy="tbBaseUrlInputError">
+                {{ t('generateOpenapiSpecDialog.pleaseAddValidUrl') }}
               </mat-error>
             }
           </mat-form-field>
 
-          <h1 class="dialog__title" data-cy="uploadTitle">
-            {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_TITLE' | translate: {output: output.value.toUpperCase()} }}:
-          </h1>
-          <p class="dialog__description">
-            {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_DESCRIPTION' | translate: {output: output.value.toUpperCase()} }}
-            <a [href]="linkToSpecification" target="_blank" rel="noopener">{{ output.value.toUpperCase() }} file properties</a>
-          </p>
-
-          @if (uploadedFile) {
-            <div class="dialog__file-info">
-              <h2 data-cy="uploadFileTitle">
-                {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOADED_FILE_TITLE' | translate: {output: output.value.toUpperCase()} }}:
-              </h2>
-              <span class="dialog__file-name">{{ uploadedFile.name }}</span>
-              <button (click)="removeUploadedFile()" mat-icon-button>
-                <mat-icon data-cy="removeUploadFile">remove_circle</mat-icon>
-              </button>
-            </div>
-          }
-
-          @if (!uploadedFile) {
-            <div
-              class="dialog__upload-content"
-              #dropArea
-              [ngClass]="file?.errors?.required ? 'dialog__border--error' : 'dialog__border--dashed'"
-              data-cy="uploadContent"
-            >
-              <input
-                class="dialog__upload-input"
-                #fileDropRef
-                [accept]="output.value === 'yaml' ? '.yml,.yaml' : '.json'"
-                (change)="onFileBrowseHandler($event)"
-                type="file"
-                data-cy="uploadContentFileInput"
-              />
-              <div>
-                <button (click)="fileDropRef.click()" mat-icon-button tabindex="0">
-                  <mat-icon>cloud_upload</mat-icon>
-                </button>
-                <p class="dialog__upload-text">{{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_DRAG_AND_DROP_TEXT' | translate }}</p>
-              </div>
-            </div>
-            @if (file?.errors?.required) {
-              <mat-error data-cy="uploadFileRequireError">
-                {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_REQUIRED' | translate: {output: output.value.toUpperCase()} }}
-              </mat-error>
-            }
-          }
-
-          @if (uploadedFile) {
-            <div class="margin-bottom-10">
-              <mat-accordion>
-                <mat-expansion-panel>
-                  <mat-expansion-panel-header>
-                    <mat-panel-title data-cy="accordionTitle">
-                      {{ 'GENERATE_OPENAPI_SPEC_DIALOG.UPLOAD_FILE_ACCORDION_TITLE' | translate }}
-                    </mat-panel-title>
-                  </mat-expansion-panel-header>
-                  <textarea class="dialog__textarea" spellcheck="false" matInput readonly>{{
-                    output.value === 'json' ? getControlValue('jsonProperties') : getControlValue('ymlProperties')
-                  }}</textarea>
-                </mat-expansion-panel>
-              </mat-accordion>
-            </div>
-          }
+          <mat-form-field appearance="fill">
+            <mat-label>{{ t('generateOpenapiSpecDialog.pagingTypeOption') }}</mat-label>
+            <mat-select [formField]="openApiForm.paging">
+              <mat-option value="NO_PAGING">{{ t('generateOpenapiSpecDialog.noPaging') }}</mat-option>
+              <mat-option value="CURSOR_BASED_PAGING">{{ t('generateOpenapiSpecDialog.cursorBasedPaging') }}</mat-option>
+              <mat-option value="OFFSET_BASED_PAGING">{{ t('generateOpenapiSpecDialog.offsetBasedPaging') }}</mat-option>
+              <mat-option value="TIME_BASED_PAGING">{{ t('generateOpenapiSpecDialog.timeBasedPaging') }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </section>
+
+        <section>
+          <mat-checkbox
+            class="dialog__checkbox"
+            [formField]="openApiForm.includeQueryApi"
+            [matTooltip]="t('generateOpenapiSpecDialog.includeQueryApiTooltip')"
+          >
+            {{ t('generateOpenapiSpecDialog.includeQueryApi') }}
+          </mat-checkbox>
+
+          <mat-checkbox
+            class="dialog__checkbox"
+            [formField]="openApiForm.useSemanticVersion"
+            [matTooltip]="t('generateOpenapiSpecDialog.useSemanticVersionTooltip')"
+          >
+            {{ t('generateOpenapiSpecDialog.useSemanticVersion') }}
+          </mat-checkbox>
+
+          <mat-checkbox
+            class="dialog__checkbox"
+            [formField]="openApiForm.activateResourcePath"
+            [matTooltip]="t('generateOpenapiSpecDialog.activateResourcePath')"
+            (change)="toggleResourcePath($event.checked)"
+            data-cy="activateResourcePathCheckbox"
+          >
+            {{ t('generateOpenapiSpecDialog.activateResourcePathTooltip') }}
+          </mat-checkbox>
+        </section>
+
+        @if (openApiModel().activateResourcePath) {
+          <section>
+            <mat-form-field appearance="fill">
+              <mat-label data-cy="resourcePathTitle">{{ t('generateOpenapiSpecDialog.resourcePath') }}</mat-label>
+              <input [formField]="openApiForm.resourcePath" matInput placeholder="/resource/{resourceId}" data-cy="resourcePathInput" />
+              @if (hasResourcePathError('required')) {
+                <mat-error data-cy="resourcePathRequiredError">
+                  {{ t('generateOpenapiSpecDialog.resourcePathRequired') }}
+                </mat-error>
+              }
+              @if (hasResourcePathError('pattern')) {
+                <mat-error data-cy="resourcePathPatternError">
+                  {{ t('generateOpenapiSpecDialog.resourcePathPattern') }}
+                </mat-error>
+              }
+            </mat-form-field>
+
+            <h1 class="dialog__title" data-cy="uploadTitle">
+              {{ t('generateOpenapiSpecDialog.uploadFileTitle', {output: openApiModel().output.toUpperCase()}) }}:
+            </h1>
+            <p class="dialog__description">
+              {{ t('generateOpenapiSpecDialog.uploadFileDescription', {output: openApiModel().output.toUpperCase()}) }}
+              <a [href]="linkToSpecification()" target="_blank" rel="noopener">{{ openApiModel().output.toUpperCase() }} file properties</a>
+            </p>
+
+            @if (uploadedFile()) {
+              <div class="dialog__file-info">
+                <h2 data-cy="uploadFileTitle">
+                  {{ t('generateOpenapiSpecDialog.uploadedFileTitle', {output: openApiModel().output.toUpperCase()}) }}:
+                </h2>
+                <span class="dialog__file-name">{{ uploadedFile().name }}</span>
+                <button (click)="removeUploadedFile()" type="button" mat-icon-button>
+                  <mat-icon data-cy="removeUploadFile">remove_circle</mat-icon>
+                </button>
+              </div>
+            }
+
+            @if (!uploadedFile()) {
+              <div
+                class="dialog__upload-content"
+                #dropArea
+                [ngClass]="openApiForm.file().invalid() ? 'dialog__border--error' : 'dialog__border--dashed'"
+                data-cy="uploadContent"
+              >
+                <input
+                  class="dialog__upload-input"
+                  #fileDropRef
+                  [accept]="openApiModel().output === 'yaml' ? '.yml,.yaml' : '.json'"
+                  (change)="onFileBrowseHandler($event)"
+                  type="file"
+                  data-cy="uploadContentFileInput"
+                />
+                <div>
+                  <button (click)="fileDropRef.click()" type="button" mat-icon-button tabindex="0">
+                    <mat-icon>cloud_upload</mat-icon>
+                  </button>
+                  <p class="dialog__upload-text">{{ t('generateOpenapiSpecDialog.uploadDragAndDropText') }}</p>
+                </div>
+              </div>
+              @if (openApiForm.file().invalid()) {
+                <mat-error data-cy="uploadFileRequireError">
+                  {{ t('generateOpenapiSpecDialog.uploadFileRequired', {output: openApiModel().output.toUpperCase()}) }}
+                </mat-error>
+              }
+            }
+
+            @if (uploadedFile()) {
+              <div class="margin-bottom-10">
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title data-cy="accordionTitle">
+                        {{ t('generateOpenapiSpecDialog.uploadFileAccordionTitle') }}
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <textarea class="dialog__textarea" spellcheck="false" matInput readonly>{{
+                      openApiModel().output === 'json' ? openApiModel().jsonProperties : openApiModel().ymlProperties
+                    }}</textarea>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            }
+          </section>
+        }
+
+        <mat-expansion-panel data-cy="includeAPIextensions">
+          <mat-expansion-panel-header>
+            <mat-panel-description> Include API extensions for additional CRUD operations</mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-checkbox
+            class="dialog__checkbox"
+            [formField]="openApiForm.includePost"
+            [matTooltip]="t('generateOpenapiSpecDialog.addOpenApiPostTooltip')"
+            data-cy="includePost"
+          >
+            {{ t('generateOpenapiSpecDialog.addOpenApiPost') }}
+          </mat-checkbox>
+
+          <mat-checkbox
+            class="dialog__checkbox"
+            [formField]="openApiForm.includePut"
+            [matTooltip]="t('generateOpenapiSpecDialog.addOpenApiPutTooltip')"
+            data-cy="includePut"
+          >
+            {{ t('generateOpenapiSpecDialog.addOpenApiPut') }}
+          </mat-checkbox>
+
+          <mat-checkbox
+            class="dialog__checkbox"
+            [formField]="openApiForm.includePatch"
+            [matTooltip]="t('generateOpenapiSpecDialog.addOpenApiPatchTooltip')"
+            data-cy="includePatch"
+          >
+            {{ t('generateOpenapiSpecDialog.addOpenApiPatch') }}
+          </mat-checkbox>
+        </mat-expansion-panel>
+      } @else {
+        <div class="dialog__loading">
+          <h3>{{ t('generateOpenapiSpecDialog.generating') }}</h3>
+          <mat-spinner></mat-spinner>
+        </div>
       }
+    </mat-dialog-content>
 
-      <mat-expansion-panel data-cy="includeAPIextensions">
-        <mat-expansion-panel-header>
-          <mat-panel-description> Include API extensions for additional CRUD operations</mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <mat-checkbox
-          class="dialog__checkbox"
-          [formControl]="getControl('includePost')"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST_TOOLTIP' | translate"
-          data-cy="includePost"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_POST' | translate }}
-        </mat-checkbox>
-
-        <mat-checkbox
-          class="dialog__checkbox"
-          [formControl]="getControl('includePut')"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT_TOOLTIP' | translate"
-          data-cy="includePut"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PUT' | translate }}
-        </mat-checkbox>
-
-        <mat-checkbox
-          class="dialog__checkbox"
-          [formControl]="getControl('includePatch')"
-          [matTooltip]="'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH_TOOLTIP' | translate"
-          data-cy="includePatch"
-        >
-          {{ 'GENERATE_OPENAPI_SPEC_DIALOG.ADD_OPEN_API_PATCH' | translate }}
-        </mat-checkbox>
-      </mat-expansion-panel>
-    } @else {
-      <div class="dialog__loading">
-        <h3>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.GENERATING' | translate }}</h3>
-        <mat-spinner></mat-spinner>
-      </div>
-    }
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close data-cy="cancelOpenApiButton">
-      {{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.CANCEL' | translate }}
-    </button>
-    <button
-      [disabled]="!form.valid"
-      (click)="generateOpenApiSpec()"
-      type="button"
-      mat-flat-button
-      color="primary"
-      data-cy="tbGenerateOpenApiButton"
-    >
-      <span>{{ 'GENERATE_OPENAPI_SPEC_DIALOG.BUTTON.GENERATE' | translate }}</span>
-    </button>
-  </mat-dialog-actions>
-</form>
+    <mat-dialog-actions align="end">
+      <button type="button" mat-flat-button mat-dialog-close data-cy="cancelOpenApiButton">
+        {{ t('generateOpenapiSpecDialog.button.cancel') }}
+      </button>
+      <button [disabled]="openApiForm().invalid()" type="submit" mat-flat-button color="primary" data-cy="tbGenerateOpenApiButton">
+        <span>{{ t('generateOpenapiSpecDialog.button.generate') }}</span>
+      </button>
+    </mat-dialog-actions>
+  </form>
+</ng-container>

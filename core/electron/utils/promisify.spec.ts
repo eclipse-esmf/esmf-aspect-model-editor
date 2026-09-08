@@ -11,24 +11,32 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 
-const mockExecAsyncFn = jest.fn();
-const mockExecAsync = mockExecAsyncFn as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const {mockExecAsyncFn, mockExecAsync} = vi.hoisted(() => {
+  const fn = vi.fn();
+  return {mockExecAsyncFn: fn, mockExecAsync: fn as unknown as MockedFunction<(...args: any[]) => any>};
+});
 
-jest.mock('util', () => ({
-  promisify: jest.fn(() => mockExecAsyncFn),
+vi.mock('util', () => ({
+  promisify: vi.fn(() => mockExecAsyncFn),
+}));
+vi.mock('node:util', () => ({
+  promisify: vi.fn(() => mockExecAsyncFn),
 }));
 
-jest.mock('child_process', () => ({
-  exec: jest.fn(),
+vi.mock('child_process', () => ({
+  exec: vi.fn(),
+}));
+vi.mock('node:child_process', () => ({
+  exec: vi.fn(),
 }));
 
 import {execPromise} from './promisify';
 
 describe('promisify', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('execPromise', () => {

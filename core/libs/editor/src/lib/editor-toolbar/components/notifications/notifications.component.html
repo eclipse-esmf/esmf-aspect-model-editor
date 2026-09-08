@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,82 +12,83 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<h2 mat-dialog-title>{{ 'NOTIFICATIONS_TABLE_DIALOG.NOTIFICATIONS' | translate }}</h2>
-<button class="close-button" data-cy="close-notifications" mat-icon-button tabindex="-1" mat-dialog-close>
-  <mat-icon>close</mat-icon>
-</button>
-
-<mat-dialog-content class="table-container">
-  <button (click)="clearAllNotifications()" mat-button color="primary" data-cy="clear-notifications">
-    <span>{{ 'NOTIFICATIONS_TABLE_DIALOG.CLEAR_TABLE' | translate }}</span>
+  <h2 mat-dialog-title>{{ t('notificationsTableDialog.notifications') }}</h2>
+  <button class="close-button" data-cy="close-notifications" mat-icon-button tabindex="-1" mat-dialog-close>
+    <mat-icon>close</mat-icon>
   </button>
 
-  <table class="mat-elevation-z2 notifications-table" [dataSource]="notificationsService.getNotifications()" mat-table>
-    <ng-container matColumnDef="expand">
-      <th *matHeaderCellDef mat-header-cell></th>
-      <td *matCellDef="let element" mat-cell>
-        @if (!element.expanded && element.description) {
-          <mat-icon (click)="element.expanded = !element.expanded">expand_more</mat-icon>
-        }
-        @if (element.expanded && element.description) {
-          <mat-icon (click)="element.expanded = !element.expanded">expand_less</mat-icon>
-        }
-      </td>
-    </ng-container>
+  <mat-dialog-content class="table-container">
+    <button (click)="clearAllNotifications()" mat-button color="primary" data-cy="clear-notifications">
+      <span>{{ t('notificationsTableDialog.clearTable') }}</span>
+    </button>
 
-    <ng-container matColumnDef="date">
-      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.DATE' | translate }}</th>
-      <td *matCellDef="let element" mat-cell>
-        <div class="date-time">
-          <div>{{ element.formattedDate }} {{ element.formattedTime }}</div>
-        </div>
-      </td>
-    </ng-container>
+    <table class="mat-elevation-z2 notifications-table" [dataSource]="notificationsService.getNotifications()" mat-table>
+      <ng-container matColumnDef="expand">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let element" mat-cell>
+          @if (!element.expanded && element.description) {
+            <mat-icon (click)="element.expanded = !element.expanded">expand_more</mat-icon>
+          }
+          @if (element.expanded && element.description) {
+            <mat-icon (click)="element.expanded = !element.expanded">expand_less</mat-icon>
+          }
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="type">
-      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.TYPE' | translate }}</th>
-      <td *matCellDef="let element" mat-cell>
-        <mat-icon [ngClass]="[getTypeIcon(element.type)]">{{ getTypeIcon(element.type) }}</mat-icon>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="message">
-      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.MESSAGE' | translate }}</th>
-      <td *matCellDef="let element" mat-cell>
-        <div class="message-title">
-          {{ element.title }}
-        </div>
-        @if (element.expanded) {
-          <div>
-            {{ element.description }}
+      <ng-container matColumnDef="date">
+        <th *matHeaderCellDef mat-header-cell>{{ t('notificationsTableDialog.date') }}</th>
+        <td *matCellDef="let element" mat-cell>
+          <div class="date-time">
+            <div>{{ element.formattedDate }} {{ element.formattedTime }}</div>
           </div>
-        }
-      </td>
-    </ng-container>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="options">
-      <th *matHeaderCellDef mat-header-cell>{{ 'NOTIFICATIONS_TABLE_DIALOG.OPTIONS' | translate }}</th>
-      <td *matCellDef="let element" mat-cell>
-        <button [matMenuTriggerFor]="menu" (click)="currentItem = element" mat-icon-button>
-          <mat-icon>more_vertical</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="type">
+        <th *matHeaderCellDef mat-header-cell>{{ t('notificationsTableDialog.type') }}</th>
+        <td *matCellDef="let element" mat-cell>
+          <mat-icon [ngClass]="[getTypeIcon(element.type)]">{{ getTypeIcon(element.type) }}</mat-icon>
+        </td>
+      </ng-container>
 
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell no-notif-msg" colspan="9999">{{ 'NOTIFICATIONS_TABLE_DIALOG.NO_NOTIFICATIONS' | translate }}</td>
-    </tr>
+      <ng-container matColumnDef="message">
+        <th *matHeaderCellDef mat-header-cell>{{ t('notificationsTableDialog.message') }}</th>
+        <td *matCellDef="let element" mat-cell>
+          <div class="message-title">
+            {{ element.title }}
+          </div>
+          @if (element.expanded) {
+            <div>
+              {{ element.description }}
+            </div>
+          }
+        </td>
+      </ng-container>
 
-    <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
-    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-  </table>
-</mat-dialog-content>
+      <ng-container matColumnDef="options">
+        <th *matHeaderCellDef mat-header-cell>{{ t('notificationsTableDialog.options') }}</th>
+        <td *matCellDef="let element" mat-cell>
+          <button [matMenuTriggerFor]="menu" (click)="currentItem.set(element)" mat-icon-button>
+            <mat-icon>more_vertical</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-<mat-menu #menu="matMenu">
-  <button [disabled]="!currentItem?.link" (click)="goTo(currentItem?.link)" mat-menu-item>
-    <mat-icon>arrow_circle_right</mat-icon>{{ 'NOTIFICATIONS_TABLE_DIALOG.GO' | translate }}
-  </button>
-  <button (click)="clearNotification(currentItem)" mat-menu-item>
-    <mat-icon>delete</mat-icon>{{ 'NOTIFICATIONS_TABLE_DIALOG.CLEAR' | translate }}
-  </button>
-</mat-menu>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-notif-msg" colspan="9999">{{ t('notificationsTableDialog.noNotifications') }}</td>
+      </tr>
+
+      <tr *matHeaderRowDef="displayedColumns(); sticky: true" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns()" mat-row></tr>
+    </table>
+  </mat-dialog-content>
+
+  <mat-menu #menu="matMenu">
+    <button [disabled]="!currentItem()?.link" (click)="goTo(currentItem()?.link)" mat-menu-item>
+      <mat-icon>arrow_circle_right</mat-icon>{{ t('notificationsTableDialog.go') }}
+    </button>
+    <button (click)="clearNotification(currentItem())" mat-menu-item>
+      <mat-icon>delete</mat-icon>{{ t('notificationsTableDialog.clear') }}
+    </button>
+  </mat-menu>
+</ng-container>

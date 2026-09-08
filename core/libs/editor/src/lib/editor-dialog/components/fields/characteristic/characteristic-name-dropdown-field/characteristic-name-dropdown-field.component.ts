@@ -18,9 +18,8 @@ import {ModelService} from '@ame/rdf/services';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ElementCreatorService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
-import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatLabel} from '@angular/material/input';
 import {MatOptgroup, MatOption, MatSelect} from '@angular/material/select';
@@ -42,7 +41,6 @@ import {
   DefaultStructuredValue,
   DefaultTimeSeries,
   NamedElement,
-  Unit,
   useLoader,
 } from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
@@ -52,7 +50,7 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 @Component({
   selector: 'ame-characteristic-name-dropdown-field',
   templateUrl: './characteristic-name-dropdown-field.component.html',
-  imports: [MatFormFieldModule, MatLabel, MatSelect, FormsModule, KeyValuePipe, MatOptgroup, MatOption],
+  imports: [MatFormFieldModule, MatLabel, MatSelect, KeyValuePipe, MatOptgroup, MatOption],
 })
 export class CharacteristicNameDropdownFieldComponent extends DropdownFieldComponent<DefaultCharacteristic> implements OnInit {
   private destroyRef = inject(DestroyRef);
@@ -64,11 +62,11 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
   public languageSettings = inject(SammLanguageSettingsService);
   public loadedFilesService = inject(LoadedFilesService);
 
-  public listCharacteristics: Map<string, Function> = new Map();
-  public listCharacteristicGroup: Map<string, Array<string>> = new Map();
-  public units: Array<Unit> = [];
+  public listCharacteristics: Map<string, () => DefaultCharacteristic> = new Map();
 
-  @Output() selectedCharacteristic = new EventEmitter<CharacteristicClassType>();
+  public listCharacteristicGroup = signal<Map<string, Array<string>>>(new Map());
+
+  readonly selectedCharacteristic = output<CharacteristicClassType>();
 
   ngOnInit(): void {
     this.initListCharacteristics();
@@ -82,6 +80,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
   }
 
   onCharacteristicChange(characteristic: string) {
+    this.metaModelClassName = characteristic;
     this.setPreviousData();
 
     const createInstanceFunction = this.listCharacteristics.get(characteristic);
@@ -89,6 +88,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
     const oldMetaModelElement = this.metaModelElement;
     this.metaModelElement = newCharacteristicType;
+    this.metaModelElement.anonymous = Boolean(oldMetaModelElement?.isAnonymous?.());
 
     if (newCharacteristicType?.isPredefined) {
       this.metaModelElement.name = newCharacteristicType.name;
@@ -105,21 +105,31 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
           this.metaModelElement.aspectModelUrn = this.originalCharacteristic.aspectModelUrn;
         }
       } else {
-        this.metaModelElement.name = oldMetaModelElement.name;
+        this.metaModelElement.name = this.metaModelElement.isAnonymous?.() ? `[${characteristic}]` : oldMetaModelElement.name;
         this.migrateCommonAttributes(oldMetaModelElement);
       }
     }
     this.addLanguageSettings(this.metaModelElement);
     this.setMetaModelElementAspectUrn(newCharacteristicType);
 
-    this.selectedCharacteristic.emit(characteristic as CharacteristicClassType);
+    if (this.metaModelElement.isAnonymous?.()) {
+      this.signalForm().set('name', this.metaModelElement.name);
+      this.signalForm().set('isAnonymous', true);
+    }
+
     this.updateFields(newCharacteristicType);
+
+    this.selectedCharacteristic.emit(characteristic as CharacteristicClassType);
   }
 
   private initListCharacteristics(): void {
     if (this.listCharacteristics.size <= 0) {
-      this.listCharacteristicGroup.set('Classes', this.createCharacteristicClassesList());
-      this.listCharacteristicGroup.set('Instances', this.createCharacteristicInstancesList());
+      this.listCharacteristicGroup.set(
+        new Map([
+          ['Classes', this.createCharacteristicClassesList()],
+          ['Instances', this.createCharacteristicInstancesList()],
+        ]),
+      );
     }
   }
 
@@ -175,32 +185,19 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
   private migrateCommonAttributes(oldMetaModelElement: NamedElement) {
     const modelKeys = Object.keys(this.metaModelElement);
-    const skipKeys = ['aspectModelUrn', 'name', 'className'];
-    const {createUnit} = useLoader({
-      rdfModel: this.loadedFilesService.currentLoadedFile.rdfModel,
-      cache: this.loadedFilesService.currentLoadedFile.cachedFile,
-    });
+    const skipKeys = ['aspectModelUrn', 'name', '_name', 'className'];
 
     Object.keys(oldMetaModelElement).forEach(oldKey => {
-      if (modelKeys.includes(oldKey) && !skipKeys.includes(oldKey)) {
-        if (oldKey === 'unit' && this.metaModelElement instanceof DefaultDuration) {
-          const matchedUnit = this.units.find(
-            unit =>
-              unit.quantityKinds &&
-              unit.quantityKinds.includes('time') &&
-              unit.name.toLowerCase().indexOf(oldMetaModelElement[oldKey].name.toLowerCase()) >= 0,
-          );
-          if (matchedUnit) {
-            this.metaModelElement[oldKey] = createUnit(matchedUnit.name);
-          }
-        } else {
-          this.metaModelElement[oldKey] = oldMetaModelElement[oldKey];
-        }
+      if (!skipKeys.includes(oldKey) && (modelKeys.includes(oldKey) || oldKey in this.metaModelElement)) {
+        this.metaModelElement[oldKey] = oldMetaModelElement[oldKey];
       }
     });
   }
 
   private setMetaModelElementAspectUrn(modelElement: NamedElement) {
+    if (this.metaModelElement?.isAnonymous?.()) {
+      return;
+    }
     const currentRdfModel = this.loadedFilesService.currentLoadedFile.rdfModel;
     const {getSupportedCharacteristicNames} = useLoader({
       rdfModel: currentRdfModel,
@@ -212,7 +209,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
     }
   }
 
-  private getMetaModelElementTypeWhenChange(createInstanceFunction: Function) {
+  private getMetaModelElementTypeWhenChange(createInstanceFunction: () => DefaultCharacteristic) {
     const modelElementType = createInstanceFunction();
     if (modelElementType.aspectModelUrn === this.selectedMetaModelElement.aspectModelUrn) {
       this.metaModelElement = this.selectedMetaModelElement;

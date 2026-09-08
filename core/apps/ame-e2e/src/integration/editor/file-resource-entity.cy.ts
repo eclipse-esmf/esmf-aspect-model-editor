@@ -17,6 +17,10 @@ import {FIELD_extends, SELECTOR_tbDeleteButton} from '../../support/constants';
 import {cyHelp} from '../../support/helpers';
 
 describe('Time Series Entity', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   function createFileResourceEntity() {
     return cy
       .then(() => cy.dbClickShape('Entity1'))
@@ -26,9 +30,7 @@ describe('Time Series Entity', () => {
   }
 
   it('should create FileResource with its properties', () => {
-    cy.visitDefault();
     cy.startModelling()
-      .wait(500)
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
       .then(() => createFileResourceEntity())
 

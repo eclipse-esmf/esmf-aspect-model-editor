@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -23,8 +23,8 @@ export class RdfLoader {
   public loadModel(payloads: Array<{rdfAspectModel: string; sourceLocation: string}>): Observable<RdfModel> {
     const subject = new Subject<RdfModel>();
     const store: Store = new Store();
-    let rdfModel: RdfModel = null;
-    const parsedRdf = [];
+    let rdfModel: RdfModel | null = null;
+    const parsedRdf: string[] = [];
 
     payloads.forEach(payload => {
       new Parser().parse(payload.rdfAspectModel, (error, quad, prefixes: Prefixes<any>) => {
@@ -40,14 +40,15 @@ export class RdfLoader {
           // content is parsed at that point. push rdf to parsed array
           if (!rdfModel) {
             rdfModel = new RdfModel(store);
-            rdfModel.setPrefixes(prefixes);
+            rdfModel.setPrefixes(prefixes as Record<string, string>);
             rdfModel.setSourceLocation(payload.sourceLocation);
           }
 
           for (const [key, value] of Object.entries(prefixes)) {
             // Because the original model should be always first, we take as the main urn the first one
             if (key === '' && rdfModel.getPrefixes()[key]) continue;
-            rdfModel.addPrefix(key, value);
+            const prefixValue = typeof value === 'string' ? value : ((value as any)?.value ?? String(value));
+            rdfModel.addPrefix(key, prefixValue);
           }
           parsedRdf.push(payload.rdfAspectModel);
         }

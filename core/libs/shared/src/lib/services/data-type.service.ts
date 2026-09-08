@@ -26,6 +26,6 @@ export class DataTypeService {
   }
 
   getDataType(key: string): any {
-    return simpleDataTypes[key];
+    return (simpleDataTypes as Record<string, any>)[key];
   }
 }

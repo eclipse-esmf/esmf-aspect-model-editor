@@ -10,11 +10,11 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {AsyncPipe} from '@angular/common';
-import {Component, Input, inject} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {TranslatePipe} from '@ngx-translate/core';
+import {Component, inject, input} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {ElementListComponent} from '../element-list';
 import {BaseInputComponent, InputChiplistFieldComponent, OutputInputFieldComponent} from '../fields';
 
@@ -22,11 +22,11 @@ import {BaseInputComponent, InputChiplistFieldComponent, OutputInputFieldCompone
   selector: 'ame-operation',
   templateUrl: './operation.component.html',
   styleUrls: [],
-  imports: [BaseInputComponent, InputChiplistFieldComponent, OutputInputFieldComponent, ElementListComponent, AsyncPipe, TranslatePipe],
+  imports: [BaseInputComponent, InputChiplistFieldComponent, OutputInputFieldComponent, ElementListComponent, TranslocoDirective],
 })
 export class OperationComponent {
-  @Input() parentForm: FormGroup;
+  readonly signalForm = input(EditorSignalFormContext.create());
 
   public metaModelDialogService = inject(EditorModelService);
-  public element$ = this.metaModelDialogService.getMetaModelElement();
+  public element = toSignal(this.metaModelDialogService.getMetaModelElement());
 }

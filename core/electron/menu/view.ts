@@ -21,7 +21,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
   return [
     {
       id: 'SHOW_HIDE_TOOLBAR',
-      label: translation.TOGGLE_TOOLBAR,
+      label: translation.toggleToolbar,
       icon: getIcon(icons.SHOW_HIDE_TOOLBAR.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -30,7 +30,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'SHOW_HIDE_MINIMAP',
-      label: translation.TOGGLE_MINIMAP,
+      label: translation.toggleMinimap,
       icon: getIcon(icons.SHOW_HIDE_MINIMAP.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
         const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -39,13 +39,13 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'MENU_FILTER_MODEL_BY',
-      label: translation.FILTER.LABEL,
+      label: translation.filter.label,
       enabled: false,
       icon: getIcon(icons.MENU_FILTER_MODEL_BY.enabled),
       submenu: [
         {
           id: 'FILTER_MODEL_BY_NONE',
-          label: translation.FILTER.SUBMENU.NONE,
+          label: translation.filter.submenu.none,
           icon: getIcon(icons.FILTER_MODEL_BY_NONE.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -54,7 +54,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
         },
         {
           id: 'FILTER_MODEL_BY_PROPERTIES',
-          label: translation.FILTER.SUBMENU.PROPERTIES,
+          label: translation.filter.submenu.properties,
           icon: getIcon(icons.FILTER_MODEL_BY_PROPERTIES.enabled),
           click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
             const bw = window instanceof BrowserWindow ? window : BrowserWindow.getFocusedWindow();
@@ -68,7 +68,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'ZOOM_IN',
-      label: translation.ZOOM_IN,
+      label: translation.zoomIn,
       enabled: false,
       icon: getIcon(icons.ZOOM_IN.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -78,7 +78,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'ZOOM_OUT',
-      label: translation.ZOOM_OUT,
+      label: translation.zoomOut,
       enabled: false,
       icon: getIcon(icons.ZOOM_OUT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -88,7 +88,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'ZOOM_TO_FIT',
-      label: translation.ZOOM_TO_FIT,
+      label: translation.zoomToFit,
       enabled: false,
       icon: getIcon(icons.ZOOM_TO_FIT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -98,7 +98,7 @@ export function view(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'ZOOM_TO_ACTUAL',
-      label: translation.ZOOM_TO_100,
+      label: translation.zoomTo100,
       enabled: false,
       icon: getIcon(icons.ZOOM_TO_ACTUAL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {

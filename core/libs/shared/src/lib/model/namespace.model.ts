@@ -39,7 +39,7 @@ export class NamespaceModel {
     if (this.fileStatus[file]) {
       this.fileStatus[file].hasErrors = hasErrors;
     } else {
-      this.fileStatus[file] = {...this.fileStatus[file], version: null, outdated: false, hasErrors};
+      this.fileStatus[file] = {version: null as any, outdated: false, hasErrors};
     }
   }
 

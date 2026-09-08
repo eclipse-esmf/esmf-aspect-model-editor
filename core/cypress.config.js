@@ -14,6 +14,7 @@
 const {defineConfig} = require('cypress');
 
 module.exports = defineConfig({
+  allowCypressEnv: false,
   fileServerFolder: '.',
   fixturesFolder: 'apps/ame-e2e/src/fixtures',
   modifyObstructiveCode: false,
@@ -22,7 +23,7 @@ module.exports = defineConfig({
   reporter: 'spec',
   video: false,
   screenshotOnRunFailure: false,
-  downloadsFolder: 'apps/ame-e2e/src/fixtures/cypress/downloads',
+  downloadsFolder: 'apps/ame-e2e/cypress/downloads',
   videosFolder: 'apps/ame-e2e/cypress/videos',
   screenshotsFolder: 'apps/ame-e2e/cypress/screenshots',
   chromeWebSecurity: false,

@@ -11,36 +11,48 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div class="container">
-  <h3>StructuredValue Elements</h3>
-  <mat-table [dataSource]="dataSource">
-    <ng-container matColumnDef="regex">
-      <mat-header-cell *matHeaderCellDef>Capture Group</mat-header-cell>
-      <mat-cell *matCellDef="let group">
-        <span [attr.data-cy]="'regex-group-' + group.regex">{{ group.regex }}</span>
-      </mat-cell>
-    </ng-container>
+<ng-container *transloco="let t">
+  <div class="container">
+    <h3>{{ t('editorCanvas.shapeSetting.field.structuredValue.elementsTitle') }}</h3>
+    <mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="regex">
+        <mat-header-cell *matHeaderCellDef>{{ t('editorCanvas.shapeSetting.field.structuredValue.captureGroup') }}</mat-header-cell>
+        <mat-cell *matCellDef="let group">
+          <span [attr.data-cy]="'regex-group-' + group.regex">{{ group.regex }}</span>
+        </mat-cell>
+      </ng-container>
 
-    <ng-container matColumnDef="property">
-      <mat-header-cell *matHeaderCellDef>Property</mat-header-cell>
-      <mat-cell *matCellDef="let group">
-        <ame-structured-value-property-field
-          class="property-field"
-          [fieldControl]="getControl(getKey(group.data))"
-          [defaultProperty]="group.property"
-          [attr.data-cy]="'property-' + group.regex"
-        ></ame-structured-value-property-field>
-      </mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="property">
+        <mat-header-cell *matHeaderCellDef>{{ t('editorCanvas.shapeSetting.field.structuredValue.property') }}</mat-header-cell>
+        <mat-cell *matCellDef="let group; let index = index">
+          <ame-structured-value-property-field
+            class="property-field"
+            [defaultProperty]="group.property"
+            [excludedProperties]="data.parentProperties || []"
+            [attr.data-cy]="'property-' + group.regex"
+            (propertyChange)="onPropertyChange(index, group.key, $event)"
+          ></ame-structured-value-property-field>
+        </mat-cell>
+      </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-  </mat-table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
 
-  <div class="dialog-actions">
-    <button (click)="closeModal()" type="button" mat-button data-cy="propertiesCancelButton">Cancel</button>
-    <button [disabled]="form.invalid" (click)="closeModal(true)" mat-flat-button color="primary" data-cy="propertiesSaveButton">
-      Save
-    </button>
+    <div class="dialog-actions">
+      <button (click)="closeModal()" type="button" mat-button data-cy="propertiesCancelButton">
+        {{ t('editorCanvas.shapeSetting.cancel') }}
+      </button>
+      <button
+        [disabled]="propertiesForm().invalid()"
+        (click)="closeModal(true)"
+        type="button"
+        mat-flat-button
+        color="primary"
+        data-cy="propertiesSaveButton"
+      >
+        {{ t('editorCanvas.shapeSetting.save') }}
+      </button>
+    </div>
   </div>
-</div>
+</ng-container>

@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -44,14 +43,18 @@ import {cyHelp} from '../../support/helpers';
 import {assertRdf} from '../../support/utils';
 
 describe('Test editing Characteristic', () => {
-  it('can add new', () => {
+  before(() => {
     cy.visitDefault();
+  });
+
+  it('can add new', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.getAspect())
       .then(aspect => {
-        expect(aspect.properties).to.have.length(1);
+        expect(aspect.name).to.equal('AspectDefault');
+        expect(aspect.properties[0].name).to.equal('property1');
         expect(aspect.properties[0].characteristic.name).to.equal('Characteristic1');
       });
   });
@@ -114,7 +117,7 @@ describe('Test editing Characteristic', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.addSeeElements('http://www.see1.de', 'http://www.see2.de', 'http://www.see3.de'))
-      .then(() => cyHelp.clickSaveButton().wait(250))
+      .then(() => cyHelp.clickSaveButton())
       .then(() =>
         cy
           .getCellLabel('Characteristic1', META_MODEL_see)
@@ -301,7 +304,6 @@ describe('Test editing Characteristic', () => {
       .then(() => cy.getAspect())
       .then(aspect => expect(aspect.properties[0].characteristic.name).to.be.equal('NewCharacteristic'));
 
-    cy.wait(1000);
     cy.dbClickShape('NewCharacteristic')
       .then(() => cy.get(FIELD_chipIcon).each(chip => cy.wrap(chip).click({force: true})))
       .then(() => cy.get(FIELD_values).type('2', {force: true}))
@@ -346,7 +348,7 @@ describe('Test editing Characteristic', () => {
   it('add new default characteristic rename it and add new default characteristic', () => {
     cy.clickAddShapePlusIcon('property1')
       .then(() => cy.shapeExists('Characteristic1'))
-      .then(() => cy.dbClickShape('Characteristic1').wait(200))
+      .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => cy.get(SELECTOR_editorCancelButton).focus()) // reactivate change detection
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewCharacteristic', {force: true}))
       .then(() => cyHelp.clickSaveButton())
@@ -398,7 +400,6 @@ describe('Structured Value Characteristic', () => {
       cy.get(`[data-cy="property-${groups[index]}"] [data-cy="property-element"]`)
         .clear({force: true})
         .type(properties[index], {force: true})
-        .then(() => cy.wait(300))
         .then(() => cy.get('[data-cy="new-property"]').click({force: true}))
         .then(() => cy.get(`[data-cy="property-${groups[index]}"] [data-cy="property-element"]`).should('have.value', properties[index]))
         .then(() => cy.get(`[data-cy="property-${groups[index]}"] [data-cy="property-element"]`).should('not.be.enabled'));
@@ -449,12 +450,10 @@ describe('Structured Value Characteristic', () => {
       .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('StructuredValue').click({force: true}))
       .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
       .then(() => cy.contains('Email Address').click({force: true}))
-      .wait(500)
       .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
       .then(() => shouldHaveValues(['([\\\\w\\\\.-]+)', '([\\\\w\\\\.-]+\\\\.\\\\w{2,4})'], ['username', 'host']))
       .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
       .then(() => cyHelp.clickSaveButton())
-      .wait(200)
       .then(() => cy.shapeExists('username'))
       .then(() => cy.shapeExists('host'))
       .then(() =>
@@ -493,7 +492,6 @@ describe('Structured Value Characteristic', () => {
         .then(() =>
           cy.get(FIELD_deconstructionRuleInput).clear({force: true}).type('example-(group1)-splitter-(group2)-(group3)', {force: true}),
         )
-        .then(() => cy.wait(500))
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
         .then(() => checkGeneratedGroups(['(group1)', '(group2)', '(group3)']));
     });
@@ -566,12 +564,10 @@ describe('Structured Value Characteristic', () => {
         )
         .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
         .then(() => cy.contains('ISO 8601 Date').click({force: true}))
-        .wait(500)
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
         .then(() => shouldHaveValues(['(\\\\d{4})', '(\\\\d{2})', '(\\\\d{2})'], ['year', 'month', 'day']))
         .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
         .then(() => cyHelp.clickSaveButton())
-        .wait(200)
         .then(() => cy.shapeExists('year'))
         .then(() => cy.shapeExists('month'))
         .then(() => cy.shapeExists('day'))
@@ -611,12 +607,10 @@ describe('Structured Value Characteristic', () => {
         )
         .then(() => cy.get(FIELD_deconstructionRuleSelect).click({force: true}))
         .then(() => cy.contains('Hex-encoded color').click({force: true}))
-        .wait(500)
         .then(() => cy.get(FIELD_elementsModalButton).click({force: true}))
         .then(() => shouldHaveValues(['([0-9A-Fa-f]{2})', '([0-9A-Fa-f]{2})', '([0-9A-Fa-f]{2})'], ['red', 'green', 'blue']))
         .then(() => cy.get(SELECTOR_editorSaveButton).should('be.enabled'))
         .then(() => cyHelp.clickSaveButton())
-        .wait(200)
         .then(() => cy.shapeExists('red'))
         .then(() => cy.shapeExists('green'))
         .then(() => cy.shapeExists('blue'))

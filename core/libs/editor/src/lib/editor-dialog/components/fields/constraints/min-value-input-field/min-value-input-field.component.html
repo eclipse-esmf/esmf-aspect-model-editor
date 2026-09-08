@@ -11,13 +11,12 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="getControl('minValue')?.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="minValue">minValue</mat-label>
+<mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
+  <mat-label>minValue</mat-label>
   <input
-    [formControl]="getControl('minValue')"
-    [placeholder]="getPlaceholder(getValueWithoutUrnDefinition(rangeConstraintDataType?.getUrn()))"
+    [formField]="field"
+    [placeholder]="getPlaceholder(getValueWithoutUrnDefinition(rangeConstraintDataType()?.getUrn()))"
     matInput
-    name="minValue"
     data-cy="minValue"
   />
 </mat-form-field>

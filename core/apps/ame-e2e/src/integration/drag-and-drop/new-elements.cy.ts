@@ -25,10 +25,14 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test drag and drop', () => {
-  it('can add new Property', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.get(SELECTOR_elementBtn).click())
+    cy.startModelling();
+  });
+
+  it('can add new Property', () => {
+    cy.get(SELECTOR_elementBtn)
+      .click()
       .then(() => cy.dragElement(SELECTOR_ecProperty, 100, 300).then(() => cy.clickShape('property2')));
   });
 

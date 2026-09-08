@@ -10,21 +10,21 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {AsyncPipe} from '@angular/common';
-import {Component, Input, inject} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {TranslatePipe} from '@ngx-translate/core';
+import {Component, inject, input} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
+import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {ElementListComponent} from '../element-list';
 import {BaseInputComponent, ExampleValueInputFieldComponent} from '../fields';
 
 @Component({
   selector: 'ame-property',
   templateUrl: './property.component.html',
-  imports: [BaseInputComponent, ExampleValueInputFieldComponent, ElementListComponent, AsyncPipe, TranslatePipe],
+  imports: [BaseInputComponent, ExampleValueInputFieldComponent, ElementListComponent, TranslocoDirective],
 })
 export class PropertyComponent {
-  @Input() parentForm: FormGroup;
+  readonly signalForm = input(EditorSignalFormContext.create());
   private metaModelDialogService = inject(EditorModelService);
-  public element$ = this.metaModelDialogService.getMetaModelElement();
+  public element = toSignal(this.metaModelDialogService.getMetaModelElement());
 }

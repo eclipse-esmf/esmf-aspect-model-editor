@@ -22,24 +22,25 @@ export interface AlertOptions {
   rightButtonText: string;
   hasLeftButton: boolean;
   hasRightButton: boolean;
-  leftButtonAction: Function;
-  rightButtonAction: Function;
+  leftButtonAction: (arg0: MouseEvent) => void;
+  rightButtonAction: (arg0: MouseEvent) => void;
 }
 
 @Injectable({providedIn: 'root'})
 export class AlertService {
   private matDialog = inject(MatDialog);
 
-  public open(options: MatDialogConfig<Partial<AlertOptions>>) {
+  public open(options: MatDialogConfig<Partial<AlertOptions>> = {}) {
+    const data = options?.data || {};
     return this.matDialog.open(AlertComponent, {
       minWidth: '500px',
       maxWidth: '800px',
       disableClose: true,
       ...options,
       data: {
-        ...options.data,
-        leftButtonText: options.data.leftButtonText || 'Close',
-        rightButtonText: options.data.rightButtonText || 'Ok',
+        ...data,
+        leftButtonText: data.leftButtonText || 'Close',
+        rightButtonText: data.rightButtonText || 'Ok',
       },
     });
   }

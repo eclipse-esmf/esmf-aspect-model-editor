@@ -12,7 +12,7 @@
  */
 
 export interface ModelData {
-  model: string;
+  name: string;
   existing: boolean;
   version: string;
   aspectModelUrn: string;

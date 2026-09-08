@@ -11,9 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ViolationError} from './violation-error';
-
-export interface DetailViolationInfo {
-  file: string;
-  violationError: ViolationError[];
-}
+export type {DetailViolationInfo} from '@ame/api';

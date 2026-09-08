@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -18,6 +18,7 @@ export {useLoader} from './loader-factory';
 export * from './namespace-loader';
 export * from './shared/elements-set';
 export * from './shared/model-element-cache.service';
+export * from './shared/rdf-loader';
 export * from './shared/rdf-model';
 export * from './shared/rdf-model-util';
 export * from './shared/xsd-datatypes';

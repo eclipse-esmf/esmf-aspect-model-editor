@@ -10,12 +10,12 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
-<ame-values-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-values-input-field>
+<ame-values-input-field [previousData]="previousData() || {}" [signalForm]="signalForm()" />
 @if (hasEntityType) {
   <ame-default-value-entity-input-field
-    [previousData]="previousData || {}"
-    [parentForm]="parentForm"
+    [previousData]="previousData() || {}"
+    [signalForm]="signalForm()"
   ></ame-default-value-entity-input-field>
 } @else {
-  <ame-default-value-input-field [previousData]="previousData || {}" [parentForm]="parentForm"></ame-default-value-input-field>
+  <ame-default-value-input-field [previousData]="previousData() || {}" [signalForm]="signalForm()" />
 }

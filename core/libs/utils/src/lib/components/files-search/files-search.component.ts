@@ -11,45 +11,34 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject} from '@angular/core';
-
 import {FileHandlingService, ModelCheckerService, SaveModelDialogService} from '@ame/editor';
 import {
   ElectronSignals,
   ElectronSignalsService,
+  filesSearchOption,
   ModelSavingTrackerService,
   NotificationsService,
   SearchService,
-  filesSearchOption,
 } from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Component, inject, signal} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {TranslatePipe} from '@ngx-translate/core';
-import {Observable, filter, first, map, of, startWith, switchMap, tap, throttleTime} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {filter, first, map, Observable, of, switchMap, tap, throttleTime} from 'rxjs';
 import {SearchesStateService} from '../../search-state.service';
 import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.component';
 
 @Component({
   selector: 'ame-files-search',
-  standalone: true,
   templateUrl: './files-search.component.html',
   styleUrls: ['./files-search.component.scss'],
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatDialogModule,
-    TranslatePipe,
-  ],
+  imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, TranslocoDirective],
 })
 export class FilesSearchComponent {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
@@ -64,10 +53,11 @@ export class FilesSearchComponent {
   private translate = inject(LanguageTranslationService);
   private modelChecker = inject(ModelCheckerService);
 
-  public searchControl = new FormControl('');
-  public files: {file: string; namespace: string}[] = [];
-  public loading = false;
-  public searchableFiles = [];
+  private files: {file: string; namespace: string}[] = [];
+
+  public searchQuery = signal('');
+  public loading = signal(false);
+  public searchableFiles = signal([]);
 
   public get namespaces() {
     return this.sidebarStateService.namespacesState.namespaces();
@@ -77,19 +67,25 @@ export class FilesSearchComponent {
     this.parseFiles(this.namespaces);
 
     if (!Object.keys(this.namespaces).length) {
-      this.loading = true;
+      this.loading.set(true);
       this.modelChecker
         .detectWorkspaceErrors()
         .pipe(map(files => this.sidebarStateService.updateWorkspace(files)))
         .subscribe(n => {
           this.parseFiles(n);
-          this.loading = false;
+          this.loading.set(false);
         });
-
-      this.searchControl.valueChanges.pipe(startWith(''), throttleTime(150)).subscribe(value => {
-        this.searchableFiles = value === '' ? this.files : this.searchService.search(value, this.files, filesSearchOption);
-      });
     }
+
+    toObservable(this.searchQuery)
+      .pipe(throttleTime(150))
+      .subscribe(value => {
+        if (value === '') {
+          this.searchableFiles.set(this.files);
+        } else {
+          this.searchableFiles.set(this.searchService.search(value, this.files, filesSearchOption));
+        }
+      });
   }
 
   openFile({file, namespace, aspectModelUrn}) {
@@ -101,7 +97,7 @@ export class FilesSearchComponent {
         switchMap(result => (result === 'open-in' ? this.loadModel(file, namespace, aspectModelUrn) : this.openWindow(file, namespace))),
       )
       .subscribe();
-    this.searchControl.patchValue('');
+    this.searchQuery.set('');
     this.closeSearch();
   }
 
@@ -114,7 +110,8 @@ export class FilesSearchComponent {
       acc.push(...files.map(file => ({file: file.name, namespace, aspectModelUrn: file.aspectModelUrn})));
       return acc;
     }, []);
-    this.searchableFiles = this.files;
+
+    this.searchableFiles.set(this.files);
   }
 
   private checkUnsavedChanges(): Observable<boolean> {
@@ -152,10 +149,10 @@ export class FilesSearchComponent {
     const fileStatus = this.sidebarStateService.namespacesState.getFile(namespace, file);
     if (fileStatus && (fileStatus.errored || fileStatus.loaded)) {
       this.notificationService.warning({
-        title: this.translate.language.SEARCHES.FILES.NOTIFICATIONS.TITLE,
+        title: this.translate.language.searches.files.notifications.title,
         message: fileStatus.errored
-          ? this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ERROR_MESSAGE
-          : this.translate.language.SEARCHES.FILES.NOTIFICATIONS.ALREADY_LOADED_FILE_MESSAGE,
+          ? this.translate.language.searches.files.notifications.errorMessage
+          : this.translate.language.searches.files.notifications.alreadyLoadedFileMessage,
       });
       return 'invalid-file';
     }

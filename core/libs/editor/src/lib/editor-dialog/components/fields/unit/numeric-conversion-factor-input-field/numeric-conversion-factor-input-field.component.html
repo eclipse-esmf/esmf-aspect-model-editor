@@ -13,9 +13,9 @@
 
 @if (metaModelElement?.conversionFactor || !metaModelElement?.isPredefined) {
   <div>
-    <mat-form-field [floatLabel]="getControl('numericConversionFactor')?.disabled ? 'always' : 'auto'" appearance="fill">
-      <mat-label for="numericConversionFactor">numericConversionFactor</mat-label>
-      <input [formControl]="getControl('numericConversionFactor')" matInput name="numericConversionFactor" />
+    <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
+      <mat-label>numericConversionFactor</mat-label>
+      <input [formField]="field" matInput type="number" />
     </mat-form-field>
   </div>
 }

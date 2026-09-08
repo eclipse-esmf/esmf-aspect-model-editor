@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -111,13 +111,14 @@ export class RdfModelUtil {
     }
   }
 
-  static resolveRecursiveBlankNodes(rdfModel: RdfModel, uri: string, writer: Writer): Quad[] {
+  static resolveRecursiveBlankNodes(rdfModel: RdfModel, uri: string, writer: Writer, processedQuads?: Set<Quad>): Quad[] {
     const quads: Quad[] = rdfModel.store.getQuads(DataFactory.blankNode(uri), null, null, null);
     const blankNodes = [];
 
     for (const quad of quads) {
+      processedQuads?.add(quad);
       if (Util.isBlankNode(quad.subject) && Util.isBlankNode(quad.object)) {
-        const currentBlankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, quad.object.value, writer);
+        const currentBlankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, quad.object.value, writer, processedQuads);
 
         if (currentBlankNodes.every(({predicate}) => predicate.value.startsWith(Samm.RDF_URI))) {
           blankNodes.push(...currentBlankNodes);
@@ -129,13 +130,13 @@ export class RdfModelUtil {
       }
 
       if (Util.isBlankNode(quad.object)) {
-        const currentBlankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, quad.object.value, writer);
+        const currentBlankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, quad.object.value, writer, processedQuads);
 
         blankNodes.push(...currentBlankNodes);
         continue;
       }
 
-      if (!quad.object.value.startsWith(Samm.RDF_URI)) {
+      if (quad.object.value !== `${Samm.RDF_URI}#nil`) {
         blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, quad.object));
       }
     }

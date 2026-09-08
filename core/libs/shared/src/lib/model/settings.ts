@@ -12,9 +12,9 @@
  */
 
 export class ToggleSettings {
-  autoValidation: boolean;
-  validationTimer: number;
-  map: boolean;
-  nav: boolean;
-  notification: boolean;
+  autoValidation = false;
+  validationTimer = 0;
+  map = false;
+  nav = false;
+  notification = false;
 }

@@ -10,24 +10,33 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {disabled, form, FormField, required} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultRegularExpressionConstraint} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 @Component({
   selector: 'ame-regular-expression-value-input-field',
   templateUrl: './regular-expression-value-input-field.component.html',
   styleUrls: ['../../field.scss'],
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatLabel, MatError, MatInput],
+  imports: [FormField, MatFormFieldModule, MatLabel, MatError, MatInput, TranslocoDirective],
 })
 export class RegularExpressionValueInputFieldComponent
   extends InputFieldComponent<DefaultRegularExpressionConstraint>
   implements OnInit, OnDestroy
 {
+  private readonly model = signal('');
+  private unregisterField = () => undefined;
+
+  readonly field = form(this.model, path => {
+    required(path);
+    disabled(path, {when: () => !!this.metaModelElement && this.loadedFiles.isElementExtern(this.metaModelElement)});
+  });
+
   constructor() {
     super();
     this.resetFormOnDestroy = false;
@@ -35,7 +44,7 @@ export class RegularExpressionValueInputFieldComponent
   }
 
   getCurrentValue(key: string) {
-    return this.previousData[key]?.[this.metaModelElement.className] || this.metaModelElement?.[key] || '';
+    return this.previousData()[key]?.[this.metaModelElement.className] || this.metaModelElement?.[key] || '';
   }
 
   ngOnInit() {
@@ -46,19 +55,17 @@ export class RegularExpressionValueInputFieldComponent
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.parentForm.removeControl(this.fieldName);
+    this.unregisterField();
   }
 
   initForm() {
-    this.parentForm.setControl(
-      this.fieldName,
-      new FormControl(
-        {
-          value: this.getCurrentValue(this.fieldName),
-          disabled: this.loadedFiles.isElementExtern(this.metaModelElement),
-        },
-        Validators.required,
-      ),
-    );
+    this.model.set(this.getCurrentValue(this.fieldName));
+    this.unregisterField = this.signalForm().register(this.fieldName, this.field);
+  }
+
+  hasError(kind: string): boolean {
+    return this.field()
+      .errors()
+      .some(error => error.kind === kind);
   }
 }

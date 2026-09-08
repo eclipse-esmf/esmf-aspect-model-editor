@@ -11,24 +11,24 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService, MxGraphShapeOverlayService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
 import {DefaultQuantifiable, DefaultUnit, NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class QuantifiableModelService extends BaseModelService {
-  private mxGraphShapeOverlayService = inject(MxGraphShapeOverlayService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-  private mxGraphService = inject(MxGraphService);
+  private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
+  private readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private readonly maxgraphService = inject(MaxGraphService);
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultQuantifiable;
   }
 
-  update(cell: mxgraph.mxCell, form: {[key: string]: any}) {
-    const metaModelElement: DefaultQuantifiable = MxGraphHelper.getModelElement(cell);
+  update(cell: Cell, form: {[key: string]: any}) {
+    const metaModelElement: DefaultQuantifiable = MaxGraphHelper.getModelElement(cell);
     if (!form.unit) {
       metaModelElement.unit = new DefaultUnit({name: '', aspectModelUrn: '', metaModelVersion: '', quantityKinds: []});
     } else {
@@ -36,13 +36,13 @@ export class QuantifiableModelService extends BaseModelService {
     }
   }
 
-  delete(cell: mxgraph.mxCell) {
+  delete(cell: Cell) {
     super.delete(cell);
-    const modelElement = MxGraphHelper.getModelElement(cell);
-    const outgoingEdges = this.mxGraphAttributeService.graph.getOutgoingEdges(cell);
-    const incomingEdges = this.mxGraphAttributeService.graph.getIncomingEdges(cell);
-    this.mxGraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
-    this.mxGraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
-    this.mxGraphService.removeCells([cell]);
+    const modelElement = MaxGraphHelper.getModelElement(cell);
+    const outgoingEdges = this.maxgraphAttributeService.graph.getOutgoingEdges(cell, null);
+    const incomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(cell, null);
+    this.maxgraphShapeOverlayService.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
+    this.maxgraphShapeOverlayService.checkAndAddShapeActionIcon(incomingEdges, modelElement);
+    this.maxgraphService.removeCells([cell]);
   }
 }

@@ -11,4 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './shared/services/namespaces-manager.service';
+export * from './namespace-exporter/components';
+export * from './shared';

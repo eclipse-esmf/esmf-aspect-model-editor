@@ -11,6 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import 'zone.js';
-
 (window as any)['global'] = window;

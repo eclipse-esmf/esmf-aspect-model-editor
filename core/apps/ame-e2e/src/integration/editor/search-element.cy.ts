@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -17,29 +16,30 @@
 import {SELECTOR_searchInputField} from '../../support/constants';
 
 describe('Test search for element', () => {
-  it('can search for element', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling().then(() => {
-      cy.clickAddShapePlusIcon('AspectDefault');
-      cy.clickAddShapePlusIcon('AspectDefault');
-      cy.clickAddShapePlusIcon('AspectDefault');
-      cy.clickAddShapePlusIcon('AspectDefault');
-      cy.wait(250);
-      cy.searchesStateService().then(() =>
-        cy
-          .get(SELECTOR_searchInputField)
-          .focus()
-          .click({force: true})
-          .type('property', {force: true})
-          .get('.mat-mdc-autocomplete-panel')
-          .children('mat-option')
-          .then(listing => {
-            expect(listing).to.have.length(5);
-          })
-          .get('.mat-mdc-option')
-          .each(option => expect(option).to.contain('property')),
-      );
-    });
+    cy.startModelling();
+  });
+
+  it('can search for element', () => {
+    cy.clickAddShapePlusIcon('AspectDefault');
+    cy.clickAddShapePlusIcon('AspectDefault');
+    cy.clickAddShapePlusIcon('AspectDefault');
+    cy.clickAddShapePlusIcon('AspectDefault');
+    cy.searchesStateService().then(() =>
+      cy
+        .get(SELECTOR_searchInputField)
+        .focus()
+        .click({force: true})
+        .type('property', {force: true})
+        .get('.mat-mdc-autocomplete-panel')
+        .children('mat-option')
+        .then(listing => {
+          expect(listing).to.have.length(5);
+        })
+        .get('.mat-mdc-option')
+        .each(option => expect(option).to.contain('property')),
+    );
   });
 
   it.skip('can search using * for element', () => {
@@ -70,7 +70,6 @@ describe('Test search for element', () => {
         .type('c{enter}', {force: true})
         .type('1{enter}', {force: true})
         .type('${enter}', {force: true})
-        .wait(250)
         .get('.mat-mdc-autocomplete-panel')
         .children('mat-option')
         .then(listing => {

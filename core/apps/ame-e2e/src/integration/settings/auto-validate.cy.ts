@@ -16,13 +16,14 @@
 import {SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
 
 describe('Auto Validate', () => {
+  before(() => {
+    cy.visitDefault();
+    cy.startModelling();
+  });
+
   it('should open editor settings dialog', () => {
-    cy.visitDefault()
-      .then(() => cy.startModelling())
-      .then(() => {
-        cy.get(SELECTOR_settingsButton).click({force: true});
-        cy.get(SettingsDialogSelectors.autoValidateInput).should('exist');
-      });
+    cy.get(SELECTOR_settingsButton).click({force: true});
+    cy.get(SettingsDialogSelectors.autoValidateInput).should('exist');
   });
 
   it('should set timer to 60 seconds', () => {

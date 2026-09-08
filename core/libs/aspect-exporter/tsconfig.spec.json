@@ -2,11 +2,16 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
-    "types": ["jest", "node"],
-    "target": "es2016"
+    "types": ["node"]
   },
-  "files": ["src/test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.d.ts"],
-  "allowJs": true
+  "allowJs": true,
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

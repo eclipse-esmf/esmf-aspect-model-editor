@@ -23,6 +23,7 @@ export * from './lib/large-file-warning-dialog/large-file-warning-dialog.service
 export * from './lib/model-checker.service';
 export * from './lib/model-loader.service';
 export * from './lib/model-saver.service';
+export * from './lib/models/confirm-dialog.enum';
 export * from './lib/open-element-window/open-element-window.component';
 export * from './lib/open-element-window/open-element-window.service';
 export * from './lib/rename-model/rename-model.component';

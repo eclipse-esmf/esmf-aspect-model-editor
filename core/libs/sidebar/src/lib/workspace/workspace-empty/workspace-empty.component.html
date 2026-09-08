@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,16 +12,17 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-@if (loading()) {
-  <div class="loading">
-    <mat-spinner></mat-spinner>
-    <p>{{ 'SIDEBAR.EMPTY.LOADING_NAMESPACES' | translate }}</p>
-  </div>
-} @else {
-  <p>{{ 'SIDEBAR.EMPTY.SAVE_MESSAGE' | translate }}</p>
-  <p>{{ 'SIDEBAR.EMPTY.CALL_TO_ACTION' | translate }}</p>
-  <button (click)="fileInput.click()" mat-flat-button color="primary">
-    {{ 'SIDEBAR.EMPTY.IMPORT_BUTTON' | translate }}
-  </button>
-  <input #fileInput (change)="onFileInput(fileInput.files)" hidden type="file" />
-}
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner></mat-spinner>
+      <p>{{ t('sidebar.empty.loadingNamespaces') }}</p>
+    </div>
+  } @else {
+    <p>{{ t('sidebar.empty.saveMessage') }}</p>
+    <p>{{ t('sidebar.empty.callToAction') }}</p>
+    <button (click)="fileInput.click()" mat-flat-button color="primary">
+      {{ t('sidebar.empty.importButton') }}
+    </button>
+    <input #fileInput (change)="onFileInput(fileInput.files)" hidden type="file" />
+  }
+</ng-container>

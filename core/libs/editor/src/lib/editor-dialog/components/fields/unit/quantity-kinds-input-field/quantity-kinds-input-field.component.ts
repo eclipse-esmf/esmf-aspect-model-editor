@@ -12,17 +12,16 @@
  */
 
 import {ENTER} from '@angular/cdk/keycodes';
-import {AsyncPipe} from '@angular/common';
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, computed, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {disabled, form, FormField} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOptgroup, MatOption} from '@angular/material/autocomplete';
 import {MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInput, MatLabel} from '@angular/material/input';
 import {DefaultQuantityKind, DefaultUnit} from '@esmf/aspect-model-loader';
-import {Observable, map} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
 declare const sammUDefinition: any;
@@ -34,90 +33,73 @@ declare const sammUDefinition: any;
     MatFormFieldModule,
     MatLabel,
     MatChipGrid,
-    ReactiveFormsModule,
+    FormField,
     MatChipRow,
     MatIconModule,
     MatAutocompleteTrigger,
     MatChipInput,
     MatInput,
     MatAutocomplete,
-    AsyncPipe,
     MatOptgroup,
     MatOption,
     MatChipsModule,
     MatIconModule,
+    TranslocoDirective,
   ],
 })
-export class QuantityKindsInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit {
-  @ViewChild('input') inputValue: any;
-  readonly separatorKeysCodes: number[] = [ENTER];
+export class QuantityKindsInputFieldComponent extends InputFieldComponent<DefaultUnit> implements OnInit, OnDestroy {
+  private supportedQuantityKinds: string[] = [];
+  private readonly inputModel = signal('');
+  private readonly quantityKindsModel = signal<string[]>([]);
+  private unregisterField = () => undefined;
 
-  public filteredQuantityKinds$: Observable<any[]>;
-  public supportedQuantityKinds = [];
-  public inputControl: FormControl;
-  public selectable = true;
-  public editable = true;
-  public quantityKindValues: Array<string>;
+  readonly inputField = form(this.inputModel, path => disabled(path, {when: () => !this.editable()}));
+  readonly quantityKindsField = form(this.quantityKindsModel, path => disabled(path, {when: () => !this.editable()}));
+  readonly filteredQuantityKinds = computed(() => {
+    const value = this.inputModel();
+    return value ? this.supportedQuantityKinds.filter(quantityKind => quantityKind.startsWith(value)) : this.supportedQuantityKinds;
+  });
 
-  get chipListControl(): FormControl {
-    return this.parentForm.get('quantityKindsChipList') as FormControl;
-  }
+  readonly separatorKeysCodes = signal([ENTER]);
+  public editable = signal(true);
+  public quantityKindValues = this.quantityKindsModel.asReadonly();
 
   ngOnInit(): void {
     this.supportedQuantityKinds = Object.keys(sammUDefinition.quantityKinds);
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.quantityKindValues = [];
         this.setInputControl();
       });
   }
 
   setInputControl() {
-    this.editable = !this.metaModelDialogService.isReadOnly();
-    this.quantityKindValues = [
-      ...((this.metaModelElement?.quantityKinds?.map(value => (value instanceof DefaultQuantityKind ? value.name : value)) as any) || []),
-    ];
-
-    this.inputControl = new FormControl({
-      value: '',
-      disabled: this.metaModelDialogService.isReadOnly(),
-    });
-
-    this.parentForm.setControl(
-      'quantityKindsChipList',
-      new FormControl({
-        value: this.quantityKindValues,
-        disabled: this.metaModelDialogService.isReadOnly(),
-      }),
+    this.editable.set(!this.metaModelDialogService.isReadOnly());
+    this.quantityKindsModel.set(
+      this.metaModelElement?.quantityKinds?.map(value => (value instanceof DefaultQuantityKind ? value.name : String(value))) || [],
     );
-
-    this.filteredQuantityKinds$ = this.initFilteredQuantityKinds(this.inputControl);
+    this.inputModel.set('');
+    this.unregisterField = this.signalForm().register('quantityKindsChipList', this.quantityKindsField);
   }
 
-  initFilteredQuantityKinds(control: FormControl): Observable<Array<string>> {
-    return control?.valueChanges.pipe(
-      map((value: string) => {
-        return value ? this.supportedQuantityKinds?.filter(qk => qk.startsWith(value)) : this.supportedQuantityKinds;
-      }),
-    );
+  ngOnDestroy(): void {
+    this.unregisterField();
+    super.ngOnDestroy();
   }
 
   onSelectionChange(newValue: string) {
-    this.inputValue.nativeElement.value = '';
-    this.inputControl.reset();
-    this.inputControl.markAllAsTouched();
-
-    this.quantityKindValues.push(newValue);
-    this.parentForm.get('quantityKindsChipList').setValue(this.quantityKindValues);
+    this.inputModel.set('');
+    this.inputField().markAsTouched();
+    if (!this.quantityKindsModel().includes(newValue)) {
+      this.quantityKindsModel.update(values => [...values, newValue]);
+    }
   }
 
   remove(value: string) {
-    const index = this.quantityKindValues.indexOf(value);
+    const index = this.quantityKindValues().indexOf(value);
 
     if (index >= 0) {
-      this.quantityKindValues.splice(index, 1);
-      this.parentForm.get('quantityKindsChipList').setValue(this.quantityKindValues);
+      this.quantityKindsModel.update(values => values.filter(quantityKind => quantityKind !== value));
     }
   }
 }

@@ -12,30 +12,30 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {Settings} from '@ame/settings-dialog';
 import {TitleService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class NamespaceConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  private loadedFilesService = inject(LoadedFilesService);
-  private titleService = inject(TitleService);
+  private readonly loadedFilesService = inject(LoadedFilesService);
+  private readonly titleService = inject(TitleService);
 
-  updateSettings(form: FormGroup, settings: Settings): void {
-    const namespaceConfiguration = form.get('namespaceConfiguration');
+  updateSettings(model: SettingsFormData, settings: Settings): void {
+    const namespaceConfiguration = model?.namespaceConfiguration;
     if (!namespaceConfiguration) return;
 
     const currentFile = this.loadedFilesService.currentLoadedFile;
-    this.loadedFilesService.updateAbsoluteName(
-      currentFile.absoluteName,
-      `${namespaceConfiguration.get('aspectUri')?.value}:${namespaceConfiguration.get('aspectVersion')?.value}:${namespaceConfiguration.get('aspectName')?.value}.ttl`,
-    );
+    if (currentFile) {
+      this.loadedFilesService.updateAbsoluteName(
+        currentFile.absoluteName,
+        `${namespaceConfiguration.aspectUri}:${namespaceConfiguration.aspectVersion}:${namespaceConfiguration.aspectName}.ttl`,
+      );
+      this.titleService.updateTitle(currentFile.absoluteName);
+    }
 
-    settings.namespace = namespaceConfiguration.get('aspectUri')?.value;
-    settings.version = namespaceConfiguration.get('aspectVersion')?.value;
-
-    this.titleService.updateTitle(currentFile.absoluteName);
+    settings.namespace = namespaceConfiguration.aspectUri;
+    settings.version = namespaceConfiguration.aspectVersion;
   }
 }

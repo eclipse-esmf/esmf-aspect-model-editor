@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AppConfig} from '@ame/shared';
 import {InjectionToken} from '@angular/core';
 import packageJson from '../../../../package.json';
+import {AppConfig} from './model';
 
 const defaultPort = '9090';
 
@@ -21,7 +21,6 @@ export const config: AppConfig = {
   environment: 'dev',
   ameService: 'http://localhost:9090',
   ameVersion: packageJson?.version,
-  editorConfiguration: 'assets/config/editor/config/editor.xml',
   assetLocation: 'assets',
   minSammVersion: '2.0.0',
   currentSammVersion: '2.2.0',

@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -17,19 +16,22 @@
 import {GENERATION_downloadFileButton} from '../../support/constants';
 
 describe('Test generation and download of Json payload/schema', () => {
-  it('Can generate and download valid Json payload', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.openGenerationJsonSample().wait(500))
-      .then(() => cy.get(GENERATION_downloadFileButton).click({force: true}).wait(5000))
-      .then(() => cy.fixture('cypress/downloads/AspectDefault-sample.json'));
+    cy.startModelling();
+  });
+
+  it('Can generate and download valid Json payload', () => {
+    cy.openGenerationJsonSample()
+      .then(() => cy.get(GENERATION_downloadFileButton).should('be.visible').click({force: true}))
+      .then(() => cy.readFile('apps/ame-e2e/cypress/downloads/AspectDefault-sample.json'))
+      .then(() => cy.get('button.close-button').click({force: true}));
   });
 
   it('Can generate and download valid Json schema', () => {
-    cy.visitDefault();
-    cy.startModelling()
-      .then(() => cy.openGenerationJsonSchema().wait(500))
-      .then(() => cy.get(GENERATION_downloadFileButton).click({force: true}).wait(5000))
-      .then(() => cy.fixture('cypress/downloads/AspectDefault-schema.json'));
+    cy.openGenerationJsonSchema()
+      .then(() => cy.get(GENERATION_downloadFileButton).should('be.visible').click({force: true}))
+      .then(() => cy.readFile('apps/ame-e2e/cypress/downloads/AspectDefault-schema.json'))
+      .then(() => cy.get('button.close-button').click({force: true}));
   });
 });

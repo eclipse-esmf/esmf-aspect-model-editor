@@ -13,11 +13,10 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL} from '../../../support/api-mocks';
-
 import {
   FIELD_entityValueName,
   FIELD_propertyLanguageValue,
+  FIELD_propertyValueNotComplex,
   SELECTOR_addEntityValue,
   SELECTOR_editorSaveButton,
   SELECTOR_entitySaveButton,
@@ -25,9 +24,7 @@ import {
 import {assertRdf, loadModel, openElementAndAssertValues} from '../../../support/utils';
 
 describe('Loading and edit Entity value RDF lang string properties on modal tests', () => {
-  beforeEach(() => {
-    cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-    cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
+  before(() => {
     cy.visitDefault();
   });
 
@@ -36,26 +33,30 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
     cy.dbClickShape('Enumeration')
       .then(() => cy.get(SELECTOR_addEntityValue).click())
       .then(() => cy.get(FIELD_entityValueName).type('Complaint30'))
-      .then(() => cy.get('[data-cy="modeCodeValue"]').type('30'))
-      .then(() => cy.get('[data-cy="modeDescriptionValue"]').type('DescriptionOne'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).type('30'))
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(1).type('DescriptionOne'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de');
+        cy.get('.mat-mdc-option').contains('de').click();
+      })
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
-      .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(1).type('DescriptionTwo'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(2).type('DescriptionTwo'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en');
+        cy.get('.mat-mdc-option').contains('en').click();
+      })
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
-      .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(2).type('DescriptionThree'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(3).type('DescriptionThree'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en');
+        cy.get('.mat-mdc-option').contains('en').click();
+      })
       .then(() => cy.get('[data-cy="modeDescriptionRemove"]').eq(0).click())
-      .then(() => cy.get('[data-cy="modeValueValue"]').type('Value'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(3).type('Value'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en');
+        cy.get('.mat-mdc-option').contains('en').click();
+      })
       .then(() => cy.get(SELECTOR_entitySaveButton).click());
 
     openElementAndAssertValues('Enumeration', [
@@ -137,36 +138,42 @@ describe('Loading and edit Entity value RDF lang string properties on modal test
     cy.dbClickShape('Enumeration')
       .then(() => cy.get(SELECTOR_addEntityValue).click())
       .then(() => cy.get(FIELD_entityValueName).type('Complaint30'))
-      .then(() => cy.get('[data-cy="modeCodeValue"]').type('30'))
-      .then(() => cy.get('[data-cy="modeDescriptionValue"]').type('DescriptionOne'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(0).type('30'))
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(1).type('DescriptionOne'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(0).should('exist').clear().type('de');
+        cy.get('.mat-mdc-option').contains('de').click();
+      })
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
-      .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(1).type('DescriptionTwo'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(2).type('DescriptionTwo'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(1).should('exist').clear().type('en');
+        cy.get('.mat-mdc-option').contains('en').click();
+      })
       .then(() => cy.get('[data-cy="modeDescriptionAdd"]').click())
-      .then(() => cy.get('[data-cy="modeDescriptionValue"]').eq(2).type('DescriptionThree'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(3).type('DescriptionThree'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en');
+        cy.get('.mat-mdc-option').contains('en').click();
+      })
       .then(() => cy.get('[data-cy="modeDescriptionRemove"]').eq(0).click())
-      .then(() => cy.get('[data-cy="modeValueValue"]').type('ValueOne'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en').get('.mat-mdc-option').contains('en').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(3).type('ValueOne'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(2).should('exist').clear().type('en');
+        cy.get('.mat-mdc-option').contains('en').click();
+      })
       .then(() => cy.get('[data-cy="modeValueAdd"]').click())
-      .then(() => cy.get('[data-cy="modeValueValue"]').eq(1).type('ValueTwo'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(3).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(4).type('ValueTwo'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(3).should('exist').clear().type('de');
+        cy.get('.mat-mdc-option').contains('de').click();
+      })
       .then(() => cy.get('[data-cy="modeValueAdd"]').click())
-      .then(() => cy.get('[data-cy="modeValueValue"]').eq(2).type('ValueThree'))
-      .then(() =>
-        cy.get(FIELD_propertyLanguageValue).eq(4).should('exist').clear().type('de').get('.mat-mdc-option').contains('de').click(),
-      )
+      .then(() => cy.get(FIELD_propertyValueNotComplex).eq(5).type('ValueThree'))
+      .then(() => {
+        cy.get(FIELD_propertyLanguageValue).eq(4).should('exist').clear().type('de');
+        cy.get('.mat-mdc-option').contains('de').click();
+      })
       .then(() => cy.get('[data-cy="modeValueRemove"]').eq(0).click())
       .then(() => cy.get(SELECTOR_entitySaveButton).click());
 

@@ -12,15 +12,6 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {
-  AASXGenerationModalComponent,
-  EditorService,
-  FileHandlingService,
-  GenerateAsyncApiComponent,
-  GenerateDocumentationComponent,
-  GenerateOpenApiComponent,
-  LanguageSelectorModalComponent,
-} from '@ame/editor';
 import {ModelService} from '@ame/rdf/services';
 import {LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
@@ -30,7 +21,14 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {catchError, map, Observable, switchMap, throwError} from 'rxjs';
 import {finalize, first} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
+import {EditorService} from '../../editor.service';
 import {PreviewDialogComponent} from '../../preview-dialog';
+import {AASXGenerationModalComponent} from '../components/aasx-generation-modal/aasx-generation-modal.component';
+import {GenerateAsyncApiComponent} from '../components/generate-async-api/generate-async-api.component';
+import {GenerateDocumentationComponent} from '../components/generate-documentation/generate-documentation.component';
+import {GenerateOpenApiComponent} from '../components/generate-open-api/generate-open-api.component';
+import {LanguageSelectorModalComponent} from '../components/language-sector-modal/language-selector-modal.component';
+import {FileHandlingService} from './file-handling.service';
 
 @Injectable({providedIn: 'root'})
 export class GenerateHandlingService {
@@ -82,8 +80,12 @@ export class GenerateHandlingService {
   }
 
   onGenerateAASXFile() {
-    const cb = () => this.matDialog.open(AASXGenerationModalComponent, {disableClose: true});
+    const cb = () => this.openGenerationAASX();
     this.validateFile(cb);
+  }
+
+  openGenerationAASX(): MatDialogRef<AASXGenerationModalComponent> {
+    return this.matDialog.open(AASXGenerationModalComponent, {disableClose: true});
   }
 
   onGenerateJsonSample() {
@@ -93,8 +95,8 @@ export class GenerateHandlingService {
 
   generateJsonSample(): Observable<any> {
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG?.GENERATE_JSON_PAYLOAD,
-      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
+      title: this.translate.language.notificationDialog?.GENERATE_JSON_PAYLOAD,
+      content: this.translate.language.notificationDialog?.CONTENT,
       hasCloseButton: true,
     };
 
@@ -103,15 +105,15 @@ export class GenerateHandlingService {
       first(),
       catchError(() => {
         this.notificationsService.error({
-          title: this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE,
-          message: this.translate.language.GENERATE_HANDLING.INVALID_MODEL,
+          title: this.translate.language.generateHandling.failGenerateJsonSample,
+          message: this.translate.language.generateHandling.invalidModel,
           timeout: 5000,
         });
-        return throwError(() => this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SAMPLE);
+        return throwError(() => this.translate.language.generateHandling.failGenerateJsonSample);
       }),
       map(data => {
         this.openPreview(
-          this.translate.language.GENERATE_HANDLING.JSON_PAYLOAD_PREVIEW,
+          this.translate.language.generateHandling.jsonPayloadPreview,
           this.formatStringToJson(data),
           !this.loadedFilesService?.currentLoadedFile?.aspect
             ? this.currentFile.name
@@ -129,8 +131,8 @@ export class GenerateHandlingService {
 
   generateJsonSchema(): Observable<void> {
     const loadingScreenOptions: LoadingScreenOptions = {
-      title: this.translate.language.NOTIFICATION_DIALOG?.GENERATE_JSON_SCHEMA,
-      content: this.translate.language.NOTIFICATION_DIALOG?.CONTENT,
+      title: this.translate.language.notificationDialog?.GENERATE_JSON_SCHEMA,
+      content: this.translate.language.notificationDialog?.CONTENT,
       hasCloseButton: true,
     };
 
@@ -146,16 +148,16 @@ export class GenerateHandlingService {
             first(),
             catchError(() => {
               this.notificationsService.error({
-                title: this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA,
-                message: this.translate.language.GENERATE_HANDLING.INVALID_MODEL,
+                title: this.translate.language.generateHandling.failGenerateJsonSchema,
+                message: this.translate.language.generateHandling.invalidModel,
                 timeout: 5000,
               });
-              return throwError(() => this.translate.language.GENERATE_HANDLING.FAIL_GENERATE_JSON_SCHEMA);
+              return throwError(() => this.translate.language.generateHandling.failGenerateJsonSchema);
             }),
             map(data => {
               this.loadingScreenService.close();
               this.openPreview(
-                this.translate.language.GENERATE_HANDLING.JSON_SCHEMA_PREVIEW,
+                this.translate.language.generateHandling.jsonSchemaPreview,
                 this.formatStringToJson(data),
                 !this.loadedFilesService?.currentLoadedFile?.aspect
                   ? this.currentFile.name
@@ -167,6 +169,7 @@ export class GenerateHandlingService {
       );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   validateFile(callback?: Function): void {
     this.modelService
       .synchronizeModelToRdf()
@@ -174,7 +177,7 @@ export class GenerateHandlingService {
       .subscribe((): void => {
         if (!this.loadedFilesService?.currentLoadedFile?.aspect) {
           this.notificationsService.info({
-            title: this.translate.language.GENERATE_HANDLING.NO_ASPECT_TITLE,
+            title: this.translate.language.generateHandling.noAspectTitle,
             timeout: 5000,
           });
           return;

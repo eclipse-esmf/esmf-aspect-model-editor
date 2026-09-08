@@ -30,9 +30,9 @@ import {
 } from '../../support/constants';
 
 describe('Test migration of common attributes on Constraint/Characteristic type change', () => {
-  it('can add new', () => {
+  before(() => {
     cy.visitDefault();
-    cy.startModelling().then(() => {});
+    cy.startModelling();
   });
 
   it('can add additional attributes', () => {

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -16,7 +15,7 @@ import {EventProps} from '../shared/props';
 import {ModelVisitor} from '../visitor/model-visitor';
 import {StructureElement} from './structure-element';
 
-export interface Event extends StructureElement {}
+export type Event = StructureElement;
 
 export class DefaultEvent extends StructureElement implements Event {
   override className = 'DefaultEvent';

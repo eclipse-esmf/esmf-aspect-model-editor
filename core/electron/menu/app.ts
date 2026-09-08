@@ -35,33 +35,33 @@ export function appMenuTemplate(translation: Translation): Array<MenuItemConstru
       : []),
     {
       id: 'MENU_FILE',
-      label: translation.MENU.FILE.LABEL,
-      submenu: file(translation.MENU.FILE),
+      label: translation.menu.file.label,
+      submenu: file(translation.menu.file),
     },
     {
       id: 'MENU_VIEW',
-      label: translation.MENU.VIEW.LABEL,
-      submenu: view(translation.MENU.VIEW),
+      label: translation.menu.view.label,
+      submenu: view(translation.menu.view),
     },
     {
       id: 'MENU_EDIT',
-      label: translation.MENU.EDIT.LABEL,
-      submenu: edit(translation.MENU.EDIT),
+      label: translation.menu.edit.label,
+      submenu: edit(translation.menu.edit),
     },
     {
       id: 'MENU_VALIDATE',
-      label: translation.MENU.VALIDATE.LABEL,
-      submenu: validate(translation.MENU.VALIDATE),
+      label: translation.menu.validate.label,
+      submenu: validate(translation.menu.validate),
     },
     {
       id: 'MENU_GENERATE',
-      label: translation.MENU.GENERATE.LABEL,
-      submenu: generate(translation.MENU.GENERATE),
+      label: translation.menu.generate.label,
+      submenu: generate(translation.menu.generate),
     },
     {
       id: 'MENU_SEARCH',
-      label: translation.MENU.SEARCH.LABEL,
-      submenu: search(translation.MENU.SEARCH),
+      label: translation.menu.search.label,
+      submenu: search(translation.menu.search),
     },
   ];
 }

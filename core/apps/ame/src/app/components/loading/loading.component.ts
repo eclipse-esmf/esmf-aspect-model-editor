@@ -11,50 +11,62 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {ModelApiService} from '@ame/api';
-import {ElectronSignals, ElectronSignalsService, ElectronTunnelService} from '@ame/shared';
+import {ElectronSignals, ElectronSignalsService, ElectronTunnelService, NotificationsService} from '@ame/shared';
 import {NgOptimizedImage} from '@angular/common';
-import {AfterViewInit, Component, DestroyRef, NgZone, inject} from '@angular/core';
+import {Component, DestroyRef, OnInit, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from '@angular/router';
-import {Observable, forkJoin, of, switchMap, take} from 'rxjs';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {Observable, catchError, forkJoin, of, switchMap, take} from 'rxjs';
 import {map} from 'rxjs/operators';
 
 @Component({
-  standalone: true,
   templateUrl: 'loading.component.html',
   styleUrls: ['loading.component.scss'],
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, TranslocoDirective],
 })
-export class LoadingComponent implements AfterViewInit {
-  private destroyRef = inject(DestroyRef);
-  private router = inject(Router);
-  private electronTunnel = inject(ElectronTunnelService);
-  private modelApiService = inject(ModelApiService);
-  private ngZone = inject(NgZone);
+export class LoadingComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
+  private readonly electronTunnel = inject(ElectronTunnelService);
+  private readonly modelApiService = inject(ModelApiService);
+  private readonly notificationsService = inject(NotificationsService);
+  private readonly electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
 
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  /** Whether startup data could not be loaded, used by the template to show an error state instead of the spinner. */
+  readonly hasError = signal(false);
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.electronSignalsService.call('requestMaximizeWindow');
 
     forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
-      .pipe(takeUntilDestroyed(this.destroyRef), take(1))
-      .subscribe({
-        next: ([isFirstWindow, model]) => {
-          this.electronTunnel.startUpData$.next({isFirstWindow, model});
-        },
-        error: error => console.log(error),
-        complete: () => {
-          // Because complete is called in electron callback,
-          // router.navigate is called outside ngZone
-          // and needs to be called in ngZone to function
-          const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
-          this.ngZone.run(() => this.router.navigate(['/editor'], {queryParams}));
-        },
+      .pipe(
+        take(1),
+        catchError(error => {
+          console.error(error);
+          this.notificationsService.error({
+            title: 'Unable to load the application',
+            message: error?.message || 'An unexpected error occurred while starting the editor.',
+          });
+          this.hasError.set(true);
+          return of(null);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(result => {
+        if (!result) {
+          return;
+        }
+
+        const [isFirstWindow, model] = result;
+        this.electronTunnel.startUpData$.next({isFirstWindow, model});
+
+        const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
+        this.router.navigate(['/editor'], {queryParams});
       });
   }
 
-  loadModelText(): Observable<string> {
+  loadModelText(): Observable<string | null> {
     return this.electronSignalsService.call('requestWindowData').pipe(
       switchMap(data => {
         if (!data?.options) {

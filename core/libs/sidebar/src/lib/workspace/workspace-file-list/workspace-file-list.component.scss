@@ -27,7 +27,7 @@
 
   ::ng-deep {
     mat-form-field .mdc-text-field {
-      background-color: white;
+      background-color: var(--ame-surface, white);
     }
   }
 }
@@ -53,7 +53,7 @@
   margin: -16px;
   flex: 1;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   height: calc(100% - 95px);
   overflow-x: hidden;
   padding-bottom: 1rem;
@@ -65,13 +65,25 @@
     padding-left: 16px;
     padding-right: 16px;
     gap: 5px;
-
-    &:hover {
-      cursor: pointer;
-    }
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
 
     span {
       word-break: break-all;
+    }
+
+    &:focus {
+      outline: 2px solid #007bc0;
+      outline-offset: 2px;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
     }
   }
 
@@ -85,44 +97,77 @@
     padding-left: 35px;
     align-items: center;
     justify-content: space-between;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    position: relative;
 
     &:hover {
-      background-color: #e1e1e1;
-      cursor: pointer;
+      background-color: var(--ame-surface-hover, #e1e1e1);
 
-      button {
+      > button {
         display: inline-flex;
       }
     }
 
     &.selected {
-      background-color: #e1e1e1;
+      background-color: var(--ame-surface-selected, #e1e1e1);
       cursor: default;
     }
 
     &.outdated {
-      opacity: 0.75;
+      opacity: 0.85;
+      color: var(--ame-gray-600, #787878);
+
+      .content mat-icon {
+        color: var(--ame-orange, #f59e0b);
+      }
+
       &:hover {
-        background-color: transparent;
-        cursor: default;
+        background-color: var(--ame-surface-hover, #e1e1e1);
       }
     }
 
     &.errored {
-      color: var(--ame-error);
-
-      &:hover {
-        background-color: transparent;
-        cursor: default;
-      }
+      opacity: 0.85;
+      color: var(--ame-error, #f44336);
 
       .content mat-icon {
-        color: var(--ame-error);
+        color: var(--ame-error, #f44336);
+      }
+
+      &:hover {
+        background-color: var(--ame-surface-hover, #e1e1e1);
       }
     }
 
-    button {
+    // Innerer Button
+    > button {
       display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 10;
+      position: relative;
+
+      &:focus {
+        outline: 2px solid #007bc0;
+        outline-offset: 2px;
+      }
+    }
+
+    &:focus {
+      outline: 2px solid #007bc0;
+      outline-offset: 2px;
+    }
+
+    &:focus:not(:focus-visible) {
+      outline: none;
     }
 
     .content {
@@ -130,6 +175,7 @@
       align-items: center;
       gap: 5px;
       width: 80%;
+      pointer-events: none;
 
       span {
         font-size: 14px;

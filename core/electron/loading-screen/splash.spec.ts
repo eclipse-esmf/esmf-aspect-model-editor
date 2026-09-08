@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach} from '@jest/globals';
 import * as fs from 'fs';
-import * as path from 'path';
 import {JSDOM} from 'jsdom';
+import * as path from 'path';
+import {beforeEach, describe, expect, it} from 'vitest';
 
 describe('splash.html', () => {
   let document: Document;

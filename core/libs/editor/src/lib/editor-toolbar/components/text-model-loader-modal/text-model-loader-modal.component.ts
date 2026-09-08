@@ -11,18 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
+import {form, FormField, required} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
-import {TranslatePipe} from '@ngx-translate/core';
+import {TranslocoDirective} from '@jsverse/transloco';
 import {first} from 'rxjs';
 import {FileHandlingService} from '../../services';
 
+export interface TextModelFormData {
+  modelText: string;
+}
+
 @Component({
-  standalone: true,
   templateUrl: './text-model-loader-modal.component.html',
   styles: [
     `
@@ -38,14 +42,20 @@ import {FileHandlingService} from '../../services';
       }
     `,
   ],
-  imports: [TranslatePipe, MatDialogModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatIcon],
+  imports: [TranslocoDirective, MatDialogModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatIcon, FormField],
 })
 export class TextModelLoaderModalComponent {
   private fileHandlingService = inject(FileHandlingService);
   private matDialogRef = inject(MatDialogRef<TextModelLoaderModalComponent>);
 
-  loadModel(modelText: string) {
+  public modelData = signal<TextModelFormData>({modelText: ''});
+  public modelForm = form(this.modelData, schemaPath => {
+    required(schemaPath.modelText);
+  });
+
+  loadModel(modelText?: string) {
+    const textToLoad = modelText ?? this.modelData().modelText;
     this.matDialogRef.close();
-    this.fileHandlingService.loadModel(modelText).pipe(first()).subscribe();
+    this.fileHandlingService.loadModel(textToLoad).pipe(first()).subscribe();
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -33,15 +33,14 @@ export class NamespaceLoader extends BaseModelLoader {
    */
   public load(...rdfContent: string[]): Observable<Map<string, Array<NamedElement>>> {
     const subject = new Subject<Map<string, Array<NamedElement>>>();
-    const initProps: BaseInitProps = {rdfModel: null, cache: null};
 
     const rdfModels = rdfContent.map(r => ({rdfAspectModel: r, sourceLocation: ''}));
 
     new RdfLoader().loadModel(rdfModels).subscribe({
       next: (rdfModel: RdfModel) => {
-        initProps.rdfModel = rdfModel;
-        initProps.cache = new ModelElementCache();
-        this.cacheService = initProps.cache;
+        const cache = new ModelElementCache();
+        const initProps: BaseInitProps = {rdfModel, cache};
+        this.cacheService = cache;
 
         try {
           RdfModelUtil.throwErrorIfUnsupportedVersion(rdfModel);

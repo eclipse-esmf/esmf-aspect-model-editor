@@ -11,26 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {RdfModelUtil} from '@ame/rdf/utils';
-import {Directive, inject, OnDestroy} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {Directive, inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {Subscription} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {filter, tap} from 'rxjs/operators';
 import {EditorModelService} from '../editor-model.service';
 
 @Directive()
-export abstract class ModelElementEditorComponent<T extends NamedElement> implements OnDestroy {
+export abstract class ModelElementEditorComponent<T extends NamedElement> {
   public metaModelDialogService = inject(EditorModelService);
   public metaModelElement: T;
-  public subscription: Subscription;
-  public formSubscription: Subscription = new Subscription(); // subscriptions from form controls are added here
-  public formGroup: FormGroup;
-
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();
-    this.cleanSubscriptions();
-    this.resetForm();
-  }
 
   getValueWithoutUrnDefinition(value: string): string {
     return RdfModelUtil.getValueWithoutUrnDefinition(value);
@@ -38,24 +27,10 @@ export abstract class ModelElementEditorComponent<T extends NamedElement> implem
 
   getMetaModelData() {
     return this.metaModelDialogService.getMetaModelElement().pipe(
+      filter((metaModelElement): metaModelElement is T => Boolean(metaModelElement)),
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
       }),
     );
-  }
-
-  cleanSubscriptions() {
-    this.formSubscription.unsubscribe();
-    this.formSubscription = new Subscription();
-  }
-
-  private resetForm() {
-    if (!this.formGroup) {
-      return;
-    }
-    Object.keys(this.formGroup.controls).forEach((key: string) => {
-      this.formGroup.setControl(key, new FormControl());
-    });
-    this.formGroup.reset();
   }
 }

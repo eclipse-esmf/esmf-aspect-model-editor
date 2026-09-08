@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ViolationError} from '@ame/editor';
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
+import {ViolationError} from './models';
 
 @Injectable({providedIn: 'root'})
 export class ModelValidatorService {
-  private mxGraphService = inject(MxGraphService);
-  private notificationsService = inject(NotificationsService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly notificationsService = inject(NotificationsService);
 
   constructor() {
     this.notificationsService.clearNotifications();
@@ -48,7 +48,7 @@ export class ModelValidatorService {
         link: error.focusNode,
         timeout: 5000,
       });
-      this.mxGraphService.showValidationErrorOnShape(error.focusNode);
+      this.maxgraphService.showValidationErrorOnShape(error.focusNode);
     });
   }
 }

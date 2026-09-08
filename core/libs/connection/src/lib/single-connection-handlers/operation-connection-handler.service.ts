@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelInfo} from '@ame/mx-graph';
+import {ModelInfo} from '@ame/max-graph';
 import {NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, Operation} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
@@ -23,7 +23,7 @@ import {SingleShapeConnector} from '../models';
 export class OperationConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Operation> {
   private notificationsService = inject(NotificationsService);
 
-  public connect(operation: Operation, source: mxgraph.mxCell, modelInfo: ModelInfo) {
+  public connect(operation: Operation, source: Cell, modelInfo: ModelInfo) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
 
     if (ModelInfo.IS_OPERATION_OUTPUT === modelInfo) {
@@ -38,8 +38,8 @@ export class OperationConnectionHandler extends BaseConnectionHandler implements
 
     const child = this.renderTree(defaultProperty, source);
     this.refreshPropertiesLabel(child, defaultProperty);
-    this.mxGraphService.assignToParent(child, source);
-    this.mxGraphService.formatCell(source);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.assignToParent(child, source);
+    this.maxgraphService.formatCell(source);
+    this.maxgraphService.formatShapes();
   }
 }

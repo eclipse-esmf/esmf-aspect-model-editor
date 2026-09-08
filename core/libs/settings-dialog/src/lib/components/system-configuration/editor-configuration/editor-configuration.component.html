@@ -1,4 +1,5 @@
-<!--
+<ng-container *transloco="let t">
+  <!--
   ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
   ~
   ~ See the AUTHORS file(s) distributed with this work for
@@ -11,38 +12,57 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<div>
-  <h3>{{ 'SETTINGS_DIALOG.SUB_NODE.EDITOR' | translate }}</h3>
-  <form [formGroup]="form">
-    <div class="setting-item">
-      <mat-slide-toggle matTooltip="may be more suitable for some models, e.g. with recursion" formControlName="enableHierarchicalLayout">
-        {{ 'SETTINGS_DIALOG.CONFIGURATION.USING_HIERARCHICAL_LAYOUT' | translate }}
-      </mat-slide-toggle>
-    </div>
+  <div>
+    <h3>{{ t('settingsDialog.subNode.editor') }}</h3>
+    <div>
+      <div class="settings-container">
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle
+                [formField]="form.editorConfiguration.enableHierarchicalLayout"
+                [matTooltip]="t('settingsDialog.configuration.hierarchicalLayoutTooltip')"
+              >
+                {{ t('settingsDialog.configuration.usingHierarchicalLayout') }}
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </div>
 
-    <div class="setting-item">
-      <mat-slide-toggle formControlName="showEntityValueEntityEdge">
-        {{ 'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_ENTITY_VALUE_ENTITY' | translate }}
-      </mat-slide-toggle>
-    </div>
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.editorConfiguration.showConnectionLabels">
+                {{ t('settingsDialog.configuration.displayDisambiguationLabel') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.displayDisambiguationLabelTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
+          </div>
+        </div>
 
-    <div class="setting-item">
-      <mat-slide-toggle formControlName="showAbstractPropertyConnection">
-        {{ 'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_PROPERTY_ABSTRACT_PROPERTY' | translate }}
-      </mat-slide-toggle>
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.editorConfiguration.darkMode" data-cy="darkModeToggle">
+                {{ t('settingsDialog.configuration.darkMode') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.darkModeTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="setting-item">
-      <mat-slide-toggle formControlName="showConnectionLabels">
-        {{ 'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_DISAMBIGUATION_LABEL' | translate }}
-        <mat-icon
-          [matTooltipShowDelay]="0"
-          [matTooltipHideDelay]="100"
-          [matTooltip]="'SETTINGS_DIALOG.CONFIGURATION.DISPLAY_DISAMBIGUATION_LABEL_TOOLTIP' | translate"
-        >
-          info
-        </mat-icon>
-      </mat-slide-toggle>
-    </div>
-  </form>
-</div>
+  </div>
+</ng-container>

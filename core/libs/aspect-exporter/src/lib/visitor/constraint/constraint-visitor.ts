@@ -27,6 +27,7 @@ import {
   DefaultTrait,
 } from '@esmf/aspect-model-loader';
 import {ComplexType} from 'libs/aspect-model-loader/src/lib/aspect-meta-model/complex-type';
+import {Quad_Subject} from 'n3';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {BaseVisitor} from '../base-visitor';
@@ -38,32 +39,41 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
   public loadedFilesService = inject(LoadedFilesService);
 
   private readonly constraintCallbacks = {
-    DefaultRangeConstraint: (constraint: DefaultRangeConstraint, characteristicType: ComplexType) =>
-      this.updateRange(constraint, characteristicType),
-    DefaultFixedPointConstraint: (constraint: DefaultFixedPointConstraint) => this.updateFixedPoint(constraint),
-    DefaultLengthConstraint: (constraint: DefaultLengthConstraint) => this.updateLength(constraint),
-    DefaultLanguageConstraint: (constraint: DefaultLanguageConstraint) => this.updateLanguage(constraint),
-    DefaultEncodingConstraint: (constraint: DefaultEncodingConstraint) => this.updateEncoding(constraint),
-    DefaultRegularExpressionConstraint: (constraint: DefaultRegularExpressionConstraint) => this.updateRegularExpression(constraint),
-    DefaultLocaleConstraint: (constraint: DefaultLocaleConstraint) => this.updateLocale(constraint),
+    DefaultRangeConstraint: (constraint: DefaultRangeConstraint, characteristicType: ComplexType, subject?: Quad_Subject) =>
+      this.updateRange(constraint, characteristicType, subject),
+    DefaultFixedPointConstraint: (constraint: DefaultFixedPointConstraint, subject?: Quad_Subject) =>
+      this.updateFixedPoint(constraint, subject),
+    DefaultLengthConstraint: (constraint: DefaultLengthConstraint, subject?: Quad_Subject) => this.updateLength(constraint, subject),
+    DefaultLanguageConstraint: (constraint: DefaultLanguageConstraint, subject?: Quad_Subject) => this.updateLanguage(constraint, subject),
+    DefaultEncodingConstraint: (constraint: DefaultEncodingConstraint, subject?: Quad_Subject) => this.updateEncoding(constraint, subject),
+    DefaultRegularExpressionConstraint: (constraint: DefaultRegularExpressionConstraint, subject?: Quad_Subject) =>
+      this.updateRegularExpression(constraint, subject),
+    DefaultLocaleConstraint: (constraint: DefaultLocaleConstraint, subject?: Quad_Subject) => this.updateLocale(constraint, subject),
   };
 
-  visit(constraint: DefaultConstraint): DefaultConstraint {
-    this.setPrefix(constraint.aspectModelUrn);
-    this.updateProperties(constraint);
+  visit(constraint: DefaultConstraint, parentDataType?: any, customSubject?: Quad_Subject): DefaultConstraint {
+    if (!customSubject && constraint.isAnonymous?.()) {
+      return constraint;
+    }
 
-    const defaultTrait: DefaultTrait = constraint.parents.find(e => e instanceof DefaultTrait) as DefaultTrait;
+    if (!customSubject) {
+      this.setPrefix(constraint.aspectModelUrn);
+    }
+    this.updateProperties(constraint, customSubject);
 
-    if (constraint instanceof DefaultRangeConstraint && defaultTrait) {
-      this.constraintCallbacks[constraint.className]?.(constraint, defaultTrait.baseCharacteristic?.dataType);
+    const defaultTrait: DefaultTrait = constraint.parents?.find(e => e instanceof DefaultTrait) as DefaultTrait;
+    const dataType = parentDataType || defaultTrait?.baseCharacteristic?.dataType;
+
+    if (constraint instanceof DefaultRangeConstraint) {
+      this.constraintCallbacks[constraint.className]?.(constraint, dataType, customSubject);
     } else {
-      this.constraintCallbacks[constraint.className]?.(constraint);
+      this.constraintCallbacks[constraint.className]?.(constraint, customSubject);
     }
     return constraint;
   }
 
-  private updateProperties(constraint: DefaultConstraint) {
-    this.rdfNodeService.update(constraint, {
+  private updateProperties(constraint: DefaultConstraint, subject?: Quad_Subject) {
+    const properties = {
       preferredName: getPreferredNamesLocales(constraint)?.map(language => ({
         language,
         value: constraint.getPreferredName(language),
@@ -73,50 +83,90 @@ export class ConstraintVisitor extends BaseVisitor<DefaultConstraint> {
         value: constraint.getDescription(language),
       })),
       see: constraint.getSee() || [],
-    });
+    };
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 
-  private updateRange(constraint: DefaultRangeConstraint, characteristicType: ComplexType) {
-    this.rdfNodeService.update(constraint, {
+  private updateRange(constraint: DefaultRangeConstraint, characteristicType: ComplexType, subject?: Quad_Subject) {
+    const properties = {
       characteristicType: characteristicType,
       minValue: constraint.minValue,
       maxValue: constraint.maxValue,
       lowerBoundDefinition: constraint.lowerBoundDefinition,
       upperBoundDefinition: constraint.upperBoundDefinition,
-    });
+    };
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 
-  private updateFixedPoint(constraint: DefaultFixedPointConstraint) {
-    this.rdfNodeService.update(constraint, {
+  private updateFixedPoint(constraint: DefaultFixedPointConstraint, subject?: Quad_Subject) {
+    const properties = {
       scale: constraint.scale,
       integer: constraint.integer,
-    });
+    };
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 
-  private updateLength(constraint: DefaultLengthConstraint) {
-    this.rdfNodeService.update(constraint, {
+  private updateLength(constraint: DefaultLengthConstraint, subject?: Quad_Subject) {
+    const properties = {
       maxValue: constraint.maxValue,
       minValue: constraint.minValue,
-    });
+    };
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 
-  private updateLanguage(constraint: DefaultLanguageConstraint) {
-    this.rdfNodeService.update(constraint, {
+  private updateLanguage(constraint: DefaultLanguageConstraint, subject?: Quad_Subject) {
+    const properties = {
       languageCode: constraint.languageCode,
-    });
+    };
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 
-  private updateEncoding(constraint: DefaultEncodingConstraint) {
-    this.rdfNodeService.update(constraint, {
+  private updateEncoding(constraint: DefaultEncodingConstraint, subject?: Quad_Subject) {
+    const properties = {
       value: constraint.value,
-    });
+    };
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 
-  private updateRegularExpression(constraint: DefaultRegularExpressionConstraint) {
-    this.rdfNodeService.update(constraint, {value: constraint.value});
+  private updateRegularExpression(constraint: DefaultRegularExpressionConstraint, subject?: Quad_Subject) {
+    const properties = {value: constraint.value};
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 
-  private updateLocale(constraint: DefaultLocaleConstraint) {
-    this.rdfNodeService.update(constraint, {localeCode: constraint.localeCode});
+  private updateLocale(constraint: DefaultLocaleConstraint, subject?: Quad_Subject) {
+    const properties = {localeCode: constraint.localeCode};
+    if (subject) {
+      this.rdfNodeService.update(constraint, properties, subject);
+    } else {
+      this.rdfNodeService.update(constraint, properties);
+    }
   }
 }

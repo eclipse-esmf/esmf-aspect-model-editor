@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
  * See the AUTHORS file(s) distributed with this work for
  * additional information regarding authorship.
@@ -78,8 +78,12 @@ export function propertyFactory(initProps: BaseInitProps) {
 
     if (samm.property().equals(quad.predicate)) {
       const [, name] = quad.object.value.split('#');
-      name && (baseProperties.name = name);
-      name && (baseProperties.aspectModelUrn = quad.object.value);
+
+      if (name) {
+        baseProperties.name = name;
+        baseProperties.aspectModelUrn = quad.object.value;
+      }
+
       propertyQuads = [
         ...rdfModel.store.getQuads(quad.object, null, null, null),
         ...rdfModel.store.getQuads(quad.subject, null, null, null),
@@ -122,13 +126,18 @@ export function propertyFactory(initProps: BaseInitProps) {
       property.exampleValue = getValue(rdfModel, exampleValueQuad, property, modelElementCache);
     }
 
-    property.extends_ = getExtends(propertyQuads);
+    property.extends_ = getExtends(propertyQuads) || undefined;
     property.extends_?.addParent(property);
 
     return {property, payload};
   }
 
-  function getValue(rdfModel: RdfModel, quad: Quad, property: Property, modelElementCache: CacheStrategy): ScalarValue | ValueElement {
+  function getValue(
+    rdfModel: RdfModel,
+    quad: Quad,
+    property: Property,
+    modelElementCache: CacheStrategy,
+  ): ScalarValue | ValueElement | undefined {
     const dataType =
       property.characteristic instanceof DefaultTrait
         ? property.characteristic.baseCharacteristic?.dataType
@@ -136,15 +145,19 @@ export function propertyFactory(initProps: BaseInitProps) {
 
     if (Util.isLiteral(quad.object)) {
       return new ScalarValue({
-        value: CharacteristicInstantiatorUtil.resolveValues(quad, dataType?.urn),
-        type: dataType,
+        value: CharacteristicInstantiatorUtil.resolveValues(quad, dataType?.urn || ''),
+        type: dataType as any,
       });
     }
 
-    const valueQuads = rdfModel.store.getQuads(quad.object.value, null, null, null);
-    const valueElement = modelElementCache.resolveInstance(valueFactory(initProps)(valueQuads, dataType));
+    const valueQuads = Util.isBlankNode(quad.object)
+      ? rdfModel.resolveBlankNodes(quad.object.value)
+      : rdfModel.store.getQuads(quad.object.value, null, null, null);
+    const rawValue = valueFactory(initProps)(valueQuads, dataType as any);
+    if (!rawValue) return undefined;
+    const valueElement = modelElementCache.resolveInstance(rawValue) as unknown as ScalarValue | ValueElement;
 
-    valueElement?.addParent(property);
+    (valueElement as any)?.addParent?.(property);
     return valueElement;
   }
 

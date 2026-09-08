@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -13,13 +12,10 @@
  */
 
 import {FileHandlingService} from '@ame/editor';
-import {MxGraphAttributeService} from '@ame/mx-graph';
+import {MaxGraphAttributeService} from '@ame/max-graph';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {mxgraph, mxgraphFactory} from 'mxgraph-factory';
-import {finalize} from 'rxjs/operators';
+import {Cell, CellOverlay} from '@maxgraph/core';
 import {FIELD_name, SELECTOR_editorSaveButton, SELECTOR_propertiesCancelButton, SIDEBAR_CLOSE_BUTTON} from './constants';
-
-const {mxConstants} = mxgraphFactory({});
 
 /**
  * Provides helper functions for performing various actions and checks in Cypress tests related to a graphical interface.
@@ -38,15 +34,11 @@ export class cyHelp {
    * @returns {Cypress.Chainable} Cypress chainable object.
    */
   public static closeSidebar(): Cypress.Chainable {
-    return cy
-      .get('body')
-      .find(SIDEBAR_CLOSE_BUTTON)
-      .its('length')
-      .then(length => {
-        if (length) {
-          cy.get(SIDEBAR_CLOSE_BUTTON).click({force: true});
-        }
-      });
+    return cy.get('body').then($body => {
+      if ($body.find(SIDEBAR_CLOSE_BUTTON).length > 0) {
+        cy.get(SIDEBAR_CLOSE_BUTTON).click({force: true});
+      }
+    });
   }
 
   /**
@@ -71,26 +63,36 @@ export class cyHelp {
    * @returns {Cypress.Chainable} Cypress chainable object.
    */
   public static clickSaveButton(): Cypress.Chainable {
-    cy.wait(1000);
-    return this.forceChangeDetection().then(() => cy.get(SELECTOR_editorSaveButton).focus().click({force: true}));
+    return this.forceChangeDetection().then(() =>
+      cy.get(SELECTOR_editorSaveButton).should('be.visible').should('not.be.disabled').click({force: true}),
+    );
   }
 
   public static clickPropertiesCancelButton(): Cypress.Chainable {
-    return this.forceChangeDetection().then(() => cy.get(SELECTOR_propertiesCancelButton).focus().click({force: true}));
+    return this.forceChangeDetection().then(() =>
+      cy.get(SELECTOR_propertiesCancelButton).should('be.visible').should('not.be.disabled').click({force: true}),
+    );
   }
 
   /**
    * Finds a shape by its name.
    * @param {string} name The name of the shape.
    * @param {Window} win The window object where the shape is located.
-   * @returns {mxgraph.mxCell} The found mxCell if any.
+   * @returns {Cell} The found mxCell if any.
    */
-  public static findShapeByName(name: string, win: Window): mxgraph.mxCell {
-    const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
+  public static findShapeByName(name: string, win: Window): Cell {
+    const maxgraphAttributeService: MaxGraphAttributeService = win['angular.maxgraphAttributeService'];
 
-    return mxGraphAttributeService.graph
-      .getChildCells(mxGraphAttributeService.graph.getDefaultParent(), true, false)
-      .find(cell => cell && cell.id === name);
+    return maxgraphAttributeService.graph
+      .getChildCells(maxgraphAttributeService.graph.getDefaultParent(), true, false)
+      .find(
+        cell =>
+          cell &&
+          (cell.id === name ||
+            cell.getAttribute?.('name') === name ||
+            (cell.value as Element)?.getAttribute?.('name') === name ||
+            (cell as any)?.getMetaModelElement?.()?.element?.name === name),
+      );
   }
 
   /**
@@ -98,13 +100,13 @@ export class cyHelp {
    * @param {string} shapeName The name of the target shape.
    * @param {object[]} shapeFieldsPartialMatch Fields for partial matching.
    * @param {Cypress.AUTWindow} win The window object from the application under test.
-   * @returns {mxgraph.mxCell} The found mxCell if any.
+   * @returns {Cell} The found mxCell if any.
    */
-  static findShapeByFields(shapeName: string, shapeFieldsPartialMatch: object[], win: Cypress.AUTWindow): mxgraph.mxCell {
-    const mxGraphAttributeService: MxGraphAttributeService = win['angular.mxGraphAttributeService'];
+  static findShapeByFields(shapeName: string, shapeFieldsPartialMatch: object[], win: Cypress.AUTWindow): Cell {
+    const maxgraphAttributeService: MaxGraphAttributeService = win['angular.maxgraphAttributeService'];
 
     // Get all cells
-    return mxGraphAttributeService.graph.getChildCells(null, true, false).find((cell: any) => {
+    return maxgraphAttributeService.graph.getChildCells(null, true, false).find((cell: any) => {
       if (!cell) return false;
       if (cell.id !== shapeName) return false;
 
@@ -133,7 +135,7 @@ export class cyHelp {
       if (!foundShape) {
         throw new Error(`Shape ${cellName} not found`);
       }
-      return !!foundShape?.overlays?.some(({verticalAlign, offset: {x}}) => verticalAlign === mxConstants.ALIGN_BOTTOM && !x);
+      return !!foundShape?.overlays?.some(({verticalAlign, offset: {x}}) => verticalAlign === 'bottom' && !x);
     });
   }
 
@@ -181,62 +183,62 @@ export class cyHelp {
       if (!foundShape) {
         throw new Error(`Shape ${cellName} not found`);
       }
-      return !!foundShape?.overlays?.some(({verticalAlign, offset: {x}}) => verticalAlign === mxConstants.ALIGN_TOP && x > 0);
+      return !!foundShape?.overlays?.some(({verticalAlign, offset: {x}}) => verticalAlign === 'top' && x > 0);
     });
   }
 
   /**
    * Retrieves the add shape overlay for a given cell.
-   * @param {mxgraph.mxCell} cell The cell to check for the overlay.
-   * @returns {mxgraph.mxCellOverlay} The add shape overlay, if present.
+   * @param {Cell} cell The cell to check for the overlay.
+   * @returns {CellOverlay} The add shape overlay, if present.
    */
-  static getAddShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
-    return cell?.overlays?.find(({verticalAlign, offset: {x}}) => verticalAlign === mxConstants.ALIGN_BOTTOM && !x);
+  static getAddShapeOverlay(cell: Cell): CellOverlay {
+    return cell?.overlays?.find(({verticalAlign, offset: {x}}) => verticalAlign === 'bottom' && !x);
   }
 
   /**
    * Retrieves the add input shape overlay for a given cell.
-   * @param {mxgraph.mxCell} cell The cell to check for the input overlay.
-   * @returns {mxgraph.mxCellOverlay} The add input shape overlay, if present.
+   * @param {Cell} cell The cell to check for the input overlay.
+   * @returns {CellOverlay} The add input shape overlay, if present.
    */
-  static getAddInputShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
+  static getAddInputShapeOverlay(cell: Cell): CellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Input Property');
   }
 
   /**
    * Retrieves the add output shape overlay for a given cell.
-   * @param {mxgraph.mxCell} cell The cell to check for the output overlay.
-   * @returns {mxgraph.mxCellOverlay} The add output shape overlay, if present.
+   * @param {Cell} cell The cell to check for the output overlay.
+   * @returns {CellOverlay} The add output shape overlay, if present.
    */
-  static getAddOutputShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
+  static getAddOutputShapeOverlay(cell: Cell): CellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Output Property');
   }
 
   /**
    * Retrieves the add left shape overlay for a given cell.
-   * @param {mxgraph.mxCell} cell The cell to check for the left overlay.
-   * @returns {mxgraph.mxCellOverlay} The add left shape overlay, if present.
+   * @param {Cell} cell The cell to check for the left overlay.
+   * @returns {CellOverlay} The add left shape overlay, if present.
    */
-  static getAddLeftShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
+  static getAddLeftShapeOverlay(cell: Cell): CellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Right Characteristic');
   }
 
   /**
    * Retrieves the add right shape overlay for a given cell.
-   * @param {mxgraph.mxCell} cell The cell to check for the right overlay.
-   * @returns {mxgraph.mxCellOverlay} The add right shape overlay, if present.
+   * @param {Cell} cell The cell to check for the right overlay.
+   * @returns {CellOverlay} The add right shape overlay, if present.
    */
-  static getAddRightShapeOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
+  static getAddRightShapeOverlay(cell: Cell): CellOverlay {
     return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Left Characteristic');
   }
 
   /**
    * Retrieves the add constraint overlay for a given cell.
-   * @param {mxgraph.mxCell} cell The cell to check for the constraint overlay.
-   * @returns {mxgraph.mxCellOverlay} The add constraint overlay, if present.
+   * @param {Cell} cell The cell to check for the constraint overlay.
+   * @returns {CellOverlay} The add constraint overlay, if present.
    */
-  static getAddConstraintOverlay(cell: mxgraph.mxCell): mxgraph.mxCellOverlay {
-    return cell?.overlays?.find(({verticalAlign, offset: {x}}) => verticalAlign === mxConstants.ALIGN_TOP && x > 0);
+  static getAddConstraintOverlay(cell: Cell): CellOverlay {
+    return cell?.overlays?.find(({verticalAlign, offset: {x}}) => verticalAlign === 'top' && x > 0);
   }
 
   /**
@@ -288,29 +290,21 @@ export class cyHelp {
    * @returns {Cypress.Chainable} Cypress chainable object.
    */
   static clickShape(name: string, selectMultipleShapes = false): Cypress.Chainable {
-    cy.getHTMLCell(name).should('exist');
+    const modifierKey = Cypress.platform !== 'darwin' ? '{ctrl}' : '{meta}';
 
     if (selectMultipleShapes) {
-      if (Cypress.platform !== 'darwin') {
-        cy.get('body').type('{ctrl}', {release: false, force: true});
-      } else {
-        cy.get('body').type('{meta}', {release: false, force: true});
-      }
+      cy.get('body').type(modifierKey, {release: false, force: true});
     }
 
-    if (Cypress.platform !== 'darwin') {
-      return cy
-        .getHTMLCell(name)
-        .first()
-        .click({force: true})
-        .then(() => cy.get('body').type('{ctrl}', {force: true}));
-    } else {
-      return cy
-        .getHTMLCell(name)
-        .first()
-        .click({force: true})
-        .then(() => cy.get('body').type('{meta}', {force: true}));
-    }
+    return cy
+      .getHTMLCell(name)
+      .scrollIntoView()
+      .click({force: true})
+      .then(() => {
+        if (selectMultipleShapes) {
+          cy.get('body').type(modifierKey, {force: true});
+        }
+      });
   }
 
   /**
@@ -320,7 +314,7 @@ export class cyHelp {
    * @returns {Cypress.Chainable} Cypress chainable object containing the label.
    */
   static getShapeLabelByKey(name: string, key: string) {
-    return cy.getHTMLCell(name).get(`.element-info[data-key="${key}"]`);
+    return cy.getHTMLCell(name).find(`.element-info[data-key="${key}"]`);
   }
 
   /**
@@ -344,11 +338,9 @@ export class cyHelp {
    * @param {string} newName - The new name to assign to the element.
    * @returns {Cypress.Chainable} - Returns a chainable Cypress command that performs the rename operation.
    */
-
   static renameElement(oldName: string, newName: string): Cypress.Chainable {
     return cy
-      .then(() => cy.dbClickShape(oldName))
-      .then(() => cy.get('#graph').click({force: true}))
+      .dbClickShape(oldName)
       .then(() => cy.get(FIELD_name).clear({force: true}).type(newName, {force: true}))
       .then(() => this.clickSaveButton());
   }
@@ -383,14 +375,18 @@ export class cyHelp {
   static loadModel(rdfString: string): Cypress.Chainable {
     return cy
       .window()
-      .then(win => {
-        const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
-        const sub = fileHandlingService
-          .loadModel(rdfString)
-          .pipe(finalize(() => sub.unsubscribe()))
-          .subscribe();
-        return sub;
-      })
-      .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'));
+      .then(
+        win =>
+          new Cypress.Promise((resolve, reject) => {
+            const fileHandlingService: FileHandlingService = win['angular.fileHandlingService'];
+            fileHandlingService.loadModel(rdfString).subscribe({
+              next: () => resolve(true),
+              error: err => reject(err),
+              complete: () => resolve(true),
+            });
+          }),
+      )
+      .then(() => cy.get('ame-loading-screen', {timeout: 15000}).should('not.exist'))
+      .then(() => cy.get('#graph', {timeout: 15000}).should('be.visible'));
   }
 }

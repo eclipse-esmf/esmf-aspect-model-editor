@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -14,18 +13,13 @@
 
 /// <reference types="cypress" />
 
-import {NAMESPACES_URL} from '../../support/api-mocks';
-
-import {setUpDynamicModellingInterceptors, setUpStaticModellingInterceptors} from '../../support/api-mocks';
-import {SELECTOR_workspaceBtn} from '../../support/constants';
-
-// TODO redo the setUpDynamicModellingInterceptors function
 describe('Elements count', () => {
+  before(() => {
+    cy.visitDefault();
+  });
+
   describe('Movement model', () => {
     it('should display elements count for incoming & outgoing edges', () => {
-      cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-      cy.visitDefault();
       cy.fixture('/default-models/movement.txt')
         .then(rdfString => cy.loadModel(rdfString))
         .then(() => {
@@ -51,7 +45,7 @@ describe('Elements count', () => {
 
           cy.dbClickShape('Boolean');
           cy.contains('Incoming edges (1)').should('exist');
-          cy.contains('Outgoing edges').should('not.exist');
+          cy.contains('Outgoing edges (0)').should('exist');
 
           cy.dbClickShape('SpatialPositionCharacteristic');
           cy.contains('Incoming edges (1)').should('exist');
@@ -63,7 +57,7 @@ describe('Elements count', () => {
 
           cy.dbClickShape('TrafficLight');
           cy.contains('Incoming edges (1)').should('exist');
-          cy.contains('Outgoing edges').should('not.exist');
+          cy.contains('Outgoing edges (0)').should('exist');
 
           cy.dbClickShape('SpatialPosition');
           cy.contains('Incoming edges (1)').should('exist');
@@ -71,7 +65,7 @@ describe('Elements count', () => {
 
           cy.dbClickShape('kilometrePerHour');
           cy.contains('Incoming edges (1)').should('exist');
-          cy.contains('Outgoing edges').should('not.exist');
+          cy.contains('Outgoing edges (0)').should('exist');
 
           cy.dbClickShape('latitude');
           cy.contains('Incoming edges (1)').should('exist');
@@ -95,88 +89,21 @@ describe('Elements count', () => {
 
           cy.dbClickShape('degreeUnitOfAngle');
           cy.contains('Incoming edges (1)').should('exist');
-          cy.contains('Outgoing edges').should('not.exist');
+          cy.contains('Outgoing edges (0)').should('exist');
 
           cy.dbClickShape('metre');
           cy.contains('Incoming edges (1)').should('exist');
-          cy.contains('Outgoing edges').should('not.exist');
+          cy.contains('Outgoing edges (0)').should('exist');
         });
-    });
-
-    // TODO check the models and create a valid namespaces response
-    it.skip('should display elements count in sidebar', () => {
-      cy.intercept(NAMESPACES_URL, {statusCode: 200, body: {}});
-      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-      const namespacesConfig = {
-        'org.eclipse.examples.aspect': {
-          version: '1.0.0',
-          models: [
-            {
-              model: 'AspectDefault.ttl',
-              aspectModelUrn: 'org.eclipse.examples.aspect:1.0.0#AspectDefault',
-              existing: true,
-            },
-          ],
-        },
-        'org.eclipse.examples.movement': {
-          version: '1.0.0',
-          models: [
-            {
-              model: 'Movement.ttl',
-              aspectModelUrn: 'org.eclipse.examples.movement:1.0.0#Movement',
-              existing: true,
-            },
-          ],
-        },
-
-        // aspectDefault: {
-        //   name: 'org.eclipse.examples.aspect:1.0.0',
-        //   files: [
-        //     {
-        //       name: 'AspectDefault.ttl',
-        //       response: {fixture: '/default-models/aspect-default.txt'},
-        //     },
-        //   ],
-        // },
-        // movement: {
-        //   name: 'org.eclipse.examples.movement:1.0.0',
-        //   files: [
-        //     {
-        //       name: 'Movement.ttl',
-        //       response: {fixture: '/default-models/movement.txt'},
-        //     },
-        //   ],
-        // },
-      };
-
-      //   setUpStaticModellingInterceptors();
-      //   setUpDynamicModellingInterceptors(namespacesConfig);
-
-      //   cy.visitDefault();
-      //   cy.fixture(namespacesConfig.aspectDefault.files[0].response.fixture)
-      //     .then(rdfString => cy.loadModel(rdfString))
-      //     .then(() => cy.fixture(namespacesConfig.movement.files[0].response.fixture))
-      //     .then(rdfString => cy.loadModel(rdfString))
-      //     .then(() => cy.startModelling())
-      //     .then(() => {
-      //       cy.get(SELECTOR_workspaceBtn).click({force: true});
-      //       cy.contains('Movement.ttl').click({force: true});
-      //       cy.contains('Properties (7)').should('exist');
-      //       cy.contains('Characteristics (5)').should('exist');
-      //       cy.contains('Entities (1)').should('exist');
-      //     });
     });
   });
 
   describe('Enumeration instances model', () => {
-    it.skip('should display elements count for incoming & outgoing edges', () => {
-      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-      cy.visitDefault();
+    it('should display elements count for incoming & outgoing edges', () => {
       cy.fixture('/enumeration-instances.txt')
         .then(rdfString => cy.loadModel(rdfString))
         .then(() => {
           cy.dbClickShape('EnumerationInstances');
-          cy.contains('Incoming edges').should('not.exist');
           cy.contains('Outgoing edges (1)').should('exist');
 
           cy.dbClickShape('enumerationInstancesProperty1');
@@ -189,7 +116,7 @@ describe('Elements count', () => {
 
           cy.dbClickShape('enumerationInstancesEntity1');
           cy.contains('Incoming edges (4)').should('exist');
-          cy.contains('Outgoing edges').should('not.exist');
+          cy.contains('Outgoing edges (0)').should('exist');
 
           cy.dbClickShape('enumerationInstancesInstance1');
           cy.contains('Incoming edges (1)').should('exist');
@@ -202,47 +129,6 @@ describe('Elements count', () => {
           cy.dbClickShape('enumerationInstancesInstance3');
           cy.contains('Incoming edges (1)').should('exist');
           cy.contains('Outgoing edges (1)').should('exist');
-        });
-    });
-
-    it.skip('should display elements count in sidebar', () => {
-      cy.intercept('POST', 'http://localhost:9090/ame/api/models/validate', {fixture: 'model-validation-response.json'});
-      const namespacesConfig = {
-        aspectDefault: {
-          name: 'org.eclipse.examples.aspect:1.0.0',
-          files: [
-            {
-              name: 'AspectDefault.ttl',
-              response: {fixture: '/default-models/aspect-default.txt'},
-            },
-          ],
-        },
-        enumerationInstances: {
-          name: 'org.eclipse.digitaltwin:1.0.0',
-          files: [
-            {
-              name: 'EnumerationInstances.ttl',
-              response: {fixture: '/enumeration-instances.txt'},
-            },
-          ],
-        },
-      };
-
-      setUpStaticModellingInterceptors();
-      setUpDynamicModellingInterceptors(namespacesConfig);
-
-      cy.visitDefault();
-      cy.fixture(namespacesConfig.aspectDefault.files[0].response.fixture)
-        .then(rdfString => cy.loadModel(rdfString))
-        .then(() => cy.fixture(namespacesConfig.enumerationInstances.files[0].response.fixture))
-        .then(rdfString => cy.loadModel(rdfString))
-        .then(() => cy.startModelling())
-        .then(() => {
-          cy.get(SELECTOR_workspaceBtn).click({force: true});
-          cy.contains('EnumerationInstances.ttl').click({force: true});
-          cy.contains('Properties (1)').should('exist');
-          cy.contains('Characteristics (1)').should('exist');
-          cy.contains('Entities (1)').should('exist');
         });
     });
   });

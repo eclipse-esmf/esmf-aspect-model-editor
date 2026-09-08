@@ -11,12 +11,12 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-<mat-form-field [floatLabel]="displayControl.disabled ? 'always' : 'auto'" appearance="fill">
-  <mat-label for="defaultValue">defaultValue</mat-label>
-  <input #valuesInput [matAutocomplete]="auto" [formControl]="displayControl" matInput name="defaultValue" data-cy="defaultValue" />
+<mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill">
+  <mat-label>defaultValue</mat-label>
+  <input #valuesInput [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="defaultValue" />
 
-  @if (displayControl.disabled) {
-    <button (click)="unlockDefaultValue()" data-cy="clear-example-value-button" matSuffix mat-icon-button tabindex="-1">
+  @if (displayField().disabled()) {
+    <button (click)="unlockDefaultValue()" data-cy="clear-example-value-button" type="button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
   }

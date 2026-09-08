@@ -21,15 +21,15 @@ import {NotificationsService} from './services';
 export class HttpErrorInterceptor implements HttpInterceptor {
   private notificationsService = inject(NotificationsService);
 
-  private isError400(error): boolean {
+  private isError400(error: any): boolean {
     return error instanceof HttpErrorResponse && error.status === 400;
   }
 
-  private isError422(error): boolean {
+  private isError422(error: any): boolean {
     return error instanceof HttpErrorResponse && error.status === 422;
   }
 
-  private isError404(error): boolean {
+  private isError404(error: any): boolean {
     return error instanceof HttpErrorResponse && error.status === 404;
   }
 

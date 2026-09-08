@@ -33,8 +33,11 @@ import {
 import {cyHelp} from '../../support/helpers';
 
 describe('Test editing Either', () => {
-  it('can change to class Either', () => {
+  before(() => {
     cy.visitDefault();
+  });
+
+  it('can change to class Either', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.dbClickShape('Characteristic1'))

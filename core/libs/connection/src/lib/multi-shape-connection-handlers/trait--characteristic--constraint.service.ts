@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphService} from '@ame/mx-graph';
+import {MaxGraphService} from '@ame/max-graph';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
@@ -22,12 +22,14 @@ export class TraitWithCharacteristicOrConstraintConnectionHandler implements Mul
   DefaultTrait,
   DefaultCharacteristic | DefaultConstraint
 > {
-  private mxGraphService = inject(MxGraphService);
+  private maxgraphService = inject(MaxGraphService);
 
-  public connect(parentMetaModel: DefaultTrait, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
+  public connect(parentMetaModel: DefaultTrait, childMetaModel: DefaultCharacteristic | DefaultConstraint, parent: Cell, child: Cell) {
     if (childMetaModel instanceof DefaultConstraint) {
       parentMetaModel.constraints.push(childMetaModel);
-    } else parentMetaModel.baseCharacteristic = childMetaModel;
-    this.mxGraphService.assignToParent(child, parent);
+    } else {
+      parentMetaModel.baseCharacteristic = childMetaModel;
+    }
+    this.maxgraphService.assignToParent(child, parent);
   }
 }

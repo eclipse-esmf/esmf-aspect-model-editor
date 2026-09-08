@@ -11,19 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelInfo} from '@ame/mx-graph';
-import {mxgraph} from 'mxgraph-factory';
+import {ModelInfo} from '@ame/max-graph';
 
-import mxCell = mxgraph.mxCell;
+import {Cell} from '@maxgraph/core';
 
 export interface SingleShapeConnector<T> {
-  connect(metaModel: T, source: mxCell, modelInfo?: ModelInfo): void;
+  connect(metaModel: T, source: Cell, modelInfo?: ModelInfo): void;
 }
 
 export interface MultiShapeConnector<T, R> {
-  connect(parentMetaModel: T, childMetaModel: R, parent: mxCell, child: mxCell): void;
+  connect(parentMetaModel: T, childMetaModel: R, parent: Cell, child: Cell): void;
 }
 
 export interface MultiShapeConnectorWithProperty<T, R> {
-  connect(parentMetaModel: T, childMetaModel: R, parent: mxCell, child: mxCell, property: string): void;
+  connect(parentMetaModel: T, childMetaModel: R, parent: Cell, child: Cell, property: string): void;
 }

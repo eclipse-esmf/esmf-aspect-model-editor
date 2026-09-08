@@ -11,12 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphHelper} from '@ame/mx-graph';
+import {MaxGraphHelper} from '@ame/max-graph';
 import {NotificationsService} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {DefaultProperty} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
-import {MultiShapeConnector, PropertyInheritanceConnector} from '../models';
+import {Cell} from '@maxgraph/core';
+import {PropertyInheritanceConnector} from '../models/property-inheritance-connector';
+import {MultiShapeConnector} from '../models/shape-connectors.interface';
 
 @Injectable({providedIn: 'root'})
 export class PropertyPropertyConnectionHandler
@@ -25,24 +26,24 @@ export class PropertyPropertyConnectionHandler
 {
   private notificationService = inject(NotificationsService);
 
-  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: mxgraph.mxCell, childCell: mxgraph.mxCell) {
+  public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultProperty, parentCell: Cell, childCell: Cell) {
     if (parentMetaModel.isPredefined) {
-      this.notificationsService.warning({title: this.translate.language.NOTIFICATION_SERVICE.CHILD_FOR_PREDEFINED_ELEMENT_ERROR});
+      this.notificationsService.warning({title: this.translate.language.notificationService.childForPredefinedElementError});
       return;
     }
 
     if (this.hasEntityParent(parentCell)) {
       this.notificationsService.warning({
-        title: this.translate.language.NOTIFICATION_SERVICE.MISSING_PARENT_ENTITY,
-        message: this.translate.language.NOTIFICATION_SERVICE.ABSTRACT_PROPERTY_PARENT_REQUIREMENT,
+        title: this.translate.language.notificationService.missingParentEntity,
+        message: this.translate.language.notificationService.abstractPropertyParentRequirement,
       });
       return;
     }
 
-    if (MxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.mxGraphService.graph)) {
+    if (MaxGraphHelper.isEntityCycleInheritance(childCell, parentMetaModel, this.maxgraphService.graph)) {
       this.notificationService.warning({
-        title: this.translate.language.NOTIFICATION_SERVICE.RECURSIVE_ELEMENTS,
-        message: this.translate.language.NOTIFICATION_SERVICE.CIRCULAR_CONNECTION_MESSAGE,
+        title: this.translate.language.notificationService.recursiveElements,
+        message: this.translate.language.notificationService.circularConnectionMessage,
         timeout: 5000,
       });
       return;
@@ -50,8 +51,8 @@ export class PropertyPropertyConnectionHandler
 
     if (childMetaModel.getExtends()) {
       this.notificationService.warning({
-        title: this.translate.language.NOTIFICATION_SERVICE.ILLEGAL_OPERATION_MESSAGE,
-        message: this.translate.language.NOTIFICATION_SERVICE.PROPERTY_EXTENSION_CONFLICT,
+        title: this.translate.language.notificationService.illegalOperationMessage,
+        message: this.translate.language.notificationService.propertyExtensionConflict,
         timeout: 5000,
       });
       return;

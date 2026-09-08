@@ -57,6 +57,14 @@
     }
   }
 
+  &__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   &__content {
     flex: 1;
     padding: 10px 15px;

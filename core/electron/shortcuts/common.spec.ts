@@ -11,36 +11,36 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {describe, it, expect, beforeEach, jest} from '@jest/globals';
 import {BrowserWindow, globalShortcut} from 'electron';
+import {beforeEach, describe, expect, it, MockedFunction, vi} from 'vitest';
 import {registerCommonShortcuts} from './common';
 
-jest.mock('electron', () => ({
+vi.mock('electron', () => ({
   BrowserWindow: {
-    getFocusedWindow: jest.fn(),
+    getFocusedWindow: vi.fn(),
   },
   globalShortcut: {
-    register: jest.fn(),
+    register: vi.fn(),
   },
 }));
 
-const mockedRegister = globalShortcut.register as unknown as jest.MockedFunction<(...args: any[]) => any>;
-const mockedGetFocusedWindow = BrowserWindow.getFocusedWindow as unknown as jest.MockedFunction<(...args: any[]) => any>;
+const mockedRegister = globalShortcut.register as unknown as MockedFunction<(...args: any[]) => any>;
+const mockedGetFocusedWindow = BrowserWindow.getFocusedWindow as unknown as MockedFunction<(...args: any[]) => any>;
 
 const mockWin = {
-  close: jest.fn(),
-  minimize: jest.fn(),
-  maximize: jest.fn(),
-  setFullScreen: jest.fn(),
-  reload: jest.fn(),
+  close: vi.fn(),
+  minimize: vi.fn(),
+  maximize: vi.fn(),
+  setFullScreen: vi.fn(),
+  reload: vi.fn(),
   webContents: {
-    undo: jest.fn(),
+    undo: vi.fn(),
   },
 };
 
 describe('registerCommonShortcuts', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockedGetFocusedWindow.mockReturnValue(mockWin);
   });
 

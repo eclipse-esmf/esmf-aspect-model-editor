@@ -11,27 +11,27 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MxGraphAttributeService, MxGraphHelper, MxGraphService} from '@ame/mx-graph';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
-import {mxgraph} from 'mxgraph-factory';
+import {Cell} from '@maxgraph/core';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class EitherCharacteristicLeftConnectionHandler implements MultiShapeConnector<DefaultEither, DefaultCharacteristic> {
-  private mxGraphService = inject(MxGraphService);
-  private mxGraphAttributeService = inject(MxGraphAttributeService);
-
-  public connect(parentMetaModel: DefaultEither, childMetaModel: DefaultCharacteristic, parent: mxgraph.mxCell, child: mxgraph.mxCell) {
+  private maxgraphService = inject(MaxGraphService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
+  public connect(parentMetaModel: DefaultEither, childMetaModel: DefaultCharacteristic, parent: Cell, child: Cell) {
     parentMetaModel.left = childMetaModel;
-    this.mxGraphAttributeService.graph.getOutgoingEdges(parent).forEach(outEdge => {
-      if (outEdge.target && outEdge.target.getMetaModelElement().aspectModelUrn === parentMetaModel.left?.aspectModelUrn) {
-        MxGraphHelper.removeRelation(parentMetaModel, parentMetaModel.left);
-        this.mxGraphService.removeCells([parent.removeEdge(outEdge, true)]);
+    this.maxgraphAttributeService.graph.getOutgoingEdges(parent, null).forEach(outEdge => {
+      const targetModel = MaxGraphHelper.getModelElement(outEdge?.target);
+      if (outEdge.target && targetModel?.aspectModelUrn === parentMetaModel.left?.aspectModelUrn) {
+        MaxGraphHelper.removeRelation(parentMetaModel, parentMetaModel.left);
+        this.maxgraphService.removeCells([parent.removeEdge(outEdge, true)]);
       }
     });
 
-    this.mxGraphService.assignToParent(child, parent);
-    this.mxGraphService.formatShapes();
+    this.maxgraphService.assignToParent(child, parent);
+    this.maxgraphService.formatShapes();
   }
 }

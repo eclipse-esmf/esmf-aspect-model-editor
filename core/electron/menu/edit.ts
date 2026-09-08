@@ -22,7 +22,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
   return [
     {
       id: 'OPEN_SELECTED_ELEMENT',
-      label: translation.OPEN_SELECTED_ELEMENT,
+      label: translation.openSelectedElement,
       enabled: false,
       icon: getIcon(icons.OPEN_SELECTED_ELEMENT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -32,7 +32,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'REMOVE_SELECTED_ELEMENT',
-      label: translation.REMOVE_SELECTED_ELEMENT,
+      label: translation.removeSelectedElement,
       enabled: false,
       icon: getIcon(icons.REMOVE_SELECTED_ELEMENT.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -42,7 +42,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'COLLAPSE_EXPAND_MODEL',
-      label: translation.COLLAPSE_EXPAND_MODEL,
+      label: translation.collapseExpandModel,
       enabled: false,
       icon: getIcon(icons.COLLAPSE_EXPAND_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -52,7 +52,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'FORMAT_MODEL',
-      label: translation.FORMAT_MODEL,
+      label: translation.formatModel,
       enabled: false,
       icon: getIcon(icons.FORMAT_MODEL.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
@@ -62,7 +62,7 @@ export function edit(translation: Translation): MenuItemConstructorOptions[] {
     },
     {
       id: 'CONNECT_ELEMENTS',
-      label: translation.CONNECT_SELECTED_ELEMENTS,
+      label: translation.connectSelectedElements,
       enabled: false,
       icon: getIcon(icons.CONNECT_ELEMENTS.enabled),
       click: (_menuItem: MenuItem, window: BaseWindow | undefined) => {
