@@ -3,7 +3,7 @@
   "author": "",
   "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
-  "version": "",
+  "version": "0.0.1",
   "main": "dist/main.js",
   "repository": {
     "type": "git",
