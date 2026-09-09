@@ -4,7 +4,7 @@
   "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
   "version": "0.0.1",
-  "main": "dist/main.js",
+  "main": "main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor.git"
