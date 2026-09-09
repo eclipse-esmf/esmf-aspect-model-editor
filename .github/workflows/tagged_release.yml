@@ -192,12 +192,12 @@ jobs:
 
       - name: Set app version (Unix)
         if: matrix.os == 'macos-15-intel' || matrix.os == 'ubuntu-latest'
-        run: pnpm version ${{ env.RELEASE_VERSION }}
+        run: pnpm version ${{ env.RELEASE_VERSION }} --no-git-checks
         working-directory: core
 
       - name: Set app version (Windows)
         if: matrix.os == 'windows-latest'
-        run: pnpm version ${{ env.RELEASE_VERSION }}
+        run: pnpm version ${{ env.RELEASE_VERSION }} --no-git-checks
         working-directory: core
 
       - name: Build electron app (Mac)
