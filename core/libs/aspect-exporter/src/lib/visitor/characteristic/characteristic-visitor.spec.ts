@@ -62,6 +62,7 @@ describe('Characteristic Visitor', () => {
         CharacteristicVisitor,
         MockProvider(RdfListService, {
           push: vi.fn(),
+          pushWithSubject: vi.fn(),
           createEmpty: vi.fn(),
         }),
         MockProvider(RdfNodeService, {
@@ -224,7 +225,23 @@ describe('Characteristic Visitor', () => {
 
       service.visit(characteristic);
 
-      expect(service.rdfListService.push).toHaveBeenCalledWith(characteristic, 'a', 'b');
+      expect(service.rdfListService.pushWithSubject).toHaveBeenCalledWith(characteristic, undefined, 'a', 'b');
+    });
+
+    it('should pass customSubject when anonymous', () => {
+      const blankNode = DataFactory.blankNode();
+      const values = ['a', 'b'] as any;
+      const characteristic = new DefaultEnumeration({
+        metaModelVersion: '1',
+        aspectModelUrn: 'samm#[Enumeration]_1',
+        name: '[Enumeration]',
+        isAnonymous: true,
+        values,
+      });
+
+      service.visit(characteristic, blankNode);
+
+      expect(service.rdfListService.pushWithSubject).toHaveBeenCalledWith(characteristic, blankNode, 'a', 'b');
     });
 
     it('should set prefix for named DefaultValues in enumeration', () => {
@@ -251,7 +268,7 @@ describe('Characteristic Visitor', () => {
 
       service.visit(characteristic);
 
-      expect(service.rdfListService.push).toHaveBeenCalledWith(characteristic, namedVal, anonVal);
+      expect(service.rdfListService.pushWithSubject).toHaveBeenCalledWith(characteristic, undefined, namedVal, anonVal);
       expect(rdfModel.hasDependency).toHaveBeenCalledWith('samm#');
     });
   });
@@ -364,7 +381,7 @@ describe('Characteristic Visitor', () => {
       const quads = rdfModel.store.getQuads(DataFactory.namedNode('samm#sv1'), rdfModel.sammC.DeconstructionRuleProperty(), null, null);
       expect(quads).toHaveLength(1);
       expect(quads[0].object.value).toBe('(.*)');
-      expect(service.rdfListService.push).toHaveBeenCalledWith(characteristic, property);
+      expect(service.rdfListService.pushWithSubject).toHaveBeenCalledWith(characteristic, undefined, property);
     });
   });
 

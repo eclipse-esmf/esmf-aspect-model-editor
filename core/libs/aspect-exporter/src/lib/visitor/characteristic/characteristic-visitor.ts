@@ -155,8 +155,8 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     this.updateUnit(characteristic, customSubject);
   }
 
-  private updateEnumeration(characteristic: DefaultEnumeration, _customSubject?: Quad_Subject) {
-    this.rdfListService.push(characteristic, ...characteristic.values);
+  private updateEnumeration(characteristic: DefaultEnumeration, customSubject?: Quad_Subject) {
+    this.rdfListService.pushWithSubject(characteristic, customSubject, ...characteristic.values);
     for (const value of characteristic.values) {
       if (value instanceof DefaultValue) {
         if (!value.isAnonymous?.()) {
@@ -246,7 +246,7 @@ export class CharacteristicVisitor extends BaseVisitor<DefaultCharacteristic> {
     );
 
     // update elements
-    this.rdfListService.push(characteristic, ...characteristic.elements);
+    this.rdfListService.pushWithSubject(characteristic, customSubject, ...characteristic.elements);
 
     for (const element of characteristic.elements) {
       if (element instanceof DefaultProperty) {

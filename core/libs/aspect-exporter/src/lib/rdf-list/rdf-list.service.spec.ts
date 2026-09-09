@@ -624,6 +624,31 @@ describe('RDF Helper', () => {
     service.push(sourceAspect, ...elements);
   };
 
+  describe('pushWithSubject()', () => {
+    it('should create list with custom blank node subject', () => {
+      const blankSubject = DataFactory.blankNode();
+      setPredicate(rdfModel.sammC.ValuesProperty());
+      const enumeration = new DefaultEnumeration({
+        metaModelVersion: '1',
+        name: '[Enumeration]',
+        aspectModelUrn: 'urn:samm:test:1.0.0#[Enumeration]_1',
+        isAnonymous: true,
+        values: [],
+        dataType: stringDataType,
+      });
+
+      service.pushWithSubject(enumeration, blankSubject, 'DD', 'gege');
+
+      const quads = rdfModel.store.getQuads(blankSubject, predicate, null, null);
+      expect(quads).toHaveLength(1);
+      const list = quads[0].object;
+      expect(Util.isBlankNode(list)).toBe(true);
+      expect(getRdfFirstCount(list)).toBe(2);
+      expect(getRestCount(list)).toBe(2);
+      expect(isEndingInNil(list)).toBe(true);
+    });
+  });
+
   describe('emptyList', () => {
     beforeEach(() => {
       setPredicate(rdfModel.samm.PropertiesProperty());
