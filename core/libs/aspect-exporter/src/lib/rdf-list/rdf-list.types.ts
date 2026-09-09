@@ -24,7 +24,7 @@ import {
   Trait,
   Unit,
 } from '@esmf/aspect-model-loader';
-import {BlankNode, NamedNode, Quad_Object} from 'n3';
+import {BlankNode, NamedNode, Quad_Object, Quad_Subject} from 'n3';
 
 export type ListElementType = any;
 export type SourceElementType = Aspect | Operation | Enumeration | StructuredValue | Entity | Unit | Event | Trait;
@@ -56,7 +56,7 @@ export interface RelationsChild {
 }
 
 export interface StoreListReferences {
-  subject: NamedNode;
+  subject: Quad_Subject;
   predicate: NamedNode;
   list: Quad_Object;
   created: boolean;

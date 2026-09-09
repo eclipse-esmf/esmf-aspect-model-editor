@@ -16,7 +16,7 @@ import {simpleDataTypes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultValue, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
-import {BlankNode, DataFactory, NamedNode, Quad, Quad_Object, Store, Triple, Util} from 'n3';
+import {BlankNode, DataFactory, NamedNode, Quad, Quad_Object, Quad_Subject, Store, Triple, Util} from 'n3';
 import {RdfNodeService} from '../rdf-node';
 import {ValueVisitor} from '../visitor/value/value-visitor';
 import {RdfListHelper} from './rdf-list-helper';
@@ -57,7 +57,11 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   push(source: SourceElementType, ...elements: ListElementType[]) {
-    const preparedList = this.getFilteredElements(source, elements);
+    return this.pushWithSubject(source, undefined, ...elements);
+  }
+
+  pushWithSubject(source: SourceElementType, customSubject?: Quad_Subject, ...elements: ListElementType[]) {
+    const preparedList = this.getFilteredElements(source, elements, customSubject);
     if (preparedList === null) {
       return this;
     }
@@ -73,7 +77,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
       return this;
     }
 
-    this.remove(source, ...elements);
+    this.removeWithSubject(source, customSubject, ...elements);
     this.recreateList(list, [...listElements.map(({node}) => node), ...elementsToBeAdded.listElements]);
     this.createPropertyList(elementsToBeAdded.overWrittenListElements, source);
     return this;
@@ -111,7 +115,11 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
   }
 
   remove(source: SourceElementType, ...elements: ListElementType[]) {
-    const preparedList = this.getFilteredElements(source, elements);
+    return this.removeWithSubject(source, undefined, ...elements);
+  }
+
+  removeWithSubject(source: SourceElementType, customSubject?: Quad_Subject, ...elements: ListElementType[]) {
+    const preparedList = this.getFilteredElements(source, elements, customSubject);
     if (preparedList === null || preparedList.created) {
       return this;
     }
@@ -250,7 +258,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     return listElement;
   }
 
-  private getFilteredElements(source: SourceElementType, elements: ListElementType[]): StoreListReferences {
+  private getFilteredElements(source: SourceElementType, elements: ListElementType[], customSubject?: Quad_Subject): StoreListReferences {
     const relations = RdfListConstants.getRelations(this.samm, this.rdfModel.sammC);
     const children = relations.find(({source: sourceType}) => source instanceof sourceType).children;
     const types = children.map(child => child.type).filter(type => type);
@@ -266,7 +274,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
       return null;
     }
 
-    const subject = DataFactory.namedNode(source.aspectModelUrn);
+    const subject = customSubject || DataFactory.namedNode(source.aspectModelUrn);
     const predicate = this.resolvePredicate(source, filteredList[0]?.property || filteredList[0]);
     const {list, created} = this.getListOrCreateNew(subject, predicate);
 
@@ -299,7 +307,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     return null;
   }
 
-  private createNewList(subject: NamedNode, predicate: NamedNode) {
+  private createNewList(subject: Quad_Subject, predicate: NamedNode) {
     const list = DataFactory.blankNode();
     this.store.removeQuads(this.store.getQuads(subject, predicate, this.samm.RdfNil(), null));
     this.store.addQuad(DataFactory.triple(subject, predicate, list));
@@ -307,7 +315,7 @@ export class RdfListService implements CreateEmptyRdfList, EmptyRdfList {
     return list;
   }
 
-  private getListOrCreateNew(subject: NamedNode, predicate: NamedNode): {list: Quad_Object; created: boolean} {
+  private getListOrCreateNew(subject: Quad_Subject, predicate: NamedNode): {list: Quad_Object; created: boolean} {
     const quad = this.store.getQuads(subject, predicate, null, null)?.[0];
     return quad && !this.samm.isRdfNill(quad.object.value)
       ? {list: quad.object, created: false}

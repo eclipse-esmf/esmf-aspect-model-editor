@@ -111,34 +111,77 @@ export class RdfModelUtil {
     }
   }
 
+  static isRdfList(rdfModel: RdfModel, node: Quad['object']): boolean {
+    if (!Util.isBlankNode(node)) {
+      return false;
+    }
+    return (
+      rdfModel.store.getQuads(node, DataFactory.namedNode(`${Samm.RDF_URI}#first`), null, null).length > 0 ||
+      rdfModel.store.getQuads(node, DataFactory.namedNode(`${Samm.RDF_URI}#rest`), null, null).length > 0
+    );
+  }
+
+  static resolveRdfListElements(rdfModel: RdfModel, head: Quad['object'], writer: Writer, processedQuads?: Set<Quad>): Quad['object'][] {
+    const elements: Quad['object'][] = [];
+    let current: Quad['object'] = head;
+    const nilUri = `${Samm.RDF_URI}#nil`;
+    const firstPred = DataFactory.namedNode(`${Samm.RDF_URI}#first`);
+    const restPred = DataFactory.namedNode(`${Samm.RDF_URI}#rest`);
+
+    while (current && current.value !== nilUri) {
+      const firstQuads = rdfModel.store.getQuads(current, firstPred, null, null);
+      if (firstQuads.length > 0) {
+        processedQuads?.add(firstQuads[0]);
+        const obj = firstQuads[0].object;
+        if (Util.isBlankNode(obj)) {
+          const itemBlankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, obj.value, writer, processedQuads);
+          elements.push(writer.blank(itemBlankNodes));
+        } else {
+          elements.push(obj);
+        }
+      }
+      const restQuads = rdfModel.store.getQuads(current, restPred, null, null);
+      if (restQuads.length > 0) {
+        processedQuads?.add(restQuads[0]);
+        current = restQuads[0].object;
+      } else {
+        break;
+      }
+    }
+    return elements;
+  }
+
   static resolveRecursiveBlankNodes(rdfModel: RdfModel, uri: string, writer: Writer, processedQuads?: Set<Quad>): Quad[] {
-    const quads: Quad[] = rdfModel.store.getQuads(DataFactory.blankNode(uri), null, null, null);
+    const blankNode = DataFactory.blankNode(uri);
+    if (RdfModelUtil.isRdfList(rdfModel, blankNode)) {
+      const listElements = RdfModelUtil.resolveRdfListElements(rdfModel, blankNode, writer, processedQuads);
+      return listElements.map(el => DataFactory.quad(blankNode, DataFactory.namedNode(`${Samm.RDF_URI}#first`), el));
+    }
+
+    const quads: Quad[] = rdfModel.store.getQuads(blankNode, null, null, null);
     const blankNodes = [];
 
     for (const quad of quads) {
       processedQuads?.add(quad);
-      if (Util.isBlankNode(quad.subject) && Util.isBlankNode(quad.object)) {
-        const currentBlankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, quad.object.value, writer, processedQuads);
 
-        if (currentBlankNodes.every(({predicate}) => predicate.value.startsWith(Samm.RDF_URI))) {
-          blankNodes.push(...currentBlankNodes);
-          continue;
-        }
+      if (quad.object.value === `${Samm.RDF_URI}#nil`) {
+        blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, writer.list([]) as unknown as Quad['object']));
+        continue;
+      }
 
-        blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, writer.blank(currentBlankNodes)));
+      if (RdfModelUtil.isRdfList(rdfModel, quad.object)) {
+        const listElements = RdfModelUtil.resolveRdfListElements(rdfModel, quad.object, writer, processedQuads);
+        blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, writer.list(listElements) as unknown as Quad['object']));
         continue;
       }
 
       if (Util.isBlankNode(quad.object)) {
         const currentBlankNodes = RdfModelUtil.resolveRecursiveBlankNodes(rdfModel, quad.object.value, writer, processedQuads);
-
-        blankNodes.push(...currentBlankNodes);
+        blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, writer.blank(currentBlankNodes)));
         continue;
       }
 
-      if (quad.object.value !== `${Samm.RDF_URI}#nil`) {
-        blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, quad.object));
-      }
+      blankNodes.push(DataFactory.quad(quad.subject, quad.predicate, quad.object));
     }
 
     return blankNodes;
