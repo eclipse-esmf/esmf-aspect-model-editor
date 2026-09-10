@@ -22,6 +22,6 @@ button {
 }
 
 p {
-  color: #343434;
+  color: var(--ame-font, #343434);
   line-height: 1.35;
 }

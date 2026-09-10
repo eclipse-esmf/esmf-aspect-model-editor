@@ -28,7 +28,7 @@
         [matTooltipHideDelay]="0"
         [disabled]="isModelEmpty() || selectedCells()?.length !== 1"
         [matTooltip]="t('toolbar.editHighlightedCell')"
-        (click)="editSelectedCell()"
+        (itemClick)="editSelectedCell()"
       >
         <mat-icon class="material-symbols-outlined">jump_to_element</mat-icon>
       </ame-bar-item>
@@ -38,7 +38,7 @@
         [matTooltipHideDelay]="0"
         [disabled]="isModelEmpty() || selectedCells()?.length === 0"
         [matTooltip]="t('toolbar.delete')"
-        (click)="onDelete()"
+        (itemClick)="onDelete()"
         data-cy="tbDeleteButton"
       >
         <mat-icon class="material-icons">delete</mat-icon>
@@ -49,7 +49,7 @@
         [matTooltipHideDelay]="0"
         [disabled]="isModelEmpty() || selectedCells()?.length !== 2"
         [matTooltip]="t('toolbar.connect')"
-        (click)="onConnect()"
+        (itemClick)="onConnect()"
         data-cy="tbConnectButton"
       >
         <mat-icon class="material-icons">commit</mat-icon>
@@ -61,7 +61,7 @@
           [matTooltipHideDelay]="0"
           [disabled]="isModelEmpty()"
           [matTooltip]="t('toolbar.collapseAll')"
-          (click)="onToggleExpand()"
+          (itemClick)="onToggleExpand()"
           data-cy="collapseExpandToggle"
         >
           <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
@@ -72,7 +72,7 @@
           [matTooltipHideDelay]="0"
           [disabled]="isModelEmpty()"
           [matTooltip]="t('toolbar.expandAll')"
-          (click)="onToggleExpand()"
+          (itemClick)="onToggleExpand()"
           data-cy="collapseExpandToggle"
         >
           <mat-icon class="material-icons rotate-45 editor-icon-active">unfold_more</mat-icon>
@@ -84,7 +84,7 @@
         [matTooltipHideDelay]="0"
         [disabled]="isModelEmpty()"
         [matTooltip]="t('toolbar.format')"
-        (click)="onFormat()"
+        (itemClick)="onFormat()"
         data-cy="formatButton"
       >
         <mat-icon class="material-icons rotate-90">schema</mat-icon>
@@ -95,7 +95,7 @@
         [matTooltipHideDelay]="0"
         [disabled]="isModelEmpty()"
         [matTooltip]="t('toolbar.validate')"
-        (click)="validateFile()"
+        (itemClick)="validateFile()"
         data-cy="tbValidateButton"
       >
         <mat-icon class="material-icons">task</mat-icon>
@@ -103,10 +103,10 @@
     </div>
 
     <div class="menu-items__group">
-      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomInProgress')" (click)="zoomIn()">
+      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomInProgress')" (itemClick)="zoomIn()">
         <mat-icon>zoom_in</mat-icon>
       </ame-bar-item>
-      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomOutProgress')" (click)="zoomOut()">
+      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomOutProgress')" (itemClick)="zoomOut()">
         <mat-icon>zoom_out</mat-icon>
       </ame-bar-item>
     </div>

@@ -25,7 +25,7 @@ import {
   SearchService,
 } from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
-import {Component, computed, inject, signal} from '@angular/core';
+import {AfterViewInit, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -42,7 +42,7 @@ import {SearchesStateService} from '../../search-state.service';
   styleUrls: ['./elements-search.component.scss'],
   imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, ElementIconComponent, TranslocoDirective],
 })
-export class ElementsSearchComponent {
+export class ElementsSearchComponent implements AfterViewInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
@@ -52,6 +52,8 @@ export class ElementsSearchComponent {
   private translate = inject(LanguageTranslationService);
 
   public loadedFiles = inject(LoadedFilesService);
+
+  private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   public searchQuery = signal('');
   public elements = signal<NamedElement[]>([]);
@@ -75,6 +77,11 @@ export class ElementsSearchComponent {
           ?.map(cell => MaxGraphHelper.getModelElement(cell)),
       );
     });
+  }
+
+  ngAfterViewInit() {
+    // Focus the input as soon as the search overlay is opened so the user can start typing immediately.
+    this.searchInput()?.nativeElement.focus();
   }
 
   openElement(element: NamedElement) {
