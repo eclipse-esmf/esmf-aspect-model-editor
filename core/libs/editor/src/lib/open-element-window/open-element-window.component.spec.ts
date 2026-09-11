@@ -13,9 +13,8 @@
 
 import {ModelApiService} from '@ame/api';
 import {ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {DialogRef} from '@angular/cdk/dialog';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {NamedNode, Quad, Store} from 'n3';
@@ -32,7 +31,7 @@ describe('OpenElementWindowComponent', () => {
   let modelLoaderService: ModelLoaderService;
   let electronSignalsService: ElectronSignalsService;
   let notificationService: NotificationsService;
-  let dialogRef: DialogRef<OpenElementWindowComponent>;
+  let dialogRef: MatDialogRef<OpenElementWindowComponent>;
 
   const urn = 'urn:samm:com.test:1.0.0#TestElement';
   const file = 'test.ttl';
@@ -40,7 +39,7 @@ describe('OpenElementWindowComponent', () => {
   beforeEach(async () => {
     dialogRef = {
       close: vi.fn(),
-    } as unknown as DialogRef<OpenElementWindowComponent>;
+    } as unknown as MatDialogRef<OpenElementWindowComponent>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -48,7 +47,7 @@ describe('OpenElementWindowComponent', () => {
         TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
       ],
       providers: [
-        {provide: DialogRef, useValue: dialogRef},
+        {provide: MatDialogRef, useValue: dialogRef},
         {provide: MAT_DIALOG_DATA, useValue: {urn, file}},
         MockProvider(ModelApiService, {
           fetchAspectMetaModel: vi.fn(() => of({content: 'model ttl content', sourceLocation: ''} as any)),
