@@ -417,7 +417,7 @@ export class EditorService {
       })
       .afterOpened()
       .subscribe(() => {
-        this.maxgraphAttributeService.graph.getPlugin<FitPlugin>('FitPlugin').fit();
+        this.maxgraphAttributeService.graph.getPlugin<FitPlugin>('fit')?.fit();
         this.loadingScreenService.close();
       });
   }
@@ -430,7 +430,7 @@ export class EditorService {
       })
       .afterOpened()
       .subscribe(() => {
-        this.maxgraphAttributeService.graph.zoomActual();
+        this.maxgraphAttributeService.graph.zoomTo(1, true);
         this.loadingScreenService.close();
       });
   }

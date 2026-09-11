@@ -530,11 +530,10 @@ export class FileHandlingService {
         }
         this.notificationsService.error({
           title: this.translate.language?.notificationService?.validationErrorTitle,
-          message: this.translate.language?.notificationService?.validationErrorMessage,
+          message: error?.error?.error?.message,
           timeout: 5000,
         });
-        console.error(`Error occurred while validating the current model (${JSON.stringify(error)})`);
-        return throwError(() => 'Validation completed with errors');
+        return throwError(() => error);
       }),
       finalize(() => localStorage.removeItem('validating')),
     );

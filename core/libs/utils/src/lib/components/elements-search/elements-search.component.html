@@ -24,6 +24,7 @@
   <mat-form-field class="search">
     <mat-label>{{ t('searches.elementsLabel') }}</mat-label>
     <input
+      #searchInput
       [matAutocomplete]="auto"
       [value]="searchQuery()"
       (input)="searchQuery.set($any($event.target).value)"

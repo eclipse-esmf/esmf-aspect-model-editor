@@ -23,7 +23,14 @@
   ></div>
   <mat-form-field class="search">
     <mat-label>{{ t('searches.files.label') }}</mat-label>
-    <input [matAutocomplete]="auto" [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" type="text" matInput />
+    <input
+      #searchInput
+      [matAutocomplete]="auto"
+      [value]="searchQuery()"
+      (input)="searchQuery.set($any($event.target).value)"
+      type="text"
+      matInput
+    />
     <mat-icon [class.rotate]="loading()" matSuffix>{{ loading() ? 'refresh' : 'description' }}</mat-icon>
 
     <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">

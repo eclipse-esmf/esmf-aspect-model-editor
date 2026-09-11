@@ -18,7 +18,7 @@
     [matTooltipHideDelay]="0"
     [class.selected]="sidebarService.workspace.opened()"
     [matTooltip]="t('tooltips.workspace')"
-    (click)="sidebarService.workspace.toggle()"
+    (itemClick)="sidebarService.workspace.toggle()"
     matTooltipPosition="right"
     data-cy="workspaceBtn"
   >
@@ -31,7 +31,7 @@
     [matTooltipHideDelay]="0"
     [class.selected]="sidebarService.sammElements.opened()"
     [matTooltip]="t('tooltips.elements')"
-    (click)="sidebarService.sammElements.toggle()"
+    (itemClick)="sidebarService.sammElements.toggle()"
     matTooltipPosition="right"
     data-cy="elementsBtn"
   >
@@ -43,7 +43,7 @@
     [matTooltipShowDelay]="0"
     [matTooltipHideDelay]="0"
     [matTooltip]="isDarkMode ? t('tooltips.lightMode') : t('tooltips.darkMode')"
-    (click)="toggleDarkMode()"
+    (itemClick)="toggleDarkMode()"
     matTooltipPosition="right"
     data-cy="darkModeBtn"
   >
@@ -55,7 +55,7 @@
     [matTooltipShowDelay]="0"
     [matTooltipHideDelay]="0"
     [matTooltip]="t('tooltips.settings')"
-    (click)="openSettingsDialog()"
+    (itemClick)="openSettingsDialog()"
     matTooltipPosition="right"
     data-cy="settingsBtn"
   >
@@ -67,7 +67,7 @@
     [matTooltipShowDelay]="0"
     [matTooltipHideDelay]="0"
     [matTooltip]="t('tooltips.notifications')"
-    (click)="openNotificationDialog()"
+    (itemClick)="openNotificationDialog()"
     matTooltipPosition="right"
     data-cy="notificationsBtn"
   >
@@ -79,7 +79,7 @@
     [matTooltipShowDelay]="0"
     [matTooltipHideDelay]="0"
     [matTooltip]="t('tooltips.help')"
-    (click)="openHelpDialog()"
+    (itemClick)="openHelpDialog()"
     matTooltipPosition="right"
     data-cy="helpBtn"
   >

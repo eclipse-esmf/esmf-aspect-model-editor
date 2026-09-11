@@ -12,9 +12,8 @@
  */
 import {ModelApiService} from '@ame/api';
 import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {DialogRef} from '@angular/cdk/dialog';
 import {Component, inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {NamedNode} from 'n3';
@@ -47,7 +46,7 @@ import {ModelLoaderService} from '../model-loader.service';
 export class OpenElementWindowComponent implements OnInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private modelLoaderService = inject(ModelLoaderService);
-  private dialogRef = inject(DialogRef<OpenElementWindowComponent>);
+  private dialogRef = inject(MatDialogRef<OpenElementWindowComponent>);
   private modelApiService = inject(ModelApiService);
   private notificationService = inject(NotificationsService);
   private elementInfo = inject<{urn: string; file: string}>(MAT_DIALOG_DATA);

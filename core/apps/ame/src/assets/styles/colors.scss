@@ -36,6 +36,8 @@ html {
   --ame-surface-selected: #ebebeb;
   --ame-border-color: #cfd0d1;
   --ame-border-light: #efeff0;
+  --ame-link: #005691;
+  --ame-link-hover: #00365c;
 
   // AME color palette
   // blue
@@ -127,6 +129,8 @@ html.dark-theme,
   --ame-shadow--black-25: rgba(0, 0, 0, 0.5);
   --ame-shadow--black-45: rgba(0, 0, 0, 0.7);
   --ame-top-border: #27272a;
+  --ame-link: #72b4ff;
+  --ame-link-hover: #a1cdff;
 }
 
 $characteristic-color: var(--ame-characteristic);

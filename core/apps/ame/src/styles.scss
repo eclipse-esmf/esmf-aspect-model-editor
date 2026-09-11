@@ -43,6 +43,14 @@ body {
   color: var(--ame-font, #000000);
 }
 
+a {
+  color: var(--ame-link, #005691);
+
+  &:hover {
+    color: var(--ame-link-hover, #00365c);
+  }
+}
+
 h3 {
   font-weight: 400;
 }
@@ -295,4 +303,15 @@ mat-icon {
 
 .search-autocomplete {
   box-shadow: 0 24px 24px 0 var(--ame-shadow--black-45) !important;
+  background-color: var(--ame-surface, white);
+  color: var(--ame-font, inherit);
+
+  .mat-mdc-option {
+    color: var(--ame-font, inherit);
+
+    &:hover:not(.mdc-list-item--disabled),
+    &.mat-mdc-option-active {
+      background-color: var(--ame-surface-hover, #f3f3f3);
+    }
+  }
 }

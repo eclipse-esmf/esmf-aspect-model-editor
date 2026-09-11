@@ -41,11 +41,11 @@ $top: 100px;
 
     .mat-mdc-form-field-focus-overlay {
       opacity: 0.04 !important;
-      background-color: white;
+      background-color: var(--ame-font, black);
     }
 
     .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-      background-color: white;
+      background-color: var(--ame-surface, white);
     }
 
     .mdc-line-ripple::before {
@@ -54,6 +54,22 @@ $top: 100px;
 
     .mdc-line-ripple::after {
       content: none;
+    }
+
+    // Text, caret and label must follow the theme font color, otherwise typed
+    // text and the label are invisible against the dark surface background.
+    .mat-mdc-input-element {
+      color: var(--ame-font, inherit);
+      caret-color: var(--ame-font, inherit);
+    }
+
+    .mat-mdc-form-field-label,
+    mat-label {
+      color: var(--ame-gray-600, #787878);
+    }
+
+    mat-icon {
+      color: var(--ame-gray-600, #787878);
     }
   }
 }
@@ -84,7 +100,7 @@ $top: 100px;
 
 .open-icon {
   margin-top: 10px;
-  color: #686868;
+  color: var(--ame-gray-600, #686868);
 }
 
 .has-external-element {

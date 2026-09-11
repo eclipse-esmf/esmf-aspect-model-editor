@@ -22,7 +22,7 @@ import {
 } from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
-import {Component, inject, signal} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatDialog} from '@angular/material/dialog';
@@ -40,7 +40,7 @@ import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.comp
   styleUrls: ['./files-search.component.scss'],
   imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, TranslocoDirective],
 })
-export class FilesSearchComponent {
+export class FilesSearchComponent implements AfterViewInit {
   private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
   private searchesStateService = inject(SearchesStateService);
   private sidebarStateService = inject(SidebarStateService);
@@ -52,6 +52,8 @@ export class FilesSearchComponent {
   private searchService = inject(SearchService);
   private translate = inject(LanguageTranslationService);
   private modelChecker = inject(ModelCheckerService);
+
+  private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   private files: {file: string; namespace: string}[] = [];
 
@@ -86,6 +88,11 @@ export class FilesSearchComponent {
           this.searchableFiles.set(this.searchService.search(value, this.files, filesSearchOption));
         }
       });
+  }
+
+  ngAfterViewInit() {
+    // Focus the input as soon as the search overlay is opened so the user can start typing immediately.
+    this.searchInput()?.nativeElement.focus();
   }
 
   openFile({file, namespace, aspectModelUrn}) {
