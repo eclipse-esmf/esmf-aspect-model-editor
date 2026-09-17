@@ -12,12 +12,38 @@
  */
 
 span {
-  color: red;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.2;
 }
 
+.message-content {
+  display: block;
+  color: #000;
+  white-space: pre-line;
+  padding-top: 4px;
+}
+
+.error-label {
+  color: red;
+}
+
+.file-link {
+  margin-left: 4px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.message-content hr {
+  margin: 6px 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
 p {
   line-height: 1.5;
+}
+
+a {
+  padding-top: 10px;
 }

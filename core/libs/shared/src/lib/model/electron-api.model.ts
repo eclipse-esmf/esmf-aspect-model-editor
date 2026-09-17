@@ -24,4 +24,5 @@ export interface ElectronApi {
   writePrintFile(content: string): Promise<string>;
   openExternalLink(link: string): Promise<void> | boolean;
   showContextMenu(payload: ElectronContextMenuPayload): void;
+  openInVsCodeOrDefault(vscodeUrl: string, fallbackUrl: string): Promise<void>;
 }

@@ -84,6 +84,23 @@ contextBridge.exposeInMainWorld('electronAPI', {
   openExternalLink: (link: string): Promise<void> | boolean => shell.openExternal(link),
 
   /**
+   * Tries to open the given `vscode://` URL in Visual Studio Code. If VSCode is not installed
+   * (i.e. the OS has no handler registered for the `vscode://` protocol and the call fails),
+   * falls back to opening the `fallbackUrl` (e.g. a `file://` URL) with the OS default application.
+   *
+   * @param {string} vscodeUrl - The `vscode://file/...` URL to try first.
+   * @param {string} fallbackUrl - The URL to open if VSCode could not be opened.
+   * @returns {Promise<void>} Resolves once either link has been opened.
+   */
+  openInVsCodeOrDefault: async (vscodeUrl: string, fallbackUrl: string): Promise<void> => {
+    try {
+      await shell.openExternal(vscodeUrl);
+    } catch {
+      await shell.openExternal(fallbackUrl);
+    }
+  },
+
+  /**
    * Shows a context menu for the given payload.
    *
    * @param {{href: string|null}} payload - The payload containing the link.
