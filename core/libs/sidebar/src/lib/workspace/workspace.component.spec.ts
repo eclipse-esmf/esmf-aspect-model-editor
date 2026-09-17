@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelApiService} from '@ame/api';
 import {ConfirmDialogService, FileHandlingService, ModelCheckerService, ModelSaverService} from '@ame/editor';
 import {NamespacesManagerService} from '@ame/namespace-manager';
-import {ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {BrowserService, ElectronSignalsService, IPC_RENDERER, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -30,6 +31,14 @@ describe('WorkspaceComponent', () => {
   let modelCheckerMock: {
     detectWorkspaceErrors: ReturnType<typeof vi.fn>;
   };
+  let modelApiServiceMock: {
+    getStoragePath: ReturnType<typeof vi.fn>;
+  };
+  let notificationsServiceMock: {
+    info: ReturnType<typeof vi.fn>;
+    error: ReturnType<typeof vi.fn>;
+    clearNotifications: ReturnType<typeof vi.fn>;
+  };
   let sidebarService: SidebarStateService;
 
   beforeEach(() => {
@@ -37,6 +46,14 @@ describe('WorkspaceComponent', () => {
 
     modelCheckerMock = {
       detectWorkspaceErrors: vi.fn(() => of([])),
+    };
+    modelApiServiceMock = {
+      getStoragePath: vi.fn(() => of({path: '/workspace', storagePath: '/workspace'})),
+    };
+    notificationsServiceMock = {
+      info: vi.fn(),
+      error: vi.fn(),
+      clearNotifications: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -49,8 +66,9 @@ describe('WorkspaceComponent', () => {
         provideZonelessChangeDetection(),
         SidebarStateService,
         {provide: ModelCheckerService, useValue: modelCheckerMock},
+        {provide: ModelApiService, useValue: modelApiServiceMock},
         {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
-        {provide: NotificationsService, useValue: {info: vi.fn(), error: vi.fn(), clearNotifications: vi.fn()}},
+        {provide: NotificationsService, useValue: notificationsServiceMock},
         {provide: ConfirmDialogService, useValue: {open: vi.fn()}},
         {provide: ModelSaverService, useValue: {saveModel: vi.fn()}},
         {provide: FileHandlingService, useValue: {loadNamespaceFile: vi.fn()}},
@@ -139,5 +157,76 @@ describe('WorkspaceComponent', () => {
 
     expect(clearSpy).toHaveBeenCalled();
     expect(refreshSpy).toHaveBeenCalled();
+  });
+
+  it('should copy storagePath to clipboard using ipcRenderer when in electron app', () => {
+    const copyToClipboardMock = vi.fn();
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [
+        WorkspaceComponent,
+        NoopAnimationsModule,
+        TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
+      ],
+      providers: [
+        provideZonelessChangeDetection(),
+        SidebarStateService,
+        {provide: ModelCheckerService, useValue: modelCheckerMock},
+        {provide: ModelApiService, useValue: modelApiServiceMock},
+        {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
+        {provide: NotificationsService, useValue: {info: vi.fn(), error: vi.fn(), clearNotifications: vi.fn()}},
+        {provide: ConfirmDialogService, useValue: {open: vi.fn()}},
+        {provide: ModelSaverService, useValue: {saveModel: vi.fn()}},
+        {provide: FileHandlingService, useValue: {loadNamespaceFile: vi.fn()}},
+        {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
+        {
+          provide: BrowserService,
+          useValue: {isStartedAsElectronApp: () => true, getAssetBasePath: () => './assets'},
+        },
+        {
+          provide: IPC_RENDERER,
+          useValue: {copyToClipboard: copyToClipboardMock},
+        },
+        {
+          provide: LanguageTranslationService,
+          useValue: {
+            language: {notificationService: {}, confirmDialog: {}},
+            translateService: {translate: (k: string) => k},
+          },
+        },
+      ],
+    });
+
+    fixture = TestBed.createComponent(WorkspaceComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    component.copyWorkspacePath();
+
+    expect(modelApiServiceMock.getStoragePath).toHaveBeenCalled();
+    expect(copyToClipboardMock).toHaveBeenCalledWith('/workspace');
+    expect(notificationsServiceMock.info).toHaveBeenCalledWith({
+      title: 'sidebar.workspace.copiedWorkspacePath',
+      message: '/workspace',
+    });
+  });
+
+  it('should copy storagePath to clipboard when copyWorkspacePath is called', () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, {clipboard: {writeText: writeTextMock}});
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
+
+    fixture = TestBed.createComponent(WorkspaceComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    component.copyWorkspacePath();
+
+    expect(modelApiServiceMock.getStoragePath).toHaveBeenCalled();
+    expect(writeTextMock).toHaveBeenCalledWith('/workspace');
+    expect(notificationsServiceMock.info).toHaveBeenCalledWith({
+      title: 'sidebar.workspace.copiedWorkspacePath',
+      message: '/workspace',
+    });
   });
 });

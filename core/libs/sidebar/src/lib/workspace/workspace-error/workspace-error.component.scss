@@ -11,6 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+:host {
+  display: block;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
 span {
   font-size: 14px;
   font-weight: 500;

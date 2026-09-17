@@ -17,6 +17,16 @@
       <h2>{{ t('sidebar.workspace.title') }}</h2>
 
       <button
+        class="copy-path"
+        [matTooltip]="t('sidebar.workspace.copyWorkspacePath')"
+        (click)="copyWorkspacePath()"
+        mat-mini-fab
+        data-cy="workspaceCopyPathButton"
+      >
+        <mat-icon>content_copy</mat-icon>
+      </button>
+
+      <button
         class="refresh"
         [class.loading]="loading()"
         [class.disabled]="loading()"

@@ -19,7 +19,7 @@ import {Injectable, inject} from '@angular/core';
 import {Observable, forkJoin, of, throwError} from 'rxjs';
 import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
-import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, ViolationError, WorkspaceStructure} from './models';
+import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, StoragePathResponse, ViolationError, WorkspaceStructure} from './models';
 
 @Injectable({providedIn: 'root'})
 export class ModelApiService {
@@ -149,6 +149,13 @@ export class ModelApiService {
   loadNamespacesStructure(onlyAspectModel?: boolean): Observable<WorkspaceStructure> {
     const params = onlyAspectModel ? {onlyAspectModels: 'true'} : {onlyAspectModels: 'false'};
     return this.http.get<WorkspaceStructure>(`${this.serviceUrl}${this.api.models}/namespaces`, {params}).pipe(
+      timeout(this.requestTimeout),
+      catchError(res => throwError(() => res)),
+    );
+  }
+
+  getStoragePath(): Observable<StoragePathResponse> {
+    return this.http.get<StoragePathResponse>(`${this.serviceUrl}${this.api.models}/storage-path`).pipe(
       timeout(this.requestTimeout),
       catchError(res => throwError(() => res)),
     );

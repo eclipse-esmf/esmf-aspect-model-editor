@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {contextBridge, ipcRenderer, shell} from 'electron';
+import {clipboard, contextBridge, ipcRenderer, shell} from 'electron';
 
 /**
  * Exposes a set of Electron IPC and shell functions to the renderer process via the `electronAPI` object.
@@ -99,6 +99,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
       await shell.openExternal(fallbackUrl);
     }
   },
+
+  /**
+   * Copies text directly to the system clipboard.
+   *
+   * @param {string} text - The text to copy.
+   */
+  copyToClipboard: (text: string): void => clipboard.writeText(text),
 
   /**
    * Shows a context menu for the given payload.
