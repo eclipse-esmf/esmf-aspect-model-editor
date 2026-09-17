@@ -250,14 +250,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
   }
 
   private changeValuesByDataType(dataType: string) {
-    const dataTypeKeys = Object.keys(this.dataTypeService.getDataTypes());
-
-    if (dataTypeKeys.includes(dataType)) {
-      return;
-    }
-
     this.searchModel.set('');
-    this.enumValueChange([]);
   }
 
   private handleNextModelElement(modelElement: NamedElement): void {

@@ -265,6 +265,9 @@ export class WorkspaceFileElementsComponent {
     if (element instanceof DefaultEntity) {
       return (element as any).isAbstract ? 'abstract-entity' : 'entity';
     }
+    if (element instanceof DefaultTrait) {
+      return 'trait';
+    }
     if (element instanceof DefaultCharacteristic) {
       return 'characteristic';
     }
@@ -273,9 +276,6 @@ export class WorkspaceFileElementsComponent {
     }
     if (element instanceof DefaultConstraint) {
       return 'constraint';
-    }
-    if (element instanceof DefaultTrait) {
-      return 'trait';
     }
     if (element instanceof DefaultOperation) {
       return 'operation';

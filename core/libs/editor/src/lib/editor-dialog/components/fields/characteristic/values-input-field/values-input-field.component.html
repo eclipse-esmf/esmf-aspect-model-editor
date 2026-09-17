@@ -25,11 +25,6 @@
             (removed)="remove(value)"
           >
             <span>{{ value?.['name'] || value?.['value'] }}</span>
-            @if (!initialValues()[value?.['aspectModelUrn'] || '']) {
-              <button matChipEdit>
-                <mat-icon>edit</mat-icon>
-              </button>
-            }
             <mat-icon matChipRemove data-cy="chipIcon">close</mat-icon>
           </mat-chip-row>
         }

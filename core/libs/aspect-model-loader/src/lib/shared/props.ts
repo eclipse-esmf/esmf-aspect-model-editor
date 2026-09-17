@@ -80,6 +80,7 @@ export interface PropertyProps extends NamedElementProps {
   exampleValue?: DefaultValue | ValueElement;
   isAbstract?: boolean;
   extends_?: Property;
+  payloadName?: string;
 }
 
 // Event props

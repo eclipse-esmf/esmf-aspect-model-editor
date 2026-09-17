@@ -36,6 +36,7 @@ describe('WorkspaceComponent', () => {
   };
   let notificationsServiceMock: {
     info: ReturnType<typeof vi.fn>;
+    success: ReturnType<typeof vi.fn>;
     error: ReturnType<typeof vi.fn>;
     clearNotifications: ReturnType<typeof vi.fn>;
   };
@@ -52,6 +53,7 @@ describe('WorkspaceComponent', () => {
     };
     notificationsServiceMock = {
       info: vi.fn(),
+      success: vi.fn(),
       error: vi.fn(),
       clearNotifications: vi.fn(),
     };
@@ -174,7 +176,7 @@ describe('WorkspaceComponent', () => {
         {provide: ModelCheckerService, useValue: modelCheckerMock},
         {provide: ModelApiService, useValue: modelApiServiceMock},
         {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
-        {provide: NotificationsService, useValue: {info: vi.fn(), error: vi.fn(), clearNotifications: vi.fn()}},
+        {provide: NotificationsService, useValue: notificationsServiceMock},
         {provide: ConfirmDialogService, useValue: {open: vi.fn()}},
         {provide: ModelSaverService, useValue: {saveModel: vi.fn()}},
         {provide: FileHandlingService, useValue: {loadNamespaceFile: vi.fn()}},
@@ -205,7 +207,7 @@ describe('WorkspaceComponent', () => {
 
     expect(modelApiServiceMock.getStoragePath).toHaveBeenCalled();
     expect(copyToClipboardMock).toHaveBeenCalledWith('/workspace');
-    expect(notificationsServiceMock.info).toHaveBeenCalledWith({
+    expect(notificationsServiceMock.success).toHaveBeenCalledWith({
       title: 'sidebar.workspace.copiedWorkspacePath',
       message: '/workspace',
     });
@@ -224,7 +226,7 @@ describe('WorkspaceComponent', () => {
 
     expect(modelApiServiceMock.getStoragePath).toHaveBeenCalled();
     expect(writeTextMock).toHaveBeenCalledWith('/workspace');
-    expect(notificationsServiceMock.info).toHaveBeenCalledWith({
+    expect(notificationsServiceMock.success).toHaveBeenCalledWith({
       title: 'sidebar.workspace.copiedWorkspacePath',
       message: '/workspace',
     });

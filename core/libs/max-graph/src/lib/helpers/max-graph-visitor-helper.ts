@@ -298,6 +298,10 @@ export class MaxGraphVisitorHelper {
     return hasValidValue ? {label: `exampleValue = ${property.exampleValue.value}`, key: 'exampleValue'} : null;
   }
 
+  static addPayloadName(property: Property): ShapeAttribute {
+    return property.payloadName ? {label: `payloadName = "${property.payloadName}"`, key: 'payloadName'} : null;
+  }
+
   static addIsCollectionAspect(aspect: Aspect): ShapeAttribute {
     if (aspect.isCollectionAspect) {
       return {label: `isCollectionAspect = ${aspect.isCollectionAspect}`, key: 'isCollectionAspect'};
@@ -379,6 +383,7 @@ export class MaxGraphVisitorHelper {
       ...this.addLocalizedDescriptions(property, sammLangService),
       this.addSee(property),
       this.addExampleValue(property),
+      this.addPayloadName(property),
     ].filter(e => !!e);
   }
 
