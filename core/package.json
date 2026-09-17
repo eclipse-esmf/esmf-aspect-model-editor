@@ -4,7 +4,7 @@
   "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
   "version": "0.0.1",
-  "main": "main.js",
+  "main": "dist/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor.git"
@@ -207,8 +207,8 @@
     "build": "nx build",
     "build:prod": "nx build --configuration=production",
     "build:stats": "nx build --configuration=production --stats-json",
-    "build:electron": "tsc -p tsconfig.electron.json && shx cp -R ./electron/loading-screen ./dist/electron/",
-    "build:electron:prod": "tsc -p tsconfig.electron.prod.json && pnpm electron:minify && pnpm electron:obfuscate && shx mkdir -p ./dist/electron/loading-screen && shx cp ./electron/loading-screen/*.html ./dist/electron/loading-screen/",
+    "build:electron": "tsc -p tsconfig.electron.json && shx cp -R ./electron/loading-screen ./dist/electron/ && node ./utils/generate-electron-package-json.js",
+    "build:electron:prod": "tsc -p tsconfig.electron.prod.json && pnpm electron:minify && pnpm electron:obfuscate && shx mkdir -p ./dist/electron/loading-screen && shx cp ./electron/loading-screen/*.html ./dist/electron/loading-screen/ && node ./utils/generate-electron-package-json.js",
     "build:win": "pnpm build:electron && nx build && electron-builder build --win",
     "build:mac": "pnpm build:electron && nx build && electron-builder build --mac",
     "build:linux": "pnpm build:electron && nx build && electron-builder build --linux",
