@@ -21,6 +21,9 @@
       </button>
     }
 
+    @if (hasError('required')) {
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.unit.fieldRequired') }}</mat-error>
+    }
     @if (hasError('checkShapeName')) {
       <mat-error>{{ t('editorCanvas.shapeSetting.field.unit.selectDifferentNameType') }}</mat-error>
     }

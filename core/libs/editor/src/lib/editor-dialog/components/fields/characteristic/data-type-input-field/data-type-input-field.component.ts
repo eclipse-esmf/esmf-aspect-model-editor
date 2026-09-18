@@ -17,7 +17,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {config, DataTypeService, ElementIconComponent} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {disabled, form, FormField, validateAsync} from '@angular/forms/signals';
+import {disabled, form, FormField, required, validateAsync} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
@@ -92,6 +92,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     });
 
   readonly displayField = form(this.displayModel, path => {
+    required(path);
     validateAsync(path, {
       params: ({value}) => value(),
       factory: this.createDuplicateNameResource,

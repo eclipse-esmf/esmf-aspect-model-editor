@@ -123,6 +123,17 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
       this.previousDataType = dataType;
       this.dataTypeInitialized = true;
     });
+
+    effect(() => {
+      const isComplex = this.hasComplexValues();
+      if (!isComplex) {
+        const hasEntities = this.enumValues().some(v => v instanceof DefaultEntityInstance);
+        if (hasEntities) {
+          this.enumValues.update(values => values.filter(v => !(v instanceof DefaultEntityInstance)));
+          this.syncFormValues();
+        }
+      }
+    });
   }
 
   ngOnInit(): void {

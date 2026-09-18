@@ -71,7 +71,8 @@ export class CharacteristicRenderService extends BaseRenderService {
       this.handleOverlay(cell);
       this.handlePredefinedCharacteristicConnections(cell);
       this.removeCharacteristicTargetShape(cell);
-      this.handleDataType(cell, form.dataTypeEntity);
+      const targetDataType = this.metaModelElement.dataType || form.newDataType || form.dataTypeEntity;
+      this.handleDataType(cell, targetDataType);
       this.handleUnit(cell, form.unit);
       this.handleElementCharacteristic(cell, form.elementCharacteristic);
       this.removeStructuredValueProperties(cell);
@@ -241,7 +242,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     }
 
     if (newDataType instanceof DefaultEntity) {
-      this.removeOutgoingComplexDataType(cell);
+      this.removeOutgoingComplexDataType(cell, newDataType);
       this.handleComplexDataType(cell, newDataType);
     } else if (newDataType instanceof DefaultScalar) {
       this.removeOutgoingComplexDataType(cell);
@@ -279,7 +280,7 @@ export class CharacteristicRenderService extends BaseRenderService {
     }
   }
 
-  private removeOutgoingComplexDataType(cell: Cell) {
+  private removeOutgoingComplexDataType(cell: Cell, keepEntity?: DefaultEntity) {
     const outGoingEdges = this.maxgraphService.graph.getOutgoingEdges(cell, null);
     const characteristic = MaxGraphHelper.getModelElement(cell);
 
@@ -287,6 +288,9 @@ export class CharacteristicRenderService extends BaseRenderService {
       outGoingEdges.forEach(edge => {
         const modelElement = MaxGraphHelper.getModelElement(edge.target);
         if (modelElement instanceof DefaultEntity) {
+          if (keepEntity && modelElement.aspectModelUrn === keepEntity.aspectModelUrn) {
+            return;
+          }
           MaxGraphHelper.removeRelation(characteristic, modelElement);
           const characteristicUpdater = useUpdater(this.metaModelElement);
           characteristicUpdater.delete(modelElement);
