@@ -202,11 +202,15 @@ export class CharacteristicRenderService extends BaseRenderService {
     if (!(this.metaModelElement instanceof DefaultEither)) {
       this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getNewShapeOverlayButton(cell));
       this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getTopOverlayButton(cell));
+      this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getRightOverlayButton(cell));
 
       if (this.metaModelElement?.isPredefined) {
         this.maxgraphShapeOverlayService.addTopShapeOverlay(cell);
       } else {
         this.maxgraphShapeOverlayService.addTopShapeOverlay(cell);
+        if (MaxGraphHelper.isComplexEnumeration(this.metaModelElement)) {
+          this.maxgraphShapeOverlayService.addComplexEnumerationShapeOverlay(cell);
+        }
         this.maxgraphShapeOverlayService.addBottomShapeOverlay(cell);
       }
     }

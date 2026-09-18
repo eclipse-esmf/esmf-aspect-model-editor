@@ -187,11 +187,17 @@ export class EnumerationRenderService extends BaseRenderService {
   private handleBottomOverlay(cell: Cell) {
     const modelElement = MaxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (!(modelElement instanceof DefaultEither)) {
-      this.maxgraphShapeOverlayService.removeOverlay(cell);
+      this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getNewShapeOverlayButton(cell));
+      this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getTopOverlayButton(cell));
+      this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getRightOverlayButton(cell));
+
       if (modelElement?.isPredefined) {
         this.maxgraphShapeOverlayService.addTopShapeOverlay(cell);
       } else {
         this.maxgraphShapeOverlayService.addTopShapeOverlay(cell);
+        if (MaxGraphHelper.isComplexEnumeration(modelElement)) {
+          this.maxgraphShapeOverlayService.addComplexEnumerationShapeOverlay(cell);
+        }
         this.maxgraphShapeOverlayService.addBottomShapeOverlay(cell);
       }
     }
