@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
 import {MaxGraphHelper, MaxGraphRenderer, MaxGraphShapeOverlayService, ModelInfo} from '@ame/max-graph';
 import {ModelElementNamingService} from '@ame/meta-model';
 import {config} from '@ame/shared';
@@ -38,7 +37,6 @@ import {SingleShapeConnector} from '../models';
 export class CharacteristicConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Characteristic> {
   private modelElementNamingService = inject(ModelElementNamingService);
   private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
-  private loadedFilesService = inject(LoadedFilesService);
 
   get currentCachedFile() {
     return this.loadedFilesService.currentLoadedFile.cachedFile;

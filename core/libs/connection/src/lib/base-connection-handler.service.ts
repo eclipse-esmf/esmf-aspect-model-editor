@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {FiltersService} from '@ame/loader-filters';
 import {
   MaxGraphAttributeService,
@@ -34,6 +35,7 @@ export class BaseConnectionHandler {
   protected readonly maxgraphService = inject(MaxGraphService);
   protected readonly filtersService = inject(FiltersService);
   protected readonly maxgraphShapeOverlay = inject(MaxGraphShapeOverlayService);
+  protected readonly loadedFilesService = inject(LoadedFilesService);
 
   refreshPropertiesLabel(cell: Cell, modelElement: NamedElement) {
     if (cell && (cell as any).configuration) {

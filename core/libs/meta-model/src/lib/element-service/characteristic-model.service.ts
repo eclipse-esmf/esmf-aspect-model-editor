@@ -76,6 +76,23 @@ export class CharacteristicModelService extends BaseModelService {
     // if datatype has changed
     this.updateDatatype(metaModelElement, form);
 
+    if (metaModelElement.dataType) {
+      if (metaModelElement instanceof DefaultEnumeration && metaModelElement.values) {
+        metaModelElement.values.forEach(v => {
+          if (v instanceof DefaultValue && !this.loadedFilesService.isElementExtern(v)) {
+            v.type = metaModelElement.dataType;
+          }
+        });
+      }
+      this.maxgraphAttributeService.graph.getOutgoingEdges(cell, null)?.forEach(edge => {
+        const targetModel = MaxGraphHelper.getModelElement(edge.target);
+        if (targetModel instanceof DefaultValue && !this.loadedFilesService.isElementExtern(targetModel)) {
+          targetModel.type = metaModelElement.dataType;
+          this.maxgraphAttributeService.graph.labelChanged(edge.target, MaxGraphHelper.createPropertiesLabel(edge.target), null);
+        }
+      });
+    }
+
     // remove old entity dependency if changed
     if (oldDataType instanceof DefaultEntity && oldDataType !== metaModelElement.dataType) {
       this.removeEntityDependency(cell, oldDataType);
@@ -234,12 +251,17 @@ export class CharacteristicModelService extends BaseModelService {
         .filter((v: ScalarValue | DefaultValue) => v instanceof DefaultValue)
         .forEach((value: DefaultValue) => {
           if (!this.loadedFilesService.isElementExtern(value)) {
+            if (metaModelElement.dataType) {
+              value.type = metaModelElement.dataType;
+            }
             this.currentCachedFile.addElement(value.aspectModelUrn, value);
           }
         });
       metaModelElement.values = (form.enumValues || []).map((v: ScalarValue | DefaultValue) => {
         if (v instanceof ScalarValue) {
           v.type = metaModelElement.dataType || null;
+        } else if (v instanceof DefaultValue && !this.loadedFilesService.isElementExtern(v) && metaModelElement.dataType) {
+          v.type = metaModelElement.dataType;
         }
         return v;
       });

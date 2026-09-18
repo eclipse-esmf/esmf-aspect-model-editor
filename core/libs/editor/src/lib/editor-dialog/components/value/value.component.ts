@@ -68,7 +68,7 @@ export class ValueComponent {
   public selectedTypeUrn = signal<string>(ValueComponent.DEFAULT_TYPE_URN);
 
   public availableDataTypes = computed<DefaultScalar[]>(() => {
-    return Object.keys(this.dataTypeService.getDataTypes()).map(key => {
+    const list = Object.keys(this.dataTypeService.getDataTypes()).map(key => {
       const type = this.dataTypeService.getDataType(key);
       return new DefaultScalar({
         urn: type.isDefinedBy,
@@ -76,6 +76,18 @@ export class ValueComponent {
         metaModelVersion: config.currentSammVersion,
       });
     });
+    const currentUrn = this.selectedTypeUrn();
+    if (currentUrn && !list.some(dt => dt.urn === currentUrn)) {
+      const res = this.typeResolution();
+      list.push(
+        new DefaultScalar({
+          urn: currentUrn,
+          descriptions: new Map([['en', res.shortType || '']]),
+          metaModelVersion: config.currentSammVersion,
+        }),
+      );
+    }
+    return list;
   });
 
   constructor() {

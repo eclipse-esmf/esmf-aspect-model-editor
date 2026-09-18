@@ -111,6 +111,11 @@ export class EnumerationRenderService extends BaseRenderService {
   }
 
   private connectElements(parentCell: Cell, childCell: Cell) {
+    const parentModel = MaxGraphHelper.getModelElement<DefaultEnumeration>(parentCell);
+    const childModel = MaxGraphHelper.getModelElement<DefaultValue>(childCell);
+    if (parentModel?.dataType && childModel instanceof DefaultValue && !this.loadedFilesService.isElementExtern(childModel)) {
+      childModel.type = parentModel.dataType;
+    }
     this.maxgraphService.assignToParent(childCell, parentCell);
     MaxGraphHelper.updateLabel(parentCell, this.maxgraphService.graph, this.sammLangService);
     MaxGraphHelper.updateLabel(childCell, this.maxgraphService.graph, this.sammLangService);

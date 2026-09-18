@@ -50,26 +50,24 @@
     </div>
   }
 
-  @if (typeResolution().canSelectDataType) {
-    <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>dataType</mat-label>
-      <mat-select [value]="selectedTypeUrn()" (valueChange)="onDataTypeChange($event)" data-cy="valueDataTypeSelect">
-        @for (dt of availableDataTypes(); track dt.urn) {
-          <mat-option [value]="dt.urn">
-            <span>{{ dt.name }}</span>
-            @if (dt.getDescription('en')) {
-              <span style="opacity: 0.6; margin-left: 8px; font-size: 12px">({{ dt.getDescription('en') }})</span>
-            }
-          </mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-  } @else if (typeResolution().shortType) {
-    <mat-form-field appearance="fill" style="width: 100%">
-      <mat-label>dataType (derived from connected element)</mat-label>
-      <input [value]="typeResolution().shortType" matInput disabled />
-    </mat-form-field>
-  }
+  <mat-form-field appearance="fill" style="width: 100%">
+    <mat-label>{{ typeResolution().isReadOnly ? 'dataType (derived from connected element)' : 'dataType' }}</mat-label>
+    <mat-select
+      [value]="selectedTypeUrn()"
+      [disabled]="!typeResolution().canSelectDataType"
+      (valueChange)="onDataTypeChange($event)"
+      data-cy="valueDataTypeSelect"
+    >
+      @for (dt of availableDataTypes(); track dt.urn) {
+        <mat-option [value]="dt.urn">
+          <span>{{ dt.name }}</span>
+          @if (dt.getDescription('en')) {
+            <span style="opacity: 0.6; margin-left: 8px; font-size: 12px">({{ dt.getDescription('en') }})</span>
+          }
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
 
   <ame-base-input [signalForm]="signalForm()"></ame-base-input>
   <ame-value-input-field [signalForm]="signalForm()"></ame-value-input-field>
