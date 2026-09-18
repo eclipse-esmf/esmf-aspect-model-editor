@@ -31,6 +31,9 @@ export class ValueModelService extends BaseModelService {
     const modelElement = MaxGraphHelper.getModelElement<DefaultValue>(cell);
     super.update(cell, form);
     modelElement.value = form.value;
+    if ('type' in form) {
+      modelElement.type = form.type;
+    }
 
     this.valueRender.update({cell, form});
   }

@@ -52,19 +52,19 @@
 
       <mat-autocomplete #auto="matAutocomplete" [hideSingleSelectionIndicator]="true">
         @if (valuesInput.value) {
-          <mat-option [value]="valuesInput.value" (click)="addValue(valuesInput.value)">
+          <mat-option [value]="valuesInput.value" (onSelectionChange)="$event.isUserInput && addValue(valuesInput.value)">
             <ame-element [isNewValue]="true" [type]="{type: 'text', symbol: 'T'}" [name]="valuesInput.value" size="medium"></ame-element>
           </mat-option>
         }
 
         @let fValues = filteredValues();
         @if (fValues.length === 0 && valuesInput.value) {
-          <mat-option [value]="valuesInput.value" (click)="addValue(valuesInput.value, false)">
+          <mat-option [value]="valuesInput.value" (onSelectionChange)="$event.isUserInput && addValue(valuesInput.value, false)">
             <ame-element [isNewValue]="true" [type]="{type: 'value', symbol: 'V'}" [name]="valuesInput.value" size="medium"></ame-element>
           </mat-option>
         } @else {
           @for (value of fValues; track value.name) {
-            <mat-option [value]="value.name" (click)="addValue(value)">
+            <mat-option [value]="value.name" (onSelectionChange)="$event.isUserInput && addValue(value)">
               <ame-element [type]="{type: 'value', symbol: 'V'}" [name]="value.name" size="medium"></ame-element>
             </mat-option>
           }

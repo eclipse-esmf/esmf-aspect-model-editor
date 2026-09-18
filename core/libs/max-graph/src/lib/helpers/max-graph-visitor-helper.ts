@@ -168,8 +168,8 @@ export class MaxGraphVisitorHelper {
     }
 
     if (element instanceof DefaultValue) {
-      if (element.value) {
-        return {label: `value = "${element.value}"`, key: 'value'};
+      if (element.value !== undefined && element.value !== null && element.value !== '') {
+        return {label: `value = ${element.value}`, key: 'value'};
       }
     }
     return null;

@@ -105,8 +105,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
    *
    * @param {string} text - The text to copy.
    */
-  copyToClipboard: (text: string): void => clipboard.writeText(text),
-
+  copyToClipboard: (text: string): void => {
+    clipboard.writeText(text);
+  },
   /**
    * Shows a context menu for the given payload.
    *

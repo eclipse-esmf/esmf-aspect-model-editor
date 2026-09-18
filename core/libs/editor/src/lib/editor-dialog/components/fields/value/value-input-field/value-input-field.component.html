@@ -17,5 +17,8 @@
     @if (hasError('required')) {
       <mat-error>{{ t('editorCanvas.shapeSetting.field.value.pleaseDefine') }}</mat-error>
     }
+    @if (getValidationError(); as customError) {
+      <mat-error>{{ customError }}</mat-error>
+    }
   </mat-form-field>
 </ng-container>

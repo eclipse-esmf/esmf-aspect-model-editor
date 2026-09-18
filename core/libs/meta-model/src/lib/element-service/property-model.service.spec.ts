@@ -42,6 +42,7 @@ describe('PropertyModelService', () => {
           provide: LoadedFilesService,
           useValue: {
             isElementInCurrentFile: vi.fn().mockReturnValue(true),
+            isElementExtern: vi.fn().mockReturnValue(false),
             currentLoadedFile: {
               namespace: 'ns',
               rdfModel: {getAspectModelUrn: () => 'urn:test#'},

@@ -30,6 +30,47 @@
     </div>
   }
 
+  @if (typeResolution().hasConflict) {
+    <div
+      style="
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        margin-bottom: 16px;
+        background-color: #fef2f2;
+        border: 1px solid #f87171;
+        border-radius: 6px;
+        color: #991b1b;
+        font-size: 13px;
+      "
+    >
+      <mat-icon style="color: #dc2626">warning</mat-icon>
+      <span>{{ typeResolution().conflictMessage }}</span>
+    </div>
+  }
+
+  @if (typeResolution().canSelectDataType) {
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>dataType</mat-label>
+      <mat-select [value]="selectedTypeUrn()" (valueChange)="onDataTypeChange($event)" data-cy="valueDataTypeSelect">
+        @for (dt of availableDataTypes(); track dt.urn) {
+          <mat-option [value]="dt.urn">
+            <span>{{ dt.name }}</span>
+            @if (dt.getDescription('en')) {
+              <span style="opacity: 0.6; margin-left: 8px; font-size: 12px">({{ dt.getDescription('en') }})</span>
+            }
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  } @else if (typeResolution().shortType) {
+    <mat-form-field appearance="fill" style="width: 100%">
+      <mat-label>dataType (derived from connected element)</mat-label>
+      <input [value]="typeResolution().shortType" matInput disabled />
+    </mat-form-field>
+  }
+
   <ame-base-input [signalForm]="signalForm()"></ame-base-input>
   <ame-value-input-field [signalForm]="signalForm()"></ame-value-input-field>
   <ame-element-list

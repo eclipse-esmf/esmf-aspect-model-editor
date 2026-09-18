@@ -22,3 +22,4 @@ export * from './model-saving-tracker.service';
 export * from './notifications.service';
 export * from './search.service';
 export * from './title.service';
+export * from './value-type-resolver.service';

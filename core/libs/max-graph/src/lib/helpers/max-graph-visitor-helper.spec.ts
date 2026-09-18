@@ -171,16 +171,16 @@ describe('MaxGraphVisitorHelper', () => {
       expect(result.label).toContain('^[a-z]+$');
     });
 
-    it('should return value for DefaultValue', () => {
+    it('should return value for DefaultValue without quotes', () => {
       const val = new DefaultValue({
         name: 'val',
         aspectModelUrn: 'urn:test#val',
-        value: '123',
+        value: 'hello',
         metaModelVersion: '2.1.0',
       });
       const result = MaxGraphVisitorHelper.addValue(val);
       expect(result).toBeDefined();
-      expect(result.label).toBe('value = "123"');
+      expect(result.label).toBe('value = hello');
     });
   });
 

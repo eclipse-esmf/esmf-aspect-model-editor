@@ -215,8 +215,17 @@ export class CharacteristicModelService extends BaseModelService {
     } else if (metaModelElement instanceof DefaultEnumeration) {
       form.enumValues
         .filter((v: ScalarValue | DefaultValue) => v instanceof DefaultValue)
-        .forEach((value: DefaultValue) => this.currentCachedFile.addElement(value.aspectModelUrn, value));
-      metaModelElement.values = form.enumValues || [];
+        .forEach((value: DefaultValue) => {
+          if (!this.loadedFilesService.isElementExtern(value)) {
+            this.currentCachedFile.addElement(value.aspectModelUrn, value);
+          }
+        });
+      metaModelElement.values = (form.enumValues || []).map((v: ScalarValue | DefaultValue) => {
+        if (v instanceof ScalarValue) {
+          v.type = metaModelElement.dataType || null;
+        }
+        return v;
+      });
     } else if (metaModelElement instanceof DefaultCollection) {
       metaModelElement.elementCharacteristic = form.elementCharacteristic;
       if (form.elementCharacteristic) {

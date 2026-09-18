@@ -77,7 +77,7 @@ export class RdfListHelper {
       }
 
       if (metaModelElement instanceof ScalarValue) {
-        const dtUrn = metaModelElement.type?.urn || metaModelElement.type?.aspectModelUrn || defaultDataTypeUrn;
+        const dtUrn = defaultDataTypeUrn || metaModelElement.type?.urn || metaModelElement.type?.aspectModelUrn;
         return DataFactory.literal(`${metaModelElement.value}`, DataFactory.namedNode(dtUrn));
       }
 

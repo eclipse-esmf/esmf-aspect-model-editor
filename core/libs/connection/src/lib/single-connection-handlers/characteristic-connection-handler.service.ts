@@ -27,6 +27,7 @@ import {
   DefaultEnumeration,
   DefaultProperty,
   DefaultTrait,
+  DefaultValue,
   ScalarValue,
 } from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -149,6 +150,19 @@ export class CharacteristicConnectionHandler extends BaseConnectionHandler imple
     // add icon if we click on + button of an enumeration
     if (characteristic instanceof DefaultEnumeration) {
       this.maxgraphShapeOverlayService.removeOverlay(source, MaxGraphHelper.getNewShapeOverlayButton(source));
+      const outgoingEdges = this.maxgraphAttributeService.graph.getOutgoingEdges(source, null);
+      const valueEdgesToRemove: Cell[] = [];
+      outgoingEdges.forEach(edge => {
+        const targetModel = MaxGraphHelper.getModelElement(edge.target);
+        if (targetModel instanceof DefaultValue || targetModel instanceof DefaultEntityInstance) {
+          MaxGraphHelper.removeRelation(characteristic, targetModel);
+          useUpdater(characteristic).delete(targetModel);
+          valueEdgesToRemove.push(edge);
+        }
+      });
+      if (valueEdgesToRemove.length) {
+        this.maxgraphService.removeCells(valueEdgesToRemove);
+      }
       characteristic.values = [];
     }
     this.maxgraphShapeOverlayService.checkComplexEnumerationOverlays(characteristic, source);
