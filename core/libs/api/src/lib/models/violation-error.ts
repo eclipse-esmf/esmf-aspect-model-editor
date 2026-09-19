@@ -18,6 +18,13 @@ export interface ViolationError {
   errorCode?: string;
 }
 
+export interface BackendValidationError {
+  message: string;
+  path?: string;
+  code?: number;
+  focusNode?: string | null;
+}
+
 export interface DetailViolationInfo {
   file: string;
   violationError: ViolationError[];

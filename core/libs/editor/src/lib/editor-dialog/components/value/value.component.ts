@@ -17,7 +17,6 @@ import {Component, computed, effect, inject, input, signal} from '@angular/core'
 import {toSignal} from '@angular/core/rxjs-interop';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
-import {MatInput} from '@angular/material/input';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {DefaultScalar, DefaultValue} from '@esmf/aspect-model-loader';
@@ -39,7 +38,6 @@ import {BaseInputComponent, ValueInputFieldComponent} from '../fields';
     MatSlideToggle,
     MatIcon,
     MatFormFieldModule,
-    MatInput,
     MatSelect,
     MatOption,
   ],

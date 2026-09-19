@@ -47,7 +47,10 @@ describe('ModelApiService', () => {
   let service: ModelApiService;
   let httpMock: HttpTestingController;
   let browserService: {isStartedAsElectronApp: ReturnType<typeof vi.fn>};
-  let modelValidatorService: {notifyCorrectableErrors: ReturnType<typeof vi.fn>};
+  let modelValidatorService: {
+    notifyCorrectableErrors: ReturnType<typeof vi.fn>;
+    notifyBackendError: ReturnType<typeof vi.fn>;
+  };
   let translate: {language: {notificationService: {aspectSavedDefaultModel: string}}};
   let ipcRenderer: {getBackendPort: ReturnType<typeof vi.fn>};
 
@@ -71,7 +74,10 @@ describe('ModelApiService', () => {
 
   beforeEach(() => {
     browserService = {isStartedAsElectronApp: vi.fn(() => false)};
-    modelValidatorService = {notifyCorrectableErrors: vi.fn()};
+    modelValidatorService = {
+      notifyCorrectableErrors: vi.fn(),
+      notifyBackendError: vi.fn(),
+    };
     translate = {language: {notificationService: {aspectSavedDefaultModel: 'You cannot save into the default model.'}}};
     ipcRenderer = {getBackendPort: vi.fn(() => Promise.resolve('4000'))};
 
@@ -237,6 +243,22 @@ describe('ModelApiService', () => {
       const req = httpMock.expectOne(`${modelsUrl}/validate`);
       expect(req.request.headers.get('uri')).toBe('blob:mock-url');
       req.flush({violationErrors: []});
+    });
+
+    it('should notify backend error and rethrow when HTTP request fails', () => {
+      let error: any;
+      service.validate('<ttl content>').subscribe({
+        error: err => (error = err),
+      });
+
+      const req = httpMock.expectOne(`${modelsUrl}/validate`);
+      req.flush(
+        {error: {message: 'Backend failure', path: '/foo', code: 400, focusNode: 'urn:node'}},
+        {status: 400, statusText: 'Bad Request'},
+      );
+
+      expect(error).toBeTruthy();
+      expect(modelValidatorService.notifyBackendError).toHaveBeenCalled();
     });
   });
 
