@@ -13,7 +13,7 @@
 
 import {FileHandlingService, ModelLoaderService} from '@ame/editor';
 import {MaxGraphService} from '@ame/max-graph';
-import {ElectronSignalsService, ElectronTunnelService, LoadingScreenService, ModelSavingTrackerService} from '@ame/shared';
+import {LoadingScreenService, ModelSavingTrackerService, TauriSignalsService, TauriTunnelService} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
@@ -31,8 +31,8 @@ describe('StartupService', () => {
 
   let router: {events: Subject<any>; navigate: ReturnType<typeof vi.fn>};
   let maxgraphService: {graphInitialized$: BehaviorSubject<boolean>};
-  let electronSignalsService: {call: ReturnType<typeof vi.fn>};
-  let electronTunnelService: {startUpData$: BehaviorSubject<any>};
+  let tauriSignalsService: {call: ReturnType<typeof vi.fn>};
+  let tauriTunnelService: {startUpData$: BehaviorSubject<any>};
   let modelLoaderService: {renderModel: ReturnType<typeof vi.fn>};
   let modelSaveTrackerService: {updateSavedModel: ReturnType<typeof vi.fn>};
   let fileHandlingService: {loadEmptyModel: ReturnType<typeof vi.fn>};
@@ -47,8 +47,8 @@ describe('StartupService', () => {
 
     router = {events: events$, navigate: vi.fn(() => Promise.resolve(true))};
     maxgraphService = {graphInitialized$};
-    electronSignalsService = {call: vi.fn(() => of({options: {namespace: 'ns', file: 'file.ttl'}}))};
-    electronTunnelService = {startUpData$};
+    tauriSignalsService = {call: vi.fn(() => of({options: {namespace: 'ns', file: 'file.ttl'}}))};
+    tauriTunnelService = {startUpData$};
     modelLoaderService = {renderModel: vi.fn(() => of(undefined))};
     modelSaveTrackerService = {updateSavedModel: vi.fn()};
     fileHandlingService = {loadEmptyModel: vi.fn(() => of(undefined))};
@@ -60,8 +60,8 @@ describe('StartupService', () => {
       providers: [
         StartupService,
         {provide: MaxGraphService, useValue: maxgraphService},
-        {provide: ElectronSignalsService, useValue: electronSignalsService},
-        {provide: ElectronTunnelService, useValue: electronTunnelService},
+        {provide: TauriSignalsService, useValue: tauriSignalsService},
+        {provide: TauriTunnelService, useValue: tauriTunnelService},
         {provide: ModelLoaderService, useValue: modelLoaderService},
         {provide: ModelSavingTrackerService, useValue: modelSaveTrackerService},
         {provide: FileHandlingService, useValue: fileHandlingService},

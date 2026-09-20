@@ -34,7 +34,7 @@ export class DocumentComponent {
   openLink(event: MouseEvent) {
     event.preventDefault();
 
-    if (!this.browserService.isStartedAsElectronApp()) return;
+    if (!this.browserService.isStartedAsTauriApp()) return;
 
     this.ipcRenderer.openExternalLink((event.target as HTMLAnchorElement).href);
   }

@@ -14,7 +14,7 @@
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
-import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
@@ -48,7 +48,7 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
   ],
 })
 export class WorkspaceFileListComponent {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private modelSaverService = inject(ModelSaverService);
   private notificationService = inject(NotificationsService);
   private confirmDialogService = inject(ConfirmDialogService);
@@ -180,7 +180,7 @@ export class WorkspaceFileListComponent {
       return;
     }
 
-    this.electronSignalsService.call('openWindow', {
+    this.tauriSignalsService.call('openWindow', {
       namespace,
       file: file.name,
       fromWorkspace: true,
@@ -258,7 +258,7 @@ export class WorkspaceFileListComponent {
           this.modelApiService.deleteAspectModel(selection.file.aspectModelUrn).subscribe(() => {
             this.sidebarService.namespacesState.clear();
             this.sidebarService.workspace.refresh();
-            this.electronSignalsService.call('requestRefreshWorkspaces');
+            this.tauriSignalsService.call('requestRefreshWorkspaces');
           });
         }
       });

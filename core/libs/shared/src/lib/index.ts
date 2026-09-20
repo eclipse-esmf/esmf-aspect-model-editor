@@ -14,7 +14,6 @@
 export * from './components';
 export * from './config';
 export * from './constants';
-export * from './electron-ipc.provider';
 export * from './enums';
 export * from './general-config';
 export * from './http-error.interceptor';
@@ -22,3 +21,4 @@ export * from './http-header-builder';
 export * from './model';
 export * from './pipes';
 export * from './services';
+export * from './tauri-ipc.provider';

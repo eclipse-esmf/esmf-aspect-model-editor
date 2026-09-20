@@ -51,7 +51,7 @@ This section lists limitations that are specific to running the Aspect Model Edi
 [[macos-notarization]]
 === No notarization or code signing
 
-The Electron application is currently not notarized or signed with an Apple Developer certificate. As a result, macOS Gatekeeper blocks the app from starting and marks it as quarantined after downloading.
+The Tarui application is currently not notarized or signed with an Apple Developer certificate. As a result, macOS Gatekeeper blocks the app from starting and marks it as quarantined after downloading.
 
 To run the application, use one of the following workarounds:
 

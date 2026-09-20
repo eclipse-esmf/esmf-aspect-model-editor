@@ -22,18 +22,18 @@ describe('BrowserService', () => {
     (window as any).process = originalProcess;
   });
 
-  it('should detect when running in electron renderer process', () => {
+  it('should detect when running in tauri renderer process', () => {
     (window as any).process = {type: 'renderer'};
-    expect(service.isStartedAsElectronApp()).toBe(true);
+    expect(service.isStartedAsTauriApp()).toBe(true);
     expect(service.getAssetBasePath()).toBe('./assets');
   });
 
-  it('should detect when not running in electron', () => {
+  it('should detect when not running in tauri', () => {
     (window as any).process = undefined;
-    const isElectron = service.isStartedAsElectronApp();
+    const isTauri = service.isStartedAsTauriApp();
     const basePath = service.getAssetBasePath();
 
-    if (isElectron) {
+    if (isTauri) {
       expect(basePath).toBe('./assets');
     } else {
       expect(basePath).toBe('../../../assets');

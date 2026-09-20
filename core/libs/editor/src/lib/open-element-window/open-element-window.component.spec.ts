@@ -12,7 +12,7 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {RdfModel} from '@esmf/aspect-model-loader';
@@ -29,7 +29,7 @@ describe('OpenElementWindowComponent', () => {
   let fixture: ComponentFixture<OpenElementWindowComponent>;
   let modelApiService: ModelApiService;
   let modelLoaderService: ModelLoaderService;
-  let electronSignalsService: ElectronSignalsService;
+  let tauriSignalsService: TauriSignalsService;
   let notificationService: NotificationsService;
   let dialogRef: MatDialogRef<OpenElementWindowComponent>;
 
@@ -53,7 +53,7 @@ describe('OpenElementWindowComponent', () => {
           fetchAspectMetaModel: vi.fn(() => of({content: 'model ttl content', sourceLocation: ''} as any)),
         }),
         MockProvider(ModelLoaderService),
-        MockProvider(ElectronSignalsService, {
+        MockProvider(TauriSignalsService, {
           call: vi.fn(),
         }),
         MockProvider(NotificationsService, {
@@ -64,11 +64,11 @@ describe('OpenElementWindowComponent', () => {
 
     modelApiService = TestBed.inject(ModelApiService);
     modelLoaderService = TestBed.inject(ModelLoaderService);
-    electronSignalsService = TestBed.inject(ElectronSignalsService);
+    tauriSignalsService = TestBed.inject(TauriSignalsService);
     notificationService = TestBed.inject(NotificationsService);
   });
 
-  it('should call electron openWindow when element is found in RDF', () => {
+  it('should call tauri openWindow when element is found in RDF', () => {
     const store = new Store();
     store.addQuad(new Quad(new NamedNode(urn), new NamedNode('http://test#pred'), new NamedNode('http://test#obj')));
     const rdfModel = new RdfModel(store, '2.0.0', 'urn:samm:com.test:1.0.0#');
@@ -80,7 +80,7 @@ describe('OpenElementWindowComponent', () => {
     fixture.detectChanges();
 
     expect(component).toBeTruthy();
-    expect(electronSignalsService.call).toHaveBeenCalledWith('openWindow', {
+    expect(tauriSignalsService.call).toHaveBeenCalledWith('openWindow', {
       namespace: 'com.test:1.0.0',
       file: 'test.ttl',
       editElement: urn,

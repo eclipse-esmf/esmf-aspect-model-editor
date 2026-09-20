@@ -14,7 +14,7 @@
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
-import {ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -29,7 +29,7 @@ describe('WorkspaceFileListComponent', () => {
   let component: WorkspaceFileListComponent;
   let fixture: ComponentFixture<WorkspaceFileListComponent>;
   let sidebarService: SidebarStateService;
-  let electronSignalsMock: {call: ReturnType<typeof vi.fn>};
+  let tauriSignalsMock: {call: ReturnType<typeof vi.fn>};
   let modelSaverMock: {saveModel: ReturnType<typeof vi.fn>};
   let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>};
   let confirmDialogMock: {open: ReturnType<typeof vi.fn>};
@@ -40,7 +40,7 @@ describe('WorkspaceFileListComponent', () => {
   beforeEach(() => {
     vi.useFakeTimers();
 
-    electronSignalsMock = {call: vi.fn()};
+    tauriSignalsMock = {call: vi.fn()};
     modelSaverMock = {saveModel: vi.fn(() => of(true))};
     notificationMock = {info: vi.fn(), error: vi.fn()};
     confirmDialogMock = {open: vi.fn(() => of(ConfirmDialogEnum.ok))};
@@ -60,7 +60,7 @@ describe('WorkspaceFileListComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: ElectronSignalsService, useValue: electronSignalsMock},
+        {provide: TauriSignalsService, useValue: tauriSignalsMock},
         {provide: ModelSaverService, useValue: modelSaverMock},
         {provide: NotificationsService, useValue: notificationMock},
         {provide: ConfirmDialogService, useValue: confirmDialogMock},
@@ -189,7 +189,7 @@ describe('WorkspaceFileListComponent', () => {
       expect(component.isOpenable()).toBe(true);
       component.loadInNewWindow();
 
-      expect(electronSignalsMock.call).toHaveBeenCalledWith('openWindow', {
+      expect(tauriSignalsMock.call).toHaveBeenCalledWith('openWindow', {
         namespace: 'org.eclipse.esmf:1.0.0',
         file: 'File1.ttl',
         fromWorkspace: true,
@@ -225,7 +225,7 @@ describe('WorkspaceFileListComponent', () => {
       expect(confirmDialogMock.open).toHaveBeenCalled();
       expect(modelApiMock.deleteAspectModel).toHaveBeenCalledWith(file.aspectModelUrn);
       expect(loadedFilesMock.removeFile).toHaveBeenCalledWith('org.eclipse.esmf:1.0.0:File1.ttl');
-      expect(electronSignalsMock.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
+      expect(tauriSignalsMock.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
     }
   });
 

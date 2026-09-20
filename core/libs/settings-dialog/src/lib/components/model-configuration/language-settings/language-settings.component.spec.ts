@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/cache';
 import {EditorService, ModelSaverService} from '@ame/editor';
 import {MaxGraphService} from '@ame/max-graph';
-import {ElectronTunnelService, TitleService} from '@ame/shared';
+import {TauriTunnelService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
@@ -67,7 +67,7 @@ describe('LanguageSettingsComponent', () => {
           },
         },
         {provide: TitleService, useValue: {updateTitle: vi.fn()}},
-        {provide: ElectronTunnelService, useValue: {sendTranslationsToElectron: vi.fn()}},
+        {provide: TauriTunnelService, useValue: {sendTranslationsToTauri: vi.fn()}},
         {provide: MaxGraphService, useValue: {formatShapes: vi.fn()}},
         {provide: ModelSaverService, useValue: {enableAutoSave: vi.fn()}},
         {provide: EditorService, useValue: {enableAutoValidation: vi.fn()}},

@@ -47,10 +47,10 @@ Thumbs.db
 
 *.iml
 
-# electron
+# tauri & rust
+**/src-tauri/target
 **/out
 **/.cache
-**/.electron
 **/.files
 lsp
 

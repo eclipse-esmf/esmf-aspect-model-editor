@@ -12,8 +12,6 @@
  */
 
 export * from './app-config.interface';
-export * from './electron-api.model';
-export * from './electron-signals.model';
 export * from './element.model';
 export * from './file-content.model';
 export * from './known-version';
@@ -22,3 +20,5 @@ export * from './notification.model';
 export * from './search-config';
 export * from './settings';
 export * from './startup-options';
+export * from './tauri-api.model';
+export * from './tauri-signals.model';

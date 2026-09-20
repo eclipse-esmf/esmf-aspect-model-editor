@@ -15,19 +15,24 @@ import {Injectable} from '@angular/core';
 
 @Injectable({providedIn: 'root'})
 export class BrowserService {
-  isStartedAsElectronApp() {
-    if (typeof window !== 'undefined' && typeof window.process === 'object' && (<any>window.process).type === 'renderer') {
+  isStartedAsTauriApp() {
+    if (typeof window !== 'undefined') {
+      if ('__TAURI_INTERNALS__' in window || '__TAURI__' in window || window.tauriAPI) {
+        return true;
+      }
+      if (typeof window.process === 'object' && (<any>window.process).type === 'renderer') {
+        return true;
+      }
+    }
+
+    if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.tauriApi) {
       return true;
     }
 
-    if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
-      return true;
-    }
-
-    return typeof navigator === 'object' && navigator.userAgent.indexOf('Electron') >= 0;
+    return typeof navigator === 'object' && navigator.userAgent.indexOf('tauriApi') >= 0;
   }
 
   getAssetBasePath(): string {
-    return this.isStartedAsElectronApp() ? './assets' : '../../../assets';
+    return this.isStartedAsTauriApp() ? './assets' : '../../../assets';
   }
 }

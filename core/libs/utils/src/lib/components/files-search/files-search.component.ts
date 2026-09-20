@@ -13,12 +13,12 @@
 
 import {FileHandlingService, ModelCheckerService, SaveModelDialogService} from '@ame/editor';
 import {
-  ElectronSignals,
-  ElectronSignalsService,
   filesSearchOption,
   ModelSavingTrackerService,
   NotificationsService,
   SearchService,
+  TauriSignals,
+  TauriSignalsService,
 } from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
@@ -41,7 +41,7 @@ import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.comp
   imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, TranslocoDirective],
 })
 export class FilesSearchComponent implements AfterViewInit {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private searchesStateService = inject(SearchesStateService);
   private sidebarStateService = inject(SidebarStateService);
   private matDialog = inject(MatDialog);
@@ -142,7 +142,7 @@ export class FilesSearchComponent implements AfterViewInit {
 
     return this.checkUnsavedChanges().pipe(
       tap(() =>
-        this.electronSignalsService.call('openWindow', {
+        this.tauriSignalsService.call('openWindow', {
           namespace,
           file,
           fromWorkspace: true,

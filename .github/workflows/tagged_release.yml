@@ -184,6 +184,15 @@ jobs:
       - name: Clear pnpm cache
         run: pnpm store prune
 
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Linux build dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
       - name: Install node modules
         run: |
           pnpm install
@@ -192,30 +201,35 @@ jobs:
 
       - name: Set app version (Unix)
         if: matrix.os == 'macos-15-intel' || matrix.os == 'ubuntu-latest'
-        run: pnpm version ${{ env.RELEASE_VERSION }} --no-git-checks --no-git-tag-version
+        run: |
+          pnpm version ${{ env.RELEASE_VERSION }} --no-git-checks --no-git-tag-version
+          node -e "const p='src-tauri/tauri.conf.json'; const c=require('./'+p); c.version='${{ env.RELEASE_VERSION }}'; require('fs').writeFileSync(p, JSON.stringify(c, null, 2));"
         working-directory: core
 
       - name: Set app version (Windows)
         if: matrix.os == 'windows-latest'
-        run: pnpm version ${{ env.RELEASE_VERSION }} --no-git-checks --no-git-tag-version
+        run: |
+          pnpm version ${{ env.RELEASE_VERSION }} --no-git-checks --no-git-tag-version
+          node -e "const p='src-tauri/tauri.conf.json'; const c=require('./'+p); c.version='${{ env.RELEASE_VERSION }}'; require('fs').writeFileSync(p, JSON.stringify(c, null, 2));"
         working-directory: core
 
-      - name: Build electron app (Mac)
+      - name: Build desktop app
+        run: pnpm run build:desktop
+        working-directory: core
+
+      - name: Package Mac binary
         if: matrix.os == 'macos-15-intel'
-        run: pnpm run build:mac:prod
-        working-directory: core
+        run: |
+          mkdir -p release-artifacts
+          cd core/src-tauri/target/release/bundle/macos
+          zip -r ../../../../../release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip "Aspect Model Editor.app"
 
-      - name: Build electron app (Linux)
+      - name: Package Linux binary
         if: matrix.os == 'ubuntu-latest'
         run: |
-          pnpm run build:linux:prod
-          mv .electron/aspect-model-editor-v${RELEASE_VERSION}-linux.tar.gz .electron/aspect-model-editor-v${RELEASE_VERSION}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
-        working-directory: core
-
-      - name: Build electron app (Windows)
-        if: matrix.os == 'windows-latest'
-        run: pnpm run build:win:prod
-        working-directory: core
+          mkdir -p release-artifacts
+          cd core/src-tauri/target/release
+          tar -czvf ../../../../release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz app
 
       - name: Install NSIS on Windows
         if: matrix.os == 'windows-latest'
@@ -240,14 +254,14 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac
-          path: core/.electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip
+          path: release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip
 
       - name: Upload binary (Linux)
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
         with:
           name: aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux
-          path: core/.electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+          path: release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
 
       # Release Linux executables
       - name: Create GitHub release (Linux)
@@ -257,7 +271,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/.electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+          file: release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
           tag: v${{ env.RELEASE_VERSION }}
 
       - name: Create GitHub pre-release (Linux)
@@ -267,7 +281,7 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/.electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
+          file: release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-linux-glibc-v${{ env.GLIBC_VERSION }}.tar.gz
           tag: v${{ env.RELEASE_VERSION }}
 
       # Release Mac executables
@@ -278,7 +292,7 @@ jobs:
           overwrite: true
           prerelease: false
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/.electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip
+          file: release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip
           tag: v${{ env.RELEASE_VERSION }}
 
       - name: Create GitHub pre-release (Mac)
@@ -288,7 +302,7 @@ jobs:
           overwrite: true
           prerelease: true
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: core/.electron/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip
+          file: release-artifacts/aspect-model-editor-v${{ env.RELEASE_VERSION }}-mac.zip
           tag: v${{ env.RELEASE_VERSION }}
 
   release:

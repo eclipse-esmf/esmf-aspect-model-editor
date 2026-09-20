@@ -16,6 +16,17 @@ import {Title} from '@angular/platform-browser';
 
 @Injectable({providedIn: 'root'})
 export class TitleService extends Title {
+  override setTitle(newTitle: string): void {
+    super.setTitle(newTitle);
+    if (typeof window !== 'undefined' && ('__TAURI_INTERNALS__' in window || '__TAURI__' in window || (window as any).tauriApi)) {
+      import('@tauri-apps/api/core')
+        .then(({invoke}) => {
+          invoke('set_window_title', {title: newTitle});
+        })
+        .catch(() => {});
+    }
+  }
+
   updateTitle(absoluteName: string) {
     if (!absoluteName) {
       return;

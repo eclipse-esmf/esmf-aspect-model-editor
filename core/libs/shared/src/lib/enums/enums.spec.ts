@@ -12,7 +12,7 @@
  */
 
 import {describe, expect, it} from 'vitest';
-import {AssetsPath, ELECTRON_EVENTS, NotificationType, SaveValidateErrorsCodes, ValidateStatus} from './index';
+import {AssetsPath, NotificationType, SaveValidateErrorsCodes, TAURI_EVENTS, ValidateStatus} from './index';
 
 describe('Shared Enums', () => {
   it('should define AssetsPath values', () => {
@@ -22,13 +22,13 @@ describe('Shared Enums', () => {
     expect(AssetsPath.OpenIcon).toBe('config/editor/img/jump-to-element.svg');
   });
 
-  it('should define ELECTRON_EVENTS request, response, and signal events', () => {
-    expect(ELECTRON_EVENTS.REQUEST.CREATE_WINDOW).toBe('CREATE_WINDOW');
-    expect(ELECTRON_EVENTS.REQUEST.CLOSE_WINDOW).toBe('CLOSE_WINDOW');
-    expect(ELECTRON_EVENTS.RESPONSE.IS_FIRST_WINDOW).toBe('IS_FIRST_WINDOW');
-    expect(ELECTRON_EVENTS.SIGNAL.LOAD_FILE).toBe('LOAD_FILE');
-    expect(ELECTRON_EVENTS.SIGNAL.SAVE_TO_WORKSPACE).toBe('SAVE_TO_WORKSPACE');
-    expect(ELECTRON_EVENTS.SIGNAL.ZOOM_IN).toBe('ZOOM_IN');
+  it('should define TAURI_EVENTS request, response, and signal events', () => {
+    expect(TAURI_EVENTS.REQUEST.CREATE_WINDOW).toBe('CREATE_WINDOW');
+    expect(TAURI_EVENTS.REQUEST.CLOSE_WINDOW).toBe('CLOSE_WINDOW');
+    expect(TAURI_EVENTS.RESPONSE.IS_FIRST_WINDOW).toBe('IS_FIRST_WINDOW');
+    expect(TAURI_EVENTS.SIGNAL.LOAD_FILE).toBe('LOAD_FILE');
+    expect(TAURI_EVENTS.SIGNAL.SAVE_TO_WORKSPACE).toBe('SAVE_TO_WORKSPACE');
+    expect(TAURI_EVENTS.SIGNAL.ZOOM_IN).toBe('ZOOM_IN');
   });
 
   it('should define NotificationType values', () => {

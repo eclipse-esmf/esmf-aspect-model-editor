@@ -66,7 +66,7 @@ describe('GenerateDocumentationComponent', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(BrowserService, {
-          isStartedAsElectronApp: vi.fn(() => false),
+          isStartedAsTauriApp: vi.fn(() => false),
         }),
       ],
     }).compileComponents();

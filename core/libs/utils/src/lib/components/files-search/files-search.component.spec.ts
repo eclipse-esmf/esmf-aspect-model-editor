@@ -24,7 +24,7 @@ vi.mock('@ame/editor', () => ({
 
 import {FileHandlingService, ModelCheckerService, SaveModelDialogService} from '@ame/editor';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
-import {ElectronSignalsService, ModelSavingTrackerService, NotificationsService, SearchService} from '@ame/shared';
+import {ModelSavingTrackerService, NotificationsService, SearchService, TauriSignalsService} from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideHttpClient, withXhr} from '@angular/common/http';
@@ -48,7 +48,7 @@ describe('Files search', () => {
   let fixture: ComponentFixture<FilesSearchComponent>;
   let searchesStateService: SearchesStateService;
   let matDialog: MatDialog;
-  let electronSignalsService: ElectronSignalsService;
+  let tauriSignalsService: TauriSignalsService;
   let notificationService: NotificationsService;
   let sidebarStateService: SidebarStateService;
   let searchService: SearchService;
@@ -121,7 +121,7 @@ describe('Files search', () => {
         MockProvider(ModelSavingTrackerService, {
           isSaved$: of(true),
         }),
-        MockProvider(ElectronSignalsService, {
+        MockProvider(TauriSignalsService, {
           call: vi.fn(),
         }),
         MockProvider(SearchService, {
@@ -158,7 +158,7 @@ describe('Files search', () => {
     component = fixture.componentInstance;
     searchesStateService = TestBed.inject(SearchesStateService);
     matDialog = TestBed.inject(MatDialog);
-    electronSignalsService = TestBed.inject(ElectronSignalsService);
+    tauriSignalsService = TestBed.inject(TauriSignalsService);
     notificationService = TestBed.inject(NotificationsService);
     sidebarStateService = TestBed.inject(SidebarStateService);
     searchService = TestBed.inject(SearchService);
@@ -239,7 +239,7 @@ describe('Files search', () => {
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#SharedModel',
     });
 
-    expect(electronSignalsService.call).toHaveBeenCalledWith('openWindow', {
+    expect(tauriSignalsService.call).toHaveBeenCalledWith('openWindow', {
       namespace: 'org.eclipse.examples:1.0.0',
       file: 'SharedModel.ttl',
       fromWorkspace: true,
@@ -268,7 +268,7 @@ describe('Files search', () => {
     });
 
     expect(notificationService.warning).toHaveBeenCalled();
-    expect(electronSignalsService.call).not.toHaveBeenCalled();
+    expect(tauriSignalsService.call).not.toHaveBeenCalled();
   });
 
   it('should prompt save dialog when model is not saved before loading', () => {

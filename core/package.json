@@ -4,225 +4,29 @@
   "description": "Used to design and edit SAMM specific aspect models.",
   "productName": "Aspect-Model-Editor",
   "version": "0.0.1",
-  "main": "dist/main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/eclipse-esmf/esmf-aspect-model-editor.git"
   },
-  "build": {
-    "appId": "org.eclipse.esmf",
-    "artifactName": "${name}-v${version}-${os}.${ext}",
-    "win": {
-      "target": "zip",
-      "icon": "./apps/ame/src/assets/img/png/aspect-model-editor-targetsize-256.png",
-      "files": [
-        {
-          "from": "dist/electron",
-          "to": "electron",
-          "filter": [
-            "**/*",
-            "!main/**"
-          ]
-        },
-        {
-          "from": "dist",
-          "to": "dist",
-          "filter": [
-            "**/*",
-            "!electron/**"
-          ]
-        },
-        {
-          "from": "dist",
-          "to": ".",
-          "filter": [
-            "main.js",
-            "package.json"
-          ]
-        }
-      ],
-      "extraFiles": [
-        {
-          "from": "../backend/",
-          "to": "backend/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./apps/ame/src/assets/aspect-models/com.examples/1.0.0/",
-          "to": "default-models/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./apps/ame/src/assets/img/png/app-menu/",
-          "to": "app-menu/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./dist/electron/loading-screen/",
-          "to": "loading-screen/",
-          "filter": [
-            "**/*"
-          ]
-        }
-      ]
-    },
-    "mac": {
-      "target": "zip",
-      "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
-      "files": [
-        {
-          "from": "dist/electron",
-          "to": "electron",
-          "filter": [
-            "**/*",
-            "!main/**"
-          ]
-        },
-        {
-          "from": "dist",
-          "to": "dist",
-          "filter": [
-            "**/*",
-            "!electron/**"
-          ]
-        },
-        {
-          "from": "dist",
-          "to": ".",
-          "filter": [
-            "main.js",
-            "package.json"
-          ]
-        }
-      ],
-      "extraFiles": [
-        {
-          "from": "../backend/",
-          "to": "backend/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./apps/ame/src/assets/aspect-models/com.examples/1.0.0/",
-          "to": "default-models/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./apps/ame/src/assets/img/png/app-menu/",
-          "to": "app-menu/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./dist/electron/loading-screen/",
-          "to": "loading-screen/",
-          "filter": [
-            "**/*"
-          ]
-        }
-      ]
-    },
-    "linux": {
-      "target": "tar.gz",
-      "icon": "./apps/ame/src/assets/img/icns/aspect-model-editor-targetsize-192.icns",
-      "files": [
-        {
-          "from": "dist/electron",
-          "to": "electron",
-          "filter": [
-            "**/*",
-            "!main/**"
-          ]
-        },
-        {
-          "from": "dist",
-          "to": "dist",
-          "filter": [
-            "**/*",
-            "!electron/**"
-          ]
-        },
-        {
-          "from": "dist",
-          "to": ".",
-          "filter": [
-            "main.js",
-            "package.json"
-          ]
-        }
-      ],
-      "extraFiles": [
-        {
-          "from": "../backend/",
-          "to": "backend/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./apps/ame/src/assets/aspect-models/com.examples/1.0.0/",
-          "to": "default-models/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./apps/ame/src/assets/img/png/app-menu/",
-          "to": "app-menu/",
-          "filter": [
-            "**/*"
-          ]
-        },
-        {
-          "from": "./dist/electron/loading-screen/",
-          "to": "loading-screen/",
-          "filter": [
-            "**/*"
-          ]
-        }
-      ]
-    },
-    "directories": {
-      "output": "./.electron"
-    }
-  },
   "scripts": {
     "start": "nx serve",
-    "start:electron:mac": "pnpm build:electron && pnpm exec electron . --dev",
-    "start:electron:linux": "pnpm build:electron && pnpm exec electron . --dev",
-    "start:electron:win": "pnpm build:electron && .\\node_modules\\electron\\dist\\electron.exe . --dev",
-    "start:electron:mac:prod": "pnpm build:electron:prod && pnpm exec electron .",
-    "start:electron:linux:prod": "pnpm build:electron:prod && pnpm exec electron .",
-    "start:electron:win:prod": "pnpm build:electron:prod && pnpm exec .\\node_modules\\electron\\dist\\electron.exe .",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "start:desktop": "tauri dev",
+    "start:tauri": "tauri dev",
     "build": "nx build",
     "build:prod": "nx build --configuration=production",
     "build:stats": "nx build --configuration=production --stats-json",
-    "build:electron": "tsc -p tsconfig.electron.json && shx cp -R ./electron/loading-screen ./dist/electron/ && node ./utils/generate-electron-package-json.js",
-    "build:electron:prod": "tsc -p tsconfig.electron.prod.json && pnpm electron:minify && pnpm electron:obfuscate && shx mkdir -p ./dist/electron/loading-screen && shx cp ./electron/loading-screen/*.html ./dist/electron/loading-screen/ && node ./utils/generate-electron-package-json.js",
-    "build:win": "pnpm build:electron && nx build && electron-builder build --win",
-    "build:mac": "pnpm build:electron && nx build && electron-builder build --mac",
-    "build:linux": "pnpm build:electron && nx build && electron-builder build --linux",
-    "build:win:prod": "pnpm build:electron:prod && nx build --configuration=production && electron-builder build --win",
-    "build:mac:prod": "pnpm build:electron:prod && nx build --configuration=production && electron-builder build --mac",
-    "build:linux:prod": "pnpm build:electron:prod && nx build --configuration=production && electron-builder build --linux",
-    "electron:minify": "esbuild dist/electron/**/*.js --minify --platform=node --outdir=dist/electron --legal-comments=none --target=node20 --allow-overwrite",
-    "electron:obfuscate": "javascript-obfuscator \"dist/electron\" --output \"dist/electron\" --compact true --self-defending false",
+    "build:desktop": "tauri build",
+    "build:win": "tauri build --target x86_64-pc-windows-msvc",
+    "build:mac": "tauri build",
+    "build:linux": "tauri build --target x86_64-unknown-linux-gnu",
     "lint": "nx run-many --all --target=lint --exclude=ame-e2e",
     "lint:affected": "nx affected:lint --exclude ame-e2e",
     "lint:uncommitted": "nx affected --target=lint --exclude=ame-e2e --uncommitted",
     "test": "nx run-many --all --target=test",
     "test:coverage": "nx run-many --all --target=test --coverage",
-    "test:electron": "nx test electron",
     "test:aspect-exporter": "nx test aspect-exporter",
     "test:connection": "nx test connection",
     "test:editor": "nx test editor",
@@ -263,12 +67,16 @@
     "@angular/router": "22.1.3",
     "@jsverse/transloco": "^8.4.0",
     "@maxgraph/core": "^0.22.0",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-clipboard-manager": "^2.3.3",
+    "@tauri-apps/plugin-dialog": "^2.7.3",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "@tauri-apps/plugin-shell": "^2.3.6",
     "file-saver": "^2.0.5",
     "fuse.js": "~6.5.3",
     "locale-codes": "^1.3.1",
     "n3": "~2.6.4",
     "ngx-toastr": "^20.0.5",
-    "portfinder": "^1.0.28",
     "rxjs": "7.8.1",
     "tslib": "^2.6.3",
     "typescript-mix": "^3.1.3",
@@ -301,6 +109,7 @@
     "@swc-node/register": "1.12.1",
     "@swc/core": "1.16.1",
     "@swc/helpers": "0.5.23",
+    "@tauri-apps/cli": "^2.11.4",
     "@types/file-saver": "^2.0.5",
     "@types/jsdom": "^30.0.0",
     "@types/n3": "^1.26.3",
@@ -313,8 +122,6 @@
     "cypress": "15.21.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-real-events": "^1.13.0",
-    "electron": "44.1.0",
-    "electron-builder": "^26.15.7",
     "esbuild": "^0.28.1",
     "eslint": "^10.9.1",
     "eslint-config-prettier": "10.1.8",

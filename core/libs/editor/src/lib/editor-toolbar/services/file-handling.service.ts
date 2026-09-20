@@ -19,13 +19,13 @@ import {ModelService, RdfService} from '@ame/rdf/services';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {
-  ElectronSignalsService,
   GeneralConfig,
   LoadingScreenOptions,
   LoadingScreenService,
   ModelSavingTrackerService,
   NotificationsService,
   SaveValidateErrorsCodes,
+  TauriSignalsService,
   TitleService,
 } from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
@@ -87,7 +87,7 @@ export class FileHandlingService {
   private loadingScreenService = inject(LoadingScreenService);
   private sidebarService = inject(SidebarStateService);
   private translate = inject(LanguageTranslationService);
-  private electronSignalsService = inject(ElectronSignalsService);
+  private tauriSignalsService = inject(TauriSignalsService);
   private configurationService = inject(ConfigurationService);
   private modelSaveTracker = inject(ModelSavingTrackerService);
   private fileUploadService = inject(FileUploadService);
@@ -384,7 +384,7 @@ export class FileHandlingService {
 
   addFileToNamespace(fileInfo: FileInfoParsed): Observable<any> {
     return this.addFileToWorkspace(fileInfo.name, fileInfo.content, {showNotifications: true}).pipe(
-      map(() => this.electronSignalsService.call('requestRefreshWorkspaces')),
+      map(() => this.tauriSignalsService.call('requestRefreshWorkspaces')),
     );
   }
 
@@ -672,7 +672,7 @@ export class FileHandlingService {
     this.currentLoadedFile?.resetOriginalUrn();
     this.currentLoadedFile?.setExistsInWorkspace();
 
-    this.electronSignalsService.call('updateWindowInfo', {
+    this.tauriSignalsService.call('updateWindowInfo', {
       namespace: this.currentLoadedFile?.namespace || '',
       fromWorkspace: true,
       file: this.currentLoadedFile?.name,

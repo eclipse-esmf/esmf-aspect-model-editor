@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/cache';
 import {ConfirmDialogEnum, ConfirmDialogService, ShapeSettingsService} from '@ame/editor';
 import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
-import {ElectronSignalsService, SearchService} from '@ame/shared';
+import {SearchService, TauriSignalsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -40,7 +40,7 @@ describe('ElementsSearchComponent', () => {
   let confirmDialogService: ConfirmDialogService;
   let searchService: SearchService;
   let loadedFiles: LoadedFilesService;
-  let electronSignalsService: ElectronSignalsService;
+  let tauriSignalsService: TauriSignalsService;
   let shapeSettingsService: ShapeSettingsService;
 
   beforeEach(async () => {
@@ -92,7 +92,7 @@ describe('ElementsSearchComponent', () => {
             },
           } as any,
         }),
-        MockProvider(ElectronSignalsService, {
+        MockProvider(TauriSignalsService, {
           call: vi.fn(),
         }),
         MockProvider(TranslocoService, {
@@ -115,7 +115,7 @@ describe('ElementsSearchComponent', () => {
     confirmDialogService = TestBed.inject(ConfirmDialogService);
     searchService = TestBed.inject(SearchService);
     loadedFiles = TestBed.inject(LoadedFilesService);
-    electronSignalsService = TestBed.inject(ElectronSignalsService);
+    tauriSignalsService = TestBed.inject(TauriSignalsService);
     shapeSettingsService = TestBed.inject(ShapeSettingsService);
     fixture.detectChanges();
   });
@@ -202,7 +202,7 @@ describe('ElementsSearchComponent', () => {
     component.openElement(aspect);
 
     expect(confirmDialogService.open).toHaveBeenCalled();
-    expect(electronSignalsService.call).toHaveBeenCalledWith('openWindow', {
+    expect(tauriSignalsService.call).toHaveBeenCalledWith('openWindow', {
       file: 'TestFile.ttl',
       namespace: 'org.eclipse.examples:1.0.0',
       editElement: aspect.aspectModelUrn,
@@ -226,6 +226,6 @@ describe('ElementsSearchComponent', () => {
     component.openElement(aspect);
 
     expect(confirmDialogService.open).toHaveBeenCalled();
-    expect(electronSignalsService.call).not.toHaveBeenCalled();
+    expect(tauriSignalsService.call).not.toHaveBeenCalled();
   });
 });

@@ -15,7 +15,7 @@ import {StartupService} from '@ame/app/startup.service';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
 import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/max-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, ElectronTunnelService, IPC_RENDERER, TitleService} from '@ame/shared';
+import {BrowserService, IPC_RENDERER, TauriTunnelService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
 import {provideZonelessChangeDetection} from '@angular/core';
@@ -32,8 +32,8 @@ describe('AppComponent', () => {
   let ipcRenderer: {showContextMenu: ReturnType<typeof vi.fn>};
   let titleService: {setTitle: ReturnType<typeof vi.fn>};
   let domainModelToRdf: {listenForStoreUpdates: ReturnType<typeof vi.fn>};
-  let browserService: {isStartedAsElectronApp: ReturnType<typeof vi.fn>};
-  let electronTunnelService: {subscribeMessages: ReturnType<typeof vi.fn>; sendTranslationsToElectron: ReturnType<typeof vi.fn>};
+  let browserService: {isStartedAsTauriApp: ReturnType<typeof vi.fn>};
+  let tauriTunnelService: {subscribeMessages: ReturnType<typeof vi.fn>; sendTranslationsToTauri: ReturnType<typeof vi.fn>};
   let configurationService: {getSettings: ReturnType<typeof vi.fn>};
   let themeService: {applyTheme: ReturnType<typeof vi.fn>; setCssVars: ReturnType<typeof vi.fn>};
   let langChanges$: BehaviorSubject<string>;
@@ -58,8 +58,8 @@ describe('AppComponent', () => {
     ipcRenderer = {showContextMenu: vi.fn()};
     titleService = {setTitle: vi.fn()};
     domainModelToRdf = {listenForStoreUpdates: vi.fn()};
-    browserService = {isStartedAsElectronApp: vi.fn(() => false)};
-    electronTunnelService = {subscribeMessages: vi.fn(), sendTranslationsToElectron: vi.fn()};
+    browserService = {isStartedAsTauriApp: vi.fn(() => false)};
+    tauriTunnelService = {subscribeMessages: vi.fn(), sendTranslationsToTauri: vi.fn()};
     configurationService = {getSettings: vi.fn(() => ({darkMode: false}))};
     themeService = {applyTheme: vi.fn(), setCssVars: vi.fn()};
     langChanges$ = new BehaviorSubject('en');
@@ -87,7 +87,7 @@ describe('AppComponent', () => {
         {provide: TitleService, useValue: titleService},
         {provide: DomainModelToRdfService, useValue: domainModelToRdf},
         {provide: BrowserService, useValue: browserService},
-        {provide: ElectronTunnelService, useValue: electronTunnelService},
+        {provide: TauriTunnelService, useValue: tauriTunnelService},
         {provide: ConfigurationService, useValue: configurationService},
         {provide: ThemeService, useValue: themeService},
         {provide: LanguageTranslationService, useValue: translate},
@@ -132,25 +132,25 @@ describe('AppComponent', () => {
       expect(translate.initTranslationService).toHaveBeenCalledWith('zh');
     });
 
-    it('should subscribe to electron messages and set the title', () => {
+    it('should subscribe to tauri messages and set the title', () => {
       fixture.detectChanges();
 
-      expect(electronTunnelService.subscribeMessages).toHaveBeenCalled();
+      expect(tauriTunnelService.subscribeMessages).toHaveBeenCalled();
       expect(titleService.setTitle).toHaveBeenCalledWith(component.title);
     });
 
-    it('should send translations to electron and set the context menu when started as an electron app', () => {
-      browserService.isStartedAsElectronApp.mockReturnValue(true);
+    it('should send translations to tauri and set the context menu when started as an tauri app', () => {
+      browserService.isStartedAsTauriApp.mockReturnValue(true);
 
       fixture.detectChanges();
 
-      expect(electronTunnelService.sendTranslationsToElectron).toHaveBeenCalledWith('en');
+      expect(tauriTunnelService.sendTranslationsToTauri).toHaveBeenCalledWith('en');
     });
 
-    it('should not send translations to electron when not started as an electron app', () => {
+    it('should not send translations to tauri when not started as an tauri app', () => {
       fixture.detectChanges();
 
-      expect(electronTunnelService.sendTranslationsToElectron).not.toHaveBeenCalled();
+      expect(tauriTunnelService.sendTranslationsToTauri).not.toHaveBeenCalled();
     });
 
     it('should apply the light theme when dark mode is disabled', () => {

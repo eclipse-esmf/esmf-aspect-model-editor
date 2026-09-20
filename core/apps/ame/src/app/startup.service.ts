@@ -13,7 +13,7 @@
 
 import {FileHandlingService, ModelLoaderService} from '@ame/editor';
 import {MaxGraphService} from '@ame/max-graph';
-import {ElectronSignalsService, ElectronTunnelService, LoadingScreenService, ModelSavingTrackerService, StartupPayload} from '@ame/shared';
+import {LoadingScreenService, ModelSavingTrackerService, StartupPayload, TauriSignalsService, TauriTunnelService} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {inject, Injectable} from '@angular/core';
@@ -24,8 +24,8 @@ import {filter} from 'rxjs/operators';
 @Injectable({providedIn: 'root'})
 export class StartupService {
   private maxgraphService = inject(MaxGraphService);
-  private electronSignalsService = inject(ElectronSignalsService);
-  private electronTunnelService = inject(ElectronTunnelService);
+  private tauriSignalsService = inject(TauriSignalsService);
+  private tauriTunnelService = inject(TauriTunnelService);
   private modelLoaderService = inject(ModelLoaderService);
   private modelSaveTrackerService = inject(ModelSavingTrackerService);
   private fileHandlingService = inject(FileHandlingService);
@@ -37,7 +37,7 @@ export class StartupService {
   listenForLoading() {
     return this.router.events.pipe(
       filter(ev => ev instanceof NavigationEnd && ev.url.includes('/editor')),
-      switchMap(() => this.electronTunnelService.startUpData$.asObservable()),
+      switchMap(() => this.tauriTunnelService.startUpData$.asObservable()),
       sample(this.maxgraphService.graphInitialized$.pipe(filter(Boolean))),
       switchMap(data =>
         data?.model
@@ -57,7 +57,7 @@ export class StartupService {
       content: this.translate.language.loadingScreenDialog.modelLoadingWait,
     });
 
-    return this.electronSignalsService.call('requestWindowData').pipe(
+    return this.tauriSignalsService.call('requestWindowData').pipe(
       tap(data => {
         options = data.options;
       }),

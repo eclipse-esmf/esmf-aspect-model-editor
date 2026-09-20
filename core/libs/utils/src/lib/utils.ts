@@ -46,8 +46,9 @@ export const readFile = (file: File): Observable<string> => {
  * @param mimeType MIME type to be used (default is 'text/plain')
  * @returns new File instance
  */
-export const createFile = (content: string | BufferSource, fileName: string, mimeType = 'text/plain'): File => {
-  const blob = new Blob([content], {type: mimeType});
+export const createFile = (content: string | BufferSource | number[], fileName: string, mimeType = 'text/plain'): File => {
+  const data = Array.isArray(content) ? new Uint8Array(content) : (content as any);
+  const blob = new Blob([data], {type: mimeType});
   return new File([blob], fileName, {type: mimeType});
 };
 
@@ -58,9 +59,11 @@ export const createFile = (content: string | BufferSource, fileName: string, mim
  * @param encoding is an encoding type to be used while decoding (default is 'utf-8')
  * @returns decoded string
  */
-export const decodeText = (content: BufferSource, encoding = 'utf-8'): string => {
+export const decodeText = (content: BufferSource | number[] | string, encoding = 'utf-8'): string => {
+  if (typeof content === 'string') return content;
+  const data = Array.isArray(content) ? new Uint8Array(content) : (content as BufferSource);
   const decoder = new TextDecoder(encoding);
-  return decoder.decode(content);
+  return decoder.decode(data);
 };
 
 /**

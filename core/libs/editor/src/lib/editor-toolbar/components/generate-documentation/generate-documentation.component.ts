@@ -132,7 +132,7 @@ export class GenerateDocumentationComponent {
       .generateDocumentation(rdfContent, language, this.loadedFiles.currentLoadedFile.rdfModel.getSourceLocation())
       .pipe(
         map((documentation: string) => {
-          if (!this.browserService.isStartedAsElectronApp()) {
+          if (!this.browserService.isStartedAsTauriApp()) {
             return;
           }
 

@@ -12,7 +12,7 @@
  */
 
 import {FileHandlingService, FileInfo, FileTypes, FileUploadService} from '@ame/editor';
-import {ElectronSignalsService} from '@ame/shared';
+import {TauriSignalsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {of} from 'rxjs';
@@ -24,7 +24,7 @@ describe('NamespacesManagerService', () => {
   let service: NamespacesManagerService;
   let matDialog: {open: ReturnType<typeof vi.fn>};
   let fileHandlingService: {importFilesToWorkspace: ReturnType<typeof vi.fn>};
-  let electronSignalsService: {call: ReturnType<typeof vi.fn>};
+  let tauriSignalsService: {call: ReturnType<typeof vi.fn>};
   let fileUploadService: {selectFile: ReturnType<typeof vi.fn>};
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('NamespacesManagerService', () => {
     fileHandlingService = {
       importFilesToWorkspace: vi.fn(() => of([])),
     };
-    electronSignalsService = {
+    tauriSignalsService = {
       call: vi.fn(),
     };
     fileUploadService = {
@@ -46,7 +46,7 @@ describe('NamespacesManagerService', () => {
         NamespacesManagerService,
         {provide: MatDialog, useValue: matDialog},
         {provide: FileHandlingService, useValue: fileHandlingService},
-        {provide: ElectronSignalsService, useValue: electronSignalsService},
+        {provide: TauriSignalsService, useValue: tauriSignalsService},
         {provide: FileUploadService, useValue: fileUploadService},
       ],
     });
@@ -112,7 +112,7 @@ describe('NamespacesManagerService', () => {
 
       expect(resolveSpy).toHaveBeenCalledWith(fileInfo);
       expect(importSpy).toHaveBeenCalledWith(zipFile);
-      expect(electronSignalsService.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
+      expect(tauriSignalsService.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
     });
 
     it('should resolve file from file upload when fileInfo is omitted, import and refresh workspace', () => {
@@ -124,7 +124,7 @@ describe('NamespacesManagerService', () => {
 
       expect(resolveSpy).toHaveBeenCalledWith(undefined);
       expect(importSpy).toHaveBeenCalledWith(zipFile);
-      expect(electronSignalsService.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
+      expect(tauriSignalsService.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
     });
   });
 

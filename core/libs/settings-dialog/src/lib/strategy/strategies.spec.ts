@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/cache';
 import {EditorService, ModelSaverService} from '@ame/editor';
 import {MaxGraphService, ThemeService} from '@ame/max-graph';
-import {ElectronTunnelService, TitleService} from '@ame/shared';
+import {TauriTunnelService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -153,28 +153,28 @@ describe('Settings Update Strategies', () => {
   describe('LanguageConfigurationUpdateStrategy', () => {
     let strategy: LanguageConfigurationUpdateStrategy;
     let translate: {translateService: {setActiveLang: ReturnType<typeof vi.fn>}};
-    let electronTunnelService: {sendTranslationsToElectron: ReturnType<typeof vi.fn>};
+    let tauriTunnelService: {sendTranslationsToTauri: ReturnType<typeof vi.fn>};
 
     beforeEach(() => {
       translate = {translateService: {setActiveLang: vi.fn()}};
-      electronTunnelService = {sendTranslationsToElectron: vi.fn()};
+      tauriTunnelService = {sendTranslationsToTauri: vi.fn()};
 
       TestBed.configureTestingModule({
         providers: [
           LanguageConfigurationUpdateStrategy,
           {provide: LanguageTranslationService, useValue: translate},
-          {provide: ElectronTunnelService, useValue: electronTunnelService},
+          {provide: TauriTunnelService, useValue: tauriTunnelService},
         ],
       });
 
       strategy = TestBed.inject(LanguageConfigurationUpdateStrategy);
     });
 
-    it('should update active language, electron tunnel, and aspectModelLanguages', () => {
+    it('should update active language, tauri tunnel, and aspectModelLanguages', () => {
       strategy.updateSettings(mockFormData, initialSettings);
 
       expect(translate.translateService.setActiveLang).toHaveBeenCalledWith('de');
-      expect(electronTunnelService.sendTranslationsToElectron).toHaveBeenCalledWith('de');
+      expect(tauriTunnelService.sendTranslationsToTauri).toHaveBeenCalledWith('de');
       expect(localStorage.getItem('applicationLanguage')).toBe('de');
       expect(initialSettings.aspectModelLanguages).toEqual(['de', 'en']);
     });

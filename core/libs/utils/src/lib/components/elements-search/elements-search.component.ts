@@ -15,14 +15,14 @@ import {LoadedFilesService} from '@ame/cache';
 import {ConfirmDialogEnum, ConfirmDialogService, ShapeSettingsService} from '@ame/editor';
 import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {
-  ElectronSignals,
-  ElectronSignalsService,
   ElementIconComponent,
   ElementInfo,
   ElementType,
   mxCellSearchOption,
   sammElements,
   SearchService,
+  TauriSignals,
+  TauriSignalsService,
 } from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {AfterViewInit, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
@@ -43,7 +43,7 @@ import {SearchesStateService} from '../../search-state.service';
   imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, ElementIconComponent, TranslocoDirective],
 })
 export class ElementsSearchComponent implements AfterViewInit {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
   private searchesStateService = inject(SearchesStateService);
@@ -95,7 +95,7 @@ export class ElementsSearchComponent implements AfterViewInit {
         })
         .subscribe(confirm => {
           if (confirm !== ConfirmDialogEnum.cancel) {
-            this.electronSignalsService.call('openWindow', {
+            this.tauriSignalsService.call('openWindow', {
               file: this.loadedFiles.getFileFromElement(element),
               namespace: element.aspectModelUrn.replace('urn:samm:', '').split('#')[0],
               editElement: element.aspectModelUrn,

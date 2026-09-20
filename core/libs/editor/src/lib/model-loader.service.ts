@@ -16,7 +16,7 @@ import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {InstantiatorService} from '@ame/instantiator';
 import {RdfModelUtil} from '@ame/rdf/utils';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, config, ElectronSignalsService, ModelSavingTrackerService, NotificationsService, TitleService} from '@ame/shared';
+import {BrowserService, config, ModelSavingTrackerService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {isVersionOutdated} from '@ame/utils';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -44,7 +44,7 @@ export class ModelLoaderService {
   private modelRenderer = inject(ModelRendererService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);
-  private electronSignalsService = inject(ElectronSignalsService);
+  private tauriSignalsService = inject(TauriSignalsService);
   private configurationService = inject(ConfigurationService);
   private titleService = inject(TitleService);
 
@@ -72,9 +72,9 @@ export class ModelLoaderService {
       switchMap(() => this.modelRenderer.renderModel(payload.editElementUrn)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
-        if (this.browserService.isStartedAsElectronApp()) {
+        if (this.browserService.isStartedAsTauriApp()) {
           const currentFile = this.loadedFilesService.currentLoadedFile;
-          this.electronSignalsService.call('updateWindowInfo', {
+          this.tauriSignalsService.call('updateWindowInfo', {
             namespace: currentFile.namespace,
             fromWorkspace: payload.fromWorkspace,
             file: currentFile.name,

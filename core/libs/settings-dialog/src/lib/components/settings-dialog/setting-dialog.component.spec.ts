@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/cache';
 import {EditorService, ModelSaverService} from '@ame/editor';
 import {MaxGraphService, ShapeLanguageRemover} from '@ame/max-graph';
-import {AlertService, ElectronTunnelService, LoadingScreenService, TitleService} from '@ame/shared';
+import {AlertService, LoadingScreenService, TauriTunnelService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -124,7 +124,7 @@ describe('SettingDialogComponent', () => {
           },
         },
         {provide: TitleService, useValue: {updateTitle: vi.fn()}},
-        {provide: ElectronTunnelService, useValue: {sendTranslationsToElectron: vi.fn()}},
+        {provide: TauriTunnelService, useValue: {sendTranslationsToTauri: vi.fn()}},
         {provide: ModelSaverService, useValue: {enableAutoSave: vi.fn()}},
         {provide: EditorService, useValue: {enableAutoValidation: vi.fn()}},
       ],

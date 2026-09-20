@@ -15,7 +15,7 @@ import {StartupService} from '@ame/app/startup.service';
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
 import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/max-graph';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, ElectronTunnelService, IPC_RENDERER, TitleService} from '@ame/shared';
+import {BindingsService, BrowserService, IPC_RENDERER, TauriTunnelService, TitleService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {SearchesStateService} from '@ame/utils';
 import {Component, inject, Injector, OnInit, signal} from '@angular/core';
@@ -29,6 +29,12 @@ import {take} from 'rxjs';
     '(window:keydown.control.f)': 'openSearchElements()',
     '(window:keydown.control.p)': 'openFilesElements()',
     '(window:keydown.escape)': 'closeSearchModals()',
+    '(window:keydown.backspace)': 'onDeleteKey($event)',
+    '(window:keydown.delete)': 'onDeleteKey($event)',
+    '(window:keydown.f5)': '$event.preventDefault()',
+    '(window:keydown.control.r)': '$event.preventDefault()',
+    '(window:keydown.meta.r)': '$event.preventDefault()',
+    '(document:submit)': '$event.preventDefault()',
   },
   templateUrl: './app.component.html',
   imports: [RouterOutlet],
@@ -36,9 +42,10 @@ import {take} from 'rxjs';
 export class AppComponent implements OnInit {
   private ipcRenderer = inject(IPC_RENDERER);
   private titleService = inject(TitleService);
+  private bindingsService = inject(BindingsService);
   private domainModelToRdf = inject(DomainModelToRdfService);
   private browserService = inject(BrowserService);
-  private electronTunnelService = inject(ElectronTunnelService);
+  private tauriTunnelService = inject(TauriTunnelService);
   private configurationService = inject(ConfigurationService);
   private themeService = inject(ThemeService);
   private translate = inject(LanguageTranslationService);
@@ -62,11 +69,11 @@ export class AppComponent implements OnInit {
     this.language.set(this.getApplicationLanguage());
     this.translate.initTranslationService(this.language());
 
-    this.electronTunnelService.subscribeMessages();
+    this.tauriTunnelService.subscribeMessages();
     this.titleService.setTitle(this.title);
 
-    if (this.browserService.isStartedAsElectronApp()) {
-      this.electronTunnelService.sendTranslationsToElectron(this.currentLanguage());
+    if (this.browserService.isStartedAsTauriApp()) {
+      this.tauriTunnelService.sendTranslationsToTauri(this.currentLanguage());
       this.setContextMenu();
     }
 
@@ -78,6 +85,20 @@ export class AppComponent implements OnInit {
     }
 
     this.startupService.listenForLoading().pipe(take(1)).subscribe();
+  }
+
+  onDeleteKey(event: Event): void {
+    const target = event.target as HTMLElement;
+    const isEditable =
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target?.isContentEditable ||
+      target?.getAttribute('contenteditable') === 'true';
+
+    if (!isEditable) {
+      event.preventDefault();
+      this.bindingsService.fireAction('deleteElement');
+    }
   }
 
   openSearchElements(): void {

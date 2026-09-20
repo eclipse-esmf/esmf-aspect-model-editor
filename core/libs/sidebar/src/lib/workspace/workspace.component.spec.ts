@@ -14,7 +14,7 @@
 import {ModelApiService} from '@ame/api';
 import {ConfirmDialogService, FileHandlingService, ModelCheckerService, ModelSaverService} from '@ame/editor';
 import {NamespacesManagerService} from '@ame/namespace-manager';
-import {BrowserService, ElectronSignalsService, IPC_RENDERER, NotificationsService} from '@ame/shared';
+import {BrowserService, IPC_RENDERER, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -69,7 +69,7 @@ describe('WorkspaceComponent', () => {
         SidebarStateService,
         {provide: ModelCheckerService, useValue: modelCheckerMock},
         {provide: ModelApiService, useValue: modelApiServiceMock},
-        {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
+        {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
         {provide: ConfirmDialogService, useValue: {open: vi.fn()}},
         {provide: ModelSaverService, useValue: {saveModel: vi.fn()}},
@@ -161,7 +161,7 @@ describe('WorkspaceComponent', () => {
     expect(refreshSpy).toHaveBeenCalled();
   });
 
-  it('should copy storagePath to clipboard using ipcRenderer when in electron app', () => {
+  it('should copy storagePath to clipboard using ipcRenderer when in tauri app', () => {
     const copyToClipboardMock = vi.fn();
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -175,7 +175,7 @@ describe('WorkspaceComponent', () => {
         SidebarStateService,
         {provide: ModelCheckerService, useValue: modelCheckerMock},
         {provide: ModelApiService, useValue: modelApiServiceMock},
-        {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
+        {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
         {provide: ConfirmDialogService, useValue: {open: vi.fn()}},
         {provide: ModelSaverService, useValue: {saveModel: vi.fn()}},
@@ -183,7 +183,7 @@ describe('WorkspaceComponent', () => {
         {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
         {
           provide: BrowserService,
-          useValue: {isStartedAsElectronApp: () => true, getAssetBasePath: () => './assets'},
+          useValue: {isStartedAsTauriApp: () => true, getAssetBasePath: () => './assets'},
         },
         {
           provide: IPC_RENDERER,

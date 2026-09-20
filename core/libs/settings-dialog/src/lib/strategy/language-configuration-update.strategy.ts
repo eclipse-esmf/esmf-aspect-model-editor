@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElectronTunnelService} from '@ame/shared';
+import {TauriTunnelService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';
@@ -20,7 +20,7 @@ import {SettingsUpdateStrategy} from './settings-update.strategy';
 @Injectable({providedIn: 'root'})
 export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrategy {
   private readonly translate = inject(LanguageTranslationService);
-  private readonly electronTunnelService = inject(ElectronTunnelService);
+  private readonly tauriTunnelService = inject(TauriTunnelService);
 
   updateSettings(model: SettingsFormData, settings: Settings): void {
     const languageConfiguration = model?.languageConfiguration;
@@ -28,7 +28,7 @@ export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrate
 
     const userInterfaceLang = languageConfiguration.userInterface;
     this.translate.translateService.setActiveLang(userInterfaceLang);
-    this.electronTunnelService.sendTranslationsToElectron(userInterfaceLang);
+    this.tauriTunnelService.sendTranslationsToTauri(userInterfaceLang);
     localStorage.setItem('applicationLanguage', userInterfaceLang);
 
     settings.aspectModelLanguages = (languageConfiguration.aspectModel || [])

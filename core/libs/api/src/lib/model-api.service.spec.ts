@@ -46,7 +46,7 @@ const packageUrl = 'http://localhost:9090/ame/api/package';
 describe('ModelApiService', () => {
   let service: ModelApiService;
   let httpMock: HttpTestingController;
-  let browserService: {isStartedAsElectronApp: ReturnType<typeof vi.fn>};
+  let browserService: {isStartedAsTauriApp: ReturnType<typeof vi.fn>};
   let modelValidatorService: {
     notifyCorrectableErrors: ReturnType<typeof vi.fn>;
     notifyBackendError: ReturnType<typeof vi.fn>;
@@ -73,7 +73,7 @@ describe('ModelApiService', () => {
   };
 
   beforeEach(() => {
-    browserService = {isStartedAsElectronApp: vi.fn(() => false)};
+    browserService = {isStartedAsTauriApp: vi.fn(() => false)};
     modelValidatorService = {
       notifyCorrectableErrors: vi.fn(),
       notifyBackendError: vi.fn(),
@@ -95,7 +95,7 @@ describe('ModelApiService', () => {
   });
 
   describe('constructor', () => {
-    it('should not touch the service url when not running as an electron app', () => {
+    it('should not touch the service url when not running as an tauri app', () => {
       configureTestBed();
 
       let result: {content: string; sourceLocation: string | null};
@@ -108,8 +108,8 @@ describe('ModelApiService', () => {
       expect(result).toEqual({content: 'ttl', sourceLocation: null});
     });
 
-    it('should replace the service url port when running as an electron app', async () => {
-      browserService.isStartedAsElectronApp = vi.fn(() => true);
+    it('should replace the service url port when running as an tauri app', async () => {
+      browserService.isStartedAsTauriApp = vi.fn(() => true);
       configureTestBed();
 
       await Promise.resolve();

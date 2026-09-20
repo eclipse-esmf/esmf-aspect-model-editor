@@ -95,7 +95,7 @@ export class WorkspaceErrorComponent {
   openLink(event: MouseEvent, part: MessagePart): void {
     event.preventDefault();
 
-    if (!part.applicationUrl || !this.browserService.isStartedAsElectronApp()) return;
+    if (!part.applicationUrl || !this.browserService.isStartedAsTauriApp()) return;
 
     // Try opening the file in VSCode first; if VSCode isn't installed on the system,
     // fall back to opening it with the OS default application for that file type.

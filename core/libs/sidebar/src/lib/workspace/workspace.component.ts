@@ -113,7 +113,7 @@ export class WorkspaceComponent {
           const pathToCopy = response?.storagePath || response?.path;
           if (!pathToCopy) return;
 
-          if (this.browserService.isStartedAsElectronApp() && this.ipcRenderer?.copyToClipboard) {
+          if (this.browserService.isStartedAsTauriApp() && this.ipcRenderer?.copyToClipboard) {
             this.ipcRenderer.copyToClipboard(pathToCopy);
           } else if (navigator.clipboard && document.hasFocus()) {
             navigator.clipboard.writeText(pathToCopy).catch(() => this.fallbackCopy(pathToCopy));

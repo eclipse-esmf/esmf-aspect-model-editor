@@ -41,7 +41,7 @@ const config: AppConfig = {
 describe('MigratorApiService', () => {
   let service: MigratorApiService;
   let httpMock: HttpTestingController;
-  let browserService: {isStartedAsElectronApp: ReturnType<typeof vi.fn>};
+  let browserService: {isStartedAsTauriApp: ReturnType<typeof vi.fn>};
   let modelApiService: {fetchAllNamespaceFilesContent: ReturnType<typeof vi.fn>};
   let ipcRenderer: {getBackendPort: ReturnType<typeof vi.fn>};
 
@@ -63,7 +63,7 @@ describe('MigratorApiService', () => {
   };
 
   beforeEach(() => {
-    browserService = {isStartedAsElectronApp: vi.fn(() => false)};
+    browserService = {isStartedAsTauriApp: vi.fn(() => false)};
     modelApiService = {fetchAllNamespaceFilesContent: vi.fn()};
     ipcRenderer = {getBackendPort: vi.fn(() => Promise.resolve('4000'))};
   });
@@ -82,7 +82,7 @@ describe('MigratorApiService', () => {
     expect(service.rdfModelsToMigrate()).toEqual([]);
   });
 
-  it('should not replace the service url port when not started as an electron app', () => {
+  it('should not replace the service url port when not started as an tauri app', () => {
     configureTestBed();
 
     service.createBackup().subscribe();
@@ -92,8 +92,8 @@ describe('MigratorApiService', () => {
     expect(ipcRenderer.getBackendPort).not.toHaveBeenCalled();
   });
 
-  it('should replace the service url port when started as an electron app', async () => {
-    browserService.isStartedAsElectronApp = vi.fn(() => true);
+  it('should replace the service url port when started as an tauri app', async () => {
+    browserService.isStartedAsTauriApp = vi.fn(() => true);
     configureTestBed();
 
     // let the getBackendPort() promise resolve

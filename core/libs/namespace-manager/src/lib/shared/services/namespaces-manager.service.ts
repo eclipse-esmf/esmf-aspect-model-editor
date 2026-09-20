@@ -12,7 +12,7 @@
  */
 
 import {FileHandlingService, FileInfo, FileTypes, FileUploadService} from '@ame/editor';
-import {ElectronSignalsService} from '@ame/shared';
+import {TauriSignalsService} from '@ame/shared';
 import {createFile} from '@ame/utils';
 import {Injectable, inject} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
@@ -25,7 +25,7 @@ import {SelectNamespacesComponent} from '../../namespace-exporter/components';
 export class NamespacesManagerService {
   private readonly matDialog = inject(MatDialog);
   private readonly fileHandlingService = inject(FileHandlingService);
-  private readonly electronSignalsService = inject(ElectronSignalsService);
+  private readonly tauriSignalsService = inject(TauriSignalsService);
   private readonly fileUploadService = inject(FileUploadService);
 
   constructor() {
@@ -37,7 +37,7 @@ export class NamespacesManagerService {
   onImportNamespaces(fileInfo?: FileInfo): void {
     this.resolveNamespacesFile(fileInfo)
       .pipe(switchMap(file => this.importNamespaces(file)))
-      .subscribe(() => this.electronSignalsService.call('requestRefreshWorkspaces'));
+      .subscribe(() => this.tauriSignalsService.call('requestRefreshWorkspaces'));
   }
 
   resolveNamespacesFile(fileInfo?: FileInfo): Observable<File> {

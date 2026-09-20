@@ -113,7 +113,10 @@ Function DirectoryLeave
 FunctionEnd
 
 Function install_AME
-    File /r "..\core\.electron\win-unpacked\*"
+    File /oname=Aspect-Model-Editor.exe "..\core\src-tauri\target\release\app.exe"
+    SetOutPath "$INSTDIR\backend"
+    File /r "..\backend\*"
+    SetOutPath "$INSTDIR"
 
     CreateDirectory "$SMPROGRAMS\ESMF"
 

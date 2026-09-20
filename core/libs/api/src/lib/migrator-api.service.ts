@@ -37,7 +37,7 @@ export class MigratorApiService {
   readonly rdfModelsToMigrate = this._rdfModelsToMigrate.asReadonly();
 
   constructor() {
-    if (this.browserService.isStartedAsElectronApp() && !window.location.search.includes('?e2e=true')) {
+    if (this.browserService.isStartedAsTauriApp() && !window.location.search.includes('?e2e=true')) {
       this.ipcRenderer.getBackendPort().then((port: string) => (this.serviceUrl = this.serviceUrl.replace(this.defaultPort, port)));
     }
   }

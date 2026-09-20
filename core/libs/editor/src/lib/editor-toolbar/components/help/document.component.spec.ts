@@ -37,7 +37,7 @@ describe('DocumentComponent', () => {
         {provide: IPC_RENDERER, useValue: ipcRenderer},
         {provide: APP_CONFIG, useValue: {version: '1.0.0'}},
         MockProvider(BrowserService, {
-          isStartedAsElectronApp: vi.fn(() => true),
+          isStartedAsTauriApp: vi.fn(() => true),
         }),
       ],
     }).compileComponents();
@@ -52,7 +52,7 @@ describe('DocumentComponent', () => {
     expect(component.AMEDocumentationLink()).toBe('https://eclipse-esmf.github.io/ame-guide/introduction.html');
   });
 
-  it('openLink should open external link via ipcRenderer in electron app', () => {
+  it('openLink should open external link via ipcRenderer in tauri app', () => {
     const event = {
       preventDefault: vi.fn(),
       target: {href: 'https://eclipse-esmf.github.io/ame-guide/introduction.html'},

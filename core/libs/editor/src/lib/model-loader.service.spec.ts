@@ -15,7 +15,7 @@ import {ModelApiService} from '@ame/api';
 import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {InstantiatorService} from '@ame/instantiator';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, ElectronSignalsService, ModelSavingTrackerService, NotificationsService, TitleService} from '@ame/shared';
+import {BrowserService, ModelSavingTrackerService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -67,9 +67,9 @@ describe('ModelLoaderService', () => {
           updateSavedModel: vi.fn(),
         }),
         MockProvider(BrowserService, {
-          isStartedAsElectronApp: vi.fn(() => false),
+          isStartedAsTauriApp: vi.fn(() => false),
         }),
-        MockProvider(ElectronSignalsService, {call: vi.fn()}),
+        MockProvider(TauriSignalsService, {call: vi.fn()}),
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(() => ({copyrightHeader: []}) as any),
         }),

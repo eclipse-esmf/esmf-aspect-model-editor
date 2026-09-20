@@ -17,7 +17,7 @@ import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {MaxGraphService} from '@ame/max-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {ElectronSignalsService, LoadingScreenService, ModelSavingTrackerService, NotificationsService, TitleService} from '@ame/shared';
+import {LoadingScreenService, ModelSavingTrackerService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
@@ -88,7 +88,7 @@ describe('FileHandlingService', () => {
           } as any,
           translateService: {translate: vi.fn(() => '')} as any,
         }),
-        MockProvider(ElectronSignalsService, {call: vi.fn()}),
+        MockProvider(TauriSignalsService, {call: vi.fn()}),
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(() => ({copyrightHeader: ['# Header']}) as any),
         }),

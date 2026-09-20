@@ -12,7 +12,7 @@
  */
 
 import {ModelApiService} from '@ame/api';
-import {ElectronSignalsService, ElectronTunnelService, NotificationsService} from '@ame/shared';
+import {NotificationsService, TauriSignalsService, TauriTunnelService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {TranslocoTestingModule} from '@jsverse/transloco';
@@ -25,8 +25,8 @@ describe('LoadingComponent', () => {
   let fixture: ComponentFixture<LoadingComponent>;
 
   let router: {navigate: ReturnType<typeof vi.fn>};
-  let electronSignalsService: {call: ReturnType<typeof vi.fn>};
-  let electronTunnelService: {startUpData$: BehaviorSubject<any>};
+  let tauriSignalsService: {call: ReturnType<typeof vi.fn>};
+  let tauriTunnelService: {startUpData$: BehaviorSubject<any>};
   let modelApiService: {fetchAspectMetaModel: ReturnType<typeof vi.fn>};
   let notificationsService: {error: ReturnType<typeof vi.fn>};
 
@@ -37,7 +37,7 @@ describe('LoadingComponent', () => {
 
   beforeEach(() => {
     router = {navigate: vi.fn(() => Promise.resolve(true))};
-    electronSignalsService = {
+    tauriSignalsService = {
       call: vi.fn((action: string) => {
         if (action === 'isFirstWindow') {
           return of(true);
@@ -48,7 +48,7 @@ describe('LoadingComponent', () => {
         return of(undefined);
       }),
     };
-    electronTunnelService = {startUpData$: new BehaviorSubject<any>(null)};
+    tauriTunnelService = {startUpData$: new BehaviorSubject<any>(null)};
     modelApiService = {fetchAspectMetaModel: vi.fn(() => of({content: '<ttl content>', sourceLocation: null}))};
     notificationsService = {error: vi.fn()};
 
@@ -56,8 +56,8 @@ describe('LoadingComponent', () => {
       imports: [LoadingComponent, TranslocoTestingModule.forRoot({langs: {en: {}}})],
       providers: [
         {provide: Router, useValue: router},
-        {provide: ElectronSignalsService, useValue: electronSignalsService},
-        {provide: ElectronTunnelService, useValue: electronTunnelService},
+        {provide: TauriSignalsService, useValue: tauriSignalsService},
+        {provide: TauriTunnelService, useValue: tauriTunnelService},
         {provide: ModelApiService, useValue: modelApiService},
         {provide: NotificationsService, useValue: notificationsService},
       ],
@@ -73,20 +73,20 @@ describe('LoadingComponent', () => {
     createComponent();
     fixture.detectChanges();
 
-    expect(electronSignalsService.call).toHaveBeenCalledWith('requestMaximizeWindow');
+    expect(tauriSignalsService.call).toHaveBeenCalledWith('requestMaximizeWindow');
   });
 
   it('should push startup data and navigate to the editor when no model is provided', () => {
     createComponent();
     fixture.detectChanges();
 
-    expect(electronTunnelService.startUpData$.value).toEqual({isFirstWindow: true, model: null});
+    expect(tauriTunnelService.startUpData$.value).toEqual({isFirstWindow: true, model: null});
     expect(router.navigate).toHaveBeenCalledWith(['/editor'], {queryParams: {}});
     expect(component.hasError()).toBe(false);
   });
 
   it('should fetch and forward the model content when startup options contain an aspect model urn', () => {
-    electronSignalsService.call = vi.fn((action: string) => {
+    tauriSignalsService.call = vi.fn((action: string) => {
       if (action === 'isFirstWindow') {
         return of(false);
       }
@@ -100,12 +100,12 @@ describe('LoadingComponent', () => {
     fixture.detectChanges();
 
     expect(modelApiService.fetchAspectMetaModel).toHaveBeenCalledWith('urn:samm:example#Aspect');
-    expect(electronTunnelService.startUpData$.value).toEqual({isFirstWindow: false, model: '<ttl content>'});
+    expect(tauriTunnelService.startUpData$.value).toEqual({isFirstWindow: false, model: '<ttl content>'});
     expect(router.navigate).toHaveBeenCalledWith(['/editor'], {queryParams: {}});
   });
 
   it('should set hasError and notify when loading the startup data fails', () => {
-    electronSignalsService.call = vi.fn((action: string) => {
+    tauriSignalsService.call = vi.fn((action: string) => {
       if (action === 'isFirstWindow') {
         return throwError(() => new Error('boom'));
       }
@@ -123,7 +123,7 @@ describe('LoadingComponent', () => {
       expect.objectContaining({title: 'Unable to load the application', message: 'boom'}),
     );
     expect(router.navigate).not.toHaveBeenCalled();
-    expect(electronTunnelService.startUpData$.value).toBeNull();
+    expect(tauriTunnelService.startUpData$.value).toBeNull();
   });
 
   it('loadModelText should return null when no options are provided', () => {
@@ -137,7 +137,7 @@ describe('LoadingComponent', () => {
   });
 
   it('loadModelText should return the fetched model content when options are provided', () => {
-    electronSignalsService.call = vi.fn((action: string) => {
+    tauriSignalsService.call = vi.fn((action: string) => {
       if (action === 'requestWindowData') {
         return of({options: {aspectModelUrn: 'urn:samm:example#Aspect'}});
       }

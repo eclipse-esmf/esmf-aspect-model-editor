@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {ModelApiService} from '@ame/api';
-import {ElectronSignals, ElectronSignalsService, ElectronTunnelService, NotificationsService} from '@ame/shared';
+import {NotificationsService, TauriSignals, TauriSignalsService, TauriTunnelService} from '@ame/shared';
 import {NgOptimizedImage} from '@angular/common';
 import {Component, DestroyRef, OnInit, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -28,18 +28,18 @@ import {map} from 'rxjs/operators';
 export class LoadingComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
-  private readonly electronTunnel = inject(ElectronTunnelService);
+  private readonly tauriTunnelService = inject(TauriTunnelService);
   private readonly modelApiService = inject(ModelApiService);
   private readonly notificationsService = inject(NotificationsService);
-  private readonly electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
 
   /** Whether startup data could not be loaded, used by the template to show an error state instead of the spinner. */
   readonly hasError = signal(false);
 
   ngOnInit(): void {
-    this.electronSignalsService.call('requestMaximizeWindow');
+    this.tauriSignalsService.call('requestMaximizeWindow');
 
-    forkJoin([this.electronSignalsService.call('isFirstWindow'), this.loadModelText()])
+    forkJoin([this.tauriSignalsService.call('isFirstWindow'), this.loadModelText()])
       .pipe(
         take(1),
         catchError(error => {
@@ -59,7 +59,7 @@ export class LoadingComponent implements OnInit {
         }
 
         const [isFirstWindow, model] = result;
-        this.electronTunnel.startUpData$.next({isFirstWindow, model});
+        this.tauriTunnelService.startUpData$.next({isFirstWindow, model});
 
         const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
         this.router.navigate(['/editor'], {queryParams});
@@ -67,7 +67,7 @@ export class LoadingComponent implements OnInit {
   }
 
   loadModelText(): Observable<string | null> {
-    return this.electronSignalsService.call('requestWindowData').pipe(
+    return this.tauriSignalsService.call('requestWindowData').pipe(
       switchMap(data => {
         if (!data?.options) {
           return of(null);

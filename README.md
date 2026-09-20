@@ -7,7 +7,8 @@
 - [Getting started](#getting-started-for-developers)
   - [Setup](#setup)
   - [Install & Run](#install--run)
-  - [Run As Electron](#run-as-electron)
+  - [Run As Desktop (Tauri)](#run-as-desktop-tauri)
+  - [Build Desktop App](#build-desktop-app)
   - [Running E2E (Cypress) Test](#running-e2e-cypress-test)
 - [Documentation](#documentation)
 - [License](#license)
@@ -36,44 +37,51 @@ If you want to run the aspect model editor from repositories, please ensure to c
 
 #### Setup
 
-- Download & Install [Node.js](https://nodejs.org/en/download/)
-- To generate Aspect Model documentation, the installation [GraphViz](https://graphviz.org/download) is required.
+- Download & Install [Node.js](https://nodejs.org/en/download/) (v20+ recommended)
+- Install [Rust & Cargo](https://rustup.rs/) (required for Tauri desktop build):
+  ```bash
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  ```
+- To generate Aspect Model documentation, the installation of [GraphViz](https://graphviz.org/download) is required.
 
 #### First steps into the code: [Code Overview](CODE-OVERVIEW.md)
 
-#### Install & Run
+#### Install & Run (Web only)
 
 ```bash
-# enter the core directory where the package.json is located
+# enter the core directory where package.json is located
 cd core
 
 pnpm install
 pnpm run start
 ```
 
-#### Run As Electron
+#### Run As Desktop (Tauri)
 
-After running `pnpm start` run one of the following commands:
-
-Windows:
+To run the desktop application in development mode (starts both the Angular frontend and the native Tauri window):
 
 ```bash
-pnpm run start:win # DEV
-pnpm run start:win:prod # PROD
+cd core
+
+pnpm run start:desktop
+# or
+pnpm run tauri:dev
 ```
 
-Mac:
+#### Build Desktop App
+
+To build production desktop packages:
 
 ```bash
-pnpm run start:mac # DEV
-pnpm run start:mac:prod # PROD
-```
+cd core
 
-Unix:
+# Current platform
+pnpm run build:desktop
 
-```bash
-pnpm run start:linux # DEV
-pnpm run start:linux:prod # PROD
+# Or platform-specific targets
+pnpm run build:mac     # macOS (.app, .dmg)
+pnpm run build:win     # Windows (.msi, .exe)
+pnpm run build:linux   # Linux (.deb, .AppImage)
 ```
 
 #### Running E2E (Cypress) Test

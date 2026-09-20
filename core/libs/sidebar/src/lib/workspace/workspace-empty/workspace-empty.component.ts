@@ -12,7 +12,7 @@
  */
 
 import {NamespacesManagerService} from '@ame/namespace-manager';
-import {ElectronSignalsService} from '@ame/shared';
+import {TauriSignalsService} from '@ame/shared';
 import {Component, inject, input} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -26,7 +26,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
 })
 export class WorkspaceEmptyComponent {
   private namespacesManagerService = inject(NamespacesManagerService);
-  private electronSignalsService = inject(ElectronSignalsService);
+  private tauriSignalsService = inject(TauriSignalsService);
 
   private file: File | null = null;
 
@@ -35,9 +35,7 @@ export class WorkspaceEmptyComponent {
   onFileInput(files: FileList | null): void {
     if (files) {
       this.file = files.item(0);
-      this.namespacesManagerService
-        .importNamespaces(this.file)
-        .subscribe(() => this.electronSignalsService.call('requestRefreshWorkspaces'));
+      this.namespacesManagerService.importNamespaces(this.file).subscribe(() => this.tauriSignalsService.call('requestRefreshWorkspaces'));
     }
   }
 }

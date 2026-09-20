@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/cache';
 import {EditorService, InformationHandlingService, ModelCheckerService} from '@ame/editor';
 import {MaxGraphService} from '@ame/max-graph';
-import {ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -47,7 +47,7 @@ describe('SidebarComponent', () => {
         {provide: LoadedFilesService, useValue: {hasAspect: signal(false), currentLoadedFile: null, getFile: () => null}},
         {provide: EditorService, useValue: {makeDraggable: vi.fn()}},
         {provide: ModelCheckerService, useValue: {detectWorkspaceErrors: () => EMPTY}},
-        {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
+        {provide: TauriSignalsService, useValue: {call: vi.fn()}},
       ],
     });
 
