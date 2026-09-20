@@ -46,8 +46,10 @@
   font-weight: 400;
   color: var(--ame-font, #000000);
   position: relative;
+  pointer-events: none;
 
   .element-name {
+    pointer-events: auto;
     align-self: center;
     text-align: center;
     text-overflow: ellipsis;
@@ -73,7 +75,12 @@
     }
   }
 
+  .icons-bar > * {
+    pointer-events: auto;
+  }
+
   .element-info {
+    pointer-events: auto;
     display: block;
     align-self: flex-start;
     width: 100%;
