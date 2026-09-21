@@ -24,7 +24,7 @@ test.describe('Generation - OpenAPI, AsyncAPI & Documentation', () => {
 
   test('should trigger generation options from toolbar or menu', async ({page}) => {
     // Check toolbar elements for documentation/generation
-    const docBtn = page.locator('[data-cy="generate-doc"], [data-cy="tbGenerateButton"], ame-generate-documentation');
+    const docBtn = page.locator('[data-testid="generate-doc"], [data-testid="tbGenerateButton"], ame-generate-documentation');
     if (await docBtn.first().isVisible()) {
       await expect(docBtn.first()).toBeVisible();
     }

@@ -23,13 +23,13 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button (click)="closeAndGiveResult(confirmDialogEnum.cancel)" mat-flat-button data-cy="cancelBtn">{{ data.closeButtonText }}</button>
+  <button (click)="closeAndGiveResult(confirmDialogEnum.cancel)" mat-flat-button data-testid="cancelBtn">{{ data.closeButtonText }}</button>
   @if (data.actionButtonText) {
-    <button (click)="closeAndGiveResult(confirmDialogEnum.action)" mat-flat-button data-cy="actionBtn">
+    <button (click)="closeAndGiveResult(confirmDialogEnum.action)" mat-flat-button data-testid="actionBtn">
       {{ data.actionButtonText }}
     </button>
   }
-  <button (click)="closeAndGiveResult(confirmDialogEnum.ok)" mat-flat-button color="primary" data-cy="okBtn">
+  <button (click)="closeAndGiveResult(confirmDialogEnum.ok)" mat-flat-button color="primary" data-testid="okBtn">
     {{ data.okButtonText }}
   </button>
 </mat-dialog-actions>

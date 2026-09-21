@@ -21,7 +21,7 @@
         [matTooltip]="t('sidebar.workspace.copyWorkspacePath')"
         (click)="copyWorkspacePath()"
         mat-mini-fab
-        data-cy="workspaceCopyPathButton"
+        data-testid="workspaceCopyPathButton"
       >
         <mat-icon>content_copy</mat-icon>
       </button>
@@ -34,13 +34,13 @@
         [disabled]="loading()"
         (click)="refreshWorkspace()"
         mat-mini-fab
-        data-cy="workspaceRefreshButton"
+        data-testid="workspaceRefreshButton"
       >
         <mat-icon>refresh</mat-icon>
       </button>
     </div>
 
-    <button (click)="sidebarService.workspace.close()" mat-mini-fab data-cy="sidebar-close">
+    <button (click)="sidebarService.workspace.close()" mat-mini-fab data-testid="sidebar-close">
       <mat-icon>close</mat-icon>
     </button>
   </div>

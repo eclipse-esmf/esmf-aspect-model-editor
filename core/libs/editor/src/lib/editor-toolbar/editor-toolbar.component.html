@@ -39,7 +39,7 @@
         [disabled]="isModelEmpty() || selectedCells()?.length === 0"
         [matTooltip]="t('toolbar.delete')"
         (itemClick)="onDelete()"
-        data-cy="tbDeleteButton"
+        data-testid="tbDeleteButton"
       >
         <mat-icon class="material-icons">delete</mat-icon>
       </ame-bar-item>
@@ -50,7 +50,7 @@
         [disabled]="isModelEmpty() || selectedCells()?.length !== 2"
         [matTooltip]="t('toolbar.connect')"
         (itemClick)="onConnect()"
-        data-cy="tbConnectButton"
+        data-testid="tbConnectButton"
       >
         <mat-icon class="material-icons">commit</mat-icon>
       </ame-bar-item>
@@ -62,7 +62,7 @@
           [disabled]="isModelEmpty()"
           [matTooltip]="t('toolbar.collapseAll')"
           (itemClick)="onToggleExpand()"
-          data-cy="collapseExpandToggle"
+          data-testid="collapseExpandToggle"
         >
           <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
         </ame-bar-item>
@@ -73,7 +73,7 @@
           [disabled]="isModelEmpty()"
           [matTooltip]="t('toolbar.expandAll')"
           (itemClick)="onToggleExpand()"
-          data-cy="collapseExpandToggle"
+          data-testid="collapseExpandToggle"
         >
           <mat-icon class="material-icons rotate-45 editor-icon-active">unfold_more</mat-icon>
         </ame-bar-item>
@@ -85,7 +85,7 @@
         [disabled]="isModelEmpty()"
         [matTooltip]="t('toolbar.format')"
         (itemClick)="onFormat()"
-        data-cy="formatButton"
+        data-testid="formatButton"
       >
         <mat-icon class="material-icons rotate-90">schema</mat-icon>
       </ame-bar-item>
@@ -96,7 +96,7 @@
         [disabled]="isModelEmpty()"
         [matTooltip]="t('toolbar.validate')"
         (itemClick)="validateFile()"
-        data-cy="tbValidateButton"
+        data-testid="tbValidateButton"
       >
         <mat-icon class="material-icons">task</mat-icon>
       </ame-bar-item>

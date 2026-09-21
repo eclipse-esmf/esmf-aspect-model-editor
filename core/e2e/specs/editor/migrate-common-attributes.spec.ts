@@ -43,7 +43,7 @@ test.describe('Test migration of common attributes on Constraint/Characteristic 
     // Change to Code
     await helper.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Code"]').click();
+    await page.locator('mat-option[data-testid="Code"]').click();
     await helper.clickSaveButton();
 
     rdf = await helper.getUpdatedRDF();
@@ -54,7 +54,7 @@ test.describe('Test migration of common attributes on Constraint/Characteristic 
     // Change to Duration
     await helper.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Duration"]').click();
+    await page.locator('mat-option[data-testid="Duration"]').click();
     await page.locator(FIELD_unit).fill('day');
     await page.locator('mat-optgroup[label="Predefined Units"] mat-option').getByText('day', {exact: true}).click();
     await helper.clickSaveButton();

@@ -13,12 +13,12 @@
   -->
 
   <h2 mat-dialog-title>{{ t('notificationsTableDialog.notifications') }}</h2>
-  <button class="close-button" data-cy="close-notifications" mat-icon-button tabindex="-1" mat-dialog-close>
+  <button class="close-button" data-testid="close-notifications" mat-icon-button tabindex="-1" mat-dialog-close>
     <mat-icon>close</mat-icon>
   </button>
 
   <mat-dialog-content class="table-container">
-    <button (click)="clearAllNotifications()" mat-button color="primary" data-cy="clear-notifications">
+    <button (click)="clearAllNotifications()" mat-button color="primary" data-testid="clear-notifications">
       <span>{{ t('notificationsTableDialog.clearTable') }}</span>
     </button>
 

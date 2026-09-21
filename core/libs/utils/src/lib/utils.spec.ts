@@ -18,7 +18,7 @@ vi.mock('@ame/editor', () => ({
 }));
 
 import {LoadedFilesService} from '@ame/cache';
-import {createTestAspect, createTestCharacteristic, createTestProperty, createTestScalar, createTestTrait} from '@ame/test-helpers';
+import {createTestAspect, createTestCharacteristic, createTestProperty, createTestScalar, createTestTrait} from '@ame/testing';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {lastValueFrom} from 'rxjs';
 import {describe, expect, it} from 'vitest';

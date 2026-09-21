@@ -28,7 +28,7 @@ import {
   createTestTrait as createTrait,
   createTestUnit as createUnit,
   createTestValue as createValue,
-} from '@ame/test-helpers';
+} from '@ame/testing';
 import {describe, expect, it} from 'vitest';
 import {useUpdater} from './element-updater';
 

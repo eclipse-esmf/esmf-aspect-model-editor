@@ -19,10 +19,10 @@
 
 <mat-dialog-actions align="end">
   @if (data.hasLeftButton) {
-    <button (click)="close($event)" mat-button data-cy="alert-left-btn">{{ data.leftButtonText }}</button>
+    <button (click)="close($event)" mat-button data-testid="alert-left-btn">{{ data.leftButtonText }}</button>
   }
   @if (data.hasRightButton) {
-    <button (click)="ok($event)" mat-raised-button color="primary" data-cy="alert-right-btn">
+    <button (click)="ok($event)" mat-raised-button color="primary" data-testid="alert-right-btn">
       {{ data.rightButtonText }}
     </button>
   }

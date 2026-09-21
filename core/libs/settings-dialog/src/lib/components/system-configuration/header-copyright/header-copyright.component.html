@@ -15,7 +15,7 @@
   <div>
     <h3>{{ t('settingsDialog.subNode.copyright') }}</h3>
     <div>
-      <textarea [formField]="form.copyrightHeaderConfiguration.copyright" data-cy="copyright"></textarea>
+      <textarea [formField]="form.copyrightHeaderConfiguration.copyright" data-testid="copyright"></textarea>
       @if (form.copyrightHeaderConfiguration.copyright().invalid()) {
         @for (error of form.copyrightHeaderConfiguration.copyright().errors(); track error) {
           <mat-error>{{ error.message }}</mat-error>

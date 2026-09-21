@@ -25,10 +25,10 @@
     <div class="search">
       <mat-form-field appearance="outline">
         <mat-icon matPrefix>search</mat-icon>
-        <input [placeholder]="t('sidebar.actions.searchElements')" (keyup)="search($event)" matInput data-cy="searchElements" />
+        <input [placeholder]="t('sidebar.actions.searchElements')" (keyup)="search($event)" matInput data-testid="searchElements" />
       </mat-form-field>
 
-      <button class="filter" [matMenuTriggerFor]="filter" mat-mini-fab data-cy="elementsFilterBtn">
+      <button class="filter" [matMenuTriggerFor]="filter" mat-mini-fab data-testid="elementsFilterBtn">
         <mat-icon>filter_list</mat-icon>
       </button>
     </div>
@@ -39,10 +39,10 @@
         <p>{{ t('sidebar.loadingElements') }}</p>
       </div>
     } @else {
-      <div class="elements" data-cy="fileElementsList">
+      <div class="elements" data-testid="fileElementsList">
         @for (key of elementsOrder; track key) {
           @if (searched()[key]?.length && elements()[key]?.displayed) {
-            <div class="elements__section" [class.expanded]="!elements()[key]?.hidden" [attr.data-cy]="'section-' + key">
+            <div class="elements__section" [class.expanded]="!elements()[key]?.hidden" [attr.data-testid]="'section-' + key">
               <div class="elements__header">
                 <h3 class="elements__title">{{ elements()[key]?.plural }} ({{ searched()[key]?.length }})</h3>
                 @if (searched()[key]?.length > 4) {
@@ -92,7 +92,7 @@
             <mat-checkbox
               class="filter-menu-item"
               [checked]="elements()[key]?.displayed"
-              [attr.data-cy]="'filterCheckbox-' + key"
+              [attr.data-testid]="'filterCheckbox-' + key"
               (change)="toggleFilter($event.checked, key)"
               labelPosition="before"
             >

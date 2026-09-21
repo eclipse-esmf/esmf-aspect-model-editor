@@ -19,18 +19,18 @@ export const provideMockObject = <T>(service: T) => {
   }
 
   const object: any = {};
-  for (const key of Object.getOwnPropertyNames(service.prototype)) {
+  for (const key of Object.getOwnPropertyNames((service as any).prototype)) {
     if (key !== 'currentCachedFile' && key !== 'visitorAnnouncer$' && key !== 'graph') {
-      if (!service.prototype[key]) {
+      if (!(service as any).prototype[key]) {
         continue;
       }
 
-      if (typeof service.prototype[key] === 'function') {
+      if (typeof (service as any).prototype[key] === 'function') {
         object[key] = vi.fn();
         continue;
       }
 
-      object[key] = service.prototype[key];
+      object[key] = (service as any).prototype[key];
     }
   }
 

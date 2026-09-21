@@ -26,7 +26,7 @@ test.describe('Test editing Unit', () => {
 
     await helper.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Quantifiable"]').click();
+    await page.locator('mat-option[data-testid="Quantifiable"]').click();
     await page.locator(FIELD_unit).fill('CustomUnit1');
     await page.locator('mat-option').filter({hasText: 'CustomUnit1'}).first().click();
     await page.locator(FIELD_name).clear();
@@ -44,7 +44,7 @@ test.describe('Test editing Unit', () => {
 
     // Change to predefined unit
     await helper.dbClickShape('Quantifiable1');
-    await page.locator('[data-cy=clear-unit-button]').click({force: true});
+    await page.locator('[data-testid=clear-unit-button]').click({force: true});
     await page.locator(FIELD_unit).fill('day');
     await page.locator('mat-optgroup[label="Predefined Units"] mat-option').getByText('day', {exact: true}).click({force: true});
     await helper.clickSaveButton();

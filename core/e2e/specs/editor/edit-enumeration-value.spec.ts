@@ -40,7 +40,7 @@ test.describe('Test editing Value', () => {
 
     await app.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Enumeration"]').click();
+    await page.locator('mat-option[data-testid="Enumeration"]').click();
 
     await page.locator(FIELD_values).click();
     await page.locator('mat-option').filter({hasText: 'Value1'}).first().click();
@@ -58,7 +58,7 @@ test.describe('Test editing Value', () => {
 
     await app.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Enumeration"]').click();
+    await page.locator('mat-option[data-testid="Enumeration"]').click();
 
     await page.locator(FIELD_values).click();
     await page.locator('mat-option').filter({hasText: 'Value1'}).first().click();
@@ -91,7 +91,7 @@ test.describe('Test editing Value', () => {
 
     await app.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Enumeration"]').click();
+    await page.locator('mat-option[data-testid="Enumeration"]').click();
 
     await page.locator(FIELD_values).click();
     await page.locator('mat-option').filter({hasText: 'Value1'}).first().click();

@@ -67,7 +67,7 @@
 
       <div class="shape-settings__actions">
         @if (metaModelDialogService.isSaveButtonEnabled()) {
-          <button (click)="onClose()" type="button" mat-flat-button data-cy="editorCancelButton">
+          <button (click)="onClose()" type="button" mat-flat-button data-testid="editorCancelButton">
             {{ t('editorCanvas.shapeSetting.cancel') }}
           </button>
         }
@@ -77,7 +77,7 @@
             mat-flat-button
             color="primary"
             type="submit"
-            data-cy="editorSaveButton"
+            data-testid="editorSaveButton"
           >
             {{ t('editorCanvas.shapeSetting.save') }}
           </button>

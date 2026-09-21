@@ -30,7 +30,7 @@ test.describe('Generation - Comprehensive Suite', () => {
     const modal = page.locator('mat-dialog-container');
     if (await modal.isVisible()) {
       await expect(modal).toBeVisible();
-      const closeBtn = page.locator('[data-cy="cancelOpenApiButton"], button.close-button, [mat-dialog-close]').first();
+      const closeBtn = page.locator('[data-testid="cancelOpenApiButton"], button.close-button, [mat-dialog-close]').first();
       if (await closeBtn.isVisible()) await closeBtn.click();
     }
   });

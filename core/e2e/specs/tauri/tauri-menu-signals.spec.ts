@@ -84,7 +84,7 @@ test.describe('Tauri Menu & IPC Integration', () => {
     await tauri.emitSignal('LOAD_FROM_TEXT');
     const modal = page.locator('ame-text-model-loader-modal, mat-dialog-container');
     await expect(modal).toBeVisible();
-    await page.locator('[data-cy="cancel-btn"], [data-cy="dialog-cancel-btn"], button:has-text("Cancel")').first().click();
+    await page.locator('[data-testid="cancel-btn"], [data-testid="dialog-cancel-btn"], button:has-text("Cancel")').first().click();
     await expect(modal).not.toBeVisible();
   });
 

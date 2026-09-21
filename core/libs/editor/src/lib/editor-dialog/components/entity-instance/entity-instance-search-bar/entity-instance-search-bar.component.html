@@ -14,7 +14,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>{{ t('entityValue.edit.searchBar') }}</mat-label>
-    <input (input)="sendNewSearchValue($event)" matInput type="search" data-cy="searchEntityValueInputField" />
+    <input (input)="sendNewSearchValue($event)" matInput type="search" data-testid="searchEntityValueInputField" />
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 
@@ -26,7 +26,7 @@
     type="button"
     mat-fab
     color="accent"
-    data-cy="addNewEntityValueButton"
+    data-testid="addNewEntityValueButton"
   >
     <mat-icon>add</mat-icon>
   </button>

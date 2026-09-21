@@ -20,7 +20,7 @@
       (click)="onClose()"
       mat-icon-button
       tabindex="-1"
-      data-cy="settingsModalCloseButton"
+      data-testid="settingsModalCloseButton"
     >
       <mat-icon>close</mat-icon>
     </button>
@@ -82,17 +82,17 @@
 
   <mat-dialog-actions class="dialog-actions" align="end">
     <div>
-      <button (click)="onCancel()" mat-raised-button data-cy="settingsDialogCancelButton">
+      <button (click)="onCancel()" mat-raised-button data-testid="settingsDialogCancelButton">
         {{ t('settingsDialog.cancel') }}
       </button>
     </div>
     <div matTooltip="{{ settingsForm().invalid() ? t('settingsDialog.errorMessage') : '' }}">
-      <button [disabled]="settingsForm().invalid()" (click)="applySettings()" mat-raised-button data-cy="settingsDialogApplyButton">
+      <button [disabled]="settingsForm().invalid()" (click)="applySettings()" mat-raised-button data-testid="settingsDialogApplyButton">
         {{ t('settingsDialog.apply') }}
       </button>
     </div>
     <div matTooltip="{{ settingsForm().invalid() ? t('settingsDialog.errorMessage') : '' }}">
-      <button [disabled]="settingsForm().invalid()" (click)="onOk()" mat-raised-button color="primary" data-cy="settingsDialogOkButton">
+      <button [disabled]="settingsForm().invalid()" (click)="onOk()" mat-raised-button color="primary" data-testid="settingsDialogOkButton">
         {{ t('settingsDialog.ok') }}
       </button>
     </div>

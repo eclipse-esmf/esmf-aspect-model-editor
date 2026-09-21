@@ -39,7 +39,7 @@
       "@ame/shared": ["libs/shared/src/index.ts"],
       "@ame/shared/pipes": ["libs/shared/src/lib/pipes/index.ts"],
       "@ame/sidebar": ["libs/sidebar/src/index.ts"],
-      "@ame/test-helpers": ["test-helpers/index.ts"],
+      "@ame/testing": ["libs/testing/src/index.ts"],
       "@ame/translation": ["libs/translation/src/index.ts"],
       "@ame/utils": ["libs/utils/src/index.ts"],
       "@esmf/aspect-model-loader": ["libs/aspect-model-loader/src/index.ts"]

@@ -76,7 +76,7 @@ test.describe('Test create recursive element', () => {
     // 5. Change characteristic type
     await helper.dbClickShape('NewCharacteristic');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Code"]').click();
+    await page.locator('mat-option[data-testid="Code"]').click();
     await helper.clickSaveButton();
 
     rdf = await helper.getUpdatedRDF();
@@ -86,7 +86,7 @@ test.describe('Test create recursive element', () => {
     // 6. Add constraint to characteristic using trait with recursive properties
     await helper.dbClickShape('NewCharacteristic');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Characteristic"]').click();
+    await page.locator('mat-option[data-testid="Characteristic"]').click();
     await helper.clickSaveButton();
 
     await helper.clickConnectShapes('NewCharacteristic', 'NewEntity');

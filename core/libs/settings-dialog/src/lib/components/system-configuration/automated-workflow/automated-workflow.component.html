@@ -19,7 +19,7 @@
         <div class="setting-item">
           <div class="setting-item__content">
             <div class="setting-item__toggle">
-              <mat-slide-toggle [formField]="form.automatedWorkflow.autoFormatEnabled" data-cy="autoFormatToggle">
+              <mat-slide-toggle [formField]="form.automatedWorkflow.autoFormatEnabled" data-testid="autoFormatToggle">
                 {{ t('settingsDialog.configuration.autoFormatting') }}
               </mat-slide-toggle>
               <mat-icon
@@ -36,13 +36,13 @@
         <div class="setting-item">
           <div class="setting-item__content">
             <div class="setting-item__toggle">
-              <mat-slide-toggle [formField]="form.automatedWorkflow.autoSaveEnabled" data-cy="autoSaveToggle">
+              <mat-slide-toggle [formField]="form.automatedWorkflow.autoSaveEnabled" data-testid="autoSaveToggle">
                 {{ t('settingsDialog.configuration.autoSave') }}
               </mat-slide-toggle>
             </div>
             <mat-form-field class="setting-item__value" appearance="fill" subscriptSizing="dynamic">
               <mat-label for="autoSaveTime">{{ t('settingsDialog.configuration.waitingPeriod') }}</mat-label>
-              <input [formField]="form.automatedWorkflow.saveTimerSeconds" matInput type="number" data-cy="autoSaveTime" />
+              <input [formField]="form.automatedWorkflow.saveTimerSeconds" matInput type="number" data-testid="autoSaveTime" />
               @if (form.automatedWorkflow.saveTimerSeconds().invalid()) {
                 @for (error of form.automatedWorkflow.saveTimerSeconds().errors(); track error) {
                   <mat-error>{{ error.message }}</mat-error>
@@ -55,7 +55,7 @@
         <div class="setting-item">
           <div class="setting-item__content">
             <div class="setting-item__toggle">
-              <mat-slide-toggle [formField]="form.automatedWorkflow.autoValidationEnabled" data-cy="autoValidateToggle">
+              <mat-slide-toggle [formField]="form.automatedWorkflow.autoValidationEnabled" data-testid="autoValidateToggle">
                 {{ t('settingsDialog.configuration.autoValidation') }}
               </mat-slide-toggle>
               <mat-icon
@@ -68,7 +68,7 @@
             </div>
             <mat-form-field class="setting-item__value" appearance="fill" subscriptSizing="dynamic">
               <mat-label for="autoValidateTime">{{ t('settingsDialog.configuration.waitingPeriod') }}</mat-label>
-              <input [formField]="form.automatedWorkflow.validationTimerSeconds" matInput type="number" data-cy="autoValidateTime" />
+              <input [formField]="form.automatedWorkflow.validationTimerSeconds" matInput type="number" data-testid="autoValidateTime" />
               @if (form.automatedWorkflow.validationTimerSeconds().invalid()) {
                 @for (error of form.automatedWorkflow.validationTimerSeconds().errors(); track error) {
                   <mat-error>{{ error.message }}</mat-error>

@@ -20,7 +20,7 @@
   ></ame-entity-instance-search-bar>
 
   @for (complexValue of displayedValues() | entityInstance: searchFilter(); track complexValue.aspectModelUrn) {
-    <mat-expansion-panel class="complex-value-items" [attr.data-cy]="complexValue.name" expanded="true">
+    <mat-expansion-panel class="complex-value-items" [attr.data-testid]="complexValue.name" expanded="true">
       <mat-expansion-panel-header class="complex-value-header">
         <mat-panel-title class="complex-value-bar">
           <span class="value-name">{{ complexValue.name }}</span>
@@ -29,7 +29,7 @@
               <mat-icon
                 [matTooltip]="t('entityValue.view.deleteComplexValue', {name: complexValue.name})"
                 (click)="onDelete(complexValue, $event)"
-                data-cy="remove-entity-value"
+                data-testid="remove-entity-value"
                 >delete
               </mat-icon>
             }

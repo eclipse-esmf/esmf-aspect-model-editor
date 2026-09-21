@@ -17,7 +17,7 @@ import {SettingsDialogSelectors} from '../../support/constants';
 
 test.describe('Test language settings - Copyright Header', () => {
   let app: AppHelper;
-  const copyrightField = '[data-cy="copyright"]';
+  const copyrightField = '[data-testid="copyright"]';
 
   test.beforeEach(async ({page}) => {
     app = new AppHelper(page);

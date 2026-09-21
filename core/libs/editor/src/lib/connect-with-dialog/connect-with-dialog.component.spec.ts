@@ -14,7 +14,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 import {MaxGraphService} from '@ame/max-graph';
-import {provideMockObject} from '@ame/test-helpers';
+import {provideMockObject} from '@ame/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';

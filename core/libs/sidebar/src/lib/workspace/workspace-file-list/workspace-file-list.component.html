@@ -15,7 +15,7 @@
   <div class="search">
     <mat-form-field appearance="outline">
       <mat-icon matPrefix>search</mat-icon>
-      <input [placeholder]="t('sidebar.actions.searchFile')" (keyup)="search($event)" matInput data-cy="workspaceSearchInput" />
+      <input [placeholder]="t('sidebar.actions.searchFile')" (keyup)="search($event)" matInput data-testid="workspaceSearchInput" />
     </mat-form-field>
 
     <button
@@ -24,7 +24,7 @@
       (click)="toggleFold()"
       matTooltipPosition="right"
       mat-mini-fab
-      data-cy="workspaceToggleFold"
+      data-testid="workspaceToggleFold"
     >
       <mat-icon>{{ foldedStatus() ? 'unfold_more' : 'unfold_less' }}</mat-icon>
     </button>
@@ -81,7 +81,7 @@
               (click)="prepare(namespace.key, file); $event.stopPropagation()"
               (keyup.enter)="prepare(namespace.key, file); $event.stopPropagation()"
               mat-mini-fab
-              data-cy="openFileMenu"
+              data-testid="openFileMenu"
               aria-label="Open menu for {{ file.name }}"
               title="Open menu"
             >
@@ -95,24 +95,24 @@
 
   <mat-menu #menu="matMenu">
     @if (menuSelection()) {
-      <button [disabled]="!isOpenable()" (click)="loadInNewWindow()" mat-menu-item data-cy="fileMenuLoadAspectModelButton">
+      <button [disabled]="!isOpenable()" (click)="loadInNewWindow()" mat-menu-item data-testid="fileMenuLoadAspectModelButton">
         {{ t('sidebar.fileMenu.newWindow') }}
       </button>
-      <button [disabled]="isLoadDisabled()" (click)="openFile()" mat-menu-item data-cy="fileMenuLoadAspectModelButton">
+      <button [disabled]="isLoadDisabled()" (click)="openFile()" mat-menu-item data-testid="fileMenuLoadAspectModelButton">
         {{ t('sidebar.fileMenu.openCurrent') }}
       </button>
       <button
         [disabled]="!isOpenable() || !sidebarService.isCurrentFileLoaded()"
         (click)="selectFile(menuSelection().namespace, menuSelection().file)"
         mat-menu-item
-        data-cy="fileMenuFindElements"
+        data-testid="fileMenuFindElements"
       >
         {{ t('sidebar.fileMenu.findElements') }}
       </button>
-      <button (click)="copyNamespace()" mat-menu-item data-cy="fileMenuCopyToClipboardButton">
+      <button (click)="copyNamespace()" mat-menu-item data-testid="fileMenuCopyToClipboardButton">
         {{ t('sidebar.fileMenu.copyFilePath') }}
       </button>
-      <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-cy="fileMenuDeleteButton">
+      <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-testid="fileMenuDeleteButton">
         {{ t('sidebar.fileMenu.delete') }}
       </button>
     }

@@ -31,7 +31,7 @@ test.describe('Editor - Model Validation & Element Search', () => {
   });
 
   test('should search for elements in search palette', async ({page}) => {
-    const searchInput = page.locator('[data-cy="searchElements"], input[placeholder*="Search"]').first();
+    const searchInput = page.locator('[data-testid="searchElements"], input[placeholder*="Search"]').first();
     if (await searchInput.isVisible()) {
       await searchInput.fill('AspectDefault');
     }

@@ -19,7 +19,7 @@ import {readFixture} from '../../../support/drag-drop-utils';
 async function verifyColumnValues(page: any, dataCy: string, expectedKeyValues: Array<{key: string; value: string}>) {
   for (let i = 0; i < expectedKeyValues.length; i++) {
     const item = expectedKeyValues[i];
-    const row = page.locator(`[data-cy="${dataCy}"]`);
+    const row = page.locator(`[data-testid="${dataCy}"]`);
     await expect(row.locator('.cdk-column-key').nth(i)).toContainText(item.key);
     await expect(row.locator('.cdk-column-value').nth(i)).toContainText(item.value);
   }

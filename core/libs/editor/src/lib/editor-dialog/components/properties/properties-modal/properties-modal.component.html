@@ -39,7 +39,7 @@
                 <mat-label for="refines">{{ t('editorCanvas.shapeSetting.propertiesModal.payloadName') }}</mat-label>
                 <input
                   [value]="propertiesModel()[overwritten.property.aspectModelUrn]?.payloadName || ''"
-                  [attr.data-cy]="'property-' + overwritten.property.name + '-payloadName'"
+                  [attr.data-testid]="'property-' + overwritten.property.name + '-payloadName'"
                   [attr.name]="overwritten.property.aspectModelUrn + '.payloadName'"
                   (input)="updatePayloadName(overwritten.property.aspectModelUrn, $any($event.target).value)"
                   matInput
@@ -58,7 +58,7 @@
           @if (!isReadonly() && !(overwritten.disabled || overwritten.inherited)) {
             <mat-checkbox
               [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.optional || false"
-              [attr.data-cy]="'property-' + overwritten.property.name + '-optional'"
+              [attr.data-testid]="'property-' + overwritten.property.name + '-optional'"
               [attr.name]="overwritten.property.aspectModelUrn + '.optional'"
               (change)="updateOptional(overwritten.property.aspectModelUrn, $event.checked)"
             >
@@ -78,7 +78,7 @@
           @if (!isReadonly() && !(overwritten.disabled || overwritten.inherited)) {
             <mat-checkbox
               [checked]="propertiesModel()[overwritten.property.aspectModelUrn]?.notInPayload || false"
-              [attr.data-cy]="'property-' + overwritten.property.name + '-notInPayload'"
+              [attr.data-testid]="'property-' + overwritten.property.name + '-notInPayload'"
               [attr.name]="overwritten.property.aspectModelUrn + '.notInPayload'"
               (change)="updateNotInPayload(overwritten.property.aspectModelUrn, $event.checked)"
             >
@@ -99,10 +99,17 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button (click)="closeModal()" type="button" mat-flat-button data-cy="propertiesCancelButton">
+    <button (click)="closeModal()" type="button" mat-flat-button data-testid="propertiesCancelButton">
       {{ t('editorCanvas.shapeSetting.propertiesModal.cancel') }}
     </button>
-    <button [disabled]="isReadonly()" (click)="saveChanges()" mat-flat-button type="button" color="primary" data-cy="propertiesSaveButton">
+    <button
+      [disabled]="isReadonly()"
+      (click)="saveChanges()"
+      mat-flat-button
+      type="button"
+      color="primary"
+      data-testid="propertiesSaveButton"
+    >
       {{ t('editorCanvas.shapeSetting.propertiesModal.save') }}
     </button>
   </mat-dialog-actions>

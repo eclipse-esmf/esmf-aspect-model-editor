@@ -51,7 +51,7 @@ test.describe('Test enumeration entity instance', () => {
 
     await helper.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Enumeration"]').click();
+    await page.locator('mat-option[data-testid="Enumeration"]').click();
 
     await page.locator(SELECTOR_addEntityValue).click();
     await page.locator(FIELD_entityValueName).fill('ev1');
@@ -91,7 +91,7 @@ test.describe('Test enumeration entity instance', () => {
 
     await helper.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Enumeration"]').click();
+    await page.locator('mat-option[data-testid="Enumeration"]').click();
 
     await page.locator(SELECTOR_addEntityValue).click();
     await page.locator(FIELD_entityValueName).fill('EntityInstance1');
@@ -159,7 +159,7 @@ test.describe('Test enumeration entity instance', () => {
     await helper.clickAddShapePlusIcon('Characteristic1');
     await helper.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Enumeration"]').click();
+    await page.locator('mat-option[data-testid="Enumeration"]').click();
 
     await page.locator(SELECTOR_addEntityValue).click();
     await page.locator(FIELD_entityValueName).fill('FillGapEntityValue');

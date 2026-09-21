@@ -52,7 +52,7 @@ vi.mock('@esmf/aspect-model-loader', () => {
 });
 
 import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {provideMockObject} from '@ame/test-helpers';
+import {provideMockObject} from '@ame/testing';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it} from 'vitest';
 

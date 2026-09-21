@@ -65,7 +65,7 @@ import {
 } from '@ame/connection';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
 import {NotificationsService} from '@ame/shared';
-import {provideMockObject} from '@ame/test-helpers';
+import {provideMockObject} from '@ame/testing';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';

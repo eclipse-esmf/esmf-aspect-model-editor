@@ -24,7 +24,7 @@ test.describe('Export - Namespaces & Language Strings', () => {
   });
 
   test('should open export dialog and list available namespaces', async ({page}) => {
-    const exportBtn = page.locator('[data-cy="exportBtn"], [data-cy="tbExportButton"]').first();
+    const exportBtn = page.locator('[data-testid="exportBtn"], [data-testid="tbExportButton"]').first();
     if (await exportBtn.isVisible()) {
       await exportBtn.click();
       const nsList = page.locator(SELECTOR_enNamespaceList);

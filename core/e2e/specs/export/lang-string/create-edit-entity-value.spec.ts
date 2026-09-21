@@ -34,7 +34,7 @@ import {readFixture} from '../../../support/drag-drop-utils';
 async function verifyColumnValues(page: any, dataCy: string, expectedKeyValues: Array<{key: string; value: string}>) {
   for (let i = 0; i < expectedKeyValues.length; i++) {
     const item = expectedKeyValues[i];
-    const row = page.locator(`[data-cy="${dataCy}"]`);
+    const row = page.locator(`[data-testid="${dataCy}"]`);
     await expect(row.locator('.cdk-column-key').nth(i)).toContainText(item.key);
     await expect(row.locator('.cdk-column-value').nth(i)).toContainText(item.value);
   }
@@ -62,7 +62,7 @@ test.describe('Create and edit Entity value RDF lang string properties in edit v
     await helper.clickAddShapePlusIcon('Characteristic2');
 
     await helper.dbClickShape('Characteristic4');
-    await page.locator('button[data-cy="clear-dataType-button"]').click({force: true});
+    await page.locator('button[data-testid="clear-dataType-button"]').click({force: true});
     await page.locator(FIELD_dataType).fill('langString');
     await page.locator(FIELD_dataTypeOption).nth(0).click();
     await helper.clickSaveButton();

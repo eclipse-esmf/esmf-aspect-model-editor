@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {provideMockObject} from '@ame/test-helpers';
+import {provideMockObject} from '@ame/testing';
 import {LanguageTranslationService} from '@ame/translation';
 import {CommonModule} from '@angular/common';
 import {NO_ERRORS_SCHEMA} from '@angular/core';

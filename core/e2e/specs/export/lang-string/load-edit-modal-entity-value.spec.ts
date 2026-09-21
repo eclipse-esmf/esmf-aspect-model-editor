@@ -38,7 +38,7 @@ async function setLanguage(page: Page, inputLocator: Locator, lang: string) {
 async function verifyColumnValues(page: any, dataCy: string, expectedKeyValues: Array<{key: string; value: string}>) {
   for (let i = 0; i < expectedKeyValues.length; i++) {
     const item = expectedKeyValues[i];
-    const row = page.locator(`[data-cy="${dataCy}"]`);
+    const row = page.locator(`[data-testid="${dataCy}"]`);
     await expect(row.locator('.cdk-column-key').nth(i)).toContainText(item.key);
     await expect(row.locator('.cdk-column-value').nth(i)).toContainText(item.value);
   }
@@ -60,17 +60,17 @@ test.describe('Loading and edit Entity value RDF lang string properties on modal
 
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(0), 'de');
 
-    await page.locator('[data-cy="modeDescriptionAdd"]').click();
+    await page.locator('[data-testid="modeDescriptionAdd"]').click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(4);
     await page.locator(FIELD_propertyValueNotComplex).nth(2).fill('DescriptionTwo');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(1), 'en');
 
-    await page.locator('[data-cy="modeDescriptionAdd"]').click();
+    await page.locator('[data-testid="modeDescriptionAdd"]').click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(5);
     await page.locator(FIELD_propertyValueNotComplex).nth(3).fill('DescriptionThree');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(2), 'en');
 
-    await page.locator('[data-cy="modeDescriptionRemove"]').nth(0).click();
+    await page.locator('[data-testid="modeDescriptionRemove"]').nth(0).click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(4);
     await page.locator(FIELD_propertyValueNotComplex).nth(3).fill('Value');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(2), 'en');
@@ -133,32 +133,32 @@ test.describe('Loading and edit Entity value RDF lang string properties on modal
 
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(0), 'de');
 
-    await page.locator('[data-cy="modeDescriptionAdd"]').click();
+    await page.locator('[data-testid="modeDescriptionAdd"]').click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(4);
     await page.locator(FIELD_propertyValueNotComplex).nth(2).fill('DescriptionTwo');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(1), 'en');
 
-    await page.locator('[data-cy="modeDescriptionAdd"]').click();
+    await page.locator('[data-testid="modeDescriptionAdd"]').click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(5);
     await page.locator(FIELD_propertyValueNotComplex).nth(3).fill('DescriptionThree');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(2), 'en');
 
-    await page.locator('[data-cy="modeDescriptionRemove"]').nth(0).click();
+    await page.locator('[data-testid="modeDescriptionRemove"]').nth(0).click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(4);
     await page.locator(FIELD_propertyValueNotComplex).nth(3).fill('ValueOne');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(2), 'en');
 
-    await page.locator('[data-cy="modeValueAdd"]').click();
+    await page.locator('[data-testid="modeValueAdd"]').click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(5);
     await page.locator(FIELD_propertyValueNotComplex).nth(4).fill('ValueTwo');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(3), 'de');
 
-    await page.locator('[data-cy="modeValueAdd"]').click();
+    await page.locator('[data-testid="modeValueAdd"]').click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(6);
     await page.locator(FIELD_propertyValueNotComplex).nth(5).fill('ValueThree');
     await setLanguage(page, page.locator(FIELD_propertyLanguageValue).nth(4), 'de');
 
-    await page.locator('[data-cy="modeValueRemove"]').nth(0).click();
+    await page.locator('[data-testid="modeValueRemove"]').nth(0).click();
     await expect(page.locator(FIELD_propertyValueNotComplex)).toHaveCount(5);
     await page.locator(SELECTOR_entitySaveButton).click();
 

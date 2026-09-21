@@ -70,7 +70,7 @@ test.describe('Change class behavior tests', () => {
 
     for (const classType of constraintClassTypes) {
       await page.locator(FIELD_constraintName).click();
-      const option = page.locator(`mat-option[cy-value="${classType}"]`);
+      const option = page.locator(`mat-option[data-testid="${classType}"]`);
       await option.waitFor({state: 'visible'});
       await option.click();
       await option.waitFor({state: 'detached'}).catch(() => {});
@@ -98,7 +98,7 @@ test.describe('Change class behavior tests', () => {
 
     for (const classType of characteristicClassTypes) {
       await page.locator(FIELD_characteristicName).click();
-      const option = page.locator(`mat-option[cy-value="${classType}"]`);
+      const option = page.locator(`mat-option[data-testid="${classType}"]`);
       await option.waitFor({state: 'visible'});
       await option.click();
       await option.waitFor({state: 'detached'}).catch(() => {});

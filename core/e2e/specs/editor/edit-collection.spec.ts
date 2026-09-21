@@ -35,7 +35,7 @@ test.describe('Test editing different Collections', () => {
     await helper.shapeExists('Characteristic1');
     await helper.dbClickShape('Characteristic1');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="Collection"]').click();
+    await page.locator('mat-option[data-testid="Collection"]').click();
     await helper.clickSaveButton();
 
     let rdf = await helper.getUpdatedRDF();
@@ -45,7 +45,7 @@ test.describe('Test editing different Collections', () => {
     // Add new Characteristic
     await dragElementToGraph(page, SELECTOR_ecCharacteristic, 350, 300);
     await helper.dbClickShape('Characteristic1');
-    const clearDataTypeBtn = page.locator('button[data-cy="clear-dataType-button"]');
+    const clearDataTypeBtn = page.locator('button[data-testid="clear-dataType-button"]');
     await clearDataTypeBtn.waitFor({state: 'visible'});
     await clearDataTypeBtn.click();
     await page.locator(FIELD_elementCharacteristic).fill('Characteristic2');
@@ -58,7 +58,7 @@ test.describe('Test editing different Collections', () => {
     // Add new Entity
     await dragElementToGraph(page, SELECTOR_ecEntity, 350, 300);
     await helper.dbClickShape('Characteristic1');
-    const clearElemCharBtn = page.locator('button[data-cy="clear-element-characteristic-button"]');
+    const clearElemCharBtn = page.locator('button[data-testid="clear-element-characteristic-button"]');
     await clearElemCharBtn.waitFor({state: 'visible'});
     await clearElemCharBtn.click();
     await page.locator(FIELD_dataType).fill('Entity1');

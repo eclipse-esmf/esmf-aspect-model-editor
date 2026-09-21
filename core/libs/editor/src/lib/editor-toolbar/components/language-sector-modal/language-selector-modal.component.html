@@ -17,7 +17,7 @@
   <mat-dialog-content>
     <mat-form-field appearance="fill">
       <mat-label>{{ t('selectLanguageToJsonSchemaDialog.language') }}</mat-label>
-      <mat-select [formField]="languageForm.language" data-cy="language-selector">
+      <mat-select [formField]="languageForm.language" data-testid="language-selector">
         @for (language of languages(); track language) {
           <mat-option [value]="language.tag">{{ language.name }}</mat-option>
         }

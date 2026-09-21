@@ -98,31 +98,31 @@ test.describe('Test workspace file elements filtering', () => {
 
     // File elements view should be visible
     await expect(page.locator('ame-workspace-file-elements')).toBeVisible();
-    await expect(page.locator('[data-cy="fileElementsList"]')).toBeVisible();
+    await expect(page.locator('[data-testid="fileElementsList"]')).toBeVisible();
 
     // Check sections exist initially
-    await expect(page.locator('[data-cy="section-property"]')).toBeAttached();
-    await expect(page.locator('[data-cy="section-characteristic"]')).toBeAttached();
+    await expect(page.locator('[data-testid="section-property"]')).toBeAttached();
+    await expect(page.locator('[data-testid="section-characteristic"]')).toBeAttached();
 
     // Open filter menu
-    await page.locator('[data-cy="elementsFilterBtn"]').click({force: true});
+    await page.locator('[data-testid="elementsFilterBtn"]').click({force: true});
     await expect(page.locator('.filter-menu')).toBeVisible();
 
     // Toggle off Property filter
-    await page.locator('[data-cy="filterCheckbox-property"]').click();
-    await expect(page.locator('[data-cy="section-property"]')).not.toBeAttached();
-    await expect(page.locator('[data-cy="section-characteristic"]')).toBeAttached();
+    await page.locator('[data-testid="filterCheckbox-property"]').click();
+    await expect(page.locator('[data-testid="section-property"]')).not.toBeAttached();
+    await expect(page.locator('[data-testid="section-characteristic"]')).toBeAttached();
 
     // Toggle off Characteristic filter
-    await page.locator('[data-cy="filterCheckbox-characteristic"]').click();
-    await expect(page.locator('[data-cy="section-characteristic"]')).not.toBeAttached();
+    await page.locator('[data-testid="filterCheckbox-characteristic"]').click();
+    await expect(page.locator('[data-testid="section-characteristic"]')).not.toBeAttached();
 
     // Toggle back on Property filter
-    await page.locator('[data-cy="filterCheckbox-property"]').click();
-    await expect(page.locator('[data-cy="section-property"]')).toBeAttached();
+    await page.locator('[data-testid="filterCheckbox-property"]').click();
+    await expect(page.locator('[data-testid="section-property"]')).toBeAttached();
 
     // Toggle back on Characteristic filter
-    await page.locator('[data-cy="filterCheckbox-characteristic"]').click();
-    await expect(page.locator('[data-cy="section-characteristic"]')).toBeAttached();
+    await page.locator('[data-testid="filterCheckbox-characteristic"]').click();
+    await expect(page.locator('[data-testid="section-characteristic"]')).toBeAttached();
   });
 });

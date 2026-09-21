@@ -44,7 +44,7 @@
                   (input)="onLanguageInput(i, $event)"
                   matInput
                   placeholder="{{ t('settingsDialog.languages.selectLanguage') }}"
-                  data-cy="langCode"
+                  data-testid="langCode"
                 />
                 @if (aspectModelLanguages.length > 1) {
                   <button class="delete-icon" (click)="removeLanguage(i)" matSuffix mat-icon-button>
@@ -68,7 +68,7 @@
 
       <!-- Add Language Button -->
       <div class="add-language-box">
-        <button class="add-language-box__button" (click)="addLanguage()" mat-flat-button data-cy="addLang">
+        <button class="add-language-box__button" (click)="addLanguage()" mat-flat-button data-testid="addLang">
           <mat-icon>add</mat-icon>
           {{ t('settingsDialog.languages.addLanguage') }}
         </button>

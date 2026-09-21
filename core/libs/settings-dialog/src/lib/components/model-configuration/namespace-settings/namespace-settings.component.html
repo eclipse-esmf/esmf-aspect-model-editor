@@ -28,7 +28,7 @@
           [formField]="form.namespaceConfiguration.aspectUri"
           matInput
           spellcheck="false"
-          data-cy="namespaceTabValueInput"
+          data-testid="namespaceTabValueInput"
         />
         @if (form.namespaceConfiguration.aspectUri().invalid()) {
           @for (error of form.namespaceConfiguration.aspectUri().errors(); track error) {
@@ -49,7 +49,7 @@
           [formField]="form.namespaceConfiguration.aspectVersion"
           matInput
           spellcheck="false"
-          data-cy="namespaceTabVersionInput"
+          data-testid="namespaceTabVersionInput"
         />
         @if (form.namespaceConfiguration.aspectVersion().invalid()) {
           @for (error of form.namespaceConfiguration.aspectVersion().errors(); track error) {
@@ -70,7 +70,7 @@
           [formField]="form.namespaceConfiguration.aspectName"
           matInput
           spellcheck="false"
-          data-cy="namespaceTabFileNameInput"
+          data-testid="namespaceTabFileNameInput"
         />
       </mat-form-field>
 
@@ -81,7 +81,7 @@
           [formField]="form.namespaceConfiguration.sammVersion"
           matInput
           spellcheck="false"
-          data-cy="namespaceTabSammVersionInput"
+          data-testid="namespaceTabSammVersionInput"
         />
       </mat-form-field>
     </div>

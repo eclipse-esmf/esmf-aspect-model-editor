@@ -62,7 +62,7 @@ test.describe('Test load and edit anonymous elements', () => {
     // Switch to List
     await helper.dbClickShape('[Characteristic]');
     await page.locator(FIELD_characteristicName).click();
-    await page.locator('mat-option[cy-value="List"]').click();
+    await page.locator('mat-option[data-testid="List"]').click();
     await expect(page.locator(FIELD_name)).toHaveValue('[List]');
     await helper.clickSaveButton();
 

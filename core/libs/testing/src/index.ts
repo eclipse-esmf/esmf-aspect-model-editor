@@ -11,5 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './model-factories';
-export * from './utils';
+export * from './lib/model-factories';
+export * from './lib/utils';

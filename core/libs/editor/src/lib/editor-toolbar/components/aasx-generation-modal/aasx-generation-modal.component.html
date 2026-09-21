@@ -20,9 +20,9 @@
     @if (!isGenerating()) {
       <mat-form-field appearance="fill">
         <mat-label>{{ t('generateAasxDialog.outputFileFormat') }}</mat-label>
-        <mat-select [formField]="formatForm.format" data-cy="tbOutputButton">
-          <mat-option data-cy="tbOutputButton-aasx" value="aasx">AASX</mat-option>
-          <mat-option data-cy="tbOutputButton-xml" value="xml">XML</mat-option>
+        <mat-select [formField]="formatForm.format" data-testid="tbOutputButton">
+          <mat-option data-testid="tbOutputButton-aasx" value="aasx">AASX</mat-option>
+          <mat-option data-testid="tbOutputButton-xml" value="xml">XML</mat-option>
         </mat-select>
       </mat-form-field>
     } @else {

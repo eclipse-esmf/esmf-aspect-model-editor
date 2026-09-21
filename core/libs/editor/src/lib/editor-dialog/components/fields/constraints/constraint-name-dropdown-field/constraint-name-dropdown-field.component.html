@@ -17,11 +17,11 @@
     #constraintName
     [formField]="classField"
     (selectionChange)="onConstraintChange($event.value)"
-    data-cy="constraintName"
+    data-testid="constraintName"
     panelClass="constraint-items-panel"
   >
     @for (constraintName of listConstraintNames; track constraintName) {
-      <mat-option [value]="constraintName" [attr.cy-value]="constraintName">
+      <mat-option [value]="constraintName" [attr.data-testid]="constraintName">
         {{ constraintName }}
       </mat-option>
     }

@@ -41,15 +41,15 @@ test.describe('Test language settings', () => {
 
   test('can open settings dialog', async ({page}) => {
     await app.openSettings(/language|sprache/i);
-    await expect(page.locator('[data-cy="langCode"]')).toHaveValue('English (en)');
+    await expect(page.locator('[data-testid="langCode"]')).toHaveValue('English (en)');
     await app.closeDialog(SettingsDialogSelectors.settingsDialogOkButton);
   });
 
   test('can add new language', async ({page}) => {
     await app.openSettings(/language|sprache/i);
-    await expect(page.locator('[data-cy="langCode"]')).toHaveValue('English (en)');
-    await page.locator('[data-cy="addLang"]').click({force: true});
-    const lastInput = page.locator('[data-cy="langCode"]').last();
+    await expect(page.locator('[data-testid="langCode"]')).toHaveValue('English (en)');
+    await page.locator('[data-testid="addLang"]').click({force: true});
+    const lastInput = page.locator('[data-testid="langCode"]').last();
     await lastInput.click();
     await lastInput.pressSequentially('German', {delay: 50});
     const option = page.locator('mat-option').filter({hasText: 'German (de)'}).first();
@@ -62,8 +62,8 @@ test.describe('Test language settings', () => {
 
   test('can delete language', async ({page}) => {
     await app.openSettings(/language|sprache/i);
-    await page.locator('[data-cy="addLang"]').click({force: true});
-    const lastInput = page.locator('[data-cy="langCode"]').last();
+    await page.locator('[data-testid="addLang"]').click({force: true});
+    const lastInput = page.locator('[data-testid="langCode"]').last();
     await lastInput.click();
     await lastInput.pressSequentially('German', {delay: 50});
     const option = page.locator('mat-option').filter({hasText: 'German (de)'}).first();
@@ -74,12 +74,12 @@ test.describe('Test language settings', () => {
     await page.locator('.delete-icon').last().click({force: true});
     await page.locator(SettingsDialogSelectors.settingsDialogApplyButton).click({force: true});
 
-    const alertCancelBtn = page.locator('[data-cy="alert-left-btn"]');
+    const alertCancelBtn = page.locator('[data-testid="alert-left-btn"]');
     if (await alertCancelBtn.isVisible().catch(() => false)) {
       await alertCancelBtn.click({force: true});
     }
 
-    await expect(page.locator('[data-cy="langCode"]').last()).toHaveValue('English (en)');
+    await expect(page.locator('[data-testid="langCode"]').last()).toHaveValue('English (en)');
     await app.closeDialog(SettingsDialogSelectors.settingsDialogCancelButton);
   });
 
@@ -88,12 +88,12 @@ test.describe('Test language settings', () => {
     await app.loadModel(rdfString);
 
     await app.openSettings(/language|sprache/i);
-    await expect(page.locator('[data-cy="langCode"]')).toHaveCount(3);
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(3);
 
     await page.locator('.delete-icon').last().click({force: true});
-    await expect(page.locator('[data-cy="langCode"]')).toHaveCount(2);
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(2);
     await page.locator('.delete-icon').last().click({force: true});
-    await expect(page.locator('[data-cy="langCode"]')).toHaveCount(1);
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(1);
     await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click({force: true});
     await page.locator(SELECTOR_alertRightButton).click({force: true});
 
