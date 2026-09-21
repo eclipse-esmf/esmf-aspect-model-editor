@@ -13,7 +13,7 @@
 
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
+import {ConfirmDialogEnum, ConfirmDialogService, ModelOpenerService} from '@ame/editor';
 import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
@@ -25,7 +25,6 @@ import {MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {filter, finalize, switchMap} from 'rxjs';
 import {FileStatus, SidebarStateService} from '../../sidebar-state.service';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
@@ -48,17 +47,16 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
   ],
 })
 export class WorkspaceFileListComponent {
-  private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
-  private modelSaverService = inject(ModelSaverService);
-  private notificationService = inject(NotificationsService);
-  private confirmDialogService = inject(ConfirmDialogService);
-  private modelApiService = inject(ModelApiService);
-  private fileHandlingService = inject(FileHandlingService);
-  private translate = inject(LanguageTranslationService);
-  private loadedFiles = inject(LoadedFilesService);
-  private destroyRef = inject(DestroyRef);
+  private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
+  private readonly notificationService = inject(NotificationsService);
+  private readonly confirmDialogService = inject(ConfirmDialogService);
+  private readonly modelApiService = inject(ModelApiService);
+  private readonly modelOpener = inject(ModelOpenerService);
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly loadedFiles = inject(LoadedFilesService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  public sidebarService = inject(SidebarStateService);
+  public readonly sidebarService = inject(SidebarStateService);
 
   public readonly menuSelection = signal<{namespace: string; file: FileStatus} | null>(null);
   public readonly foldedStatus = signal(false);
@@ -172,19 +170,12 @@ export class WorkspaceFileListComponent {
 
   public loadInNewWindow() {
     const selection = this.menuSelection();
-    if (!selection) return;
+    if (!selection || selection.file.outdated || selection.file.errored) return;
 
-    const {namespace, file} = selection;
-
-    if (file.outdated || file.errored) {
-      return;
-    }
-
-    this.tauriSignalsService.call('openWindow', {
-      namespace,
-      file: file.name,
-      fromWorkspace: true,
-      aspectModelUrn: file.aspectModelUrn,
+    this.modelOpener.openInNewWindow({
+      namespace: selection.namespace,
+      file: selection.file.name,
+      aspectModelUrn: selection.file.aspectModelUrn,
     });
 
     this.menuSelection.set(null);
@@ -206,33 +197,33 @@ export class WorkspaceFileListComponent {
     return this.sidebarService.isCurrentFile(namespace, file.name);
   }
 
-  public openFile() {
-    const selection = this.menuSelection();
-    if (!selection) return;
-
-    const {namespace, file} = selection;
-    const absoluteFileName = `${namespace}:${file.name}`;
-
-    if (file.outdated || file.errored) {
+  public promptOpenFile(namespace: string, file: FileStatus) {
+    if (file.outdated || file.errored || this.isCurrentFile(namespace, file.name)) {
       return;
     }
 
-    this.confirmDialogService
-      .open({
-        phrases: [
-          this.translate.translateService.translate('confirmDialog.saveBeforeLoad.phrase1', {fileName: file.name}),
-          this.translate.language.confirmDialog.saveBeforeLoad.phrase2,
-        ],
-        title: this.translate.language.confirmDialog.saveBeforeLoad.title,
-        closeButtonText: this.translate.language.confirmDialog.saveBeforeLoad.cancelButton,
-        okButtonText: this.translate.language.confirmDialog.saveBeforeLoad.okButton,
+    this.modelOpener
+      .promptAndOpen({
+        file: file.name,
+        namespace,
+        aspectModelUrn: file.aspectModelUrn,
       })
-      .pipe(
-        filter((confirmed: ConfirmDialogEnum) => confirmed !== ConfirmDialogEnum.cancel),
-        switchMap(() => this.modelSaverService.saveModel()),
-        finalize(() => this.fileHandlingService.loadNamespaceFile(absoluteFileName, file.aspectModelUrn)),
-      )
       .subscribe();
+  }
+
+  public openFile() {
+    const selection = this.menuSelection();
+    if (!selection || selection.file.outdated || selection.file.errored) return;
+
+    this.modelOpener
+      .openInCurrentWindow({
+        file: selection.file.name,
+        namespace: selection.namespace,
+        aspectModelUrn: selection.file.aspectModelUrn,
+      })
+      .subscribe();
+
+    this.menuSelection.set(null);
   }
 
   public deleteFile() {

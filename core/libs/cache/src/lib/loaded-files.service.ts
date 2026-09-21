@@ -295,6 +295,16 @@ export class LoadedFilesService {
     return null;
   }
 
+  getNamespaceFileFromElement(element: NamedElement): NamespaceFile | null {
+    for (const file of Object.values(this.files)) {
+      if (file.rdfModel.store?.getQuads(element.aspectModelUrn, null, null, null)?.length || file.cachedFile?.get(element.aspectModelUrn)) {
+        return file;
+      }
+    }
+
+    return null;
+  }
+
   findElementOnExtReferences<T extends NamedElement>(aspectModelUrn: string): T | null {
     for (const file of this.filesAsList) {
       if (this.currentLoadedFile?.absoluteName === file.absoluteName) continue;

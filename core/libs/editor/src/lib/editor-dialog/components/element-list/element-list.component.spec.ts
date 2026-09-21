@@ -18,6 +18,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {MockProvider} from 'ng-mocks';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 import {ShapeSettingsService} from '../../services';
 import {ElementListComponent} from './element-list.component';
 
@@ -37,7 +38,12 @@ describe('ElementListComponent', () => {
         BrowserAnimationsModule,
         TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
       ],
-      providers: [{provide: MatDialogRef, useValue: dialogRef}, MockProvider(ShapeSettingsService), MockProvider(MaxGraphService)],
+      providers: [
+        {provide: MatDialogRef, useValue: dialogRef},
+        MockProvider(ShapeSettingsService),
+        MockProvider(MaxGraphService),
+        MockProvider(OpenReferencedElementService),
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ElementListComponent);

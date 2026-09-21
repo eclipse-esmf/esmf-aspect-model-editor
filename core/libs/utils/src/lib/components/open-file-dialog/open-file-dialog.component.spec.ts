@@ -11,21 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DIALOG_DATA} from '@angular/cdk/dialog';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {TranslocoService} from '@jsverse/transloco';
 import {MockProvider} from 'ng-mocks';
 import {BehaviorSubject, of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {OpenFileDialogComponent} from './open-file-dialog.component';
+import {OpenFileDialogComponent, OpenFileDialogData} from './open-file-dialog.component';
 
 describe('OpenFileDialogComponent', () => {
   let component: OpenFileDialogComponent;
   let fixture: ComponentFixture<OpenFileDialogComponent>;
 
-  const mockData = {
+  const mockData: OpenFileDialogData = {
     file: 'AspectDefault.ttl',
     namespace: 'org.eclipse.examples:1.0.0',
   };
@@ -34,7 +33,7 @@ describe('OpenFileDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [OpenFileDialogComponent, MatDialogModule, MatButtonModule],
       providers: [
-        {provide: DIALOG_DATA, useValue: mockData},
+        {provide: MAT_DIALOG_DATA, useValue: mockData},
         MockProvider(TranslocoService, {
           langChanges$: new BehaviorSubject('en'),
           events$: new Subject(),

@@ -13,7 +13,7 @@
 
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
+import {ConfirmDialogEnum, ConfirmDialogService, ModelOpenerService} from '@ame/editor';
 import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideZonelessChangeDetection} from '@angular/core';
@@ -30,25 +30,31 @@ describe('WorkspaceFileListComponent', () => {
   let fixture: ComponentFixture<WorkspaceFileListComponent>;
   let sidebarService: SidebarStateService;
   let tauriSignalsMock: {call: ReturnType<typeof vi.fn>};
-  let modelSaverMock: {saveModel: ReturnType<typeof vi.fn>};
   let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>};
   let confirmDialogMock: {open: ReturnType<typeof vi.fn>};
   let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>};
-  let fileHandlingMock: {loadNamespaceFile: ReturnType<typeof vi.fn>};
   let loadedFilesMock: {currentLoadedFile: any; removeFile: ReturnType<typeof vi.fn>};
+  let modelOpenerMock: {
+    promptAndOpen: ReturnType<typeof vi.fn>;
+    openInCurrentWindow: ReturnType<typeof vi.fn>;
+    openInNewWindow: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     vi.useFakeTimers();
 
     tauriSignalsMock = {call: vi.fn()};
-    modelSaverMock = {saveModel: vi.fn(() => of(true))};
     notificationMock = {info: vi.fn(), error: vi.fn()};
     confirmDialogMock = {open: vi.fn(() => of(ConfirmDialogEnum.ok))};
     modelApiMock = {deleteAspectModel: vi.fn(() => of(undefined))};
-    fileHandlingMock = {loadNamespaceFile: vi.fn()};
     loadedFilesMock = {
       currentLoadedFile: {namespace: 'org.eclipse.esmf:1.0.0', name: 'Current.ttl'},
       removeFile: vi.fn(),
+    };
+    modelOpenerMock = {
+      promptAndOpen: vi.fn(() => of(true)),
+      openInCurrentWindow: vi.fn(() => of(true)),
+      openInNewWindow: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -61,12 +67,11 @@ describe('WorkspaceFileListComponent', () => {
         provideZonelessChangeDetection(),
         SidebarStateService,
         {provide: TauriSignalsService, useValue: tauriSignalsMock},
-        {provide: ModelSaverService, useValue: modelSaverMock},
         {provide: NotificationsService, useValue: notificationMock},
         {provide: ConfirmDialogService, useValue: confirmDialogMock},
         {provide: ModelApiService, useValue: modelApiMock},
-        {provide: FileHandlingService, useValue: fileHandlingMock},
         {provide: LoadedFilesService, useValue: loadedFilesMock},
+        {provide: ModelOpenerService, useValue: modelOpenerMock},
         {
           provide: LanguageTranslationService,
           useValue: {
@@ -180,7 +185,7 @@ describe('WorkspaceFileListComponent', () => {
     }
   });
 
-  it('should load file in new window', () => {
+  it('should load file in new window via ModelOpenerService', () => {
     const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
     expect(file).toBeDefined();
     if (file) {
@@ -189,17 +194,16 @@ describe('WorkspaceFileListComponent', () => {
       expect(component.isOpenable()).toBe(true);
       component.loadInNewWindow();
 
-      expect(tauriSignalsMock.call).toHaveBeenCalledWith('openWindow', {
+      expect(modelOpenerMock.openInNewWindow).toHaveBeenCalledWith({
         namespace: 'org.eclipse.esmf:1.0.0',
         file: 'File1.ttl',
-        fromWorkspace: true,
         aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
       });
       expect(component.menuSelection()).toBeNull();
     }
   });
 
-  it('should open file after confirming and saving model', () => {
+  it('should open file in current window via ModelOpenerService', () => {
     const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
     expect(file).toBeDefined();
     if (file) {
@@ -207,9 +211,11 @@ describe('WorkspaceFileListComponent', () => {
 
       component.openFile();
 
-      expect(confirmDialogMock.open).toHaveBeenCalled();
-      expect(modelSaverMock.saveModel).toHaveBeenCalled();
-      expect(fileHandlingMock.loadNamespaceFile).toHaveBeenCalledWith('org.eclipse.esmf:1.0.0:File1.ttl', file.aspectModelUrn);
+      expect(modelOpenerMock.openInCurrentWindow).toHaveBeenCalledWith({
+        namespace: 'org.eclipse.esmf:1.0.0',
+        file: 'File1.ttl',
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
+      });
     }
   });
 
@@ -291,5 +297,28 @@ describe('WorkspaceFileListComponent', () => {
 
     const normalFile = new FileStatus('Normal.ttl');
     expect(component.getFileTooltip('other.namespace:1.0.0', normalFile)).toBe('Normal.ttl');
+  });
+
+  it('should prompt open dialog via ModelOpenerService on promptOpenFile', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    expect(file).toBeDefined();
+    if (file) {
+      component.promptOpenFile('org.eclipse.esmf:1.0.0', file);
+
+      expect(modelOpenerMock.promptAndOpen).toHaveBeenCalledWith({
+        file: 'File1.ttl',
+        namespace: 'org.eclipse.esmf:1.0.0',
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
+      });
+    }
+  });
+
+  it('should not prompt open dialog if file is current loaded file', () => {
+    const currentFile = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'Current.ttl');
+    expect(currentFile).toBeDefined();
+    if (currentFile) {
+      component.promptOpenFile('org.eclipse.esmf:1.0.0', currentFile);
+      expect(modelOpenerMock.promptAndOpen).not.toHaveBeenCalled();
+    }
   });
 });

@@ -13,56 +13,54 @@
 
 import {LoadedFilesService} from '@ame/cache';
 import {TestBed} from '@angular/core/testing';
-import {MatDialog} from '@angular/material/dialog';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {MockProvider} from 'ng-mocks';
+import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {OpenElementWindowComponent} from './open-element-window.component';
+import {ModelOpenerService} from '../model-opener/model-opener.service';
 import {OpenReferencedElementService} from './open-element-window.service';
 
 describe('OpenReferencedElementService', () => {
   let service: OpenReferencedElementService;
-  let dialog: MatDialog;
+  let modelOpenerService: ModelOpenerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         OpenReferencedElementService,
-        {
-          provide: MatDialog,
-          useValue: {
-            open: vi.fn(),
-          },
-        },
         MockProvider(LoadedFilesService, {
           getFileFromElement: vi.fn(() => 'test.ttl'),
+          getNamespaceFileFromElement: vi.fn(() => ({name: 'test.ttl', namespace: 'org.eclipse.examples:1.0.0'}) as any),
+        }),
+        MockProvider(ModelOpenerService, {
+          promptAndOpen: vi.fn(() => of(true)),
         }),
       ],
     });
 
     service = TestBed.inject(OpenReferencedElementService);
-    dialog = TestBed.inject(MatDialog);
+    modelOpenerService = TestBed.inject(ModelOpenerService);
   });
 
   it('should do nothing if element is null', () => {
     service.openReferencedElement(null);
-    expect(dialog.open).not.toHaveBeenCalled();
+    expect(modelOpenerService.promptAndOpen).not.toHaveBeenCalled();
   });
 
-  it('should open dialog with correct file and urn for valid element', () => {
+  it('should delegate to ModelOpenerService.promptAndOpen with correct parameters', () => {
     const element = new DefaultEntity({
-      aspectModelUrn: 'urn:test:1.0.0#MyEntity',
+      aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#MyEntity',
       name: 'MyEntity',
       metaModelVersion: '2.0.0',
     });
 
     service.openReferencedElement(element);
 
-    expect(dialog.open).toHaveBeenCalledWith(OpenElementWindowComponent, {
-      data: {
-        file: 'test.ttl',
-        urn: 'urn:test:1.0.0#MyEntity',
-      },
+    expect(modelOpenerService.promptAndOpen).toHaveBeenCalledWith({
+      file: 'test.ttl',
+      namespace: 'org.eclipse.examples:1.0.0',
+      aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#MyEntity',
+      editElementUrn: 'urn:samm:org.eclipse.examples:1.0.0#MyEntity',
     });
   });
 });

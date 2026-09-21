@@ -12,19 +12,9 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogEnum, ConfirmDialogService, ShapeSettingsService} from '@ame/editor';
+import {ModelOpenerService, ShapeSettingsService} from '@ame/editor';
 import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
-import {
-  ElementIconComponent,
-  ElementInfo,
-  ElementType,
-  mxCellSearchOption,
-  sammElements,
-  SearchService,
-  TauriSignals,
-  TauriSignalsService,
-} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ElementIconComponent, ElementInfo, ElementType, mxCellSearchOption, sammElements, SearchService} from '@ame/shared';
 import {AfterViewInit, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -43,20 +33,18 @@ import {SearchesStateService} from '../../search-state.service';
   imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, ElementIconComponent, TranslocoDirective],
 })
 export class ElementsSearchComponent implements AfterViewInit {
-  private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
-  private maxgraphService = inject(MaxGraphService);
-  private shapeSettingsService = inject(ShapeSettingsService);
-  private searchesStateService = inject(SearchesStateService);
-  private confirmDialogService = inject(ConfirmDialogService);
-  private searchService = inject(SearchService);
-  private translate = inject(LanguageTranslationService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly shapeSettingsService = inject(ShapeSettingsService);
+  private readonly searchesStateService = inject(SearchesStateService);
+  private readonly modelOpener = inject(ModelOpenerService);
+  private readonly searchService = inject(SearchService);
 
-  public loadedFiles = inject(LoadedFilesService);
+  public readonly loadedFiles = inject(LoadedFilesService);
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
-  public searchQuery = signal('');
-  public elements = signal<NamedElement[]>([]);
+  public readonly searchQuery = signal('');
+  public readonly elements = signal<NamedElement[]>([]);
 
   public readonly transformedElements = computed(() => {
     return this.elements().map(element => {
@@ -86,24 +74,17 @@ export class ElementsSearchComponent implements AfterViewInit {
 
   openElement(element: NamedElement) {
     if (this.loadedFiles.isElementExtern(element) && !element.isPredefined) {
-      this.confirmDialogService
-        .open({
-          phrases: [this.translate.translateService.translate('confirmDialog.newWindowElement.phrase1', {elementName: element.name})],
-          title: this.translate.language.confirmDialog.newWindowElement.title,
-          closeButtonText: this.translate.language.confirmDialog.newWindowElement.cancelButton,
-          okButtonText: this.translate.language.confirmDialog.newWindowElement.okButton,
+      const file = this.loadedFiles.getFileFromElement(element) || 'aspect.ttl';
+      const namespace = element.aspectModelUrn.replace('urn:samm:', '').replace('urn:bamm:', '').split('#')[0];
+
+      this.modelOpener
+        .promptAndOpen({
+          file,
+          namespace,
+          aspectModelUrn: element.aspectModelUrn,
+          editElementUrn: element.aspectModelUrn,
         })
-        .subscribe(confirm => {
-          if (confirm !== ConfirmDialogEnum.cancel) {
-            this.tauriSignalsService.call('openWindow', {
-              file: this.loadedFiles.getFileFromElement(element),
-              namespace: element.aspectModelUrn.replace('urn:samm:', '').split('#')[0],
-              editElement: element.aspectModelUrn,
-              fromWorkspace: true,
-              aspectModelUrn: element.aspectModelUrn,
-            });
-          }
-        });
+        .subscribe();
     } else {
       this.shapeSettingsService.editModel(element);
       requestAnimationFrame(() => {

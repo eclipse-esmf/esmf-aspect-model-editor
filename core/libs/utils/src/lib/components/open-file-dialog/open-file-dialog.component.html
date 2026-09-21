@@ -18,11 +18,11 @@
     <p [innerHTML]="t('searches.files.openDialog.content', {fileName: fileData.file, namespace: fileData.namespace})"></p>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>{{ t('searches.files.openDialog.cancel') }}</button>
-    <button mat-flat-button mat-dialog-close="open-in" color="primary">
+    <button mat-button mat-dialog-close data-testid="openDialogCancelButton">{{ t('searches.files.openDialog.cancel') }}</button>
+    <button mat-flat-button mat-dialog-close="open-in" color="primary" data-testid="openDialogThisWindowButton">
       {{ t('searches.files.openDialog.openInThisWindow') }}
     </button>
-    <button mat-flat-button mat-dialog-close="open-out" color="primary">
+    <button mat-flat-button mat-dialog-close="open-out" color="primary" data-testid="openDialogNewWindowButton">
       {{ t('searches.files.openDialog.openInNewWindow') }}
     </button>
   </mat-dialog-actions>

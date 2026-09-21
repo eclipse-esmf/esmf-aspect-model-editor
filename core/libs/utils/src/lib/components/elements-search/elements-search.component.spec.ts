@@ -12,10 +12,9 @@
  */
 
 import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogEnum, ConfirmDialogService, ShapeSettingsService} from '@ame/editor';
+import {ModelOpenerService, ShapeSettingsService} from '@ame/editor';
 import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
-import {SearchService, TauriSignalsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {SearchService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
@@ -37,11 +36,10 @@ describe('ElementsSearchComponent', () => {
   let fixture: ComponentFixture<ElementsSearchComponent>;
   let maxGraphService: MaxGraphService;
   let searchesStateService: SearchesStateService;
-  let confirmDialogService: ConfirmDialogService;
   let searchService: SearchService;
   let loadedFiles: LoadedFilesService;
-  let tauriSignalsService: TauriSignalsService;
   let shapeSettingsService: ShapeSettingsService;
+  let modelOpenerService: ModelOpenerService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -71,29 +69,11 @@ describe('ElementsSearchComponent', () => {
           elementsSearch: {close: vi.fn()} as any,
           filesSearch: {close: vi.fn()} as any,
         }),
-        MockProvider(ConfirmDialogService, {
-          open: vi.fn(() => of(ConfirmDialogEnum.ok)),
+        MockProvider(ModelOpenerService, {
+          promptAndOpen: vi.fn(() => of(true)),
         }),
         MockProvider(SearchService, {
           search: vi.fn(() => []),
-        }),
-        MockProvider(LanguageTranslationService, {
-          translateService: {
-            translate: vi.fn((key: string) => key),
-          } as any,
-          language: {
-            confirmDialog: {
-              newWindowElement: {
-                title: 'Title',
-                phrase1: 'Phrase',
-                cancelButton: 'Cancel',
-                okButton: 'OK',
-              },
-            },
-          } as any,
-        }),
-        MockProvider(TauriSignalsService, {
-          call: vi.fn(),
         }),
         MockProvider(TranslocoService, {
           langChanges$: new BehaviorSubject('en'),
@@ -112,11 +92,10 @@ describe('ElementsSearchComponent', () => {
     component = fixture.componentInstance;
     maxGraphService = TestBed.inject(MaxGraphService);
     searchesStateService = TestBed.inject(SearchesStateService);
-    confirmDialogService = TestBed.inject(ConfirmDialogService);
     searchService = TestBed.inject(SearchService);
     loadedFiles = TestBed.inject(LoadedFilesService);
-    tauriSignalsService = TestBed.inject(TauriSignalsService);
     shapeSettingsService = TestBed.inject(ShapeSettingsService);
+    modelOpenerService = TestBed.inject(ModelOpenerService);
     fixture.detectChanges();
   });
 
@@ -188,7 +167,7 @@ describe('ElementsSearchComponent', () => {
     vi.unstubAllGlobals();
   });
 
-  it('should open confirmation dialog and open window for external element', () => {
+  it('should delegate to ModelOpenerService.promptAndOpen for external element', () => {
     const aspect = new DefaultAspect({
       name: 'ExternalAspect',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#ExternalAspect',
@@ -197,35 +176,15 @@ describe('ElementsSearchComponent', () => {
     aspect.isPredefined = false;
 
     vi.spyOn(loadedFiles, 'isElementExtern').mockReturnValue(true);
-    vi.spyOn(confirmDialogService, 'open').mockReturnValue(of(ConfirmDialogEnum.ok));
 
     component.openElement(aspect);
 
-    expect(confirmDialogService.open).toHaveBeenCalled();
-    expect(tauriSignalsService.call).toHaveBeenCalledWith('openWindow', {
+    expect(modelOpenerService.promptAndOpen).toHaveBeenCalledWith({
       file: 'TestFile.ttl',
       namespace: 'org.eclipse.examples:1.0.0',
-      editElement: aspect.aspectModelUrn,
-      fromWorkspace: true,
       aspectModelUrn: aspect.aspectModelUrn,
+      editElementUrn: aspect.aspectModelUrn,
     });
     expect(searchesStateService.elementsSearch.close).toHaveBeenCalled();
-  });
-
-  it('should not open window if user cancels confirm dialog for external element', () => {
-    const aspect = new DefaultAspect({
-      name: 'ExternalAspect',
-      aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#ExternalAspect',
-      metaModelVersion: '2.0.0',
-    });
-    aspect.isPredefined = false;
-
-    vi.spyOn(loadedFiles, 'isElementExtern').mockReturnValue(true);
-    vi.spyOn(confirmDialogService, 'open').mockReturnValue(of(ConfirmDialogEnum.cancel));
-
-    component.openElement(aspect);
-
-    expect(confirmDialogService.open).toHaveBeenCalled();
-    expect(tauriSignalsService.call).not.toHaveBeenCalled();
   });
 });

@@ -11,15 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DIALOG_DATA} from '@angular/cdk/dialog';
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {TranslocoDirective} from '@jsverse/transloco';
 
+export interface OpenFileDialogData {
+  file: string;
+  namespace: string;
+}
+
+export type OpenFileDialogResult = 'open-in' | 'open-out';
+
 @Component({
+  selector: 'ame-open-file-dialog',
   templateUrl: './open-file-dialog.component.html',
   imports: [MatDialogModule, MatButtonModule, TranslocoDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       :host {
@@ -29,5 +37,5 @@ import {TranslocoDirective} from '@jsverse/transloco';
   ],
 })
 export class OpenFileDialogComponent {
-  public fileData = inject(DIALOG_DATA) as {file: string; namespace: string};
+  public readonly fileData = inject<OpenFileDialogData>(MAT_DIALOG_DATA);
 }

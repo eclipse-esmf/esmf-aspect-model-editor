@@ -58,7 +58,7 @@
             [class.errored]="file.errored"
             [matTooltip]="getFileTooltip(namespace.key, file)"
             (click)="selectFile(namespace.key, file)"
-            (dblclick)="prepare(namespace.key, file); loadInNewWindow()"
+            (dblclick)="promptOpenFile(namespace.key, file)"
             (keyup.enter)="selectFile(namespace.key, file)"
             (keyup.space)="selectFile(namespace.key, file)"
             type="button"

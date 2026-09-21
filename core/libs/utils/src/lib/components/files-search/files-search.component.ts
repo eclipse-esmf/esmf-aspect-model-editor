@@ -11,28 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileHandlingService, ModelCheckerService, SaveModelDialogService} from '@ame/editor';
-import {
-  filesSearchOption,
-  ModelSavingTrackerService,
-  NotificationsService,
-  SearchService,
-  TauriSignals,
-  TauriSignalsService,
-} from '@ame/shared';
+import {ModelCheckerService, ModelOpenerService} from '@ame/editor';
+import {filesSearchOption, NotificationsService, SearchService} from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {AfterViewInit, Component, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatDialog} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {filter, first, map, Observable, of, switchMap, tap, throttleTime} from 'rxjs';
+import {map, throttleTime} from 'rxjs';
 import {SearchesStateService} from '../../search-state.service';
-import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.component';
 
 @Component({
   selector: 'ame-files-search',
@@ -41,25 +32,21 @@ import {OpenFileDialogComponent} from '../open-file-dialog/open-file-dialog.comp
   imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, TranslocoDirective],
 })
 export class FilesSearchComponent implements AfterViewInit {
-  private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
-  private searchesStateService = inject(SearchesStateService);
-  private sidebarStateService = inject(SidebarStateService);
-  private matDialog = inject(MatDialog);
-  private notificationService = inject(NotificationsService);
-  private modelSavingTracker = inject(ModelSavingTrackerService);
-  private saveModelDialog = inject(SaveModelDialogService);
-  private fileHandlingService = inject(FileHandlingService);
-  private searchService = inject(SearchService);
-  private translate = inject(LanguageTranslationService);
-  private modelChecker = inject(ModelCheckerService);
+  private readonly searchesStateService = inject(SearchesStateService);
+  private readonly sidebarStateService = inject(SidebarStateService);
+  private readonly notificationService = inject(NotificationsService);
+  private readonly modelOpener = inject(ModelOpenerService);
+  private readonly searchService = inject(SearchService);
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly modelChecker = inject(ModelCheckerService);
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
-  private files: {file: string; namespace: string}[] = [];
+  private files: {file: string; namespace: string; aspectModelUrn?: string}[] = [];
 
-  public searchQuery = signal('');
-  public loading = signal(false);
-  public searchableFiles = signal([]);
+  public readonly searchQuery = signal('');
+  public readonly loading = signal(false);
+  public readonly searchableFiles = signal<{file: string; namespace: string; aspectModelUrn?: string}[]>([]);
 
   public get namespaces() {
     return this.sidebarStateService.namespacesState.namespaces();
@@ -95,15 +82,13 @@ export class FilesSearchComponent implements AfterViewInit {
     this.searchInput()?.nativeElement.focus();
   }
 
-  openFile({file, namespace, aspectModelUrn}) {
-    this.matDialog
-      .open(OpenFileDialogComponent, {data: {file, namespace}})
-      .afterClosed()
-      .pipe(
-        filter(result => result),
-        switchMap(result => (result === 'open-in' ? this.loadModel(file, namespace, aspectModelUrn) : this.openWindow(file, namespace))),
-      )
-      .subscribe();
+  openFile({file, namespace, aspectModelUrn}: {file: string; namespace: string; aspectModelUrn?: string}) {
+    const fileStatus = this.checkFile(file, namespace);
+    if (!fileStatus) {
+      return;
+    }
+
+    this.modelOpener.promptAndOpen({file, namespace, aspectModelUrn}).subscribe();
     this.searchQuery.set('');
     this.closeSearch();
   }
@@ -121,38 +106,7 @@ export class FilesSearchComponent implements AfterViewInit {
     this.searchableFiles.set(this.files);
   }
 
-  private checkUnsavedChanges(): Observable<boolean> {
-    return this.modelSavingTracker.isSaved$.pipe(
-      first(),
-      switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialog.openDialog())),
-    );
-  }
-
-  private loadModel(file: string, namespace: string, aspectModelUrn: string) {
-    return this.checkUnsavedChanges().pipe(
-      switchMap(() => of(this.fileHandlingService.loadNamespaceFile(`${namespace}:${file}`, aspectModelUrn))),
-    );
-  }
-
-  private openWindow(file: string, namespace: string) {
-    const status = this.checkFile(file, namespace);
-    if (!(status instanceof FileStatus)) {
-      return of(status);
-    }
-
-    return this.checkUnsavedChanges().pipe(
-      tap(() =>
-        this.tauriSignalsService.call('openWindow', {
-          namespace,
-          file,
-          fromWorkspace: true,
-          aspectModelUrn: status.aspectModelUrn,
-        }),
-      ),
-    );
-  }
-
-  private checkFile(file: string, namespace: string) {
+  private checkFile(file: string, namespace: string): boolean {
     const fileStatus = this.sidebarStateService.namespacesState.getFile(namespace, file);
     if (fileStatus && (fileStatus.errored || fileStatus.loaded)) {
       this.notificationService.warning({
@@ -161,9 +115,9 @@ export class FilesSearchComponent implements AfterViewInit {
           ? this.translate.language.searches.files.notifications.errorMessage
           : this.translate.language.searches.files.notifications.alreadyLoadedFileMessage,
       });
-      return 'invalid-file';
+      return false;
     }
 
-    return fileStatus;
+    return true;
   }
 }

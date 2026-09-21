@@ -15,16 +15,15 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 
 vi.mock('@ame/editor', () => ({
   ModelElementEditorComponent: class {},
-  SaveModelDialogService: class {},
-  FileHandlingService: class {},
+  ModelOpenerService: class {},
   ModelCheckerService: class {
     detectWorkspaceErrors = vi.fn();
   },
 }));
 
-import {FileHandlingService, ModelCheckerService, SaveModelDialogService} from '@ame/editor';
+import {ModelCheckerService, ModelOpenerService} from '@ame/editor';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
-import {ModelSavingTrackerService, NotificationsService, SearchService, TauriSignalsService} from '@ame/shared';
+import {NotificationsService, SearchService} from '@ame/shared';
 import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {provideHttpClient, withXhr} from '@angular/common/http';
@@ -32,7 +31,7 @@ import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideZonelessChangeDetection, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {By} from '@angular/platform-browser';
@@ -47,14 +46,10 @@ describe('Files search', () => {
   let component: FilesSearchComponent;
   let fixture: ComponentFixture<FilesSearchComponent>;
   let searchesStateService: SearchesStateService;
-  let matDialog: MatDialog;
-  let tauriSignalsService: TauriSignalsService;
   let notificationService: NotificationsService;
   let sidebarStateService: SidebarStateService;
   let searchService: SearchService;
-  let fileHandlingService: FileHandlingService;
-  let modelSavingTracker: ModelSavingTrackerService;
-  let saveModelDialog: SaveModelDialogService;
+  let modelOpenerService: ModelOpenerService;
 
   const files = [
     {
@@ -112,17 +107,8 @@ describe('Files search', () => {
           } as any,
           updateWorkspace: vi.fn(() => of({})) as any,
         }),
-        {
-          provide: MatDialog,
-          useValue: {
-            open: vi.fn(),
-          },
-        },
-        MockProvider(ModelSavingTrackerService, {
-          isSaved$: of(true),
-        }),
-        MockProvider(TauriSignalsService, {
-          call: vi.fn(),
+        MockProvider(ModelOpenerService, {
+          promptAndOpen: vi.fn(() => of(true)),
         }),
         MockProvider(SearchService, {
           search: vi.fn(() => []),
@@ -140,12 +126,6 @@ describe('Files search', () => {
             },
           } as any,
         }),
-        MockProvider(FileHandlingService, {
-          loadNamespaceFile: vi.fn(),
-        }),
-        MockProvider(SaveModelDialogService, {
-          openDialog: vi.fn(() => of(true)),
-        }),
         MockProvider(ModelCheckerService, {
           detectWorkspaceErrors: vi.fn(() => of([])),
         }),
@@ -157,14 +137,10 @@ describe('Files search', () => {
     fixture = TestBed.createComponent(FilesSearchComponent);
     component = fixture.componentInstance;
     searchesStateService = TestBed.inject(SearchesStateService);
-    matDialog = TestBed.inject(MatDialog);
-    tauriSignalsService = TestBed.inject(TauriSignalsService);
     notificationService = TestBed.inject(NotificationsService);
     sidebarStateService = TestBed.inject(SidebarStateService);
     searchService = TestBed.inject(SearchService);
-    fileHandlingService = TestBed.inject(FileHandlingService);
-    modelSavingTracker = TestBed.inject(ModelSavingTrackerService);
-    saveModelDialog = TestBed.inject(SaveModelDialogService);
+    modelOpenerService = TestBed.inject(ModelOpenerService);
     fixture.detectChanges();
   });
 
@@ -184,7 +160,13 @@ describe('Files search', () => {
   it('should have mat option if there are namespaces with files', () => {
     vi.spyOn(component, 'openFile');
 
-    component.searchableFiles.set(files);
+    component.searchableFiles.set([
+      {
+        file: 'AspectDefault.ttl',
+        namespace: 'org.eclipse.examples:1.0.0',
+        aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#AspectDefault',
+      },
+    ]);
     fixture.detectChanges();
     const autocomplete = fixture.debugElement.query(By.css('mat-autocomplete'));
     expect(autocomplete).toBeTruthy();
@@ -198,28 +180,7 @@ describe('Files search', () => {
     expect(searchesStateService.filesSearch.close).toHaveBeenCalled();
   });
 
-  it('should open dialog and load model when dialog returns "open-in"', () => {
-    const dialogRefMock = {
-      afterClosed: () => of('open-in'),
-    } as any;
-    vi.spyOn(matDialog, 'open').mockReturnValue(dialogRefMock);
-
-    component.openFile({
-      file: 'AspectDefault.ttl',
-      namespace: 'org.eclipse.examples:1.0.0',
-      aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#AspectDefault',
-    });
-
-    expect(matDialog.open).toHaveBeenCalled();
-    expect(fileHandlingService.loadNamespaceFile).toHaveBeenCalledWith(
-      'org.eclipse.examples:1.0.0:AspectDefault.ttl',
-      'urn:samm:org.eclipse.examples:1.0.0#AspectDefault',
-    );
-    expect(component.searchQuery()).toBe('');
-    expect(searchesStateService.filesSearch.close).toHaveBeenCalled();
-  });
-
-  it('should open dialog and open window when dialog returns "open-out"', () => {
+  it('should delegate to ModelOpenerService.promptAndOpen on openFile', () => {
     const mockFileStatus = new FileStatus('SharedModel.ttl');
     mockFileStatus.loaded = false;
     mockFileStatus.outdated = false;
@@ -228,26 +189,22 @@ describe('Files search', () => {
     mockFileStatus.aspectModelUrn = 'urn:samm:org.eclipse.examples:1.0.0#SharedModel';
     vi.spyOn(sidebarStateService.namespacesState, 'getFile').mockReturnValue(mockFileStatus);
 
-    const dialogRefMock = {
-      afterClosed: () => of('open-out'),
-    } as any;
-    vi.spyOn(matDialog, 'open').mockReturnValue(dialogRefMock);
-
     component.openFile({
       file: 'SharedModel.ttl',
       namespace: 'org.eclipse.examples:1.0.0',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#SharedModel',
     });
 
-    expect(tauriSignalsService.call).toHaveBeenCalledWith('openWindow', {
-      namespace: 'org.eclipse.examples:1.0.0',
+    expect(modelOpenerService.promptAndOpen).toHaveBeenCalledWith({
       file: 'SharedModel.ttl',
-      fromWorkspace: true,
+      namespace: 'org.eclipse.examples:1.0.0',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#SharedModel',
     });
+    expect(component.searchQuery()).toBe('');
+    expect(searchesStateService.filesSearch.close).toHaveBeenCalled();
   });
 
-  it('should warn if file is already loaded or errored when attempting to open window', () => {
+  it('should warn if file is already loaded or errored', () => {
     const mockFileStatus = new FileStatus('SharedModel.ttl');
     mockFileStatus.loaded = true;
     mockFileStatus.outdated = false;
@@ -256,11 +213,6 @@ describe('Files search', () => {
     mockFileStatus.aspectModelUrn = 'urn:samm:org.eclipse.examples:1.0.0#SharedModel';
     vi.spyOn(sidebarStateService.namespacesState, 'getFile').mockReturnValue(mockFileStatus);
 
-    const dialogRefMock = {
-      afterClosed: () => of('open-out'),
-    } as any;
-    vi.spyOn(matDialog, 'open').mockReturnValue(dialogRefMock);
-
     component.openFile({
       file: 'SharedModel.ttl',
       namespace: 'org.eclipse.examples:1.0.0',
@@ -268,23 +220,7 @@ describe('Files search', () => {
     });
 
     expect(notificationService.warning).toHaveBeenCalled();
-    expect(tauriSignalsService.call).not.toHaveBeenCalled();
-  });
-
-  it('should prompt save dialog when model is not saved before loading', () => {
-    (modelSavingTracker as any).isSaved$ = of(false);
-    const dialogRefMock = {
-      afterClosed: () => of('open-in'),
-    } as any;
-    vi.spyOn(matDialog, 'open').mockReturnValue(dialogRefMock);
-
-    component.openFile({
-      file: 'AspectDefault.ttl',
-      namespace: 'org.eclipse.examples:1.0.0',
-      aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#AspectDefault',
-    });
-
-    expect(saveModelDialog.openDialog).toHaveBeenCalled();
+    expect(modelOpenerService.promptAndOpen).not.toHaveBeenCalled();
   });
 
   it('should filter files when searchQuery changes', async () => {
