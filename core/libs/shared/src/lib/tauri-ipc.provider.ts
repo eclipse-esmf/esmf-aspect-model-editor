@@ -194,8 +194,8 @@ export const IPC_RENDERER = new InjectionToken<TauriApi | undefined>('TauriIpcRe
   providedIn: 'root',
   factory: () => {
     if (typeof window !== 'undefined') {
-      if (window.tauriAPI) {
-        return window.tauriAPI;
+      if (window.tauriAPI || (window as any).tauriApi) {
+        return window.tauriAPI || (window as any).tauriApi;
       }
       if ('__TAURI_INTERNALS__' in window || '__TAURI__' in window) {
         const bridge = createTauriBridge();

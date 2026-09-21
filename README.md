@@ -9,7 +9,7 @@
   - [Install & Run](#install--run)
   - [Run As Desktop (Tauri)](#run-as-desktop-tauri)
   - [Build Desktop App](#build-desktop-app)
-  - [Running E2E (Cypress) Test](#running-e2e-cypress-test)
+  - [Running E2E (Playwright) Tests](#running-e2e-playwright-tests)
 - [Documentation](#documentation)
 - [License](#license)
 
@@ -84,10 +84,19 @@ pnpm run build:win     # Windows (.msi, .exe)
 pnpm run build:linux   # Linux (.deb, .AppImage)
 ```
 
-#### Running E2E (Cypress) Test
+#### Running E2E (Playwright) Tests
 
 ```bash
-pnpm run cypress
+cd core
+
+# Run all E2E tests headless
+pnpm run e2e
+
+# Run with interactive UI
+pnpm run e2e:ui
+
+# Run headed
+pnpm run e2e:headed
 ```
 
 ## Documentation

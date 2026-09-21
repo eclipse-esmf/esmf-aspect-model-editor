@@ -54,10 +54,6 @@ Thumbs.db
 **/.files
 lsp
 
-# cypress
-**/.nyc_output
-**/cypress
-
 # playwright
 **/playwright-report
 **/test-results

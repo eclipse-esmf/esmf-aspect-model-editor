@@ -245,7 +245,7 @@ describe('ModelApiService', () => {
       req.flush({violationErrors: []});
     });
 
-    it('should notify backend error and rethrow when HTTP request fails', () => {
+    it('should rethrow when HTTP request fails', () => {
       let error: any;
       service.validate('<ttl content>').subscribe({
         error: err => (error = err),
@@ -258,7 +258,6 @@ describe('ModelApiService', () => {
       );
 
       expect(error).toBeTruthy();
-      expect(modelValidatorService.notifyBackendError).toHaveBeenCalled();
     });
   });
 

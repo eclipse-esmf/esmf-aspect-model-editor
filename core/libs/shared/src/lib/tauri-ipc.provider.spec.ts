@@ -16,9 +16,10 @@ import {afterEach, describe, expect, it} from 'vitest';
 import {IPC_RENDERER} from './tauri-ipc.provider';
 
 describe('IPC_RENDERER Provider', () => {
-  const originalTauriApi = (window as any).tauriApi;
+  const originalTauriApi = (window as any).tauriAPI || (window as any).tauriApi;
 
   afterEach(() => {
+    (window as any).tauriAPI = originalTauriApi;
     (window as any).tauriApi = originalTauriApi;
   });
 
@@ -28,13 +29,16 @@ describe('IPC_RENDERER Provider', () => {
       on: () => {},
       removeListener: () => {},
     };
+    (window as any).tauriAPI = mockApi;
     (window as any).tauriApi = mockApi;
 
+    TestBed.resetTestingModule();
     const renderer = TestBed.inject(IPC_RENDERER);
     expect(renderer).toBe(mockApi);
   });
 
   it('should return undefined when window.tauriApi is undefined', () => {
+    delete (window as any).tauriAPI;
     delete (window as any).tauriApi;
 
     // Create a new TestBed to avoid cached factory output

@@ -69,9 +69,10 @@ test.describe('Change class behavior tests', () => {
     await page.locator(FIELD_preferredNameen).fill('Changed Preferred Name');
 
     for (const classType of constraintClassTypes) {
-      await page.locator(FIELD_constraintName).click({force: true});
+      await page.locator(FIELD_constraintName).click();
       const option = page.locator(`mat-option[cy-value="${classType}"]`);
-      await option.click({force: true});
+      await option.waitFor({state: 'visible'});
+      await option.click();
       await option.waitFor({state: 'detached'}).catch(() => {});
       await expect(page.locator(FIELD_name)).toHaveValue('ChangedConstraintName');
       await expect(page.locator(FIELD_descriptionen)).toHaveValue('Changed Description');
@@ -96,9 +97,10 @@ test.describe('Change class behavior tests', () => {
     await page.locator(FIELD_preferredNameen).fill('Changed Preferred Name');
 
     for (const classType of characteristicClassTypes) {
-      await page.locator(FIELD_characteristicName).click({force: true});
+      await page.locator(FIELD_characteristicName).click();
       const option = page.locator(`mat-option[cy-value="${classType}"]`);
-      await option.click({force: true});
+      await option.waitFor({state: 'visible'});
+      await option.click();
       await option.waitFor({state: 'detached'}).catch(() => {});
       await expect(page.locator(FIELD_name)).toHaveValue('ChangedCharacteristicName');
       await expect(page.locator(FIELD_descriptionen)).toHaveValue('Changed Description');
