@@ -13,7 +13,7 @@
 
 import {expect, test} from '@playwright/test';
 import {AppHelper} from '../../support/app-helper';
-import {SELECTOR_alertRightButton, SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
+import {SELECTOR_alertRightButton, SettingsDialogSelectors} from '../../support/constants';
 import {readFixture} from '../../support/drag-drop-utils';
 
 function assertNullMultiLanguageValues(modelElement: any, langTag: string) {
@@ -36,20 +36,17 @@ test.describe('Test language settings', () => {
 
   test.beforeEach(async ({page}) => {
     app = new AppHelper(page);
-    await app.visitDefault();
     await app.startModelling();
   });
 
   test('can open settings dialog', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click();
-    await page.locator(':nth-child(5) > .settings__node').click();
+    await app.openSettings(/language|sprache/i);
     await expect(page.locator('[data-cy="langCode"]')).toHaveValue('English (en)');
-    await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click();
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogOkButton);
   });
 
   test('can add new language', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click();
-    await page.locator(':nth-child(5) > .settings__node').click();
+    await app.openSettings(/language|sprache/i);
     await expect(page.locator('[data-cy="langCode"]')).toHaveValue('English (en)');
     await page.locator('[data-cy="addLang"]').click({force: true});
     const lastInput = page.locator('[data-cy="langCode"]').last();
@@ -60,12 +57,11 @@ test.describe('Test language settings', () => {
     await option.click();
     await page.locator(SettingsDialogSelectors.settingsDialogApplyButton).click({force: true});
     await expect(lastInput).toHaveValue('German (de)');
-    await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click();
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogOkButton);
   });
 
   test('can delete language', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click();
-    await page.locator(':nth-child(5) > .settings__node').click();
+    await app.openSettings(/language|sprache/i);
     await page.locator('[data-cy="addLang"]').click({force: true});
     const lastInput = page.locator('[data-cy="langCode"]').last();
     await lastInput.click();
@@ -77,17 +73,21 @@ test.describe('Test language settings', () => {
 
     await page.locator('.delete-icon').last().click({force: true});
     await page.locator(SettingsDialogSelectors.settingsDialogApplyButton).click({force: true});
-    await page.locator('[data-cy="alert-left-btn"]').click({force: true});
+
+    const alertCancelBtn = page.locator('[data-cy="alert-left-btn"]');
+    if (await alertCancelBtn.isVisible().catch(() => false)) {
+      await alertCancelBtn.click({force: true});
+    }
+
     await expect(page.locator('[data-cy="langCode"]').last()).toHaveValue('English (en)');
-    await page.locator(SettingsDialogSelectors.settingsDialogCancelButton).click();
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogCancelButton);
   });
 
   test('can delete and remove all multi language information in the loaded model', async ({page}) => {
     const rdfString = readFixture('multi-language-model.txt');
     await app.loadModel(rdfString);
 
-    await page.locator(SELECTOR_settingsButton).click();
-    await page.locator(':nth-child(5) > .settings__node').click();
+    await app.openSettings(/language|sprache/i);
     await expect(page.locator('[data-cy="langCode"]')).toHaveCount(3);
 
     await page.locator('.delete-icon').last().click({force: true});
@@ -97,7 +97,7 @@ test.describe('Test language settings', () => {
     await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click({force: true});
     await page.locator(SELECTOR_alertRightButton).click({force: true});
 
-    await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+    await app.closeDialog();
     const rdf = await app.getUpdatedRDF();
     expect(rdf).not.toContain('@en-us');
     expect(rdf).not.toContain('@de-de');

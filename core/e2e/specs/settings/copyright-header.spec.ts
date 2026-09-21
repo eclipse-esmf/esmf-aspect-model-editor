@@ -13,7 +13,7 @@
 
 import {expect, test} from '@playwright/test';
 import {AppHelper} from '../../support/app-helper';
-import {SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
+import {SettingsDialogSelectors} from '../../support/constants';
 
 test.describe('Test language settings - Copyright Header', () => {
   let app: AppHelper;
@@ -25,27 +25,16 @@ test.describe('Test language settings - Copyright Header', () => {
   });
 
   test('can see copyright header', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click();
-    await page
-      .locator('.settings__node')
-      .filter({hasText: /copyright/i})
-      .first()
-      .click();
+    await app.openSettings(/copyright/i);
     const input = page.locator(copyrightField);
     await expect(input).toBeVisible();
     await input.clear();
     await expect(input).toHaveValue('');
-    await page.locator(SettingsDialogSelectors.settingsDialogCancelButton).click();
-    await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogCancelButton);
   });
 
   test('can add copyright header', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click();
-    await page
-      .locator('.settings__node')
-      .filter({hasText: /copyright/i})
-      .first()
-      .click();
+    await app.openSettings(/copyright/i);
     const input = page.locator(copyrightField);
     await expect(input).toBeVisible();
 
@@ -57,18 +46,11 @@ test.describe('Test language settings - Copyright Header', () => {
     // Valid format with '#'
     await input.fill('# CopyrightHeader');
     await expect(page.locator(SettingsDialogSelectors.settingsDialogOkButton)).toBeEnabled();
-    await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click();
-    await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogOkButton);
 
     // Reopen settings and verify persisted value
-    await page.locator(SELECTOR_settingsButton).click();
-    await page
-      .locator('.settings__node')
-      .filter({hasText: /copyright/i})
-      .first()
-      .click();
+    await app.openSettings(/copyright/i);
     await expect(page.locator(copyrightField)).toHaveValue('# CopyrightHeader');
-    await page.locator(SettingsDialogSelectors.settingsDialogCancelButton).click();
-    await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogCancelButton);
   });
 });

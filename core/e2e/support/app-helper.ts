@@ -457,4 +457,50 @@ export class AppHelper {
       .catch(() => {});
     await expect(this.page.locator('#graph')).toBeVisible({timeout: 20000});
   }
+
+  async selectDropdown(triggerSelector: string | Locator, optionText: string): Promise<void> {
+    const trigger = typeof triggerSelector === 'string' ? this.page.locator(triggerSelector) : triggerSelector;
+    await trigger.click({force: true});
+    const option = this.page.locator('mat-option').filter({hasText: optionText}).first();
+    await expect(option).toBeVisible();
+    await option.click({force: true});
+    await this.page
+      .locator('mat-option')
+      .waitFor({state: 'detached'})
+      .catch(() => {});
+  }
+
+  async selectAutocomplete(inputSelector: string | Locator, textToType: string, optionText?: string): Promise<void> {
+    const input = typeof inputSelector === 'string' ? this.page.locator(inputSelector) : inputSelector;
+    await input.click({force: true});
+    await input.fill('');
+    await input.pressSequentially(textToType, {delay: 30});
+    const targetText = optionText || textToType;
+    const option = this.page.locator('mat-option').filter({hasText: targetText}).first();
+    await expect(option).toBeVisible();
+    await option.click({force: true});
+    await this.page
+      .locator('mat-option')
+      .waitFor({state: 'detached'})
+      .catch(() => {});
+  }
+
+  async openSettings(nodeRegexOrText?: RegExp | string): Promise<void> {
+    const {SELECTOR_settingsButton} = await import('./constants');
+    await this.page.locator(SELECTOR_settingsButton).click({force: true});
+    await expect(this.page.locator('mat-dialog-container')).toBeVisible();
+    if (nodeRegexOrText) {
+      const node = this.page.locator('.settings__node').filter({hasText: nodeRegexOrText}).first();
+      await expect(node).toBeVisible();
+      await node.click({force: true});
+    }
+  }
+
+  async closeDialog(buttonSelector?: string | Locator): Promise<void> {
+    if (buttonSelector) {
+      const btn = typeof buttonSelector === 'string' ? this.page.locator(buttonSelector) : buttonSelector;
+      await btn.click({force: true});
+    }
+    await expect(this.page.locator('mat-dialog-container')).toHaveCount(0);
+  }
 }

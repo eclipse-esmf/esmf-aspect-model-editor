@@ -17,19 +17,17 @@ import {FIELD_extends, SELECTOR_tbDeleteButton} from '../../support/constants';
 import {readFixture} from '../../support/drag-drop-utils';
 
 test.describe('Predefined Entities - Point3D, FileResource, TimeSeriesEntity', () => {
-  test('should create and delete Point3d entity structure', async ({page}) => {
-    const helper = new AppHelper(page);
-    await helper.visitDefault();
-    await helper.startModelling();
+  let helper: AppHelper;
 
+  test.beforeEach(async ({page}) => {
+    helper = new AppHelper(page);
+    await helper.startModelling();
+  });
+
+  test('should create and delete Point3d entity structure', async ({page}) => {
     await helper.clickAddShapePlusIcon('Characteristic1');
     await helper.dbClickShape('Entity1');
-    await page.locator(FIELD_extends).click();
-    await page.locator(FIELD_extends).fill('');
-    await page.locator(FIELD_extends).pressSequentially('Point3d', {delay: 30});
-    const opt = page.locator('mat-option, [data-cy="Point3d"]').filter({hasText: 'Point3d'}).first();
-    await opt.waitFor({state: 'visible'});
-    await opt.click();
+    await helper.selectAutocomplete(FIELD_extends, 'Point3d');
     await helper.clickSaveButton();
 
     await helper.shapeExists('Point3d');
@@ -47,18 +45,9 @@ test.describe('Predefined Entities - Point3D, FileResource, TimeSeriesEntity', (
   });
 
   test('should create and delete FileResource entity structure', async ({page}) => {
-    const helper = new AppHelper(page);
-    await helper.visitDefault();
-    await helper.startModelling();
-
     await helper.clickAddShapePlusIcon('Characteristic1');
     await helper.dbClickShape('Entity1');
-    await page.locator(FIELD_extends).click();
-    await page.locator(FIELD_extends).fill('');
-    await page.locator(FIELD_extends).pressSequentially('FileResource', {delay: 30});
-    const opt = page.locator('mat-option, [data-cy="FileResource"]').filter({hasText: 'FileResource'}).first();
-    await opt.waitFor({state: 'visible'});
-    await opt.click();
+    await helper.selectAutocomplete(FIELD_extends, 'FileResource');
     await helper.clickSaveButton();
 
     await helper.shapeExists('FileResource');
@@ -73,10 +62,7 @@ test.describe('Predefined Entities - Point3D, FileResource, TimeSeriesEntity', (
     await helper.shapeExists('mimeType', false);
   });
 
-  test('should create and import TimeSeriesEntity structure', async ({page}) => {
-    const helper = new AppHelper(page);
-    await helper.visitDefault();
-
+  test('should create and import TimeSeriesEntity structure', async () => {
     const rdfString = readFixture('time-series-entity');
     await helper.loadModel(rdfString);
 

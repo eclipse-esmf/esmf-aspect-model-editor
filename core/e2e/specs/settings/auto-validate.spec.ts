@@ -13,7 +13,7 @@
 
 import {expect, test} from '@playwright/test';
 import {AppHelper} from '../../support/app-helper';
-import {SELECTOR_settingsButton, SettingsDialogSelectors} from '../../support/constants';
+import {SettingsDialogSelectors} from '../../support/constants';
 
 test.describe('Settings - Auto Validation & Timers', () => {
   let app: AppHelper;
@@ -24,17 +24,16 @@ test.describe('Settings - Auto Validation & Timers', () => {
   });
 
   test('should open editor settings and configure auto validate interval', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click({force: true});
+    await app.openSettings();
     await expect(page.locator(SettingsDialogSelectors.autoValidateInput)).toBeVisible();
 
     await page.locator(SettingsDialogSelectors.autoValidateInput).fill('60');
-    await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click();
-    await expect(page.locator('mat-dialog-container')).toHaveCount(0);
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogOkButton);
 
     // Verify saved state
-    await page.locator(SELECTOR_settingsButton).click({force: true});
+    await app.openSettings();
     await expect(page.locator(SettingsDialogSelectors.autoValidateInput)).toBeVisible();
     await expect(page.locator(SettingsDialogSelectors.autoValidateInput)).toHaveValue('60');
-    await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click();
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogOkButton);
   });
 });

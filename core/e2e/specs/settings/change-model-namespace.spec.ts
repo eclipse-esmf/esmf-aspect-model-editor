@@ -13,23 +13,18 @@
 
 import {expect, test} from '@playwright/test';
 import {AppHelper} from '../../support/app-helper';
-import {SELECTOR_namespaceTabValueInput, SELECTOR_namespaceTabVersionInput, SELECTOR_settingsButton} from '../../support/constants';
+import {SELECTOR_namespaceTabValueInput, SELECTOR_namespaceTabVersionInput} from '../../support/constants';
 
 test.describe('Settings - Namespace & Model Configuration', () => {
   let app: AppHelper;
 
   test.beforeEach(async ({page}) => {
     app = new AppHelper(page);
-    await app.visitDefault();
+    await app.startModelling();
   });
 
   test('should open namespace settings and verify default values', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click();
-    await page
-      .locator('.settings__node')
-      .filter({hasText: /Namespace|Modell/i})
-      .first()
-      .click();
+    await app.openSettings(/Namespace|Modell/i);
 
     const nsInput = page.locator(SELECTOR_namespaceTabValueInput);
     const verInput = page.locator(SELECTOR_namespaceTabVersionInput);
@@ -39,12 +34,7 @@ test.describe('Settings - Namespace & Model Configuration', () => {
   });
 
   test('should update namespace and version in settings dialog', async ({page}) => {
-    await page.locator(SELECTOR_settingsButton).click();
-    await page
-      .locator('.settings__node')
-      .filter({hasText: /Namespace|Modell/i})
-      .first()
-      .click();
+    await app.openSettings(/Namespace|Modell/i);
 
     const nsInput = page.locator(SELECTOR_namespaceTabValueInput);
     const verInput = page.locator(SELECTOR_namespaceTabVersionInput);
@@ -58,7 +48,7 @@ test.describe('Settings - Namespace & Model Configuration', () => {
       .filter({hasText: /ok|speichern|save/i})
       .first();
     if (await okBtn.isVisible()) {
-      await okBtn.click();
+      await app.closeDialog(okBtn);
     }
   });
 });

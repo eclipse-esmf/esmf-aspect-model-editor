@@ -34,27 +34,11 @@ test.describe('Test editing Either', () => {
 
     await page.locator(SELECTOR_elementBtn).click();
     await helper.dbClickShape('Characteristic1');
-    await page.locator(FIELD_characteristicName).click({force: true});
-    await page.locator('mat-option').filter({hasText: 'Either'}).click({force: true});
-    await page
-      .locator('mat-option')
-      .waitFor({state: 'detached'})
-      .catch(() => {});
+    await helper.selectDropdown(FIELD_characteristicName, 'Either');
     await page.locator(FIELD_name).fill('Either1');
 
-    await page.locator(FIELD_left).fill('LeftCharacteristic');
-    await page.locator('mat-option').filter({hasText: 'LeftCharacteristic'}).click({force: true});
-    await page
-      .locator('mat-option')
-      .waitFor({state: 'detached'})
-      .catch(() => {});
-
-    await page.locator(FIELD_right).fill('RightCharacteristic');
-    await page.locator('mat-option').filter({hasText: 'RightCharacteristic'}).click({force: true});
-    await page
-      .locator('mat-option')
-      .waitFor({state: 'detached'})
-      .catch(() => {});
+    await helper.selectAutocomplete(FIELD_left, 'LeftCharacteristic');
+    await helper.selectAutocomplete(FIELD_right, 'RightCharacteristic');
 
     await helper.clickSaveButton();
 
