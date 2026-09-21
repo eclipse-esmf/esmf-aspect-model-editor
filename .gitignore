@@ -58,6 +58,10 @@ lsp
 **/.nyc_output
 **/cypress
 
+# playwright
+**/playwright-report
+**/test-results
+
 #jest
 jest-coverage
 junit.xml

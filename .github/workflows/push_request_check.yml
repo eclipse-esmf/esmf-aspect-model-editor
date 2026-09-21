@@ -57,7 +57,7 @@ jobs:
         run: |
           pnpm install
           pnpm rebuild nx
-          pnpm dlx cypress install
+          pnpm exec playwright install --with-deps chromium
         working-directory: core
 
       - name: Identifying and reporting lint patterns
@@ -68,8 +68,8 @@ jobs:
         run: pnpm run test
         working-directory: core
 
-      - name: Performing cypress tests
-        run: pnpm run cypress:ci
+      - name: Performing playwright e2e tests
+        run: pnpm run e2e --project=chromium
         working-directory: core
 
       - name: Build dev package

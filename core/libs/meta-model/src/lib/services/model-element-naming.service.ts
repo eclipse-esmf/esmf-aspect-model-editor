@@ -30,14 +30,18 @@ export class ModelElementNamingService {
    * @param NamedElement element being created
    * @returns element being created
    */
-  resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean): T {
+  resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean, visited = new Set<NamedElement>()): T {
+    if (visited.has(element)) {
+      return element;
+    }
+    visited.add(element);
     const mainAspectModelUrn = `urn:samm:${this.loadedFiles.currentLoadedFile?.namespace}#`;
     for (const child of element.children) {
       if (
         !child.isPredefined &&
         (!child.aspectModelUrn || child.aspectModelUrn.startsWith('#') || child.aspectModelUrn.startsWith(mainAspectModelUrn))
       ) {
-        this.resolveMetaModelElement(child, cached);
+        this.resolveMetaModelElement(child, cached, visited);
       }
     }
     const resolved = this.resolveElementNaming(element);
@@ -46,7 +50,11 @@ export class ModelElementNamingService {
       : resolved;
   }
 
-  resolveMetaModelElement$<T extends NamedElement>(element: T, cached = true): Observable<T> {
+  resolveMetaModelElement$<T extends NamedElement>(element: T, cached = true, visited = new Set<NamedElement>()): Observable<T> {
+    if (visited.has(element)) {
+      return of(element);
+    }
+    visited.add(element);
     const mainAspectModelUrn = `urn:samm:${this.loadedFiles.currentLoadedFile?.namespace}#`;
     const childObservables: Observable<any>[] = [];
     for (const child of element.children) {
@@ -54,7 +62,7 @@ export class ModelElementNamingService {
         !child.isPredefined &&
         (!child.aspectModelUrn || child.aspectModelUrn.startsWith('#') || child.aspectModelUrn.startsWith(mainAspectModelUrn))
       ) {
-        childObservables.push(this.resolveMetaModelElement$(child, cached));
+        childObservables.push(this.resolveMetaModelElement$(child, cached, visited));
       }
     }
 

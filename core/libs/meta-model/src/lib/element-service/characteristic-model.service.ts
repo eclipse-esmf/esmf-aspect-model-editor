@@ -28,6 +28,7 @@ import {inject, Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultCollection,
+  DefaultEither,
   DefaultEntity,
   DefaultEntityInstance,
   DefaultEnumeration,
@@ -271,6 +272,17 @@ export class CharacteristicModelService extends BaseModelService {
         this.currentCachedFile.resolveInstance(form.elementCharacteristic);
         MaxGraphHelper.establishRelation(metaModelElement, form.elementCharacteristic);
       }
+    } else if (metaModelElement instanceof DefaultEither) {
+      metaModelElement.left = form.leftCharacteristic;
+      metaModelElement.right = form.rightCharacteristic;
+      if (form.leftCharacteristic) {
+        this.currentCachedFile.resolveInstance(form.leftCharacteristic);
+        MaxGraphHelper.establishRelation(metaModelElement, form.leftCharacteristic);
+      }
+      if (form.rightCharacteristic) {
+        this.currentCachedFile.resolveInstance(form.rightCharacteristic);
+        MaxGraphHelper.establishRelation(metaModelElement, form.rightCharacteristic);
+      }
     }
   }
 
@@ -349,6 +361,8 @@ export class CharacteristicModelService extends BaseModelService {
           }
         }
       }
+    } else {
+      metaModelElement.dataType = null;
     }
   }
 
