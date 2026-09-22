@@ -13,21 +13,21 @@
 
 :host {
   width: 100vw;
+  max-width: 100vw;
   height: 100vh;
+  max-height: 100vh;
   display: grid;
-  grid-template-columns: 55px auto;
-  grid-template-rows: 50px auto;
+  grid-template-columns: 55px minmax(0, 1fr);
+  grid-template-rows: 50px 36px minmax(0, 1fr);
+  overflow: hidden;
+  box-sizing: border-box;
 
   &:not(:has(.toolbar)) {
-    grid-template-rows: 0 auto;
-
-    #outline {
-      top: 24px;
-    }
+    grid-template-rows: 0 36px minmax(0, 1fr);
 
     .info-section {
-      top: 0;
-      height: 100vh;
+      top: 36px;
+      height: calc(100vh - 36px);
     }
   }
 }
@@ -35,11 +35,25 @@
 .toolbar {
   grid-row: 1 / span 1;
   grid-column: 1 / span 2;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tab-bar {
+  grid-row: 2 / span 1;
+  grid-column: 1 / span 2;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 5;
 }
 
 .sidebar {
-  grid-row: 2 / span 1;
+  grid-row: 3 / span 1;
   grid-column: 1 / span 1;
+  z-index: 10;
 }
 
 ::ng-deep {
@@ -59,14 +73,25 @@
   }
 }
 
-#graph {
-  grid-row: 2 / span 1;
+.canvas-area {
+  grid-row: 3 / span 1;
   grid-column: 2 / span 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#graph {
+  flex: 1 1 auto;
   background: transparent;
   overflow: auto;
   transition: 0.5s;
   position: relative;
   width: 100%;
+  height: 100%;
   outline: none;
 
   &:focus,
@@ -77,16 +102,18 @@
 }
 
 .empty-model {
-  grid-row: 2 / span 1;
-  grid-column: 2 / span 1;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 48px;
   font-weight: 300;
   font-style: italic;
+  pointer-events: none;
 
   span {
     display: block;
@@ -131,12 +158,12 @@
 
 .info-section {
   right: 0;
-  top: 50px;
-  height: calc(100vh - 50px);
+  top: 86px;
+  height: calc(100vh - 86px);
   position: fixed;
   transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   box-shadow: -4px 8px 8px 0 var(--ame-shadow--black-25);
-  z-index: 1;
+  z-index: 10;
   background: var(--ame-surface, white);
   color: var(--ame-font, inherit);
 
@@ -176,12 +203,13 @@
 
 #outline {
   position: absolute;
-  top: 70px;
+  top: 16px;
   right: 24px;
   background-color: var(--ame-surface, white);
   border: 1px solid var(--ame-border-color, transparent);
   border-radius: 8px;
   box-shadow: 0 4px 12px var(--ame-shadow--black-25);
+  z-index: 5;
 
   .map {
     position: absolute;

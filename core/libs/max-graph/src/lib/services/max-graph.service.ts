@@ -64,6 +64,7 @@ export class MaxGraphService {
   private readonly cellsCountSignal = signal(0);
   public readonly cellsCount = this.cellsCountSignal.asReadonly();
   public readonly isModelEmpty = computed(() => this.cellsCountSignal() === 0);
+  public readonly graphModelChanged$ = new Subject<void>();
 
   get currentCachedFile() {
     return this.loadedFiles.currentLoadedFile.cachedFile;
@@ -91,10 +92,16 @@ export class MaxGraphService {
   }
 
   private initCellsCountListener(): void {
-    const updateCount = () => this.cellsCountSignal.set(this.getAllCells()?.length ?? 0);
+    const updateCount = () => {
+      this.cellsCountSignal.set(this.getAllCells()?.length ?? 0);
+      this.graphModelChanged$.next();
+    };
     updateCount();
     this.graph.addListener(InternalEvent.CELLS_ADDED, updateCount);
     this.graph.addListener(InternalEvent.CELLS_REMOVED, updateCount);
+    this.graph.model.addListener(InternalEvent.CHANGE, () => {
+      this.graphModelChanged$.next();
+    });
   }
 
   setCoordinatesForNextCellRender(x: number, y: number) {

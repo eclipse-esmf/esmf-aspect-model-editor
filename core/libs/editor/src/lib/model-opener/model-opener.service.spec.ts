@@ -20,6 +20,7 @@ import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';
+import {TabStateService} from '../tabs/tab-state.service';
 import {ModelOpenerService} from './model-opener.service';
 
 describe('ModelOpenerService', () => {
@@ -29,6 +30,7 @@ describe('ModelOpenerService', () => {
   let fileHandling: FileHandlingService;
   let modelSavingTracker: ModelSavingTrackerService;
   let saveModelDialog: SaveModelDialogService;
+  let tabStateService: TabStateService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -54,6 +56,12 @@ describe('ModelOpenerService', () => {
         MockProvider(SaveModelDialogService, {
           openDialog: vi.fn(() => of(true)),
         }),
+        MockProvider(TabStateService, {
+          findTab: vi.fn(),
+          switchToTab: vi.fn(() => of(true)),
+          saveActiveTabSnapshot: vi.fn(),
+          isActiveTabCleanEmpty: vi.fn(() => false),
+        }),
       ],
     });
 
@@ -63,6 +71,7 @@ describe('ModelOpenerService', () => {
     fileHandling = TestBed.inject(FileHandlingService);
     modelSavingTracker = TestBed.inject(ModelSavingTrackerService);
     saveModelDialog = TestBed.inject(SaveModelDialogService);
+    tabStateService = TestBed.inject(TabStateService);
   });
 
   it('should be created', () => {
@@ -70,7 +79,30 @@ describe('ModelOpenerService', () => {
   });
 
   describe('promptAndOpen', () => {
+    it('should switch directly to tab if file is already open in a tab', () => {
+      vi.spyOn(tabStateService, 'findTab').mockReturnValue({
+        id: 'org.eclipse.examples:1.0.0:TestModel.ttl',
+        file: 'TestModel.ttl',
+        namespace: 'org.eclipse.examples:1.0.0',
+      });
+
+      service
+        .promptAndOpen({
+          file: 'TestModel.ttl',
+          namespace: 'org.eclipse.examples:1.0.0',
+          aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+        })
+        .subscribe();
+
+      expect(tabStateService.switchToTab).toHaveBeenCalledWith(
+        'org.eclipse.examples:1.0.0:TestModel.ttl',
+        'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+      );
+      expect(dialog.open).not.toHaveBeenCalled();
+    });
+
     it('should open dialog and load in current window when user chooses open-in', () => {
+      vi.spyOn(tabStateService, 'findTab').mockReturnValue(undefined);
       vi.spyOn(dialog, 'open').mockReturnValue({
         afterClosed: () => of('open-in'),
       } as any);
@@ -92,7 +124,29 @@ describe('ModelOpenerService', () => {
       );
     });
 
+    it('should open in new tab when user chooses open-tab', () => {
+      vi.spyOn(tabStateService, 'findTab').mockReturnValue(undefined);
+      vi.spyOn(dialog, 'open').mockReturnValue({
+        afterClosed: () => of('open-tab'),
+      } as any);
+
+      service
+        .promptAndOpen({
+          file: 'TestModel.ttl',
+          namespace: 'org.eclipse.examples:1.0.0',
+          aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+        })
+        .subscribe();
+
+      expect(tabStateService.saveActiveTabSnapshot).toHaveBeenCalled();
+      expect(fileHandling.loadNamespaceFile).toHaveBeenCalledWith(
+        'org.eclipse.examples:1.0.0:TestModel.ttl',
+        'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+      );
+    });
+
     it('should open dialog and open in new window when user chooses open-out', () => {
+      vi.spyOn(tabStateService, 'findTab').mockReturnValue(undefined);
       vi.spyOn(dialog, 'open').mockReturnValue({
         afterClosed: () => of('open-out'),
       } as any);
@@ -128,6 +182,48 @@ describe('ModelOpenerService', () => {
 
       expect(fileHandling.loadNamespaceFile).not.toHaveBeenCalled();
       expect(tauriSignals.call).not.toHaveBeenCalled();
+    });
+
+    it('should directly open in current window without dialog if active tab is clean empty', () => {
+      vi.spyOn(tabStateService, 'findTab').mockReturnValue(undefined);
+      vi.spyOn(tabStateService, 'isActiveTabCleanEmpty').mockReturnValue(true);
+
+      service
+        .promptAndOpen({
+          file: 'TestModel.ttl',
+          namespace: 'org.eclipse.examples:1.0.0',
+          aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+        })
+        .subscribe();
+
+      expect(dialog.open).not.toHaveBeenCalled();
+      expect(fileHandling.loadNamespaceFile).toHaveBeenCalledWith(
+        'org.eclipse.examples:1.0.0:TestModel.ttl',
+        'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+      );
+    });
+  });
+
+  describe('promptForUpload', () => {
+    it('should open in new tab when user chooses open-tab for uploaded file', () => {
+      vi.spyOn(dialog, 'open').mockReturnValue({
+        afterClosed: () => of('open-tab'),
+      } as any);
+      vi.spyOn(fileHandling, 'loadModel').mockReturnValue(of(true));
+
+      service
+        .promptForUpload({
+          fileName: 'Uploaded.ttl',
+          namespace: 'org.eclipse.examples:1.0.0',
+          modelContent: 'sample content',
+        })
+        .subscribe();
+
+      expect(dialog.open).toHaveBeenCalledWith(OpenFileDialogComponent, {
+        data: {file: 'Uploaded.ttl', namespace: 'org.eclipse.examples:1.0.0'},
+      });
+      expect(tabStateService.saveActiveTabSnapshot).toHaveBeenCalled();
+      expect(fileHandling.loadModel).toHaveBeenCalledWith('sample content');
     });
   });
 

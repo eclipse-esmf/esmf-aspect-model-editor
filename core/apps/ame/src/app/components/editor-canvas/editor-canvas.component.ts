@@ -15,6 +15,7 @@ import {LoadedFilesService} from '@ame/cache';
 import {
   EditorFormModel,
   EditorService,
+  EditorTabBarComponent,
   EditorToolbarComponent,
   ShapeSettingsComponent,
   ShapeSettingsService,
@@ -52,6 +53,7 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
     ElementsSearchComponent,
     FilesSearchComponent,
     EditorToolbarComponent,
+    EditorTabBarComponent,
     SidebarComponent,
     ShapeSettingsComponent,
     TranslocoDirective,

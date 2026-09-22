@@ -59,6 +59,7 @@
             [matTooltip]="getFileTooltip(namespace.key, file)"
             (click)="selectFile(namespace.key, file)"
             (dblclick)="promptOpenFile(namespace.key, file)"
+            (contextmenu)="openContextMenu($event, namespace.key, file, menuTrigger)"
             (keyup.enter)="selectFile(namespace.key, file)"
             (keyup.space)="selectFile(namespace.key, file)"
             type="button"
@@ -77,6 +78,7 @@
               <span>{{ file.name }}</span>
             </div>
             <button
+              #menuTrigger="matMenuTrigger"
               [matMenuTriggerFor]="menu"
               (click)="prepare(namespace.key, file); $event.stopPropagation()"
               (keyup.enter)="prepare(namespace.key, file); $event.stopPropagation()"
@@ -95,25 +97,46 @@
 
   <mat-menu #menu="matMenu">
     @if (menuSelection()) {
-      <button [disabled]="!isOpenable()" (click)="loadInNewWindow()" mat-menu-item data-testid="fileMenuLoadAspectModelButton">
-        {{ t('sidebar.fileMenu.newWindow') }}
+      <button [matMenuTriggerFor]="openSubMenu" [disabled]="!isOpenable()" mat-menu-item data-testid="fileMenuOpenSubMenuButton">
+        <mat-icon>open_in_new</mat-icon>
+        <span>{{ t('sidebar.fileMenu.open') }}</span>
       </button>
-      <button [disabled]="isLoadDisabled()" (click)="openFile()" mat-menu-item data-testid="fileMenuLoadAspectModelButton">
-        {{ t('sidebar.fileMenu.openCurrent') }}
-      </button>
+
       <button
         [disabled]="!isOpenable() || !sidebarService.isCurrentFileLoaded()"
         (click)="selectFile(menuSelection().namespace, menuSelection().file)"
         mat-menu-item
         data-testid="fileMenuFindElements"
       >
-        {{ t('sidebar.fileMenu.findElements') }}
+        <mat-icon>manage_search</mat-icon>
+        <span>{{ t('sidebar.fileMenu.findElements') }}</span>
       </button>
+
       <button (click)="copyNamespace()" mat-menu-item data-testid="fileMenuCopyToClipboardButton">
-        {{ t('sidebar.fileMenu.copyFilePath') }}
+        <mat-icon>content_copy</mat-icon>
+        <span>{{ t('sidebar.fileMenu.copyFilePath') }}</span>
       </button>
+
       <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-testid="fileMenuDeleteButton">
-        {{ t('sidebar.fileMenu.delete') }}
+        <mat-icon>delete</mat-icon>
+        <span>{{ t('sidebar.fileMenu.delete') }}</span>
+      </button>
+    }
+  </mat-menu>
+
+  <mat-menu #openSubMenu="matMenu">
+    @if (menuSelection()) {
+      <button [disabled]="isLoadDisabled()" (click)="openFile()" mat-menu-item data-testid="fileMenuLoadAspectModelCurrentButton">
+        <mat-icon>tab</mat-icon>
+        <span>{{ t('sidebar.fileMenu.openCurrent') }}</span>
+      </button>
+      <button [disabled]="!isOpenable()" (click)="loadInNewTab()" mat-menu-item data-testid="fileMenuLoadAspectModelNewTabButton">
+        <mat-icon>tab_unselected</mat-icon>
+        <span>{{ t('sidebar.fileMenu.openTab') }}</span>
+      </button>
+      <button [disabled]="!isOpenable()" (click)="loadInNewWindow()" mat-menu-item data-testid="fileMenuLoadAspectModelButton">
+        <mat-icon>open_in_browser</mat-icon>
+        <span>{{ t('sidebar.fileMenu.newWindow') }}</span>
       </button>
     }
   </mat-menu>

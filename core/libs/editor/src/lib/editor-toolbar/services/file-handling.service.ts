@@ -31,7 +31,7 @@ import {
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {decodeText, readFile} from '@ame/utils';
-import {DestroyRef, inject, Injectable} from '@angular/core';
+import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {saveAs} from 'file-saver';
@@ -43,8 +43,10 @@ import {ConfirmDialogService, DialogOptions} from '../../confirm-dialog/confirm-
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
 import {EditorService} from '../../editor.service';
 import {ModelLoaderService} from '../../model-loader.service';
+import {ModelOpenerService} from '../../model-opener/model-opener.service';
 import {ModelSaverService} from '../../model-saver.service';
 import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
+import {TabStateService} from '../../tabs/tab-state.service';
 import {FileUploadOptions} from '../interfaces/file-upload-options';
 import {FileTypes, FileUploadService} from './file-upload.service';
 
@@ -98,6 +100,15 @@ export class FileHandlingService {
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
   private rdfNodeService = inject(RdfNodeService);
+  private injector = inject(Injector);
+
+  private get tabStateService(): TabStateService {
+    return this.injector.get(TabStateService);
+  }
+
+  private get modelOpenerService(): ModelOpenerService {
+    return this.injector.get(ModelOpenerService);
+  }
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
@@ -110,7 +121,24 @@ export class FileHandlingService {
   }
 
   onLoadModel(fileInfo?: FileInfo) {
-    this.loadModel(decodeText(fileInfo.content)).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
+    if (!fileInfo) return;
+    const modelContent = decodeText(fileInfo.content);
+    if (!modelContent) return;
+
+    if (this.tabStateService.isActiveTabCleanEmpty()) {
+      this.loadModel(modelContent).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
+      return;
+    }
+
+    const fileName = fileInfo.name || fileInfo.path?.split(/[/\\]/).pop() || 'Model.ttl';
+    const namespaceMatch =
+      modelContent.match(/@prefix\s+:[ \t]*<urn:samm:([^#]+)#>/i) || modelContent.match(/@prefix\s+\w+:[ \t]*<urn:samm:([^#]+)#>/i);
+    const namespace = namespaceMatch ? namespaceMatch[1] : '';
+
+    this.modelOpenerService
+      .promptForUpload({fileName, namespace, modelContent})
+      .pipe(takeUntilDestroyed(this.destroyRef), first())
+      .subscribe();
   }
 
   loadModel(modelContent: string): Observable<any> {
@@ -230,6 +258,7 @@ export class FileHandlingService {
 
         this.modelSaveTracker.updateSavedModel(true);
         this.titleService.updateTitle(absoluteName);
+        this.tabStateService.onModelLoaded(this.loadedFilesService.currentLoadedFile);
       }),
       finalize(() => this.loadingScreenService.close()),
     );

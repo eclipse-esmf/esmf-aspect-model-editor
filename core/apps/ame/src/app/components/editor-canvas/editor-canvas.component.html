@@ -15,6 +15,8 @@
   <ame-editor-toolbar class="toolbar"></ame-editor-toolbar>
 }
 
+<ame-editor-tab-bar class="tab-bar"></ame-editor-tab-bar>
+
 <ame-sidebar class="sidebar"></ame-sidebar>
 
 @if (isShapeSettingsOpened(); as isOpened) {
@@ -45,27 +47,29 @@
   <ame-files-search></ame-files-search>
 }
 
-<div id="graph" #graph></div>
+<div class="canvas-area">
+  <div id="graph" #graph></div>
 
-@if (isModelEmpty()) {
-  <div class="empty-model" *transloco="let t">
-    <span>
-      {{ t('editorCanvas.dragElementLine1') }} <br />
-      {{ t('editorCanvas.dragElementLine2') }}
-    </span>
-  </div>
-}
+  @if (isModelEmpty()) {
+    <div class="empty-model" *transloco="let t">
+      <span>
+        {{ t('editorCanvas.dragElementLine1') }} <br />
+        {{ t('editorCanvas.dragElementLine2') }}
+      </span>
+    </div>
+  }
 
-<div class="map-graph" id="outline" [class.hidden]="isMapVisible() === false">
-  <div
-    class="map"
-    (click)="toggleMap()"
-    (keyup.enter)="toggleMap()"
-    (keyup.space)="toggleMap()"
-    tabindex="0"
-    role="button"
-    aria-label="Toggle map visibility"
-  >
-    <mat-icon>map</mat-icon>
+  <div class="map-graph" id="outline" [class.hidden]="isMapVisible() === false">
+    <div
+      class="map"
+      (click)="toggleMap()"
+      (keyup.enter)="toggleMap()"
+      (keyup.space)="toggleMap()"
+      tabindex="0"
+      role="button"
+      aria-label="Toggle map visibility"
+    >
+      <mat-icon>map</mat-icon>
+    </div>
   </div>
 </div>

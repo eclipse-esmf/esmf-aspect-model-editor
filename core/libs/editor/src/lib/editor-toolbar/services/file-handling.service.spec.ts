@@ -30,7 +30,9 @@ import {ConfirmDialogService} from '../../confirm-dialog/confirm-dialog.service'
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
 import {EditorService} from '../../editor.service';
 import {ModelLoaderService} from '../../model-loader.service';
+import {ModelOpenerService} from '../../model-opener/model-opener.service';
 import {ModelSaverService} from '../../model-saver.service';
+import {TabStateService} from '../../tabs/tab-state.service';
 import {FileHandlingService} from './file-handling.service';
 import {FileUploadService} from './file-upload.service';
 
@@ -114,6 +116,13 @@ describe('FileHandlingService', () => {
         MockProvider(ModelSaverService),
         MockProvider(TitleService, {updateTitle: vi.fn()}),
         MockProvider(RdfNodeService),
+        MockProvider(TabStateService, {
+          onModelLoaded: vi.fn(),
+          isActiveTabCleanEmpty: vi.fn(() => true),
+        }),
+        MockProvider(ModelOpenerService, {
+          promptForUpload: vi.fn(() => of(true)),
+        }),
       ],
     });
 

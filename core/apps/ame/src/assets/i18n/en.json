@@ -7,10 +7,10 @@
     "cancel": "Cancel"
   },
   "saveModalDialog": {
-    "title": "Save changes before closing?",
-    "content": "You have unsaved changes.",
-    "continueButton": "Continue editing",
-    "discardButton": "Discard Changes",
+    "title": "Do you want to save changes?",
+    "content": "Your changes will be lost if you don't save them.",
+    "continueButton": "Cancel",
+    "discardButton": "Don't Save",
     "saveButton": "Save"
   },
   "sammMigration": {
@@ -357,8 +357,10 @@
       "copiedWorkspacePath": "Workspace path copied to clipboard"
     },
     "fileMenu": {
+      "open": "Open",
       "newWindow": "Open in new window",
-      "openCurrent": "Open in current",
+      "openTab": "Open in new tab",
+      "openCurrent": "Open in current tab",
       "findElements": "Find elements",
       "copyFilePath": "Copy file path",
       "delete": "Delete"
@@ -662,7 +664,8 @@
     "foldNamespaces": "Fold namespaces",
     "outdatedFile": "This file is based on an older SAMM version ({{sammVersion}})",
     "erroredFile": "This file has loaded with errors",
-    "currentFile": "This file is currently opened in the current window"
+    "currentFile": "This file is currently opened in the current window",
+    "openNewModelTab": "Open new model tab"
   },
   "searches": {
     "elementsLabel": "Search elements...",
@@ -678,6 +681,7 @@
         "content": "You are about to open the file <b>{{fileName}}</b> from namespace <b>{{namespace}}</b>.<br />Please choose where would you like to open it",
         "cancel": "Cancel",
         "openInThisWindow": "Open in this window",
+        "openInNewTab": "Open in new tab",
         "openInNewWindow": "Open in new window"
       }
     }

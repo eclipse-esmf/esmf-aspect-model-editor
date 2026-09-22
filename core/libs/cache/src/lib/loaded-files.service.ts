@@ -136,6 +136,14 @@ export class LoadedFilesService {
     }
   }
 
+  setFiles(files: Record<string, NamespaceFile>) {
+    this.filesSignal.set(files);
+  }
+
+  getSnapshot(): Record<string, NamespaceFile> {
+    return {...this.filesSignal()};
+  }
+
   private updateFiles(fn: (files: Record<string, NamespaceFile>) => Record<string, NamespaceFile>) {
     this.filesSignal.update(fn);
   }

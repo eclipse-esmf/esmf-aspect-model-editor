@@ -14,35 +14,62 @@
 import {LoadedFilesService} from '@ame/cache';
 import {MaxGraphService} from '@ame/max-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
-import {Injectable, inject} from '@angular/core';
-import {map, take} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {catchError, map, Observable, of, take} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ModelSavingTrackerService {
-  private modelService = inject(ModelService);
-  private rdfService = inject(RdfService);
-  private maxgraphService = inject(MaxGraphService);
-  private loadedFilesService = inject(LoadedFilesService);
-  private savedModel: string;
-  private firstLoad: boolean;
+  private readonly modelService = inject(ModelService);
+  private readonly rdfService = inject(RdfService);
+  private readonly maxgraphService = inject(MaxGraphService);
+  private readonly loadedFilesService = inject(LoadedFilesService);
+  private savedModel = '';
+  private firstLoad = false;
 
-  private get currentModel$() {
+  public get currentModel$(): Observable<string> {
+    if (!this.loadedFilesService?.currentLoadedFile?.rdfModel) {
+      return of('');
+    }
     return this.modelService.synchronizeModelToRdf().pipe(
       take(1),
       map(() => this.rdfService.serializeModel(this.loadedFilesService.currentLoadedFile.rdfModel)),
+      catchError(() => of('')),
     );
   }
 
-  public get isSaved$() {
+  public get isSaved$(): Observable<boolean> {
+    const hasCells = (this.maxgraphService.getAllCells()?.length ?? 0) > 0;
+    if (!hasCells) {
+      return of(true);
+    }
+
+    if (!this.loadedFilesService?.currentLoadedFile?.rdfModel) {
+      return of(true);
+    }
+
     return this.currentModel$.pipe(
-      map(currentModel => (!this.firstLoad && this.savedModel === currentModel) || !this.maxgraphService.getAllCells()?.length),
+      map(currentModel => {
+        if (!currentModel) return true;
+        if (this.firstLoad) return false;
+        return this.savedModel === currentModel;
+      }),
+      catchError(() => of(true)),
     );
   }
 
-  public updateSavedModel(firstLoad = false) {
+  public getSavedModel(): string {
+    return this.savedModel;
+  }
+
+  public setSavedModel(saved: string, firstLoad = false): void {
+    this.savedModel = saved ?? '';
+    this.firstLoad = firstLoad;
+  }
+
+  public updateSavedModel(firstLoad = false): void {
     this.currentModel$.subscribe(currentModel => {
       this.firstLoad = firstLoad;
-      this.savedModel = currentModel;
+      this.savedModel = currentModel ?? '';
     });
   }
 }

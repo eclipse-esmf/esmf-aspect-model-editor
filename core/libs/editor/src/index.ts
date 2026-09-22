@@ -30,3 +30,6 @@ export * from './lib/open-element-window/open-element-window.service';
 export * from './lib/rename-model/rename-model.component';
 export * from './lib/rename-model/rename-model.service';
 export * from './lib/save-model-dialog/save-model-dialog.service';
+export * from './lib/tabs/editor-tab-bar/editor-tab-bar.component';
+export * from './lib/tabs/tab-state.service';
+export * from './lib/tabs/tab.model';

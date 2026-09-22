@@ -164,8 +164,30 @@ export class WorkspaceFileListComponent {
     const selection = this.menuSelection();
     if (!selection) return false;
 
-    const {namespace, file} = selection;
-    return !(this.sidebarService.isCurrentFile(namespace, file.name) || file.outdated || file.errored);
+    const {file} = selection;
+    return !(file.outdated || file.errored);
+  }
+
+  public openContextMenu($event: MouseEvent, namespace: string, file: FileStatus, trigger: MatMenuTrigger) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.prepare(namespace, file);
+    trigger.openMenu();
+  }
+
+  public loadInNewTab() {
+    const selection = this.menuSelection();
+    if (!selection || selection.file.outdated || selection.file.errored) return;
+
+    this.modelOpener
+      .openInNewTab({
+        file: selection.file.name,
+        namespace: selection.namespace,
+        aspectModelUrn: selection.file.aspectModelUrn,
+      })
+      .subscribe();
+
+    this.menuSelection.set(null);
   }
 
   public loadInNewWindow() {
@@ -182,7 +204,11 @@ export class WorkspaceFileListComponent {
   }
 
   public isLoadDisabled() {
-    return !this.isOpenable();
+    const selection = this.menuSelection();
+    if (!selection) return true;
+
+    const {namespace, file} = selection;
+    return this.sidebarService.isCurrentFile(namespace, file.name) || !this.isOpenable();
   }
 
   public isCurrentFile(namespace?: string, fileName?: string): boolean {

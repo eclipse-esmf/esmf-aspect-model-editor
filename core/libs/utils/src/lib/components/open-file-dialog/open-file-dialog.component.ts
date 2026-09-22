@@ -21,7 +21,7 @@ export interface OpenFileDialogData {
   namespace: string;
 }
 
-export type OpenFileDialogResult = 'open-in' | 'open-out';
+export type OpenFileDialogResult = 'open-in' | 'open-tab' | 'open-out';
 
 @Component({
   selector: 'ame-open-file-dialog',

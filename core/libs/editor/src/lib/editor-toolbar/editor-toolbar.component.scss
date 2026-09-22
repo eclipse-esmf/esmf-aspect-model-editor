@@ -19,7 +19,8 @@
   height: 50px;
   z-index: 1;
   background-color: var(--ame-surface, white);
-  box-shadow: 0 4px 8px 0 var(--ame-shadow--black-25);
+  border-bottom: 1px solid var(--ame-gray-10, #e0e0e0);
+  box-shadow: 0 2px 4px 0 var(--ame-shadow--black-25);
 }
 
 mat-icon {

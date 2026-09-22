@@ -37,6 +37,7 @@ describe('WorkspaceFileListComponent', () => {
   let modelOpenerMock: {
     promptAndOpen: ReturnType<typeof vi.fn>;
     openInCurrentWindow: ReturnType<typeof vi.fn>;
+    openInNewTab: ReturnType<typeof vi.fn>;
     openInNewWindow: ReturnType<typeof vi.fn>;
   };
 
@@ -54,6 +55,7 @@ describe('WorkspaceFileListComponent', () => {
     modelOpenerMock = {
       promptAndOpen: vi.fn(() => of(true)),
       openInCurrentWindow: vi.fn(() => of(true)),
+      openInNewTab: vi.fn(() => of(true)),
       openInNewWindow: vi.fn(),
     };
 
@@ -200,6 +202,45 @@ describe('WorkspaceFileListComponent', () => {
         aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
       });
       expect(component.menuSelection()).toBeNull();
+    }
+  });
+
+  it('should load file in new tab via ModelOpenerService', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    expect(file).toBeDefined();
+    if (file) {
+      component.prepare('org.eclipse.esmf:1.0.0', file);
+
+      expect(component.isOpenable()).toBe(true);
+      component.loadInNewTab();
+
+      expect(modelOpenerMock.openInNewTab).toHaveBeenCalledWith({
+        namespace: 'org.eclipse.esmf:1.0.0',
+        file: 'File1.ttl',
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
+      });
+      expect(component.menuSelection()).toBeNull();
+    }
+  });
+
+  it('should handle context menu event on file item', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    expect(file).toBeDefined();
+    if (file) {
+      const event = {
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+      } as unknown as MouseEvent;
+      const triggerMock = {
+        openMenu: vi.fn(),
+      } as any;
+
+      component.openContextMenu(event, 'org.eclipse.esmf:1.0.0', file, triggerMock);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(component.menuSelection()).toEqual({namespace: 'org.eclipse.esmf:1.0.0', file});
+      expect(triggerMock.openMenu).toHaveBeenCalled();
     }
   });
 

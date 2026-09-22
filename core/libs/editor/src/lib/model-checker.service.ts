@@ -113,10 +113,11 @@ export class ModelCheckerService {
     const status = new FileStatus(fileName);
     const currentFile = this.loadedFilesService.currentLoadedFile;
 
+    const sammVersion = modelVersion || rdfModel?.samm?.version || 'unknown';
     status.dependencies = dependencies;
     status.missingDependencies = missingDependencies;
-    status.sammVersion = modelVersion || 'unknown';
-    status.outdated = isVersionOutdated(modelVersion, config.currentSammVersion);
+    status.sammVersion = sammVersion;
+    status.outdated = isVersionOutdated(sammVersion, config.currentSammVersion);
     status.loaded = currentFile?.absoluteName === absoluteName;
     status.errored = status.sammVersion === 'unknown' || missingDependencies.length > 0;
     status.aspectModelUrn = aspectModelUrn;

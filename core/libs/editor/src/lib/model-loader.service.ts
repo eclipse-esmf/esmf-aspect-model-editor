@@ -18,7 +18,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {ConfigurationService} from '@ame/settings-dialog';
 import {BrowserService, config, ModelSavingTrackerService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {isVersionOutdated} from '@ame/utils';
-import {DestroyRef, inject, Injectable} from '@angular/core';
+import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
@@ -26,6 +26,7 @@ import {catchError, concatMap, first, forkJoin, from, map, Observable, of, switc
 import {ModelRendererService} from './model-renderer.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LoadingCodeErrors} from './models/loading-errors';
+import {TabStateService} from './tabs/tab-state.service';
 
 interface TmpLoadedFiles {
   files: LoadedFilesService['files'];
@@ -37,6 +38,7 @@ interface TmpLoadedFiles {
 @Injectable({providedIn: 'root'})
 export class ModelLoaderService {
   private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
   private modelApiService = inject(ModelApiService);
   private notificationsService = inject(NotificationsService);
@@ -47,6 +49,10 @@ export class ModelLoaderService {
   private tauriSignalsService = inject(TauriSignalsService);
   private configurationService = inject(ConfigurationService);
   private titleService = inject(TitleService);
+
+  private get tabStateService(): TabStateService {
+    return this.injector.get(TabStateService);
+  }
 
   private tmpLoadedFiles: TmpLoadedFiles;
 
@@ -84,6 +90,7 @@ export class ModelLoaderService {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
           this.titleService.updateTitle(this.loadedFilesService.currentLoadedFile?.absoluteName);
         }
+        this.tabStateService.onModelLoaded(this.loadedFilesService.currentLoadedFile, payload.fromWorkspace, payload.editElementUrn);
       }),
       tap(() => (this.loadedFilesService.currentLoadedFile.namespaceFiles = {})),
     );

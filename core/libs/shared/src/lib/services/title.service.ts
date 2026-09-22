@@ -11,11 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 
 @Injectable({providedIn: 'root'})
 export class TitleService extends Title {
+  public readonly activeAbsoluteName = signal<string>('');
+
   override setTitle(newTitle: string): void {
     super.setTitle(newTitle);
     if (typeof window !== 'undefined' && ('__TAURI_INTERNALS__' in window || '__TAURI__' in window || (window as any).tauriApi)) {
@@ -32,6 +34,7 @@ export class TitleService extends Title {
       return;
     }
 
+    this.activeAbsoluteName.set(absoluteName);
     const [namespace, version, modelName] = absoluteName.split(':');
     const title = `${modelName} - ${namespace}:${version} | Aspect Model Editor`;
     this.setTitle(title);

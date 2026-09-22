@@ -24,6 +24,8 @@ import {RdfModel} from '@esmf/aspect-model-loader';
 import {catchError, delayWhen, first, map, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
 import {FileHandlingService} from './editor-toolbar/services/file-handling.service';
 
+import {TabStateService} from './tabs/tab-state.service';
+
 @Injectable({providedIn: 'root'})
 export class ModelSaverService {
   private destroyRef = inject(DestroyRef);
@@ -37,6 +39,10 @@ export class ModelSaverService {
   private translate = inject(LanguageTranslationService);
   private configurationService = inject(ConfigurationService);
   private injector = inject(Injector);
+
+  private get tabStateService(): TabStateService {
+    return this.injector.get(TabStateService);
+  }
 
   private saveModelSubscription$: Subscription;
 
@@ -55,6 +61,7 @@ export class ModelSaverService {
       switchMap(() => this.writeModelToWorkspace(rdfModel)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
+        this.tabStateService.setTabDirty(this.tabStateService.activeTabId(), false);
         this.notificationsService.info({title: this.translate.language.notificationService.aspectSavedSuccess});
         console.info('Aspect model was saved to the local folder');
         this.sidebarService.workspace.refresh();

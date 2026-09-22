@@ -7,10 +7,10 @@
     "cancel": "拒绝"
   },
   "saveModalDialog": {
-    "title": "关闭前保存更改?",
-    "content": "您有未保存的更改.",
-    "continueButton": "继续编辑",
-    "discardButton": "放弃更改",
+    "title": "是否保存更改?",
+    "content": "如果不保存，您的更改将会丢失。",
+    "continueButton": "取消",
+    "discardButton": "不保存",
     "saveButton": "保存"
   },
   "sammMigration": {
@@ -360,8 +360,10 @@
       "copiedWorkspacePath": "工作区路径已复制到剪贴板"
     },
     "fileMenu": {
+      "open": "打开",
       "newWindow": "在新窗口中打开",
-      "openCurrent": "在当前打开",
+      "openTab": "在新标签页中打开",
+      "openCurrent": "在当前标签页中打开",
       "findElements": "寻找元素",
       "copyFilePath": "复制文件路径",
       "delete": "删除"
@@ -665,7 +667,8 @@
     "foldNamespaces": "折叠namespaces",
     "outdatedFile": "此文件基于较旧的SAMM版本({{sammVersion}})",
     "erroredFile": "这个文件加载出错",
-    "currentFile": "该文件在当前窗口中打开"
+    "currentFile": "该文件在当前窗口中打开",
+    "openNewModelTab": "打开新模型标签页"
   },
   "searches": {
     "elementsLabel": "寻找元素...",
@@ -681,6 +684,7 @@
         "content": "您即将从命名空间<b>{{namespace}}</b>打开文件<b>{{fileName}}</b>。<br />请选择打开的位置",
         "cancel": "取消",
         "openInThisWindow": "在当前窗口打开",
+        "openInNewTab": "在新标签页打开",
         "openInNewWindow": "在新窗口打开"
       }
     }

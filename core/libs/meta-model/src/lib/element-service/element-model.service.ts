@@ -56,6 +56,7 @@ export class ElementModelService {
     const modelService =
       modelElement instanceof DefaultEnumeration ? characteristicModelService : this.modelRootService.getElementModelService(modelElement);
     modelService.update(cell, form);
+    this.maxgraphService?.graphModelChanged$?.next?.();
   }
 
   deleteElement(cell: Cell): void {
