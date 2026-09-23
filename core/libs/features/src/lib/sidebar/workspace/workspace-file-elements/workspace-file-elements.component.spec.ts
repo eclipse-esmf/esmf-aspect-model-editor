@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
+import {MaxGraphService} from '@ame/graph';
+import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {DRAGGABLE_SERVICE, MODEL_LOADER_SERVICE} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';

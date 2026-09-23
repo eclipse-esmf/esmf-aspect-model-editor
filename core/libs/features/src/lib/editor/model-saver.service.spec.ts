@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelService, RdfSerializerService} from '@ame/rdf';
-import {CONFIGURATION_SERVICE, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfSerializerService} from '@ame/infrastructure';
+import {CONFIGURATION_SERVICE, LanguageTranslationService, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';

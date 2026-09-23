@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslationService} from '@ame/shared';
 import {Component, inject} from '@angular/core';
 import {FormField} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, LoadedFilesService} from '@ame/cache';
+import {CacheUtils, LoadedFilesService} from '@ame/infrastructure';
 import {ElementCreatorService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, inject, input, OnInit, output, signal} from '@angular/core';

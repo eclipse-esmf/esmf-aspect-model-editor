@@ -10,9 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService} from '@ame/cache';
-import {filterRelations, ModelFilter, ModelTree} from '@ame/loader-filters';
-import {RdfModelUtil} from '@ame/rdf';
+import {filterRelations, ModelFilter, ModelTree} from '@ame/domain';
+import {LoadedFilesService, RdfModelUtil} from '@ame/infrastructure';
 import {
   basicShapeGeometry,
   ElementPropertyUtil,

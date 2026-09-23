@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, LoadedFilesService} from '@ame/cache';
-import {MaxGraphHelper} from '@ame/max-graph';
+import {MaxGraphHelper} from '@ame/graph';
+import {CacheUtils, LoadedFilesService} from '@ame/infrastructure';
 import {config, IEntityInstanceService, NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, Entity, Value} from '@esmf/aspect-model-loader';

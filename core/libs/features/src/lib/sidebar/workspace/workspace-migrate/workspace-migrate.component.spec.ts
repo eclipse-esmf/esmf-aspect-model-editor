@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MigratorApiService} from '@ame/api';
+import {MigratorApiService} from '@ame/infrastructure';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslocoTestingModule} from '@jsverse/transloco';

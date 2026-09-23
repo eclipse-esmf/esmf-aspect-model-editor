@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {FiltersService, ModelTree} from '@ame/loader-filters';
+import {FiltersService, ModelTree} from '@ame/domain';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {
   BrowserService,
   ISammLanguageSettingsService,

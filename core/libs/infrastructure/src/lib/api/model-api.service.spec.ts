@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, IPC_RENDERER} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, IPC_RENDERER, LanguageTranslationService} from '@ame/shared';
 import {provideHttpClient} from '@angular/common/http';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';

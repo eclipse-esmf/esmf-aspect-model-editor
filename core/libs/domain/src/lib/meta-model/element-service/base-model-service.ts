@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {GRAPH_ADAPTER, IGraphAdapter} from '@ame/contracts';
-import {ModelService, RdfService} from '@ame/rdf';
-import {ElementRelationUtil, getModelElement, useUpdater} from '@ame/shared';
+import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
+import {ElementRelationUtil, getModelElement, GRAPH_ADAPTER, IGraphAdapter, useUpdater} from '@ame/shared';
 import {inject, Injector} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultEnumeration, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 

@@ -1,6 +1,4 @@
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService, RdfService} from '@ame/rdf';
+import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {ENTITY_INSTANCE_SERVICE, GRAPH_ADAPTER, IGraphAdapter, SAMM_LANGUAGE_SETTINGS_SERVICE, setElementNode} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultProperty, DefaultValue} from '@esmf/aspect-model-loader';

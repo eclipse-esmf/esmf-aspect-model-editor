@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
+import {MaxGraphService} from '@ame/graph';
+import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {BrowserService, TauriSignals, TauriSignalsService, TitleService} from '@ame/shared';
 import {computed, DestroyRef, effect, inject, Injectable, Injector, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

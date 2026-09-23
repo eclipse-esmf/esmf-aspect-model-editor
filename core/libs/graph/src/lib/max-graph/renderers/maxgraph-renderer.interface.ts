@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelTree} from '@ame/loader-filters';
+import {ModelTree} from '@ame/domain';
 import {
   DefaultAspect,
   DefaultCharacteristic,

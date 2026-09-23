@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {AlertService, IMaxGraphSettingsService, LoadingScreenService, MAX_GRAPH_SETTINGS_SERVICE, TitleService} from '@ame/shared';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {NgClass} from '@angular/common';

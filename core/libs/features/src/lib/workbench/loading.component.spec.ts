@@ -18,8 +18,8 @@ import {Router} from '@angular/router';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {TauriTunnelService} from '../../services/tauri-tunnel.service';
 import {LoadingComponent} from './loading.component';
+import {TauriTunnelService} from './tauri-tunnel.service';
 
 describe('LoadingComponent', () => {
   let component: LoadingComponent;

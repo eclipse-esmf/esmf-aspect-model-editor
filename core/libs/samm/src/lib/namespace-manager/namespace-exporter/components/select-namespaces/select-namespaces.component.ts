@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {IModelCheckerService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ModelApiService} from '@ame/infrastructure';
+import {IModelCheckerService, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';

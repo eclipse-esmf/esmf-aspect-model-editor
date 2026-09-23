@@ -11,17 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService, ModelData} from '@ame/api';
-import {RdfNodeService} from '@ame/aspect-exporter';
-import {LoadedFilePayload, LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {ModelService, RdfModelUtil, RdfService} from '@ame/rdf';
+import {MaxGraphService} from '@ame/graph';
+import {
+  LoadedFilePayload,
+  LoadedFilesService,
+  ModelApiService,
+  ModelData,
+  ModelService,
+  NamespaceFile,
+  RdfModelUtil,
+  RdfService,
+} from '@ame/infrastructure';
+import {RdfNodeService} from '@ame/samm';
 import {
   decodeText,
   FileTypes,
   FileUploadService,
   GeneralConfig,
   IFileHandlingService,
+  LanguageTranslationService,
   LoadingScreenOptions,
   LoadingScreenService,
   NotificationsService,
@@ -30,7 +38,6 @@ import {
   TauriSignalsService,
   TitleService,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
 import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';

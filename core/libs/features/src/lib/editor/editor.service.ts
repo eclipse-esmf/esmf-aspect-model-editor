@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AsyncApi, ModelApiService, OpenApi, ViolationError} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
+import {ElementModelService, FILTER_ATTRIBUTES, FilterAttributesService, FiltersService, ModelElementNamingService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -24,14 +22,14 @@ import {
   MaxGraphShapeSelectorService,
   ShapeConfiguration,
   ThemeService,
-} from '@ame/max-graph';
-import {ElementModelService, ModelElementNamingService} from '@ame/meta-model';
-import {ModelService, RdfService} from '@ame/rdf';
+} from '@ame/graph';
+import {AsyncApi, LoadedFilesService, ModelApiService, ModelService, OpenApi, RdfService, ViolationError} from '@ame/infrastructure';
 import {
   AlertService,
   ElementCreatorService,
   IDraggableService,
   IEditorValidationService,
+  LanguageTranslationService,
   LoadingScreenService,
   NotificationsService,
   sammElements,
@@ -40,7 +38,6 @@ import {
   useUpdater,
   ValidateStatus,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
 import {DestroyRef, inject, Injectable, Injector, signal} from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';

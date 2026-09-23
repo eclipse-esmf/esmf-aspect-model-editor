@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelService, RdfSerializerService} from '@ame/rdf';
-import {IModelSaverTokenService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfSerializerService} from '@ame/infrastructure';
+import {IModelSaverTokenService, LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';

@@ -13,7 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-vi.mock('@ame/loader-filters', () => ({
+vi.mock('@ame/domain', () => ({
   ModelFilter: {
     DEFAULT: 'mock-default',
   },
@@ -24,16 +24,16 @@ vi.mock('@ame/loader-filters', () => ({
   },
 }));
 
-import {LoadedFilesService} from '@ame/cache';
-import {FiltersService} from '@ame/loader-filters';
+import {FiltersService} from '@ame/domain';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {
   ElementCreatorService,
   ENTITY_INSTANCE_SERVICE,
+  LanguageTranslationService,
   MODEL_ELEMENT_NAMING_SERVICE,
   NotificationsService,
   SAMM_LANGUAGE_SETTINGS_SERVICE,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';

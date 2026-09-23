@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
+import {MaxGraphService} from '@ame/graph';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {ElementIconComponent, ElementType, sammElements} from '@ame/shared';
 import {Component, computed, inject} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';

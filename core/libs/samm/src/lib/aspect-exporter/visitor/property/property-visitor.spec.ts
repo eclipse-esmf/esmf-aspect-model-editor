@@ -13,7 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {DefaultCharacteristic, DefaultProperty, DefaultValue, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';

@@ -1,16 +1,15 @@
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf';
+import {LoadedFilesService, ModelService} from '@ame/infrastructure';
 import {
   CONFIRM_DIALOG_SERVICE,
   ConfirmDialogEnum,
   ElementRelationUtil,
   GRAPH_ADAPTER,
+  LanguageTranslationService,
   NotificationsService,
   RENAME_MODEL_DIALOG_SERVICE,
   SAMM_LANGUAGE_SETTINGS_SERVICE,
   TitleService,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
 import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
 import {of} from 'rxjs';

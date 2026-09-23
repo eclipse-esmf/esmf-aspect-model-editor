@@ -11,19 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {
   CONFIRM_DIALOG_SERVICE,
   ConfirmDialogEnum,
   IConfirmDialogService,
   IModelOpenerService,
+  LanguageTranslationService,
   MODEL_OPENER_SERVICE,
   NotificationsService,
   TauriSignals,
   TauriSignalsService,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';

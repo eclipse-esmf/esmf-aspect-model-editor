@@ -10,6 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+
 import {ModelApiService} from '@ame/infrastructure';
 import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {NgOptimizedImage} from '@angular/common';
@@ -19,11 +20,12 @@ import {Router} from '@angular/router';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {Observable, catchError, forkJoin, of, switchMap, take} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {TauriTunnelService} from '../../services/tauri-tunnel.service';
+import {TauriTunnelService} from './tauri-tunnel.service';
 
 @Component({
-  templateUrl: 'loading.component.html',
-  styleUrls: ['loading.component.scss'],
+  selector: 'ame-loading',
+  templateUrl: './loading.component.html',
+  styleUrls: ['./loading.component.scss'],
   imports: [NgOptimizedImage, TranslocoDirective],
 })
 export class LoadingComponent implements OnInit {

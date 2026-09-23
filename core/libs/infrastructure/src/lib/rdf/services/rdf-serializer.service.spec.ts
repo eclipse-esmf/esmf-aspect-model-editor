@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslationService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';

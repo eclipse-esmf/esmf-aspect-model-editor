@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {basicShapeGeometry, SHAPE_SETTINGS_STATE_SERVICE, smallCircleShapeGeometry} from '@ame/shared';
 import {Injector} from '@angular/core';
 import {TestBed} from '@angular/core/testing';

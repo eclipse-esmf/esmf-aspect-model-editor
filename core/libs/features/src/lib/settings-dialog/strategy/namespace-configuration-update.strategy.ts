@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {TitleService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';

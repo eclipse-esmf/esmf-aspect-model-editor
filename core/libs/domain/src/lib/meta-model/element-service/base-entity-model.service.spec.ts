@@ -1,5 +1,4 @@
-import {GRAPH_ADAPTER, IGraphAdapter, NotificationsService, SHAPE_CONNECTOR_SERVICE} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {GRAPH_ADAPTER, IGraphAdapter, LanguageTranslationService, NotificationsService, SHAPE_CONNECTOR_SERVICE} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';

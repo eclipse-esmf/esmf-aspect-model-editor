@@ -13,7 +13,7 @@
 
 import {inject, Injectable} from '@angular/core';
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/shared';
 import {
   ComplexType,

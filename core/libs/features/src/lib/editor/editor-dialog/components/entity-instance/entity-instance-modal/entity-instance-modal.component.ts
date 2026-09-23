@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {config} from '@ame/shared';
 import {NgClass} from '@angular/common';
 import {Component, computed, inject, signal, viewChild} from '@angular/core';

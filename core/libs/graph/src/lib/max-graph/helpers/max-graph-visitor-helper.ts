@@ -10,8 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {RdfModelUtil} from '@ame/rdf';
+import {LoadedFilesService, NamespaceFile, RdfModelUtil} from '@ame/infrastructure';
 import {ISammLanguageSettingsService} from '@ame/shared';
 import {
   Aspect,

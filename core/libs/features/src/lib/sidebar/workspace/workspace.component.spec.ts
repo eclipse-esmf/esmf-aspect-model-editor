@@ -11,10 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {NamespacesManagerService} from '@ame/namespace-manager';
-import {BrowserService, IPC_RENDERER, MODEL_CHECKER_SERVICE, NotificationsService, TauriSignalsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ModelApiService} from '@ame/infrastructure';
+import {NamespacesManagerService} from '@ame/samm';
+import {
+  BrowserService,
+  IPC_RENDERER,
+  LanguageTranslationService,
+  MODEL_CHECKER_SERVICE,
+  NotificationsService,
+  TauriSignalsService,
+} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

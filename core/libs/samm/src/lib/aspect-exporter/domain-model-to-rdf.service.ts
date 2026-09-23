@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf';
+import {LoadedFilesService, ModelService} from '@ame/infrastructure';
 import {Injectable, inject} from '@angular/core';
 import {
   DefaultAspect,

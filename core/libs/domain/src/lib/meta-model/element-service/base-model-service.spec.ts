@@ -1,6 +1,4 @@
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService, RdfService} from '@ame/rdf';
+import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {setElementNode} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {TestBed} from '@angular/core/testing';

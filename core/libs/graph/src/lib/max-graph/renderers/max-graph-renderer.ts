@@ -12,8 +12,8 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {ModelTree} from '@ame/loader-filters';
-import {RdfModelUtil} from '@ame/rdf';
+import {ModelTree} from '@ame/domain';
+import {RdfModelUtil} from '@ame/infrastructure';
 import {ISammLanguageSettingsService} from '@ame/shared';
 import {
   DefaultAspect,

@@ -12,18 +12,6 @@
  */
 
 import {FiltersService, ModelFilter} from '@ame/domain';
-import {
-  ConfigurationService,
-  EditorService,
-  FileHandlingService,
-  FileInfo,
-  GenerateHandlingService,
-  SaveModelDialogService,
-  SearchesStateService,
-  ShapeSettingsService,
-  SidebarStateService,
-  TextModelLoaderModalComponent,
-} from '@ame/features';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
 import {NamespacesManagerService} from '@ame/samm';
@@ -44,6 +32,18 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {BehaviorSubject, Observable, distinctUntilChanged, filter, map, of, switchMap, take, tap} from 'rxjs';
+import {
+  EditorService,
+  FileHandlingService,
+  FileInfo,
+  GenerateHandlingService,
+  SaveModelDialogService,
+  ShapeSettingsService,
+  TextModelLoaderModalComponent,
+} from '../editor';
+import {SearchesStateService} from '../search';
+import {ConfigurationService} from '../settings-dialog';
+import {SidebarStateService} from '../sidebar';
 
 export {ITauriTunnelService};
 

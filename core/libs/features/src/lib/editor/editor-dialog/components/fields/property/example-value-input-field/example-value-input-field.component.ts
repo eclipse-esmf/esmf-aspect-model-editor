@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils} from '@ame/cache';
+import {CacheUtils} from '@ame/infrastructure';
 import {ElementIconComponent, simpleDataTypes} from '@ame/shared';
 import {Component, computed, OnDestroy, OnInit, signal, WritableSignal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

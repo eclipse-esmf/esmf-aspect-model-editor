@@ -11,13 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 
-vi.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {DataFactory, Store} from 'n3';
 import {CleanupVisitor} from './cleanup-visitor.service';

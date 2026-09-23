@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesManagerService} from '@ame/namespace-manager';
+import {NamespacesManagerService} from '@ame/samm';
 import {TauriSignalsService} from '@ame/shared';
 import {Component, inject, input} from '@angular/core';
 import {MatButton} from '@angular/material/button';

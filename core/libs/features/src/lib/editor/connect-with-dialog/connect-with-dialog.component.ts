@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
+import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
 import {CommonModule} from '@angular/common';
 import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';

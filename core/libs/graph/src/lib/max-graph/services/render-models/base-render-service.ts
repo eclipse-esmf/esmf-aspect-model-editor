@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {ISammLanguageSettingsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {inject} from '@angular/core';
 import {DefaultAspect, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';

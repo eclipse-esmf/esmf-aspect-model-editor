@@ -11,8 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuilder, IPC_RENDERER, RdfNamingUtil} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {
+  APP_CONFIG,
+  AppConfig,
+  BrowserService,
+  FileContentModel,
+  HttpHeaderBuilder,
+  IPC_RENDERER,
+  LanguageTranslationService,
+  RdfNamingUtil,
+} from '@ame/shared';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, forkJoin, of, throwError} from 'rxjs';

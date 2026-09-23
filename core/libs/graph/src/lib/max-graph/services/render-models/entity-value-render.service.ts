@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
+import {FiltersService} from '@ame/domain';
 import {IShapeConnectorService, SHAPE_CONNECTOR_SERVICE} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultState} from '@esmf/aspect-model-loader';

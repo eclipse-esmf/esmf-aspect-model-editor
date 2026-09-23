@@ -14,7 +14,10 @@ export default [
             // Layer hierarchy rules: strictly unidirectional flow downward
             {
               sourceTag: 'layer:shell',
-              onlyDependOnLibsWithTags: ['*'],
+              onlyDependOnLibsWithTags: [
+                'layer:features',
+                'layer:shared',
+              ],
             },
             {
               sourceTag: 'layer:features',
@@ -78,7 +81,10 @@ export default [
             // Scope hierarchy rules
             {
               sourceTag: 'scope:shell',
-              onlyDependOnLibsWithTags: ['*'],
+              onlyDependOnLibsWithTags: [
+                'scope:features',
+                'scope:shared',
+              ],
             },
             {
               sourceTag: 'scope:features',

@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {RdfService} from '@ame/rdf';
+import {LoadedFilesService, ModelApiService, RdfService} from '@ame/infrastructure';
 import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {form, FormField} from '@angular/forms/signals';

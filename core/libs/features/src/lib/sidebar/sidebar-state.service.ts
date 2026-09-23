@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {RdfModelUtil} from '@ame/rdf';
+import {LoadedFilesService, RdfModelUtil} from '@ame/infrastructure';
 import {computed, effect, inject, Injectable, signal} from '@angular/core';
 
 class SidebarState {

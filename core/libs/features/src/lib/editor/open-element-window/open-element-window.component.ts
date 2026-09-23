@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ModelApiService} from '@ame/api';
+import {ModelApiService} from '@ame/infrastructure';
 import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {Component, inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';

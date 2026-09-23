@@ -11,4 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export type {DetailViolationInfo} from '@ame/api';
+export type {DetailViolationInfo} from '@ame/infrastructure';

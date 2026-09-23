@@ -11,20 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {EditorCanvasComponent, LoadingComponent} from '@ame/features';
 import {Routes} from '@angular/router';
 
 export const APP_ROUTES: Routes = [
   {
     path: '',
-    loadComponent: () => import('./components/loading/loading.component').then(mod => mod.LoadingComponent),
+    component: LoadingComponent,
   },
   {
     path: 'editor',
-    loadComponent: () => import('./components/editor-canvas/editor-canvas.component').then(mod => mod.EditorCanvasComponent),
+    component: EditorCanvasComponent,
     children: [
       {
         path: 'select/:urn',
-        loadComponent: () => import('./components/editor-canvas/editor-canvas.component').then(mod => mod.EditorCanvasComponent),
+        component: EditorCanvasComponent,
       },
     ],
   },

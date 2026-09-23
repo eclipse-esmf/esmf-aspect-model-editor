@@ -11,10 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {CONFIRM_DIALOG_SERVICE, ConfirmDialogEnum, MODEL_OPENER_SERVICE, NotificationsService, TauriSignalsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
+import {
+  CONFIRM_DIALOG_SERVICE,
+  ConfirmDialogEnum,
+  LanguageTranslationService,
+  MODEL_OPENER_SERVICE,
+  NotificationsService,
+  TauriSignalsService,
+} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

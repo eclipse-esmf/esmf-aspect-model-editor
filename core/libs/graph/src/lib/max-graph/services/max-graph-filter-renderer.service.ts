@@ -11,16 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {
   EDITOR_VALIDATION_SERVICE,
   IEditorValidationService,
   IGraphFilterRenderer,
   ISammLanguageSettingsService,
+  LanguageTranslationService,
+  LoadingScreenService,
   SAMM_LANGUAGE_SETTINGS_SERVICE,
-} from '@ame/contracts';
-import {LoadingScreenService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {of, switchMap} from 'rxjs';
 import {MaxGraphHelper} from '../helpers/max-graph-helper';

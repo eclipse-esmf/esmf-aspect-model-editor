@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {ModelElementNamingService} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf';
+import {ModelElementNamingService} from '@ame/domain';
+import {LoadedFilesService, ModelService} from '@ame/infrastructure';
 import {ElementCreatorService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, inject, OnInit, output, signal} from '@angular/core';

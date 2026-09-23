@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, LoadedFilesService} from '@ame/cache';
-import {FILTER_ATTRIBUTES, ModelTree} from '@ame/loader-filters';
+import {FILTER_ATTRIBUTES, ModelTree} from '@ame/domain';
+import {CacheUtils, LoadedFilesService} from '@ame/infrastructure';
 import {CONFIGURATION_SERVICE, IConfigurationService, NotificationsService, overlayGeometry} from '@ame/shared';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';

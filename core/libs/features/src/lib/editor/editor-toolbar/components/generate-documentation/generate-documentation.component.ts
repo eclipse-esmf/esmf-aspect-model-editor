@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';

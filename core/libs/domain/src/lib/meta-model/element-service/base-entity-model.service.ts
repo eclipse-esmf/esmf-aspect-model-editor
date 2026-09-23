@@ -11,9 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GRAPH_ADAPTER, IGraphAdapter, IShapeConnectorService, SHAPE_CONNECTOR_SERVICE} from '@ame/contracts';
-import {NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {
+  GRAPH_ADAPTER,
+  IGraphAdapter,
+  IShapeConnectorService,
+  LanguageTranslationService,
+  NotificationsService,
+  SHAPE_CONNECTOR_SERVICE,
+} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 

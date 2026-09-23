@@ -11,10 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileEntry, FileInformation, ModelApiService, NamedRdfModel} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {InstantiatorService} from '@ame/instantiator';
-import {RdfModelUtil} from '@ame/rdf';
+import {
+  FileEntry,
+  FileInformation,
+  LoadedFilesService,
+  ModelApiService,
+  NamedRdfModel,
+  NamespaceFile,
+  RdfModelUtil,
+} from '@ame/infrastructure';
+import {InstantiatorService} from '@ame/samm';
 import {
   BrowserService,
   config,

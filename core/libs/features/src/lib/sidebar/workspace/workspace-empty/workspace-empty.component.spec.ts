@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesManagerService} from '@ame/namespace-manager';
+import {NamespacesManagerService} from '@ame/samm';
 import {TauriSignalsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

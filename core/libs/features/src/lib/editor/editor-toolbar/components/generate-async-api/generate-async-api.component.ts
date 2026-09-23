@@ -27,8 +27,7 @@ import {first} from 'rxjs/operators';
 import {SammLanguageSettingsService} from '../../../../settings-dialog';
 import {EditorService} from '../../../editor.service';
 
-import {AsyncApi} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
+import {AsyncApi, LoadedFilesService} from '@ame/infrastructure';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';

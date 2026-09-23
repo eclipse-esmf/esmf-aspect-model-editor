@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {inject} from '@angular/core';
 import {DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';

@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {
   AlertService,
   EDITOR_VALIDATION_SERVICE,
+  LanguageTranslationService,
   LoadingScreenService,
   MAX_GRAPH_SETTINGS_SERVICE,
   MODEL_SAVER_TOKEN_SERVICE,
   TAURI_TUNNEL_SERVICE,
   TitleService,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

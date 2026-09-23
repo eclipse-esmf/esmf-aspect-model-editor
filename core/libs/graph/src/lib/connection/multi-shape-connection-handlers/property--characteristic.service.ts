@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {basicShapeGeometry} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty, DefaultValue, NamedElement} from '@esmf/aspect-model-loader';

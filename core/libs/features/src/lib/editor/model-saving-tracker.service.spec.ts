@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {ModelService, RdfService} from '@ame/rdf';
+import {MaxGraphService} from '@ame/graph';
+import {LoadedFilesService, ModelService, RdfService} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';

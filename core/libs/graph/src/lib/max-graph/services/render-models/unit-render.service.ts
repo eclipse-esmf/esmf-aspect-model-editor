@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
+import {FiltersService} from '@ame/domain';
 import {Injectable, inject} from '@angular/core';
 import {DefaultUnit} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';

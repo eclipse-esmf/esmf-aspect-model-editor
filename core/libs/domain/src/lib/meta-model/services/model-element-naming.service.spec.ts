@@ -1,5 +1,4 @@
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
 import {firstValueFrom, of} from 'rxjs';

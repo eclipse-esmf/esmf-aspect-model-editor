@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {TAURI_TUNNEL_SERVICE} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LanguageTranslationService, TAURI_TUNNEL_SERVICE} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';

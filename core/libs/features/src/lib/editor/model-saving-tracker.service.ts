@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {ModelService, RdfService} from '@ame/rdf';
+import {MaxGraphService} from '@ame/graph';
+import {LoadedFilesService, ModelService, RdfService} from '@ame/infrastructure';
 import {IModelSavingTrackerService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {catchError, map, Observable, of, take} from 'rxjs';

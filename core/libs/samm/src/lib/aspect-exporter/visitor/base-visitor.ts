@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';

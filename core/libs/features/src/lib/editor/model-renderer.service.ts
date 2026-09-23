@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {FiltersService} from '@ame/loader-filters';
+import {FiltersService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -20,9 +19,9 @@ import {
   MaxGraphService,
   MaxGraphSetupService,
   MaxGraphShapeOverlayService,
-} from '@ame/max-graph';
-import {LoadingScreenService, NotificationsService, ValidateStatus} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+} from '@ame/graph';
+import {LoadedFilesService} from '@ame/infrastructure';
+import {LanguageTranslationService, LoadingScreenService, NotificationsService, ValidateStatus} from '@ame/shared';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';

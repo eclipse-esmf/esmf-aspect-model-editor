@@ -13,11 +13,7 @@
 
 import {vi} from 'vitest';
 
-vi.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {Injectable} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {NamedElement} from '@esmf/aspect-model-loader';

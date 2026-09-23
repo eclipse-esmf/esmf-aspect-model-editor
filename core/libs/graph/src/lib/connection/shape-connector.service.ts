@@ -13,9 +13,8 @@
 import {inject, Injectable} from '@angular/core';
 import {ShapeConnectorUtil} from './shape-connector-util';
 
-import {LoadedFilesService} from '@ame/cache';
-import {cellRelations, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService} from '@ame/infrastructure';
+import {cellRelations, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {
   DefaultAspect,
   DefaultCharacteristic,

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
-import {RdfModelUtil, RdfService} from '@ame/rdf';
+import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
+import {RdfModelUtil, RdfService} from '@ame/infrastructure';
 import {config, DataTypeService, ElementIconComponent} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';

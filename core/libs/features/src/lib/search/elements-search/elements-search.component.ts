@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
+import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {
   ElementIconComponent,
   ElementInfo,

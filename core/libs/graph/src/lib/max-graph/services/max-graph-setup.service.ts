@@ -11,9 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {AssetsPath, BindingsService, BrowserService, CONFIGURATION_SERVICE, IConfigurationService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService} from '@ame/infrastructure';
+import {
+  AssetsPath,
+  BindingsService,
+  BrowserService,
+  CONFIGURATION_SERVICE,
+  IConfigurationService,
+  LanguageTranslationService,
+} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultTrait} from '@esmf/aspect-model-loader';
 import {

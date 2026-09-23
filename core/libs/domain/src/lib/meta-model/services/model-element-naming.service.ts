@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {GRAPH_ADAPTER, IGraphAdapter} from '@ame/contracts';
+import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
+import {GRAPH_ADAPTER, IGraphAdapter} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, of} from 'rxjs';

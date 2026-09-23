@@ -10,9 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MigratorApiService} from '@ame/api';
-import {APP_CONFIG, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {MigratorApiService} from '@ame/infrastructure';
+import {APP_CONFIG, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';

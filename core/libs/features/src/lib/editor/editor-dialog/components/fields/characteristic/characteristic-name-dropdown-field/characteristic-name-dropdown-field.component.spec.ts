@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelElementNamingService} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf';
+import {ModelElementNamingService} from '@ame/domain';
+import {LoadedFilesService, ModelService, NamespaceFile} from '@ame/infrastructure';
 import {ElementCreatorService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';

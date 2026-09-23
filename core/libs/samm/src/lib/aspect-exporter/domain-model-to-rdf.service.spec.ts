@@ -13,10 +13,6 @@
 
 import {vi} from 'vitest';
 
-vi.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
 vi.mock('@esmf/aspect-model-loader', () => {
   class NamedElement {}
   class DefaultValue extends NamedElement {
@@ -51,7 +47,7 @@ vi.mock('@esmf/aspect-model-loader', () => {
   return {DefaultValue, ModelElementCache};
 });
 
-import {provideMockObject} from '@ame/testing';
+import {provideMockObject} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {DomainModelToRdfService} from './domain-model-to-rdf.service';

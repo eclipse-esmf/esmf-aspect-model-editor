@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelTree} from '@ame/loader-filters';
+import {ModelTree} from '@ame/domain';
 import {circleShapeGeometry, smallBasicShapeGeometry} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';

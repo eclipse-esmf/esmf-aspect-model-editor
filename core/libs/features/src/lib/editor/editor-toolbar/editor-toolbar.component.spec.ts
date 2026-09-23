@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ShapeConnectorService} from '@ame/connection';
-import {FiltersService} from '@ame/loader-filters';
-import {MaxGraphService, MaxGraphShapeSelectorService} from '@ame/max-graph';
+import {FiltersService} from '@ame/domain';
+import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
 import {BindingsService, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';

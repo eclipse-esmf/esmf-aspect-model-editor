@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {BrowserService, IPC_RENDERER, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ModelApiService} from '@ame/infrastructure';
+import {BrowserService, IPC_RENDERER, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';

@@ -12,16 +12,6 @@
  */
 
 import {FiltersService} from '@ame/domain';
-import {
-  ConfigurationService,
-  EditorService,
-  FileHandlingService,
-  GenerateHandlingService,
-  SaveModelDialogService,
-  SearchesStateService,
-  ShapeSettingsService,
-  SidebarStateService,
-} from '@ame/features';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
 import {NamespacesManagerService} from '@ame/samm';
@@ -37,6 +27,16 @@ import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {
+  ConfigurationService,
+  EditorService,
+  FileHandlingService,
+  GenerateHandlingService,
+  SaveModelDialogService,
+  SearchesStateService,
+  ShapeSettingsService,
+  SidebarStateService,
+} from '../../index';
 import {TauriTunnelService} from './tauri-tunnel.service';
 
 describe('tauriTunnelService', () => {

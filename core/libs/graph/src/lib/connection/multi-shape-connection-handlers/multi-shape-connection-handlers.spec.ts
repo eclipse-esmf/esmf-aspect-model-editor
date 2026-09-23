@@ -13,7 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-vi.mock('@ame/loader-filters', () => ({
+vi.mock('@ame/domain', () => ({
   FiltersService: class {
     createNode(element: any, options: any) {
       return {element, options};
@@ -21,10 +21,15 @@ vi.mock('@ame/loader-filters', () => ({
   },
 }));
 
-import {LoadedFilesService} from '@ame/cache';
-import {FiltersService} from '@ame/loader-filters';
-import {ElementCreatorService, ENTITY_INSTANCE_SERVICE, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {FiltersService} from '@ame/domain';
+import {LoadedFilesService} from '@ame/infrastructure';
+import {
+  ElementCreatorService,
+  ENTITY_INSTANCE_SERVICE,
+  LanguageTranslationService,
+  NotificationsService,
+  SAMM_LANGUAGE_SETTINGS_SERVICE,
+} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultAspect,

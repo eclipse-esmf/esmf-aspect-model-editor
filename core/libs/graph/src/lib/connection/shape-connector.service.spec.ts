@@ -13,18 +13,13 @@
 
 import {beforeEach, describe, expect, Mocked, test, vi} from 'vitest';
 
-vi.mock('@ame/loader-filters', () => ({
+vi.mock('@ame/domain', () => ({
   ModelFilter: {
     DEFAULT: 'mock-default',
   },
 }));
 
-vi.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
-import {NotificationsService} from '@ame/shared';
-import {provideMockObject} from '@ame/testing';
+import {NotificationsService, provideMockObject} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';

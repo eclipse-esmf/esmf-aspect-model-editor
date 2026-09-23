@@ -11,19 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService, ModelService} from '@ame/infrastructure';
 import {
   CONFIRM_DIALOG_SERVICE,
   ConfirmDialogEnum,
+  ElementRelationUtil,
   GRAPH_ADAPTER,
   IConfirmDialogService,
   IGraphAdapter,
   IRenameModelDialogService,
+  LanguageTranslationService,
+  NotificationsService,
   RENAME_MODEL_DIALOG_SERVICE,
-} from '@ame/contracts';
-import {ModelService} from '@ame/rdf';
-import {ElementRelationUtil, NotificationsService, TitleService, useUpdater} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+  TitleService,
+  useUpdater,
+} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {DefaultAspect, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {ModelElementNamingService} from '../services/model-element-naming.service';

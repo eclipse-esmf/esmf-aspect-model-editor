@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IMaxGraphSettingsService} from '@ame/contracts';
+import {IMaxGraphSettingsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {ShapeLanguageRemover} from '../renderers/shape-language-remover';
 import {MaxGraphService} from './max-graph.service';

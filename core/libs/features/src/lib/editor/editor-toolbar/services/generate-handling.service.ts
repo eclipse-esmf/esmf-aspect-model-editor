@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf';
-import {LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, ModelService} from '@ame/infrastructure';
+import {LanguageTranslationService, LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';

@@ -15,3 +15,4 @@ export * from './lib/editor';
 export * from './lib/search';
 export * from './lib/settings-dialog';
 export * from './lib/sidebar';
+export * from './lib/workbench';

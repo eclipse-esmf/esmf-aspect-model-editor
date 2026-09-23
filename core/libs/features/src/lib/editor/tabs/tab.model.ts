@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespaceFile} from '@ame/cache';
+import {NamespaceFile} from '@ame/infrastructure';
 
 export interface EditorTab {
   id: string;

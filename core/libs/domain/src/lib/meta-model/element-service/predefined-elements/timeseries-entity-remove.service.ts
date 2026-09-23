@@ -10,8 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {GRAPH_ADAPTER, IGraphAdapter} from '@ame/contracts';
-import {ElementRelationUtil} from '@ame/shared';
+import {ElementRelationUtil, GRAPH_ADAPTER, IGraphAdapter} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {DefaultEntity, DefaultProperty, NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {ModelRootService} from '../model-root.service';

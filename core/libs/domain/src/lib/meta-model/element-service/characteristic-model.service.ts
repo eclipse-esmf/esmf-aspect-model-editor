@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils} from '@ame/cache';
-import {RdfModelUtil} from '@ame/rdf';
+import {CacheUtils, RdfModelUtil} from '@ame/infrastructure';
 import {config, ElementRelationUtil, simpleDataTypes, useUpdater} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {

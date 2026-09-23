@@ -12,14 +12,6 @@
  */
 
 import {ElementModelService} from '@ame/domain';
-import {
-  ConfigurationService,
-  EditorFormModel,
-  EditorService,
-  SearchesStateService,
-  ShapeSettingsService,
-  ShapeSettingsStateService,
-} from '@ame/features';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
 import {signal} from '@angular/core';
@@ -29,6 +21,9 @@ import {Cell} from '@maxgraph/core';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {EditorFormModel, EditorService, ShapeSettingsService, ShapeSettingsStateService} from '../editor';
+import {SearchesStateService} from '../search';
+import {ConfigurationService} from '../settings-dialog';
 import {EditorCanvasComponent} from './editor-canvas.component';
 
 describe('EditorCanvasComponent Signal Forms save contract', () => {

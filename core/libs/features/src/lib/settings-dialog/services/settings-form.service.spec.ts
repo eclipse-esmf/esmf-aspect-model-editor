@@ -11,16 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {
   EDITOR_THEME_SERVICE,
   EDITOR_VALIDATION_SERVICE,
+  LanguageTranslationService,
   MAX_GRAPH_SETTINGS_SERVICE,
   MODEL_SAVER_TOKEN_SERVICE,
   TAURI_TUNNEL_SERVICE,
   TitleService,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ConfigurationService} from './configuration.service';

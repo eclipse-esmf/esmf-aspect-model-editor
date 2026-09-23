@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/loader-filters';
+import {FiltersService} from '@ame/domain';
 import {IShapeConnectorService, SHAPE_CONNECTOR_SERVICE, useUpdater} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {

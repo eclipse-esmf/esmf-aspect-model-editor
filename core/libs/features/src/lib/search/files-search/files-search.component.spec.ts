@@ -13,7 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/max-graph';
+import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/graph';
 import {
   ISidebarStateService,
   LanguageTranslationService,

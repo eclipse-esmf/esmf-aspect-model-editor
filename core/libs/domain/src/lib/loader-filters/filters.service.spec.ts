@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {GRAPH_FILTER_RENDERER, IGraphFilterRenderer, SHAPE_SETTINGS_STATE_SERVICE} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';

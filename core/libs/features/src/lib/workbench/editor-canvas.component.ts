@@ -12,20 +12,6 @@
  */
 
 import {ElementModelService} from '@ame/domain';
-import {
-  ConfigurationService,
-  EditorFormModel,
-  EditorService,
-  EditorTabBarComponent,
-  EditorToolbarComponent,
-  ElementsSearchComponent,
-  FilesSearchComponent,
-  SearchesStateService,
-  ShapeSettingsComponent,
-  ShapeSettingsService,
-  ShapeSettingsStateService,
-  SidebarComponent,
-} from '@ame/features';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
@@ -39,6 +25,18 @@ import {TranslocoDirective} from '@jsverse/transloco';
 import {Cell} from '@maxgraph/core';
 import {fromEvent} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
+import {
+  EditorFormModel,
+  EditorService,
+  EditorTabBarComponent,
+  EditorToolbarComponent,
+  ShapeSettingsComponent,
+  ShapeSettingsService,
+  ShapeSettingsStateService,
+} from '../editor';
+import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '../search';
+import {ConfigurationService} from '../settings-dialog';
+import {SidebarComponent} from '../sidebar';
 
 const SIDEBAR_MIN_WIDTH = 480;
 const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};

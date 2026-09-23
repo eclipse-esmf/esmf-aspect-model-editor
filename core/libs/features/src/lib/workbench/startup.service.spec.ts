@@ -11,15 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService, SidebarStateService} from '@ame/features';
 import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, LoadingScreenService, TauriSignalsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {NavigationEnd, Router} from '@angular/router';
 import {BehaviorSubject, of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {TauriTunnelService} from './services/tauri-tunnel.service';
+import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService} from '../editor';
+import {SidebarStateService} from '../sidebar';
 import {StartupService} from './startup.service';
+import {TauriTunnelService} from './tauri-tunnel.service';
 
 describe('StartupService', () => {
   let service: StartupService;

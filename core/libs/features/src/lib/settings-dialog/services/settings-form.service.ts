@@ -10,9 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {GeneralConfig} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
+import {GeneralConfig, LanguageTranslationService} from '@ame/shared';
 import {inject, Injectable, signal} from '@angular/core';
 import {disabled, form, pattern, required, validate} from '@angular/forms/signals';
 import {RdfModel} from '@esmf/aspect-model-loader';

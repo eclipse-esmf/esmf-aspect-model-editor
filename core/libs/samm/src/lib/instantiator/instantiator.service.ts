@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {RdfModelUtil} from '@ame/rdf';
+import {LoadedFilesService, RdfModelUtil} from '@ame/infrastructure';
 import {inject, Injectable} from '@angular/core';
 import {CacheStrategy, NamedElement, RdfModel, useLoader} from '@esmf/aspect-model-loader';
 import {NamedNode, Triple, Util} from 'n3';

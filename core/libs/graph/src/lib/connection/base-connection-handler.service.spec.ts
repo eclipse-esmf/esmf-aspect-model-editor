@@ -13,7 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-vi.mock('@ame/loader-filters', () => ({
+vi.mock('@ame/domain', () => ({
   FiltersService: class {
     createNode(element: any, options: any) {
       return {element, options};
@@ -21,7 +21,7 @@ vi.mock('@ame/loader-filters', () => ({
   },
 }));
 
-import {FiltersService} from '@ame/loader-filters';
+import {FiltersService} from '@ame/domain';
 import {ElementCreatorService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {TestBed} from '@angular/core/testing';

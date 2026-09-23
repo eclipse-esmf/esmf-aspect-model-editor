@@ -13,11 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-vi.mock('@ame/editor', () => ({
-  ModelElementEditorComponent: class {},
-}));
-
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultCollection,

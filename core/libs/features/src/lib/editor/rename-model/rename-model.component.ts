@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
+import {ModelApiService} from '@ame/infrastructure';
 import {Component, inject, signal} from '@angular/core';
 import {form, FormField, pattern, required, validate} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,7 +19,7 @@ import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '
 import {MatIconModule} from '@angular/material/icon';
 import {TranslocoDirective} from '@jsverse/transloco';
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';

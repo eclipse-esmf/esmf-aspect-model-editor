@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {FiltersService} from '@ame/domain';
 import {
   IGraphAdapter,
   ISammLanguageSettingsService,
@@ -18,8 +19,7 @@ import {
   ModelInfo,
   SAMM_LANGUAGE_SETTINGS_SERVICE,
   SHAPE_CONNECTOR_SERVICE,
-} from '@ame/contracts';
-import {FiltersService} from '@ame/loader-filters';
+} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {MaxGraphHelper, MaxGraphVisitorHelper} from '../helpers';
