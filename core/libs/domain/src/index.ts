@@ -13,3 +13,4 @@
 
 export * from './lib/loader-filters';
 export * from './lib/meta-model';
+export * from './lib/provide-ame-domain';

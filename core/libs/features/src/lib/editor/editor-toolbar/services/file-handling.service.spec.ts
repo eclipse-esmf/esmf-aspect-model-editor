@@ -13,8 +13,14 @@
 
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfService} from '@ame/infrastructure';
-import {RdfNodeService} from '@ame/samm';
-import {LanguageTranslationService, LoadingScreenService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
+import {
+  LanguageTranslationService,
+  LoadingScreenService,
+  NotificationsService,
+  RDF_NODE_SERVICE,
+  TauriSignalsService,
+  TitleService,
+} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -113,7 +119,7 @@ describe('FileHandlingService', () => {
         }),
         MockProvider(ModelSaverService),
         MockProvider(TitleService, {updateTitle: vi.fn()}),
-        MockProvider(RdfNodeService),
+        {provide: RDF_NODE_SERVICE, useValue: {updateQuads: vi.fn()}},
         MockProvider(TabStateService, {
           onModelLoaded: vi.fn(),
           isActiveTabCleanEmpty: vi.fn(() => true),

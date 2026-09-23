@@ -12,8 +12,7 @@
  */
 
 import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {InstantiatorService} from '@ame/samm';
-import {BrowserService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
+import {BrowserService, INSTANTIATOR_SERVICE, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -57,9 +56,12 @@ describe('ModelLoaderService', () => {
           fetchAllNamespaceFilesContent: vi.fn(() => of([])),
         }),
         MockProvider(NotificationsService),
-        MockProvider(InstantiatorService, {
-          instantiateRemainingElements: vi.fn(),
-        }),
+        {
+          provide: INSTANTIATOR_SERVICE,
+          useValue: {
+            instantiateRemainingElements: vi.fn(),
+          },
+        },
         MockProvider(ModelRendererService, {
           renderModel: vi.fn(() => of(true)),
         }),

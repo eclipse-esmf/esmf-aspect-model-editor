@@ -12,8 +12,15 @@
  */
 
 import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
-import {DomainModelToRdfService} from '@ame/samm';
-import {BindingsService, BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
+import {
+  BindingsService,
+  BrowserService,
+  DOMAIN_MODEL_TO_RDF_SERVICE,
+  IDomainModelToRdfService,
+  IPC_RENDERER,
+  LanguageTranslationService,
+  TitleService,
+} from '@ame/shared';
 import {Component, inject, Injector, OnInit, signal} from '@angular/core';
 import {take} from 'rxjs';
 import {SearchesStateService} from '../search';
@@ -40,7 +47,7 @@ export class AppShellInitializer implements OnInit {
   private ipcRenderer = inject(IPC_RENDERER);
   private titleService = inject(TitleService);
   private bindingsService = inject(BindingsService);
-  private domainModelToRdf = inject(DomainModelToRdfService);
+  private domainModelToRdf: IDomainModelToRdfService = inject(DOMAIN_MODEL_TO_RDF_SERVICE);
   private browserService = inject(BrowserService);
   private tauriTunnelService = inject(TauriTunnelService);
   private configurationService = inject(ConfigurationService);

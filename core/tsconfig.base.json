@@ -27,7 +27,6 @@
       "@ame/features": ["libs/features/src/index.ts"],
       "@ame/graph": ["libs/graph/src/index.ts"],
       "@ame/infrastructure": ["libs/infrastructure/src/index.ts"],
-      "@ame/samm": ["libs/samm/src/index.ts"],
       "@ame/shared": ["libs/shared/src/index.ts"],
       "@ame/esmf": ["libs/esmf/src/index.ts"],
       "@esmf/aspect-model-loader": ["libs/esmf/src/index.ts"]

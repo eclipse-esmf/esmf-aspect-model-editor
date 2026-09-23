@@ -22,17 +22,18 @@ import {
   RdfModelUtil,
   RdfService,
 } from '@ame/infrastructure';
-import {RdfNodeService} from '@ame/samm';
 import {
   decodeText,
   FileTypes,
   FileUploadService,
   GeneralConfig,
   IFileHandlingService,
+  IRdfNodeService,
   LanguageTranslationService,
   LoadingScreenOptions,
   LoadingScreenService,
   NotificationsService,
+  RDF_NODE_SERVICE,
   readFile,
   SaveValidateErrorsCodes,
   TauriSignalsService,
@@ -110,7 +111,7 @@ export class FileHandlingService implements IFileHandlingService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
-  private rdfNodeService = inject(RdfNodeService);
+  private rdfNodeService: IRdfNodeService = inject(RDF_NODE_SERVICE);
   private injector = inject(Injector);
 
   private get tabStateService(): TabStateService {

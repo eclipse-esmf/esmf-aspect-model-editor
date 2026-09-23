@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphSetupService, MaxGraphShapeOverlayService} from '@ame/graph';
 import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
-import {LanguageTranslationService, LoadingScreenService, NotificationsService} from '@ame/shared';
+import {FILTERS_SERVICE, LanguageTranslationService, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -53,10 +52,13 @@ describe('ModelRendererService', () => {
           open: vi.fn(),
           close: vi.fn(),
         }),
-        MockProvider(FiltersService, {
-          currentFilter: {filterType: 'ALL'} as any,
-          filter: vi.fn(elements => elements),
-        }),
+        {
+          provide: FILTERS_SERVICE,
+          useValue: {
+            currentFilter: {filterType: 'ALL'} as any,
+            filter: vi.fn(elements => elements),
+          },
+        },
         MockProvider(MaxGraphAttributeService, {
           inCollapsedMode: false,
         }),

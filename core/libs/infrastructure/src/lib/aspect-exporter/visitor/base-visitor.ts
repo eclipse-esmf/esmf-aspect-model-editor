@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {inject} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {DataFactory} from 'n3';
+import {LoadedFilesService} from '../../cache';
+
+export abstract class BaseVisitor<T> {
+  protected loadedFilesService = inject(LoadedFilesService);
+
+  abstract visit(element: NamedElement): T;
+
+  protected setPrefix(aspectModelUrn: string) {
+    const namespace = `${aspectModelUrn.split('#')[0]}#`;
+    if (this.loadedFilesService.currentLoadedFile.rdfModel.hasDependency(namespace)) {
+      return;
+    }
+
+    const externalFile = this.loadedFilesService.externalFiles.find(
+      file => file.rdfModel.store.getQuads(DataFactory.namedNode(aspectModelUrn), null, null, null).length > 0,
+    );
+    const alias = externalFile?.rdfModel?.getAliasByDependency(namespace);
+    this.loadedFilesService.currentLoadedFile.rdfModel.addPrefix(alias, namespace);
+  }
+}

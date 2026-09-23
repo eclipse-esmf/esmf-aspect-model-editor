@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementModelService, FILTER_ATTRIBUTES, FilterAttributesService, FiltersService, ModelElementNamingService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -26,11 +25,19 @@ import {
 import {AsyncApi, LoadedFilesService, ModelApiService, ModelService, OpenApi, RdfService, ViolationError} from '@ame/infrastructure';
 import {
   AlertService,
+  ELEMENT_MODEL_SERVICE,
   ElementCreatorService,
+  FILTER_ATTRIBUTES,
+  FILTERS_SERVICE,
   IDraggableService,
   IEditorValidationService,
+  IElementModelService,
+  IFilterAttributesService,
+  IFiltersService,
+  IModelElementNamingService,
   LanguageTranslationService,
   LoadingScreenService,
+  MODEL_ELEMENT_NAMING_SERVICE,
   NotificationsService,
   sammElements,
   SaveValidateErrorsCodes,
@@ -54,8 +61,8 @@ export {IDraggableService, IEditorValidationService};
 
 @Injectable({providedIn: 'root'})
 export class EditorService implements IDraggableService, IEditorValidationService {
-  private filtersService: FiltersService = inject(FiltersService);
-  private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
+  private filtersService: IFiltersService = inject(FILTERS_SERVICE);
+  private filterAttributes: IFilterAttributesService = inject(FILTER_ATTRIBUTES);
   private configurationService: ConfigurationService = inject(ConfigurationService);
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
   private maxgraphService = inject(MaxGraphService);
@@ -70,7 +77,7 @@ export class EditorService implements IDraggableService, IEditorValidationServic
   private rdfService = inject(RdfService);
   private sammLangService = inject(SammLanguageSettingsService);
   private confirmDialogService = inject(ConfirmDialogService);
-  private elementModelService = inject(ElementModelService);
+  private elementModelService: IElementModelService = inject(ELEMENT_MODEL_SERVICE);
   private titleService = inject(TitleService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private loadingScreenService = inject(LoadingScreenService);
@@ -78,7 +85,7 @@ export class EditorService implements IDraggableService, IEditorValidationServic
   private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
   private elementCreator = inject(ElementCreatorService);
-  private modelElementNamingService = inject(ModelElementNamingService);
+  private modelElementNamingService: IModelElementNamingService = inject(MODEL_ELEMENT_NAMING_SERVICE);
   private themeService = inject(ThemeService);
   private destroyRef = inject(DestroyRef);
 

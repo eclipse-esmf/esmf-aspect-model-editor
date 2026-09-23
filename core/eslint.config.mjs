@@ -24,8 +24,6 @@ export default [
               onlyDependOnLibsWithTags: [
                 'layer:features',
                 'layer:graph',
-                'layer:domain',
-                'layer:samm',
                 'layer:infrastructure',
                 'layer:shared',
                 'layer:esmf',
@@ -45,15 +43,6 @@ export default [
               sourceTag: 'layer:domain',
               onlyDependOnLibsWithTags: [
                 'layer:domain',
-                'layer:infrastructure',
-                'layer:shared',
-                'layer:esmf',
-              ],
-            },
-            {
-              sourceTag: 'layer:samm',
-              onlyDependOnLibsWithTags: [
-                'layer:samm',
                 'layer:infrastructure',
                 'layer:shared',
                 'layer:esmf',
@@ -91,8 +80,6 @@ export default [
               onlyDependOnLibsWithTags: [
                 'scope:features',
                 'scope:graph',
-                'scope:domain',
-                'scope:samm',
                 'scope:infrastructure',
                 'scope:shared',
                 'scope:esmf',
@@ -112,15 +99,6 @@ export default [
               sourceTag: 'scope:domain',
               onlyDependOnLibsWithTags: [
                 'scope:domain',
-                'scope:infrastructure',
-                'scope:shared',
-                'scope:esmf',
-              ],
-            },
-            {
-              sourceTag: 'scope:samm',
-              onlyDependOnLibsWithTags: [
-                'scope:samm',
                 'scope:infrastructure',
                 'scope:shared',
                 'scope:esmf',

@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementModelService} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
+import {ELEMENT_MODEL_SERVICE, IElementModelService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -30,9 +30,10 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
   let component: EditorCanvasComponent;
   let state: ShapeSettingsStateService;
   let shapeSettings: ShapeSettingsService;
-  let elementModel: ElementModelService;
+  let elementModel: IElementModelService;
 
   beforeEach(() => {
+    const mockElementModel = {updateElement: vi.fn()};
     TestBed.configureTestingModule({
       imports: [EditorCanvasComponent],
       providers: [
@@ -49,7 +50,7 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
             closeShapeSettings: vi.fn(),
           } as unknown as ShapeSettingsStateService,
         },
-        MockProvider(ElementModelService, {updateElement: vi.fn()}),
+        {provide: ELEMENT_MODEL_SERVICE, useValue: mockElementModel},
         {
           provide: ConfigurationService,
           useValue: {
@@ -75,7 +76,7 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
     component = TestBed.createComponent(EditorCanvasComponent).componentInstance;
     state = TestBed.inject(ShapeSettingsStateService);
     shapeSettings = TestBed.inject(ShapeSettingsService);
-    elementModel = TestBed.inject(ElementModelService);
+    elementModel = TestBed.inject(ELEMENT_MODEL_SERVICE);
   });
 
   it('forwards the emitted Signal Forms value object to the selected shape', () => {

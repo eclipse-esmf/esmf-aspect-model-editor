@@ -11,15 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService, ModelFilter} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {NamespacesManagerService} from '@ame/samm';
 import {
+  FILTERS_SERVICE,
+  IFiltersService,
+  INamespacesManagerService,
   IPC_RENDERER,
   ITauriTunnelService,
   LanguageTranslationService,
   MODEL_SAVING_TRACKER_SERVICE,
+  ModelFilter,
+  NAMESPACES_MANAGER_SERVICE,
   NotificationsService,
   StartupData,
   StartupPayload,
@@ -58,13 +61,13 @@ export class TauriTunnelService implements ITauriTunnelService {
   private saveModelDialogService = inject(SaveModelDialogService);
   private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
-  private namespacesManagerService = inject(NamespacesManagerService);
+  private namespacesManagerService: INamespacesManagerService = inject(NAMESPACES_MANAGER_SERVICE);
   private sidebarService = inject(SidebarStateService);
   private fileHandlingService = inject(FileHandlingService);
   private generateHandlingService = inject(GenerateHandlingService);
   private configurationService = inject(ConfigurationService);
   private editorService = inject(EditorService);
-  private filtersService = inject(FiltersService);
+  private filtersService: IFiltersService = inject(FILTERS_SERVICE);
   private shapeConnectorService = inject(ShapeConnectorService);
   private matDialog = inject(MatDialog);
   private searchesStateService = inject(SearchesStateService);

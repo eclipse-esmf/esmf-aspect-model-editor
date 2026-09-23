@@ -20,11 +20,12 @@ import {
   NamespaceFile,
   RdfModelUtil,
 } from '@ame/infrastructure';
-import {InstantiatorService} from '@ame/samm';
 import {
   BrowserService,
   config,
+  IInstantiatorService,
   IModelLoaderService,
+  INSTANTIATOR_SERVICE,
   isVersionOutdated,
   NotificationsService,
   TauriSignalsService,
@@ -56,7 +57,7 @@ export class ModelLoaderService implements IModelLoaderService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelApiService = inject(ModelApiService);
   private notificationsService = inject(NotificationsService);
-  private instantiatorService = inject(InstantiatorService);
+  private instantiatorService: IInstantiatorService = inject(INSTANTIATOR_SERVICE);
   private modelRenderer = inject(ModelRendererService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);

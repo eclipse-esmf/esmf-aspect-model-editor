@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
 import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
 import {BindingsService, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
@@ -75,7 +74,6 @@ describe('EditorToolbarComponent', () => {
           isModelEmpty: signal(false),
         }),
         MockProvider(NotificationsService),
-        MockProvider(FiltersService),
       ],
     }).compileComponents();
 

@@ -12,5 +12,9 @@
  */
 
 export * from './lib/api';
+export * from './lib/aspect-exporter';
 export * from './lib/cache';
+export * from './lib/instantiator';
+export * from './lib/namespace-manager';
+export * from './lib/provide-ame-infrastructure';
 export * from './lib/rdf';

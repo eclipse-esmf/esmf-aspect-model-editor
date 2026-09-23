@@ -11,8 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ShapeGeometry} from '@ame/shared';
+import {ModelFilter, ShapeGeometry} from '@ame/shared';
 import {NamedElement} from '@esmf/aspect-model-loader';
+
+export {ModelFilter};
 
 /**
  * Generates class type which implements an interface
@@ -76,11 +78,6 @@ export type ModelTreeOptions = Partial<{
    */
   notAllowed: ClassReference<NamedElement>[];
 }>;
-
-export enum ModelFilter {
-  DEFAULT = 'default',
-  PROPERTIES = 'properties',
-}
 
 export interface FilterLoader<T extends NamedElement = NamedElement> {
   cache: Record<string, boolean>;

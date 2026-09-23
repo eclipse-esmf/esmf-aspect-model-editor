@@ -11,14 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {NamespacesManagerService} from '@ame/samm';
 import {
+  FILTERS_SERVICE,
   IPC_RENDERER,
   LanguageTranslationService,
   MODEL_SAVING_TRACKER_SERVICE,
+  NAMESPACES_MANAGER_SERVICE,
   NotificationsService,
   TAURI_EVENTS,
   TauriSignalsService,
@@ -89,7 +89,7 @@ describe('tauriTunnelService', () => {
         {provide: MODEL_SAVING_TRACKER_SERVICE, useValue: {isSaved$: of(true)}},
         {provide: SaveModelDialogService, useValue: {openDialog: vi.fn(() => of(true))}},
         {provide: MaxGraphService, useValue: {navigateToCellByUrn: vi.fn()}},
-        {provide: NamespacesManagerService, useValue: {onImportNamespaces: vi.fn(), onExportNamespaces: vi.fn()}},
+        {provide: NAMESPACES_MANAGER_SERVICE, useValue: {onImportNamespaces: vi.fn(), onExportNamespaces: vi.fn()}},
         {provide: SidebarStateService, useValue: {workspace: {refresh: vi.fn()}}},
         {
           provide: FileHandlingService,
@@ -127,7 +127,7 @@ describe('tauriTunnelService', () => {
             formatModel: vi.fn(),
           },
         },
-        {provide: FiltersService, useValue: {renderByFilter: vi.fn()}},
+        {provide: FILTERS_SERVICE, useValue: {renderByFilter: vi.fn()}},
         {provide: ShapeConnectorService, useValue: {connectSelectedElements: vi.fn()}},
         {provide: MatDialog, useValue: {open: vi.fn()}},
         {provide: SearchesStateService, useValue: {elementsSearch: {open: vi.fn()}, filesSearch: {open: vi.fn()}}},

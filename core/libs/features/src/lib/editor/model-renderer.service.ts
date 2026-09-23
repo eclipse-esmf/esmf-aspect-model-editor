@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -21,7 +20,14 @@ import {
   MaxGraphShapeOverlayService,
 } from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {LanguageTranslationService, LoadingScreenService, NotificationsService, ValidateStatus} from '@ame/shared';
+import {
+  FILTERS_SERVICE,
+  IFiltersService,
+  LanguageTranslationService,
+  LoadingScreenService,
+  NotificationsService,
+  ValidateStatus,
+} from '@ame/shared';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';
@@ -36,7 +42,7 @@ export class ModelRendererService {
   private maxgraphService = inject(MaxGraphService);
   private largeFileWarningService = inject(LargeFileWarningService);
   private loadingScreenService = inject(LoadingScreenService);
-  private filtersService = inject(FiltersService);
+  private filtersService: IFiltersService = inject(FILTERS_SERVICE);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private shapeSettingsService = inject(ShapeSettingsService);
   private maxgraphSetupService = inject(MaxGraphSetupService);

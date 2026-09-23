@@ -13,3 +13,4 @@
 
 export * from './lib/connection';
 export * from './lib/max-graph';
+export * from './lib/provide-ame-graph';

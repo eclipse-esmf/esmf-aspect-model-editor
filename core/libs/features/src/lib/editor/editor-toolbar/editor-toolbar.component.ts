@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
 import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
 import {BarItemComponent, BindingsService, NotificationsService} from '@ame/shared';
 import {CommonModule} from '@angular/common';
@@ -46,7 +45,6 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
 
   public notificationsService = inject(NotificationsService);
 
-  public filtersService = inject(FiltersService);
   public isAllShapesExpanded = this.editorService.isAllShapesExpanded;
 
   protected isModelEmpty = this.maxgraphService.isModelEmpty;

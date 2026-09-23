@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementModelService} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
+import {ELEMENT_MODEL_SERVICE} from '@ame/shared';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild} from '@angular/core';
@@ -69,7 +69,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private loadedFiles = inject(LoadedFilesService);
-  private elementModelService = inject(ElementModelService);
+  private elementModelService = inject(ELEMENT_MODEL_SERVICE);
   private editorService = inject(EditorService);
   private configurationService = inject(ConfigurationService);
   private searchesStateService = inject(SearchesStateService);

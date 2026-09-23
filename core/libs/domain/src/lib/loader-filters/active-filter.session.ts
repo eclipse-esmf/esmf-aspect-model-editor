@@ -11,16 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {FILTER_ATTRIBUTES, IFilterAttributesService} from '@ame/shared';
+import {BehaviorSubject} from 'rxjs';
 import {ModelFilter} from './models';
 
-export const FILTER_ATTRIBUTES_TOKEN = 'FILTER_ATTRIBUTES_TOKEN';
-export interface FilterAttributesService {
-  isFiltering: boolean;
-  activeFilter: ModelFilter;
-  activeFilter$: Observable<ModelFilter>;
-}
+export {FILTER_ATTRIBUTES, IFilterAttributesService};
+export type FilterAttributesService = IFilterAttributesService;
 
 class FilterAttributes implements FilterAttributesService {
   #activeFilter = ModelFilter.DEFAULT;
@@ -42,7 +38,6 @@ class FilterAttributes implements FilterAttributesService {
   }
 }
 
-export const FILTER_ATTRIBUTES = new InjectionToken<FilterAttributesService>(FILTER_ATTRIBUTES_TOKEN, {
-  providedIn: 'root',
-  factory: () => new FilterAttributes(),
-});
+export function createFilterAttributes(): FilterAttributesService {
+  return new FilterAttributes();
+}

@@ -14,9 +14,19 @@
 import {InjectionToken} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 
+import {Observable, of} from 'rxjs';
+
 export interface IModelElementNamingService {
   resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean, visited?: Set<NamedElement>): T;
-  resolveElementNaming<T extends NamedElement>(element: T): T;
+  resolveMetaModelElement$<T extends NamedElement>(element: T, cached?: boolean, visited?: Set<NamedElement>): Observable<T>;
+  resolveElementNaming<T extends NamedElement>(element: T, parentName?: string): T;
 }
 
-export const MODEL_ELEMENT_NAMING_SERVICE = new InjectionToken<IModelElementNamingService>('MODEL_ELEMENT_NAMING_SERVICE');
+export const MODEL_ELEMENT_NAMING_SERVICE = new InjectionToken<IModelElementNamingService>('MODEL_ELEMENT_NAMING_SERVICE', {
+  providedIn: 'root',
+  factory: () => ({
+    resolveMetaModelElement: (el: any) => el,
+    resolveMetaModelElement$: (el: any) => of(el),
+    resolveElementNaming: (el: any) => el,
+  }),
+});

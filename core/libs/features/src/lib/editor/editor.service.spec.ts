@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementModelService, FILTER_ATTRIBUTES, FiltersService, ModelElementNamingService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphService,
@@ -23,9 +22,13 @@ import {
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfService} from '@ame/infrastructure';
 import {
   AlertService,
+  ELEMENT_MODEL_SERVICE,
   ElementCreatorService,
+  FILTER_ATTRIBUTES,
+  FILTERS_SERVICE,
   LanguageTranslationService,
   LoadingScreenService,
+  MODEL_ELEMENT_NAMING_SERVICE,
   NotificationsService,
   TitleService,
 } from '@ame/shared';
@@ -53,10 +56,24 @@ describe('EditorService', () => {
   });
 
   beforeEach(() => {
+    const mockElementModel = {
+      deleteElement: vi.fn(),
+      updateElement: vi.fn(),
+    };
+    const mockFiltersService = {
+      createNode: vi.fn(),
+      filter: vi.fn(elements => elements),
+    };
+    const mockNamingService = {
+      resolveMetaModelElement$: vi.fn().mockImplementation(el => of(el)),
+      resolveMetaModelElement: vi.fn().mockImplementation(el => el),
+      resolveElementNaming: vi.fn().mockImplementation(el => el),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         EditorService,
-        MockProvider(FiltersService),
+        {provide: FILTERS_SERVICE, useValue: mockFiltersService},
         {provide: FILTER_ATTRIBUTES, useValue: {isFiltering: false, changeState: vi.fn()}},
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(
@@ -112,10 +129,7 @@ describe('EditorService', () => {
         }),
         MockProvider(SammLanguageSettingsService),
         MockProvider(ConfirmDialogService),
-        MockProvider(ElementModelService, {
-          deleteElement: vi.fn(),
-          updateElement: vi.fn(),
-        }),
+        {provide: ELEMENT_MODEL_SERVICE, useValue: mockElementModel},
         MockProvider(TitleService),
         MockProvider(ThemeService, {
           currentColors: {border: '#000000', font: '#000000'} as any,
@@ -151,9 +165,7 @@ describe('EditorService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(ElementCreatorService),
-        MockProvider(ModelElementNamingService, {
-          resolveMetaModelElement$: vi.fn().mockImplementation(el => of(el)),
-        }),
+        {provide: MODEL_ELEMENT_NAMING_SERVICE, useValue: mockNamingService},
       ],
     });
 
@@ -177,7 +189,7 @@ describe('EditorService', () => {
   });
 
   it('deleteSelectedElements should delegate edge deletion to elementModelService when only edge is selected', () => {
-    const elementModelService = TestBed.inject(ElementModelService);
+    const elementModelService = TestBed.inject(ELEMENT_MODEL_SERVICE);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const edge = {isEdge: () => true, isVertex: () => false} as any;
     vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([edge]);
@@ -188,7 +200,7 @@ describe('EditorService', () => {
   });
 
   it('deleteSelectedElements should delete vertex cells only when both vertex and edge are selected', () => {
-    const elementModelService = TestBed.inject(ElementModelService);
+    const elementModelService = TestBed.inject(ELEMENT_MODEL_SERVICE);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const maxgraphService = TestBed.inject(MaxGraphService);
     (maxgraphService as any).graph = {getOutgoingEdges: vi.fn(() => [])};
@@ -206,7 +218,7 @@ describe('EditorService', () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const maxgraphSetupService = TestBed.inject(MaxGraphSetupService);
     const elementCreatorService = TestBed.inject(ElementCreatorService);
-    const filtersService = TestBed.inject(FiltersService);
+    const filtersService = TestBed.inject(FILTERS_SERVICE);
 
     (maxgraphService as any).isModelEmpty = vi.fn(() => true);
     maxgraphService.renderModelElement = vi.fn(() => ({id: 'mock-cell'}) as any);
@@ -232,7 +244,7 @@ describe('EditorService', () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const maxgraphAttributeService = TestBed.inject(MaxGraphAttributeService);
     const elementCreatorService = TestBed.inject(ElementCreatorService);
-    const filtersService = TestBed.inject(FiltersService);
+    const filtersService = TestBed.inject(FILTERS_SERVICE);
 
     const mockContainer = {clientWidth: 1000, clientHeight: 800} as HTMLDivElement;
     (maxgraphAttributeService as any).graph.getContainer = vi.fn(() => mockContainer);

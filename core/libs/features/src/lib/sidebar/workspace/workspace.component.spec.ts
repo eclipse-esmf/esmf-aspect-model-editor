@@ -12,12 +12,12 @@
  */
 
 import {ModelApiService} from '@ame/infrastructure';
-import {NamespacesManagerService} from '@ame/samm';
 import {
   BrowserService,
   IPC_RENDERER,
   LanguageTranslationService,
   MODEL_CHECKER_SERVICE,
+  NAMESPACES_MANAGER_SERVICE,
   NotificationsService,
   TauriSignalsService,
 } from '@ame/shared';
@@ -76,7 +76,7 @@ describe('WorkspaceComponent', () => {
         {provide: ModelApiService, useValue: modelApiServiceMock},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
+        {provide: NAMESPACES_MANAGER_SERVICE, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
         {
           provide: LanguageTranslationService,
           useValue: {
@@ -179,7 +179,7 @@ describe('WorkspaceComponent', () => {
         {provide: ModelApiService, useValue: modelApiServiceMock},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
+        {provide: NAMESPACES_MANAGER_SERVICE, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
         {
           provide: BrowserService,
           useValue: {isStartedAsTauriApp: () => true, getAssetBasePath: () => './assets'},
