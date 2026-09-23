@@ -117,10 +117,10 @@ export class ModelElementNamingService {
 
     let counter = 1;
     let baseName = element.name;
-    const match = baseName.match(/^(.*?)(\d+)$/);
+    const match = /(\d+)$/.exec(baseName);
     if (match) {
-      baseName = match[1];
-      counter = parseInt(match[2], 10);
+      baseName = baseName.slice(0, -match[1].length);
+      counter = parseInt(match[1], 10);
     }
 
     element.metaModelVersion = rdfModel.samm.version;
@@ -155,10 +155,10 @@ export class ModelElementNamingService {
     const mainAspectModelUrn = `urn:samm:${namespace}#`;
     let nameBase = element.name;
     let counter = 1;
-    const match = nameBase.match(/^(.*?)(\d+)$/);
+    const match = /(\d+)$/.exec(nameBase);
     if (match) {
-      nameBase = match[1];
-      counter = parseInt(match[2], 10);
+      nameBase = nameBase.slice(0, -match[1].length);
+      counter = parseInt(match[1], 10);
     }
 
     const checkCandidate = (name: string, urn: string): Observable<{exists: boolean; name: string; urn: string}> => {
