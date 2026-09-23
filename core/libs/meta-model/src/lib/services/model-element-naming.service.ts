@@ -166,13 +166,9 @@ export class ModelElementNamingService {
       }
     }
 
-    let counter = 1;
-    let baseName = element.name;
-    const match = /(\d+)$/.exec(baseName);
-    if (match) {
-      baseName = baseName.slice(0, -match[1].length);
-      counter = parseInt(match[1], 10);
-    }
+    const info = this.extractTrailingNumber(element.name);
+    const baseName = info.base;
+    let counter = info.counter;
 
     element.metaModelVersion = rdfModel.samm.version;
     const parentNamePrefix = parentName;
@@ -204,13 +200,9 @@ export class ModelElementNamingService {
 
     const {namespace} = this.loadedFiles.currentLoadedFile;
     const mainAspectModelUrn = `urn:samm:${namespace}#`;
-    let nameBase = element.name;
-    let counter = 1;
-    const match = /(\d+)$/.exec(nameBase);
-    if (match) {
-      nameBase = nameBase.slice(0, -match[1].length);
-      counter = parseInt(match[1], 10);
-    }
+    const match = /^(.*?)(\d+)$/.exec(element.name);
+    const nameBase = match ? match[1] : element.name;
+    let counter = match ? parseInt(match[2], 10) : 1;
 
     const checkCandidate = (name: string, urn: string): Observable<{exists: boolean; name: string; urn: string}> => {
       const cached = this.loadedFiles.currentLoadedFile.cachedFile?.get<NamedElement>(urn);
@@ -244,5 +236,13 @@ export class ModelElementNamingService {
         return element;
       }),
     );
+  }
+
+  private extractTrailingNumber(name: string): {base: string; counter: number} {
+    let i = name.length;
+    while (i > 0 && name[i - 1] >= '0' && name[i - 1] <= '9') {
+      i--;
+    }
+    return i < name.length ? {base: name.slice(0, i), counter: parseInt(name.slice(i), 10)} : {base: name, counter: 1};
   }
 }
