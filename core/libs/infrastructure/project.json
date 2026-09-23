@@ -18,5 +18,5 @@
       "executor": "@nx/eslint:lint"
     }
   },
-  "tags": ["scope:infrastructure", "type:infrastructure"]
+  "tags": ["scope:infrastructure", "layer:infrastructure"]
 }

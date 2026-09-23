@@ -18,5 +18,5 @@
       "executor": "@nx/eslint:lint"
     }
   },
-  "tags": ["scope:shared", "type:shared"]
+  "tags": ["scope:shared", "layer:shared"]
 }

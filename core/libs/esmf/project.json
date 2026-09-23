@@ -4,7 +4,7 @@
   "sourceRoot": "libs/esmf/src",
   "prefix": "lib",
   "projectType": "library",
-  "tags": ["scope:esmf", "type:sdk"],
+  "tags": ["scope:esmf", "layer:esmf"],
   "targets": {
     "test": {
       "executor": "@angular/build:unit-test",

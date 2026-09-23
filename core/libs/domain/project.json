@@ -18,5 +18,5 @@
       "executor": "@nx/eslint:lint"
     }
   },
-  "tags": ["scope:domain", "type:domain"]
+  "tags": ["scope:domain", "layer:domain"]
 }

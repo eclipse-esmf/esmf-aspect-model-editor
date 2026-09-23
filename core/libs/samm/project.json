@@ -18,5 +18,5 @@
       "executor": "@nx/eslint:lint"
     }
   },
-  "tags": ["scope:samm", "type:samm", "type:integration"]
+  "tags": ["scope:samm", "layer:samm"]
 }

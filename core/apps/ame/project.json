@@ -112,5 +112,5 @@
       "executor": "@nx/eslint:lint"
     }
   },
-  "tags": ["scope:shell", "type:app"]
+  "tags": ["scope:shell", "layer:shell"]
 }

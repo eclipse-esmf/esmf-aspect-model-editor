@@ -18,5 +18,5 @@
       "executor": "@nx/eslint:lint"
     }
   },
-  "tags": ["scope:graph", "type:graph"]
+  "tags": ["scope:graph", "layer:graph"]
 }
