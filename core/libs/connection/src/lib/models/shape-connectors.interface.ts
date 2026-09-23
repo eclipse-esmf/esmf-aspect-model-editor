@@ -14,9 +14,10 @@
 import {ModelInfo} from '@ame/max-graph';
 
 import {Cell} from '@maxgraph/core';
+import {Observable} from 'rxjs';
 
 export interface SingleShapeConnector<T> {
-  connect(metaModel: T, source: Cell, modelInfo?: ModelInfo): void;
+  connect(metaModel: T, source: Cell, modelInfo?: ModelInfo): Observable<any> | void;
 }
 
 export interface MultiShapeConnector<T, R> {

@@ -200,9 +200,9 @@ export class ModelElementNamingService {
 
     const {namespace} = this.loadedFiles.currentLoadedFile;
     const mainAspectModelUrn = `urn:samm:${namespace}#`;
-    const match = /^(.*?)(\d+)$/.exec(element.name);
-    const nameBase = match ? match[1] : element.name;
-    let counter = match ? parseInt(match[2], 10) : 1;
+    const info = this.extractTrailingNumber(element.name);
+    const nameBase = info.base;
+    let counter = info.counter;
 
     const checkCandidate = (name: string, urn: string): Observable<{exists: boolean; name: string; urn: string}> => {
       const cached = this.loadedFiles.currentLoadedFile.cachedFile?.get<NamedElement>(urn);

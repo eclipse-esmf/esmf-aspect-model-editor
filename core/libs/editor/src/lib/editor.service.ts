@@ -211,11 +211,16 @@ export class EditorService {
             this.notificationsService.warning({title: 'An AspectModel can contain only one Aspect element.'});
             return;
           }
-          newInstance = this.elementCreator.createEmptyElement(DefaultAspect);
+          newInstance = this.elementCreator.createEmptyElement(DefaultAspect, {
+            resolveNaming: false,
+            cached: false,
+          });
           break;
         default:
           newInstance = this.elementCreator.createEmptyElement(sammElements[elementType].class, {
             isAbstract: elementType.includes('abstract'),
+            resolveNaming: false,
+            cached: false,
           });
       }
 

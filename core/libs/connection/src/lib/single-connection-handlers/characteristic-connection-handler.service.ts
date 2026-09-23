@@ -12,7 +12,6 @@
  */
 
 import {MaxGraphHelper, MaxGraphRenderer, MaxGraphShapeOverlayService, ModelInfo} from '@ame/max-graph';
-import {ModelElementNamingService} from '@ame/meta-model';
 import {config} from '@ame/shared';
 import {useUpdater} from '@ame/utils';
 import {inject, Injectable} from '@angular/core';
@@ -30,12 +29,12 @@ import {
   ScalarValue,
 } from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {isObservable, map, of, shareReplay, tap} from 'rxjs';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Characteristic> {
-  private modelElementNamingService = inject(ModelElementNamingService);
   private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
 
   get currentCachedFile() {
@@ -43,20 +42,29 @@ export class CharacteristicConnectionHandler extends BaseConnectionHandler imple
   }
 
   public connect(characteristic: Characteristic, source: Cell, modelInfo: ModelInfo) {
+    let connect$: any;
     if (
       ModelInfo.IS_CHARACTERISTIC_DATATYPE === modelInfo &&
       characteristic instanceof DefaultEnumeration &&
       characteristic.dataType instanceof DefaultEntity
     ) {
       this.handleEnumeration(characteristic, source);
+      connect$ = of(undefined);
     } else if (ModelInfo.IS_CHARACTERISTIC_DATATYPE === modelInfo && !(characteristic.dataType instanceof DefaultEntity)) {
-      this.createEntity(characteristic, source);
+      connect$ = this.createEntity(characteristic, source);
     } else {
-      this.createTrait(source);
+      connect$ = this.createTrait(source);
     }
 
-    this.maxgraphService.formatCell(source);
-    this.maxgraphService.formatShapes();
+    const final$ = (isObservable(connect$) ? connect$ : of(undefined)).pipe(
+      tap(() => {
+        this.maxgraphService.formatCell(source);
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
+    );
+    final$.subscribe();
+    return final$;
   }
 
   /**
@@ -71,51 +79,59 @@ export class CharacteristicConnectionHandler extends BaseConnectionHandler imple
     const incomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(source, null);
 
     // add trait
-    const defaultTrait: DefaultTrait = this.elementCreator.createEmptyElement(DefaultTrait, {baseCharacteristic: currentMetaModel});
+    const defaultTrait: DefaultTrait = this.elementCreator.createEmptyElement(DefaultTrait, {
+      baseCharacteristic: currentMetaModel,
+      resolveNaming: false,
+      cached: false,
+    });
 
-    const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
-    const traitShape = maxgraphRenderer.render(
-      this.filtersService.createNode(this.currentCachedFile.resolveInstance(defaultTrait), {
-        parent: MaxGraphHelper.getModelElement(source),
-      }),
-      null,
-    );
+    return this.modelElementNamingService.resolveMetaModelElement$(defaultTrait).pipe(
+      map(() => {
+        const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
+        const traitShape = maxgraphRenderer.render(
+          this.filtersService.createNode(this.currentCachedFile.resolveInstance(defaultTrait), {
+            parent: MaxGraphHelper.getModelElement(source),
+          }),
+          null,
+        );
 
-    if (incomingEdges.length) {
-      incomingEdges.forEach(edge => {
-        const edgeSource = edge.source;
-        const sourceElementModel = MaxGraphHelper.getModelElement(edgeSource);
+        if (incomingEdges.length) {
+          incomingEdges.forEach(edge => {
+            const edgeSource = edge.source;
+            const sourceElementModel = MaxGraphHelper.getModelElement(edgeSource);
 
-        if (sourceElementModel instanceof DefaultProperty) {
-          sourceElementModel.characteristic = defaultTrait;
-        } else if (sourceElementModel instanceof DefaultCollection) {
-          sourceElementModel.elementCharacteristic = defaultTrait;
-        } else if (sourceElementModel instanceof DefaultEither) {
-          if (sourceElementModel.left.aspectModelUrn === MaxGraphHelper.getModelElement(edge.target).aspectModelUrn) {
-            sourceElementModel.left = defaultTrait;
-          } else {
-            sourceElementModel.right = defaultTrait;
-          }
-        } else {
-          return;
+            if (sourceElementModel instanceof DefaultProperty) {
+              sourceElementModel.characteristic = defaultTrait;
+            } else if (sourceElementModel instanceof DefaultCollection) {
+              sourceElementModel.elementCharacteristic = defaultTrait;
+            } else if (sourceElementModel instanceof DefaultEither) {
+              if (sourceElementModel.left.aspectModelUrn === MaxGraphHelper.getModelElement(edge.target).aspectModelUrn) {
+                sourceElementModel.left = defaultTrait;
+              } else {
+                sourceElementModel.right = defaultTrait;
+              }
+            } else {
+              return;
+            }
+
+            useUpdater(sourceElementModel).delete(currentMetaModel);
+            MaxGraphHelper.removeRelation(sourceElementModel, currentMetaModel);
+            this.maxgraphService.removeCells([source.removeEdge(edge, false)]);
+
+            this.maxgraphService.assignToParent(traitShape, edgeSource);
+            defaultTrait.baseCharacteristic = currentMetaModel;
+            this.maxgraphService.assignToParent(source, traitShape);
+            this.maxgraphService.formatCell(edgeSource);
+          });
         }
 
-        useUpdater(sourceElementModel).delete(currentMetaModel);
-        MaxGraphHelper.removeRelation(sourceElementModel, currentMetaModel);
-        this.maxgraphService.removeCells([source.removeEdge(edge, false)]);
-
-        this.maxgraphService.assignToParent(traitShape, edgeSource);
-        defaultTrait.baseCharacteristic = currentMetaModel;
-        this.maxgraphService.assignToParent(source, traitShape);
-        this.maxgraphService.formatCell(edgeSource);
-      });
-    }
-
-    const traitWithProperty = traitShape.edges?.some(edge => MaxGraphHelper.getModelElement(edge.source) instanceof DefaultProperty);
-    if (!traitWithProperty) {
-      this.maxgraphService.moveCells([traitShape], source.getGeometry().x, source.getGeometry().y);
-    }
-    this.maxgraphService.formatCell(traitShape);
+        const traitWithProperty = traitShape.edges?.some(edge => MaxGraphHelper.getModelElement(edge.source) instanceof DefaultProperty);
+        if (!traitWithProperty) {
+          this.maxgraphService.moveCells([traitShape], source.getGeometry().x, source.getGeometry().y);
+        }
+        this.maxgraphService.formatCell(traitShape);
+      }),
+    );
   }
 
   /**
@@ -125,50 +141,58 @@ export class CharacteristicConnectionHandler extends BaseConnectionHandler imple
    * @param source maxgraph shape from which the plus button was clicked
    */
   private createEntity(characteristic: Characteristic, source: Cell) {
-    const defaultEntity = this.elementCreator.createEmptyElement(DefaultEntity);
-    characteristic.dataType = defaultEntity;
-
-    const selectedParentIncomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(source, null);
-    selectedParentIncomingEdges.forEach(edge => {
-      const edgeSource = edge.source;
-      const edgeSourceMetaModelElement = MaxGraphHelper.getModelElement(edgeSource);
-
-      if (edgeSourceMetaModelElement instanceof DefaultProperty) {
-        // remove example value for complex datatypes
-        edgeSourceMetaModelElement.exampleValue = null;
-        this.refreshPropertiesLabel(edgeSource, edgeSourceMetaModelElement);
-      }
+    const defaultEntity = this.elementCreator.createEmptyElement(DefaultEntity, {
+      resolveNaming: false,
+      cached: false,
     });
 
-    const child = this.maxgraphService.renderModelElement(
-      this.filtersService.createNode(defaultEntity, {parent: MaxGraphHelper.getModelElement(source)}),
-    );
+    return this.modelElementNamingService.resolveMetaModelElement$(defaultEntity).pipe(
+      map(() => {
+        characteristic.dataType = defaultEntity;
 
-    this.maxgraphService.assignToParent(child, source);
-    // add icon if we click on + button of an enumeration
-    if (characteristic instanceof DefaultEnumeration) {
-      this.maxgraphShapeOverlayService.removeOverlay(source, MaxGraphHelper.getNewShapeOverlayButton(source));
-      const outgoingEdges = this.maxgraphAttributeService.graph.getOutgoingEdges(source, null);
-      const valueEdgesToRemove: Cell[] = [];
-      outgoingEdges.forEach(edge => {
-        const targetModel = MaxGraphHelper.getModelElement(edge.target);
-        if (targetModel instanceof DefaultValue || targetModel instanceof DefaultEntityInstance) {
-          MaxGraphHelper.removeRelation(characteristic, targetModel);
-          useUpdater(characteristic).delete(targetModel);
-          valueEdgesToRemove.push(edge);
+        const selectedParentIncomingEdges = this.maxgraphAttributeService.graph.getIncomingEdges(source, null);
+        selectedParentIncomingEdges.forEach(edge => {
+          const edgeSource = edge.source;
+          const edgeSourceMetaModelElement = MaxGraphHelper.getModelElement(edgeSource);
+
+          if (edgeSourceMetaModelElement instanceof DefaultProperty) {
+            // remove example value for complex datatypes
+            edgeSourceMetaModelElement.exampleValue = null;
+            this.refreshPropertiesLabel(edgeSource, edgeSourceMetaModelElement);
+          }
+        });
+
+        const child = this.maxgraphService.renderModelElement(
+          this.filtersService.createNode(defaultEntity, {parent: MaxGraphHelper.getModelElement(source)}),
+        );
+
+        this.maxgraphService.assignToParent(child, source);
+        // add icon if we click on + button of an enumeration
+        if (characteristic instanceof DefaultEnumeration) {
+          this.maxgraphShapeOverlayService.removeOverlay(source, MaxGraphHelper.getNewShapeOverlayButton(source));
+          const outgoingEdges = this.maxgraphAttributeService.graph.getOutgoingEdges(source, null);
+          const valueEdgesToRemove: Cell[] = [];
+          outgoingEdges.forEach(edge => {
+            const targetModel = MaxGraphHelper.getModelElement(edge.target);
+            if (targetModel instanceof DefaultValue || targetModel instanceof DefaultEntityInstance) {
+              MaxGraphHelper.removeRelation(characteristic, targetModel);
+              useUpdater(characteristic).delete(targetModel);
+              valueEdgesToRemove.push(edge);
+            }
+          });
+          if (valueEdgesToRemove.length) {
+            this.maxgraphService.removeCells(valueEdgesToRemove);
+          }
+          characteristic.values = [];
         }
-      });
-      if (valueEdgesToRemove.length) {
-        this.maxgraphService.removeCells(valueEdgesToRemove);
-      }
-      characteristic.values = [];
-    }
-    this.maxgraphShapeOverlayService.checkComplexEnumerationOverlays(characteristic, source);
+        this.maxgraphShapeOverlayService.checkComplexEnumerationOverlays(characteristic, source);
 
-    if (characteristic.dataType) {
-      // delete child cell dataType of the parent
-      this.maxgraphService.graph.labelChanged(source, MaxGraphHelper.createPropertiesLabel(source), null);
-    }
+        if (characteristic.dataType) {
+          // delete child cell dataType of the parent
+          this.maxgraphService.graph.labelChanged(source, MaxGraphHelper.createPropertiesLabel(source), null);
+        }
+      }),
+    );
   }
 
   /**
