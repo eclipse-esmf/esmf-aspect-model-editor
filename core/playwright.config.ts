@@ -18,6 +18,8 @@ import {defineConfig, devices} from '@playwright/test';
  * Supports testing against the local dev server (http://localhost:4200)
  * and webview components.
  */
+const PORT = process.env.PORT || '4205';
+
 export default defineConfig({
   testDir: './e2e',
   timeout: 30000,
@@ -27,7 +29,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: process.env.E2E_BASE_URL || 'http://localhost:4200',
+    baseURL: process.env.E2E_BASE_URL || `http://localhost:${PORT}`,
     testIdAttribute: 'data-testid',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -43,8 +45,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm start',
-    url: 'http://localhost:4200',
+    command: `pnpm start --port ${PORT}`,
+    url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
   },

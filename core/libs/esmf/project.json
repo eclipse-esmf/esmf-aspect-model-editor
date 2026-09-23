@@ -1,0 +1,22 @@
+{
+  "name": "esmf",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/esmf/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": ["scope:esmf", "type:sdk"],
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/esmf"],
+      "options": {
+        "tsConfig": "libs/esmf/tsconfig.spec.json",
+        "watch": false,
+        "buildTarget": "ame:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

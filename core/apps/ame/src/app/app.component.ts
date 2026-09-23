@@ -11,17 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {StartupService} from '@ame/app/startup.service';
-import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/max-graph';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {BindingsService, BrowserService, IPC_RENDERER, TauriTunnelService, TitleService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
-import {SearchesStateService} from '@ame/utils';
+import {ConfigurationService, SearchesStateService} from '@ame/features';
+import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
+import {DomainModelToRdfService} from '@ame/samm';
+import {BindingsService, BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {Component, inject, Injector, OnInit, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {RouterOutlet} from '@angular/router';
 import {take} from 'rxjs';
+import {TauriTunnelService} from './services/tauri-tunnel.service';
+import {StartupService} from './startup.service';
 
 @Component({
   selector: 'ame-root',

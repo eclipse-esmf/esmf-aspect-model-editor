@@ -11,19 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {StartupService} from '@ame/app/startup.service';
-import {DomainModelToRdfService} from '@ame/aspect-exporter';
-import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/max-graph';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, IPC_RENDERER, TauriTunnelService, TitleService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
-import {SearchesStateService} from '@ame/utils';
+import {ConfigurationService, SearchesStateService} from '@ame/features';
+import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
+import {DomainModelToRdfService} from '@ame/samm';
+import {BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideRouter} from '@angular/router';
 import {BehaviorSubject, of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AppComponent} from './app.component';
+import {TauriTunnelService} from './services/tauri-tunnel.service';
+import {StartupService} from './startup.service';
 
 describe('AppComponent', () => {
   let component: AppComponent;

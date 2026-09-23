@@ -11,21 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {ElementModelService} from '@ame/domain';
 import {
+  ConfigurationService,
   EditorFormModel,
   EditorService,
   EditorTabBarComponent,
   EditorToolbarComponent,
+  ElementsSearchComponent,
+  FilesSearchComponent,
+  SearchesStateService,
   ShapeSettingsComponent,
   ShapeSettingsService,
   ShapeSettingsStateService,
-} from '@ame/editor';
-import {MaxGraphService} from '@ame/max-graph';
-import {ElementModelService} from '@ame/meta-model';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {SidebarComponent} from '@ame/sidebar';
-import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/utils';
+  SidebarComponent,
+} from '@ame/features';
+import {MaxGraphService} from '@ame/graph';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild} from '@angular/core';

@@ -11,13 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {NotificationsService, TauriSignalsService, TauriTunnelService} from '@ame/shared';
+import {ModelApiService} from '@ame/infrastructure';
+import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {TauriTunnelService} from '../../services/tauri-tunnel.service';
 import {LoadingComponent} from './loading.component';
 
 describe('LoadingComponent', () => {

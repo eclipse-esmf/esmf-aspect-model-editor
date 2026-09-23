@@ -11,15 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileHandlingService, ModelLoaderService} from '@ame/editor';
-import {MaxGraphService} from '@ame/max-graph';
-import {LoadingScreenService, ModelSavingTrackerService, StartupPayload, TauriSignalsService, TauriTunnelService} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslationService} from '@ame/translation';
+import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService, SidebarStateService} from '@ame/features';
+import {MaxGraphService} from '@ame/graph';
+import {LanguageTranslationService, LoadingScreenService, StartupPayload, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {from, Observable, sample, switchMap, tap} from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {TauriTunnelService} from './services/tauri-tunnel.service';
 
 @Injectable({providedIn: 'root'})
 export class StartupService {

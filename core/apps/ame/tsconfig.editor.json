@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["**/*.ts", "../../libs/shared/src/lib/general-config.ts", "../../libs/shared/src/lib/config.ts"],
+  "include": ["**/*.ts", "../../libs/shared/common/src/lib/general-config.ts", "../../libs/shared/src/lib/config.ts"],
   "compilerOptions": {
     "types": ["node"]
   }

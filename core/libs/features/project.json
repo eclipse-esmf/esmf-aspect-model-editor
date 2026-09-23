@@ -1,0 +1,22 @@
+{
+  "name": "features",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/features/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/features"],
+      "options": {
+        "tsConfig": "libs/features/tsconfig.spec.json",
+        "watch": false,
+        "buildTarget": "ame:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "tags": ["scope:features", "type:feature"]
+}

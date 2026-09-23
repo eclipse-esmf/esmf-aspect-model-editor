@@ -34,7 +34,11 @@ test.describe('Test editing Either', () => {
 
     await page.locator(SELECTOR_elementBtn).click();
     await helper.dbClickShape('Characteristic1');
-    await helper.selectDropdown(FIELD_characteristicName, 'Either');
+    await page.locator(FIELD_characteristicName).click();
+    const eitherOption = page.locator('mat-option[data-testid="Either"]');
+    await eitherOption.waitFor({state: 'visible'});
+    await eitherOption.click();
+    await eitherOption.waitFor({state: 'detached'}).catch(() => {});
     await page.locator(FIELD_name).fill('Either1');
 
     await helper.selectAutocomplete(FIELD_left, 'LeftCharacteristic');

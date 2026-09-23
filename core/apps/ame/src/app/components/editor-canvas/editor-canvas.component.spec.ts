@@ -11,12 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {EditorFormModel, EditorService, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
-import {MaxGraphService} from '@ame/max-graph';
-import {ElementModelService} from '@ame/meta-model';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {SearchesStateService} from '@ame/utils';
+import {ElementModelService} from '@ame/domain';
+import {
+  ConfigurationService,
+  EditorFormModel,
+  EditorService,
+  SearchesStateService,
+  ShapeSettingsService,
+  ShapeSettingsStateService,
+} from '@ame/features';
+import {MaxGraphService} from '@ame/graph';
+import {LoadedFilesService} from '@ame/infrastructure';
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
