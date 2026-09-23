@@ -266,10 +266,17 @@ export class CharacteristicModelService extends BaseModelService {
         return v;
       });
     } else if (metaModelElement instanceof DefaultCollection) {
-      metaModelElement.elementCharacteristic = form.elementCharacteristic;
+      metaModelElement.elementCharacteristic = form.elementCharacteristic || null;
       if (form.elementCharacteristic) {
+        metaModelElement.dataType = null;
         this.currentCachedFile.resolveInstance(form.elementCharacteristic);
         MaxGraphHelper.establishRelation(metaModelElement, form.elementCharacteristic);
+      } else if (
+        metaModelElement.dataType &&
+        originalModelElement instanceof DefaultCollection &&
+        originalModelElement.elementCharacteristic
+      ) {
+        MaxGraphHelper.removeRelation(metaModelElement, originalModelElement.elementCharacteristic);
       }
     }
   }
@@ -303,6 +310,11 @@ export class CharacteristicModelService extends BaseModelService {
   }
 
   private updateDatatype(metaModelElement: DefaultCharacteristic, form: {[key: string]: any}) {
+    if (metaModelElement instanceof DefaultCollection && form.elementCharacteristic) {
+      metaModelElement.dataType = null;
+      return;
+    }
+
     if (form.newDataType) {
       metaModelElement.dataType = form.newDataType;
       // TODO get a way to signal is made in editor
@@ -349,6 +361,8 @@ export class CharacteristicModelService extends BaseModelService {
           }
         }
       }
+    } else if ('dataType' in form || 'dataTypeEntity' in form) {
+      metaModelElement.dataType = null;
     }
   }
 

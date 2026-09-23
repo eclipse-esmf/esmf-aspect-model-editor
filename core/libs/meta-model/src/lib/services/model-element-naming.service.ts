@@ -24,20 +24,53 @@ export class ModelElementNamingService {
   private readonly modelApiService = inject(ModelApiService, {optional: true});
   private readonly maxgraphService = inject(MaxGraphService, {optional: true});
 
+  private isExistingElement(element: NamedElement): boolean {
+    if (!element?.aspectModelUrn) {
+      return false;
+    }
+    const currentFile = this.loadedFiles.currentLoadedFile;
+    if (currentFile?.cachedFile?.get(element.aspectModelUrn) === element) {
+      return true;
+    }
+    if (this.maxgraphService?.graph) {
+      const vertices = this.maxgraphService.graph.getChildVertices(this.maxgraphService.graph.getDefaultParent()) || [];
+      for (const cell of vertices) {
+        if (MaxGraphHelper.getModelElement(cell) === element) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /**
    * Creates a new instance of the element and assigns it a default name
    *
    * @param NamedElement element being created
    * @returns element being created
    */
-  resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean): T {
+  resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean, visited = new Set<NamedElement>()): T {
+    if (visited.has(element)) {
+      return cached && this.loadedFiles.currentLoadedFile?.cachedFile
+        ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+        : element;
+    }
+    visited.add(element);
+
+    if (this.isExistingElement(element)) {
+      return cached && this.loadedFiles.currentLoadedFile?.cachedFile
+        ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+        : element;
+    }
+
     const mainAspectModelUrn = `urn:samm:${this.loadedFiles.currentLoadedFile?.namespace}#`;
     for (const child of element.children) {
       if (
         !child.isPredefined &&
+        !this.isExistingElement(child) &&
         (!child.aspectModelUrn || child.aspectModelUrn.startsWith('#') || child.aspectModelUrn.startsWith(mainAspectModelUrn))
       ) {
-        this.resolveMetaModelElement(child, cached);
+        this.resolveMetaModelElement(child, cached, visited);
       }
     }
     const resolved = this.resolveElementNaming(element);
@@ -46,15 +79,33 @@ export class ModelElementNamingService {
       : resolved;
   }
 
-  resolveMetaModelElement$<T extends NamedElement>(element: T, cached = true): Observable<T> {
+  resolveMetaModelElement$<T extends NamedElement>(element: T, cached = true, visited = new Set<NamedElement>()): Observable<T> {
+    if (visited.has(element)) {
+      const resolved =
+        cached && this.loadedFiles.currentLoadedFile?.cachedFile
+          ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+          : element;
+      return of(resolved);
+    }
+    visited.add(element);
+
+    if (this.isExistingElement(element)) {
+      const resolved =
+        cached && this.loadedFiles.currentLoadedFile?.cachedFile
+          ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+          : element;
+      return of(resolved);
+    }
+
     const mainAspectModelUrn = `urn:samm:${this.loadedFiles.currentLoadedFile?.namespace}#`;
     const childObservables: Observable<any>[] = [];
     for (const child of element.children) {
       if (
         !child.isPredefined &&
+        !this.isExistingElement(child) &&
         (!child.aspectModelUrn || child.aspectModelUrn.startsWith('#') || child.aspectModelUrn.startsWith(mainAspectModelUrn))
       ) {
-        childObservables.push(this.resolveMetaModelElement$(child, cached));
+        childObservables.push(this.resolveMetaModelElement$(child, cached, visited));
       }
     }
 
@@ -89,7 +140,7 @@ export class ModelElementNamingService {
 
     const mainAspectModelUrn = `urn:samm:${namespace}#`;
     for (const file of this.loadedFiles.filesAsList) {
-      if (file.rdfModel?.store) {
+      if (file !== this.loadedFiles.currentLoadedFile && file.rdfModel?.store) {
         for (const subject of file.rdfModel.store.getSubjects(null, null, null)) {
           if (subject.value?.startsWith(mainAspectModelUrn)) {
             elements[subject.value] = true;
