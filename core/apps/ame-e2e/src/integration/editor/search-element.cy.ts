@@ -22,10 +22,10 @@ describe('Test search for element', () => {
   });
 
   it('can search for element', () => {
-    cy.clickAddShapePlusIcon('AspectDefault');
-    cy.clickAddShapePlusIcon('AspectDefault');
-    cy.clickAddShapePlusIcon('AspectDefault');
-    cy.clickAddShapePlusIcon('AspectDefault');
+    cy.clickAddShapePlusIcon('AspectDefault').wait(1000);
+    cy.clickAddShapePlusIcon('AspectDefault').wait(1000);
+    cy.clickAddShapePlusIcon('AspectDefault').wait(1000);
+    cy.clickAddShapePlusIcon('AspectDefault').wait(1000);
     cy.searchesStateService().then(() =>
       cy
         .get(SELECTOR_searchInputField)

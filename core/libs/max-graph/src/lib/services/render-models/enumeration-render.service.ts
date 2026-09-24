@@ -13,7 +13,8 @@
 
 import {ShapeConnectorService} from '@ame/connection';
 import {FiltersService} from '@ame/loader-filters';
-import {Injectable, inject} from '@angular/core';
+import {useUpdater} from '@ame/utils';
+import {inject, Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultEither,
@@ -22,6 +23,7 @@ import {
   DefaultEnumeration,
   DefaultProperty,
   DefaultValue,
+  NamedElement,
   ScalarValue,
 } from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -53,13 +55,11 @@ export class EnumerationRenderService extends BaseRenderService {
   update({cell, form}) {
     const metaModelElement = MaxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     this.handleBottomOverlay(cell);
-    if (form.newDataType) {
-      this.handleNewDataType(cell, form.newDataType);
-    } else if (metaModelElement.dataType instanceof DefaultEntity) {
-      this.handleEntityDataType(cell, metaModelElement.dataType);
-    } else {
-      this.removeFloatingEntityValues(cell);
+    const targetDataType = metaModelElement.dataType || form.newDataType || form.dataTypeEntity;
+    if (targetDataType instanceof DefaultEntity) {
+      this.handleEntityDataType(cell, targetDataType);
     }
+    this.removeFloatingEntityValues(cell);
 
     this.handleValues(cell, form.enumValues || []);
     this.handleComplexValues(cell, form);
@@ -70,12 +70,13 @@ export class EnumerationRenderService extends BaseRenderService {
   }
 
   private handleValues(cell: Cell, valuesList: (ScalarValue | DefaultValue)[]) {
-    if (valuesList.some(value => value instanceof DefaultEntityInstance)) return;
+    const cleanValuesList = (valuesList || []).filter(value => !(value instanceof DefaultEntityInstance));
 
     const existentValues = (
       this.maxgraphService.graph
         .getOutgoingEdges(cell, null)
-        ?.map(edge => ({edge, modelElement: MaxGraphHelper.getModelElement<DefaultValue>(edge.target)})) || []
+        ?.map(edge => ({edge, modelElement: MaxGraphHelper.getModelElement<DefaultValue>(edge.target)}))
+        ?.filter(item => item.modelElement instanceof DefaultValue) || []
     ).reduce(
       (acc, curr) => {
         acc[curr.modelElement.aspectModelUrn] = curr;
@@ -84,7 +85,7 @@ export class EnumerationRenderService extends BaseRenderService {
       {} as Record<string, {edge: Cell; modelElement: DefaultValue}>,
     );
 
-    for (const value of valuesList) {
+    for (const value of cleanValuesList) {
       if (value instanceof ScalarValue) {
         continue;
       }
@@ -110,6 +111,11 @@ export class EnumerationRenderService extends BaseRenderService {
   }
 
   private connectElements(parentCell: Cell, childCell: Cell) {
+    const parentModel = MaxGraphHelper.getModelElement<DefaultEnumeration>(parentCell);
+    const childModel = MaxGraphHelper.getModelElement<DefaultValue>(childCell);
+    if (parentModel?.dataType && childModel instanceof DefaultValue && !this.loadedFilesService.isElementExtern(childModel)) {
+      childModel.type = parentModel.dataType;
+    }
     this.maxgraphService.assignToParent(childCell, parentCell);
     MaxGraphHelper.updateLabel(parentCell, this.maxgraphService.graph, this.sammLangService);
     MaxGraphHelper.updateLabel(childCell, this.maxgraphService.graph, this.sammLangService);
@@ -131,41 +137,48 @@ export class EnumerationRenderService extends BaseRenderService {
 
   private handleEntityDataType(cell: Cell, dataType: DefaultEntity) {
     if (dataType instanceof DefaultEntity) {
-      const entityCell = this.maxgraphService.resolveCellByModelElement(dataType);
+      let entityCell = this.maxgraphService.resolveCellByModelElement(dataType);
+      if (!entityCell) {
+        entityCell = this.maxgraphService.renderModelElement(
+          this.filtersService.createNode(dataType, {parent: MaxGraphHelper.getModelElement(cell)}),
+        );
+      }
       this.maxgraphService.assignToParent(entityCell, cell);
     }
   }
 
   private removeFloatingEntityValues(cell: Cell) {
     const modelElement = MaxGraphHelper.getModelElement<DefaultEnumeration>(cell);
-    const outGoingCells =
-      this.maxgraphService.graph.getOutgoingEdges(cell, null)?.filter(edge => {
-        const childModelElement = MaxGraphHelper.getModelElement<DefaultEntityInstance>(edge.target);
+    const outGoingEdges = this.maxgraphService.graph.getOutgoingEdges(cell, null) || [];
 
-        if (childModelElement instanceof DefaultEntity) {
-          return true;
+    const edgesToRemove: Cell[] = [];
+    outGoingEdges.forEach(edge => {
+      const childModelElement = MaxGraphHelper.getModelElement<NamedElement>(edge.target);
+
+      if (childModelElement instanceof DefaultEntity) {
+        if (
+          !(modelElement.dataType instanceof DefaultEntity) ||
+          modelElement.dataType.aspectModelUrn !== childModelElement.aspectModelUrn
+        ) {
+          MaxGraphHelper.removeRelation(modelElement, childModelElement);
+          useUpdater(modelElement).delete(childModelElement);
+          edgesToRemove.push(edge);
         }
-
-        if (!(childModelElement instanceof DefaultEntityInstance)) {
-          return false;
+      } else if (childModelElement instanceof DefaultEntityInstance) {
+        if (!this.hasSameEntityAsEnumeration(childModelElement, modelElement)) {
+          MaxGraphHelper.removeRelation(modelElement, childModelElement);
+          useUpdater(modelElement).delete(childModelElement);
+          if (!this.loadedFilesService.isElementExtern(childModelElement)) {
+            this.loadedFilesService.currentLoadedFile.cachedFile.removeElement(childModelElement.aspectModelUrn);
+          }
+          this.maxgraphService.removeCells([edge.target]);
         }
+      }
+    });
 
-        return !this.hasSameEntityAsEnumeration(childModelElement, modelElement);
-      }) || [];
-
-    this.maxgraphService.removeCells(
-      outGoingCells.map(edge => {
-        const modelElement = MaxGraphHelper.getModelElement(edge.target);
-        if (modelElement instanceof DefaultEntity) {
-          return edge;
-        }
-
-        if (!this.loadedFilesService.isElementExtern(modelElement)) {
-          this.loadedFilesService.currentLoadedFile.cachedFile.removeElement(modelElement.aspectModelUrn);
-        }
-        return edge.target;
-      }),
-    );
+    if (edgesToRemove.length) {
+      this.maxgraphService.removeCells(edgesToRemove);
+    }
   }
 
   private hasSameEntityAsEnumeration(childModelElement: DefaultEntityInstance, modelElement: DefaultEnumeration) {
@@ -179,11 +192,17 @@ export class EnumerationRenderService extends BaseRenderService {
   private handleBottomOverlay(cell: Cell) {
     const modelElement = MaxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     if (!(modelElement instanceof DefaultEither)) {
-      this.maxgraphShapeOverlayService.removeOverlay(cell);
+      this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getNewShapeOverlayButton(cell));
+      this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getTopOverlayButton(cell));
+      this.maxgraphShapeOverlayService.removeOverlay(cell, MaxGraphHelper.getRightOverlayButton(cell));
+
       if (modelElement?.isPredefined) {
         this.maxgraphShapeOverlayService.addTopShapeOverlay(cell);
       } else {
         this.maxgraphShapeOverlayService.addTopShapeOverlay(cell);
+        if (MaxGraphHelper.isComplexEnumeration(modelElement)) {
+          this.maxgraphShapeOverlayService.addComplexEnumerationShapeOverlay(cell);
+        }
         this.maxgraphShapeOverlayService.addBottomShapeOverlay(cell);
       }
     }

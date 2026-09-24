@@ -56,8 +56,13 @@ export class PropertyValueConnectionHandler extends BaseConnectionHandler {
 
     parentMetaModel.exampleValue = childMetaModel;
     childMetaModel.parents.push(parentMetaModel);
+    const charDataType = parentMetaModel.characteristic?.dataType;
+    if (charDataType && !this.loadedFilesService.isElementExtern(childMetaModel)) {
+      childMetaModel.type = charDataType;
+    }
 
     this.refreshPropertiesLabel(parentCell, parentMetaModel);
+    this.refreshPropertiesLabel(childCell, childMetaModel);
 
     this.maxgraphService.assignToParent(childCell, parentCell);
   }

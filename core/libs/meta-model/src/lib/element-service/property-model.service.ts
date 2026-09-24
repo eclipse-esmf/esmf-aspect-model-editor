@@ -44,7 +44,9 @@ export class PropertyModelService extends BaseModelService {
     const previousExampleValue = modelElement.exampleValue;
 
     if (form.exampleValue instanceof DefaultValue) {
-      this.currentCachedFile.addElement(form.exampleValue.aspectModelUrn, form.exampleValue);
+      if (!this.loadedFilesService.isElementExtern(form.exampleValue)) {
+        this.currentCachedFile.addElement(form.exampleValue.aspectModelUrn, form.exampleValue);
+      }
     }
 
     if (

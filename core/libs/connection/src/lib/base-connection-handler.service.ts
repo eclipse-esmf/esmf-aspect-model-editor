@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {FiltersService} from '@ame/loader-filters';
 import {
   MaxGraphAttributeService,
@@ -20,6 +21,7 @@ import {
   MaxGraphShapeOverlayService,
   MaxGraphVisitorHelper,
 } from '@ame/max-graph';
+import {ModelElementNamingService} from '@ame/meta-model';
 import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {ElementCreatorService} from '@ame/shared';
 import {Directive, inject} from '@angular/core';
@@ -34,6 +36,8 @@ export class BaseConnectionHandler {
   protected readonly maxgraphService = inject(MaxGraphService);
   protected readonly filtersService = inject(FiltersService);
   protected readonly maxgraphShapeOverlay = inject(MaxGraphShapeOverlayService);
+  protected readonly loadedFilesService = inject(LoadedFilesService);
+  protected readonly modelElementNamingService = inject(ModelElementNamingService);
 
   refreshPropertiesLabel(cell: Cell, modelElement: NamedElement) {
     if (cell && (cell as any).configuration) {

@@ -12,10 +12,13 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
   <mat-form-field appearance="fill">
-    <mat-label>value *</mat-label>
+    <mat-label>value</mat-label>
     <input [formField]="field" matInput data-cy="valueElement" />
     @if (hasError('required')) {
-      <mat-error>{{ t('editorCanvas.shapeSetting.field.value.pleaseDefine') }} </mat-error>
+      <mat-error>{{ t('editorCanvas.shapeSetting.field.value.pleaseDefine') }}</mat-error>
+    }
+    @if (getValidationError(); as customError) {
+      <mat-error>{{ customError }}</mat-error>
     }
   </mat-form-field>
 </ng-container>

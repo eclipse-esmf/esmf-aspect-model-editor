@@ -18,6 +18,7 @@ import {NotificationsService} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {
   DefaultCharacteristic,
+  DefaultCollection,
   DefaultEntity,
   DefaultEntityInstance,
   DefaultEnumeration,
@@ -48,6 +49,10 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
         message: 'StructuredValue can only contain a scalar "string-like value space" value',
         timeout: 5000,
       });
+    }
+
+    if (parentMetaModel instanceof DefaultCollection) {
+      parentMetaModel.elementCharacteristic = null;
     }
 
     parentMetaModel.dataType = childMetaModel;

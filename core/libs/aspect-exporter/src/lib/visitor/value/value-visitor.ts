@@ -29,6 +29,10 @@ export class ValueVisitor extends BaseVisitor<DefaultValue> {
   private samm: Samm;
 
   visit(value: DefaultValue, customSubject?: Quad_Subject, customDataTypeUrn?: string): DefaultValue {
+    if (this.loadedFilesService.isElementExtern(value)) {
+      return value;
+    }
+
     if (!customSubject && value.isAnonymous?.()) {
       return value;
     }

@@ -25,7 +25,7 @@ import {
   ShapeConfiguration,
   ThemeService,
 } from '@ame/max-graph';
-import {ElementModelService} from '@ame/meta-model';
+import {ElementModelService, ModelElementNamingService} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {
@@ -40,8 +40,8 @@ import {
 } from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {useUpdater} from '@ame/utils';
-import {inject, Injectable, Injector, signal} from '@angular/core';
-import {toObservable} from '@angular/core/rxjs-interop';
+import {DestroyRef, inject, Injectable, Injector, signal} from '@angular/core';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, InternalEvent} from '@maxgraph/core';
 import {environment} from 'environments/environment';
@@ -77,7 +77,9 @@ export class EditorService {
   private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
   private elementCreator = inject(ElementCreatorService);
+  private modelElementNamingService = inject(ModelElementNamingService);
   private themeService = inject(ThemeService);
+  private destroyRef = inject(DestroyRef);
 
   private validateModelSubscription$: Subscription;
   public readonly isAllShapesExpanded = signal<boolean>(true);
@@ -209,31 +211,41 @@ export class EditorService {
             this.notificationsService.warning({title: 'An AspectModel can contain only one Aspect element.'});
             return;
           }
-          newInstance = this.elementCreator.createEmptyElement(DefaultAspect);
+          newInstance = this.elementCreator.createEmptyElement(DefaultAspect, {
+            resolveNaming: false,
+            cached: false,
+          });
           break;
         default:
           newInstance = this.elementCreator.createEmptyElement(sammElements[elementType].class, {
             isAbstract: elementType.includes('abstract'),
+            resolveNaming: false,
+            cached: false,
           });
       }
 
-      if (newInstance instanceof DefaultAspect) {
-        this.createAspect(newInstance, targetPos);
-        return;
-      }
-      const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
+      this.modelElementNamingService
+        .resolveMetaModelElement$(newInstance)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => {
+          if (newInstance instanceof DefaultAspect) {
+            this.createAspect(newInstance, targetPos);
+            return;
+          }
+          const maxgraphRenderer = new MaxGraphRenderer(this.maxgraphService, this.maxgraphShapeOverlayService, this.sammLangService, null);
 
-      const node = this.filtersService.createNode(newInstance);
-      this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
-      const cell = maxgraphRenderer.render(node, null);
-      this.maxgraphService.formatCell(cell, true);
-      if (cell) {
-        if (isGraphEmpty) {
-          this.maxgraphSetupService.centerGraph();
-        } else {
-          this.maxgraphService.navigateToCell(cell, true);
-        }
-      }
+          const node = this.filtersService.createNode(newInstance);
+          this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
+          const cell = maxgraphRenderer.render(node, null);
+          this.maxgraphService.formatCell(cell, true);
+          if (cell) {
+            if (isGraphEmpty) {
+              this.maxgraphSetupService.centerGraph();
+            } else {
+              this.maxgraphService.navigateToCell(cell, true);
+            }
+          }
+        });
     } else {
       const element: NamedElement = this.loadedFilesService.findElementOnExtReferences(aspectModelUrn);
       if (!this.maxgraphService.resolveCellByModelElement(element)) {

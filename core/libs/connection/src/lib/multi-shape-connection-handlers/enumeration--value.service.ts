@@ -25,8 +25,12 @@ export class EnumerationValueConnectionHandler
   connect(parentMetaModel: DefaultEnumeration, childMetaModel: DefaultValue, parent: Cell, child: Cell): void {
     childMetaModel.addParent(parentMetaModel);
     parentMetaModel.values.push(childMetaModel);
+    if (parentMetaModel.dataType && !this.loadedFilesService.isElementExtern(childMetaModel)) {
+      childMetaModel.type = parentMetaModel.dataType;
+    }
 
     this.maxgraphService.assignToParent(child, parent);
     this.refreshPropertiesLabel(parent, parentMetaModel);
+    this.refreshPropertiesLabel(child, childMetaModel);
   }
 }

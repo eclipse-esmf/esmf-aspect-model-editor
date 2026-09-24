@@ -11,11 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Component, OnDestroy, OnInit, signal} from '@angular/core';
+import {ValueTypeResolution, ValueTypeResolverService} from '@ame/shared';
+import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {form, FormField, required} from '@angular/forms/signals';
+import {form, FormField, required, validate} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {DefaultValue} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
@@ -23,13 +24,24 @@ import {InputFieldComponent} from '../../input-field.component';
 @Component({
   selector: 'ame-value-input-field',
   templateUrl: './value-input-field.component.html',
-  imports: [MatFormFieldModule, MatLabel, FormField, MatInput, TranslocoDirective],
+  imports: [MatFormFieldModule, MatLabel, MatError, FormField, MatInput, TranslocoDirective],
 })
 export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> implements OnInit, OnDestroy {
+  private valueTypeResolver = inject(ValueTypeResolverService);
   private readonly model = signal('');
+  private readonly resolution = signal<ValueTypeResolution | null>(null);
   private unregisterField = () => undefined;
 
-  readonly field = form(this.model, path => required(path));
+  readonly field = form(this.model, path => {
+    required(path);
+    validate(path, ({value}) => {
+      const currentRes = this.resolution();
+      if (!currentRes) {
+        return null;
+      }
+      return this.valueTypeResolver.validateValue(value(), currentRes);
+    });
+  });
 
   ngOnInit() {
     this.getMetaModelData()
@@ -38,6 +50,10 @@ export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> 
   }
 
   initForm() {
+    if (this.metaModelElement) {
+      const res = this.valueTypeResolver.resolveValueType(this.metaModelElement);
+      this.resolution.set(res);
+    }
     this.model.set(this.metaModelElement?.value || '');
     this.unregisterField = this.signalForm().register('value', this.field);
   }
@@ -51,5 +67,12 @@ export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> 
     return this.field()
       .errors()
       .some(error => error.kind === kind);
+  }
+
+  getValidationError(): string | null {
+    const error = this.field()
+      .errors()
+      .find(e => e.kind !== 'required');
+    return error ? (error.message as string) : null;
   }
 }

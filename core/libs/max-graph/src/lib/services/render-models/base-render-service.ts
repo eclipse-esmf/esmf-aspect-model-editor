@@ -77,10 +77,16 @@ export abstract class BaseRenderService {
         return;
       }
 
+      const payload = modelElement.propertiesPayload?.[property.aspectModelUrn];
+      if (payload && property.payloadName !== payload.payloadName) {
+        property.payloadName = payload.payloadName;
+        this.refreshPropertiesLabel(e.target, property);
+      }
+
       this.maxgraphService.removeCells([e]);
       MaxGraphHelper.establishRelation(modelElement, property);
       this.graph.insertEdge(this.graph.getDefaultParent(), null, null, e.source, e.target, {
-        baseStyleNames: [modelElement.propertiesPayload[property.aspectModelUrn]?.optional ? 'optionalPropertyEdge' : 'defaultEdge'],
+        baseStyleNames: [payload?.optional ? 'optionalPropertyEdge' : 'defaultEdge'],
         strokeColor: this.themeService.currentColors.border,
         fontColor: this.themeService.currentColors.font,
       });

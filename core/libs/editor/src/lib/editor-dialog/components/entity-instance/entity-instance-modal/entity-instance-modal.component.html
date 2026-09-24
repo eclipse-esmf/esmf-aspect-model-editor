@@ -21,7 +21,7 @@
   <form (submit)="$event.preventDefault(); onSave()">
     <mat-dialog-content>
       <mat-form-field class="entity-form-field" appearance="fill">
-        <mat-label for="entityValueName">{{ t('entityValue.name') }} *</mat-label>
+        <mat-label for="entityValueName">{{ t('entityValue.name') }}</mat-label>
         <input
           [formField]="entityValueName"
           [ngClass]="hasNameError('checkShapeName') || hasNameError('whitespace') ? 'ng-invalid-error' : ''"

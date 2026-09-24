@@ -24,6 +24,7 @@ export interface Property extends NamedElement, HasExtends<Property> {
   characteristic: Characteristic;
   exampleValue: ScalarValue | DefaultValue;
   isAbstract: boolean;
+  payloadName?: string;
 }
 
 export class DefaultProperty extends NamedElement implements Property {
@@ -49,6 +50,7 @@ export class DefaultProperty extends NamedElement implements Property {
   characteristic: Characteristic;
   exampleValue: ScalarValue | DefaultValue;
   isAbstract: boolean;
+  payloadName?: string;
 
   constructor(props: PropertyProps) {
     super(props);
@@ -56,6 +58,7 @@ export class DefaultProperty extends NamedElement implements Property {
     this.exampleValue = props.exampleValue || null;
     this.extends_ = props.extends_;
     this.isAbstract = Boolean(props.isAbstract);
+    this.payloadName = props.payloadName;
   }
 
   getExtends(): Property {

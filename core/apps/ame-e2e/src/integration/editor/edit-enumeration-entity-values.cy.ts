@@ -57,9 +57,13 @@ describe('Test enumeration entity instance', () => {
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.shapeExists('NewEntity'))
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('NewEntity'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Characteristic2'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Characteristic3'))
+      .wait(1000)
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => {
         cy.get(FIELD_characteristicName).click({force: true});
@@ -119,7 +123,9 @@ describe('Test enumeration entity instance', () => {
 
   it('should add properties and set values', () => {
     cy.clickAddShapePlusIcon('Entity1')
+      .wait(1000)
       .clickAddShapePlusIcon('Entity2')
+      .wait(1000)
       .then(() => cy.dbClickShape('ev2edit'))
       .then(() => {
         cy.get(FIELD_propertyValueNotComplex).eq(0).should('exist').type('ev2Value', {force: true});
@@ -143,8 +149,10 @@ describe('Test enumeration entity instance', () => {
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => {
@@ -197,6 +205,7 @@ describe('Test enumeration entity instance', () => {
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => {
@@ -230,6 +239,7 @@ describe('Test enumeration entity instance', () => {
       .then(() => cy.get(SELECTOR_searchEntityValueInputField).should('not.exist'))
       .then(() => cy.get(SELECTOR_editorCancelButton).focus().click({force: true}))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => {
@@ -462,6 +472,7 @@ describe('Test enumeration entity instance', () => {
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.shapeExists('Characteristic1'))
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.dbClickShape('Characteristic1'))
       .then(() => {
         cy.get(FIELD_characteristicName).click({force: true});
@@ -473,7 +484,9 @@ describe('Test enumeration entity instance', () => {
       .then(() => checkMatPanelTitleValues([0], ['FillGapEntityValue']))
       .then(() => cyHelp.clickSaveButton())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cyHelp.hasAddShapeOverlay('Characteristic1'))
+      .wait(1000)
       .then(() => {
         cyHelp.hasAddShapeOverlay('Characteristic1');
         testEntityValuesExists(['entityInstance1']);
@@ -528,11 +541,17 @@ describe('Test enumeration entity instance', () => {
   it('check add new entityValue overlay in place after adding multiple entityValues for one enumeration', () => {
     cy.clickShape('Characteristic1')
       .then(() => cyHelp.hasAddShapeOverlay('Characteristic1'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cyHelp.hasAddShapeOverlay('Characteristic1'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cyHelp.hasAddShapeOverlay('Characteristic1'))
-      .then(() => cy.clickAddShapePlusIcon('Characteristic1'));
+      .wait(1000)
+      .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000);
   });
 
   it('should create NewEntity', () => {
@@ -573,8 +592,11 @@ describe('Test enumeration entity instance', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.dbClickShape('Characteristic2'))
       .then(() => cy.get('button[data-cy="clear-dataType-button"]').click({force: true}))
       .then(() => {
@@ -683,11 +705,17 @@ describe('Test enumeration entity instance', () => {
   it('should create nested enumerations', () => {
     cy.startModelling()
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Characteristic2'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Entity2'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Characteristic3'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('Entity3'))
+      .wait(1000)
       .then(() => cy.dbClickShape('Characteristic3'))
       .then(() => {
         cy.get(FIELD_characteristicName).click({force: true});

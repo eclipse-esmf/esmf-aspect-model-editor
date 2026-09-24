@@ -269,6 +269,7 @@ describe('Test Anonymous Elements', () => {
     it('can create anonymous EncodingConstraint', () => {
       cy.startModelling()
         .then(() => cy.clickAddTraitPlusIcon('Characteristic1'))
+        .wait(1000)
         .then(() => cy.clickAddShapePlusIcon('Trait1'))
         .then(() => cy.shapeExists('EncodingConstraint1'))
         .then(() => cy.dbClickShape('EncodingConstraint1'))

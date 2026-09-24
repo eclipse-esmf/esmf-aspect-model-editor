@@ -355,7 +355,9 @@
     "workspace": {
       "title": "Workspace",
       "refreshing": "刷新workspace...",
-      "refresh": "刷新workspace"
+      "refresh": "刷新workspace",
+      "copyWorkspacePath": "复制工作区路径",
+      "copiedWorkspacePath": "工作区路径已复制到剪贴板"
     },
     "fileMenu": {
       "newWindow": "在新窗口中打开",

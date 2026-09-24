@@ -119,6 +119,7 @@ export function propertyFactory(initProps: BaseInitProps) {
         payload.optional = propertyQuad.object.value === 'true';
       } else if (samm.isPayloadNameProperty(propertyQuad.predicate.value)) {
         payload.payloadName = propertyQuad.object.value;
+        property.payloadName = propertyQuad.object.value;
       }
     }
 

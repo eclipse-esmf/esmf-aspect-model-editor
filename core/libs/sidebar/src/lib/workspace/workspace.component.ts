@@ -11,7 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelApiService} from '@ame/api';
 import {ModelCheckerService} from '@ame/editor';
+import {BrowserService, IPC_RENDERER, NotificationsService} from '@ame/shared';
+import {LanguageTranslationService} from '@ame/translation';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -43,6 +46,11 @@ import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-l
 export class WorkspaceComponent {
   private destroyRef = inject(DestroyRef);
   private modelChecker = inject(ModelCheckerService);
+  private modelApiService = inject(ModelApiService);
+  private ipcRenderer = inject(IPC_RENDERER);
+  private browserService = inject(BrowserService);
+  private notificationsService = inject(NotificationsService);
+  private translate = inject(LanguageTranslationService);
 
   public sidebarService = inject(SidebarStateService);
 
@@ -94,5 +102,40 @@ export class WorkspaceComponent {
   refreshWorkspace() {
     this.sidebarService.namespacesState.clear();
     this.sidebarService.workspace.refresh();
+  }
+
+  copyWorkspacePath() {
+    this.modelApiService
+      .getStoragePath()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: response => {
+          const pathToCopy = response?.storagePath || response?.path;
+          if (!pathToCopy) return;
+
+          if (this.browserService.isStartedAsElectronApp() && this.ipcRenderer?.copyToClipboard) {
+            this.ipcRenderer.copyToClipboard(pathToCopy);
+          } else if (navigator.clipboard && document.hasFocus()) {
+            navigator.clipboard.writeText(pathToCopy).catch(() => this.fallbackCopy(pathToCopy));
+          } else {
+            this.fallbackCopy(pathToCopy);
+          }
+
+          const title = this.translate.translateService.translate('sidebar.workspace.copiedWorkspacePath');
+          this.notificationsService.success({title, message: pathToCopy});
+        },
+      });
+  }
+
+  private fallbackCopy(text: string) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   }
 }

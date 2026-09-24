@@ -53,6 +53,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('samm:properties (:test :property1)');
@@ -230,6 +231,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       // Shape is not yet synced, so you cannot search for the name
       .then(() => cy.dbClickShape('property1'))
       .then(() => {
@@ -254,6 +256,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       // Shape is not yet synced, so you cannot search for the name
       .then(() => cy.dbClickShape('property1'))
       .then(() => {
@@ -261,6 +264,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain('samm:properties (:test1 :test2 :property1)');
@@ -280,12 +284,14 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       .then(() => cy.dbClickShape('property1'))
       .then(() => {
         cy.get(FIELD_name).clear({force: true}).type('test2', {force: true});
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       .then(() => cy.dbClickShape('property1'))
       .then(() => {
         cy.get(FIELD_name).clear({force: true}).type('test3', {force: true});
@@ -314,6 +320,7 @@ describe('Test edit property', () => {
       })
       // create b
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       .then(() => cy.dbClickShape('property1'))
       .then(() => {
         cy.get(FIELD_name).clear({force: true}).type('b', {force: true});
@@ -361,6 +368,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       .then(() => cy.shapeExists('AspectDefault'))
       .then(() => cy.dbClickShape('AspectDefault'))
       .then(() => cy.get(FIELD_name).clear({force: true}).type('NewAspect', {force: true}))
@@ -383,8 +391,10 @@ describe('Test edit property', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.dbClickShape('property2'))
       .then(() => {
@@ -392,6 +402,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
@@ -410,8 +421,10 @@ describe('Test edit property', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.dbClickShape('property2'))
       .then(() => {
@@ -419,6 +432,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.dbClickShape('Entity1'))
       .then(() => {
@@ -443,8 +457,10 @@ describe('Test edit property', () => {
     cy.startModelling()
       .then(() => cy.get(SELECTOR_elementBtn).click())
       .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => cy.shapeExists('Entity1'))
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.dbClickShape('property2'))
       .then(() => {
@@ -452,6 +468,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('Entity1'))
+      .wait(1000)
       .then(() => cy.shapeExists('property2'))
       .then(() => cy.dbClickShape('Entity1'))
       .then(() => {
@@ -459,6 +476,7 @@ describe('Test edit property', () => {
         return cyHelp.clickSaveButton();
       })
       .then(() => cy.clickAddShapePlusIcon('AspectDefault'))
+      .wait(1000)
       .then(() => cy.shapeExists('property3'))
       .then(() => cy.dbClickShape('AspectDefault'))
       .then(() => {
@@ -511,6 +529,7 @@ describe('Test edit property', () => {
       cy.startModelling()
         .then(() => cy.get(SELECTOR_elementBtn).click({force: true}))
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+        .wait(1000)
         .then(() => cy.shapeExists('Entity1'))
         .then(() => cy.dbClickShape('Characteristic1'))
         .then(() => cy.get(FIELD_characteristicName).click({force: true}).get('mat-option').contains('Enumeration').click({force: true}))
@@ -520,6 +539,7 @@ describe('Test edit property', () => {
         .then(() => cy.get(SELECTOR_entitySaveButton).click({force: true}).should('not.exist'))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
+        .wait(1000)
         .then(() => cy.dbClickShape('Entity1'))
         .then(() => cy.get('[data-cy="properties-modal-button"]').click({force: true}))
         .then(() => {

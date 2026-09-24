@@ -528,11 +528,19 @@ export class FileHandlingService {
           this.notificationsService.error({title: this.translate.language?.notificationService?.validationInProgress});
           return of(() => 'Validation in progress');
         }
+        const errorMessage = error?.error?.error;
+
         this.notificationsService.error({
           title: this.translate.language?.notificationService?.validationErrorTitle,
-          message: error?.error?.error?.message,
+          message: errorMessage?.message,
+          link: errorMessage?.focusNode,
           timeout: 5000,
         });
+
+        if (errorMessage?.focusNode) {
+          this.maxgraphService.showValidationErrorOnShape(errorMessage.focusNode);
+        }
+
         return throwError(() => error);
       }),
       finalize(() => localStorage.removeItem('validating')),

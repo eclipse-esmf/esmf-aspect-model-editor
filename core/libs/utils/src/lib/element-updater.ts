@@ -40,7 +40,14 @@ interface ElementUpdater {
 const characteristic = (element: DefaultCharacteristic): ElementUpdater => ({
   update: (toUpdate: NamedElement) =>
     (toUpdate instanceof DefaultEntity || toUpdate instanceof DefaultScalar) && (element.dataType = toUpdate),
-  delete: (toRemove: NamedElement) => (toRemove instanceof DefaultEntity || toRemove instanceof DefaultScalar) && (element.dataType = null),
+  delete: (toRemove: NamedElement) => {
+    if (
+      (toRemove instanceof DefaultEntity || toRemove instanceof DefaultScalar) &&
+      (!element.dataType || element.dataType.getUrn() === toRemove.getUrn())
+    ) {
+      element.dataType = null;
+    }
+  },
 });
 
 const abstractEntity = (abstractEntity: DefaultEntity): ElementUpdater => ({
@@ -122,7 +129,7 @@ const entity = (entity: DefaultEntity): ElementUpdater => ({
 
 const enumeration = (enumeration: DefaultEnumeration): ElementUpdater => ({
   delete: (toRemove: NamedElement) => {
-    if (toRemove instanceof DefaultEntity) {
+    if (toRemove instanceof DefaultEntity && (!enumeration.dataType || enumeration.dataType.getUrn() === toRemove.getUrn())) {
       enumeration.dataType = null;
       enumeration.values = [];
     }

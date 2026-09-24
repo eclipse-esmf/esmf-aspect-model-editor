@@ -16,6 +16,7 @@ import {NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, Operation} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, of, shareReplay} from 'rxjs';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
@@ -24,22 +25,32 @@ export class OperationConnectionHandler extends BaseConnectionHandler implements
   private notificationsService = inject(NotificationsService);
 
   public connect(operation: Operation, source: Cell, modelInfo: ModelInfo) {
-    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
-
-    if (ModelInfo.IS_OPERATION_OUTPUT === modelInfo) {
-      if (operation.output) {
-        this.notificationsService.warning({title: 'Operation output is already defined'});
-        return;
-      }
-      operation.output = defaultProperty;
-    } else if (ModelInfo.IS_OPERATION_INPUT === modelInfo) {
-      operation.input.push(defaultProperty);
+    if (ModelInfo.IS_OPERATION_OUTPUT === modelInfo && operation.output) {
+      this.notificationsService.warning({title: 'Operation output is already defined'});
+      return of(undefined);
     }
 
-    const child = this.renderTree(defaultProperty, source);
-    this.refreshPropertiesLabel(child, defaultProperty);
-    this.maxgraphService.assignToParent(child, source);
-    this.maxgraphService.formatCell(source);
-    this.maxgraphService.formatShapes();
+    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty, {
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(defaultProperty).pipe(
+      map(() => {
+        if (ModelInfo.IS_OPERATION_OUTPUT === modelInfo) {
+          operation.output = defaultProperty;
+        } else if (ModelInfo.IS_OPERATION_INPUT === modelInfo) {
+          operation.input.push(defaultProperty);
+        }
+
+        const child = this.renderTree(defaultProperty, source);
+        this.refreshPropertiesLabel(child, defaultProperty);
+        this.maxgraphService.assignToParent(child, source);
+        this.maxgraphService.formatCell(source);
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
+    );
+    connect$.subscribe();
+    return connect$;
   }
 }

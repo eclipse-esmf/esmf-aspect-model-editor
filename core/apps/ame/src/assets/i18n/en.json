@@ -341,7 +341,7 @@
     },
     "workspaceError": {
       "title": "Workspace validation error!",
-      "description": "It seems at least one workspace file has validation errors. Fix or remove the errored file then refresh the workspace."
+      "description": "During loading the models from the workspace, the following validation error(s) occured. The affected ttl files need to be removed or fixed outside the editor to display and use the workspace."
     },
     "actions": {
       "searchElements": "Search elements...",
@@ -352,7 +352,9 @@
     "workspace": {
       "title": "Workspace",
       "refreshing": "Refreshing workspace...",
-      "refresh": "Refresh workspace"
+      "refresh": "Refresh workspace",
+      "copyWorkspacePath": "Copy workspace path",
+      "copiedWorkspacePath": "Workspace path copied to clipboard"
     },
     "fileMenu": {
       "newWindow": "Open in new window",

@@ -31,7 +31,7 @@ describe('WorkspaceErrorComponent', () => {
                 workspaceError: {
                   title: 'Workspace validation error!',
                   description:
-                    'It seems at least one workspace file has validation errors. Fix or remove the errored file then refresh the workspace.',
+                    'During loading the models from the workspace, the following validation error(s) occured. The affected ttl files need to be removed or fixed outside the editor to display and use the workspace.',
                 },
               },
             },

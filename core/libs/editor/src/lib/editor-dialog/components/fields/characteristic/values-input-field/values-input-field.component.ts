@@ -123,6 +123,17 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
       this.previousDataType = dataType;
       this.dataTypeInitialized = true;
     });
+
+    effect(() => {
+      const isComplex = this.hasComplexValues();
+      if (!isComplex) {
+        const hasEntities = this.enumValues().some(v => v instanceof DefaultEntityInstance);
+        if (hasEntities) {
+          this.enumValues.update(values => values.filter(v => !(v instanceof DefaultEntityInstance)));
+          this.syncFormValues();
+        }
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -133,7 +144,27 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
         this.initForm();
       });
 
-    this.values.set(CacheUtils.getCachedElements(this.loadedFiles.currentLoadedFile.cachedFile, DefaultValue));
+    this.values.set(this.getAvailableValues());
+  }
+
+  private getAvailableValues(): DefaultValue[] {
+    const localValues = this.loadedFiles.currentLoadedFile
+      ? CacheUtils.getCachedElements(this.loadedFiles.currentLoadedFile.cachedFile, DefaultValue)
+      : [];
+    const externalValues: DefaultValue[] = [];
+    for (const file of this.loadedFiles.filesAsList ?? []) {
+      if (file.absoluteName === this.loadedFiles.currentLoadedFile?.absoluteName) continue;
+      const extVals = file.cachedFile ? CacheUtils.getCachedElements(file.cachedFile, DefaultValue) : [];
+      externalValues.push(...extVals);
+    }
+    // Deduplicate by URN
+    const map = new Map<string, DefaultValue>();
+    for (const val of [...localValues, ...externalValues]) {
+      if (val.aspectModelUrn) {
+        map.set(val.aspectModelUrn, val);
+      }
+    }
+    return Array.from(map.values());
   }
 
   ngOnDestroy() {
@@ -161,12 +192,19 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     if (isLiteral && typeof value === 'string') {
       value = new ScalarValue({value, type: this.metaModelElement.dataType || null});
     } else if (typeof value === 'string') {
-      value = new DefaultValue({
-        aspectModelUrn: this.metaModelElement.namespace + `#${value}`,
-        value: 'Value',
-        name: value,
-        metaModelVersion: this.samm.version,
-      });
+      const existing =
+        this.values().find(v => v.name === value || v.aspectModelUrn === value) ||
+        this.loadedFiles.findElementOnExtReferences<DefaultValue>(value);
+      if (existing) {
+        value = existing;
+      } else {
+        value = new DefaultValue({
+          aspectModelUrn: this.metaModelElement.namespace + `#${value}`,
+          value: 'Value',
+          name: value,
+          metaModelVersion: this.samm.version,
+        });
+      }
     }
 
     this.enumValues.update(values => [...values, value]);
@@ -250,14 +288,10 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
   }
 
   private changeValuesByDataType(dataType: string) {
-    const dataTypeKeys = Object.keys(this.dataTypeService.getDataTypes());
-
-    if (dataTypeKeys.includes(dataType)) {
-      return;
-    }
-
     this.searchModel.set('');
-    this.enumValueChange([]);
+    const newType = (this.metaModelElement?.dataType as any) || (dataType ? {urn: dataType} : null);
+    this.enumValues.update(values => values.map(v => (v instanceof ScalarValue ? new ScalarValue({value: v.value, type: newType}) : v)));
+    this.syncFormValues();
   }
 
   private handleNextModelElement(modelElement: NamedElement): void {

@@ -22,7 +22,7 @@ import {
   MaxGraphShapeSelectorService,
   ThemeService,
 } from '@ame/max-graph';
-import {ElementModelService} from '@ame/meta-model';
+import {ElementModelService, ModelElementNamingService} from '@ame/meta-model';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
 import {AlertService, ElementCreatorService, LoadingScreenService, NotificationsService, TitleService} from '@ame/shared';
@@ -148,6 +148,9 @@ describe('EditorService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(ElementCreatorService),
+        MockProvider(ModelElementNamingService, {
+          resolveMetaModelElement$: vi.fn().mockImplementation(el => of(el)),
+        }),
       ],
     });
 
@@ -196,7 +199,7 @@ describe('EditorService', () => {
     expect(elementModelService.deleteElement).not.toHaveBeenCalledWith(edge);
   });
 
-  it('createElement should center element coordinates when the graph is empty', () => {
+  it('createElement should center element coordinates when the graph is empty', async () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const maxgraphSetupService = TestBed.inject(MaxGraphSetupService);
     const elementCreatorService = TestBed.inject(ElementCreatorService);
@@ -216,13 +219,17 @@ describe('EditorService', () => {
       children: [],
     } as any);
 
-    service.createElement(50, 60, 'property');
+    await service.createElement(50, 60, 'property');
 
+    expect(elementCreatorService.createEmptyElement).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({resolveNaming: false, cached: false}),
+    );
     expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(40, 40);
     expect(maxgraphSetupService.centerGraph).toHaveBeenCalled();
   });
 
-  it('createElement should use given drop coordinates when the graph is not empty', () => {
+  it('createElement should use given drop coordinates when the graph is not empty', async () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const maxgraphAttributeService = TestBed.inject(MaxGraphAttributeService);
     const elementCreatorService = TestBed.inject(ElementCreatorService);
@@ -244,7 +251,7 @@ describe('EditorService', () => {
       children: [],
     } as any);
 
-    service.createElement(50, 60, 'property');
+    await service.createElement(50, 60, 'property');
 
     expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(50, 60);
   });

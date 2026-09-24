@@ -14,5 +14,17 @@
 <ng-container *transloco="let t">
   <h2>{{ t('sidebar.workspaceError.title') }}</h2>
   <p>{{ t('sidebar.workspaceError.description') }}</p>
-  <span>{{ error()?.message }}</span>
+  <span class="message-content">
+    @for (part of messageParts(); track $index) {
+      @if (part.isSeparator) {
+        <hr />
+      } @else if (part.isLink) {
+        <a class="file-link" [href]="part.applicationUrl" (click)="openLink($event, part)">{{ part.text }}</a>
+      } @else if (part.isError) {
+        <span class="error-label">{{ part.text }}</span>
+      } @else {
+        {{ part.text }}
+      }
+    }
+  </span>
 </ng-container>

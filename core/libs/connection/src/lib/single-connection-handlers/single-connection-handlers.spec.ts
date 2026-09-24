@@ -57,6 +57,7 @@ import {
 } from '@esmf/aspect-model-loader';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Cell} from '@maxgraph/core';
+import {of} from 'rxjs';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
 import {
   AbstractEntityConnectionHandler,
@@ -182,7 +183,13 @@ describe('Single Shape Connection Handlers', () => {
         {provide: SammLanguageSettingsService, useValue: {currentLanguage: 'en'}},
         {provide: LanguageTranslationService, useValue: {language: {notificationService: {childForPredefinedElementError: 'err'}}}},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: ModelElementNamingService, useValue: {resolveMetaModelElement: vi.fn().mockImplementation(el => el)}},
+        {
+          provide: ModelElementNamingService,
+          useValue: {
+            resolveMetaModelElement: vi.fn().mockImplementation(el => el),
+            resolveMetaModelElement$: vi.fn().mockImplementation(el => of(el)),
+          },
+        },
         {provide: EntityPropertyConnectionHandler, useValue: mockEntityPropertyConnector},
         {provide: PropertyAbstractPropertyConnectionHandler, useValue: mockPropertyAbstractPropertyConnector},
       ],

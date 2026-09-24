@@ -19,6 +19,7 @@ import {
   DefaultQuantifiable,
   DefaultStructuredValue,
   DefaultUnit,
+  DefaultValue,
 } from '@esmf/aspect-model-loader';
 import {Cell, Graph} from '@maxgraph/core';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -35,6 +36,7 @@ describe('CharacteristicModelService', () => {
   beforeEach(() => {
     mockLoadedFilesService = {
       isElementInCurrentFile: vi.fn().mockReturnValue(true),
+      isElementExtern: vi.fn().mockReturnValue(false),
       currentLoadedFile: {
         namespace: 'org.eclipse.esmf.test',
         rdfModel: {
@@ -146,6 +148,25 @@ describe('CharacteristicModelService', () => {
 
     service.update(cell, {name: 'QUpdated', unit});
     expect(quantifiable.unit).toBe(unit);
+  });
+
+  it('should update enumeration and not add external DefaultValue to local cache', () => {
+    const enumeration = new DefaultEnumeration({name: 'Enum1', aspectModelUrn: 'urn:test#Enum1', metaModelVersion: '2.2.0', values: []});
+    const externalVal = new DefaultValue({name: 'ExtVal', aspectModelUrn: 'urn:ext#ExtVal', value: 'value', metaModelVersion: '2.2.0'});
+    const localVal = new DefaultValue({name: 'LocalVal', aspectModelUrn: 'urn:test#LocalVal', value: 'value', metaModelVersion: '2.2.0'});
+
+    mockLoadedFilesService.isElementExtern.mockImplementation(el => el.aspectModelUrn.startsWith('urn:ext'));
+
+    const cell = new Cell();
+    MaxGraphHelper.setElementNode(cell, {element: enumeration} as any);
+
+    service.update(cell, {name: 'EnumUpdated', enumValues: [externalVal, localVal]});
+    expect(mockLoadedFilesService.currentLoadedFile.cachedFile.addElement).not.toHaveBeenCalledWith(
+      externalVal.aspectModelUrn,
+      externalVal,
+    );
+    expect(mockLoadedFilesService.currentLoadedFile.cachedFile.addElement).toHaveBeenCalledWith(localVal.aspectModelUrn, localVal);
+    expect(enumeration.values).toEqual([externalVal, localVal]);
   });
 
   it('should delete characteristic and trigger overlays and cleanup', () => {

@@ -119,6 +119,7 @@ describe('Test create recursive element', () => {
       .then(() => cy.clickConnectShapes('NewCharacteristic', 'newProperty2'))
       .then(() => cy.clickConnectShapes('NewCharacteristic', 'newProperty3'))
       .then(() => cy.clickAddTraitPlusIcon('NewCharacteristic'))
+      .wait(1000)
       .then(() => cy.getUpdatedRDF())
       .then(rdf => {
         expect(rdf).to.contain(':property1 a samm:Property;\n' + '    samm:characteristic :Trait1.');

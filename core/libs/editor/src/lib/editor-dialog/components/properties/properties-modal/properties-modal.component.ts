@@ -209,6 +209,16 @@ export class PropertiesModalComponent implements OnInit, AfterViewInit {
     }));
   }
 
+  onCheckboxClick(event: MouseEvent, urn: string, field: 'optional' | 'notInPayload') {
+    if ((event.target as HTMLElement)?.tagName === 'MAT-CHECKBOX') {
+      if (field === 'optional') {
+        this.updateOptional(urn);
+      } else {
+        this.updateNotInPayload(urn);
+      }
+    }
+  }
+
   saveChanges() {
     this.dialogRef.close(this.propertiesModel());
   }

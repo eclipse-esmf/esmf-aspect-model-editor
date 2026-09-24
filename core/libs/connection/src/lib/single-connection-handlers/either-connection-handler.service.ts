@@ -16,6 +16,7 @@ import {NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEither} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, of, shareReplay} from 'rxjs';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
@@ -24,26 +25,35 @@ export class EitherConnectionHandler extends BaseConnectionHandler implements Si
   private notificationsService = inject(NotificationsService);
 
   public connect(either: DefaultEither, source: Cell, modelInfo: ModelInfo) {
-    const defaultCharacteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic);
-
-    if (ModelInfo.IS_EITHER_LEFT === modelInfo) {
-      if (either.left) {
-        this.notificationsService.warning({title: 'Either left is already defined'});
-        return;
-      }
-      either.left = defaultCharacteristic;
-    } else if (ModelInfo.IS_EITHER_RIGHT === modelInfo) {
-      if (either.right) {
-        this.notificationsService.warning({title: 'Either right is already defined'});
-        return;
-      }
-      either.right = defaultCharacteristic;
+    if (ModelInfo.IS_EITHER_LEFT === modelInfo && either.left) {
+      this.notificationsService.warning({title: 'Either left is already defined'});
+      return of(undefined);
+    } else if (ModelInfo.IS_EITHER_RIGHT === modelInfo && either.right) {
+      this.notificationsService.warning({title: 'Either right is already defined'});
+      return of(undefined);
     }
 
-    const child = this.renderTree(defaultCharacteristic, source);
-    this.refreshPropertiesLabel(child, defaultCharacteristic);
-    this.maxgraphService.assignToParent(child, source);
-    this.maxgraphService.formatCell(source);
-    this.maxgraphService.formatShapes();
+    const defaultCharacteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic, {
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(defaultCharacteristic).pipe(
+      map(() => {
+        if (ModelInfo.IS_EITHER_LEFT === modelInfo) {
+          either.left = defaultCharacteristic;
+        } else if (ModelInfo.IS_EITHER_RIGHT === modelInfo) {
+          either.right = defaultCharacteristic;
+        }
+
+        const child = this.renderTree(defaultCharacteristic, source);
+        this.refreshPropertiesLabel(child, defaultCharacteristic);
+        this.maxgraphService.assignToParent(child, source);
+        this.maxgraphService.formatCell(source);
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
+    );
+    connect$.subscribe();
+    return connect$;
   }
 }

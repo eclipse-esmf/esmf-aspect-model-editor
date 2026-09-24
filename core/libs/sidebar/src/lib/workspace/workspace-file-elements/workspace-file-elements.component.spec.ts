@@ -18,7 +18,7 @@ import {MaxGraphService} from '@ame/max-graph';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
+import {DefaultCharacteristic, DefaultProperty, DefaultTrait} from '@esmf/aspect-model-loader';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {of} from 'rxjs';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
@@ -295,5 +295,38 @@ describe('WorkspaceFileElementsComponent', () => {
 
     expect(component.searched()['property']).toHaveLength(1);
     expect(component.searched()['characteristic']).toHaveLength(1);
+  });
+
+  it('should categorize DefaultTrait under trait instead of characteristic', () => {
+    fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    const mockTrait = new DefaultTrait({
+      name: 'testTrait',
+      aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#testTrait',
+      metaModelVersion: '2.1.0',
+    });
+
+    const mockFileWithTrait = {
+      cachedFile: {
+        getAllElements: () => [mockTrait],
+      },
+    };
+
+    loadedFilesMock.getFile.mockImplementation((key: string) => {
+      if (key === 'org.eclipse.esmf:1.0.0:WithTrait.ttl') {
+        return mockFileWithTrait;
+      }
+      return null;
+    });
+
+    const file = new FileStatus('WithTrait.ttl');
+    file.aspectModelUrn = 'urn:samm:org.eclipse.esmf:1.0.0#WithTrait';
+    sidebarService.selection.select('org.eclipse.esmf:1.0.0', file);
+    TestBed.flushEffects();
+
+    expect(component.elements()['trait']?.elements?.length).toBe(1);
+    expect(component.elements()['characteristic']?.elements?.length).toBe(0);
   });
 });

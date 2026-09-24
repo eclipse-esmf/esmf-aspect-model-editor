@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/cache';
 import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
 import {basicShapeGeometry} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
@@ -22,6 +23,7 @@ import {MultiShapeConnector} from '../models';
 export class PropertyCharacteristicConnectionHandler implements MultiShapeConnector<DefaultProperty, DefaultCharacteristic> {
   private maxgraphService = inject(MaxGraphService);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private loadedFiles = inject(LoadedFilesService);
   public connect(parentMetaModel: DefaultProperty, childMetaModel: DefaultCharacteristic, parent: Cell, child: Cell) {
     this.maxgraphAttributeService.graph.getOutgoingEdges(parent, null).forEach((outEdge: Cell) => {
       // Moves the cell being disconnected(arrow removal) in order to prevent overlapping overlays
@@ -39,6 +41,17 @@ export class PropertyCharacteristicConnectionHandler implements MultiShapeConnec
     });
 
     parentMetaModel.characteristic = childMetaModel;
+    if (
+      childMetaModel.dataType &&
+      parentMetaModel.exampleValue instanceof DefaultValue &&
+      !this.loadedFiles.isElementExtern(parentMetaModel.exampleValue)
+    ) {
+      parentMetaModel.exampleValue.type = childMetaModel.dataType;
+      const exampleValueCell = this.maxgraphService.resolveCellByModelElement(parentMetaModel.exampleValue);
+      if (exampleValueCell) {
+        this.maxgraphAttributeService.graph.labelChanged(exampleValueCell, MaxGraphHelper.createPropertiesLabel(exampleValueCell), null);
+      }
+    }
     this.maxgraphService.assignToParent(child, parent);
     this.maxgraphService.formatShapes();
   }

@@ -17,7 +17,7 @@ import {RdfModelUtil} from '@ame/rdf/utils';
 import {config, DataTypeService, ElementIconComponent} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {disabled, form, FormField, validateAsync} from '@angular/forms/signals';
+import {disabled, form, FormField, required, validateAsync} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIconButton} from '@angular/material/button';
 import {MatOptgroup, MatOption, MatOptionSelectionChange} from '@angular/material/core';
@@ -26,6 +26,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {
   DefaultCharacteristic,
+  DefaultCollection,
   DefaultEither,
   DefaultEntity,
   DefaultScalar,
@@ -92,6 +93,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     });
 
   readonly displayField = form(this.displayModel, path => {
+    required(path, {when: () => this.isDataTypeRequired()});
     validateAsync(path, {
       params: ({value}) => value(),
       factory: this.createDuplicateNameResource,
@@ -229,6 +231,19 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     return this.displayField()
       .errors()
       .some(error => error.kind === kind);
+  }
+
+  private isDataTypeRequired(): boolean {
+    if (!this.metaModelElement) {
+      return false;
+    }
+    if (this.metaModelElement.className === 'DefaultCharacteristic') {
+      return false;
+    }
+    if (this.metaModelElement instanceof DefaultCollection) {
+      return !this.signalForm()?.get('elementCharacteristic');
+    }
+    return true;
   }
 
   private scalarTypes(): DefaultScalar[] {

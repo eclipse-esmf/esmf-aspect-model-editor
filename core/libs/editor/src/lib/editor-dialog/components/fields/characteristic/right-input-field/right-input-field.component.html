@@ -13,7 +13,7 @@
   -->
 
   <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-    <mat-label>right *</mat-label>
+    <mat-label>right</mat-label>
     <input #right [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="right" />
     @if (displayField().disabled() && !loadedFiles.isElementExtern(metaModelElement)) {
       <button (click)="unlockRight()" data-cy="clear-right-button" type="button" matSuffix mat-icon-button tabindex="-1">

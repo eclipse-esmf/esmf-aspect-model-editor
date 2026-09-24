@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {contextBridge, ipcRenderer, shell} from 'electron';
+import {clipboard, contextBridge, ipcRenderer, shell} from 'electron';
 
 /**
  * Exposes a set of Electron IPC and shell functions to the renderer process via the `electronAPI` object.
@@ -83,6 +83,31 @@ contextBridge.exposeInMainWorld('electronAPI', {
    */
   openExternalLink: (link: string): Promise<void> | boolean => shell.openExternal(link),
 
+  /**
+   * Tries to open the given `vscode://` URL in Visual Studio Code. If VSCode is not installed
+   * (i.e. the OS has no handler registered for the `vscode://` protocol and the call fails),
+   * falls back to opening the `fallbackUrl` (e.g. a `file://` URL) with the OS default application.
+   *
+   * @param {string} vscodeUrl - The `vscode://file/...` URL to try first.
+   * @param {string} fallbackUrl - The URL to open if VSCode could not be opened.
+   * @returns {Promise<void>} Resolves once either link has been opened.
+   */
+  openInVsCodeOrDefault: async (vscodeUrl: string, fallbackUrl: string): Promise<void> => {
+    try {
+      await shell.openExternal(vscodeUrl);
+    } catch {
+      await shell.openExternal(fallbackUrl);
+    }
+  },
+
+  /**
+   * Copies text directly to the system clipboard.
+   *
+   * @param {string} text - The text to copy.
+   */
+  copyToClipboard: (text: string): void => {
+    clipboard.writeText(text);
+  },
   /**
    * Shows a context menu for the given payload.
    *

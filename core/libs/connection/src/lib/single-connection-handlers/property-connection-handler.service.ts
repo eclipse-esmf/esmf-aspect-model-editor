@@ -15,6 +15,7 @@ import {MaxGraphHelper, MaxGraphShapeOverlayService} from '@ame/max-graph';
 import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, Property} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, of, shareReplay} from 'rxjs';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
@@ -24,20 +25,31 @@ export class PropertyConnectionHandler extends BaseConnectionHandler implements 
 
   public connect(property: Property, source: Cell) {
     if (property.characteristic) {
-      return;
+      return of(undefined);
     }
 
-    property.characteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic);
-    const child = this.renderTree(property.characteristic, source);
-    this.maxgraphService.assignToParent(child, source);
+    const defaultCharacteristic = this.elementCreator.createEmptyElement(DefaultCharacteristic, {
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(defaultCharacteristic).pipe(
+      map(() => {
+        property.characteristic = defaultCharacteristic;
+        const child = this.renderTree(property.characteristic, source);
+        this.maxgraphService.assignToParent(child, source);
 
-    if (MaxGraphHelper.hasGrandParentStructuredValue(child, this.maxgraphService.graph)) {
-      this.maxgraphShapeOverlayService.removeOverlay(child, MaxGraphHelper.getNewShapeOverlayButton(child));
-    }
+        if (MaxGraphHelper.hasGrandParentStructuredValue(child, this.maxgraphService.graph)) {
+          this.maxgraphShapeOverlayService.removeOverlay(child, MaxGraphHelper.getNewShapeOverlayButton(child));
+        }
 
-    this.refreshPropertiesLabel(child, property.characteristic);
+        this.refreshPropertiesLabel(child, property.characteristic);
 
-    this.maxgraphService.formatCell(source);
-    this.maxgraphService.formatShapes();
+        this.maxgraphService.formatCell(source);
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
+    );
+    connect$.subscribe();
+    return connect$;
   }
 }

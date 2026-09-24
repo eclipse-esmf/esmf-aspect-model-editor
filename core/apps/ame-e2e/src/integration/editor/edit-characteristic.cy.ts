@@ -695,7 +695,7 @@ describe('Structured Value Characteristic', () => {
       });
 
       it('should attach new Property', () => {
-        cy.clickAddShapePlusIcon('Characteristic1');
+        cy.clickAddShapePlusIcon('Characteristic1').wait(1000);
 
         const characteristicParams = {name: 'Characteristic1'};
         const childrenParams = [{name: 'property2'}, {name: 'property3'}, {name: 'property4'}];

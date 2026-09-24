@@ -51,7 +51,9 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.addSeeElements('http://test.com'))
         .then(() => cyHelp.clickSaveButton())
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
+        .wait(1000)
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
+        .wait(1000)
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'abstractProperty1'))
         .then(() => cy.clickConnectShapes('abstractProperty1', 'property2'))
         .then(() => cy.getCellLabel('[abstractProperty1]', 'preferredName').should('eq', 'Inherited\npreferredName = Preferred Name @en'))
@@ -169,8 +171,11 @@ describe('Create and Edit Abstract Property', () => {
         .then(() => cy.clickShape('AbstractEntity1'));
 
       cy.clickAddShapePlusIcon('Characteristic1')
+        .wait(1000)
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
+        .wait(1000)
         .then(() => cy.clickAddShapePlusIcon('Entity1'))
+        .wait(1000)
         .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty1')))
         .then(() => cy.dragElement(SELECTOR_ecAbstractProperty, 350, 300).then(() => cy.clickShape('abstractProperty2')))
 
