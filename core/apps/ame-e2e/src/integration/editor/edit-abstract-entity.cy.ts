@@ -218,7 +218,9 @@ describe('Create and Edit Abstract Entity', () => {
 
     it('should create abstract properties', () => {
       cy.clickAddShapePlusIcon('AbstractEntity1')
+        .wait(1000)
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
+        .wait(1000)
         .then(() => cy.clickShape('abstractProperty1'))
         .then(() => cy.clickShape('abstractProperty2'));
     });
@@ -328,7 +330,9 @@ describe('Create and Edit Abstract Entity', () => {
         .then(() => cy.clickAddShapePlusIcon('Characteristic1'))
         .then(() => cy.dragElement(SELECTOR_ecAbstractEntity, 350, 300).then(() => cy.clickShape('AbstractEntity1')))
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
+        .wait(1000)
         .then(() => cy.clickAddShapePlusIcon('AbstractEntity1'))
+        .wait(1000)
         .then(() => cy.clickConnectShapes('AbstractEntity1', 'Entity1'))
         .then(() => cy.dbClickShape('AbstractEntity1'))
         .then(() => cy.get(FIELD_preferredNameen).type('Preferred Name 1', {force: true}))

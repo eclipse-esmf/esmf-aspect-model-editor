@@ -35,11 +35,16 @@ describe('Test edit operation', () => {
       .then(() => cy.dragElement(SELECTOR_ecOperation, 100, 300))
       .then(() => cy.clickConnectShapes('AspectDefault', 'operation1'))
       .then(() => cyHelp.hasAddInputAndOutputShapeOverlay('operation1'))
+      .wait(1000)
       .then(hasInputAndOutputOverlay => expect(hasInputAndOutputOverlay).equal(true))
       .then(() => cy.clickAddInputShapeIcon('operation1'))
+      .wait(1000)
       .then(() => cy.clickAddInputShapeIcon('operation1'))
+      .wait(1000)
       .then(() => cy.clickAddInputShapeIcon('operation1'))
+      .wait(1000)
       .then(() => cy.clickAddOutputShapeIcon('operation1'))
+      .wait(1000)
       .then(() =>
         cy.getAspect().then(aspect => {
           expect(aspect.name).to.equal('AspectDefault');

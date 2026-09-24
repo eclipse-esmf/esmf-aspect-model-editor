@@ -25,6 +25,7 @@ describe('Test editing Trait', () => {
   it('can add new and rename', () => {
     cy.shapeExists('Characteristic1')
       .then(() => cy.clickAddTraitPlusIcon('Characteristic1'))
+      .wait(1000)
       .then(() => {
         cy.getAspect().then(aspect => {
           expect(aspect.properties).to.have.length(1);
@@ -65,6 +66,7 @@ describe('Test editing Trait', () => {
   it('can generate new constraints on plus click', () => {
     cy.shapeExists('Trait1')
       .then(() => cy.clickAddShapePlusIcon('Trait1'))
+      .wait(1000)
       .then(() => cy.shapeExists('EncodingConstraint1'));
   });
 });

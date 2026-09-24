@@ -53,7 +53,9 @@ describe('Test edit Events', () => {
       .then(() => cy.dragElement(SELECTOR_ecEvent, 100, 300))
       .then(() => cy.clickConnectShapes('AspectDefault', 'event1'))
       .then(() => cy.clickAddShapePlusIcon('event1'))
+      .wait(1000)
       .then(() => cy.clickAddShapePlusIcon('event1'))
+      .wait(1000)
       .then(() => cy.shapesConnected('event1', 'property2'))
       .then(() => cy.shapesConnected('event1', 'property3'))
       .then(() =>

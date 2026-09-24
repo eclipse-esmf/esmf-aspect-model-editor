@@ -29,7 +29,7 @@
 
   <!-- Input field -->
   <mat-form-field appearance="fill">
-    <mat-label>deconstructionRule *</mat-label>
+    <mat-label>deconstructionRule</mat-label>
     <input class="deconstruction-rule-input" [formField]="deconstructionRuleField" data-cy="deconstruction-rule-input" matInput />
     @if (hasRuleError('required')) {
       <mat-error>{{ t('editorCanvas.shapeSetting.field.structuredValue.ruleRequired') }}</mat-error>

@@ -254,6 +254,7 @@ describe('Test editing Either', () => {
             .contains('LeftCharacteristic')
             .click({force: true}),
         )
+
         .then(() =>
           cy
             .get(FIELD_right)
@@ -271,7 +272,9 @@ describe('Test editing Either', () => {
         .then(() => cy.clickShape('RightCharacteristic'))
         .then(() => cy.get(SELECTOR_tbDeleteButton).click({force: true}))
         .then(() => cy.clickAddLeftShapeIcon('Either1'))
+        .wait(1000)
         .then(() => cy.clickAddRightShapeIcon('Either1'))
+        .wait(1000)
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('Either1 a samm-c:Either');
