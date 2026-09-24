@@ -69,15 +69,21 @@ test.describe('Test language settings', () => {
     const option = page.locator('mat-option').filter({hasText: 'German (de)'}).first();
     await option.waitFor({state: 'visible'});
     await option.click();
+    await expect(lastInput).toHaveValue('German (de)');
     await page.locator(SettingsDialogSelectors.settingsDialogApplyButton).click({force: true});
+    await page
+      .locator('ame-loading-screen')
+      .waitFor({state: 'detached'})
+      .catch(() => {});
 
     await page.locator('.delete-icon').last().click({force: true});
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(1);
     await page.locator(SettingsDialogSelectors.settingsDialogApplyButton).click({force: true});
 
+    await expect(page.getByRole('heading', {name: 'Deleting all language related'})).toBeVisible();
+
     const alertCancelBtn = page.locator('[data-testid="alert-left-btn"]');
-    if (await alertCancelBtn.isVisible().catch(() => false)) {
-      await alertCancelBtn.click({force: true});
-    }
+    await alertCancelBtn.click({force: true});
 
     await expect(page.locator('[data-testid="langCode"]').last()).toHaveValue('English (en)');
     await app.closeDialog(SettingsDialogSelectors.settingsDialogCancelButton);

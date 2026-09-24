@@ -88,7 +88,7 @@ export class CharacteristicModelService extends BaseModelService {
         metaModelElement.defaultValue = form.defaultValue;
       }
     }
-    this.graphAdapter?.updateCell(cell);
+    this.graphAdapter?.updateCell(cell, form);
   }
 
   delete(cell: any): void {
@@ -132,7 +132,7 @@ export class CharacteristicModelService extends BaseModelService {
         for (const child of children) {
           ElementRelationUtil.removeRelation(originalModelElement, child);
         }
-        this.graphAdapter?.updateCell(cell);
+        this.graphAdapter?.updateCell(cell, form);
         return {};
       }
     }

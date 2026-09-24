@@ -45,9 +45,9 @@ export class MaxGraphDomainBridgeService implements IGraphAdapter {
   private readonly sammLangService = inject<ISammLanguageSettingsService>(SAMM_LANGUAGE_SETTINGS_SERVICE, {optional: true});
   private readonly shapeConnectorService = inject<IShapeConnectorService>(SHAPE_CONNECTOR_SERVICE, {optional: true});
 
-  updateCell(cell: any): void {
+  updateCell(cell: any, form?: any): void {
     if (cell) {
-      this.modelRenderService.update(cell);
+      this.modelRenderService.update(cell, form);
     }
   }
 

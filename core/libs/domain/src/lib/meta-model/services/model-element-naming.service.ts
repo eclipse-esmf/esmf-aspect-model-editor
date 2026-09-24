@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
-import {GRAPH_ADAPTER, IGraphAdapter} from '@ame/shared';
+import {ElementRelationUtil, GRAPH_ADAPTER, IGraphAdapter} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, of} from 'rxjs';
@@ -20,8 +20,8 @@ import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, o
 @Injectable({providedIn: 'root'})
 export class ModelElementNamingService {
   private readonly loadedFiles = inject(LoadedFilesService);
-  private readonly modelApiService = inject(ModelApiService, {optional: true});
   private readonly injector = inject(Injector);
+  private readonly modelApiService = inject(ModelApiService);
 
   private get graphAdapter(): IGraphAdapter | null {
     return this.injector.get<IGraphAdapter | null>(GRAPH_ADAPTER, null, {optional: true});
@@ -35,10 +35,11 @@ export class ModelElementNamingService {
     if (currentFile?.cachedFile?.get(element.aspectModelUrn) === element) {
       return true;
     }
-    if (this.maxgraphService?.graph) {
-      const vertices = this.maxgraphService.graph.getChildVertices(this.maxgraphService.graph.getDefaultParent()) || [];
+
+    if (this.graphAdapter) {
+      const vertices = this.graphAdapter.getChildVertices(this.graphAdapter.getDefaultParent()) || [];
       for (const cell of vertices) {
-        if (MaxGraphHelper.getModelElement(cell) === element) {
+        if (ElementRelationUtil.getModelElement(cell) === element) {
           return true;
         }
       }

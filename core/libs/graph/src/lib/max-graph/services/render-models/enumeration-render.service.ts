@@ -51,16 +51,16 @@ export class EnumerationRenderService extends BaseRenderService {
     return MaxGraphHelper.getModelElement(cell) instanceof DefaultEnumeration;
   }
 
-  update({cell, form}) {
+  update({cell, form}: {cell: Cell; form?: any}) {
     const metaModelElement = MaxGraphHelper.getModelElement<DefaultCharacteristic>(cell);
     this.handleBottomOverlay(cell);
-    const targetDataType = metaModelElement.dataType || form.newDataType || form.dataTypeEntity;
+    const targetDataType = metaModelElement.dataType || form?.newDataType || form?.dataTypeEntity;
     if (targetDataType instanceof DefaultEntity) {
       this.handleEntityDataType(cell, targetDataType);
     }
     this.removeFloatingEntityValues(cell);
 
-    this.handleValues(cell, form.enumValues || []);
+    this.handleValues(cell, form?.enumValues || []);
     this.handleComplexValues(cell, form);
     this.removeElementCharacteristic(cell);
     this.unitRendererService.removeFrom(cell);
@@ -235,20 +235,21 @@ export class EnumerationRenderService extends BaseRenderService {
     this.maxgraphService.removeCells(edgesToRemove || []);
   }
 
-  private handleComplexValues(cell: Cell, form: EnumerationForm) {
+  private handleComplexValues(cell: Cell, form?: EnumerationForm) {
     const metaModel = MaxGraphHelper.getModelElement<DefaultEnumeration>(cell);
     if (!(metaModel.dataType instanceof DefaultEntity)) {
       return;
     }
 
-    for (const entityValue of form.chipList) {
+    const entityValues = form?.chipList || (metaModel.values as DefaultEntityInstance[]) || [];
+    for (const entityValue of entityValues) {
       if (this.inMaxgraph(entityValue)) {
         continue;
       }
       this.entityValueRenderer.create(entityValue, cell);
     }
 
-    for (const entityValue of form.deletedEntityValues) {
+    for (const entityValue of form?.deletedEntityValues || []) {
       this.entityValueRenderer.deleteByModel(entityValue);
     }
 

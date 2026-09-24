@@ -14,7 +14,7 @@
 import {InjectionToken} from '@angular/core';
 
 export interface IGraphAdapter {
-  updateCell(cell: any): void;
+  updateCell(cell: any, form?: any): void;
   deleteAspectCell(cell: any): void;
   deleteEntityValueCell(cell: any): void;
   removeCells(cells: any[]): void;

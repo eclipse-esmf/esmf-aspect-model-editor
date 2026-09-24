@@ -1,5 +1,6 @@
 # Browserslist for Angular & Tauri 2 Desktop App
-# Targets the webview engines used by Tauri:
+#
+# Tauri 2 WebView engines:
 # - Windows: Microsoft Edge WebView2 (Chromium)
 # - macOS: WebKit (WKWebView)
 # - Linux: WebKitGTK
@@ -8,6 +9,6 @@ last 2 Chrome versions
 last 2 Edge versions
 last 2 Safari versions
 last 2 Firefox versions
-Safari >= 15
+
 not dead
 not IE 11

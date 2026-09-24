@@ -57,11 +57,11 @@ export class CharacteristicRenderService extends BaseRenderService {
       this.removeObsoleteEntityValues(cell);
       this.metaModelElement.dataType = null;
       this.maxgraphShapeOverlayService.changeEitherOverlay(cell);
-      this.removeEitherTargetShape(cell, form.leftCharacteristic, form.rightCharacteristic);
-      this.handleEitherCharacteristic(cell, form.leftCharacteristic, ModelInfo.IS_EITHER_LEFT);
-      this.handleEitherCharacteristic(cell, form.rightCharacteristic, ModelInfo.IS_EITHER_RIGHT);
+      this.removeEitherTargetShape(cell, form?.leftCharacteristic, form?.rightCharacteristic);
+      this.handleEitherCharacteristic(cell, form?.leftCharacteristic, ModelInfo.IS_EITHER_LEFT);
+      this.handleEitherCharacteristic(cell, form?.rightCharacteristic, ModelInfo.IS_EITHER_RIGHT);
     } else if (this.metaModelElement instanceof DefaultStructuredValue) {
-      this.handleDataType(cell, form.dataTypeEntity);
+      this.handleDataType(cell, form?.dataTypeEntity);
       this.removeStructuredValueProperties(cell);
       this.removeEverythingForStructuredValue(cell);
       this.addStructuredValueProperties(cell);
@@ -70,14 +70,14 @@ export class CharacteristicRenderService extends BaseRenderService {
       this.handleOverlay(cell);
       this.handlePredefinedCharacteristicConnections(cell);
       this.removeCharacteristicTargetShape(cell);
-      const targetDataType = this.metaModelElement.dataType || form.newDataType || form.dataTypeEntity;
+      const targetDataType = this.metaModelElement.dataType || form?.newDataType || form?.dataTypeEntity;
       this.handleDataType(cell, targetDataType);
-      this.handleUnit(cell, form.unit);
-      this.handleElementCharacteristic(cell, form.elementCharacteristic);
+      this.handleUnit(cell, form?.unit);
+      this.handleElementCharacteristic(cell, form?.elementCharacteristic);
       this.removeStructuredValueProperties(cell);
     }
 
-    super.update({cell});
+    super.update({cell, form});
   }
 
   private removeValues(cell: Cell) {

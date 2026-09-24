@@ -72,8 +72,9 @@ describe('CharacteristicModelService', () => {
     const cell = {} as any;
     ElementRelationUtil.setElementNode(cell, {element: char} as any);
 
-    service.update(cell, {name: 'CharUpdated'});
-    expect(mockGraphAdapter.updateCell).toHaveBeenCalledWith(cell);
+    const form = {name: 'CharUpdated'};
+    service.update(cell, form);
+    expect(mockGraphAdapter.updateCell).toHaveBeenCalledWith(cell, form);
   });
 
   it('should update enumeration and call enumerationRenderer', () => {
@@ -81,8 +82,9 @@ describe('CharacteristicModelService', () => {
     const cell = {} as any;
     ElementRelationUtil.setElementNode(cell, {element: enumeration} as any);
 
-    service.update(cell, {name: 'EnumUpdated', enumValues: []});
-    expect(mockGraphAdapter.updateCell).toHaveBeenCalledWith(cell);
+    const form = {name: 'EnumUpdated', enumValues: []};
+    service.update(cell, form);
+    expect(mockGraphAdapter.updateCell).toHaveBeenCalledWith(cell, form);
   });
 
   it('should handle structured value properties', () => {

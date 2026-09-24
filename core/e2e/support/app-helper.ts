@@ -292,6 +292,8 @@ export class AppHelper {
       if (!plusIcon) throw new Error('Add Shape Overlay not found');
       plusIcon.fireEvent({name: 'click', isConsumed: () => false, getName: () => 'click'});
     }, name);
+    await this.page.waitForTimeout(300);
+    await this.forceChangeDetection();
   }
 
   async clickAddInputShapeIcon(name: string): Promise<void> {
@@ -397,6 +399,8 @@ export class AppHelper {
       if (!icon) throw new Error('Add Constraint Overlay not found');
       icon.fireEvent({name: 'click', isConsumed: () => false, getName: () => 'click'});
     }, characteristicName);
+    await this.page.waitForTimeout(300);
+    await this.forceChangeDetection();
   }
 
   async shapesConnected(sourceShapeName: string, targetShapeName: string): Promise<boolean> {

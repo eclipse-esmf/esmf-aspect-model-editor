@@ -182,6 +182,40 @@ describe('SettingDialogComponent', () => {
     expect(alertService.open).toHaveBeenCalled();
   });
 
+  it('should not prompt confirm box on onOk if languages were already confirmed via applySettings', () => {
+    formService.addLanguageToBeRemove('de');
+
+    // Simulate clicking Apply
+    component.applySettings();
+    expect(alertService.open).toHaveBeenCalledTimes(1);
+
+    // Simulate user confirming (clicking Continue)
+    const alertCallArgs = alertService.open.mock.calls[0][0];
+    alertCallArgs.data.rightButtonAction();
+
+    expect(formService.getLanguagesToBeRemove().length).toBe(0);
+
+    // Now clicking OK should not prompt again
+    component.onOk();
+    expect(alertService.open).toHaveBeenCalledTimes(1); // Still 1, not called again
+    expect(dialogRef.close).toHaveBeenCalled();
+  });
+
+  it('should prompt confirm box on onOk directly if languages are marked for removal and apply was not clicked', () => {
+    formService.addLanguageToBeRemove('de');
+
+    component.onOk();
+    expect(alertService.open).toHaveBeenCalledTimes(1);
+    expect(dialogRef.close).not.toHaveBeenCalled();
+
+    // When user confirms, dialog closes
+    const alertCallArgs = alertService.open.mock.calls[0][0];
+    alertCallArgs.data.rightButtonAction();
+
+    expect(dialogRef.close).toHaveBeenCalled();
+    expect(formService.getLanguagesToBeRemove().length).toBe(0);
+  });
+
   it('should handle namespace changes during applySettings', () => {
     formService.setNamespace('org.old');
     formService.setVersion('1.0.0');

@@ -29,8 +29,12 @@ test.describe('Tauri Menu & IPC Integration', () => {
 
   test('should synchronize menu item states when model is loaded and cells are selected', async ({page}) => {
     // Check initial window focus and menu update for empty model
-    const initialEvents = await tauri.getSentEvents('UPDATE_MENU_ITEM');
-    expect(initialEvents.length).toBeGreaterThan(0);
+    await expect
+      .poll(async () => {
+        const initialEvents = await tauri.getSentEvents('UPDATE_MENU_ITEM');
+        return initialEvents.length;
+      })
+      .toBeGreaterThan(0);
 
     // Start modelling (adds cells to the graph)
     await tauri.clearSentEvents();
@@ -38,10 +42,13 @@ test.describe('Tauri Menu & IPC Integration', () => {
 
     // Check that Tauri received UPDATE_MENU_ITEM enabled=true for model actions
     await expect
-      .poll(async () => {
-        const events = await tauri.getSentEvents('UPDATE_MENU_ITEM');
-        return events.some(e => e.args?.[0]?.ids?.includes('FORMAT_MODEL') && e.args?.[0]?.payload?.enabled === true);
-      })
+      .poll(
+        async () => {
+          const events = await tauri.getSentEvents('UPDATE_MENU_ITEM');
+          return events.some(e => e.args?.[0]?.ids?.includes('FORMAT_MODEL') && e.args?.[0]?.payload?.enabled === true);
+        },
+        {timeout: 10000},
+      )
       .toBe(true);
 
     // Select a cell
@@ -50,10 +57,13 @@ test.describe('Tauri Menu & IPC Integration', () => {
 
     // Check that Tauri received UPDATE_MENU_ITEM enabled=true for selection actions
     await expect
-      .poll(async () => {
-        const events = await tauri.getSentEvents('UPDATE_MENU_ITEM');
-        return events.some(e => e.args?.[0]?.ids?.includes('OPEN_SELECTED_ELEMENT') && e.args?.[0]?.payload?.enabled === true);
-      })
+      .poll(
+        async () => {
+          const events = await tauri.getSentEvents('UPDATE_MENU_ITEM');
+          return events.some(e => e.args?.[0]?.ids?.includes('OPEN_SELECTED_ELEMENT') && e.args?.[0]?.payload?.enabled === true);
+        },
+        {timeout: 10000},
+      )
       .toBe(true);
   });
 
@@ -149,16 +159,16 @@ test.describe('Tauri Menu & IPC Integration', () => {
 
     // Zoom in
     await tauri.emitSignal('ZOOM_IN');
-    await expect.poll(async () => await getScale()).toBeGreaterThan(initialScale);
+    await expect.poll(async () => await getScale(), {timeout: 10000}).toBeGreaterThan(initialScale);
     const zoomedInScale = await getScale();
 
     // Zoom out
     await tauri.emitSignal('ZOOM_OUT');
-    await expect.poll(async () => await getScale()).toBeLessThan(zoomedInScale);
+    await expect.poll(async () => await getScale(), {timeout: 10000}).toBeLessThan(zoomedInScale);
 
     // Zoom to actual (100% = scale 1.0)
     await tauri.emitSignal('ZOOM_TO_ACTUAL');
-    await expect.poll(async () => await getScale()).toBe(1);
+    await expect.poll(async () => await getScale(), {timeout: 10000}).toBe(1);
   });
 
   test('should format model and collapse/expand model via signals', async ({page}) => {

@@ -13,7 +13,13 @@
 
 import {FiltersService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {ElementCreatorService, ISammLanguageSettingsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {
+  ElementCreatorService,
+  IModelElementNamingService,
+  ISammLanguageSettingsService,
+  MODEL_ELEMENT_NAMING_SERVICE,
+  SAMM_LANGUAGE_SETTINGS_SERVICE,
+} from '@ame/shared';
 import {Directive, inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -35,7 +41,7 @@ export class BaseConnectionHandler {
   protected readonly filtersService = inject(FiltersService);
   protected readonly maxgraphShapeOverlay = inject(MaxGraphShapeOverlayService);
   protected readonly loadedFilesService = inject(LoadedFilesService);
-  protected readonly modelElementNamingService = inject(ModelElementNamingService);
+  protected readonly modelElementNamingService: IModelElementNamingService = inject(MODEL_ELEMENT_NAMING_SERVICE);
 
   refreshPropertiesLabel(cell: Cell, modelElement: NamedElement) {
     if (cell && (cell as any).configuration) {

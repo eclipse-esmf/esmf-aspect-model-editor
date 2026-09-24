@@ -93,6 +93,7 @@ test.describe('Test create recursive element', () => {
     await helper.clickConnectShapes('NewCharacteristic', 'newProperty2');
     await helper.clickConnectShapes('NewCharacteristic', 'newProperty3');
     await helper.clickAddTraitPlusIcon('NewCharacteristic');
+    await helper.shapeExists('Trait1');
 
     rdf = await helper.getUpdatedRDF();
     expect(rdf).toContain(':property1 a samm:Property;\n    samm:characteristic :Trait1.');

@@ -40,8 +40,8 @@ export class ModelRenderService {
   private readonly unitRenderService = inject(UnitRenderService);
   private readonly constraintRenderService = inject(ConstraintRenderService);
 
-  update(cell: Cell) {
-    this.getElementModelService(cell)?.update({cell});
+  update(cell: Cell, form?: {[key: string]: any}) {
+    this.getElementModelService(cell)?.update({cell, form});
   }
 
   private getElementModelService(cell: Cell): BaseRenderService {

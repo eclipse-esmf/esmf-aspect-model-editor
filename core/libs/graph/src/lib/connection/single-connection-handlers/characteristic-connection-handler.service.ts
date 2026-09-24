@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {config, IModelElementNamingService, MODEL_ELEMENT_NAMING_SERVICE, useUpdater} from '@ame/shared';
+import {config, useUpdater} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {
   Characteristic,
@@ -34,7 +34,6 @@ import {SingleShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class CharacteristicConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Characteristic> {
-  private modelElementNamingService: IModelElementNamingService = inject(MODEL_ELEMENT_NAMING_SERVICE);
   private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
 
   get currentCachedFile() {

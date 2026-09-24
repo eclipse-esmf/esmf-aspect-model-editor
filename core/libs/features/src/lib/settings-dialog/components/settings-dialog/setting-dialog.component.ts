@@ -197,25 +197,25 @@ export class SettingDialogComponent {
   }
 
   onOk(): void {
-    this.applySettings();
-    this.onClose();
+    this.applySettings(() => this.onClose());
   }
 
   onCancel(): void {
     this.onClose();
   }
 
-  applySettings(): void {
+  applySettings(onConfirmed?: () => void): void {
     this.formService.updateSettings();
-    this.handleLanguageRemoval();
+    this.handleLanguageRemoval(onConfirmed);
     this.handleNamespaceChange();
   }
 
-  handleLanguageRemoval(): void {
+  handleLanguageRemoval(onConfirmed?: () => void): void {
     if (this.formService.getLanguagesToBeRemove().length > 0) {
-      this.openConfirmBox();
+      this.openConfirmBox(onConfirmed);
     } else {
       this.submitAndCloseDialog();
+      onConfirmed?.();
     }
   }
 
@@ -266,7 +266,7 @@ export class SettingDialogComponent {
     this.titleService.updateTitle(this.loadedFilesService.currentLoadedFile.absoluteName);
   }
 
-  openConfirmBox(): void {
+  openConfirmBox(onConfirmed?: () => void): void {
     const removedLanguages = this.formService.getLanguagesToBeRemove();
 
     this.alertService.open({
@@ -281,6 +281,7 @@ export class SettingDialogComponent {
         leftButtonText: 'Cancel',
         rightButtonAction: () => {
           this.submitAndCloseDialog();
+          onConfirmed?.();
         },
         hasLeftButton: true,
         hasRightButton: true,
@@ -310,8 +311,11 @@ export class SettingDialogComponent {
       } finally {
         this.sammLangService.setSammLanguageCodes(aspectModelLanguages);
         this.maxGraphSettingsService?.formatShapes();
+        this.formService.clearLanguagesToRemove();
         loadingScreen.close();
       }
+    } else {
+      this.formService.clearLanguagesToRemove();
     }
   }
 
