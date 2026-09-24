@@ -48,7 +48,6 @@ describe('ModelApiService', () => {
   let browserService: {isStartedAsTauriApp: ReturnType<typeof vi.fn>};
   let modelValidatorService: {
     notifyCorrectableErrors: ReturnType<typeof vi.fn>;
-    notifyBackendError: ReturnType<typeof vi.fn>;
   };
   let translate: {language: {notificationService: {aspectSavedDefaultModel: string}}};
   let ipcRenderer: {getBackendPort: ReturnType<typeof vi.fn>};
@@ -75,7 +74,6 @@ describe('ModelApiService', () => {
     browserService = {isStartedAsTauriApp: vi.fn(() => false)};
     modelValidatorService = {
       notifyCorrectableErrors: vi.fn(),
-      notifyBackendError: vi.fn(),
     };
     translate = {language: {notificationService: {aspectSavedDefaultModel: 'You cannot save into the default model.'}}};
     ipcRenderer = {getBackendPort: vi.fn(() => Promise.resolve('4000'))};

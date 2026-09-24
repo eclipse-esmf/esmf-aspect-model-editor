@@ -12,8 +12,8 @@
   -->
 
 <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
-  <mat-label>value *</mat-label>
-  <mat-select [formField]="field" data-testid="encodingValue">
+  <mat-label>value</mat-label>
+  <mat-select [formField]="field" data-cy="encodingValue">
     @for (encoding of encodingList(); track encoding) {
       <mat-option [value]="encoding.value">
         {{ encoding.value }}

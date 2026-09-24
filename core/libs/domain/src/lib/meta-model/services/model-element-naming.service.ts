@@ -27,6 +27,25 @@ export class ModelElementNamingService {
     return this.injector.get<IGraphAdapter | null>(GRAPH_ADAPTER, null, {optional: true});
   }
 
+  private isExistingElement(element: NamedElement): boolean {
+    if (!element?.aspectModelUrn) {
+      return false;
+    }
+    const currentFile = this.loadedFiles.currentLoadedFile;
+    if (currentFile?.cachedFile?.get(element.aspectModelUrn) === element) {
+      return true;
+    }
+    if (this.maxgraphService?.graph) {
+      const vertices = this.maxgraphService.graph.getChildVertices(this.maxgraphService.graph.getDefaultParent()) || [];
+      for (const cell of vertices) {
+        if (MaxGraphHelper.getModelElement(cell) === element) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /**
    * Creates a new instance of the element and assigns it a default name
    *
@@ -35,13 +54,23 @@ export class ModelElementNamingService {
    */
   resolveMetaModelElement<T extends NamedElement>(element: T, cached?: boolean, visited = new Set<NamedElement>()): T {
     if (visited.has(element)) {
-      return element;
+      return cached && this.loadedFiles.currentLoadedFile?.cachedFile
+        ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+        : element;
     }
     visited.add(element);
+
+    if (this.isExistingElement(element)) {
+      return cached && this.loadedFiles.currentLoadedFile?.cachedFile
+        ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+        : element;
+    }
+
     const mainAspectModelUrn = `urn:samm:${this.loadedFiles.currentLoadedFile?.namespace}#`;
     for (const child of element.children) {
       if (
         !child.isPredefined &&
+        !this.isExistingElement(child) &&
         (!child.aspectModelUrn || child.aspectModelUrn.startsWith('#') || child.aspectModelUrn.startsWith(mainAspectModelUrn))
       ) {
         this.resolveMetaModelElement(child, cached, visited);
@@ -55,14 +84,28 @@ export class ModelElementNamingService {
 
   resolveMetaModelElement$<T extends NamedElement>(element: T, cached = true, visited = new Set<NamedElement>()): Observable<T> {
     if (visited.has(element)) {
-      return of(element);
+      const resolved =
+        cached && this.loadedFiles.currentLoadedFile?.cachedFile
+          ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+          : element;
+      return of(resolved);
     }
     visited.add(element);
+
+    if (this.isExistingElement(element)) {
+      const resolved =
+        cached && this.loadedFiles.currentLoadedFile?.cachedFile
+          ? this.loadedFiles.currentLoadedFile.cachedFile.resolveInstance(element)
+          : element;
+      return of(resolved);
+    }
+
     const mainAspectModelUrn = `urn:samm:${this.loadedFiles.currentLoadedFile?.namespace}#`;
     const childObservables: Observable<any>[] = [];
     for (const child of element.children) {
       if (
         !child.isPredefined &&
+        !this.isExistingElement(child) &&
         (!child.aspectModelUrn || child.aspectModelUrn.startsWith('#') || child.aspectModelUrn.startsWith(mainAspectModelUrn))
       ) {
         childObservables.push(this.resolveMetaModelElement$(child, cached, visited));
@@ -100,7 +143,7 @@ export class ModelElementNamingService {
 
     const mainAspectModelUrn = `urn:samm:${namespace}#`;
     for (const file of this.loadedFiles.filesAsList) {
-      if (file.rdfModel?.store) {
+      if (file !== this.loadedFiles.currentLoadedFile && file.rdfModel?.store) {
         for (const subject of file.rdfModel.store.getSubjects(null, null, null)) {
           if (subject.value?.startsWith(mainAspectModelUrn)) {
             elements[subject.value] = true;
@@ -125,13 +168,9 @@ export class ModelElementNamingService {
       }
     }
 
-    let counter = 1;
-    let baseName = element.name;
-    const match = baseName.match(/^(.*?)(\d+)$/);
-    if (match) {
-      baseName = match[1];
-      counter = parseInt(match[2], 10);
-    }
+    const info = this.extractTrailingNumber(element.name);
+    const baseName = info.base;
+    let counter = info.counter;
 
     element.metaModelVersion = rdfModel.samm.version;
     const parentNamePrefix = parentName;
@@ -163,13 +202,9 @@ export class ModelElementNamingService {
 
     const {namespace} = this.loadedFiles.currentLoadedFile;
     const mainAspectModelUrn = `urn:samm:${namespace}#`;
-    let nameBase = element.name;
-    let counter = 1;
-    const match = nameBase.match(/^(.*?)(\d+)$/);
-    if (match) {
-      nameBase = match[1];
-      counter = parseInt(match[2], 10);
-    }
+    const info = this.extractTrailingNumber(element.name);
+    const nameBase = info.base;
+    let counter = info.counter;
 
     const checkCandidate = (name: string, urn: string): Observable<{exists: boolean; name: string; urn: string}> => {
       const cached = this.loadedFiles.currentLoadedFile.cachedFile?.get<NamedElement>(urn);
@@ -203,5 +238,13 @@ export class ModelElementNamingService {
         return element;
       }),
     );
+  }
+
+  private extractTrailingNumber(name: string): {base: string; counter: number} {
+    let i = name.length;
+    while (i > 0 && name[i - 1] >= '0' && name[i - 1] <= '9') {
+      i--;
+    }
+    return i < name.length ? {base: name.slice(0, i), counter: parseInt(name.slice(i), 10)} : {base: name, counter: 1};
   }
 }

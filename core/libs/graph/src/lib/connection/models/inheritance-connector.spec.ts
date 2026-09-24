@@ -46,6 +46,7 @@ describe('Inheritance Connectors', () => {
 
   const mockNotificationsService = {
     warning: vi.fn(),
+    clearNotifications: vi.fn(),
   };
 
   const mockTranslate = {

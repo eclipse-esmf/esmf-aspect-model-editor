@@ -104,7 +104,7 @@ export class ElementCreatorService {
           isAbstract: Boolean(elementConfig.isAbstract),
           characteristic: elementConfig.isAbstract
             ? null
-            : this.createEmptyElement(DefaultCharacteristic, {resolveNaming: true, cached: elementConfig.cached}),
+            : this.createEmptyElement(DefaultCharacteristic, {resolveNaming: elementConfig.resolveNaming, cached: elementConfig.cached}),
         });
         if (!elementConfig.isAbstract) element.characteristic.parents.push(element);
         break;
@@ -149,8 +149,18 @@ export class ElementCreatorService {
           metaModelVersion: config.currentSammVersion,
           aspectModelUrn: elementConfig.aspectModelUrn || `${namespace}#Trait`,
         });
-        (element as DefaultTrait).baseCharacteristic = elementConfig.baseCharacteristic || this.createEmptyElement(DefaultCharacteristic);
-        (element as DefaultTrait).constraints.push(this.createEmptyElement(DefaultConstraint));
+        (element as DefaultTrait).baseCharacteristic =
+          elementConfig.baseCharacteristic ||
+          this.createEmptyElement(DefaultCharacteristic, {
+            resolveNaming: elementConfig.resolveNaming,
+            cached: elementConfig.cached,
+          });
+        (element as DefaultTrait).constraints.push(
+          this.createEmptyElement(DefaultConstraint, {
+            resolveNaming: elementConfig.resolveNaming,
+            cached: elementConfig.cached,
+          }),
+        );
         break;
       case elementClass === DefaultOperation:
         element = new DefaultOperation({

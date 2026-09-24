@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {inject, Injectable} from '@angular/core';
+import {isObservable, Observable, of} from 'rxjs';
 import {ShapeConnectorUtil} from './shape-connector-util';
 
 import {LoadedFilesService} from '@ame/infrastructure';
@@ -157,10 +158,10 @@ export class ShapeConnectorService {
     }
   }
 
-  createAndConnectShape(metaModel: NamedElement, source: Cell, modelInfo: ModelInfo = ModelInfo.IS_CHARACTERISTIC) {
+  createAndConnectShape(metaModel: NamedElement, source: Cell, modelInfo: ModelInfo = ModelInfo.IS_CHARACTERISTIC): Observable<any> {
     if (!metaModel) {
       console.info('No cell selected with a meta model to connect.');
-      return;
+      return of(undefined);
     }
 
     let connectionHandler: SingleShapeConnector<NamedElement>;
@@ -203,7 +204,8 @@ export class ShapeConnectorService {
         throw new Error(`No shape connector found for ${metaModel.aspectModelUrn}`);
     }
 
-    connectionHandler.connect(metaModel, source, modelInfo);
+    const result = connectionHandler.connect(metaModel, source, modelInfo);
+    return isObservable(result) ? result : of(result);
   }
 
   connectShapes(

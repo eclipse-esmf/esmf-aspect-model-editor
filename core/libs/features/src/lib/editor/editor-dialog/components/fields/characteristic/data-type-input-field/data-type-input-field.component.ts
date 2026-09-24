@@ -25,6 +25,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
 import {
   DefaultCharacteristic,
+  DefaultCollection,
   DefaultEither,
   DefaultEntity,
   DefaultScalar,
@@ -91,7 +92,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     });
 
   readonly displayField = form(this.displayModel, path => {
-    required(path);
+    required(path, {when: () => this.isDataTypeRequired()});
     validateAsync(path, {
       params: ({value}) => value(),
       factory: this.createDuplicateNameResource,
@@ -229,6 +230,19 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     return this.displayField()
       .errors()
       .some(error => error.kind === kind);
+  }
+
+  private isDataTypeRequired(): boolean {
+    if (!this.metaModelElement) {
+      return false;
+    }
+    if (this.metaModelElement.className === 'DefaultCharacteristic') {
+      return false;
+    }
+    if (this.metaModelElement instanceof DefaultCollection) {
+      return !this.signalForm()?.get('elementCharacteristic');
+    }
+    return true;
   }
 
   private scalarTypes(): DefaultScalar[] {

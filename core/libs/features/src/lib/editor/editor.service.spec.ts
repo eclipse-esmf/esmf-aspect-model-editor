@@ -236,6 +236,10 @@ describe('EditorService', () => {
 
     await service.createElement(50, 60, 'property');
 
+    expect(elementCreatorService.createEmptyElement).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({resolveNaming: false, cached: false}),
+    );
     expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(40, 40);
     expect(maxgraphSetupService.centerGraph).toHaveBeenCalled();
   });

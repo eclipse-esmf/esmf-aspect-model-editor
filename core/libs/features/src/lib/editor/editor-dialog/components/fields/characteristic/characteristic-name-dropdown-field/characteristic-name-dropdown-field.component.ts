@@ -107,6 +107,9 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
         this.migrateCommonAttributes(oldMetaModelElement);
       }
     }
+    if (this.metaModelElement instanceof DefaultCollection && this.metaModelElement.elementCharacteristic) {
+      this.metaModelElement.dataType = null;
+    }
     this.addLanguageSettings(this.metaModelElement);
     this.setMetaModelElementAspectUrn(newCharacteristicType);
 

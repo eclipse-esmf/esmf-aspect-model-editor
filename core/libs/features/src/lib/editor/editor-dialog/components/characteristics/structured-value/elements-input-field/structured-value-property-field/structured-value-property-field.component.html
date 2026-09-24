@@ -13,8 +13,8 @@
   -->
 
   <mat-form-field>
-    <mat-label for="left">Property *</mat-label>
-    <input #property [matAutocomplete]="auto" [formField]="displayForm" matInput data-testid="property-element" />
+    <mat-label for="left">Property</mat-label>
+    <input #property [matAutocomplete]="auto" [formField]="displayForm" matInput data-cy="property-element" />
     @if (locked()) {
       <button (click)="unlock()" data-testid="clear-property-button" matSuffix type="button" mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>

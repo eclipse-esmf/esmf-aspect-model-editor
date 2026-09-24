@@ -15,6 +15,7 @@ import {ENTITY_INSTANCE_SERVICE, IEntityInstanceService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, Entity} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, shareReplay} from 'rxjs';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
@@ -23,13 +24,23 @@ export class EntityConnectionHandler extends BaseConnectionHandler implements Si
   private entityInstanceService = inject<IEntityInstanceService>(ENTITY_INSTANCE_SERVICE, {optional: true});
 
   public connect(entity: Entity, source: Cell) {
-    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
-    const child = this.renderTree(defaultProperty, source);
-    this.refreshPropertiesLabel(child, defaultProperty);
+    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty, {
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(defaultProperty).pipe(
+      map(() => {
+        const child = this.renderTree(defaultProperty, source);
+        this.refreshPropertiesLabel(child, defaultProperty);
 
-    entity.properties.push(defaultProperty);
-    this.maxgraphService.assignToParent(child, source);
-    this.entityInstanceService?.onNewProperty(defaultProperty, entity);
-    this.maxgraphService.formatCell(source, true);
+        entity.properties.push(defaultProperty);
+        this.maxgraphService.assignToParent(child, source);
+        this.entityInstanceService.onNewProperty(defaultProperty, entity);
+        this.maxgraphService.formatCell(source, true);
+      }),
+      shareReplay(1),
+    );
+    connect$.subscribe();
+    return connect$;
   }
 }

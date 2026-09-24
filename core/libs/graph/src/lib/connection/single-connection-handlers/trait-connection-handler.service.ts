@@ -15,6 +15,7 @@ import {useUpdater} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, shareReplay} from 'rxjs';
 import {MaxGraphHelper} from '../../max-graph';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
@@ -22,20 +23,28 @@ import {SingleShapeConnector} from '../models';
 @Injectable({providedIn: 'root'})
 export class TraitConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<DefaultTrait> {
   public connect(trait: DefaultTrait, source: Cell) {
-    const defaultElement =
-      trait.getBaseCharacteristic() == null
-        ? this.elementCreator.createEmptyElement(DefaultCharacteristic)
-        : this.elementCreator.createEmptyElement(DefaultConstraint);
-    const child = this.maxgraphService.renderModelElement(
-      this.filtersService.createNode(defaultElement, {parent: MaxGraphHelper.getModelElement(source)}),
+    const isBaseChar = trait.getBaseCharacteristic() == null;
+    const defaultElement = isBaseChar
+      ? this.elementCreator.createEmptyElement(DefaultCharacteristic, {resolveNaming: false, cached: false})
+      : this.elementCreator.createEmptyElement(DefaultConstraint, {resolveNaming: false, cached: false});
+
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(defaultElement).pipe(
+      map(() => {
+        const child = this.maxgraphService.renderModelElement(
+          this.filtersService.createNode(defaultElement, {parent: MaxGraphHelper.getModelElement(source)}),
+        );
+
+        useUpdater(trait).update(defaultElement);
+        this.refreshPropertiesLabel(child, defaultElement);
+
+        this.maxgraphService.assignToParent(child, source);
+        this.maxgraphService.moveCells([child], source.getGeometry().x + 30, source.getGeometry().y + 60);
+        this.maxgraphService.formatCell(child);
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
     );
-
-    useUpdater(trait).update(defaultElement);
-    this.refreshPropertiesLabel(child, defaultElement);
-
-    this.maxgraphService.assignToParent(child, source);
-    this.maxgraphService.moveCells([child], source.getGeometry().x + 30, source.getGeometry().y + 60);
-    this.maxgraphService.formatCell(child);
-    this.maxgraphService.formatShapes();
+    connect$.subscribe();
+    return connect$;
   }
 }

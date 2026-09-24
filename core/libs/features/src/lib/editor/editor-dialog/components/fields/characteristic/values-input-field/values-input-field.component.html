@@ -14,7 +14,7 @@
 <ng-container *transloco="let t">
   @if (!hasComplexValues()) {
     <mat-form-field [floatLabel]="searchField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-      <mat-label>values *</mat-label>
+      <mat-label>values</mat-label>
       <mat-chip-grid #chipList [formField]="chipListField">
         @for (value of enumValues(); track value) {
           <mat-chip-row

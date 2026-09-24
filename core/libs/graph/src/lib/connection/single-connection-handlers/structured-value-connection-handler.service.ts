@@ -15,6 +15,7 @@ import {LoadedFilesService} from '@ame/infrastructure';
 import {Injectable, inject} from '@angular/core';
 import {DefaultProperty, StructuredValue} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, shareReplay} from 'rxjs';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
@@ -27,16 +28,26 @@ export class StructuredValueConnectionHandler extends BaseConnectionHandler impl
   }
 
   public connect(structuredValue: StructuredValue, source: Cell) {
-    const property = this.elementCreator.createEmptyElement(DefaultProperty);
-    structuredValue.elements.push(property);
-    structuredValue.deconstructionRule = `${structuredValue.deconstructionRule}(regex)`;
-    const child = this.renderTree(property, source);
+    const property = this.elementCreator.createEmptyElement(DefaultProperty, {
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(property).pipe(
+      map(() => {
+        structuredValue.elements.push(property);
+        structuredValue.deconstructionRule = `${structuredValue.deconstructionRule}(regex)`;
+        const child = this.renderTree(property, source);
 
-    this.refreshPropertiesLabel(child, property);
-    this.maxgraphService.assignToParent(child, source);
-    this.currentCachedFile.resolveInstance(property);
+        this.refreshPropertiesLabel(child, property);
+        this.maxgraphService.assignToParent(child, source);
+        this.currentCachedFile.resolveInstance(property);
 
-    this.maxgraphService.formatCell(source);
-    this.maxgraphService.formatShapes();
+        this.maxgraphService.formatCell(source);
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
+    );
+    connect$.subscribe();
+    return connect$;
   }
 }

@@ -61,6 +61,7 @@
               [attr.data-testid]="'property-' + overwritten.property.name + '-optional'"
               [attr.name]="overwritten.property.aspectModelUrn + '.optional'"
               (change)="updateOptional(overwritten.property.aspectModelUrn, $event.checked)"
+              (click)="onCheckboxClick($event, overwritten.property.aspectModelUrn, 'optional')"
             >
               {{ t('editorCanvas.shapeSetting.propertiesModal.optional') }}
             </mat-checkbox>
@@ -81,6 +82,7 @@
               [attr.data-testid]="'property-' + overwritten.property.name + '-notInPayload'"
               [attr.name]="overwritten.property.aspectModelUrn + '.notInPayload'"
               (change)="updateNotInPayload(overwritten.property.aspectModelUrn, $event.checked)"
+              (click)="onCheckboxClick($event, overwritten.property.aspectModelUrn, 'notInPayload')"
             >
               {{ t('editorCanvas.shapeSetting.propertiesModal.notInPayload') }}
             </mat-checkbox>

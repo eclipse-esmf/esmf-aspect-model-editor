@@ -143,9 +143,11 @@ describe('ElementCreatorService', () => {
     expect(aspect).toBeTruthy();
   });
 
-  it('should handle cached=false and resolveNaming=false', () => {
-    const aspect = service.createEmptyElement(DefaultAspect, {resolveNaming: false, cached: false});
+  it('should handle cached=false and resolveNaming=false for DefaultProperty and its child characteristic', () => {
+    const prop = service.createEmptyElement(DefaultProperty, {resolveNaming: false, cached: false});
     expect(namingServiceMock.resolveMetaModelElement).not.toHaveBeenCalled();
-    expect(aspect).toBeTruthy();
+    expect(cachedFileMock.resolveInstance).not.toHaveBeenCalled();
+    expect(prop).toBeTruthy();
+    expect(prop.characteristic).toBeTruthy();
   });
 });

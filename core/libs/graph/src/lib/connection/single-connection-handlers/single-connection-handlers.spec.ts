@@ -24,13 +24,12 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {FiltersService} from '@ame/domain';
+import {FiltersService, ModelElementNamingService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
 import {
   ElementCreatorService,
   ENTITY_INSTANCE_SERVICE,
   LanguageTranslationService,
-  MODEL_ELEMENT_NAMING_SERVICE,
   NotificationsService,
   SAMM_LANGUAGE_SETTINGS_SERVICE,
 } from '@ame/shared';
@@ -52,6 +51,7 @@ import {
 } from '@esmf/aspect-model-loader';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Cell} from '@maxgraph/core';
+import {of} from 'rxjs';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService, ModelInfo} from '../../max-graph';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
 import {
@@ -178,7 +178,13 @@ describe('Single Shape Connection Handlers', () => {
         {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: {currentLanguage: 'en', addSammLanguageCode: vi.fn()}},
         {provide: LanguageTranslationService, useValue: {language: {notificationService: {childForPredefinedElementError: 'err'}}}},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: MODEL_ELEMENT_NAMING_SERVICE, useValue: {resolveMetaModelElement: vi.fn().mockImplementation(el => el)}},
+        {
+          provide: ModelElementNamingService,
+          useValue: {
+            resolveMetaModelElement: vi.fn().mockImplementation(el => el),
+            resolveMetaModelElement$: vi.fn().mockImplementation(el => of(el)),
+          },
+        },
         {provide: EntityPropertyConnectionHandler, useValue: mockEntityPropertyConnector},
         {provide: PropertyAbstractPropertyConnectionHandler, useValue: mockPropertyAbstractPropertyConnector},
       ],

@@ -30,6 +30,7 @@ export class CollectionCharacteristicConnectionHandler implements MultiShapeConn
       }
     });
 
+    parentMetaModel.dataType = null;
     parentMetaModel.elementCharacteristic = childMetaModel;
     this.maxgraphService.assignToParent(child, parent);
 

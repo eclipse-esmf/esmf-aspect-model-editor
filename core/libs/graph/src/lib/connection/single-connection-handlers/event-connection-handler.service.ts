@@ -14,19 +14,30 @@
 import {Injectable} from '@angular/core';
 import {DefaultEvent, DefaultProperty} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, shareReplay} from 'rxjs';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class EventConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<DefaultEvent> {
   public connect(event: DefaultEvent, source: Cell) {
-    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty);
-    const child = this.renderTree(defaultProperty, source);
-    this.refreshPropertiesLabel(child, defaultProperty);
+    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty, {
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(defaultProperty).pipe(
+      map(() => {
+        const child = this.renderTree(defaultProperty, source);
+        this.refreshPropertiesLabel(child, defaultProperty);
 
-    event.properties.push(defaultProperty);
-    this.maxgraphService.assignToParent(child, source);
-    this.maxgraphService.formatCell(source);
-    this.maxgraphService.formatShapes();
+        event.properties.push(defaultProperty);
+        this.maxgraphService.assignToParent(child, source);
+        this.maxgraphService.formatCell(source);
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
+    );
+    connect$.subscribe();
+    return connect$;
   }
 }

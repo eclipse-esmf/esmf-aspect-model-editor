@@ -35,6 +35,7 @@ export class BaseConnectionHandler {
   protected readonly filtersService = inject(FiltersService);
   protected readonly maxgraphShapeOverlay = inject(MaxGraphShapeOverlayService);
   protected readonly loadedFilesService = inject(LoadedFilesService);
+  protected readonly modelElementNamingService = inject(ModelElementNamingService);
 
   refreshPropertiesLabel(cell: Cell, modelElement: NamedElement) {
     if (cell && (cell as any).configuration) {

@@ -97,6 +97,7 @@ describe('Multi Shape Connection Handlers', () => {
     warning: vi.fn(),
     error: vi.fn(),
     info: vi.fn(),
+    clearNotifications: vi.fn(),
   };
 
   const mockTranslate = {

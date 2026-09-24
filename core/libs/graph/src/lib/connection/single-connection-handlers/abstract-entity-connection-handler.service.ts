@@ -15,6 +15,7 @@ import {ENTITY_INSTANCE_SERVICE, IEntityInstanceService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty, Entity} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
+import {map, shareReplay} from 'rxjs';
 import {MaxGraphHelper} from '../../max-graph';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
@@ -27,44 +28,55 @@ export class AbstractEntityConnectionHandler extends BaseConnectionHandler imple
   private entityPropertyConnector = inject(EntityPropertyConnectionHandler);
 
   public connect(abstractEntity: DefaultEntity, source: Cell) {
-    const abstractProperty = this.elementCreator.createEmptyElement(DefaultProperty, {isAbstract: true});
-    const abstractPropertyCell = this.maxgraphService.renderModelElement(
-      this.filtersService.createNode(abstractProperty, {parent: MaxGraphHelper.getModelElement(source)}),
+    const abstractProperty = this.elementCreator.createEmptyElement(DefaultProperty, {
+      isAbstract: true,
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(abstractProperty).pipe(
+      map(() => {
+        const abstractPropertyCell = this.maxgraphService.renderModelElement(
+          this.filtersService.createNode(abstractProperty, {parent: MaxGraphHelper.getModelElement(source)}),
+        );
+        abstractEntity.properties.push(abstractProperty);
+        this.entityInstanceService.onNewProperty(abstractProperty, abstractEntity);
+
+        this.maxgraphService.assignToParent(abstractPropertyCell, source);
+        this.maxgraphService.formatCell(source, true);
+
+        const entities = this.maxgraphService.graph
+          .getIncomingEdges(source, null)
+          .map(edge => edge.source)
+          .filter(cell => MaxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
+
+        this.refreshPropertiesLabel(abstractPropertyCell, abstractProperty);
+
+        if (entities.length) {
+          const [namespace, name] = abstractProperty.aspectModelUrn.split('#');
+          const newProperty = new DefaultProperty({
+            name: `[${name}]`,
+            aspectModelUrn: `${namespace}#[${name}]`,
+            metaModelVersion: abstractProperty.metaModelVersion,
+            characteristic: this.elementCreator.createEmptyElement(DefaultCharacteristic),
+          });
+
+          newProperty.characteristic.parents.push(newProperty);
+          const newPropertyCell = this.renderTree(newProperty, source);
+
+          for (const entity of entities) {
+            const entityModel = MaxGraphHelper.getModelElement<DefaultEntity>(entity);
+            entityModel.properties.push(newProperty);
+            this.entityPropertyConnector.connect(entityModel, newProperty, entity, newPropertyCell);
+          }
+
+          this.propertyAbstractPropertyConnector.connect(newProperty, abstractProperty, newPropertyCell, abstractPropertyCell);
+        }
+
+        this.maxgraphService.formatShapes();
+      }),
+      shareReplay(1),
     );
-    abstractEntity.properties.push(abstractProperty);
-    this.entityInstanceService?.onNewProperty(abstractProperty, abstractEntity);
-
-    this.maxgraphService.assignToParent(abstractPropertyCell, source);
-    this.maxgraphService.formatCell(source, true);
-
-    const entities = this.maxgraphService.graph
-      .getIncomingEdges(source, null)
-      .map(edge => edge.source)
-      .filter(cell => MaxGraphHelper.getModelElement(cell) instanceof DefaultEntity);
-
-    this.refreshPropertiesLabel(abstractPropertyCell, abstractProperty);
-
-    if (entities.length) {
-      const [namespace, name] = abstractProperty.aspectModelUrn.split('#');
-      const newProperty = new DefaultProperty({
-        name: `[${name}]`,
-        aspectModelUrn: `${namespace}#[${name}]`,
-        metaModelVersion: abstractProperty.metaModelVersion,
-        characteristic: this.elementCreator.createEmptyElement(DefaultCharacteristic),
-      });
-
-      newProperty.characteristic.parents.push(newProperty);
-      const newPropertyCell = this.renderTree(newProperty, source);
-
-      for (const entity of entities) {
-        const entityModel = MaxGraphHelper.getModelElement<DefaultEntity>(entity);
-        entityModel.properties.push(newProperty);
-        this.entityPropertyConnector.connect(entityModel, newProperty, entity, newPropertyCell);
-      }
-
-      this.propertyAbstractPropertyConnector.connect(newProperty, abstractProperty, newPropertyCell, abstractPropertyCell);
-    }
-
-    this.maxgraphService.formatShapes();
+    connect$.subscribe();
+    return connect$;
   }
 }
