@@ -210,6 +210,12 @@ class WindowsManager {
       const menu = Menu.buildFromTemplate(template);
       menu.popup({window: win});
     });
+
+    ipcMain.on(EVENTS.SIGNAL.COPY_TO_CLIPBOARD, (_event, text: string) => {
+      if (typeof text === 'string') {
+        clipboard.writeText(text);
+      }
+    });
   }
 
   /**

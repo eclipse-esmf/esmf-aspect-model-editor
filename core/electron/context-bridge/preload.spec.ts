@@ -171,4 +171,12 @@ describe('preload', () => {
       expect(mockedSend).toHaveBeenCalledWith('SHOW_CONTEXT_MENU', {href: null});
     });
   });
+
+  describe('copyToClipboard', () => {
+    it('should call ipcRenderer.send with COPY_TO_CLIPBOARD and text', () => {
+      electronAPI.copyToClipboard('hello world');
+
+      expect(mockedSend).toHaveBeenCalledWith('COPY_TO_CLIPBOARD', 'hello world');
+    });
+  });
 });

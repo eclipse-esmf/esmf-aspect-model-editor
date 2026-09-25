@@ -109,7 +109,7 @@
       >
         {{ t('sidebar.fileMenu.findElements') }}
       </button>
-      <button (click)="copyNamespace()" mat-menu-item data-cy="fileMenuCopyToClipboardButton">
+      <button (click)="copyFilePath()" mat-menu-item data-cy="fileMenuCopyToClipboardButton">
         {{ t('sidebar.fileMenu.copyFilePath') }}
       </button>
       <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-cy="fileMenuDeleteButton">

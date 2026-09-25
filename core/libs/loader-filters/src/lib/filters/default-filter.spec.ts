@@ -108,6 +108,27 @@ describe('DefaultFilter', () => {
       const tree = filter.generateTree(aspect);
       expect(tree.children).toHaveLength(0);
     });
+
+    it('should not include children if element is external even when child is predefined characteristic', () => {
+      const textChar = new DefaultCharacteristic({
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#Text',
+        name: 'Text',
+        metaModelVersion: '2.1.0',
+      });
+      textChar.isPredefined = true;
+
+      const prop = new DefaultProperty({
+        aspectModelUrn: 'urn:ext:1.0.0#externalProp',
+        name: 'externalProp',
+        metaModelVersion: '2.1.0',
+        characteristic: textChar,
+      });
+
+      loadedFilesMock.isElementExtern.mockImplementation(el => el === prop);
+
+      const tree = filter.generateTree(prop);
+      expect(tree.children).toHaveLength(0);
+    });
   });
 
   describe('getArrowStyle', () => {

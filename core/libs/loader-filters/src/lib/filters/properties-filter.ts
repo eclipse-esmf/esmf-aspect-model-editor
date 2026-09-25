@@ -73,11 +73,11 @@ export class PropertiesFilterLoader implements FilterLoader {
       options.parentNode.children.push(elementTree);
     }
 
-    for (const child of element.children || []) {
-      if (this.loadedFiles.isElementExtern(child) && this.loadedFiles.isElementExtern(element)) {
-        continue;
-      }
+    if (this.loadedFiles.isElementExtern(element)) {
+      return elementTree;
+    }
 
+    for (const child of element.children || []) {
       const path = `${element.aspectModelUrn} - ${child.aspectModelUrn}`;
       if (this.cache[path]) continue;
       this.cache[path] = true;

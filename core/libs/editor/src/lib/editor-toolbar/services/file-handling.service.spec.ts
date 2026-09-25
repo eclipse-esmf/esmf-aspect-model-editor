@@ -17,14 +17,21 @@ import {LoadedFilesService, NamespaceFile} from '@ame/cache';
 import {MaxGraphService} from '@ame/max-graph';
 import {ModelService, RdfService} from '@ame/rdf/services';
 import {ConfigurationService} from '@ame/settings-dialog';
-import {ElectronSignalsService, LoadingScreenService, ModelSavingTrackerService, NotificationsService, TitleService} from '@ame/shared';
+import {
+  ElectronSignalsService,
+  IPC_RENDERER,
+  LoadingScreenService,
+  ModelSavingTrackerService,
+  NotificationsService,
+  TitleService,
+} from '@ame/shared';
 import {SidebarStateService} from '@ame/sidebar';
 import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ConfirmDialogService} from '../../confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
@@ -40,6 +47,8 @@ describe('FileHandlingService', () => {
   let modelLoaderService: ModelLoaderService;
   let loadedFilesService: LoadedFilesService;
   let loadingScreenService: LoadingScreenService;
+  let notificationsService: NotificationsService;
+  let copyToClipboardMock: ReturnType<typeof vi.fn>;
 
   const aspect = new DefaultAspect({
     aspectModelUrn: 'urn:test:1.0.0#Aspect',
@@ -48,9 +57,11 @@ describe('FileHandlingService', () => {
   });
 
   beforeEach(() => {
+    copyToClipboardMock = vi.fn();
     TestBed.configureTestingModule({
       providers: [
         FileHandlingService,
+        {provide: IPC_RENDERER, useValue: {copyToClipboard: copyToClipboardMock}},
         MockProvider(EditorService, {
           validate: vi.fn(() => of([])),
         }),
@@ -122,6 +133,7 @@ describe('FileHandlingService', () => {
     modelLoaderService = TestBed.inject(ModelLoaderService);
     loadedFilesService = TestBed.inject(LoadedFilesService);
     loadingScreenService = TestBed.inject(LoadingScreenService);
+    notificationsService = TestBed.inject(NotificationsService);
   });
 
   it('loadModel should validate and render model', async () => {
@@ -144,5 +156,29 @@ describe('FileHandlingService', () => {
 
     expect(modelApiService.fetchAspectMetaModel).toHaveBeenCalledWith('urn:samm:com.example:1.0.0#Aspect');
     expect(modelLoaderService.renderModel).toHaveBeenCalled();
+  });
+
+  it('loadNamespaceFile should handle error with detailed backend message', () => {
+    const errorResponse = {
+      error: {
+        error: {
+          message: 'Aspect Model not found for URN...',
+        },
+      },
+    };
+    vi.spyOn(modelApiService, 'fetchAspectMetaModel').mockReturnValue(throwError(() => errorResponse));
+
+    service.loadNamespaceFile('com.example:1.0.0:test.ttl', 'urn:samm:com.example:1.0.0#Aspect');
+
+    expect(notificationsService.error).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'Aspect Model not found for URN...',
+      }),
+    );
+  });
+
+  it('copyToClipboardSync should use ipcRenderer when available', () => {
+    service.copyToClipboardSync('test text');
+    expect(copyToClipboardMock).toHaveBeenCalledWith('test text');
   });
 });

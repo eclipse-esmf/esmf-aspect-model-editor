@@ -133,6 +133,7 @@ export class WorkspaceFileElementsComponent {
   }
 
   public elementImported(element: NamedElement): boolean {
+    this.maxgraphService.graphVersion?.();
     if (element?.aspectModelUrn) {
       return !!this.maxgraphService.resolveCellByModelElement(element);
     }

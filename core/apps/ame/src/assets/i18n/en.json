@@ -230,7 +230,9 @@
     "options": "Options",
     "noNotifications": "No notifications available.",
     "go": "Go to",
-    "clear": "Clear"
+    "clear": "Clear",
+    "copy": "Copy",
+    "copied": "Copied!"
   },
   "workspaceSummary": {
     "selectToValidate": "Select an Aspect Model to see the validation result.",
@@ -361,6 +363,7 @@
       "openCurrent": "Open in current",
       "findElements": "Find elements",
       "copyFilePath": "Copy file path",
+      "copiedFilePath": "File path copied to clipboard",
       "delete": "Delete"
     }
   },

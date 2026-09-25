@@ -31,9 +31,9 @@ describe('WorkspaceFileListComponent', () => {
   let sidebarService: SidebarStateService;
   let electronSignalsMock: {call: ReturnType<typeof vi.fn>};
   let modelSaverMock: {saveModel: ReturnType<typeof vi.fn>};
-  let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>};
+  let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn>};
   let confirmDialogMock: {open: ReturnType<typeof vi.fn>};
-  let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>};
+  let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>; getStoragePath: ReturnType<typeof vi.fn>};
   let fileHandlingMock: {loadNamespaceFile: ReturnType<typeof vi.fn>};
   let loadedFilesMock: {currentLoadedFile: any; removeFile: ReturnType<typeof vi.fn>};
 
@@ -42,9 +42,12 @@ describe('WorkspaceFileListComponent', () => {
 
     electronSignalsMock = {call: vi.fn()};
     modelSaverMock = {saveModel: vi.fn(() => of(true))};
-    notificationMock = {info: vi.fn(), error: vi.fn()};
+    notificationMock = {info: vi.fn(), error: vi.fn(), success: vi.fn()};
     confirmDialogMock = {open: vi.fn(() => of(ConfirmDialogEnum.ok))};
-    modelApiMock = {deleteAspectModel: vi.fn(() => of(undefined))};
+    modelApiMock = {
+      deleteAspectModel: vi.fn(() => of(undefined)),
+      getStoragePath: vi.fn(() => of({storagePath: '/workspace', path: '/workspace'})),
+    };
     fileHandlingMock = {loadNamespaceFile: vi.fn()};
     loadedFilesMock = {
       currentLoadedFile: {namespace: 'org.eclipse.esmf:1.0.0', name: 'Current.ttl'},
@@ -238,21 +241,23 @@ describe('WorkspaceFileListComponent', () => {
     }
   });
 
-  it('should copy namespace to clipboard', () => {
-    const writeTextMock = vi.fn();
+  it('should copy file path to clipboard', () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, {
       clipboard: {
         writeText: writeTextMock,
       },
     });
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
 
     const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
     expect(file).toBeDefined();
     if (file) {
       component.prepare('org.eclipse.esmf:1.0.0', file);
-      component.copyNamespace();
+      component.copyFilePath();
 
-      expect(writeTextMock).toHaveBeenCalledWith('org.eclipse.esmf:1.0.0/File1.ttl');
+      expect(writeTextMock).toHaveBeenCalledWith('/workspace/org.eclipse.esmf/1.0.0/File1.ttl');
+      expect(notificationMock.success).toHaveBeenCalled();
     }
   });
 

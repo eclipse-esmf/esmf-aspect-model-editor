@@ -13,7 +13,7 @@
 
 import {AsyncApi, ModelApiService, OpenApi, ViolationError} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
-import {FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
+import {ChildrenArray, FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -253,6 +253,9 @@ export class EditorService {
 
         const filteredElements = this.filtersService.filter([element]);
         const node = filteredElements[0];
+        if (node) {
+          node.children = new ChildrenArray();
+        }
         this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
 
         const cell = maxgraphRenderer.render(node, null);

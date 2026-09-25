@@ -104,7 +104,6 @@
     font: inherit;
     color: inherit;
     cursor: pointer;
-    position: relative;
 
     &:hover {
       background-color: var(--ame-surface-hover, #e1e1e1);
@@ -120,7 +119,6 @@
     }
 
     &.outdated {
-      opacity: 0.85;
       color: var(--ame-gray-600, #787878);
 
       .content mat-icon {
@@ -133,7 +131,6 @@
     }
 
     &.errored {
-      opacity: 0.85;
       color: var(--ame-error, #f44336);
 
       .content mat-icon {
