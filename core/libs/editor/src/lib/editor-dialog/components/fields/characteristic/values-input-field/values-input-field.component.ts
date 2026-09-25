@@ -16,7 +16,7 @@ import {DataTypeService, ElementIconComponent} from '@ame/shared';
 import {ENTER} from '@angular/cdk/keycodes';
 import {Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {disabled, form, FormField, validate} from '@angular/forms/signals';
+import {disabled, form, FormField, required, validate} from '@angular/forms/signals';
 import {MatAutocomplete, MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatChipEditedEvent, MatChipGrid, MatChipInput, MatChipRow, MatChipsModule} from '@angular/material/chips';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -80,6 +80,7 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
   private readonly chipListModel = signal<string[]>([]);
   readonly searchField = form(this.searchModel, path => disabled(path, {when: this.blocked}));
   readonly chipListField = form(this.chipListModel, path => {
+    required(path);
     validate(path, ({value}) => (value()?.length ? null : {kind: 'required', message: 'Please provide at least one enumeration value'}));
     disabled(path, {when: this.blocked});
   });
