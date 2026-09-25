@@ -14,10 +14,11 @@
 import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
-import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {BrowserService, ElectronSignals, ElectronSignalsService, IPC_RENDERER, NotificationsService} from '@ame/shared';
 import {LanguageTranslationService} from '@ame/translation';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -57,6 +58,8 @@ export class WorkspaceFileListComponent {
   private translate = inject(LanguageTranslationService);
   private loadedFiles = inject(LoadedFilesService);
   private destroyRef = inject(DestroyRef);
+  private ipcRenderer = inject(IPC_RENDERER);
+  private browserService = inject(BrowserService);
 
   public sidebarService = inject(SidebarStateService);
 
@@ -265,10 +268,67 @@ export class WorkspaceFileListComponent {
   }
 
   public copyNamespace() {
+    this.copyFilePath();
+  }
+
+  public copyFilePath() {
     const selection = this.menuSelection();
     if (!selection) return;
 
-    navigator.clipboard.writeText(`${selection.namespace}/${selection.file.name}`);
+    this.modelApiService
+      .getStoragePath()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: response => {
+          const rootPath = response?.storagePath || response?.path || '';
+          const osFilePath = this.buildOsFilePath(rootPath, selection.namespace, selection.file.name);
+          this.copyToClipboard(osFilePath);
+        },
+        error: () => {
+          const fallback = `${selection.namespace.replace(':', '/')}/${selection.file.name}`;
+          this.copyToClipboard(fallback);
+        },
+      });
+  }
+
+  private buildOsFilePath(storagePath: string, namespaceKey: string, fileName: string): string {
+    if (!storagePath) {
+      return `${namespaceKey.replace(':', '/')}/${fileName}`;
+    }
+
+    const isWindows = storagePath.includes('\\');
+    const sep = isWindows ? '\\' : '/';
+    const cleanStoragePath = storagePath.replace(/[/\\]+$/, '');
+
+    const [namespace, version] = namespaceKey.split(':');
+    const segments = version ? [namespace, version, fileName] : [namespace, fileName];
+
+    return `${cleanStoragePath}${sep}${segments.join(sep)}`;
+  }
+
+  private copyToClipboard(text: string) {
+    if (this.browserService.isStartedAsElectronApp() && this.ipcRenderer?.copyToClipboard) {
+      this.ipcRenderer.copyToClipboard(text);
+    } else if (navigator.clipboard?.writeText && document.hasFocus()) {
+      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
+    } else {
+      this.fallbackCopy(text);
+    }
+
+    const title = this.translate.translateService.translate('sidebar.fileMenu.copiedFilePath') || 'File path copied to clipboard';
+    this.notificationService.success({title, message: text});
+  }
+
+  private fallbackCopy(text: string) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   }
 
   public prepare(namespace: string, file: FileStatus) {

@@ -366,6 +366,7 @@
       "openCurrent": "在当前打开",
       "findElements": "寻找元素",
       "copyFilePath": "复制文件路径",
+      "copiedFilePath": "文件路径已复制到剪贴板",
       "delete": "删除"
     }
   },

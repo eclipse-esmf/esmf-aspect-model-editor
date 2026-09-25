@@ -363,6 +363,7 @@
       "openCurrent": "Open in current",
       "findElements": "Find elements",
       "copyFilePath": "Copy file path",
+      "copiedFilePath": "File path copied to clipboard",
       "delete": "Delete"
     }
   },
