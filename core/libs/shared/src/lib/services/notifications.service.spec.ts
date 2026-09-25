@@ -72,6 +72,23 @@ describe('NotificationsService', () => {
     expect(toastrMock.error).toHaveBeenCalledWith('Error message', 'Err', {timeOut: 2000});
   });
 
+  it('error() should truncate multiline message for toastr but keep full description', () => {
+    const multiLineMsg = 'Failed to load aspect model files:\n\nFile: urn:samm:example:1.0.0#Foo\n• Error: Not found';
+    service.error({title: 'Loading Error', message: multiLineMsg});
+
+    expect(service.getNotifications()).toHaveLength(1);
+    expect(service.getNotifications()[0].description).toBe(multiLineMsg);
+    expect(toastrMock.error).toHaveBeenCalledWith('Failed to load aspect model files:... (more in notifications dialog)', 'Loading Error', {
+      timeOut: 2000,
+    });
+  });
+
+  it('error() should not append more text if message is single line and fits', () => {
+    service.error({title: 'Simple', message: 'Simple short error\n'});
+
+    expect(toastrMock.error).toHaveBeenCalledWith('Simple short error\n', 'Simple', {timeOut: 2000});
+  });
+
   it('info() and success() should push notifications and call respective toastr methods', () => {
     service.info({title: 'Info', message: 'Info message'});
     expect(toastrMock.info).toHaveBeenCalledWith('Info message', 'Info', {timeOut: 2000});

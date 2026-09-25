@@ -12,12 +12,12 @@
  */
 
 import {ValueTypeResolution, ValueTypeResolverService} from '@ame/shared';
-import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {form, FormField, required, validate} from '@angular/forms/signals';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatError, MatInput, MatLabel} from '@angular/material/input';
-import {DefaultValue} from '@esmf/aspect-model-loader';
+import {DefaultScalar, DefaultValue} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {InputFieldComponent} from '../../input-field.component';
 
@@ -31,6 +31,8 @@ export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> 
   private readonly model = signal('');
   private readonly resolution = signal<ValueTypeResolution | null>(null);
   private unregisterField = () => undefined;
+  private initialized = false;
+  private currentElementUrn: string | null = null;
 
   readonly field = form(this.model, path => {
     required(path);
@@ -43,6 +45,23 @@ export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> 
     });
   });
 
+  constructor() {
+    super();
+    effect(() => {
+      const type = this.signalForm()?.get<DefaultScalar>('type');
+      if (this.metaModelElement) {
+        if (type !== undefined) {
+          this.metaModelElement.type = type;
+        }
+        const res = this.valueTypeResolver.resolveValueType(this.metaModelElement);
+        this.resolution.set(res);
+        if (this.initialized) {
+          this.field().markAsTouched();
+        }
+      }
+    });
+  }
+
   ngOnInit() {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -51,11 +70,23 @@ export class ValueInputFieldComponent extends InputFieldComponent<DefaultValue> 
 
   initForm() {
     if (this.metaModelElement) {
+      const formType = this.signalForm()?.get<DefaultScalar>('type');
+      if (formType !== undefined) {
+        this.metaModelElement.type = formType;
+      }
       const res = this.valueTypeResolver.resolveValueType(this.metaModelElement);
       this.resolution.set(res);
     }
-    this.model.set(this.metaModelElement?.value || '');
-    this.unregisterField = this.signalForm().register('value', this.field);
+
+    const isNewElement = this.metaModelElement?.aspectModelUrn !== this.currentElementUrn;
+    if (!this.initialized || isNewElement) {
+      this.currentElementUrn = this.metaModelElement?.aspectModelUrn || null;
+      this.model.set(this.metaModelElement?.value || '');
+      if (!this.initialized) {
+        this.unregisterField = this.signalForm().register('value', this.field);
+        this.initialized = true;
+      }
+    }
   }
 
   ngOnDestroy(): void {

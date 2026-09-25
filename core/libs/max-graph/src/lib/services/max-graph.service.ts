@@ -65,6 +65,9 @@ export class MaxGraphService {
   public readonly cellsCount = this.cellsCountSignal.asReadonly();
   public readonly isModelEmpty = computed(() => this.cellsCountSignal() === 0);
 
+  private readonly graphVersionSignal = signal(0);
+  public readonly graphVersion = this.graphVersionSignal.asReadonly();
+
   get currentCachedFile() {
     return this.loadedFiles.currentLoadedFile.cachedFile;
   }
@@ -91,7 +94,10 @@ export class MaxGraphService {
   }
 
   private initCellsCountListener(): void {
-    const updateCount = () => this.cellsCountSignal.set(this.getAllCells()?.length ?? 0);
+    const updateCount = () => {
+      this.cellsCountSignal.set(this.getAllCells()?.length ?? 0);
+      this.graphVersionSignal.update(v => v + 1);
+    };
     updateCount();
     this.graph.addListener(InternalEvent.CELLS_ADDED, updateCount);
     this.graph.addListener(InternalEvent.CELLS_REMOVED, updateCount);
@@ -314,6 +320,7 @@ export class MaxGraphService {
   /** Removes all elements of the current aspect  */
   deleteAllShapes(): void {
     this.updateGraph(() => this.graph.removeCells(this.graph.getChildCells(this.graph.getDefaultParent())));
+    this.graphVersionSignal.update(v => v + 1);
   }
 
   /** Expand all cells*/
@@ -579,6 +586,7 @@ export class MaxGraphService {
     }
     this.graph.removeCells(allCellsToRemove, includeEdges);
     this.graph.refresh();
+    this.graphVersionSignal.update(v => v + 1);
   }
 
   moveCells(cells: Array<Cell>, dx: number, dy: number): void {

@@ -178,6 +178,7 @@ describe('WindowsManager', () => {
       expect(registeredEvents).toContain(EVENTS.SIGNAL.UPDATE_MENU_ITEM);
       expect(registeredEvents).toContain(EVENTS.SIGNAL.TRANSLATE_MENU_ITEMS);
       expect(registeredEvents).toContain(EVENTS.SIGNAL.SHOW_CONTEXT_MENU);
+      expect(registeredEvents).toContain(EVENTS.SIGNAL.COPY_TO_CLIPBOARD);
     });
 
     it('should register IPC handle handlers for OPEN_PRINT_WINDOW and WRITE_PRINT_FILE', () => {
@@ -360,6 +361,22 @@ describe('WindowsManager', () => {
         handler({sender: {}}, {href: 'https://example.com'});
 
         expect(mockMenuPopup).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('COPY_TO_CLIPBOARD', () => {
+      it('should write text to clipboard when called with a string', () => {
+        const handler = getIpcHandler(EVENTS.SIGNAL.COPY_TO_CLIPBOARD);
+        handler({sender: {}}, 'test text');
+
+        expect(mockClipboardWriteText).toHaveBeenCalledWith('test text');
+      });
+
+      it('should not write to clipboard when payload is not a string', () => {
+        const handler = getIpcHandler(EVENTS.SIGNAL.COPY_TO_CLIPBOARD);
+        handler({sender: {}}, null);
+
+        expect(mockClipboardWriteText).not.toHaveBeenCalled();
       });
     });
 

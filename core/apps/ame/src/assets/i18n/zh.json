@@ -233,7 +233,9 @@
     "options": "选项",
     "noNotifications": "暂无提示。",
     "go": "前往",
-    "clear": "清理"
+    "clear": "清理",
+    "copy": "复制",
+    "copied": "已复制!"
   },
   "workspaceSummary": {
     "selectToValidate": "选择一个Aspect Model来查看校验结果。",

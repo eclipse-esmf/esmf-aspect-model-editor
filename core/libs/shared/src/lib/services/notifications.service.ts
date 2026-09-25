@@ -46,7 +46,13 @@ export class NotificationsService {
     this.notifications.unshift(notification);
     this.badgeText.emit(`${this.notifications.length}`);
     if (!hidePopup) {
-      this.toastr.warning(message, title, {timeOut: timeout});
+      const lines = message
+        .split('\n')
+        .map(l => l.trim())
+        .filter(Boolean);
+      const hasMore = lines.length > 1 || message.length > 200;
+      const toastMessage = hasMore ? `${(lines[0] || title).slice(0, 150)}... (more in notifications dialog)` : message;
+      this.toastr.warning(toastMessage, title, {timeOut: timeout});
     }
   }
 
@@ -56,7 +62,13 @@ export class NotificationsService {
     this.notifications.unshift(notification);
     this.badgeText.emit(`${this.notifications.length}`);
     if (!hidePopup) {
-      this.toastr.error(message, title, {timeOut: timeout});
+      const lines = message
+        .split('\n')
+        .map(l => l.trim())
+        .filter(Boolean);
+      const hasMore = lines.length > 1 || message.length > 200;
+      const toastMessage = hasMore ? `${(lines[0] || title).slice(0, 150)}... (more in notifications dialog)` : message;
+      this.toastr.error(toastMessage, title, {timeOut: timeout});
     }
   }
 

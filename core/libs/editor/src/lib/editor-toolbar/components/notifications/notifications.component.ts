@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
+import {IPC_RENDERER, NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
 import {CommonModule} from '@angular/common';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,6 +19,7 @@ import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTableModule} from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslocoDirective} from '@jsverse/transloco';
 
@@ -26,16 +27,27 @@ import {TranslocoDirective} from '@jsverse/transloco';
   selector: 'ame-notifications',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
-  imports: [CommonModule, MatIconModule, TranslocoDirective, MatDialogModule, MatButtonModule, MatTableModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    TranslocoDirective,
+    MatDialogModule,
+    MatButtonModule,
+    MatTableModule,
+    MatMenuModule,
+    MatTooltipModule,
+  ],
 })
 export class NotificationsComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<NotificationsComponent>);
   private activatedRoute = inject(ActivatedRoute);
+  private ipcRenderer = inject(IPC_RENDERER, {optional: true});
 
   public notificationsService = inject(NotificationsService);
   public router = inject(Router);
 
   currentItem = signal(null);
+  copiedElement = signal<any>(null);
   displayedColumns = signal(['expand', 'date', 'type', 'message', 'options']);
 
   ngOnInit() {
@@ -62,6 +74,40 @@ export class NotificationsComponent implements OnInit {
       default:
         return 'info_outline';
     }
+  }
+
+  copyToClipboard(text: string, element?: any, event?: Event): void {
+    event?.stopPropagation();
+    if (!text) return;
+
+    if (this.ipcRenderer?.copyToClipboard) {
+      this.ipcRenderer.copyToClipboard(text);
+    } else if (navigator.clipboard?.writeText && document.hasFocus()) {
+      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
+    } else {
+      this.fallbackCopy(text);
+    }
+
+    if (element) {
+      this.copiedElement.set(element);
+      setTimeout(() => {
+        if (this.copiedElement() === element) {
+          this.copiedElement.set(null);
+        }
+      }, 2000);
+    }
+  }
+
+  private fallbackCopy(text: string) {
+    const el = document.createElement('textarea');
+    el.value = text;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
   }
 
   clearNotification(notification: NotificationModel) {

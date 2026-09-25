@@ -105,6 +105,44 @@ table {
   margin: 10px 10px 10px 0;
 }
 
+.message-description {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background-color: var(--ame-gray-5);
+  border: 1px solid var(--ame-gray-10);
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 6px 10px 10px 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.message-text {
+  margin: 0;
+  flex: 1;
+  font-family: monospace, Consolas, 'Courier New';
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  user-select: text;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
 .delete-btn,
 .delete-all-btn {
   min-width: 0;

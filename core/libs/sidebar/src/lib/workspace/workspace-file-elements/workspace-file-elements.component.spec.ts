@@ -15,7 +15,7 @@ import {ModelApiService} from '@ame/api';
 import {LoadedFilesService} from '@ame/cache';
 import {EditorService, ModelLoaderService} from '@ame/editor';
 import {MaxGraphService} from '@ame/max-graph';
-import {provideZonelessChangeDetection} from '@angular/core';
+import {provideZonelessChangeDetection, signal, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultCharacteristic, DefaultProperty, DefaultTrait} from '@esmf/aspect-model-loader';
@@ -29,7 +29,10 @@ describe('WorkspaceFileElementsComponent', () => {
   let component: WorkspaceFileElementsComponent;
   let fixture: ComponentFixture<WorkspaceFileElementsComponent>;
   let sidebarService: SidebarStateService;
-  let maxgraphMock: {resolveCellByModelElement: ReturnType<typeof vi.fn>};
+  let maxgraphMock: {
+    resolveCellByModelElement: ReturnType<typeof vi.fn>;
+    graphVersion: WritableSignal<number>;
+  };
   let modelApiMock: {fetchAspectMetaModel: ReturnType<typeof vi.fn>};
   let modelLoaderMock: {loadSingleModel: ReturnType<typeof vi.fn>};
   let loadedFilesMock: {getFile: ReturnType<typeof vi.fn>};
@@ -39,6 +42,7 @@ describe('WorkspaceFileElementsComponent', () => {
 
     maxgraphMock = {
       resolveCellByModelElement: vi.fn(),
+      graphVersion: signal(0),
     };
     modelApiMock = {
       fetchAspectMetaModel: vi.fn(() =>
@@ -328,5 +332,26 @@ describe('WorkspaceFileElementsComponent', () => {
 
     expect(component.elements()['trait']?.elements?.length).toBe(1);
     expect(component.elements()['characteristic']?.elements?.length).toBe(0);
+  });
+
+  it('should update elementImported reactively when graphVersion changes', () => {
+    fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    const mockProperty = new DefaultProperty({
+      name: 'prop1',
+      aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#prop1',
+      metaModelVersion: '2.1.0',
+    });
+
+    maxgraphMock.resolveCellByModelElement.mockReturnValue({id: 'cell-1'});
+    expect(component.elementImported(mockProperty)).toBe(true);
+
+    maxgraphMock.resolveCellByModelElement.mockReturnValue(null);
+    maxgraphMock.graphVersion.update(v => v + 1);
+    TestBed.flushEffects();
+
+    expect(component.elementImported(mockProperty)).toBe(false);
   });
 });

@@ -16,8 +16,8 @@ import {APP_CONFIG, AppConfig, BrowserService, FileContentModel, HttpHeaderBuild
 import {LanguageTranslationService} from '@ame/translation';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
-import {Observable, forkJoin, of, throwError} from 'rxjs';
-import {catchError, map, mergeMap, retry, tap, timeout} from 'rxjs/operators';
+import {Observable, of, throwError} from 'rxjs';
+import {catchError, map, retry, switchMap, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
 import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, StoragePathResponse, ViolationError, WorkspaceStructure} from './models';
 
@@ -163,21 +163,41 @@ export class ModelApiService {
 
   fetchAllNamespaceFilesContent(): Observable<FileContentModel[]> {
     return this.loadNamespacesStructure().pipe(
-      map((workspace: WorkspaceStructure): ModelData[] => {
-        return Object.values(workspace).flatMap(entries => entries.flatMap(entry => entry.models));
-      }),
-      map((modelDataList: ModelData[]) => {
-        return modelDataList.map(modelData =>
-          this.fetchAspectMetaModel(modelData.aspectModelUrn).pipe(
-            map(model => model.content),
-            map(
-              aspectMetaModel =>
-                new FileContentModel(modelData.name, modelData.aspectModelUrn, modelData.version, modelData.existing, aspectMetaModel),
-            ),
+      switchMap((workspace: WorkspaceStructure) => {
+        const modelMap = new Map<string, ModelData>();
+        const fileEntries: Array<FileEntry> = Object.entries(workspace).flatMap(([namespace, versions]) =>
+          versions.flatMap(({version, models}) =>
+            models.map((model: ModelData) => {
+              modelMap.set(model.aspectModelUrn, model);
+              return {
+                absoluteName: RdfModelUtil.buildAbsoluteFileName(namespace, version, model.name),
+                fileName: model.name,
+                aspectModelUrn: model.aspectModelUrn,
+                modelVersion: model.version,
+              };
+            }),
+          ),
+        );
+
+        if (fileEntries.length === 0) {
+          return of([]);
+        }
+
+        return this.fetchAllAspectMetaModel(fileEntries).pipe(
+          map(fileInformations =>
+            fileInformations.map(fileInfo => {
+              const modelData = modelMap.get(fileInfo.aspectModelUrn);
+              return new FileContentModel(
+                fileInfo.fileName || modelData?.name || fileInfo.absoluteName?.split(':').pop() || '',
+                fileInfo.aspectModelUrn,
+                fileInfo.modelVersion || modelData?.version,
+                modelData?.existing ?? true,
+                fileInfo.aspectModel,
+              );
+            }),
           ),
         );
       }),
-      mergeMap((files$: Observable<FileContentModel>[]) => (files$.length ? forkJoin(files$) : of([]))),
       catchError(() => of([])),
     );
   }

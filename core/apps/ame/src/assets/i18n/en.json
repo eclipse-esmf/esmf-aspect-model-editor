@@ -230,7 +230,9 @@
     "options": "Options",
     "noNotifications": "No notifications available.",
     "go": "Go to",
-    "clear": "Clear"
+    "clear": "Clear",
+    "copy": "Copy",
+    "copied": "Copied!"
   },
   "workspaceSummary": {
     "selectToValidate": "Select an Aspect Model to see the validation result.",

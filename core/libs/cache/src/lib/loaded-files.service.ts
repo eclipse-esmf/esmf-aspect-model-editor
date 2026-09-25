@@ -308,4 +308,8 @@ export class LoadedFilesService {
   removeAll() {
     this.updateFiles(() => ({}));
   }
+
+  restoreFiles(files: Record<string, NamespaceFile>) {
+    this.updateFiles(() => ({...files}));
+  }
 }

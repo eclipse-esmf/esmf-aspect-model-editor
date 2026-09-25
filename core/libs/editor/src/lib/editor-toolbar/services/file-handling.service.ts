@@ -21,6 +21,7 @@ import {ConfigurationService} from '@ame/settings-dialog';
 import {
   ElectronSignalsService,
   GeneralConfig,
+  IPC_RENDERER,
   LoadingScreenOptions,
   LoadingScreenService,
   ModelSavingTrackerService,
@@ -98,6 +99,7 @@ export class FileHandlingService {
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
   private rdfNodeService = inject(RdfNodeService);
+  private ipcRenderer = inject(IPC_RENDERER, {optional: true});
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
@@ -173,12 +175,18 @@ export class FileHandlingService {
         ),
         first(),
         catchError(httpError => {
+          const detailedMessage =
+            httpError?.error?.error?.message ||
+            httpError?.error?.message ||
+            (typeof httpError?.error === 'string' ? httpError.error : null) ||
+            httpError?.message ||
+            '';
           this.notificationsService.error({
             title: this.translate.language.notificationService.loadingError,
-            message: httpError?.error?.error?.message,
+            message: detailedMessage,
             timeout: 5000,
           });
-          return throwError(() => 'Load namespace file failed');
+          return of(null);
         }),
         finalize(() => {
           this.loadingScreenService.close();
@@ -278,6 +286,11 @@ export class FileHandlingService {
 
   copyToClipboardSync(text: string) {
     if (!text) return;
+
+    if (this.ipcRenderer?.copyToClipboard) {
+      this.ipcRenderer.copyToClipboard(text);
+      return;
+    }
 
     window.focus();
 

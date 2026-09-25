@@ -12,13 +12,14 @@
  */
 
 import {MigratorApiService} from '@ame/api';
-import {Component, DestroyRef, inject} from '@angular/core';
+import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {of, switchMap, tap} from 'rxjs';
+import {finalize, of, switchMap, tap} from 'rxjs';
 import {SidebarStateService} from '../../sidebar-state.service';
 import {MigrationDialogComponent} from './migration-dialog';
 
@@ -26,7 +27,7 @@ import {MigrationDialogComponent} from './migration-dialog';
   selector: 'ame-workspace-migrate',
   templateUrl: './workspace-migrate.component.html',
   styleUrls: ['./workspace-migrate.component.scss'],
-  imports: [MatButtonModule, MatIconModule, TranslocoDirective],
+  imports: [MatButtonModule, MatIconModule, MatProgressSpinner, TranslocoDirective],
 })
 export class WorkspaceMigrateComponent {
   private dialog = inject(MatDialog);
@@ -34,11 +35,15 @@ export class WorkspaceMigrateComponent {
   private migratorApiService = inject(MigratorApiService);
   private sidebarService = inject(SidebarStateService);
 
+  public loading = signal(false);
+
   migrate() {
+    this.loading.set(true);
     return this.migratorApiService
       .hasFilesToMigrate()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loading.set(false)),
         switchMap(hasFiles =>
           hasFiles
             ? this.dialog
