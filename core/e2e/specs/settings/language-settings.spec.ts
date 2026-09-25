@@ -120,4 +120,57 @@ test.describe('Test language settings', () => {
     assertNullMultiLanguageValues(aspect.properties[0].characteristic, 'en-US');
     assertNullMultiLanguageValues(aspect.properties[0].characteristic, 'de-DE');
   });
+
+  test('does not re-prompt confirmation on OK if language removal was already confirmed on Apply', async ({page}) => {
+    const rdfString = readFixture('multi-language-model.txt');
+    await app.loadModel(rdfString);
+
+    await app.openSettings(/language|sprache/i);
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(3);
+
+    // Delete one language (last one)
+    await page.locator('.delete-icon').last().click({force: true});
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(2);
+
+    // Click Apply -> confirmation dialog must appear
+    await page.locator(SettingsDialogSelectors.settingsDialogApplyButton).click({force: true});
+    await expect(page.getByRole('heading', {name: 'Deleting all language related'})).toBeVisible();
+
+    // Confirm removal
+    await page.locator(SELECTOR_alertRightButton).click({force: true});
+    await page
+      .locator('ame-loading-screen')
+      .waitFor({state: 'detached'})
+      .catch(() => {});
+
+    // Now click OK -> dialog must close without asking for confirmation again
+    await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click({force: true});
+    await expect(page.getByRole('heading', {name: 'Deleting all language related'})).not.toBeVisible();
+    await expect(page.locator('ame-setting-dialog')).not.toBeVisible();
+  });
+
+  test('prompts confirmation on OK when languages are removed without clicking Apply first', async ({page}) => {
+    const rdfString = readFixture('multi-language-model.txt');
+    await app.loadModel(rdfString);
+
+    await app.openSettings(/language|sprache/i);
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(3);
+
+    // Delete one language
+    await page.locator('.delete-icon').last().click({force: true});
+    await expect(page.locator('[data-testid="langCode"]')).toHaveCount(2);
+
+    // Directly click OK -> confirmation dialog must appear
+    await page.locator(SettingsDialogSelectors.settingsDialogOkButton).click({force: true});
+    await expect(page.getByRole('heading', {name: 'Deleting all language related'})).toBeVisible();
+
+    // Confirm removal
+    await page.locator(SELECTOR_alertRightButton).click({force: true});
+    await page
+      .locator('ame-loading-screen')
+      .waitFor({state: 'detached'})
+      .catch(() => {});
+
+    await expect(page.locator('ame-setting-dialog')).not.toBeVisible();
+  });
 });

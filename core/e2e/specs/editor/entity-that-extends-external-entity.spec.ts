@@ -12,11 +12,11 @@
  */
 
 import {expect, test} from '@playwright/test';
-import {NAMESPACES_URL} from '../../support/api-mocks';
+import {MODELS_BATCH_API_URL, NAMESPACES_URL} from '../../support/api-mocks';
 import {AppHelper} from '../../support/app-helper';
 import {readFixture} from '../../support/drag-drop-utils';
 
-test.describe.skip('Test loading aspect with extended external Entity', () => {
+test.describe('Test loading aspect with extended external Entity', () => {
   test('should load a model with an entity that extends an external entity in same namespace', async ({page}) => {
     const helper = new AppHelper(page);
     await helper.visitDefault();
@@ -32,11 +32,17 @@ test.describe.skip('Test loading aspect with extended external Entity', () => {
     });
 
     const fixtureModel = readFixture('external-reference/same-namespace/model-with-entity.ttl');
-    await page.route('**/models*', async route => {
+    await page.route(MODELS_BATCH_API_URL, async route => {
       await route.fulfill({
         status: 200,
-        contentType: 'text/plain',
-        body: fixtureModel,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#Entity1',
+            aspectModel: fixtureModel,
+            fileName: 'model-with-entity.ttl',
+          },
+        ]),
       });
     });
 

@@ -12,11 +12,11 @@
  */
 
 import {expect, test} from '@playwright/test';
-import {NAMESPACES_URL} from '../../support/api-mocks';
+import {MODELS_BATCH_API_URL, NAMESPACES_URL} from '../../support/api-mocks';
 import {AppHelper} from '../../support/app-helper';
 import {readFixture} from '../../support/drag-drop-utils';
 
-test.describe.skip('Test load external reference with same namespace', () => {
+test.describe('Test load external reference with same namespace', () => {
   test('Loading property element with their children from external file with same namespace', async ({page}) => {
     const helper = new AppHelper(page);
     await helper.visitDefault();
@@ -32,11 +32,17 @@ test.describe.skip('Test load external reference with same namespace', () => {
     });
 
     const fixtureModel = readFixture('external-reference/same-namespace/with-childrens/external-property-reference.ttl');
-    await page.route('**/models*', async route => {
+    await page.route(MODELS_BATCH_API_URL, async route => {
       await route.fulfill({
         status: 200,
-        contentType: 'text/plain',
-        body: fixtureModel,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#externalPropertyWithChildren',
+            aspectModel: fixtureModel,
+            fileName: 'external-property-reference.ttl',
+          },
+        ]),
       });
     });
 
@@ -77,11 +83,17 @@ test.describe.skip('Test load external reference with same namespace', () => {
     });
 
     const fixtureModel = readFixture('external-reference/same-namespace/with-childrens/external-characteristic-reference.ttl');
-    await page.route('**/models*', async route => {
+    await page.route(MODELS_BATCH_API_URL, async route => {
       await route.fulfill({
         status: 200,
-        contentType: 'text/plain',
-        body: fixtureModel,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#ExternalCharacteristicWithChildren',
+            aspectModel: fixtureModel,
+            fileName: 'external-characteristic-reference.ttl',
+          },
+        ]),
       });
     });
 

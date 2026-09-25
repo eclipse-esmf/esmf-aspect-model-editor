@@ -315,4 +315,96 @@ test.describe('Editor Multi-Tab Management', () => {
     await expect(tabs).toHaveCount(2, {timeout: 10000});
     await expect(tabs.nth(1)).toHaveClass(/active/);
   });
+
+  test('should show save confirmation dialog when closing dirty tab and keep tab open on Cancel', async ({page}) => {
+    await app.loadModel(SAMPLE_TURTLE_MODEL_1);
+
+    const activeTab = page.locator('[data-testid="editor-tab"].active');
+    await expect(activeTab).toBeVisible();
+
+    // Mark model dirty in both tab state and modelSavingTracker
+    await page.evaluate(() => {
+      const tabState = (window as any)['angular.TabStateService'];
+      if (tabState) {
+        tabState.setTabDirty(tabState.activeTabId(), true);
+        tabState.modelSavingTracker?.setSavedModel('different-baseline');
+      }
+    });
+
+    const closeBtn = activeTab.locator('[data-testid="editor-tab-close"]');
+    await closeBtn.click();
+
+    // Confirmation dialog must appear
+    const dialogTitle = page.getByRole('heading', {name: /save changes/i});
+    await expect(dialogTitle).toBeVisible();
+
+    // Click "Cancel" button to abort closing
+    const cancelBtn = page.locator('mat-dialog-actions button').filter({hasText: /cancel/i});
+    await cancelBtn.click();
+
+    // Tab must still be present and still active
+    await expect(dialogTitle).not.toBeVisible();
+    const tabs = page.locator('[data-testid="editor-tab"]');
+    await expect(tabs).toHaveCount(1);
+    await expect(tabs.first().locator('.tab-dirty-indicator')).toBeVisible();
+  });
+
+  test('should discard changes and close tab when clicking Discard in confirmation dialog', async ({page}) => {
+    await app.loadModel(SAMPLE_TURTLE_MODEL_1);
+
+    // Add a second tab and load Model 2
+    const addBtn = page.locator('[data-testid="editor-tab-add"]');
+    await addBtn.click();
+    await app.loadModel(SAMPLE_TURTLE_MODEL_2);
+
+    const tabs = page.locator('[data-testid="editor-tab"]');
+    await expect(tabs).toHaveCount(2);
+
+    // Mark Tab 2 dirty
+    await page.evaluate(() => {
+      const tabState = (window as any)['angular.TabStateService'];
+      if (tabState) {
+        tabState.setTabDirty(tabState.activeTabId(), true);
+        tabState.modelSavingTracker?.setSavedModel('different-baseline');
+      }
+    });
+
+    const closeBtn = tabs.nth(1).locator('[data-testid="editor-tab-close"]');
+    await closeBtn.click();
+
+    // Confirmation dialog appears
+    const dialogTitle = page.getByRole('heading', {name: /save changes/i});
+    await expect(dialogTitle).toBeVisible();
+
+    // Click "Don't Save" to discard changes and close
+    const discardBtn = page.locator('mat-dialog-actions button').filter({hasText: /don't save/i});
+    await discardBtn.click();
+
+    await expect(dialogTitle).not.toBeVisible();
+    await expect(tabs).toHaveCount(1);
+    await expect(tabs.first()).toHaveClass(/active/);
+  });
+
+  test('should preserve independent shapes when switching between multiple tabs', async ({page}) => {
+    await app.loadModel(SAMPLE_TURTLE_MODEL_1);
+    await app.shapeExists('ModelOne', true);
+
+    // Add a second tab with Model 2
+    const addBtn = page.locator('[data-testid="editor-tab-add"]');
+    await addBtn.click();
+
+    const tabs = page.locator('[data-testid="editor-tab"]');
+    await expect(tabs).toHaveCount(2);
+
+    await app.loadModel(SAMPLE_TURTLE_MODEL_2);
+    await app.shapeExists('ModelTwo', true);
+
+    // Switch back to Tab 1 -> ModelOne must exist, ModelTwo must not
+    await tabs.first().click();
+    await app.shapeExists('ModelOne', true);
+
+    // Switch to Tab 2 -> ModelTwo must exist
+    await tabs.nth(1).click();
+    await app.shapeExists('ModelTwo', true);
+  });
 });
