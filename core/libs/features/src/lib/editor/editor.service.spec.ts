@@ -274,7 +274,7 @@ describe('EditorService', () => {
   it('createElement with aspectModelUrn should render only the reference and clear any children', async () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const loadedFilesService = TestBed.inject(LoadedFilesService);
-    const filtersService = TestBed.inject(FiltersService);
+    const filtersService = TestBed.inject(FILTERS_SERVICE);
 
     (maxgraphService as any).isModelEmpty = vi.fn(() => false);
     maxgraphService.resolveCellByModelElement = vi.fn(() => null);

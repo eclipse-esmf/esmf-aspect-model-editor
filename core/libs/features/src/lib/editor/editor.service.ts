@@ -25,6 +25,7 @@ import {
 import {AsyncApi, LoadedFilesService, ModelApiService, ModelService, OpenApi, RdfService, ViolationError} from '@ame/infrastructure';
 import {
   AlertService,
+  ChildrenArray,
   ELEMENT_MODEL_SERVICE,
   ElementCreatorService,
   FILTER_ATTRIBUTES,
@@ -45,7 +46,7 @@ import {
   useUpdater,
   ValidateStatus,
 } from '@ame/shared';
-import {DestroyRef, inject, Injectable, Injector, signal} from '@angular/core';
+import {DestroyRef, inject, Injectable, signal} from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, InternalEvent} from '@maxgraph/core';
@@ -82,7 +83,6 @@ export class EditorService implements IDraggableService, IEditorValidationServic
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private loadingScreenService = inject(LoadingScreenService);
   private translate = inject(LanguageTranslationService);
-  private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
   private elementCreator = inject(ElementCreatorService);
   private modelElementNamingService: IModelElementNamingService = inject(MODEL_ELEMENT_NAMING_SERVICE);

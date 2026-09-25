@@ -25,6 +25,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map, retry, switchMap, tap, timeout} from 'rxjs/operators';
+import {RdfModelUtil} from '../rdf';
 import {ModelValidatorService} from './model-validator.service';
 import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, StoragePathResponse, ViolationError, WorkspaceStructure} from './models';
 

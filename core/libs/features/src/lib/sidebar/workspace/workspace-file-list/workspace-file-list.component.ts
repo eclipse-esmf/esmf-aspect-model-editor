@@ -329,9 +329,7 @@ export class WorkspaceFileListComponent {
   }
 
   private copyToClipboard(text: string) {
-    if (this.browserService.isStartedAsElectronApp() && this.ipcRenderer?.copyToClipboard) {
-      this.ipcRenderer.copyToClipboard(text);
-    } else if (navigator.clipboard?.writeText && document.hasFocus()) {
+    if (navigator.clipboard?.writeText && document.hasFocus()) {
       navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
     } else {
       this.fallbackCopy(text);

@@ -14,7 +14,7 @@
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {DRAGGABLE_SERVICE, MODEL_LOADER_SERVICE} from '@ame/shared';
-import {provideZonelessChangeDetection} from '@angular/core';
+import {provideZonelessChangeDetection, signal, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultCharacteristic, DefaultProperty, DefaultTrait} from '@esmf/aspect-model-loader';

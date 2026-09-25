@@ -18,6 +18,7 @@
   background-color: var(--ame-surface-card, #f5f5f6);
   border-top: 1px solid var(--ame-border-color, #cfd0d1);
   color: var(--ame-font, inherit);
+  z-index: 10;
 }
 
 .migrate-box {

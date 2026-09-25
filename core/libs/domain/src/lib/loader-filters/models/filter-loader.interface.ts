@@ -11,58 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelFilter, ShapeGeometry} from '@ame/shared';
+import {ArrowStyle, ChildrenArray, ModelFilter, ModelTree, ShapeGeometry} from '@ame/shared';
 import {NamedElement} from '@esmf/aspect-model-loader';
 
-export {ModelFilter};
+export {ArrowStyle, ChildrenArray, ModelFilter, ModelTree};
 
 /**
  * Generates class type which implements an interface
  */
 export type ClassReference<T = NamedElement, Args extends any[] = any[]> = new (...args: Args) => T;
-
-export type ArrowStyle = 'entityValueEntityEdge' | 'optionalPropertyEdge' | 'abstractPropertyEdge' | 'abstractElementEdge' | 'defaultEdge';
-
-export class ChildrenArray<T extends ModelTree<NamedElement> = ModelTree<NamedElement>> extends Array<T> {
-  override push(...items: T[]): number {
-    let pushed = 0;
-    for (const item of items) {
-      if (!item || this.some(i => i?.element?.aspectModelUrn === item.element?.aspectModelUrn)) {
-        continue;
-      }
-
-      super.push(item);
-      pushed++;
-    }
-    return pushed;
-  }
-}
-
-export interface ModelTree<T extends NamedElement = NamedElement> {
-  /**
-   * The meta model element which will be rendered
-   */
-  element: T;
-  /**
-   * Geometrical shape the element will have in the maxGraph
-   *
-   * `default` - rectangle shape |
-   * `connector` - small circle shape
-   */
-  shape?: ShapeGeometry;
-  /**
-   * Arrow style
-   */
-  fromParentArrow?: ArrowStyle;
-  /**
-   * ModelTree structures which represents the element's children
-   */
-  children?: ChildrenArray<ModelTree<NamedElement>>;
-  /**
-   * Identifier for used filtering
-   */
-  filterType: 'default' | 'properties';
-}
 
 export type ModelTreeOptions = Partial<{
   /**

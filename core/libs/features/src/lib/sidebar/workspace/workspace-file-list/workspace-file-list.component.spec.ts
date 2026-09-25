@@ -36,7 +36,7 @@ describe('WorkspaceFileListComponent', () => {
   let tauriSignalsMock: {call: ReturnType<typeof vi.fn>};
   let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn>};
   let confirmDialogMock: {open: ReturnType<typeof vi.fn>};
-  let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>};
+  let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>; getStoragePath: ReturnType<typeof vi.fn>};
   let loadedFilesMock: {currentLoadedFile: any; removeFile: ReturnType<typeof vi.fn>};
   let modelOpenerMock: {
     promptAndOpen: ReturnType<typeof vi.fn>;
@@ -51,7 +51,10 @@ describe('WorkspaceFileListComponent', () => {
     tauriSignalsMock = {call: vi.fn()};
     notificationMock = {info: vi.fn(), error: vi.fn(), success: vi.fn(() => of(true))};
     confirmDialogMock = {open: vi.fn(() => of(ConfirmDialogEnum.ok))};
-    modelApiMock = {deleteAspectModel: vi.fn(() => of(undefined))};
+    modelApiMock = {
+      deleteAspectModel: vi.fn(() => of(undefined)),
+      getStoragePath: vi.fn(() => of({storagePath: '/workspace'})),
+    };
     loadedFilesMock = {
       currentLoadedFile: {namespace: 'org.eclipse.esmf:1.0.0', name: 'Current.ttl'},
       removeFile: vi.fn(),
