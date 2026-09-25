@@ -245,6 +245,11 @@ describe('LoadedFilesService & NamespaceFile', () => {
       });
       service.removeAll();
       expect(service.filesAsList.length).toBe(0);
+
+      service.restoreFiles({[added.absoluteName]: added});
+      expect(service.filesAsList.length).toBe(1);
+      expect(service.getFile(added.absoluteName)).toBe(added);
+      expect(service.currentLoadedFile).toBe(added);
     });
 
     it('should update file absolute name', () => {

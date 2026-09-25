@@ -378,10 +378,25 @@ describe('ModelApiService', () => {
         ],
       });
 
-      const modelReqs = httpMock.match(req => req.url === modelsUrl);
-      expect(modelReqs).toHaveLength(2);
-      modelReqs[0].flush({content: 'content-1', sourceLocation: null});
-      modelReqs[1].flush({content: 'content-2', sourceLocation: null});
+      const batchReq = httpMock.expectOne(req => req.url === `${modelsUrl}/batch` && req.method === 'POST');
+      expect(batchReq.request.body).toEqual([
+        {
+          absoluteName: 'my.namespace:1.0.0:1.0.0:Model1',
+          fileName: 'Model1',
+          aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Model1',
+          modelVersion: '1.0.0',
+        },
+        {
+          absoluteName: 'my.namespace:1.0.0:1.0.0:Model2',
+          fileName: 'Model2',
+          aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Model2',
+          modelVersion: '1.0.0',
+        },
+      ]);
+      batchReq.flush([
+        {aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Model1', aspectModel: 'content-1', fileName: 'Model1', modelVersion: '1.0.0'},
+        {aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Model2', aspectModel: 'content-2', fileName: 'Model2', modelVersion: '1.0.0'},
+      ]);
 
       expect(result.map(file => file.name)).toEqual(['Model1', 'Model2']);
       expect(result.map(file => file.aspectMetaModel)).toEqual(['content-1', 'content-2']);

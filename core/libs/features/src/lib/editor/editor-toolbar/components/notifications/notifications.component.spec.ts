@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
+import {IPC_RENDERER, NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -26,11 +26,13 @@ describe('NotificationsComponent', () => {
   let notificationsService: NotificationsService;
   let dialogRef: MatDialogRef<NotificationsComponent>;
   let router: Router;
+  let copyToClipboardMock: ReturnType<typeof vi.fn>;
 
   const mockNotification = new NotificationModel('Warning Title', 'Warning Message', undefined, NotificationType.Warning);
   mockNotification.expanded = true;
 
   beforeEach(async () => {
+    copyToClipboardMock = vi.fn();
     dialogRef = {
       close: vi.fn(),
     } as unknown as MatDialogRef<NotificationsComponent>;
@@ -42,6 +44,7 @@ describe('NotificationsComponent', () => {
       ],
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
+        {provide: IPC_RENDERER, useValue: {copyToClipboard: copyToClipboardMock}},
         MockProvider(NotificationsService, {
           getNotifications: vi.fn(() => [mockNotification]),
           clearNotifications: vi.fn(),
@@ -83,5 +86,16 @@ describe('NotificationsComponent', () => {
     component.goTo('urn:test#Prop');
     expect(router.navigate).toHaveBeenCalled();
     expect(dialogRef.close).toHaveBeenCalled();
+  });
+
+  it('copyToClipboard should delegate to ipcRenderer and track copied element', () => {
+    component.copyToClipboard('Some error text', mockNotification);
+    expect(copyToClipboardMock).toHaveBeenCalledWith('Some error text');
+    expect(component.copiedElement()).toBe(mockNotification);
+  });
+
+  it('copyToClipboard should do nothing if text is empty', () => {
+    component.copyToClipboard('');
+    expect(copyToClipboardMock).not.toHaveBeenCalled();
   });
 });

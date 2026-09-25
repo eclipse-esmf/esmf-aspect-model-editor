@@ -111,10 +111,8 @@
         <mat-icon>manage_search</mat-icon>
         <span>{{ t('sidebar.fileMenu.findElements') }}</span>
       </button>
-
-      <button (click)="copyNamespace()" mat-menu-item data-testid="fileMenuCopyToClipboardButton">
-        <mat-icon>content_copy</mat-icon>
-        <span>{{ t('sidebar.fileMenu.copyFilePath') }}</span>
+      <button (click)="copyFilePath()" mat-menu-item data-testid="fileMenuCopyToClipboardButton">
+        {{ t('sidebar.fileMenu.copyFilePath') }}
       </button>
 
       <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-testid="fileMenuDeleteButton">

@@ -16,7 +16,7 @@ import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DefaultValue, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {DefaultScalar, DefaultValue, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
@@ -83,6 +83,28 @@ describe('ValueInputFieldComponent', () => {
     component.field().value.set('');
     expect(component.hasError('required')).toBe(true);
     expect(signalForm.valid()).toBe(false);
+  });
+
+  it('should trigger re-validation and mark touched when type changes in signalForm', () => {
+    expect(component.field().valid()).toBe(true);
+
+    const intScalar = new DefaultScalar({
+      urn: 'http://www.w3.org/2001/XMLSchema#integer',
+      metaModelVersion: '2.0.0',
+    });
+    signalForm.set('type', intScalar);
+    fixture.detectChanges();
+
+    expect(component.field().valid()).toBe(false);
+    expect(component.hasError('invalidInteger')).toBe(true);
+    expect(component.field().touched()).toBe(true);
+    expect(signalForm.valid()).toBe(false);
+
+    component.field().value.set('42');
+    fixture.detectChanges();
+
+    expect(component.field().valid()).toBe(true);
+    expect(signalForm.valid()).toBe(true);
   });
 
   it('should unregister value field on destroy', () => {

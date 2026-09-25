@@ -92,5 +92,6 @@ describe('WorkspaceMigrateComponent', () => {
     component.migrate();
 
     expect(matDialogMock.open).not.toHaveBeenCalled();
+    expect(component.loading()).toBe(false);
   });
 });

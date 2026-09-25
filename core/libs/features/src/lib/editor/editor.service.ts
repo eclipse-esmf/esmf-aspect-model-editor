@@ -257,6 +257,9 @@ export class EditorService implements IDraggableService, IEditorValidationServic
 
         const filteredElements = this.filtersService.filter([element]);
         const node = filteredElements[0];
+        if (node) {
+          node.children = new ChildrenArray();
+        }
         this.maxgraphService.setCoordinatesForNextCellRender(targetPos.x, targetPos.y);
 
         const cell = maxgraphRenderer.render(node, null);

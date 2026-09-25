@@ -57,9 +57,21 @@
           <div class="message-title">
             {{ element.title }}
           </div>
-          @if (element.expanded) {
-            <div>
-              {{ element.description }}
+          @if (element.expanded && element.description) {
+            <div class="message-description">
+              <pre class="message-text">{{ element.description }}</pre>
+              <button
+                class="copy-btn"
+                [matTooltip]="
+                  copiedElement() === element
+                    ? t('notificationsTableDialog.copied') || 'Copied!'
+                    : t('notificationsTableDialog.copy') || 'Copy'
+                "
+                (click)="copyToClipboard(element.description, element, $event)"
+                mat-icon-button
+              >
+                <mat-icon>{{ copiedElement() === element ? 'check' : 'content_copy' }}</mat-icon>
+              </button>
             </div>
           }
         </td>
@@ -86,6 +98,9 @@
   <mat-menu #menu="matMenu">
     <button [disabled]="!currentItem()?.link" (click)="goTo(currentItem()?.link)" mat-menu-item>
       <mat-icon>arrow_circle_right</mat-icon>{{ t('notificationsTableDialog.go') }}
+    </button>
+    <button (click)="copyToClipboard(currentItem()?.description || currentItem()?.title, currentItem())" mat-menu-item>
+      <mat-icon>content_copy</mat-icon>{{ t('notificationsTableDialog.copy') }}
     </button>
     <button (click)="clearNotification(currentItem())" mat-menu-item>
       <mat-icon>delete</mat-icon>{{ t('notificationsTableDialog.clear') }}

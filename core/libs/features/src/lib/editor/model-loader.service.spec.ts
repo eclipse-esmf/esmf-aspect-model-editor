@@ -17,7 +17,7 @@ import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ConfigurationService} from '../settings-dialog';
 import {ModelLoaderService} from './model-loader.service';
@@ -38,6 +38,7 @@ describe('ModelLoaderService', () => {
           externalFiles: [],
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), null),
           removeAll: vi.fn(),
+          restoreFiles: vi.fn(),
           addFile: vi.fn(opts => {
             const file = new NamespaceFile(
               opts.rdfModel || new RdfModel(new Store()),
@@ -94,5 +95,29 @@ describe('ModelLoaderService', () => {
 
     expect(file).toBeDefined();
     expect(loadedFilesService.addFile).toHaveBeenCalled();
+  });
+
+  it('should restore files on error when renderModel fails', async () => {
+    const modelApiService = TestBed.inject(ModelApiService);
+    vi.spyOn(modelApiService, 'loadNamespacesStructure').mockReturnValue(throwError(() => new Error('Batch load failed')));
+
+    const payload = {
+      rdfAspectModel: `@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix : <urn:samm:com.example:1.0.0#> .
+:Aspect a samm:Aspect .`,
+      aspectModelUri: '',
+    };
+
+    let caughtError: any;
+    try {
+      await new Promise((resolve, reject) => {
+        service.renderModel(payload).subscribe({next: resolve, error: reject});
+      });
+    } catch (err) {
+      caughtError = err;
+    }
+
+    expect(caughtError).toBeDefined();
+    expect(loadedFilesService.restoreFiles).toHaveBeenCalled();
   });
 });

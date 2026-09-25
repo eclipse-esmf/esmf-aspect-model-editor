@@ -16,8 +16,12 @@
       <mat-icon class="migrate-icon">update</mat-icon>
       <p class="migrate-message">{{ t('sammMigration.sidebar.message') }}</p>
     </div>
-    <button (click)="migrate()" mat-flat-button color="primary" data-testid="workspaceMigrateButton">
-      {{ t('sammMigration.sidebar.button') }}
+    <button [disabled]="loading()" (click)="migrate()" mat-flat-button color="primary" data-testid="workspaceMigrateButton">
+      @if (!loading()) {
+        {{ t('sammMigration.sidebar.button') }}
+      } @else {
+        <mat-spinner class="spinner" diameter="20"></mat-spinner>
+      }
     </button>
   </div>
 </ng-container>

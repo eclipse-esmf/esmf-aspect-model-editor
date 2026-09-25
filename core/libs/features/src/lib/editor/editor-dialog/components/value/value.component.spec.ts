@@ -113,4 +113,13 @@ describe('ValueComponent', () => {
     elementSubject.next(valueNoParent);
     expect(component.canBeAnonymous()).toBe(false);
   });
+
+  it('should trigger validation on value field when dataType changes to incompatible type', () => {
+    expect(component.signalForm().valid()).toBe(true);
+
+    component.onDataTypeChange('http://www.w3.org/2001/XMLSchema#integer');
+    fixture.detectChanges();
+
+    expect(component.signalForm().valid()).toBe(false);
+  });
 });

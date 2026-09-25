@@ -11,15 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  FileEntry,
-  FileInformation,
-  LoadedFilesService,
-  ModelApiService,
-  NamedRdfModel,
-  NamespaceFile,
-  RdfModelUtil,
-} from '@ame/infrastructure';
+import {FileEntry, FileInformation, LoadedFilesService, ModelApiService, NamespaceFile, RdfModelUtil} from '@ame/infrastructure';
 import {
   BrowserService,
   config,
@@ -35,7 +27,7 @@ import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
-import {catchError, concatMap, first, forkJoin, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {catchError, concatMap, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
 import {ConfigurationService} from '../settings-dialog';
 import {ModelRendererService} from './model-renderer.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
@@ -182,7 +174,9 @@ export class ModelLoaderService implements IModelLoaderService {
         ),
       ),
       catchError(error => {
-        Object.assign(this.loadedFilesService, this.tmpLoadedFiles);
+        if (this.tmpLoadedFiles?.files) {
+          this.loadedFilesService.restoreFiles(this.tmpLoadedFiles.files);
+        }
         return throwError(() => error);
       }),
     );
@@ -200,23 +194,6 @@ export class ModelLoaderService implements IModelLoaderService {
       takeUntilDestroyed(this.destroyRef),
       map(rdfModel => this.registerPartialFile(rdfModel, absoluteFileName)),
       catchError(error => throwError(() => ({code: LoadingCodeErrors.LOADING_SINGLE_FILE, error}))),
-    );
-  }
-
-  getRdfModelsFromWorkspace(): Observable<NamedRdfModel[]> {
-    return this.modelApiService.fetchAllNamespaceFilesContent().pipe(
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(files =>
-        forkJoin<[string, string, RdfModel][]>(
-          files.map(file =>
-            this.parseRdfModel([{rdfAspectModel: file.aspectMetaModel, sourceLocation: ''}]).pipe(
-              takeUntilDestroyed(this.destroyRef),
-              map(rdfModel => [file.name, file.version, rdfModel]),
-            ),
-          ),
-        ),
-      ),
-      map(result => result.map(([name, version, rdfModel]) => ({name, version, rdfModel}) as NamedRdfModel)),
     );
   }
 

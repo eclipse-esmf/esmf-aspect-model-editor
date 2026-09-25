@@ -270,4 +270,36 @@ describe('EditorService', () => {
 
     expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(50, 60);
   });
+
+  it('createElement with aspectModelUrn should render only the reference and clear any children', async () => {
+    const maxgraphService = TestBed.inject(MaxGraphService);
+    const loadedFilesService = TestBed.inject(LoadedFilesService);
+    const filtersService = TestBed.inject(FiltersService);
+
+    (maxgraphService as any).isModelEmpty = vi.fn(() => false);
+    maxgraphService.resolveCellByModelElement = vi.fn(() => null);
+    maxgraphService.setCoordinatesForNextCellRender = vi.fn();
+    maxgraphService.formatCell = vi.fn();
+    maxgraphService.navigateToCell = vi.fn();
+
+    const mockExtProp = new DefaultProperty({
+      name: 'extProp',
+      aspectModelUrn: 'urn:ext:1.0.0#extProp',
+      metaModelVersion: '2.0.0',
+    });
+    vi.spyOn(loadedFilesService, 'findElementOnExtReferences').mockReturnValue(mockExtProp as any);
+
+    const childNode = {element: {name: 'Text', aspectModelUrn: 'urn:samm:...#Text'}, children: []};
+    const nodeWithChildren = {
+      element: mockExtProp,
+      shape: {expandedWith: 300, expandedHeight: 120},
+      children: [childNode],
+    };
+    vi.spyOn(filtersService, 'filter').mockReturnValue([nodeWithChildren as any]);
+
+    await service.createElement(100, 150, 'property', 'urn:ext:1.0.0#extProp');
+
+    expect(nodeWithChildren.children).toHaveLength(0);
+    expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(100, 150);
+  });
 });

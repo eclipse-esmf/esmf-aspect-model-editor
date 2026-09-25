@@ -85,6 +85,9 @@ describe('ValuesInputFieldComponent', () => {
 
   it('should aggregate search, chip list, and enum values', () => {
     expect(component).toBeTruthy();
+    expect(component.chipListField().required()).toBe(true);
+    const marker = fixture.nativeElement.querySelector('.mat-mdc-form-field-required-marker');
+    expect(marker).toBeTruthy();
     expect(signalForm.value()).toMatchObject({values: '', chipList: [initial], enumValues: [initial]});
     expect(signalForm.valid()).toBe(true);
   });

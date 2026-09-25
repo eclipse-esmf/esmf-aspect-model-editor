@@ -12,7 +12,7 @@
  */
 
 import {ModelApiService} from '@ame/infrastructure';
-import {BrowserService, IPC_RENDERER, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
+import {IPC_RENDERER, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -46,7 +46,6 @@ export class WorkspaceComponent {
   private modelChecker = inject(MODEL_CHECKER_SERVICE);
   private modelApiService = inject(ModelApiService);
   private ipcRenderer = inject(IPC_RENDERER);
-  private browserService = inject(BrowserService);
   private notificationsService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);
 
@@ -111,9 +110,9 @@ export class WorkspaceComponent {
           const pathToCopy = response?.storagePath || response?.path;
           if (!pathToCopy) return;
 
-          if (this.browserService.isStartedAsTauriApp() && this.ipcRenderer?.copyToClipboard) {
+          if (this.ipcRenderer?.copyToClipboard) {
             this.ipcRenderer.copyToClipboard(pathToCopy);
-          } else if (navigator.clipboard && document.hasFocus()) {
+          } else if (navigator.clipboard?.writeText && document.hasFocus()) {
             navigator.clipboard.writeText(pathToCopy).catch(() => this.fallbackCopy(pathToCopy));
           } else {
             this.fallbackCopy(pathToCopy);

@@ -13,13 +13,8 @@
   -->
 
   <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
-    <mat-label
-      >unit
-      @if (unitRequired()) {
-        *
-      }
-    </mat-label>
-    <input #unit [matAutocomplete]="auto" [formField]="displayField" matInput data-testid="unit" />
+    <mat-label>unit</mat-label>
+    <input #unit [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="unit" />
     @if (displayField().disabled() && !loadedFiles.isElementExtern(metaModelElement)) {
       <button (click)="unlockUnit()" data-testid="clear-unit-button" type="button" matSuffix mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>

@@ -28,6 +28,7 @@ import {
   FileUploadService,
   GeneralConfig,
   IFileHandlingService,
+  IPC_RENDERER,
   IRdfNodeService,
   LanguageTranslationService,
   LoadingScreenOptions,
@@ -111,6 +112,7 @@ export class FileHandlingService implements IFileHandlingService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
+  private ipcRenderer = inject(IPC_RENDERER, {optional: true});
   private rdfNodeService: IRdfNodeService = inject(RDF_NODE_SERVICE);
   private injector = inject(Injector);
 
@@ -213,12 +215,18 @@ export class FileHandlingService implements IFileHandlingService {
         ),
         first(),
         catchError(httpError => {
+          const detailedMessage =
+            httpError?.error?.error?.message ||
+            httpError?.error?.message ||
+            (typeof httpError?.error === 'string' ? httpError.error : null) ||
+            httpError?.message ||
+            '';
           this.notificationsService.error({
             title: this.translate.language.notificationService.loadingError,
-            message: httpError?.error?.error?.message,
+            message: detailedMessage,
             timeout: 5000,
           });
-          return throwError(() => 'Load namespace file failed');
+          return of(null);
         }),
         finalize(() => {
           this.loadingScreenService.close();
@@ -319,6 +327,11 @@ export class FileHandlingService implements IFileHandlingService {
 
   copyToClipboardSync(text: string) {
     if (!text) return;
+
+    if (this.ipcRenderer?.copyToClipboard) {
+      this.ipcRenderer.copyToClipboard(text);
+      return;
+    }
 
     window.focus();
 

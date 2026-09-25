@@ -34,7 +34,7 @@ describe('WorkspaceFileListComponent', () => {
   let fixture: ComponentFixture<WorkspaceFileListComponent>;
   let sidebarService: SidebarStateService;
   let tauriSignalsMock: {call: ReturnType<typeof vi.fn>};
-  let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>};
+  let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn>};
   let confirmDialogMock: {open: ReturnType<typeof vi.fn>};
   let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>};
   let loadedFilesMock: {currentLoadedFile: any; removeFile: ReturnType<typeof vi.fn>};
@@ -49,7 +49,7 @@ describe('WorkspaceFileListComponent', () => {
     vi.useFakeTimers();
 
     tauriSignalsMock = {call: vi.fn()};
-    notificationMock = {info: vi.fn(), error: vi.fn()};
+    notificationMock = {info: vi.fn(), error: vi.fn(), success: vi.fn(() => of(true))};
     confirmDialogMock = {open: vi.fn(() => of(ConfirmDialogEnum.ok))};
     modelApiMock = {deleteAspectModel: vi.fn(() => of(undefined))};
     loadedFilesMock = {
@@ -289,21 +289,23 @@ describe('WorkspaceFileListComponent', () => {
     }
   });
 
-  it('should copy namespace to clipboard', () => {
-    const writeTextMock = vi.fn();
+  it('should copy file path to clipboard', () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, {
       clipboard: {
         writeText: writeTextMock,
       },
     });
+    vi.spyOn(document, 'hasFocus').mockReturnValue(true);
 
     const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
     expect(file).toBeDefined();
     if (file) {
       component.prepare('org.eclipse.esmf:1.0.0', file);
-      component.copyNamespace();
+      component.copyFilePath();
 
-      expect(writeTextMock).toHaveBeenCalledWith('org.eclipse.esmf:1.0.0/File1.ttl');
+      expect(writeTextMock).toHaveBeenCalledWith('/workspace/org.eclipse.esmf/1.0.0/File1.ttl');
+      expect(notificationMock.success).toHaveBeenCalled();
     }
   });
 

@@ -98,11 +98,11 @@ export class DefaultFilter implements FilterLoader {
       filterType: this.filterType,
     };
 
-    for (const child of element.children || []) {
-      if (this.loadedFiles.isElementExtern(child) && this.loadedFiles.isElementExtern(element)) {
-        continue;
-      }
+    if (this.loadedFiles.isElementExtern(element)) {
+      return elementTree;
+    }
 
+    for (const child of element.children || []) {
       const cacheKey = `${element.aspectModelUrn} - ${child.aspectModelUrn}`;
       if (this.cache[cacheKey]) {
         continue;
