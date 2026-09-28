@@ -11,6 +11,11 @@ export default [
           enforceBuildableLibDependency: false,
           allow: ['^.*/environments/.*', '^.*/package.json$'],
           depConstraints: [
+            // Feature libs must never depend on the workbench shell
+            {
+              sourceTag: 'type:feature',
+              notDependOnLibsWithTags: ['type:shell'],
+            },
             // Layer hierarchy rules: strictly unidirectional flow downward
             {
               sourceTag: 'layer:shell',
@@ -24,6 +29,7 @@ export default [
               onlyDependOnLibsWithTags: [
                 'layer:features',
                 'layer:graph',
+                'layer:domain',
                 'layer:infrastructure',
                 'layer:shared',
                 'layer:esmf',
@@ -80,6 +86,7 @@ export default [
               onlyDependOnLibsWithTags: [
                 'scope:features',
                 'scope:graph',
+                'scope:domain',
                 'scope:infrastructure',
                 'scope:shared',
                 'scope:esmf',

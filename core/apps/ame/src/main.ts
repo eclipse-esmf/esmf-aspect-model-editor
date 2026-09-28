@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {provideAmeFeatures} from '@ame/features/workbench';
+import {provideAmeFeatures} from '@ame/workbench';
 import {HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import {enableProdMode, importProvidersFrom, inject, provideZonelessChangeDetection} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';

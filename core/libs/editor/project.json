@@ -1,0 +1,22 @@
+{
+  "name": "editor",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/editor/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/editor"],
+      "options": {
+        "tsConfig": "libs/editor/tsconfig.spec.json",
+        "watch": false,
+        "buildTarget": "ame:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "tags": ["scope:features", "layer:features", "type:feature"]
+}

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorCanvasComponent, LoadingComponent} from '@ame/features/workbench';
+import {EditorCanvasComponent, LoadingComponent} from '@ame/workbench';
 import {describe, expect, it} from 'vitest';
 import {APP_ROUTES} from './app.routes';
 
