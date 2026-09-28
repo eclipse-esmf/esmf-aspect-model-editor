@@ -24,6 +24,6 @@ export interface TauriApi {
   writePrintFile(content: string): Promise<string>;
   openExternalLink(link: string): Promise<void> | boolean;
   showContextMenu(payload: TauriContextMenuPayload): void;
-  openInVsCodeOrDefault(vscodeUrl: string, fallbackUrl: string): Promise<void>;
+  openInVsCodeOrDefault(vscodeUrl: string, filePath: string): Promise<void>;
   copyToClipboard(text: string): void;
 }

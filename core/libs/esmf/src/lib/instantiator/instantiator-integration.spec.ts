@@ -14,8 +14,10 @@
 import {firstValueFrom} from 'rxjs';
 import {describe, expect, it} from 'vitest';
 import {
+  DefaultEither,
   DefaultEntity,
   DefaultEnumeration,
+  DefaultList,
   DefaultRangeConstraint,
   DefaultRegularExpressionConstraint,
   DefaultTrait,
@@ -157,5 +159,85 @@ describe('AspectModelLoader instantiator integration', () => {
     expect(event.name).toBe('somethingHappened');
     expect(event.properties.length).toBe(1);
     expect(event.properties[0].name).toBe('traitProperty');
+  });
+
+  it('should instantiate List characteristic with elementCharacteristic and wire parent relationship', async () => {
+    const listModelTtl = `
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:org.eclipse.esmf.samm:test:2.0.0#> .
+
+:ListAspect a samm:Aspect ;
+   samm:properties ( :listProperty ) .
+
+:listProperty a samm:Property ;
+   samm:characteristic :MyList .
+
+:MyList a samm-c:List ;
+   samm-c:elementCharacteristic :ElementTrait .
+
+:ElementTrait a samm-c:Trait ;
+   samm-c:baseCharacteristic :ItemQuantifiable .
+
+:ItemQuantifiable a samm-c:Quantifiable ;
+   samm:dataType xsd:string .
+`;
+    const loader = new AspectModelLoader();
+    const result = await firstValueFrom(loader.loadSelfContainedModel(listModelTtl));
+
+    expect(result.aspect).toBeDefined();
+    const prop = result.aspect.properties.find(p => p.name === 'listProperty');
+    expect(prop).toBeDefined();
+    expect(prop.characteristic).toBeInstanceOf(DefaultList);
+
+    const listChar = prop.characteristic as DefaultList;
+    expect(listChar.elementCharacteristic).toBeDefined();
+    expect(listChar.elementCharacteristic).toBeInstanceOf(DefaultTrait);
+    expect(listChar.elementCharacteristic.parents).toContain(listChar);
+  });
+
+  it('should instantiate Either characteristic and wire parents for both left and right', async () => {
+    const eitherModelTtl = `
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:org.eclipse.esmf.samm:test:2.0.0#> .
+
+:EitherAspect a samm:Aspect ;
+   samm:properties ( :eitherProperty ) .
+
+:eitherProperty a samm:Property ;
+   samm:characteristic :MyEither .
+
+:MyEither a samm-c:Either ;
+   samm-c:left :LeftTrait ;
+   samm-c:right :RightTrait .
+
+:LeftTrait a samm-c:Trait ;
+   samm-c:baseCharacteristic :LeftQuantifiable .
+
+:LeftQuantifiable a samm-c:Quantifiable ;
+   samm:dataType xsd:string .
+
+:RightTrait a samm-c:Trait ;
+   samm-c:baseCharacteristic :RightQuantifiable .
+
+:RightQuantifiable a samm-c:Quantifiable ;
+   samm:dataType xsd:integer .
+`;
+    const loader = new AspectModelLoader();
+    const result = await firstValueFrom(loader.loadSelfContainedModel(eitherModelTtl));
+
+    expect(result.aspect).toBeDefined();
+    const prop = result.aspect.properties.find(p => p.name === 'eitherProperty');
+    expect(prop).toBeDefined();
+    expect(prop.characteristic).toBeInstanceOf(DefaultEither);
+
+    const eitherChar = prop.characteristic as DefaultEither;
+    expect(eitherChar.left).toBeDefined();
+    expect(eitherChar.left.parents).toContain(eitherChar);
+    expect(eitherChar.right).toBeDefined();
+    expect(eitherChar.right.parents).toContain(eitherChar);
   });
 });
