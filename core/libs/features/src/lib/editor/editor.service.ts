@@ -51,7 +51,7 @@ import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, InternalEvent} from '@maxgraph/core';
 import {environment} from 'environments/environment';
-import {catchError, delayWhen, first, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
+import {catchError, delayWhen, finalize, first, Observable, of, retry, Subscription, switchMap, take, tap, throwError, timer} from 'rxjs';
 import {ConfigurationService, SammLanguageSettingsService} from '../settings-dialog';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from './editor-dialog/services/shape-settings-state.service';
@@ -403,84 +403,81 @@ export class EditorService implements IDraggableService, IEditorValidationServic
   }
 
   zoomIn() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.zoomInProgress,
-        content: this.translate.language.loadingScreenDialog.zoomInWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.zoomIn();
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.zoomInProgress,
+      content: this.translate.language.loadingScreenDialog.zoomInWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.zoomIn();
+    } finally {
+      handle.close();
+    }
   }
 
   zoomOut() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.zoomOutProgress,
-        content: this.translate.language.loadingScreenDialog.zoomInWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.zoomOut();
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.zoomOutProgress,
+      content: this.translate.language.loadingScreenDialog.zoomInWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.zoomOut();
+    } finally {
+      handle.close();
+    }
   }
 
   fit() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.fittingProgress,
-        content: this.translate.language.loadingScreenDialog.fittingWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.getPlugin<FitPlugin>('fit')?.fit();
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.fittingProgress,
+      content: this.translate.language.loadingScreenDialog.fittingWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.getPlugin<FitPlugin>('fit')?.fit();
+    } finally {
+      handle.close();
+    }
   }
 
   actualSize() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.fitToViewProgress,
-        content: this.translate.language.loadingScreenDialog.fittingWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.zoomTo(1, true);
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.fitToViewProgress,
+      content: this.translate.language.loadingScreenDialog.fittingWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.zoomTo(1, true);
+    } finally {
+      handle.close();
+    }
   }
 
   toggleExpand() {
     const isExpanded = this.isAllShapesExpanded();
-    this.loadingScreenService
-      .open({
-        title: isExpanded ? this.translate.language.loadingScreenDialog.folding : this.translate.language.loadingScreenDialog.expanding,
-        content: this.translate.language.loadingScreenDialog.actionWait,
-      })
-      .afterOpened()
-      .pipe(switchMap(() => (isExpanded ? this.maxgraphService.foldCells() : this.maxgraphService.expandCells())))
+    const handle = this.loadingScreenService.open({
+      title: isExpanded ? this.translate.language.loadingScreenDialog.folding : this.translate.language.loadingScreenDialog.expanding,
+      content: this.translate.language.loadingScreenDialog.actionWait,
+    });
+    const op$ = isExpanded ? this.maxgraphService.foldCells() : this.maxgraphService.expandCells();
+    op$
+      .pipe(
+        take(1),
+        finalize(() => handle.close()),
+      )
       .subscribe(() => {
         this.isAllShapesExpanded.set(!isExpanded);
         this.maxgraphService.formatShapes(true);
-        this.loadingScreenService.close();
       });
   }
 
   formatModel() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.formatting,
-        content: this.translate.language.loadingScreenDialog.waitFormat,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphService.formatShapes(true, true);
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.formatting,
+      content: this.translate.language.loadingScreenDialog.waitFormat,
+    });
+    try {
+      this.maxgraphService.formatShapes(true, true);
+    } finally {
+      handle.close();
+    }
   }
 
   enableAutoValidation() {

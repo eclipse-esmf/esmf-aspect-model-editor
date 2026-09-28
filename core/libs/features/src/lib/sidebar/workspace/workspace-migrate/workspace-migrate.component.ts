@@ -12,7 +12,8 @@
  */
 
 import {MigratorApiService} from '@ame/infrastructure';
-import {Component, DestroyRef, inject, signal} from '@angular/core';
+import {createDebouncedLoading} from '@ame/shared';
+import {Component, DestroyRef, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
@@ -35,7 +36,7 @@ export class WorkspaceMigrateComponent {
   private migratorApiService = inject(MigratorApiService);
   private sidebarService = inject(SidebarStateService);
 
-  public loading = signal(false);
+  public readonly loading = createDebouncedLoading();
 
   migrate() {
     this.loading.set(true);

@@ -12,14 +12,14 @@
  */
 
 import {ModelApiService} from '@ame/infrastructure';
-import {IPC_RENDERER, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
+import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {EMPTY, Subject, catchError, debounceTime, finalize, map, switchMap, tap} from 'rxjs';
+import {catchError, debounceTime, EMPTY, finalize, map, Subject, switchMap, tap} from 'rxjs';
 import {SidebarStateService} from '../sidebar-state.service';
 import {WorkspaceEmptyComponent} from './workspace-empty/workspace-empty.component';
 import {WorkspaceErrorComponent} from './workspace-error/workspace-error.component';
@@ -52,7 +52,7 @@ export class WorkspaceComponent {
   public sidebarService = inject(SidebarStateService);
 
   public namespaces = this.sidebarService.namespacesState;
-  public loading = signal(false);
+  public readonly loading = createDebouncedLoading();
   public error = signal<{code: number; message: string; path: string}>(null);
 
   public get namespacesKeys(): string[] {

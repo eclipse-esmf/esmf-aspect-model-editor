@@ -12,6 +12,7 @@
  */
 
 import {
+  createDebouncedLoading,
   filesSearchOption,
   IModelCheckerService,
   IModelOpenerService,
@@ -53,7 +54,7 @@ export class FilesSearchComponent implements AfterViewInit {
   private files: {file: string; namespace: string; aspectModelUrn?: string}[] = [];
 
   public readonly searchQuery = signal('');
-  public readonly loading = signal(false);
+  public readonly loading = createDebouncedLoading();
   public readonly searchableFiles = signal<{file: string; namespace: string; aspectModelUrn?: string}[]>([]);
 
   public get namespaces() {

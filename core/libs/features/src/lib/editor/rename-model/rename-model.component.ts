@@ -12,6 +12,7 @@
  */
 
 import {ModelApiService} from '@ame/infrastructure';
+import {createDebouncedLoading} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {form, FormField, pattern, required, validate} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -75,7 +76,7 @@ export class RenameModelComponent {
     });
   });
 
-  public loading = signal(true);
+  public readonly loading = createDebouncedLoading();
 
   constructor() {
     this.loading.set(true);

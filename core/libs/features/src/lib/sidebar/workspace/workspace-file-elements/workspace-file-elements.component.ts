@@ -13,7 +13,14 @@
 
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {ElementIconComponent, ElementType, IModelLoaderService, MODEL_LOADER_SERVICE, sammElements} from '@ame/shared';
+import {
+  createDebouncedLoading,
+  ElementIconComponent,
+  ElementType,
+  IModelLoaderService,
+  MODEL_LOADER_SERVICE,
+  sammElements,
+} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal, untracked} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
@@ -72,7 +79,7 @@ export class WorkspaceFileElementsComponent {
 
   public readonly elements = signal<Record<string, any>>({});
   public readonly searched = signal<Record<string, any[]>>({});
-  public readonly loadingElements = signal(false);
+  public readonly loadingElements = createDebouncedLoading();
 
   public elementsOrder: ElementType[] = [
     'property',
