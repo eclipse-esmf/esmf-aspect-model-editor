@@ -20,9 +20,9 @@ import {
   ThemeService,
 } from '@ame/graph';
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfService} from '@ame/infrastructure';
-import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings';
 import {
   AlertService,
+  CONFIGURATION_SERVICE,
   ELEMENT_MODEL_SERVICE,
   ElementCreatorService,
   FILTER_ATTRIBUTES,
@@ -75,7 +75,7 @@ describe('EditorService', () => {
         EditorService,
         {provide: FILTERS_SERVICE, useValue: mockFiltersService},
         {provide: FILTER_ATTRIBUTES, useValue: {isFiltering: false, changeState: vi.fn()}},
-        MockProvider(ConfigurationService, {
+        MockProvider(CONFIGURATION_SERVICE, {
           getSettings: vi.fn(
             () =>
               ({
@@ -127,7 +127,6 @@ describe('EditorService', () => {
         MockProvider(RdfService, {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
-        MockProvider(SammLanguageSettingsService),
         MockProvider(ConfirmDialogService),
         {provide: ELEMENT_MODEL_SERVICE, useValue: mockElementModel},
         MockProvider(TitleService),

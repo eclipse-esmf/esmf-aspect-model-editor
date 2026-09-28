@@ -12,8 +12,7 @@
  */
 
 import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
-import {NotificationsService} from '@ame/shared';
+import {NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -52,7 +51,7 @@ describe('GenerateOpenApiComponent', () => {
       ],
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
-        MockProvider(SammLanguageSettingsService, {
+        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {
           getSammLanguageCodes: vi.fn(() => ['en']),
         }),
         MockProvider(EditorService, {

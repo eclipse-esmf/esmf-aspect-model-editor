@@ -29,7 +29,7 @@ import {
 } from '@ame/editor';
 import {provideAmeGraph} from '@ame/graph';
 import {provideAmeInfrastructure} from '@ame/infrastructure';
-import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings';
+import {ConfigurationService, SammLanguageSettingsService, SettingDialogComponent} from '@ame/settings';
 import {
   APP_CONFIG,
   config,
@@ -47,6 +47,7 @@ import {
   MODEL_SAVING_TRACKER_SERVICE,
   RENAME_MODEL_DIALOG_SERVICE,
   SAMM_LANGUAGE_SETTINGS_SERVICE,
+  SETTINGS_DIALOG_COMPONENT,
   SHAPE_SETTINGS_SERVICE,
   SHAPE_SETTINGS_STATE_SERVICE,
   SIDEBAR_STATE_SERVICE,
@@ -82,6 +83,7 @@ export function provideAmeFeatures(): EnvironmentProviders {
     {provide: SIDEBAR_STATE_SERVICE, useExisting: SidebarStateService},
     {provide: CONFIGURATION_SERVICE, useExisting: ConfigurationService},
     {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useExisting: SammLanguageSettingsService},
+    {provide: SETTINGS_DIALOG_COMPONENT, useValue: SettingDialogComponent},
     provideAmeGraph(),
     provideAmeInfrastructure(),
     provideAmeDomain(),

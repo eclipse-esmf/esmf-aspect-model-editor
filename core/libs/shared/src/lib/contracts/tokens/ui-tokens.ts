@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
+import {InjectionToken, Type} from '@angular/core';
 
 export interface IDraggableService {
   makeDraggable(element: HTMLDivElement, dragElement: HTMLDivElement): void;
@@ -26,6 +26,9 @@ export interface IInformationHandlingService {
 }
 
 export const INFORMATION_HANDLING_SERVICE = new InjectionToken<IInformationHandlingService>('INFORMATION_HANDLING_SERVICE');
+
+/** Component class of the settings dialog, provided by the app shell to avoid a feature -> settings dependency. */
+export const SETTINGS_DIALOG_COMPONENT = new InjectionToken<Type<unknown>>('SETTINGS_DIALOG_COMPONENT');
 
 export interface IShapeSettingsService {
   editModel(elementModel: any): void;

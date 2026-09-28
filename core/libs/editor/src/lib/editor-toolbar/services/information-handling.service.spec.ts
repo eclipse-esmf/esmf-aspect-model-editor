@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SettingDialogComponent} from '@ame/settings';
+import {SETTINGS_DIALOG_COMPONENT} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {of} from 'rxjs';
@@ -19,6 +19,8 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {DocumentComponent} from '../components/help/document.component';
 import {NotificationsComponent} from '../components/notifications/notifications.component';
 import {InformationHandlingService} from './information-handling.service';
+
+class FakeSettingDialogComponent {}
 
 describe('InformationHandlingService', () => {
   let service: InformationHandlingService;
@@ -28,6 +30,7 @@ describe('InformationHandlingService', () => {
     TestBed.configureTestingModule({
       providers: [
         InformationHandlingService,
+        {provide: SETTINGS_DIALOG_COMPONENT, useValue: FakeSettingDialogComponent},
         {
           provide: MatDialog,
           useValue: {
@@ -43,7 +46,7 @@ describe('InformationHandlingService', () => {
 
   it('openSettingsDialog should open SettingDialogComponent', () => {
     service.openSettingsDialog();
-    expect(dialog.open).toHaveBeenCalledWith(SettingDialogComponent, {
+    expect(dialog.open).toHaveBeenCalledWith(FakeSettingDialogComponent, {
       panelClass: 'settings-dialog-container',
       width: '60%',
       autoFocus: false,

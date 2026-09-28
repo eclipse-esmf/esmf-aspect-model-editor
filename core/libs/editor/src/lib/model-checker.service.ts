@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {WorkspaceStore} from '@ame/domain';
+import {FileStatus, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
 import {
   FileEntry,
   FileInformation,
@@ -22,7 +22,6 @@ import {
   WorkspaceStructure,
 } from '@ame/infrastructure';
 import {config, IModelCheckerService, isVersionOutdated} from '@ame/shared';
-import {FileStatus, SidebarStateService} from '@ame/sidebar';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
@@ -37,7 +36,7 @@ export class ModelCheckerService implements IModelCheckerService {
   private modelApiService = inject(ModelApiService);
   private loadedFilesService = inject(LoadedFilesService);
   private modelLoader = inject(ModelLoaderService);
-  private sidebarStateService = inject(SidebarStateService);
+  private workspaceNamespaces = inject(WorkspaceNamespacesService);
   private workspaceStore = inject(WorkspaceStore);
 
   /**
@@ -50,7 +49,7 @@ export class ModelCheckerService implements IModelCheckerService {
     let namespacesStructure: WorkspaceStructure;
 
     const extractDependencies = (fileEntries: Array<FileEntry>) => {
-      const namespaces = this.sidebarStateService.namespacesState.namespaces();
+      const namespaces = this.workspaceNamespaces.namespaces();
       const unloadedFileEntries = this.filterUnloadedFiles(fileEntries, namespaces);
 
       if (unloadedFileEntries.length === 0) {

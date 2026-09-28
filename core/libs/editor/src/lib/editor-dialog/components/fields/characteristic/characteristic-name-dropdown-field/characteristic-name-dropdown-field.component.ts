@@ -12,8 +12,7 @@
  */
 
 import {LoadedFilesService, ModelService} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
-import {ElementCreatorService, IModelElementNamingService, MODEL_ELEMENT_NAMING_SERVICE} from '@ame/shared';
+import {ElementCreatorService, IModelElementNamingService, MODEL_ELEMENT_NAMING_SERVICE, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, inject, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -57,7 +56,7 @@ export class CharacteristicNameDropdownFieldComponent extends DropdownFieldCompo
 
   public editorModelService = inject(EditorModelService);
   public modelService = inject(ModelService);
-  public languageSettings = inject(SammLanguageSettingsService);
+  public languageSettings = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
   public loadedFilesService = inject(LoadedFilesService);
 
   public listCharacteristics: Map<string, () => DefaultCharacteristic> = new Map();

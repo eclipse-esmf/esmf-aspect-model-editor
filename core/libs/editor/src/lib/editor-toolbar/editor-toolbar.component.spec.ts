@@ -12,8 +12,7 @@
  */
 
 import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
-import {ConfigurationService} from '@ame/settings';
-import {BindingsService, NotificationsService} from '@ame/shared';
+import {BindingsService, CONFIGURATION_SERVICE, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
@@ -56,7 +55,7 @@ describe('EditorToolbarComponent', () => {
         MockProvider(ShapeConnectorService, {
           connectSelectedElements: vi.fn(),
         }),
-        MockProvider(ConfigurationService, {
+        MockProvider(CONFIGURATION_SERVICE, {
           settings$: of({} as any),
         }),
         MockProvider(BindingsService, {

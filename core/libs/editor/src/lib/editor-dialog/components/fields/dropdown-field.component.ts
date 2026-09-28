@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService, ModelService} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
+import {SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {Directive, inject, input, output} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement} from '@esmf/aspect-model-loader';
 import {filter, tap} from 'rxjs/operators';
@@ -27,7 +27,7 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
 
   public editorModelService = inject(EditorModelService);
   public modelService = inject(ModelService);
-  public languageSettings = inject(SammLanguageSettingsService);
+  public languageSettings = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
   public loadedFilesService = inject(LoadedFilesService);
 
   public metaModelElement: T;

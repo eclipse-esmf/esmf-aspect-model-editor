@@ -13,8 +13,7 @@
 
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, NamespaceFile, RdfService} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
-import {NotificationsService, SearchService} from '@ame/shared';
+import {NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE, SearchService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {form, required} from '@angular/forms/signals';
@@ -60,7 +59,7 @@ describe('ShapeSettingsComponent', () => {
           updateMetaModelElement: vi.fn(),
           isReadOnly: vi.fn(() => false),
         }),
-        MockProvider(SammLanguageSettingsService, {
+        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {
           getSammLanguageCodes: vi.fn(() => ['en']),
         }),
         MockProvider(LoadedFilesService, {

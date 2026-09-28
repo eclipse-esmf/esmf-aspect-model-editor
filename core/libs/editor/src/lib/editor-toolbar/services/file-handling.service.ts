@@ -23,8 +23,8 @@ import {
   RdfModelUtil,
   RdfService,
 } from '@ame/infrastructure';
-import {ConfigurationService} from '@ame/settings';
 import {
+  CONFIGURATION_SERVICE,
   decodeText,
   FileTypes,
   FileUploadService,
@@ -42,7 +42,6 @@ import {
   TauriSignalsService,
   TitleService,
 } from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -101,12 +100,11 @@ export class FileHandlingService implements IFileHandlingService {
   private confirmDialogService = inject(ConfirmDialogService);
   private notificationsService = inject(NotificationsService);
   private loadingScreenService = inject(LoadingScreenService);
-  private sidebarService = inject(SidebarStateService);
   private uiShellStore = inject(UiShellStore);
   private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private tauriSignalsService = inject(TauriSignalsService);
-  private configurationService = inject(ConfigurationService);
+  private configurationService = inject(CONFIGURATION_SERVICE);
   private modelSaveTracker = inject(ModelSavingTrackerService);
   private fileUploadService = inject(FileUploadService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
@@ -190,7 +188,6 @@ export class FileHandlingService implements IFileHandlingService {
           this.shapeSettingsStateService.closeShapeSettings();
         }
         this.uiShellStore.closeSidebar();
-        this.sidebarService.workspace.close();
       }),
     );
   }
@@ -275,7 +272,6 @@ export class FileHandlingService implements IFileHandlingService {
     return of(true).pipe(
       map(() => {
         this.uiShellStore.openSidebar('sammElements');
-        this.sidebarService.sammElements.open();
 
         if (this.maxgraphService.graph?.model) {
           this.maxgraphService.deleteAllShapes();
@@ -513,7 +509,6 @@ export class FileHandlingService implements IFileHandlingService {
           });
         }
         this.workspaceStore.triggerRefresh();
-        this.sidebarService.workspace.refresh();
       }),
       switchMap(() => this.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),
       catchError(httpError => {

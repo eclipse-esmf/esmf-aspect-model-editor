@@ -12,9 +12,7 @@
  */
 
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfSerializerService} from '@ame/infrastructure';
-import {ConfigurationService} from '@ame/settings';
 import {CONFIGURATION_SERVICE, LanguageTranslationService, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -61,9 +59,6 @@ describe('ModelSaverService', () => {
           info: vi.fn(),
           error: vi.fn(),
         }),
-        MockProvider(SidebarStateService, {
-          workspace: {refresh: vi.fn()} as any,
-        }),
         MockProvider(FileHandlingService, {
           isFileExistOnWorkspace: vi.fn(() => of(false)),
         }),
@@ -76,7 +71,7 @@ describe('ModelSaverService', () => {
             },
           } as any,
         }),
-        MockProvider(ConfigurationService, {
+        MockProvider(CONFIGURATION_SERVICE, {
           getSettings: vi.fn(
             () =>
               ({

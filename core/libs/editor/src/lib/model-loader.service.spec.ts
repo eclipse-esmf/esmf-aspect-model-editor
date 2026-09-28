@@ -12,8 +12,14 @@
  */
 
 import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {ConfigurationService} from '@ame/settings';
-import {BrowserService, INSTANTIATOR_SERVICE, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
+import {
+  BrowserService,
+  CONFIGURATION_SERVICE,
+  INSTANTIATOR_SERVICE,
+  NotificationsService,
+  TauriSignalsService,
+  TitleService,
+} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -73,7 +79,7 @@ describe('ModelLoaderService', () => {
           isStartedAsTauriApp: vi.fn(() => false),
         }),
         MockProvider(TauriSignalsService, {call: vi.fn()}),
-        MockProvider(ConfigurationService, {
+        MockProvider(CONFIGURATION_SERVICE, {
           getSettings: vi.fn(() => ({copyrightHeader: []}) as any),
         }),
         MockProvider(TitleService, {updateTitle: vi.fn()}),

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {WorkspaceNamespacesService} from '@ame/domain';
 import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {SidebarStateService} from '@ame/sidebar';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -38,11 +38,9 @@ describe('ModelCheckerService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), null),
         }),
         MockProvider(ModelLoaderService),
-        MockProvider(SidebarStateService, {
-          namespacesState: {
-            namespaces: vi.fn(() => ({})),
-          } as any,
-        }),
+        MockProvider(WorkspaceNamespacesService, {
+          namespaces: vi.fn(() => ({})),
+        } as any),
       ],
     });
 

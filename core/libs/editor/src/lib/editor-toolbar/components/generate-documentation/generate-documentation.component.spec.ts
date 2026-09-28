@@ -12,8 +12,7 @@
  */
 
 import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
-import {BrowserService, IPC_RENDERER} from '@ame/shared';
+import {BrowserService, IPC_RENDERER, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -52,7 +51,7 @@ describe('GenerateDocumentationComponent', () => {
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
         {provide: IPC_RENDERER, useValue: {writePrintFile: vi.fn(() => Promise.resolve('path')), openPrintWindow: vi.fn()}},
-        MockProvider(SammLanguageSettingsService, {
+        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {
           getSammLanguageCodes: vi.fn(() => ['en', 'de']),
         }),
         MockProvider(ModelApiService, {

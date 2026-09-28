@@ -12,8 +12,7 @@
  */
 
 import {LoadedFilesService, OpenApi, OpenApiModel} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
-import {LanguageTranslationService, NotificationsService} from '@ame/shared';
+import {LanguageTranslationService, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {CommonModule} from '@angular/common';
 import {Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, untracked, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -68,7 +67,7 @@ export class GenerateOpenApiComponent implements OnInit {
 
   private destroyRef = inject(DestroyRef);
   private dialogRef = inject(MatDialogRef<GenerateOpenApiComponent>);
-  private languageService = inject(SammLanguageSettingsService);
+  private languageService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
   private editorService = inject(EditorService);
   private notificationsService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);

@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SettingDialogComponent} from '@ame/settings';
-import {IInformationHandlingService} from '@ame/shared';
+import {IInformationHandlingService, SETTINGS_DIALOG_COMPONENT} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {DocumentComponent} from '../components/help/document.component';
@@ -23,9 +22,10 @@ export {IInformationHandlingService};
 @Injectable({providedIn: 'root'})
 export class InformationHandlingService implements IInformationHandlingService {
   private matDialog = inject(MatDialog);
+  private settingsDialogComponent = inject(SETTINGS_DIALOG_COMPONENT);
 
   openSettingsDialog() {
-    this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false});
+    this.matDialog.open(this.settingsDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false});
   }
 
   openHelpDialog() {

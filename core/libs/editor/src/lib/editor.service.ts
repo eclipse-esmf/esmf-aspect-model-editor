@@ -23,14 +23,15 @@ import {
   ThemeService,
 } from '@ame/graph';
 import {AsyncApi, LoadedFilesService, ModelApiService, ModelService, OpenApi, RdfService, ViolationError} from '@ame/infrastructure';
-import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings';
 import {
   AlertService,
   ChildrenArray,
+  CONFIGURATION_SERVICE,
   ELEMENT_MODEL_SERVICE,
   ElementCreatorService,
   FILTER_ATTRIBUTES,
   FILTERS_SERVICE,
+  IConfigurationService,
   IDraggableService,
   IEditorValidationService,
   IElementModelService,
@@ -41,6 +42,7 @@ import {
   LoadingScreenService,
   MODEL_ELEMENT_NAMING_SERVICE,
   NotificationsService,
+  SAMM_LANGUAGE_SETTINGS_SERVICE,
   sammElements,
   SaveValidateErrorsCodes,
   TitleService,
@@ -64,7 +66,7 @@ export {IDraggableService, IEditorValidationService};
 export class EditorService implements IDraggableService, IEditorValidationService {
   private filtersService: IFiltersService = inject(FILTERS_SERVICE);
   private filterAttributes: IFilterAttributesService = inject(FILTER_ATTRIBUTES);
-  private configurationService: ConfigurationService = inject(ConfigurationService);
+  private configurationService: IConfigurationService = inject(CONFIGURATION_SERVICE);
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
   private maxgraphService = inject(MaxGraphService);
   private maxgraphSetupService = inject(MaxGraphSetupService);
@@ -76,7 +78,7 @@ export class EditorService implements IDraggableService, IEditorValidationServic
   private modelService = inject(ModelService);
   private alertService = inject(AlertService);
   private rdfService = inject(RdfService);
-  private sammLangService = inject(SammLanguageSettingsService);
+  private sammLangService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
   private confirmDialogService = inject(ConfirmDialogService);
   private elementModelService: IElementModelService = inject(ELEMENT_MODEL_SERVICE);
   private titleService = inject(TitleService);

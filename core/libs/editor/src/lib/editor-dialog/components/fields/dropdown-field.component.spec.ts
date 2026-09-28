@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService, ModelService, NamespaceFile} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
+import {SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DefaultCharacteristic, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -61,7 +61,7 @@ describe('DropdownFieldComponent', () => {
           originalMetaModel: characteristic,
         }),
         MockProvider(ModelService),
-        MockProvider(SammLanguageSettingsService, {
+        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {
           getSammLanguageCodes: vi.fn(() => ['en', 'de']),
         }),
         MockProvider(LoadedFilesService, {

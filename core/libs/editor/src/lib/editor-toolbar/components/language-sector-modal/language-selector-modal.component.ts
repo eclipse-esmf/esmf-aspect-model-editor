@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammLanguageSettingsService} from '@ame/settings';
+import {SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {MatOptionModule} from '@angular/material/core';
@@ -28,7 +28,7 @@ import {MatButtonModule} from '@angular/material/button';
 })
 export class LanguageSelectorModalComponent {
   private dialogRef = inject(MatDialogRef<LanguageSelectorModalComponent>);
-  private languageService = inject(SammLanguageSettingsService);
+  private languageService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
 
   public languages = signal<locale.ILocale[]>([]);
   public languageModel = signal<{language: string}>({language: ''});

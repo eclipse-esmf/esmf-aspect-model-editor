@@ -13,8 +13,8 @@
 
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfService} from '@ame/infrastructure';
-import {ConfigurationService} from '@ame/settings';
 import {
+  CONFIGURATION_SERVICE,
   IPC_RENDERER,
   LanguageTranslationService,
   LoadingScreenService,
@@ -23,7 +23,6 @@ import {
   TauriSignalsService,
   TitleService,
 } from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -87,10 +86,6 @@ describe('FileHandlingService', () => {
           open: vi.fn(),
           close: vi.fn(),
         }),
-        MockProvider(SidebarStateService, {
-          workspace: {close: vi.fn(), refresh: vi.fn()} as any,
-          sammElements: {open: vi.fn()} as any,
-        }),
         MockProvider(LanguageTranslationService, {
           language: {
             notificationDialog: {LOADING: 'Loading', CONTENT: 'Wait', VALIDATING: 'Validating'},
@@ -100,7 +95,7 @@ describe('FileHandlingService', () => {
           translateService: {translate: vi.fn(() => '')} as any,
         }),
         MockProvider(TauriSignalsService, {call: vi.fn()}),
-        MockProvider(ConfigurationService, {
+        MockProvider(CONFIGURATION_SERVICE, {
           getSettings: vi.fn(() => ({copyrightHeader: ['# Header']}) as any),
         }),
         MockProvider(ModelSavingTrackerService, {

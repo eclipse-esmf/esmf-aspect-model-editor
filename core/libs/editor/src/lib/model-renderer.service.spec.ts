@@ -13,7 +13,6 @@
 
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphSetupService, MaxGraphShapeOverlayService} from '@ame/graph';
 import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
 import {FILTERS_SERVICE, LanguageTranslationService, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -76,7 +75,6 @@ describe('ModelRendererService', () => {
         }),
         MockProvider(NotificationsService),
         MockProvider(MaxGraphShapeOverlayService),
-        MockProvider(SammLanguageSettingsService),
       ],
     });
 

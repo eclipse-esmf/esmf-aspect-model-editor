@@ -12,10 +12,10 @@
  */
 
 import {FileEntry, FileInformation, LoadedFilesService, ModelApiService, NamespaceFile, RdfModelUtil} from '@ame/infrastructure';
-import {ConfigurationService} from '@ame/settings';
 import {
   BrowserService,
   config,
+  CONFIGURATION_SERVICE,
   IInstantiatorService,
   IModelLoaderService,
   INSTANTIATOR_SERVICE,
@@ -54,7 +54,7 @@ export class ModelLoaderService implements IModelLoaderService {
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);
   private tauriSignalsService = inject(TauriSignalsService);
-  private configurationService = inject(ConfigurationService);
+  private configurationService = inject(CONFIGURATION_SERVICE);
   private titleService = inject(TitleService);
 
   private get tabStateService(): TabStateService {

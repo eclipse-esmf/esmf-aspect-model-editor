@@ -20,13 +20,13 @@ import {
   MaxGraphShapeOverlayService,
 } from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
 import {
   FILTERS_SERVICE,
   IFiltersService,
   LanguageTranslationService,
   LoadingScreenService,
   NotificationsService,
+  SAMM_LANGUAGE_SETTINGS_SERVICE,
   ValidateStatus,
 } from '@ame/shared';
 import {DestroyRef, Injectable, inject} from '@angular/core';
@@ -50,7 +50,7 @@ export class ModelRendererService {
   private loadedFilesService = inject(LoadedFilesService);
   private notificationsService = inject(NotificationsService);
   private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
-  private sammLanguageSettingsService = inject(SammLanguageSettingsService);
+  private sammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
 
   private get rdfModel() {
     return this.loadedFilesService.currentLoadedFile?.rdfModel;

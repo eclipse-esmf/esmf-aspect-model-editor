@@ -12,7 +12,6 @@
  */
 
 import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
-import {SammLanguageSettingsService} from '@ame/settings';
 import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -23,7 +22,7 @@ import {from, map, Observable, throwError} from 'rxjs';
 import {catchError, finalize, first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
-import {BrowserService, IPC_RENDERER} from '@ame/shared';
+import {BrowserService, IPC_RENDERER, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
@@ -57,7 +56,7 @@ export class GenerateDocumentationComponent {
   private ipcRenderer = inject(IPC_RENDERER);
   private destroyRef = inject(DestroyRef);
   private dialogRef = inject(MatDialogRef<GenerateDocumentationComponent>);
-  private languageService = inject(SammLanguageSettingsService);
+  private languageService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
   private modelApiService = inject(ModelApiService);
   private editorService = inject(EditorService);
   private loadedFiles = inject(LoadedFilesService);
