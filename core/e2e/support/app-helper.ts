@@ -353,10 +353,12 @@ export class AppHelper {
       );
       if (!found) throw new Error(`Shape ${shapeName} not found`);
       graph.selectCellForEvent(found, new MouseEvent('click'));
-      const icon = found.overlays?.find((o: any) => o.tooltip === 'Add Right Characteristic');
+      const icon = found.overlays?.find((o: any) => o.tooltip === 'Add Left Characteristic');
       if (!icon) throw new Error('Add Left Shape Overlay not found');
       icon.fireEvent({name: 'click', isConsumed: () => false, getName: () => 'click'});
     }, name);
+    await this.page.waitForTimeout(300);
+    await this.forceChangeDetection();
   }
 
   async clickAddRightShapeIcon(name: string): Promise<void> {
@@ -374,10 +376,12 @@ export class AppHelper {
       );
       if (!found) throw new Error(`Shape ${shapeName} not found`);
       graph.selectCellForEvent(found, new MouseEvent('click'));
-      const icon = found.overlays?.find((o: any) => o.tooltip === 'Add Left Characteristic');
+      const icon = found.overlays?.find((o: any) => o.tooltip === 'Add Right Characteristic');
       if (!icon) throw new Error('Add Right Shape Overlay not found');
       icon.fireEvent({name: 'click', isConsumed: () => false, getName: () => 'click'});
     }, name);
+    await this.page.waitForTimeout(300);
+    await this.forceChangeDetection();
   }
 
   async clickAddTraitPlusIcon(characteristicName: string): Promise<void> {

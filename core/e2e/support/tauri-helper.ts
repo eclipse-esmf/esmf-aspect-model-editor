@@ -32,6 +32,7 @@ export class TauriHelper {
       (window as any).__tauriMock = {
         listeners,
         sentEvents,
+        activeContextHref: null,
         trigger(channel: string, payload?: any) {
           const cbs = listeners.get(channel);
           if (cbs) {
@@ -49,6 +50,15 @@ export class TauriHelper {
         },
         clearSentEvents() {
           sentEvents.length = 0;
+        },
+        triggerContextMenuAction(action: 'ctx_open' | 'ctx_copy') {
+          const href = (window as any).__tauriMock.activeContextHref;
+          if (!href) return;
+          if (action === 'ctx_open') {
+            sentEvents.push({channel: 'openExternalLink', args: [href]});
+          } else if (action === 'ctx_copy') {
+            sentEvents.push({channel: 'copyToClipboard', args: [href]});
+          }
         },
       };
 
@@ -76,10 +86,19 @@ export class TauriHelper {
         async writePrintFile(content: string) {
           return 'saved';
         },
-        async openExternalLink(link: string) {},
-        async openInVsCodeOrDefault(vscodeUrl: string, fallbackUrl: string) {},
-        showContextMenu(payload: any) {},
-        copyToClipboard(text: string) {},
+        async openExternalLink(link: string) {
+          sentEvents.push({channel: 'openExternalLink', args: [link]});
+        },
+        async openInVsCodeOrDefault(vscodeUrl: string, filePath: string) {
+          sentEvents.push({channel: 'openInVsCodeOrDefault', args: [vscodeUrl, filePath]});
+        },
+        showContextMenu(payload: any) {
+          (window as any).__tauriMock.activeContextHref = payload?.href || null;
+          sentEvents.push({channel: 'showContextMenu', args: [payload]});
+        },
+        copyToClipboard(text: string) {
+          sentEvents.push({channel: 'copyToClipboard', args: [text]});
+        },
       };
     });
   }
@@ -103,6 +122,15 @@ export class TauriHelper {
     return await this.page.evaluate(ch => {
       return (window as any).__tauriMock?.getSentEvents(ch) || [];
     }, channel);
+  }
+
+  /**
+   * Triggers a Tauri native context menu action (ctx_open or ctx_copy) for the active context link.
+   */
+  async triggerContextMenuAction(action: 'ctx_open' | 'ctx_copy'): Promise<void> {
+    await this.page.evaluate(act => {
+      (window as any).__tauriMock?.triggerContextMenuAction(act);
+    }, action);
   }
 
   /**

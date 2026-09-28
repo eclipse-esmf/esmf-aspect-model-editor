@@ -81,4 +81,42 @@ test.describe('Test editing different Collections', () => {
     rdf = await helper.getUpdatedRDF();
     expect(rdf).not.toContain('NewEntity');
   });
+
+  test('can configure List characteristic with elementCharacteristic', async ({page}) => {
+    const helper = new AppHelper(page);
+    await helper.visitDefault();
+
+    const defaultRdf = readFixture('default-models/aspect-default.txt');
+    await helper.loadModel(defaultRdf);
+
+    await page.locator(SELECTOR_elementBtn).click();
+    await helper.shapeExists('Characteristic1');
+    await helper.dbClickShape('Characteristic1');
+    await page.locator(FIELD_characteristicName).click();
+    await page.locator('mat-option[data-testid="List"]').click();
+    await helper.clickSaveButton();
+
+    let rdf = await helper.getUpdatedRDF();
+    expect(rdf).toContain('samm:characteristic :Characteristic1');
+    expect(rdf).toContain('Characteristic1 a samm-c:List');
+
+    // Add new Characteristic and link as elementCharacteristic
+    await dragElementToGraph(page, SELECTOR_ecCharacteristic, 350, 300);
+    await helper.dbClickShape('Characteristic1');
+    const clearDataTypeBtn = page.locator('button[data-testid="clear-dataType-button"]');
+    if (await clearDataTypeBtn.isVisible().catch(() => false)) {
+      await clearDataTypeBtn.click();
+    }
+    await page.locator(FIELD_elementCharacteristic).fill('Characteristic2');
+    await page.locator('mat-option', {hasText: 'Characteristic2'}).click();
+    await helper.clickSaveButton();
+
+    const aspect = await helper.getAspect();
+    expect(aspect.properties[0].characteristic.name).toBe('Characteristic1');
+    expect(aspect.properties[0].characteristic.elementCharacteristic.name).toBe('Characteristic2');
+
+    rdf = await helper.getUpdatedRDF();
+    expect(rdf).toContain('Characteristic1 a samm-c:List');
+    expect(rdf).toContain('samm-c:elementCharacteristic :Characteristic2');
+  });
 });

@@ -113,6 +113,7 @@
       </button>
       <button (click)="copyFilePath()" mat-menu-item data-testid="fileMenuCopyToClipboardButton">
         {{ t('sidebar.fileMenu.copyFilePath') }}
+        <mat-icon>content_copy</mat-icon>
       </button>
 
       <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-testid="fileMenuDeleteButton">

@@ -14,6 +14,7 @@
 use std::path::PathBuf;
 use tauri::menu::{Menu, MenuItem, MenuItemKind, PredefinedMenuItem, Submenu};
 use tauri::{AppHandle, Emitter, Manager, Runtime};
+use tauri_plugin_clipboard_manager::ClipboardExt;
 use tauri_plugin_dialog::DialogExt;
 
 // ---------------------------------------------------------------------------
@@ -292,6 +293,24 @@ pub fn handle_menu_click<R: Runtime>(app: &AppHandle<R>, menu_id: &str) {
         }
         "FILTER_MODEL_BY_PROPERTIES" => {
             emit_to_focused_or_app(app, "FILTER_MODEL_BY", serde_json::json!("properties"));
+        }
+        "ctx_open" => {
+            if let Some(state) = app.try_state::<crate::commands::ContextMenuState>() {
+                if let Ok(lock) = state.active_href.lock() {
+                    if let Some(ref url) = *lock {
+                        let _ = open::that(url);
+                    }
+                }
+            }
+        }
+        "ctx_copy" => {
+            if let Some(state) = app.try_state::<crate::commands::ContextMenuState>() {
+                if let Ok(lock) = state.active_href.lock() {
+                    if let Some(ref url) = *lock {
+                        let _ = app.clipboard().write_text(url.clone());
+                    }
+                }
+            }
         }
         other_id => {
             emit_to_focused_or_app(app, other_id, serde_json::Value::Null);

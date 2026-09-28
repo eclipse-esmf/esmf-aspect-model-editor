@@ -192,4 +192,103 @@ test.describe('Tauri Menu & IPC Integration', () => {
     await page.locator(SELECTOR_editorCancelButton).click();
     await expect(page.locator(SELECTOR_editorSaveButton)).not.toBeVisible();
   });
+
+  test('should invoke openInVsCodeOrDefault when clicking file link in workspace error', async ({page}) => {
+    // Open workspace sidebar
+    const {SELECTOR_workspaceBtn} = await import('../../support/constants');
+    await page.locator(SELECTOR_workspaceBtn).click();
+    await expect(page.locator('ame-workspace')).toBeVisible();
+
+    // Trigger workspace error
+    await page.evaluate(() => {
+      const workspaceComponent = (window as any)['angular.workspaceComponent'];
+      if (workspaceComponent) {
+        workspaceComponent.error.set({
+          code: 400,
+          message: 'File: /models/Invalid.ttl • Error: Parse error',
+          path: '/models/Invalid.ttl',
+        });
+      }
+    });
+
+    const fileLink = page.locator('ame-workspace-error a.file-link');
+    await expect(fileLink).toBeVisible();
+
+    await tauri.clearSentEvents();
+    await fileLink.click({force: true});
+
+    await expect
+      .poll(
+        async () => {
+          const events = await tauri.getSentEvents('openInVsCodeOrDefault');
+          return events.some(e => e.args?.[0] === 'vscode://file//models/Invalid.ttl' && e.args?.[1] === '/models/Invalid.ttl');
+        },
+        {timeout: 10000},
+      )
+      .toBe(true);
+  });
+
+  test('should handle context menu right click on links for open in browser and copy link address', async ({page}) => {
+    // Open workspace sidebar
+    const {SELECTOR_workspaceBtn} = await import('../../support/constants');
+    await page.locator(SELECTOR_workspaceBtn).click();
+    await expect(page.locator('ame-workspace')).toBeVisible();
+
+    // Trigger workspace error to show a link
+    await page.evaluate(() => {
+      const workspaceComponent = (window as any)['angular.workspaceComponent'];
+      if (workspaceComponent) {
+        workspaceComponent.error.set({
+          code: 400,
+          message: 'File: /models/Invalid.ttl • Error: Parse error',
+          path: '/models/Invalid.ttl',
+        });
+      }
+    });
+
+    const fileLink = page.locator('ame-workspace-error a.file-link');
+    await expect(fileLink).toBeVisible();
+
+    // 1. Right click on the link to trigger native context menu
+    await tauri.clearSentEvents();
+    await fileLink.click({button: 'right', force: true});
+
+    await expect
+      .poll(
+        async () => {
+          const events = await tauri.getSentEvents('showContextMenu');
+          return events.some(e => e.args?.[0]?.href?.includes('/models/Invalid.ttl'));
+        },
+        {timeout: 10000},
+      )
+      .toBe(true);
+
+    // 2. Select "Copy link address" (ctx_copy) and verify copyToClipboard is triggered with the href
+    await tauri.clearSentEvents();
+    await tauri.triggerContextMenuAction('ctx_copy');
+
+    await expect
+      .poll(
+        async () => {
+          const events = await tauri.getSentEvents('copyToClipboard');
+          return events.some(e => typeof e.args?.[0] === 'string' && e.args[0].includes('/models/Invalid.ttl'));
+        },
+        {timeout: 10000},
+      )
+      .toBe(true);
+
+    // 3. Select "Open in browser" (ctx_open) and verify openExternalLink is triggered with the href
+    await tauri.clearSentEvents();
+    await tauri.triggerContextMenuAction('ctx_open');
+
+    await expect
+      .poll(
+        async () => {
+          const events = await tauri.getSentEvents('openExternalLink');
+          return events.some(e => typeof e.args?.[0] === 'string' && e.args[0].includes('/models/Invalid.ttl'));
+        },
+        {timeout: 10000},
+      )
+      .toBe(true);
+  });
 });

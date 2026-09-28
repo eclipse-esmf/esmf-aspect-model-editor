@@ -46,4 +46,19 @@ describe('IPC_RENDERER Provider', () => {
     const renderer = TestBed.inject(IPC_RENDERER);
     expect(renderer).toBeUndefined();
   });
+
+  it('should create Tauri bridge when Tauri internals are detected', async () => {
+    delete (window as any).tauriAPI;
+    delete (window as any).tauriApi;
+    (window as any).__TAURI_INTERNALS__ = {};
+
+    TestBed.resetTestingModule();
+    const renderer = TestBed.inject(IPC_RENDERER);
+    expect(renderer).toBeDefined();
+    expect(typeof renderer?.openInVsCodeOrDefault).toBe('function');
+    expect(typeof renderer?.showContextMenu).toBe('function');
+    expect(typeof renderer?.copyToClipboard).toBe('function');
+
+    delete (window as any).__TAURI_INTERNALS__;
+  });
 });

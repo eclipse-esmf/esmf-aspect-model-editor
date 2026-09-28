@@ -39,6 +39,18 @@ impl AppWindowState {
     }
 }
 
+pub struct ContextMenuState {
+    pub active_href: Mutex<Option<String>>,
+}
+
+impl ContextMenuState {
+    pub fn new() -> Self {
+        Self {
+            active_href: Mutex::new(None),
+        }
+    }
+}
+
 #[tauri::command]
 pub fn get_backend_port(backend_state: State<'_, BackendState>) -> Result<String, String> {
     let port = backend_state.port.lock().map_err(|e| e.to_string())?;
@@ -51,9 +63,24 @@ pub fn open_external_link(link: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn open_in_vscode_or_default(vscode_url: String, fallback_url: String) -> Result<(), String> {
+pub fn open_in_vscode_or_default(vscode_url: String, file_path: Option<String>) -> Result<(), String> {
     if open::that(&vscode_url).is_err() {
-        open::that(&fallback_url).map_err(|e| e.to_string())?;
+        if let Some(path) = file_path {
+            #[cfg(target_os = "windows")]
+            {
+                std::process::Command::new("OpenWith.exe")
+                    .arg(&path)
+                    .spawn()
+                    .map_err(|e| e.to_string())?;
+                return Ok(());
+            }
+
+            #[cfg(not(target_os = "windows"))]
+            {
+                open::that(&path).map_err(|e| e.to_string())?;
+                return Ok(());
+            }
+        }
     }
     Ok(())
 }
@@ -209,6 +236,12 @@ pub fn maximize_window(app: AppHandle, window_label: String) -> Result<(), Strin
 #[tauri::command]
 pub fn show_context_menu(app: AppHandle, href: Option<String>) -> Result<(), String> {
     if let Some(link) = href {
+        if let Some(state) = app.try_state::<ContextMenuState>() {
+            if let Ok(mut lock) = state.active_href.lock() {
+                *lock = Some(link.clone());
+            }
+        }
+
         let open_item = MenuItem::with_id(
             &app,
             "ctx_open",
@@ -263,4 +296,27 @@ pub fn translate_menu_items(app: AppHandle, payload: serde_json::Value) -> Resul
         crate::menu::translate_menu(&app, &payload);
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_open_in_vscode_or_default_handles_missing_file_path() {
+        let res = open_in_vscode_or_default("invalid_proto://bad-path".to_string(), None);
+        assert!(res.is_ok());
+    }
+
+    #[test]
+    fn test_context_menu_state_stores_and_retrieves_href() {
+        let state = ContextMenuState::new();
+        assert!(state.active_href.lock().unwrap().is_none());
+
+        *state.active_href.lock().unwrap() = Some("https://example.com/test".to_string());
+        assert_eq!(
+            state.active_href.lock().unwrap().as_deref(),
+            Some("https://example.com/test")
+        );
+    }
 }

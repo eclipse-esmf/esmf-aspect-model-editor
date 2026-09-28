@@ -23,6 +23,7 @@ use tauri::{Emitter, Manager, RunEvent, WindowEvent};
 pub fn run() {
     let backend_state = BackendState::new();
     let window_state = AppWindowState::new();
+    let context_menu_state = ContextMenuState::new();
 
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
@@ -31,6 +32,7 @@ pub fn run() {
         .plugin(tauri_plugin_process::init())
         .manage(backend_state)
         .manage(window_state)
+        .manage(context_menu_state)
         .setup(|app| {
             if cfg!(debug_assertions) {
                 let _ = app.handle().plugin(

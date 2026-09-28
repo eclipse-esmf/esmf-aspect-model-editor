@@ -65,6 +65,10 @@ export class WorkspaceComponent {
   private readonly refresh$ = new Subject<void>();
 
   constructor() {
+    if (typeof window !== 'undefined') {
+      (window as any)['angular.workspaceComponent'] = this;
+    }
+
     effect(() => {
       this.sidebarService.workspace.refreshTick();
       this.refresh$.next();

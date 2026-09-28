@@ -171,9 +171,9 @@ function createTauriBridge(): TauriApi {
       await invoke('open_external_link', {link});
     },
 
-    async openInVsCodeOrDefault(vscodeUrl: string, fallbackUrl: string): Promise<void> {
+    async openInVsCodeOrDefault(vscodeUrl: string, filePath: string): Promise<void> {
       const {invoke} = await import('@tauri-apps/api/core');
-      await invoke('open_in_vscode_or_default', {vscodeUrl, fallbackUrl});
+      await invoke('open_in_vscode_or_default', {vscodeUrl, filePath});
     },
 
     showContextMenu(payload: TauriContextMenuPayload): void {

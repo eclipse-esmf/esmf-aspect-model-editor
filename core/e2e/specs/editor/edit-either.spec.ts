@@ -68,4 +68,49 @@ test.describe('Test editing Either', () => {
     expect(rdf).toContain('samm:preferredName "new-preferredName"@en');
     expect(rdf).toContain('samm:description "New description for the new created characteristic"@en');
   });
+
+  test('can instantiate and connect Either left and right via shape overlay icons', async ({page}) => {
+    const helper = new AppHelper(page);
+    await helper.visitDefault();
+
+    const defaultRdf = readFixture('default-models/aspect-default.txt');
+    await helper.loadModel(defaultRdf);
+
+    await page.locator(SELECTOR_elementBtn).click();
+    await helper.dbClickShape('Characteristic1');
+    await page.locator(FIELD_characteristicName).click();
+    const eitherOption = page.locator('mat-option[data-testid="Either"]');
+    await eitherOption.waitFor({state: 'visible'});
+    await eitherOption.click();
+    await eitherOption.waitFor({state: 'detached'}).catch(() => {});
+    await page.locator(FIELD_name).fill('Either1');
+    await helper.selectAutocomplete(FIELD_left, 'LeftCharacteristic');
+    await helper.selectAutocomplete(FIELD_right, 'RightCharacteristic');
+    await helper.clickSaveButton();
+
+    // Delete the left and right characteristics on canvas to test re-adding via shape overlay icons
+    await helper.shapeExists('LeftCharacteristic');
+    await helper.clickShape('LeftCharacteristic');
+    await page.locator('[data-testid="tbDeleteButton"]').click({force: true});
+
+    await helper.shapeExists('RightCharacteristic');
+    await helper.clickShape('RightCharacteristic');
+    await page.locator('[data-testid="tbDeleteButton"]').click({force: true});
+
+    // Click left and right overlay icons on Either1 shape
+    await helper.clickAddLeftShapeIcon('Either1');
+    await helper.clickAddRightShapeIcon('Either1');
+
+    const aspect = await helper.getAspect();
+    expect(aspect.properties[0].characteristic.name).toBe('Either1');
+    expect(aspect.properties[0].characteristic.left).toBeDefined();
+    expect(aspect.properties[0].characteristic.right).toBeDefined();
+
+    const rdf = await helper.getUpdatedRDF();
+    expect(rdf).toContain('Either1 a samm-c:Either');
+    expect(rdf).toContain('samm-c:left :Characteristic1');
+    expect(rdf).toContain('samm-c:right :Characteristic2');
+    expect(rdf).toContain('Characteristic1 a samm:Characteristic');
+    expect(rdf).toContain('Characteristic2 a samm:Characteristic');
+  });
 });
