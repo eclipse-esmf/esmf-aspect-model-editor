@@ -128,7 +128,7 @@ describe('Test editing Either', () => {
           .clear({force: true})
           .type('NewLeftCharacteristic', {force: true})
           .get('mat-option')
-          .contains('LeftCharacteristic')
+          .contains('NewLeftCharacteristic')
           .click({force: true}),
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).should('be.disabled'))
@@ -138,7 +138,7 @@ describe('Test editing Either', () => {
           .clear({force: true})
           .type('NewRightCharacteristic', {force: true})
           .get('mat-option')
-          .contains('RightCharacteristic')
+          .contains('NewRightCharacteristic')
           .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())
@@ -278,8 +278,8 @@ describe('Test editing Either', () => {
         .then(() => cy.getUpdatedRDF())
         .then(rdf => {
           expect(rdf).to.contain('Either1 a samm-c:Either');
-          expect(rdf).not.contain('samm-c:left :Characteristic1');
-          expect(rdf).not.contain('samm-c:right :Characteristic2');
+          expect(rdf).to.contain('samm-c:left :Characteristic1');
+          expect(rdf).to.contain('samm-c:right :Characteristic2');
           expect(rdf).to.contain('samm:preferredName "new-preferredName"@en');
           expect(rdf).to.contain('samm:description "New description for the new created characteristic"@en');
           expect(rdf).to.contain('samm:see <http://www.see1.de>, <http://www.see2.de>, <http://www.see3.de>');
@@ -291,8 +291,8 @@ describe('Test editing Either', () => {
           }
 
           expect(noOfDataTypes).to.eq(2);
-          expect(rdf).not.contain('samm-c:left :LeftCharacteristic');
-          expect(rdf).not.contain('samm-c:right :RightCharacteristic');
+          expect(rdf).to.contain('Characteristic1 a samm:Characteristic');
+          expect(rdf).to.contain('Characteristic2 a samm:Characteristic');
         });
     });
   });

@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {spawn} from 'child_process';
 import {BrowserWindow, clipboard, ipcMain, Menu, MenuItem, NativeImage, shell} from 'electron';
 import * as fs from 'fs';
 import * as os from 'os';
@@ -18,6 +19,7 @@ import * as path from 'path';
 import {icons} from './const/icons';
 import {EVENTS} from './events/events';
 import {appMenuTemplate} from './menu/app';
+import {isWin} from './platform/platform';
 import {getIcon} from './utils/icon-utils';
 import {inDevMode} from './utils/mode';
 
@@ -207,6 +209,8 @@ class WindowsManager {
         });
       }
 
+      if (template.length === 0) return;
+
       const menu = Menu.buildFromTemplate(template);
       menu.popup({window: win});
     });
@@ -216,6 +220,38 @@ class WindowsManager {
         clipboard.writeText(text);
       }
     });
+
+    ipcMain.handle(
+      EVENTS.SIGNAL.OPEN_FILE_IN_VSCODE_OR_DEFAULT,
+      async (_event, {vscodeUrl, filePath}: {vscodeUrl?: string; filePath?: string}) => {
+        if (!filePath) return;
+
+        let normalizedFilePath = filePath.replace(/^file:\/\//, '').replace(/^file:/, '');
+        if (isWin) {
+          normalizedFilePath = normalizedFilePath.replace(/^\/+/, '').replace(/\//g, '\\');
+        }
+
+        if (vscodeUrl) {
+          try {
+            await shell.openExternal(vscodeUrl);
+            return;
+          } catch {
+            // VSCode protocol open failed, fallback below
+          }
+        }
+
+        if (isWin) {
+          try {
+            spawn('OpenWith.exe', [normalizedFilePath], {detached: true, stdio: 'ignore'});
+            return;
+          } catch {
+            // Fallback to shell.openPath if OpenWith.exe cannot be spawned
+          }
+        }
+
+        await shell.openPath(normalizedFilePath);
+      },
+    );
   }
 
   /**

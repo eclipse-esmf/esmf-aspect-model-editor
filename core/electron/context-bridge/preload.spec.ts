@@ -179,4 +179,17 @@ describe('preload', () => {
       expect(mockedSend).toHaveBeenCalledWith('COPY_TO_CLIPBOARD', 'hello world');
     });
   });
+
+  describe('openInVsCodeOrDefault', () => {
+    it('should call ipcRenderer.invoke with OPEN_FILE_IN_VSCODE_OR_DEFAULT and payload', async () => {
+      mockedInvoke.mockResolvedValue(undefined);
+
+      await electronAPI.openInVsCodeOrDefault('vscode://file/path/to/file.ttl', '/path/to/file.ttl');
+
+      expect(mockedInvoke).toHaveBeenCalledWith('OPEN_FILE_IN_VSCODE_OR_DEFAULT', {
+        vscodeUrl: 'vscode://file/path/to/file.ttl',
+        filePath: '/path/to/file.ttl',
+      });
+    });
+  });
 });

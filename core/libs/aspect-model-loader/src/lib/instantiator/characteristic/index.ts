@@ -86,7 +86,7 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
     },
     // ListCharacteristic
     {
-      process: (quad: Quad) => createListCharacteristic(quad),
+      process: (quad: Quad) => createListCharacteristic(quad, createCharacteristic),
       shouldProcess: (namedNode: NamedNode) => rdfModel.sammC.ListCharacteristic().equals(namedNode),
     },
     // MeasurementCharacteristic

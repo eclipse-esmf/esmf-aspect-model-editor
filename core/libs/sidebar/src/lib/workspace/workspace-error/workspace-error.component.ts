@@ -27,7 +27,7 @@ interface MessagePart {
   isError?: boolean;
   isSeparator?: boolean;
   applicationUrl?: string;
-  fallbackUrl?: string;
+  filePath?: string;
 }
 
 @Component({
@@ -75,7 +75,7 @@ export class WorkspaceErrorComponent {
           text: filePath,
           isLink: true,
           applicationUrl: `vscode://file/${cleanPath}`,
-          fallbackUrl: `file://${cleanPath}`,
+          filePath: cleanPath,
         });
       } else if (match[3]) {
         // "• Error:" label
@@ -95,10 +95,10 @@ export class WorkspaceErrorComponent {
   openLink(event: MouseEvent, part: MessagePart): void {
     event.preventDefault();
 
-    if (!part.applicationUrl || !this.browserService.isStartedAsElectronApp()) return;
+    if (!part.filePath || !this.browserService.isStartedAsElectronApp()) return;
 
     // Try opening the file in VSCode first; if VSCode isn't installed on the system,
-    // fall back to opening it with the OS default application for that file type.
-    this.ipcRenderer.openInVsCodeOrDefault(part.applicationUrl, part.fallbackUrl ?? part.applicationUrl);
+    // fall back to "Open with..." dialog on Windows, or default application on macOS/Linux.
+    this.ipcRenderer.openInVsCodeOrDefault(part.applicationUrl ?? '', part.filePath);
   }
 }

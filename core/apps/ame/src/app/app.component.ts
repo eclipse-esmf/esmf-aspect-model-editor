@@ -113,8 +113,6 @@ export class AppComponent implements OnInit {
 
   setContextMenu(): void {
     window.addEventListener('contextmenu', e => {
-      e.preventDefault();
-
       const target = e.target as HTMLElement;
 
       if (this.isGraphElement(target)) return;
@@ -122,6 +120,10 @@ export class AppComponent implements OnInit {
       const anchor = target?.closest ? target.closest('a') : null;
       const rawHref = anchor?.getAttribute('href') ?? (typeof (target as any)?.href === 'string' ? (target as any).href : null);
       const href = typeof rawHref === 'string' ? rawHref : null;
+
+      if (!href) return;
+
+      e.preventDefault();
 
       this.ipcRenderer.showContextMenu({
         href,

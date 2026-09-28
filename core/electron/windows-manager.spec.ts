@@ -21,6 +21,8 @@ const {
   mockMenuBuildFromTemplate,
   mockMenuPopup,
   mockShellOpenExternal,
+  mockShellOpenPath,
+  mockSpawn,
   mockClipboardWriteText,
   makeMockWindow,
   state,
@@ -50,6 +52,8 @@ const {
     mockMenuBuildFromTemplate: vi.fn(),
     mockMenuPopup: vi.fn(),
     mockShellOpenExternal: vi.fn(),
+    mockShellOpenPath: vi.fn(),
+    mockSpawn: vi.fn(),
     mockClipboardWriteText: vi.fn(),
     makeMockWindow,
     state: {mockWindowInstance: makeMockWindow()},
@@ -75,8 +79,15 @@ vi.mock('electron', () => ({
     buildFromTemplate: mockMenuBuildFromTemplate.mockReturnValue({items: [], popup: mockMenuPopup}),
   },
   MenuItem: vi.fn(),
-  shell: {openExternal: mockShellOpenExternal},
+  shell: {
+    openExternal: mockShellOpenExternal,
+    openPath: mockShellOpenPath,
+  },
   clipboard: {writeText: mockClipboardWriteText},
+}));
+
+vi.mock('child_process', () => ({
+  spawn: mockSpawn,
 }));
 
 vi.mock('./const/icons', () => ({
@@ -109,6 +120,7 @@ vi.mock('./events/events', () => ({
       OPEN_PRINT_WINDOW: 'OPEN_PRINT_WINDOW',
       WRITE_PRINT_FILE: 'WRITE_PRINT_FILE',
       SHOW_CONTEXT_MENU: 'SHOW_CONTEXT_MENU',
+      OPEN_FILE_IN_VSCODE_OR_DEFAULT: 'OPEN_FILE_IN_VSCODE_OR_DEFAULT',
     },
   },
 }));
@@ -132,6 +144,16 @@ vi.mock('fs', () => ({
 }));
 
 vi.mock('os', () => ({homedir: vi.fn().mockReturnValue('/home/user')}));
+
+const {mockIsWin} = vi.hoisted(() => ({
+  mockIsWin: {value: false},
+}));
+
+vi.mock('./platform/platform', () => ({
+  get isWin() {
+    return mockIsWin.value;
+  },
+}));
 
 import {BrowserWindow} from 'electron';
 import {EVENTS} from './events/events';
@@ -181,13 +203,14 @@ describe('WindowsManager', () => {
       expect(registeredEvents).toContain(EVENTS.SIGNAL.COPY_TO_CLIPBOARD);
     });
 
-    it('should register IPC handle handlers for OPEN_PRINT_WINDOW and WRITE_PRINT_FILE', () => {
+    it('should register IPC handle handlers for OPEN_PRINT_WINDOW, WRITE_PRINT_FILE and OPEN_FILE_IN_VSCODE_OR_DEFAULT', () => {
       windowsManager.activateCommunicationProtocol();
 
       const handleEvents = mockIpcMainHandle.mock.calls.map((c: any[]) => c[0]);
 
       expect(handleEvents).toContain(EVENTS.SIGNAL.OPEN_PRINT_WINDOW);
       expect(handleEvents).toContain(EVENTS.SIGNAL.WRITE_PRINT_FILE);
+      expect(handleEvents).toContain(EVENTS.SIGNAL.OPEN_FILE_IN_VSCODE_OR_DEFAULT);
     });
   });
 
@@ -344,14 +367,15 @@ describe('WindowsManager', () => {
         expect(mockMenuBuildFromTemplate).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({label: 'Send email'})]));
       });
 
-      it('should show empty context menu when href is null', () => {
+      it('should not show menu when template is empty (href is null)', () => {
         const mockWin = makeMockWindow();
         mockedFromWebContents.mockReturnValue(mockWin);
 
         const handler = getIpcHandler(EVENTS.SIGNAL.SHOW_CONTEXT_MENU);
         handler({sender: {}}, {href: null});
 
-        expect(mockMenuBuildFromTemplate).toHaveBeenCalledWith([]);
+        expect(mockMenuBuildFromTemplate).not.toHaveBeenCalled();
+        expect(mockMenuPopup).not.toHaveBeenCalled();
       });
 
       it('should not show menu when no window is found', () => {
@@ -406,6 +430,72 @@ describe('WindowsManager', () => {
           EVENTS.RESPONSE.WINDOW_DATA,
           expect.objectContaining({id: mockWindowInstance.webContents.id}),
         );
+      });
+    });
+
+    describe('OPEN_FILE_IN_VSCODE_OR_DEFAULT', () => {
+      beforeEach(() => {
+        mockIsWin.value = false;
+      });
+
+      it('should do nothing if filePath is not provided', async () => {
+        const handler = getIpcHandleHandler(EVENTS.SIGNAL.OPEN_FILE_IN_VSCODE_OR_DEFAULT);
+        await handler({}, {});
+
+        expect(mockShellOpenExternal).not.toHaveBeenCalled();
+        expect(mockShellOpenPath).not.toHaveBeenCalled();
+        expect(mockSpawn).not.toHaveBeenCalled();
+      });
+
+      it('should open vscodeUrl with shell.openExternal if provided and succeeding', async () => {
+        mockShellOpenExternal.mockResolvedValue(undefined);
+        const handler = getIpcHandleHandler(EVENTS.SIGNAL.OPEN_FILE_IN_VSCODE_OR_DEFAULT);
+
+        await handler({}, {vscodeUrl: 'vscode://file/path/to/file.ttl', filePath: '/path/to/file.ttl'});
+
+        expect(mockShellOpenExternal).toHaveBeenCalledWith('vscode://file/path/to/file.ttl');
+        expect(mockShellOpenPath).not.toHaveBeenCalled();
+        expect(mockSpawn).not.toHaveBeenCalled();
+      });
+
+      it('should fallback to shell.openPath on non-windows when shell.openExternal fails', async () => {
+        mockShellOpenExternal.mockRejectedValue(new Error('VSCode protocol not found'));
+        mockShellOpenPath.mockResolvedValue('');
+        const handler = getIpcHandleHandler(EVENTS.SIGNAL.OPEN_FILE_IN_VSCODE_OR_DEFAULT);
+
+        await handler({}, {vscodeUrl: 'vscode://file/path/to/file.ttl', filePath: 'file:///path/to/file.ttl'});
+
+        expect(mockShellOpenExternal).toHaveBeenCalled();
+        expect(mockShellOpenPath).toHaveBeenCalledWith('/path/to/file.ttl');
+      });
+
+      it('should spawn OpenWith.exe on Windows when shell.openExternal fails', async () => {
+        mockIsWin.value = true;
+        mockShellOpenExternal.mockRejectedValue(new Error('VSCode protocol not found'));
+        const handler = getIpcHandleHandler(EVENTS.SIGNAL.OPEN_FILE_IN_VSCODE_OR_DEFAULT);
+
+        await handler({}, {vscodeUrl: 'vscode://file/C:/path/file.ttl', filePath: 'file:///C:/path/file.ttl'});
+
+        expect(mockSpawn).toHaveBeenCalledWith('OpenWith.exe', ['C:\\path\\file.ttl'], {
+          detached: true,
+          stdio: 'ignore',
+        });
+        expect(mockShellOpenPath).not.toHaveBeenCalled();
+      });
+
+      it('should fallback to shell.openPath on Windows if spawn throws', async () => {
+        mockIsWin.value = true;
+        mockShellOpenExternal.mockRejectedValue(new Error('VSCode protocol not found'));
+        mockSpawn.mockImplementation(() => {
+          throw new Error('Spawn failed');
+        });
+        mockShellOpenPath.mockResolvedValue('');
+        const handler = getIpcHandleHandler(EVENTS.SIGNAL.OPEN_FILE_IN_VSCODE_OR_DEFAULT);
+
+        await handler({}, {vscodeUrl: 'vscode://file/C:/path/file.ttl', filePath: 'file:///C:/path/file.ttl'});
+
+        expect(mockSpawn).toHaveBeenCalled();
+        expect(mockShellOpenPath).toHaveBeenCalledWith('C:\\path\\file.ttl');
       });
     });
   });
