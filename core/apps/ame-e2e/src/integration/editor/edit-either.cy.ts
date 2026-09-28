@@ -128,7 +128,7 @@ describe('Test editing Either', () => {
           .clear({force: true})
           .type('NewLeftCharacteristic', {force: true})
           .get('mat-option')
-          .contains('LeftCharacteristic')
+          .contains('NewLeftCharacteristic')
           .click({force: true}),
       )
       .then(() => cy.get(SELECTOR_editorSaveButton).should('be.disabled'))
@@ -138,7 +138,7 @@ describe('Test editing Either', () => {
           .clear({force: true})
           .type('NewRightCharacteristic', {force: true})
           .get('mat-option')
-          .contains('RightCharacteristic')
+          .contains('NewRightCharacteristic')
           .click({force: true}),
       )
       .then(() => cyHelp.clickSaveButton())

@@ -220,7 +220,7 @@ export class cyHelp {
    * @returns {CellOverlay} The add left shape overlay, if present.
    */
   static getAddLeftShapeOverlay(cell: Cell): CellOverlay {
-    return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Right Characteristic');
+    return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Left Characteristic');
   }
 
   /**
@@ -229,7 +229,7 @@ export class cyHelp {
    * @returns {CellOverlay} The add right shape overlay, if present.
    */
   static getAddRightShapeOverlay(cell: Cell): CellOverlay {
-    return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Left Characteristic');
+    return cell?.overlays?.find(({tooltip}) => tooltip === 'Add Right Characteristic');
   }
 
   /**
