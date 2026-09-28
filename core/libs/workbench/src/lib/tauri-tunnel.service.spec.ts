@@ -11,65 +11,36 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService, FileHandlingService, GenerateHandlingService, SaveModelDialogService, ShapeSettingsService} from '@ame/editor';
-import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
-import {SearchesStateService} from '@ame/search';
-import {ConfigurationService} from '@ame/settings';
 import {
-  FILTERS_SERVICE,
   IPC_RENDERER,
   LanguageTranslationService,
-  MODEL_SAVING_TRACKER_SERVICE,
-  NAMESPACES_MANAGER_SERVICE,
   NotificationsService,
   TAURI_EVENTS,
+  TAURI_IPC_BRIDGES,
   TauriSignalsService,
 } from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {TestBed} from '@angular/core/testing';
-import {MatDialog} from '@angular/material/dialog';
-import {BehaviorSubject, of} from 'rxjs';
+import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {TauriTunnelService} from './tauri-tunnel.service';
 
-describe('tauriTunnelService', () => {
+describe('TauriTunnelService', () => {
   let service: TauriTunnelService;
   let ipcRendererMock: any;
   let tauriSignalsMock: any;
   let notificationsServiceMock: any;
-  let shapeSettingsServiceMock: any;
   let translateMock: any;
+  let bridgeMock: {register: ReturnType<typeof vi.fn>};
 
   beforeEach(() => {
-    ipcRendererMock = {
-      send: vi.fn(),
-      on: vi.fn(),
-      removeListener: vi.fn(),
-    };
-
-    tauriSignalsMock = {
-      addListener: vi.fn(),
-      call: vi.fn(),
-    };
-
-    notificationsServiceMock = {
-      error: vi.fn(),
-      info: vi.fn(),
-    };
-
-    shapeSettingsServiceMock = {
-      selectedCells$: new BehaviorSubject([]),
-      hasCellsSubject$: new BehaviorSubject(false),
-      editModel: vi.fn(),
-    };
-
+    ipcRendererMock = {send: vi.fn(), on: vi.fn(), removeListener: vi.fn()};
+    tauriSignalsMock = {addListener: vi.fn(), call: vi.fn()};
+    notificationsServiceMock = {error: vi.fn(), info: vi.fn()};
     translateMock = {
       getTranslation: vi.fn(() => of({HELLO: 'Hello'})),
-      translateService: {
-        getActiveLang: vi.fn(() => 'en'),
-      },
+      translateService: {getActiveLang: vi.fn(() => 'en')},
     };
+    bridgeMock = {register: vi.fn()};
 
     TestBed.configureTestingModule({
       providers: [
@@ -77,58 +48,17 @@ describe('tauriTunnelService', () => {
         {provide: IPC_RENDERER, useValue: ipcRendererMock},
         {provide: TauriSignalsService, useValue: tauriSignalsMock},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: ShapeSettingsService, useValue: shapeSettingsServiceMock},
         {provide: LanguageTranslationService, useValue: translateMock},
-        {provide: LoadedFilesService, useValue: {currentLoadedFile: {cachedFile: {get: vi.fn()}}}},
-        {provide: MODEL_SAVING_TRACKER_SERVICE, useValue: {isSaved$: of(true)}},
-        {provide: SaveModelDialogService, useValue: {openDialog: vi.fn(() => of(true))}},
-        {provide: MaxGraphService, useValue: {navigateToCellByUrn: vi.fn()}},
-        {provide: NAMESPACES_MANAGER_SERVICE, useValue: {onImportNamespaces: vi.fn(), onExportNamespaces: vi.fn()}},
-        {provide: SidebarStateService, useValue: {workspace: {refresh: vi.fn()}}},
-        {
-          provide: FileHandlingService,
-          useValue: {
-            loadEmptyModel: vi.fn(() => of(true)),
-            onLoadModel: vi.fn(),
-            onAddFileToNamespace: vi.fn(),
-            onCopyToClipboard: vi.fn(),
-            onSaveAspectModelToWorkspace: vi.fn(),
-            onExportAsAspectModelFile: vi.fn(),
-            onValidateFile: vi.fn(),
-          },
-        },
-        {
-          provide: GenerateHandlingService,
-          useValue: {
-            onGenerateDocumentation: vi.fn(),
-            onGenerateOpenApiSpec: vi.fn(),
-            onGenerateAsyncApiSpec: vi.fn(),
-            onGenerateAASXFile: vi.fn(),
-            onGenerateJsonSample: vi.fn(),
-            onGenerateJsonSchema: vi.fn(),
-          },
-        },
-        {provide: ConfigurationService, useValue: {toggleToolbar: vi.fn(), toggleEditorMap: vi.fn()}},
-        {
-          provide: EditorService,
-          useValue: {
-            zoomIn: vi.fn(),
-            zoomOut: vi.fn(),
-            fit: vi.fn(),
-            actualSize: vi.fn(),
-            deleteSelectedElements: vi.fn(),
-            toggleExpand: vi.fn(),
-            formatModel: vi.fn(),
-          },
-        },
-        {provide: FILTERS_SERVICE, useValue: {renderByFilter: vi.fn()}},
-        {provide: ShapeConnectorService, useValue: {connectSelectedElements: vi.fn()}},
-        {provide: MatDialog, useValue: {open: vi.fn()}},
-        {provide: SearchesStateService, useValue: {elementsSearch: {open: vi.fn()}, filesSearch: {open: vi.fn()}}},
+        {provide: TAURI_IPC_BRIDGES, useValue: bridgeMock, multi: true},
       ],
     });
 
     service = TestBed.inject(TauriTunnelService);
+  });
+
+  it('subscribeMessages should register all feature bridges', () => {
+    service.subscribeMessages();
+    expect(bridgeMock.register).toHaveBeenCalledTimes(1);
   });
 
   it('should create', () => {

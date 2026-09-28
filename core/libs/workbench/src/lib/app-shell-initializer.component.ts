@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SearchStore} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
-import {SearchesStateService} from '@ame/search';
-import {ConfigurationService} from '@ame/settings';
 import {
   BindingsService,
   BrowserService,
+  CONFIGURATION_SERVICE,
   DOMAIN_MODEL_TO_RDF_SERVICE,
   IDomainModelToRdfService,
   IPC_RENDERER,
@@ -50,10 +50,10 @@ export class AppShellInitializer implements OnInit {
   private domainModelToRdf: IDomainModelToRdfService = inject(DOMAIN_MODEL_TO_RDF_SERVICE);
   private browserService = inject(BrowserService);
   private tauriTunnelService = inject(TauriTunnelService);
-  private configurationService = inject(ConfigurationService);
+  private configurationService = inject(CONFIGURATION_SERVICE);
   private themeService = inject(ThemeService);
   private translate = inject(LanguageTranslationService);
-  private searchesStateService = inject(SearchesStateService);
+  private searchStore = inject(SearchStore);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private startupService = inject(StartupService);
   private injector = inject(Injector);
@@ -107,16 +107,16 @@ export class AppShellInitializer implements OnInit {
     const graph = this.maxgraphAttributeService.graph;
     const vertexCount = Object.values(graph.getDataModel().cells).filter(cell => cell.isVertex()).length > 0;
 
-    if (vertexCount) this.searchesStateService.elementsSearch.toggle();
+    if (vertexCount) this.searchStore.toggleElementsSearch();
   }
 
   openFilesElements(): void {
-    this.searchesStateService.filesSearch.toggle();
+    this.searchStore.toggleFilesSearch();
   }
 
   closeSearchModals(): void {
-    this.searchesStateService.filesSearch.close();
-    this.searchesStateService.elementsSearch.close();
+    this.searchStore.closeFilesSearch();
+    this.searchStore.closeElementsSearch();
   }
 
   private getApplicationLanguage(): string {

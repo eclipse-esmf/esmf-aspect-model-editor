@@ -13,5 +13,6 @@
 
 export * from './components';
 export * from './model';
+export * from './provide-settings';
 export * from './services';
 export * from './strategy';

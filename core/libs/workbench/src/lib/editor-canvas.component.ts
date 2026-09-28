@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SearchStore} from '@ame/domain';
 import {
   EditorFormModel,
   EditorService,
@@ -22,9 +23,8 @@ import {
 } from '@ame/editor';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/search';
-import {ConfigurationService} from '@ame/settings';
-import {ELEMENT_MODEL_SERVICE} from '@ame/shared';
+import {ElementsSearchComponent, FilesSearchComponent} from '@ame/search';
+import {CONFIGURATION_SERVICE, ELEMENT_MODEL_SERVICE} from '@ame/shared';
 import {SidebarComponent} from '@ame/sidebar';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
@@ -71,8 +71,8 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   private loadedFiles = inject(LoadedFilesService);
   private elementModelService = inject(ELEMENT_MODEL_SERVICE);
   private editorService = inject(EditorService);
-  private configurationService = inject(ConfigurationService);
-  private searchesStateService = inject(SearchesStateService);
+  private configurationService = inject(CONFIGURATION_SERVICE);
+  private searchStore = inject(SearchStore);
 
   public readonly sidebarWidth = signal(SIDEBAR_MIN_WIDTH);
   public readonly sidebarDragPosition = signal({...SIDEBAR_DEFAULT_DRAG_POSITION});
@@ -87,8 +87,8 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
 
   public readonly isShapeSettingsOpened = this.shapeSettingsStateService.isShapeSettingOpened;
 
-  public readonly isElementsSearchOpened = toSignal(this.searchesStateService.elementsSearch.opened$, {initialValue: false});
-  public readonly isFilesSearchOpened = toSignal(this.searchesStateService.filesSearch.opened$, {initialValue: false});
+  public readonly isElementsSearchOpened = this.searchStore.elementsSearchOpened;
+  public readonly isFilesSearchOpened = this.searchStore.filesSearchOpened;
   public readonly isModelEmpty = this.maxgraphService.isModelEmpty;
 
   get selectedShapeForUpdate(): Cell | null {

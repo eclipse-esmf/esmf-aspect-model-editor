@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {WorkspaceStore} from '@ame/domain';
 import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService} from '@ame/editor';
 import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, LoadingScreenService, StartupPayload, TauriSignalsService} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {inject, Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 import {from, Observable, sample, switchMap, tap} from 'rxjs';
@@ -30,7 +30,7 @@ export class StartupService {
   private modelSaveTrackerService = inject(ModelSavingTrackerService);
   private fileHandlingService = inject(FileHandlingService);
   private loadingScreenService = inject(LoadingScreenService);
-  private sidebarStateService = inject(SidebarStateService);
+  private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private router = inject(Router);
 
@@ -42,7 +42,7 @@ export class StartupService {
       switchMap(data =>
         data?.model
           ? this.loadModel(data.model).pipe(
-              tap(() => this.sidebarStateService.workspace.refresh()),
+              tap(() => this.workspaceStore.triggerRefresh()),
               switchMap(() => from(this.router.navigate([]))),
             )
           : this.fileHandlingService.loadEmptyModel(),

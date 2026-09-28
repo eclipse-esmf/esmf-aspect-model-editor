@@ -11,12 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SearchStore} from '@ame/domain';
 import {EditorFormModel, EditorService, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {SearchesStateService} from '@ame/search';
-import {ConfigurationService} from '@ame/settings';
-import {ELEMENT_MODEL_SERVICE, IElementModelService} from '@ame/shared';
+import {CONFIGURATION_SERVICE, ELEMENT_MODEL_SERVICE, IElementModelService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -52,19 +51,13 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
         },
         {provide: ELEMENT_MODEL_SERVICE, useValue: mockElementModel},
         {
-          provide: ConfigurationService,
+          provide: CONFIGURATION_SERVICE,
           useValue: {
             settings$: of({showEditorMap: true, toolbarVisibility: true}),
             getSettings: vi.fn(() => ({showEditorMap: true, toolbarVisibility: true})),
-          } as unknown as ConfigurationService,
+          },
         },
-        {
-          provide: SearchesStateService,
-          useValue: {
-            elementsSearch: {opened$: of(false)},
-            filesSearch: {opened$: of(false)},
-          } as unknown as SearchesStateService,
-        },
+        {provide: SearchStore, useValue: {elementsSearchOpened: signal(false), filesSearchOpened: signal(false)}},
         MockProvider(MaxGraphService, {getAllCells: vi.fn(() => []), isModelEmpty: signal(false)}),
         MockProvider(EditorService),
         MockProvider(LoadedFilesService),

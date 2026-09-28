@@ -12,78 +12,28 @@
  */
 
 import {provideAmeDomain} from '@ame/domain';
-import {
-  ConfirmDialogService,
-  EditorService,
-  EntityInstanceService,
-  FileHandlingService,
-  InformationHandlingService,
-  ModelCheckerService,
-  ModelLoaderService,
-  ModelOpenerService,
-  ModelSaverService,
-  ModelSavingTrackerService,
-  RenameModelDialogService,
-  ShapeSettingsService,
-  ShapeSettingsStateService,
-} from '@ame/editor';
+import {provideEditor} from '@ame/editor';
 import {provideAmeGraph} from '@ame/graph';
 import {provideAmeInfrastructure} from '@ame/infrastructure';
-import {ConfigurationService, SammLanguageSettingsService, SettingDialogComponent} from '@ame/settings';
-import {
-  APP_CONFIG,
-  config,
-  CONFIGURATION_SERVICE,
-  CONFIRM_DIALOG_SERVICE,
-  DRAGGABLE_SERVICE,
-  EDITOR_VALIDATION_SERVICE,
-  ENTITY_INSTANCE_SERVICE,
-  FILE_HANDLING_SERVICE,
-  INFORMATION_HANDLING_SERVICE,
-  MODEL_CHECKER_SERVICE,
-  MODEL_LOADER_SERVICE,
-  MODEL_OPENER_SERVICE,
-  MODEL_SAVER_TOKEN_SERVICE,
-  MODEL_SAVING_TRACKER_SERVICE,
-  RENAME_MODEL_DIALOG_SERVICE,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-  SETTINGS_DIALOG_COMPONENT,
-  SHAPE_SETTINGS_SERVICE,
-  SHAPE_SETTINGS_STATE_SERVICE,
-  SIDEBAR_STATE_SERVICE,
-  TAURI_TUNNEL_SERVICE,
-} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
+import {provideSearch} from '@ame/search';
+import {provideSettings} from '@ame/settings';
+import {APP_CONFIG, config, TAURI_TUNNEL_SERVICE} from '@ame/shared';
+import {provideSidebar} from '@ame/sidebar';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 import {TauriTunnelService} from './tauri-tunnel.service';
 
 /**
- * Returns environment providers for all Aspect Model Editor feature services.
- * This encapsulates feature DI bindings so the shell application does not need
- * direct imports to graph, domain, samm, or infrastructure layers.
+ * Composition root of the Aspect Model Editor: every feature contributes its own providers,
+ * the shell only adds app-level configuration and the Tauri tunnel.
  */
 export function provideAmeFeatures(): EnvironmentProviders {
   return makeEnvironmentProviders([
     {provide: APP_CONFIG, useValue: config},
-    {provide: CONFIRM_DIALOG_SERVICE, useExisting: ConfirmDialogService},
-    {provide: RENAME_MODEL_DIALOG_SERVICE, useExisting: RenameModelDialogService},
-    {provide: ENTITY_INSTANCE_SERVICE, useExisting: EntityInstanceService},
-    {provide: MODEL_OPENER_SERVICE, useExisting: ModelOpenerService},
-    {provide: MODEL_LOADER_SERVICE, useExisting: ModelLoaderService},
-    {provide: MODEL_CHECKER_SERVICE, useExisting: ModelCheckerService},
-    {provide: DRAGGABLE_SERVICE, useExisting: EditorService},
-    {provide: INFORMATION_HANDLING_SERVICE, useExisting: InformationHandlingService},
     {provide: TAURI_TUNNEL_SERVICE, useExisting: TauriTunnelService},
-    {provide: SHAPE_SETTINGS_SERVICE, useExisting: ShapeSettingsService},
-    {provide: SHAPE_SETTINGS_STATE_SERVICE, useExisting: ShapeSettingsStateService},
-    {provide: EDITOR_VALIDATION_SERVICE, useExisting: EditorService},
-    {provide: MODEL_SAVER_TOKEN_SERVICE, useExisting: ModelSaverService},
-    {provide: MODEL_SAVING_TRACKER_SERVICE, useExisting: ModelSavingTrackerService},
-    {provide: FILE_HANDLING_SERVICE, useExisting: FileHandlingService},
-    {provide: SIDEBAR_STATE_SERVICE, useExisting: SidebarStateService},
-    {provide: CONFIGURATION_SERVICE, useExisting: ConfigurationService},
-    {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useExisting: SammLanguageSettingsService},
-    {provide: SETTINGS_DIALOG_COMPONENT, useValue: SettingDialogComponent},
+    provideEditor(),
+    provideSidebar(),
+    provideSearch(),
+    provideSettings(),
     provideAmeGraph(),
     provideAmeInfrastructure(),
     provideAmeDomain(),

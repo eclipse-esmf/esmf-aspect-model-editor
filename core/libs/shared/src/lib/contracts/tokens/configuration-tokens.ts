@@ -21,6 +21,8 @@ export interface IConfigurationService {
   setSettings(settings: Settings): void;
   setLocalStorageItem(settings?: Settings): void;
   dispatchSettings$(): void;
+  toggleEditorMap(): void;
+  toggleToolbar(): void;
 }
 
 const defaultSettings: Settings = {
@@ -50,5 +52,7 @@ export const CONFIGURATION_SERVICE = new InjectionToken<IConfigurationService>('
     setSettings: () => {},
     setLocalStorageItem: () => {},
     dispatchSettings$: () => {},
+    toggleEditorMap: () => {},
+    toggleToolbar: () => {},
   }),
 });

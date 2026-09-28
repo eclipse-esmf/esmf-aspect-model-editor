@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {OpenFileDialogComponent} from '@ame/search';
 import {TauriSignalsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
@@ -23,6 +22,7 @@ import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';
 import {TabStateService} from '../tabs/tab-state.service';
 import {ModelOpenerService} from './model-opener.service';
+import {OpenFileDialogComponent} from './open-file-dialog/open-file-dialog.component';
 
 describe('ModelOpenerService', () => {
   let service: ModelOpenerService;

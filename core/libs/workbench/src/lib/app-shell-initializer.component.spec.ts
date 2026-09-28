@@ -11,10 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SearchStore} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
-import {SearchesStateService} from '@ame/search';
-import {ConfigurationService} from '@ame/settings';
-import {BrowserService, DOMAIN_MODEL_TO_RDF_SERVICE, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
+import {
+  BrowserService,
+  CONFIGURATION_SERVICE,
+  DOMAIN_MODEL_TO_RDF_SERVICE,
+  IPC_RENDERER,
+  LanguageTranslationService,
+  TitleService,
+} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideRouter} from '@angular/router';
@@ -44,9 +50,11 @@ describe('AppShellInitializer', () => {
     };
     initTranslationService: ReturnType<typeof vi.fn>;
   };
-  let searchesStateService: {
-    elementsSearch: {toggle: ReturnType<typeof vi.fn>; close: ReturnType<typeof vi.fn>};
-    filesSearch: {toggle: ReturnType<typeof vi.fn>; close: ReturnType<typeof vi.fn>};
+  let searchStore: {
+    toggleElementsSearch: ReturnType<typeof vi.fn>;
+    closeElementsSearch: ReturnType<typeof vi.fn>;
+    toggleFilesSearch: ReturnType<typeof vi.fn>;
+    closeFilesSearch: ReturnType<typeof vi.fn>;
   };
   let maxgraphAttributeService: {graph: any};
   let startupService: {listenForLoading: ReturnType<typeof vi.fn>};
@@ -70,9 +78,11 @@ describe('AppShellInitializer', () => {
       },
       initTranslationService: vi.fn(),
     };
-    searchesStateService = {
-      elementsSearch: {toggle: vi.fn(), close: vi.fn()},
-      filesSearch: {toggle: vi.fn(), close: vi.fn()},
+    searchStore = {
+      toggleElementsSearch: vi.fn(),
+      closeElementsSearch: vi.fn(),
+      toggleFilesSearch: vi.fn(),
+      closeFilesSearch: vi.fn(),
     };
     maxgraphAttributeService = {graph: {getDataModel: () => ({cells: {}})}};
     startupService = {listenForLoading: vi.fn(() => of(true))};
@@ -87,10 +97,10 @@ describe('AppShellInitializer', () => {
         {provide: DOMAIN_MODEL_TO_RDF_SERVICE, useValue: domainModelToRdf},
         {provide: BrowserService, useValue: browserService},
         {provide: TauriTunnelService, useValue: tauriTunnelService},
-        {provide: ConfigurationService, useValue: configurationService},
+        {provide: CONFIGURATION_SERVICE, useValue: configurationService},
         {provide: ThemeService, useValue: themeService},
         {provide: LanguageTranslationService, useValue: translate},
-        {provide: SearchesStateService, useValue: searchesStateService},
+        {provide: SearchStore, useValue: searchStore},
         {provide: MaxGraphAttributeService, useValue: maxgraphAttributeService},
         {provide: StartupService, useValue: startupService},
       ],
@@ -177,7 +187,7 @@ describe('AppShellInitializer', () => {
 
       component.openSearchElements();
 
-      expect(searchesStateService.elementsSearch.toggle).toHaveBeenCalled();
+      expect(searchStore.toggleElementsSearch).toHaveBeenCalled();
     });
 
     it('should not toggle the elements search when the graph is empty', () => {
@@ -187,20 +197,20 @@ describe('AppShellInitializer', () => {
 
       component.openSearchElements();
 
-      expect(searchesStateService.elementsSearch.toggle).not.toHaveBeenCalled();
+      expect(searchStore.toggleElementsSearch).not.toHaveBeenCalled();
     });
 
     it('should toggle the files search', () => {
       component.openFilesElements();
 
-      expect(searchesStateService.filesSearch.toggle).toHaveBeenCalled();
+      expect(searchStore.toggleFilesSearch).toHaveBeenCalled();
     });
 
     it('should close both search modals', () => {
       component.closeSearchModals();
 
-      expect(searchesStateService.filesSearch.close).toHaveBeenCalled();
-      expect(searchesStateService.elementsSearch.close).toHaveBeenCalled();
+      expect(searchStore.closeFilesSearch).toHaveBeenCalled();
+      expect(searchStore.closeElementsSearch).toHaveBeenCalled();
     });
   });
 

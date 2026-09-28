@@ -11,10 +11,11 @@ export default [
           enforceBuildableLibDependency: false,
           allow: ['^.*/environments/.*', '^.*/package.json$'],
           depConstraints: [
-            // Feature libs must never depend on the workbench shell
+            // Feature libs are isolated: no dependency on the shell or on other features.
+            // Cross-feature communication goes through @ame/domain stores or @ame/shared tokens.
             {
               sourceTag: 'type:feature',
-              notDependOnLibsWithTags: ['type:shell'],
+              notDependOnLibsWithTags: ['type:shell', 'type:feature'],
             },
             // Layer hierarchy rules: strictly unidirectional flow downward
             {

@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {WorkspaceStore} from '@ame/domain';
 import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService} from '@ame/editor';
 import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, LoadingScreenService, TauriSignalsService} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
 import {TestBed} from '@angular/core/testing';
 import {NavigationEnd, Router} from '@angular/router';
 import {BehaviorSubject, of, Subject} from 'rxjs';
@@ -37,7 +37,7 @@ describe('StartupService', () => {
   let modelSaveTrackerService: {updateSavedModel: ReturnType<typeof vi.fn>};
   let fileHandlingService: {loadEmptyModel: ReturnType<typeof vi.fn>};
   let loadingScreenService: {open: ReturnType<typeof vi.fn>; close: ReturnType<typeof vi.fn>};
-  let sidebarStateService: {workspace: {refresh: ReturnType<typeof vi.fn>}};
+  let workspaceStore: {triggerRefresh: ReturnType<typeof vi.fn>};
   let translate: {language: {loadingScreenDialog: {modelLoading: string; modelLoadingWait: string}}};
 
   beforeEach(() => {
@@ -53,7 +53,7 @@ describe('StartupService', () => {
     modelSaveTrackerService = {updateSavedModel: vi.fn()};
     fileHandlingService = {loadEmptyModel: vi.fn(() => of(undefined))};
     loadingScreenService = {open: vi.fn(), close: vi.fn()};
-    sidebarStateService = {workspace: {refresh: vi.fn()}};
+    workspaceStore = {triggerRefresh: vi.fn()};
     translate = {language: {loadingScreenDialog: {modelLoading: 'Loading model', modelLoadingWait: 'Please wait'}}};
 
     TestBed.configureTestingModule({
@@ -66,7 +66,7 @@ describe('StartupService', () => {
         {provide: ModelSavingTrackerService, useValue: modelSaveTrackerService},
         {provide: FileHandlingService, useValue: fileHandlingService},
         {provide: LoadingScreenService, useValue: loadingScreenService},
-        {provide: SidebarStateService, useValue: sidebarStateService},
+        {provide: WorkspaceStore, useValue: workspaceStore},
         {provide: LanguageTranslationService, useValue: translate},
         {provide: Router, useValue: router},
       ],
@@ -100,7 +100,7 @@ describe('StartupService', () => {
     );
     expect(modelSaveTrackerService.updateSavedModel).toHaveBeenCalled();
     expect(loadingScreenService.close).toHaveBeenCalled();
-    expect(sidebarStateService.workspace.refresh).toHaveBeenCalled();
+    expect(workspaceStore.triggerRefresh).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith([]);
   });
 

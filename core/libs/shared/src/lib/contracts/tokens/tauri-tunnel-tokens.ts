@@ -18,3 +18,13 @@ export interface ITauriTunnelService {
 }
 
 export const TAURI_TUNNEL_SERVICE = new InjectionToken<ITauriTunnelService>('TAURI_TUNNEL_SERVICE');
+
+/**
+ * Feature-owned handlers for Tauri IPC/menu events. Each feature registers its own bridge (multi provider),
+ * the shell only triggers registration once the IPC renderer is available.
+ */
+export interface ITauriIpcBridge {
+  register(): void;
+}
+
+export const TAURI_IPC_BRIDGES = new InjectionToken<ITauriIpcBridge[]>('TAURI_IPC_BRIDGES');
