@@ -15,7 +15,7 @@ import {IModelOpenerService, OpenModelOptions, PromptUploadOptions, TauriSignals
 import {inject, Injectable, Injector} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {filter, first, map, Observable, of, switchMap, tap} from 'rxjs';
-import {OpenFileDialogComponent, OpenFileDialogData, OpenFileDialogResult} from '../../search/open-file-dialog/open-file-dialog.component';
+import {OpenFileDialogComponent, OpenFileDialogData, OpenFileDialogResult} from '@ame/features/search';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
 import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';

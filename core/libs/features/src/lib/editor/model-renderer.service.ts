@@ -32,7 +32,7 @@ import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {Observable, catchError, delay, filter, first, switchMap, tap, throwError} from 'rxjs';
-import {SammLanguageSettingsService} from '../settings-dialog';
+import {SammLanguageSettingsService} from '@ame/features/settings';
 import {ShapeSettingsService} from './editor-dialog/services/shape-settings.service';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 

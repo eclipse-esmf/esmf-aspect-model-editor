@@ -14,7 +14,7 @@
 import {IInformationHandlingService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {SettingDialogComponent} from '../../../settings-dialog';
+import {SettingDialogComponent} from '@ame/features/settings';
 import {DocumentComponent} from '../components/help/document.component';
 import {NotificationsComponent} from '../components/notifications/notifications.component';
 

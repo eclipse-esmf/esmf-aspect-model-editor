@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {TabsStore} from '@ame/domain';
 import {provideZonelessChangeDetection, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -55,6 +56,10 @@ describe('EditorTabBarComponent', () => {
       ],
       providers: [
         provideZonelessChangeDetection(),
+        MockProvider(TabsStore, {
+          activeTabId: activeTabIdSignal as any,
+          entities: tabsSignal as any,
+        }),
         MockProvider(TabStateService, {
           tabs: tabsSignal as any,
           activeTabId: activeTabIdSignal as any,

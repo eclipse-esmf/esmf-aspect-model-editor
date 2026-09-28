@@ -48,8 +48,9 @@ import {saveAs} from 'file-saver';
 import {BlankNode, NamedNode, Store} from 'n3';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
-import {ConfigurationService} from '../../../settings-dialog';
-import {SidebarStateService} from '../../../sidebar';
+import {UiShellStore, WorkspaceStore} from '@ame/domain';
+import {ConfigurationService} from '@ame/features/settings';
+import {SidebarStateService} from '@ame/features/sidebar';
 import {ConfirmDialogService, DialogOptions} from '../../confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
 import {EditorService} from '../../editor.service';
@@ -101,6 +102,8 @@ export class FileHandlingService implements IFileHandlingService {
   private notificationsService = inject(NotificationsService);
   private loadingScreenService = inject(LoadingScreenService);
   private sidebarService = inject(SidebarStateService);
+  private uiShellStore = inject(UiShellStore);
+  private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private tauriSignalsService = inject(TauriSignalsService);
   private configurationService = inject(ConfigurationService);
@@ -186,6 +189,7 @@ export class FileHandlingService implements IFileHandlingService {
         if (this.currentLoadedFile?.rdfModel) {
           this.shapeSettingsStateService.closeShapeSettings();
         }
+        this.uiShellStore.closeSidebar();
         this.sidebarService.workspace.close();
       }),
     );
@@ -270,6 +274,7 @@ export class FileHandlingService implements IFileHandlingService {
 
     return of(true).pipe(
       map(() => {
+        this.uiShellStore.openSidebar('sammElements');
         this.sidebarService.sammElements.open();
 
         if (this.maxgraphService.graph?.model) {
@@ -507,6 +512,7 @@ export class FileHandlingService implements IFileHandlingService {
             message: this.translate.language.notificationService.fileAddedSuccessMessage,
           });
         }
+        this.workspaceStore.triggerRefresh();
         this.sidebarService.workspace.refresh();
       }),
       switchMap(() => this.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),

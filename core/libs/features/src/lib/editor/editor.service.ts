@@ -52,7 +52,7 @@ import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, InternalEvent} from '@maxgraph/core';
 import {environment} from 'environments/environment';
 import {catchError, delayWhen, finalize, first, Observable, of, retry, Subscription, switchMap, take, tap, throwError, timer} from 'rxjs';
-import {ConfigurationService, SammLanguageSettingsService} from '../settings-dialog';
+import {ConfigurationService, SammLanguageSettingsService} from '@ame/features/settings';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from './editor-dialog/services/shape-settings-state.service';
 import {ModelSaverService} from './model-saver.service';

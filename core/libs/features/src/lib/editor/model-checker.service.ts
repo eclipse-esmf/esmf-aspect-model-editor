@@ -25,7 +25,8 @@ import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {forkJoin, map, Observable, of, Subject, switchMap} from 'rxjs';
-import {FileStatus, SidebarStateService} from '../sidebar';
+import {WorkspaceStore} from '@ame/domain';
+import {FileStatus, SidebarStateService} from '@ame/features/sidebar';
 import {ModelLoaderService} from './model-loader.service';
 
 export {IModelCheckerService};
@@ -37,6 +38,7 @@ export class ModelCheckerService implements IModelCheckerService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelLoader = inject(ModelLoaderService);
   private sidebarStateService = inject(SidebarStateService);
+  private workspaceStore = inject(WorkspaceStore);
 
   /**
    * Gets all files from workspace and process if they have any error or missing dependencies

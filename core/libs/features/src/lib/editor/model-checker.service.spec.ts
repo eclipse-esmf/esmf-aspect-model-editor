@@ -18,7 +18,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {SidebarStateService} from '../sidebar';
+import {SidebarStateService} from '@ame/features/sidebar';
 import {ModelCheckerService} from './model-checker.service';
 import {ModelLoaderService} from './model-loader.service';
 

@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {TabsStore} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {BrowserService, TauriSignals, TauriSignalsService, TitleService} from '@ame/shared';
-import {computed, DestroyRef, effect, inject, Injectable, Injector, signal} from '@angular/core';
+import {DestroyRef, effect, inject, Injectable, Injector, untracked} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {debounceTime, filter, first, map, Observable, of, switchMap, tap} from 'rxjs';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
@@ -25,6 +26,7 @@ import {EditorTab} from './tab.model';
 
 @Injectable({providedIn: 'root'})
 export class TabStateService {
+  public readonly tabsStore = inject(TabsStore);
   private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
   private readonly loadedFilesService = inject(LoadedFilesService);
@@ -46,16 +48,12 @@ export class TabStateService {
     return this.injector.get(FileHandlingService);
   }
 
-  public readonly tabs = signal<EditorTab[]>([]);
-  public readonly activeTabId = signal<string | null>(null);
+  public readonly tabs = this.tabsStore.entities;
+  public readonly activeTabId = this.tabsStore.activeTabId;
 
-  public readonly activeTab = computed<EditorTab | null>(() => {
-    const activeId = this.activeTabId();
-    if (!activeId) return null;
-    return this.tabs().find(t => t.id === activeId) ?? null;
-  });
+  public readonly activeTab = this.tabsStore.activeTab;
 
-  public readonly hasMultipleTabs = computed<boolean>(() => this.tabs().length > 1);
+  public readonly hasMultipleTabs = this.tabsStore.hasMultipleTabs;
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -70,24 +68,16 @@ export class TabStateService {
       const activeId = this.activeTabId();
       if (!activeId || activeId === absoluteName) return;
 
-      this.tabs.update(currentTabs => {
-        const activeIndex = currentTabs.findIndex(t => t.id === activeId);
-        if (activeIndex >= 0) {
-          const updated = [...currentTabs];
-          const parts = absoluteName.split(':');
-          const file = parts.pop() || '';
-          const namespace = parts.join(':');
-          updated[activeIndex] = {
-            ...updated[activeIndex],
-            id: absoluteName,
-            file,
-            namespace,
-          };
-          return updated;
-        }
-        return currentTabs;
+      untracked(() => {
+        const currentTabs = this.tabs();
+        const activeTab = currentTabs.find(t => t.id === activeId);
+        if (!activeTab || currentTabs.some(t => t.id === absoluteName)) return;
+
+        const parts = absoluteName.split(':');
+        const file = parts.pop() || '';
+        const namespace = parts.join(':');
+        this.tabsStore.renameTab(activeId, {...activeTab, id: absoluteName, file, namespace});
       });
-      this.activeTabId.set(absoluteName);
     });
   }
 
@@ -132,60 +122,57 @@ export class TabStateService {
     const snapshot = this.loadedFilesService.getSnapshot();
     const baseline = this.modelSavingTracker.getSavedModel();
 
-    this.tabs.update(currentTabs => {
-      // If we are loading an empty new-model and a new-model tab already exists, assign a unique name/id
-      if (absoluteName.includes('new-model') && currentTabs.some(t => t.id === absoluteName)) {
-        let counter = 2;
-        while (currentTabs.some(t => t.id === `${file.namespace}:new-model-${counter}.ttl`)) {
-          counter++;
-        }
-        absoluteName = `${file.namespace}:new-model-${counter}.ttl`;
+    const currentTabs = this.tabs();
+    // If we are loading an empty new-model and a new-model tab already exists, assign a unique name/id
+    if (absoluteName.includes('new-model') && currentTabs.some(t => t.id === absoluteName)) {
+      let counter = 2;
+      while (currentTabs.some(t => t.id === `${file.namespace}:new-model-${counter}.ttl`)) {
+        counter++;
       }
+      absoluteName = `${file.namespace}:new-model-${counter}.ttl`;
+    }
 
-      const existingIndex = currentTabs.findIndex(t => t.id === absoluteName);
+    const existingIndex = currentTabs.findIndex(t => t.id === absoluteName);
 
-      const tabData: EditorTab = {
-        id: absoluteName,
-        file: absoluteName.split(':').pop() || file.name,
-        namespace: file.namespace,
-        aspectModelUrn: file.aspect?.aspectModelUrn || file.originalAspectModelUrn,
-        editElementUrn,
-        fromWorkspace,
-        savedModelBaseline: baseline,
-        filesSnapshot: snapshot,
-        isDirty: false,
-      };
+    const tabData: EditorTab = {
+      id: absoluteName,
+      file: absoluteName.split(':').pop() || file.name,
+      namespace: file.namespace,
+      aspectModelUrn: file.aspect?.aspectModelUrn || file.originalAspectModelUrn,
+      editElementUrn,
+      fromWorkspace,
+      savedModelBaseline: baseline,
+      filesSnapshot: snapshot,
+      isDirty: false,
+    };
 
-      // If active tab or single tab is a clean empty new-model tab and we are loading a real model, replace the empty tab
-      const currentActiveId = this.activeTabId();
-      let replaceIndex = currentTabs.findIndex(t => t.id === currentActiveId);
-      if (replaceIndex < 0 && currentTabs.length === 1) {
-        replaceIndex = 0;
+    // If active tab or single tab is a clean empty new-model tab and we are loading a real model, replace the empty tab
+    const currentActiveId = this.activeTabId();
+    let replaceIndex = currentTabs.findIndex(t => t.id === currentActiveId);
+    if (replaceIndex < 0 && currentTabs.length === 1) {
+      replaceIndex = 0;
+    }
+
+    const isCleanEmptyToReplace =
+      replaceIndex >= 0 &&
+      currentTabs[replaceIndex].file.includes('new-model') &&
+      !currentTabs[replaceIndex].isDirty &&
+      !currentTabs[replaceIndex].aspectModelUrn &&
+      !file.name.includes('new-model');
+
+    if (isCleanEmptyToReplace) {
+      const oldTabId = currentTabs[replaceIndex].id;
+      if (oldTabId !== absoluteName) {
+        this.tabsStore.removeTab(oldTabId);
       }
+      this.tabsStore.addOrUpdateTab(tabData);
+    } else if (existingIndex >= 0) {
+      this.tabsStore.addOrUpdateTab({...currentTabs[existingIndex], ...tabData});
+    } else {
+      this.tabsStore.addOrUpdateTab(tabData);
+    }
 
-      const isCleanEmptyToReplace =
-        replaceIndex >= 0 &&
-        currentTabs[replaceIndex].file.includes('new-model') &&
-        !currentTabs[replaceIndex].isDirty &&
-        !currentTabs[replaceIndex].aspectModelUrn &&
-        !file.name.includes('new-model');
-
-      if (isCleanEmptyToReplace) {
-        const updated = [...currentTabs];
-        updated[replaceIndex] = tabData;
-        return updated;
-      }
-
-      if (existingIndex >= 0) {
-        const updated = [...currentTabs];
-        updated[existingIndex] = {...updated[existingIndex], ...tabData};
-        return updated;
-      }
-
-      return [...currentTabs, tabData];
-    });
-
-    this.activeTabId.set(absoluteName);
+    this.tabsStore.setActiveTabId(absoluteName);
     this.titleService.updateTitle(absoluteName);
 
     if (this.browserService.isStartedAsTauriApp()) {
@@ -204,21 +191,22 @@ export class TabStateService {
     if (!file) return;
     const activeId = this.activeTabId();
     const newId = file.absoluteName || `${file.namespace}:${file.name}`;
-    this.tabs.update(currentTabs =>
-      currentTabs.map(tab => {
-        if (tab.id === activeId || tab.file.includes('new-model')) {
-          return {
-            ...tab,
-            id: newId,
-            file: file.name,
-            namespace: file.namespace,
-            aspectModelUrn: file.aspect?.aspectModelUrn || file.originalAspectModelUrn,
-          };
+    const currentTabs = this.tabs();
+    for (const tab of currentTabs) {
+      if (tab.id === activeId || tab.file.includes('new-model')) {
+        if (tab.id !== newId) {
+          this.tabsStore.removeTab(tab.id);
         }
-        return tab;
-      }),
-    );
-    this.activeTabId.set(newId);
+        this.tabsStore.addOrUpdateTab({
+          ...tab,
+          id: newId,
+          file: file.name,
+          namespace: file.namespace,
+          aspectModelUrn: file.aspect?.aspectModelUrn || file.originalAspectModelUrn,
+        });
+      }
+    }
+    this.tabsStore.setActiveTabId(newId);
   }
 
   /**
@@ -230,19 +218,14 @@ export class TabStateService {
 
     const snapshot = this.loadedFilesService.getSnapshot();
     const baseline = this.modelSavingTracker.getSavedModel();
-
-    this.tabs.update(currentTabs =>
-      currentTabs.map(tab => {
-        if (tab.id === activeId) {
-          return {
-            ...tab,
-            filesSnapshot: snapshot,
-            savedModelBaseline: baseline,
-          };
-        }
-        return tab;
-      }),
-    );
+    const activeTab = this.activeTab();
+    if (activeTab) {
+      this.tabsStore.addOrUpdateTab({
+        ...activeTab,
+        filesSnapshot: snapshot,
+        savedModelBaseline: baseline,
+      });
+    }
   }
 
   /**
@@ -275,7 +258,7 @@ export class TabStateService {
         this.modelSavingTracker.setSavedModel(targetTab.savedModelBaseline);
       }
 
-      this.activeTabId.set(tabId);
+      this.tabsStore.setActiveTabId(tabId);
       this.titleService.updateTitle(targetTab.id);
 
       if (this.browserService.isStartedAsTauriApp()) {
@@ -290,7 +273,7 @@ export class TabStateService {
     }
 
     // If no snapshot yet, load via FileHandlingService
-    this.activeTabId.set(tabId);
+    this.tabsStore.setActiveTabId(tabId);
     this.fileHandlingService.loadNamespaceFile(targetTab.id, targetTab.aspectModelUrn || targetTab.editElementUrn);
     return of(true);
   }
@@ -300,7 +283,7 @@ export class TabStateService {
    */
   public setTabDirty(tabId: string | null, isDirty: boolean): void {
     if (!tabId) return;
-    this.tabs.update(currentTabs => currentTabs.map(tab => (tab.id === tabId ? {...tab, isDirty} : tab)));
+    this.tabsStore.setTabDirty(tabId, isDirty);
   }
 
   /**
@@ -332,20 +315,20 @@ export class TabStateService {
         const remainingTabs = currentTabs.filter(t => t.id !== tabId);
 
         this.loadedFilesService.removeFile(tabId);
+        if (isActive) {
+          // Prevent the store from auto-selecting a neighbour, so switchToTab performs a full restore
+          this.tabsStore.setActiveTabId(null);
+        }
+        this.tabsStore.removeTab(tabId);
 
         if (isActive) {
           if (remainingTabs.length > 0) {
-            this.tabs.set(remainingTabs);
             const nextIndex = Math.min(tabIndex, remainingTabs.length - 1);
             const nextTab = remainingTabs[nextIndex];
             this.switchToTab(nextTab.id).subscribe();
           } else {
-            this.tabs.set([]);
-            this.activeTabId.set(null);
             this.fileHandlingService.loadEmptyModel().subscribe();
           }
-        } else {
-          this.tabs.set(remainingTabs);
         }
       }),
       map(() => true),

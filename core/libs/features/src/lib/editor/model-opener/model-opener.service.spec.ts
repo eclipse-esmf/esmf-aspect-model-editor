@@ -17,7 +17,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {OpenFileDialogComponent} from '../../search/open-file-dialog/open-file-dialog.component';
+import {OpenFileDialogComponent} from '@ame/features/search';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
 import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';

@@ -17,8 +17,9 @@ import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {catchError, delayWhen, first, map, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
-import {ConfigurationService} from '../settings-dialog';
-import {SidebarStateService} from '../sidebar';
+import {WorkspaceStore} from '@ame/domain';
+import {ConfigurationService} from '@ame/features/settings';
+import {SidebarStateService} from '@ame/features/sidebar';
 import {FileHandlingService} from './editor-toolbar/services/file-handling.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
@@ -36,6 +37,7 @@ export class ModelSaverService implements IModelSaverTokenService {
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private notificationsService = inject(NotificationsService);
   private sidebarService = inject(SidebarStateService);
+  private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private configurationService = inject(ConfigurationService);
   private injector = inject(Injector);
@@ -64,6 +66,7 @@ export class ModelSaverService implements IModelSaverTokenService {
         this.tabStateService.setTabDirty(this.tabStateService.activeTabId(), false);
         this.notificationsService.info({title: this.translate.language.notificationService.aspectSavedSuccess});
         console.info('Aspect model was saved to the local folder');
+        this.workspaceStore.triggerRefresh();
         this.sidebarService.workspace.refresh();
       }),
       catchError(error => {

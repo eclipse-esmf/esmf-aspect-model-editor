@@ -43,10 +43,10 @@ import {
   SaveModelDialogService,
   ShapeSettingsService,
   TextModelLoaderModalComponent,
-} from '../editor';
-import {SearchesStateService} from '../search';
-import {ConfigurationService} from '../settings-dialog';
-import {SidebarStateService} from '../sidebar';
+} from '@ame/features/editor';
+import {SearchesStateService} from '@ame/features/search';
+import {ConfigurationService} from '@ame/features/settings';
+import {SidebarStateService} from '@ame/features/sidebar';
 
 export {ITauriTunnelService};
 

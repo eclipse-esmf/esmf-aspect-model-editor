@@ -33,10 +33,10 @@ import {
   ShapeSettingsComponent,
   ShapeSettingsService,
   ShapeSettingsStateService,
-} from '../editor';
-import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '../search';
-import {ConfigurationService} from '../settings-dialog';
-import {SidebarComponent} from '../sidebar';
+} from '@ame/features/editor';
+import {ElementsSearchComponent, FilesSearchComponent, SearchesStateService} from '@ame/features/search';
+import {ConfigurationService} from '@ame/features/settings';
+import {SidebarComponent} from '@ame/features/sidebar';
 
 const SIDEBAR_MIN_WIDTH = 480;
 const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};

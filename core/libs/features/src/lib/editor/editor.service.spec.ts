@@ -38,7 +38,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ConfigurationService, SammLanguageSettingsService} from '../settings-dialog';
+import {ConfigurationService, SammLanguageSettingsService} from '@ame/features/settings';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from './editor-dialog';
 import {EditorService} from './editor.service';

@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {UiShellStore, WorkspaceStore} from '@ame/domain';
 import {LoadedFilesService, RdfModelUtil} from '@ame/infrastructure';
 import {computed, effect, inject, Injectable, signal} from '@angular/core';
 
@@ -129,6 +130,8 @@ export class NamespacesManager {
 @Injectable({providedIn: 'root'})
 export class SidebarStateService {
   private loadedFilesService = inject(LoadedFilesService);
+  public readonly uiShellStore = inject(UiShellStore);
+  public readonly workspaceStore = inject(WorkspaceStore);
 
   public sammElements = new SidebarState();
   public workspace = new SidebarStateWithRefresh();
@@ -165,6 +168,25 @@ export class SidebarStateService {
     const allNamespaces = this.namespacesState.namespaces();
     const hasOutdated = Object.values(allNamespaces).some(files => files.some(f => f.outdated));
     this.namespacesState.hasOutdatedFiles.set(hasOutdated);
+
+    // Sync into WorkspaceStore
+    const items = Object.entries(allNamespaces).flatMap(([ns, files]) =>
+      files.map(f => ({
+        id: `${ns}:${f.name}`,
+        name: f.name,
+        namespace: ns,
+        aspectModelUrn: f.aspectModelUrn,
+        loaded: f.loaded,
+        outdated: f.outdated,
+        errored: f.errored,
+        isLoadedInWorkspace: f.isLoadedInWorkspace,
+        sammVersion: f.sammVersion,
+        dependencies: f.dependencies,
+        missingDependencies: f.missingDependencies,
+      })),
+    );
+    this.workspaceStore.setFiles(items);
+
     return allNamespaces;
   }
 
@@ -173,25 +195,37 @@ export class SidebarStateService {
       if (this.sammElements.isOpened()) {
         this.workspace.close();
         this.fileElements.close();
+        this.uiShellStore.openSidebar('sammElements');
       }
     });
 
     effect(() => {
       if (this.workspace.isOpened()) {
         this.sammElements.close();
+        this.uiShellStore.openSidebar('workspace');
       } else {
         this.fileElements.close();
+        if (!this.sammElements.isOpened()) {
+          this.uiShellStore.closeSidebar();
+        }
       }
     });
 
     effect(() => {
       const opened = this.fileElements.isOpened();
-      if (!opened) this.selection.reset();
+      if (!opened) {
+        this.selection.reset();
+        this.workspaceStore.selectFile(null);
+      }
     });
 
     effect(() => {
       const sel = this.selection.selection();
-      if (sel) this.fileElements.open();
+      if (sel) {
+        this.fileElements.open();
+        this.uiShellStore.openSidebar('fileElements');
+        this.workspaceStore.selectFile(sel);
+      }
     });
   }
 }

@@ -23,8 +23,8 @@ import {
 } from '@ame/shared';
 import {Component, inject, Injector, OnInit, signal} from '@angular/core';
 import {take} from 'rxjs';
-import {SearchesStateService} from '../search';
-import {ConfigurationService} from '../settings-dialog';
+import {SearchesStateService} from '@ame/features/search';
+import {ConfigurationService} from '@ame/features/settings';
 import {StartupService} from './startup.service';
 import {TauriTunnelService} from './tauri-tunnel.service';
 

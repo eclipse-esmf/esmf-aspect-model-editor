@@ -28,7 +28,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
 import {catchError, concatMap, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
-import {ConfigurationService} from '../settings-dialog';
+import {ConfigurationService} from '@ame/features/settings';
 import {ModelRendererService} from './model-renderer.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';

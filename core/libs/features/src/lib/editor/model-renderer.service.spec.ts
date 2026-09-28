@@ -20,7 +20,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {SammLanguageSettingsService} from '../settings-dialog';
+import {SammLanguageSettingsService} from '@ame/features/settings';
 import {ShapeSettingsService} from './editor-dialog';
 import {LargeFileWarningService} from './large-file-warning-dialog/large-file-warning-dialog.service';
 import {ModelRendererService} from './model-renderer.service';

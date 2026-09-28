@@ -31,6 +31,4 @@ export * from './open-element-window/open-element-window.service';
 export * from './rename-model/rename-model.component';
 export * from './rename-model/rename-model.service';
 export * from './save-model-dialog/save-model-dialog.service';
-export * from './tabs/editor-tab-bar/editor-tab-bar.component';
-export * from './tabs/tab-state.service';
-export * from './tabs/tab.model';
+export * from './tabs';

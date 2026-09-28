@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelValidationStore, WorkspaceStore} from '@ame/domain';
 import {ModelApiService} from '@ame/infrastructure';
 import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
@@ -50,6 +51,8 @@ export class WorkspaceComponent {
   private translate = inject(LanguageTranslationService);
 
   public sidebarService = inject(SidebarStateService);
+  public validationStore = inject(ModelValidationStore);
+  public workspaceStore = inject(WorkspaceStore);
 
   public namespaces = this.sidebarService.namespacesState;
   public readonly loading = createDebouncedLoading();
@@ -70,6 +73,7 @@ export class WorkspaceComponent {
     }
 
     effect(() => {
+      this.workspaceStore.refreshTick();
       this.sidebarService.workspace.refreshTick();
       this.refresh$.next();
     });
@@ -79,19 +83,26 @@ export class WorkspaceComponent {
         debounceTime(50),
         tap(() => {
           this.error.set(null);
+          this.validationStore.clearWorkspaceError();
+          this.validationStore.setValidating(true);
           this.loading.set(true);
         }),
         switchMap(() =>
           this.modelChecker.detectWorkspaceErrors().pipe(
-            map(files => this.sidebarService.updateWorkspace(files)),
+            map(files => {
+              this.validationStore.setValidationStatus(true);
+              return this.sidebarService.updateWorkspace(files);
+            }),
             catchError(err => {
               if (err?.error?.error) {
                 this.error.set(err.error.error);
+                this.validationStore.setWorkspaceError(err.error.error);
               }
               return EMPTY;
             }),
             finalize(() => {
               this.loading.set(false);
+              this.validationStore.setValidating(false);
             }),
           ),
         ),

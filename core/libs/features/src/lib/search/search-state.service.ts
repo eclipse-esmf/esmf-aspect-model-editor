@@ -11,43 +11,55 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {SearchStore} from '@ame/domain';
+import {inject, Injectable} from '@angular/core';
+import {toObservable} from '@angular/core/rxjs-interop';
 import {environment} from 'environments/environment';
-import {BehaviorSubject} from 'rxjs';
+import {Observable} from 'rxjs';
 
-class SearchState {
-  private _opened$ = new BehaviorSubject(false);
-  public opened$ = this._opened$.asObservable();
+class SearchStateAdapter {
+  constructor(
+    public readonly opened$: Observable<boolean>,
+    private readonly onOpen: () => void,
+    private readonly onClose: () => void,
+    private readonly onToggle: () => void,
+  ) {}
 
   open() {
-    this._opened$.next(true);
+    this.onOpen();
   }
 
   close() {
-    this._opened$.next(false);
+    this.onClose();
   }
 
   toggle() {
-    this._opened$.next(!this._opened$.value);
+    this.onToggle();
   }
 }
 
 @Injectable({providedIn: 'root'})
 export class SearchesStateService {
-  public elementsSearch = new SearchState();
-  public filesSearch = new SearchState();
+  public readonly searchStore = inject(SearchStore);
+
+  public readonly elementsSearch = new SearchStateAdapter(
+    toObservable(this.searchStore.elementsSearchOpened),
+    () => this.searchStore.openElementsSearch(),
+    () => this.searchStore.closeElementsSearch(),
+    () => this.searchStore.toggleElementsSearch(),
+  );
+
+  public readonly filesSearch = new SearchStateAdapter(
+    toObservable(this.searchStore.filesSearchOpened),
+    () => this.searchStore.openFilesSearch(),
+    () => this.searchStore.closeFilesSearch(),
+    () => this.searchStore.toggleFilesSearch(),
+  );
 
   constructor() {
-    this.elementsSearch.opened$.subscribe(opened => {
-      if (opened) this.filesSearch.close();
-    });
-
-    this.filesSearch.opened$.subscribe(opened => {
-      if (opened) this.elementsSearch.close();
-    });
-
     if (!environment.production) {
       window['angular.searchesStateService'] = this;
     }
   }
 }
+

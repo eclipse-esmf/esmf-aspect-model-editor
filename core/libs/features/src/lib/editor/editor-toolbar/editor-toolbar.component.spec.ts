@@ -20,7 +20,7 @@ import {TranslocoTestingModule} from '@jsverse/transloco';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ConfigurationService} from '../../settings-dialog';
+import {ConfigurationService} from '@ame/features/settings';
 import {ShapeSettingsService} from '../editor-dialog';
 import {EditorService} from '../editor.service';
 import {EditorToolbarComponent} from './editor-toolbar.component';

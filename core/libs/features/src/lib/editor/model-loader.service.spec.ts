@@ -19,7 +19,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ConfigurationService} from '../settings-dialog';
+import {ConfigurationService} from '@ame/features/settings';
 import {ModelLoaderService} from './model-loader.service';
 import {ModelRendererService} from './model-renderer.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';

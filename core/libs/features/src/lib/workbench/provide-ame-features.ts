@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {provideAmeDomain} from '@ame/domain';
 import {provideAmeGraph} from '@ame/graph';
 import {provideAmeInfrastructure} from '@ame/infrastructure';
 import {
@@ -50,9 +51,9 @@ import {
   RenameModelDialogService,
   ShapeSettingsService,
   ShapeSettingsStateService,
-} from '../editor';
-import {ConfigurationService, SammLanguageSettingsService} from '../settings-dialog';
-import {SidebarStateService} from '../sidebar';
+} from '@ame/features/editor';
+import {ConfigurationService, SammLanguageSettingsService} from '@ame/features/settings';
+import {SidebarStateService} from '@ame/features/sidebar';
 import {TauriTunnelService} from './tauri-tunnel.service';
 
 /**
@@ -83,5 +84,6 @@ export function provideAmeFeatures(): EnvironmentProviders {
     {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useExisting: SammLanguageSettingsService},
     provideAmeGraph(),
     provideAmeInfrastructure(),
+    provideAmeDomain(),
   ]);
 }

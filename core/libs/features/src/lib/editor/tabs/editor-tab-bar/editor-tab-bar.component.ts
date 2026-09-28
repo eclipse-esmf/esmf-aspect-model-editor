@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {TabsStore} from '@ame/domain';
 import {ChangeDetectionStrategy, Component, effect, ElementRef, inject, ViewChild} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -27,13 +28,14 @@ import {TabStateService} from '../tab-state.service';
 })
 export class EditorTabBarComponent {
   public readonly tabState = inject(TabStateService);
+  public readonly tabsStore = inject(TabsStore);
 
   @ViewChild('scrollContainer', {static: false})
   private scrollContainer?: ElementRef<HTMLElement>;
 
   constructor() {
     effect(() => {
-      const activeId = this.tabState.activeTabId();
+      const activeId = this.tabsStore.activeTabId() ?? this.tabState.activeTabId();
       if (activeId && this.scrollContainer?.nativeElement) {
         setTimeout(() => {
           const tabEl = this.scrollContainer?.nativeElement.querySelector(`[data-tab-id="${activeId}"]`);

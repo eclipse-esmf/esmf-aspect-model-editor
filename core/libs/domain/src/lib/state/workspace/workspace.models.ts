@@ -11,15 +11,22 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AppShellInitializer} from '@ame/features/workbench';
-import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+export interface WorkspaceFileItem {
+  id: string; // namespace:fileName
+  name: string;
+  namespace: string;
+  aspectModelUrn: string;
+  loaded: boolean;
+  outdated: boolean;
+  errored: boolean;
+  isLoadedInWorkspace: boolean;
+  sammVersion?: string;
+  dependencies?: string[];
+  missingDependencies?: string[];
+}
 
-@Component({
-  selector: 'ame-root',
-  templateUrl: './app.component.html',
-  imports: [RouterOutlet, AppShellInitializer],
-})
-export class AppComponent {
-  public readonly title = 'Aspect Model Editor';
+export interface WorkspaceSelection {
+  namespace: string;
+  file: string;
+  aspectModelUrn: string;
 }

@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {WorkspaceStore} from '@ame/domain';
 import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {
   CONFIRM_DIALOG_SERVICE,
@@ -65,6 +66,7 @@ export class WorkspaceFileListComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   public readonly sidebarService = inject(SidebarStateService);
+  public readonly workspaceStore = inject(WorkspaceStore);
 
   public readonly menuSelection = signal<{namespace: string; file: FileStatus} | null>(null);
   public readonly foldedStatus = signal(false);

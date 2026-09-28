@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorCanvasComponent, LoadingComponent} from '@ame/features';
+import {EditorCanvasComponent, LoadingComponent} from '@ame/features/workbench';
 import {Routes} from '@angular/router';
 
 export const APP_ROUTES: Routes = [
