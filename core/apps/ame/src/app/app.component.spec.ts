@@ -229,5 +229,20 @@ describe('AppComponent', () => {
 
       document.body.removeChild(anchor);
     });
+
+    it('should not call showContextMenu when target is not a link', () => {
+      component.setContextMenu();
+
+      const div = document.createElement('div');
+      document.body.appendChild(div);
+
+      const event = new MouseEvent('contextmenu', {bubbles: true, cancelable: true});
+      Object.defineProperty(event, 'target', {value: div});
+      div.dispatchEvent(event);
+
+      expect(ipcRenderer.showContextMenu).not.toHaveBeenCalled();
+
+      document.body.removeChild(div);
+    });
   });
 });

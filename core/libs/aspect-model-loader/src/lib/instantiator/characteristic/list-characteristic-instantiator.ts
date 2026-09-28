@@ -12,22 +12,33 @@
  */
 
 import {Quad} from 'n3';
+import {Characteristic} from '../../aspect-meta-model/characteristic/default-characteristic';
 import {DefaultList} from '../../aspect-meta-model/characteristic/default-list';
 import {BaseInitProps} from '../../shared/base-init-props';
 import {characteristicFactory} from './characteristic-instantiator';
 
 export function listCharacteristicFactory(initProps: BaseInitProps) {
   const {
-    rdfModel: {samm},
+    rdfModel: {samm, sammC},
   } = initProps;
   const {generateCharacteristic, getDataType} = characteristicFactory(initProps);
 
-  return function createListCharacteristic(quad: Quad): DefaultList {
+  return function createListCharacteristic(quad: Quad, characteristicCreator?: (quad: Quad) => Characteristic): DefaultList {
     return generateCharacteristic(quad, (baseProperties, propertyQuads) => {
-      return new DefaultList({
-        ...baseProperties,
-        dataType: getDataType(propertyQuads.find(propertyQuad => samm.isDataTypeProperty(propertyQuad.predicate.value))),
-      });
+      const characteristic = new DefaultList({...baseProperties});
+
+      for (const propertyQuad of propertyQuads) {
+        if (samm.isDataTypeProperty(propertyQuad.predicate.value)) {
+          characteristic.dataType = getDataType(propertyQuad);
+        } else if (sammC.isElementCharacteristicProperty(propertyQuad.predicate.value)) {
+          characteristic.elementCharacteristic = characteristicCreator?.(propertyQuad);
+          if (characteristic.elementCharacteristic) {
+            characteristic.elementCharacteristic.addParent(characteristic);
+          }
+        }
+      }
+
+      return characteristic;
     });
   };
 }

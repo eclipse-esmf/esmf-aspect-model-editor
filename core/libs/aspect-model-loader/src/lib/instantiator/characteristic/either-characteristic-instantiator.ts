@@ -36,8 +36,8 @@ export function eitherCharacteristicFactory(initProps: BaseInitProps) {
           characteristic.left = characteristicCreator(propertyQuad);
           if (characteristic.left) characteristic.left.addParent(characteristic);
         } else if (sammC.isEitherRightProperty(propertyQuad.predicate.value)) {
-          if (characteristic.right) characteristic.right.addParent(characteristic);
           characteristic.right = characteristicCreator(propertyQuad);
+          if (characteristic.right) characteristic.right.addParent(characteristic);
         }
       }
       return characteristic;
