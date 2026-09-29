@@ -11,19 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {WorkspaceStore} from '@ame/domain';
-import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
-import {
-  CONFIRM_DIALOG_SERVICE,
-  ConfirmDialogEnum,
-  IConfirmDialogService,
-  IModelOpenerService,
-  LanguageTranslationService,
-  MODEL_OPENER_SERVICE,
-  NotificationsService,
-  TauriSignals,
-  TauriSignalsService,
-} from '@ame/shared';
+import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -58,11 +47,11 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
 export class WorkspaceFileListComponent {
   private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private readonly notificationService = inject(NotificationsService);
-  private readonly confirmDialogService = inject<IConfirmDialogService>(CONFIRM_DIALOG_SERVICE, {optional: true});
-  private readonly modelApiService = inject(ModelApiService);
-  private readonly modelOpener = inject<IModelOpenerService>(MODEL_OPENER_SERVICE, {optional: true});
+  private readonly confirmDialogService = inject(ConfirmDialogPort, {optional: true});
+  private readonly modelApiService = inject(WorkspaceFacade);
+  private readonly modelOpener = inject(ModelOpenerPort, {optional: true});
   private readonly translate = inject(LanguageTranslationService);
-  private readonly loadedFiles = inject(LoadedFilesService);
+  private readonly loadedFiles = inject(ModelSessionFacade);
   private readonly destroyRef = inject(DestroyRef);
 
   public readonly sidebarService = inject(SidebarStateService);

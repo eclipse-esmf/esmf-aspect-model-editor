@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService, ModelLoaderPort} from '@ame/domain';
 import {
   FileEntry,
   FileInformation,
@@ -20,16 +21,7 @@ import {
   NamespaceFile,
   RdfModelUtil,
 } from '@ame/infrastructure';
-import {
-  BrowserService,
-  config,
-  CONFIGURATION_SERVICE,
-  IModelLoaderService,
-  isVersionOutdated,
-  NotificationsService,
-  TauriSignalsService,
-  TitleService,
-} from '@ame/shared';
+import {BrowserService, config, isVersionOutdated, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
@@ -49,7 +41,7 @@ interface TmpLoadedFiles {
 }
 
 @Injectable({providedIn: 'root'})
-export class ModelLoaderService implements IModelLoaderService {
+export class ModelLoaderService implements ModelLoaderPort {
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
@@ -60,7 +52,7 @@ export class ModelLoaderService implements IModelLoaderService {
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);
   private tauriSignalsService = inject(TauriSignalsService);
-  private configurationService = inject(CONFIGURATION_SERVICE);
+  private configurationService = inject(ConfigurationService);
   private titleService = inject(TitleService);
 
   private get tabStateService(): TabStateService {

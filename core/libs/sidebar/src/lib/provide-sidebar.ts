@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {WorkspaceStore} from '@ame/domain';
-import {IPC_RENDERER, ITauriIpcBridge, SIDEBAR_STATE_SERVICE, TAURI_EVENTS, TAURI_IPC_BRIDGES} from '@ame/shared';
+import {SidebarStatePort, WorkspaceStore} from '@ame/domain';
+import {IPC_RENDERER, ITauriIpcBridge, TAURI_EVENTS, TAURI_IPC_BRIDGES} from '@ame/shared';
 import {EnvironmentProviders, Injectable, inject, makeEnvironmentProviders} from '@angular/core';
 import {SidebarStateService} from './sidebar-state.service';
 
@@ -29,7 +29,7 @@ export class SidebarTauriBridge implements ITauriIpcBridge {
 
 export function provideSidebar(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    {provide: SIDEBAR_STATE_SERVICE, useExisting: SidebarStateService},
+    {provide: SidebarStatePort, useExisting: SidebarStateService},
     {provide: TAURI_IPC_BRIDGES, useExisting: SidebarTauriBridge, multi: true},
   ]);
 }

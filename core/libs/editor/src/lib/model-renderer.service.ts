@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
+import {FiltersService, SammLanguageSettingsService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -21,13 +21,7 @@ import {
   MaxGraphShapeOverlayService,
 } from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  LanguageTranslationService,
-  LoadingScreenService,
-  NotificationsService,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-  ValidateStatus,
-} from '@ame/shared';
+import {LanguageTranslationService, LoadingScreenService, NotificationsService, ValidateStatus} from '@ame/shared';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';
@@ -49,7 +43,7 @@ export class ModelRendererService {
   private loadedFilesService = inject(LoadedFilesService);
   private notificationsService = inject(NotificationsService);
   private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
-  private sammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private sammLanguageSettingsService = inject(SammLanguageSettingsService);
 
   private get rdfModel() {
     return this.loadedFilesService.currentLoadedFile?.rdfModel;

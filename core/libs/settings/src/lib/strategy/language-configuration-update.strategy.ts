@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LanguageTranslationService, TAURI_TUNNEL_SERVICE} from '@ame/shared';
+import {LanguageTranslationService, TauriTunnelPort} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
@@ -19,7 +19,7 @@ import {SettingsUpdateStrategy} from './settings-update.strategy';
 @Injectable({providedIn: 'root'})
 export class LanguageConfigurationUpdateStrategy implements SettingsUpdateStrategy {
   private readonly translate = inject(LanguageTranslationService);
-  private readonly tauriTunnelService = inject(TAURI_TUNNEL_SERVICE);
+  private readonly tauriTunnelService = inject(TauriTunnelPort);
 
   updateSettings(model: SettingsFormData, settings: Settings): void {
     const languageConfiguration = model?.languageConfiguration;

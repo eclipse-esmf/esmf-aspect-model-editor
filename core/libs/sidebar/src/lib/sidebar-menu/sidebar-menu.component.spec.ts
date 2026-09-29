@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CONFIGURATION_SERVICE, EDITOR_THEME_SERVICE, INFORMATION_HANDLING_SERVICE, NotificationsService} from '@ame/shared';
+import {ConfigurationService, EditorThemePort, InformationHandlingPort} from '@ame/domain';
+import {NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslocoTestingModule} from '@jsverse/transloco';
@@ -70,10 +71,10 @@ describe('SidebarMenuComponent', () => {
       ],
       providers: [
         SidebarStateService,
-        {provide: INFORMATION_HANDLING_SERVICE, useValue: informationServiceMock},
+        {provide: InformationHandlingPort, useValue: informationServiceMock},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: CONFIGURATION_SERVICE, useValue: configurationServiceMock},
-        {provide: EDITOR_THEME_SERVICE, useValue: themeServiceMock},
+        {provide: ConfigurationService, useValue: configurationServiceMock},
+        {provide: EditorThemePort, useValue: themeServiceMock},
       ],
     });
 

@@ -1,13 +1,14 @@
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {GRAPH_ADAPTER, IGraphAdapter, setElementNode} from '@ame/shared';
+import {setElementNode} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultQuantifiable, DefaultUnit} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {QuantifiableModelService} from './quantifiable-model.service';
 
 describe('QuantifiableModelService', () => {
   let service: QuantifiableModelService;
-  let mockGraphAdapter: Partial<IGraphAdapter>;
+  let mockGraphAdapter: Partial<GraphAdapterPort>;
 
   beforeEach(() => {
     mockGraphAdapter = {
@@ -21,7 +22,7 @@ describe('QuantifiableModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         QuantifiableModelService,
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {
           provide: LoadedFilesService,
           useValue: {

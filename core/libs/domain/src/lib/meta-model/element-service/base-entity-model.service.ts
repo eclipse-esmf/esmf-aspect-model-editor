@@ -11,26 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  GRAPH_ADAPTER,
-  IGraphAdapter,
-  IShapeConnectorService,
-  LanguageTranslationService,
-  NotificationsService,
-  SHAPE_CONNECTOR_SERVICE,
-} from '@ame/shared';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
+import {ShapeConnectorPort} from '../../ports/shape-connector.port';
 
 @Injectable({providedIn: 'root'})
 export class BaseEntityModelService {
   private readonly notificationService = inject(NotificationsService);
-  private readonly shapeConnectorService: IShapeConnectorService = inject(SHAPE_CONNECTOR_SERVICE);
+  private readonly shapeConnectorService = inject(ShapeConnectorPort);
   private readonly injector = inject(Injector);
   private readonly translate = inject(LanguageTranslationService);
 
-  private get graphAdapter(): IGraphAdapter | null {
-    return this.injector.get<IGraphAdapter | null>(GRAPH_ADAPTER, null, {optional: true});
+  private get graphAdapter(): GraphAdapterPort | null {
+    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
   }
 
   checkExtendedElement(metaModelElement: DefaultEntity, extendedElement: DefaultEntity) {

@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {basicShapeGeometry, circleShapeGeometry, DRAGGABLE_SERVICE} from '@ame/shared';
+import {DraggablePort} from '@ame/domain';
+import {basicShapeGeometry, circleShapeGeometry} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {DraggableElementComponent} from './draggable-element.component';
@@ -30,7 +31,7 @@ describe('DraggableElementComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [DraggableElementComponent],
-      providers: [{provide: DRAGGABLE_SERVICE, useValue: editorServiceMock}],
+      providers: [{provide: DraggablePort, useValue: editorServiceMock}],
     });
 
     fixture = TestBed.createComponent(DraggableElementComponent);

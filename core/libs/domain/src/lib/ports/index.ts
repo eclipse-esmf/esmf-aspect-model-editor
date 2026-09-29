@@ -11,11 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
-import {Observable} from 'rxjs';
-
-export interface IFileHandlingService {
-  importFilesToWorkspace(zip: File): Observable<unknown>;
-}
-
-export const FILE_HANDLING_SERVICE = new InjectionToken<IFileHandlingService>('FILE_HANDLING_SERVICE');
+export * from './dialog.port';
+export * from './editor-actions.port';
+export * from './entity-instance.port';
+export * from './graph-adapter.port';
+export * from './graph-filter-renderer.port';
+export * from './graph-navigator.port';
+export * from './model-loader.port';
+export * from './model-opener.port';
+export * from './shape-connector.port';
+export * from './sidebar-state.port';
+export * from './ui.port';

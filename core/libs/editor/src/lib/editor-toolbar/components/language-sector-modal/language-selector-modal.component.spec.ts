@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {SammLanguageSettingsService} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -38,7 +38,7 @@ describe('LanguageSelectorModalComponent', () => {
       ],
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
-        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {
+        MockProvider(SammLanguageSettingsService, {
           getSammLanguageCodes: vi.fn(() => ['en', 'de']),
         }),
       ],

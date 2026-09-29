@@ -12,9 +12,10 @@
  */
 
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {ElementRelationUtil, getModelElement, GRAPH_ADAPTER, IGraphAdapter, useUpdater} from '@ame/shared';
+import {ElementRelationUtil, getModelElement, useUpdater} from '@ame/shared';
 import {inject, Injector} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultEnumeration, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 
 export abstract class BaseModelService {
   protected readonly rdfService: RdfService = inject(RdfService);
@@ -23,8 +24,8 @@ export abstract class BaseModelService {
   protected readonly loadedFilesService: LoadedFilesService = inject(LoadedFilesService);
   protected readonly injector = inject(Injector);
 
-  protected get graphAdapter(): IGraphAdapter | null {
-    return this.injector.get<IGraphAdapter | null>(GRAPH_ADAPTER, null, {optional: true});
+  protected get graphAdapter(): GraphAdapterPort | null {
+    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
   }
 
   get currentCachedFile() {

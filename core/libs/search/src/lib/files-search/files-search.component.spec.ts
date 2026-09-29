@@ -13,16 +13,8 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '@ame/graph';
-import {
-  ISidebarStateService,
-  LanguageTranslationService,
-  MODEL_CHECKER_SERVICE,
-  MODEL_OPENER_SERVICE,
-  NotificationsService,
-  SearchService,
-  SIDEBAR_STATE_SERVICE,
-} from '@ame/shared';
+import {ModelOpenerPort, SidebarStatePort} from '@ame/domain';
+import {LanguageTranslationService, ModelCheckerPort, NotificationsService, SearchService} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideZonelessChangeDetection, signal} from '@angular/core';
@@ -44,7 +36,7 @@ describe('Files search', () => {
   let fixture: ComponentFixture<FilesSearchComponent>;
   let searchesStateService: SearchesStateService;
   let notificationService: NotificationsService;
-  let sidebarStateService: ISidebarStateService;
+  let sidebarStateService: SidebarStatePort;
   let searchService: SearchService;
   let modelOpenerService: any;
 
@@ -79,12 +71,9 @@ describe('Files search', () => {
         provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         MockProvider(MatDialogRef),
-        MockProvider(MaxGraphService),
         MockProvider(NotificationsService, {
           warning: vi.fn(),
         }),
-        MockProvider(MaxGraphShapeOverlayService),
-        MockProvider(MaxGraphAttributeService),
         MockProvider(TranslocoService, {
           langChanges$: new BehaviorSubject('en'),
           events$: new Subject(),
@@ -98,7 +87,7 @@ describe('Files search', () => {
           elementsSearch: {close: vi.fn()} as any,
         }),
         {
-          provide: SIDEBAR_STATE_SERVICE,
+          provide: SidebarStatePort,
           useValue: {
             namespacesState: {
               namespaces: signal(namespaces),
@@ -108,7 +97,7 @@ describe('Files search', () => {
           },
         },
         {
-          provide: MODEL_OPENER_SERVICE,
+          provide: ModelOpenerPort,
           useValue: {
             promptAndOpen: vi.fn(() => of(true)),
           },
@@ -130,7 +119,7 @@ describe('Files search', () => {
           } as any,
         }),
         {
-          provide: MODEL_CHECKER_SERVICE,
+          provide: ModelCheckerPort,
           useValue: {
             detectWorkspaceErrors: vi.fn(() => of([])),
           },
@@ -144,9 +133,9 @@ describe('Files search', () => {
     component = fixture.componentInstance;
     searchesStateService = TestBed.inject(SearchesStateService);
     notificationService = TestBed.inject(NotificationsService);
-    sidebarStateService = TestBed.inject(SIDEBAR_STATE_SERVICE);
+    sidebarStateService = TestBed.inject(SidebarStatePort);
     searchService = TestBed.inject(SearchService);
-    modelOpenerService = TestBed.inject(MODEL_OPENER_SERVICE);
+    modelOpenerService = TestBed.inject(ModelOpenerPort);
     fixture.detectChanges();
   });
 

@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService, ModelService} from '@ame/infrastructure';
-import {ElementCreatorService, IModelElementNamingService, MODEL_ELEMENT_NAMING_SERVICE, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {ElementCreatorService, ModelElementNamingPort} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, inject, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -51,12 +52,12 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 })
 export class CharacteristicNameDropdownFieldComponent extends DropdownFieldComponent<DefaultCharacteristic> implements OnInit {
   private destroyRef = inject(DestroyRef);
-  private modelElementNamingService: IModelElementNamingService = inject(MODEL_ELEMENT_NAMING_SERVICE);
+  private modelElementNamingService = inject(ModelElementNamingPort);
   private elementCreator = inject(ElementCreatorService);
 
   public editorModelService = inject(EditorModelService);
   public modelService = inject(ModelService);
-  public languageSettings = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  public languageSettings = inject(SammLanguageSettingsService);
   public loadedFilesService = inject(LoadedFilesService);
 
   public listCharacteristics: Map<string, () => DefaultCharacteristic> = new Map();

@@ -11,4 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export {ConfirmDialogEnum} from '@ame/shared';
+export {ConfirmDialogEnum} from '@ame/domain';

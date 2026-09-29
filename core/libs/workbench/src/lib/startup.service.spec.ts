@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {WorkspaceStore} from '@ame/domain';
+import {GraphNavigatorPort, WorkspaceStore} from '@ame/domain';
 import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService} from '@ame/editor';
-import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, LoadingScreenService, TauriSignalsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {NavigationEnd, Router} from '@angular/router';
@@ -59,7 +58,7 @@ describe('StartupService', () => {
     TestBed.configureTestingModule({
       providers: [
         StartupService,
-        {provide: MaxGraphService, useValue: maxgraphService},
+        {provide: GraphNavigatorPort, useValue: maxgraphService},
         {provide: TauriSignalsService, useValue: tauriSignalsService},
         {provide: TauriTunnelService, useValue: tauriTunnelService},
         {provide: ModelLoaderService, useValue: modelLoaderService},

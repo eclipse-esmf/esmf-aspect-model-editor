@@ -11,19 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
-
-export interface ISidebarStateService {
-  namespacesState?: {
+export abstract class SidebarStatePort {
+  abstract namespacesState?: {
     namespaces: () => Record<string, any[]>;
     getFile: (namespace: string, fileName: string) => any;
   };
-  updateWorkspace?(fileStatus?: any[]): Record<string, any[]>;
-  workspace?: {
+  abstract updateWorkspace?(fileStatus?: any[]): Record<string, any[]>;
+  abstract workspace?: {
     refresh?: () => void;
     [key: string]: any;
   };
   [key: string]: any;
 }
-
-export const SIDEBAR_STATE_SERVICE = new InjectionToken<ISidebarStateService>('SIDEBAR_STATE_SERVICE');

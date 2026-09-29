@@ -16,6 +16,7 @@ export * from './max-graph-attribute.service';
 export * from './max-graph-domain-bridge.service';
 export * from './max-graph-filter-renderer.service';
 export * from './max-graph-geometry-provider.service';
+export * from './max-graph-navigator.service';
 export * from './max-graph-settings-bridge.service';
 export * from './max-graph-setup.service';
 export * from './max-graph-shape-overlay.service';

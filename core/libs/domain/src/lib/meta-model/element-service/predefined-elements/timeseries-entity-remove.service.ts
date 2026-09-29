@@ -10,9 +10,10 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ElementRelationUtil, GRAPH_ADAPTER, IGraphAdapter} from '@ame/shared';
+import {ElementRelationUtil} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {DefaultEntity, DefaultProperty, NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
+import {GraphAdapterPort} from '../../../ports/graph-adapter.port';
 import {ModelRootService} from '../model-root.service';
 import {PredefinedRemove} from './predefined-remove.type';
 
@@ -21,8 +22,8 @@ export class TimeSeriesEntityRemoveService implements PredefinedRemove {
   private readonly modelRootService = inject(ModelRootService);
   private readonly injector = inject(Injector);
 
-  public get graphAdapter(): IGraphAdapter | null {
-    return this.injector.get<IGraphAdapter | null>(GRAPH_ADAPTER, null, {optional: true});
+  public get graphAdapter(): GraphAdapterPort | null {
+    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
   }
 
   public delete(cell: any) {

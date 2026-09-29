@@ -12,14 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  basicShapeGeometry,
-  ElementPropertyUtil,
-  IShapeSettingsStateService,
-  SHAPE_SETTINGS_STATE_SERVICE,
-  ShapeGeometry,
-  smallCircleShapeGeometry,
-} from '@ame/shared';
+import {basicShapeGeometry, ElementPropertyUtil, ShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
 import {Injector} from '@angular/core';
 import {
   DefaultAspect,
@@ -32,6 +25,7 @@ import {
   DefaultUnit,
   NamedElement,
 } from '@esmf/aspect-model-loader';
+import {ShapeSettingsStatePort} from '../../ports/ui.port';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 
 const allowedElements = [DefaultAspect, DefaultProperty, DefaultEntity, DefaultEither];
@@ -48,7 +42,7 @@ export class PropertiesFilterLoader implements FilterLoader {
   }
 
   filter(rootElements: NamedElement[]): ModelTree<NamedElement>[] {
-    const shapeSettingsStateService = this.injector.get<IShapeSettingsStateService>(SHAPE_SETTINGS_STATE_SERVICE, null as any, {
+    const shapeSettingsStateService = this.injector.get<ShapeSettingsStatePort>(ShapeSettingsStatePort, null as any, {
       optional: true,
     });
     if (shapeSettingsStateService?.isShapeSettingOpened()) {

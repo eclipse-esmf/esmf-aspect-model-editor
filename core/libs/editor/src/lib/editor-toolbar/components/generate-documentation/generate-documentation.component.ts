@@ -22,7 +22,8 @@ import {from, map, Observable, throwError} from 'rxjs';
 import {catchError, finalize, first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
-import {BrowserService, IPC_RENDERER, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {SammLanguageSettingsService} from '@ame/domain';
+import {BrowserService, IPC_RENDERER} from '@ame/shared';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
@@ -56,7 +57,7 @@ export class GenerateDocumentationComponent {
   private ipcRenderer = inject(IPC_RENDERER);
   private destroyRef = inject(DestroyRef);
   private dialogRef = inject(MatDialogRef<GenerateDocumentationComponent>);
-  private languageService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private languageService = inject(SammLanguageSettingsService);
   private modelApiService = inject(ModelApiService);
   private editorService = inject(EditorService);
   private loadedFiles = inject(LoadedFilesService);

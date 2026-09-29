@@ -1,7 +1,8 @@
-import {ElementRelationUtil, GRAPH_ADAPTER} from '@ame/shared';
+import {ElementRelationUtil} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity, PredefinedEntitiesEnum} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../../ports/graph-adapter.port';
 import {ModelRootService} from '../model-root.service';
 import {Point3dRemoveService} from './point3d-remove.service';
 
@@ -25,7 +26,7 @@ describe('Point3dRemoveService', () => {
       providers: [
         Point3dRemoveService,
         {provide: ModelRootService, useValue: mockModelRootService},
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
       ],
     });
 

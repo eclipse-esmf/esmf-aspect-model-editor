@@ -11,15 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  AssetsPath,
-  BindingsService,
-  BrowserService,
-  CONFIGURATION_SERVICE,
-  IConfigurationService,
-  LanguageTranslationService,
-} from '@ame/shared';
+import {AssetsPath, BindingsService, BrowserService, LanguageTranslationService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultTrait} from '@esmf/aspect-model-loader';
 import {
@@ -50,7 +44,7 @@ import {MaxGraphShapeSelectorService} from './max-graph-shape-selector.service';
 
 @Injectable({providedIn: 'root'})
 export class MaxGraphSetupService {
-  private readonly configurationService: IConfigurationService = inject(CONFIGURATION_SERVICE);
+  private readonly configurationService = inject(ConfigurationService);
   private readonly bindingsService = inject(BindingsService);
   private readonly browserService = inject(BrowserService);
   private readonly maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);

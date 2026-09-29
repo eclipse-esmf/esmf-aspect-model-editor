@@ -11,16 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {
-  createDebouncedLoading,
-  ElementIconComponent,
-  ElementType,
-  IModelLoaderService,
-  MODEL_LOADER_SERVICE,
-  sammElements,
-} from '@ame/shared';
+import {GraphNavigatorPort, ModelLoaderPort, ModelSessionFacade, NamespaceFile, WorkspaceFacade} from '@ame/domain';
+import {createDebouncedLoading, ElementIconComponent, ElementType, sammElements} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal, untracked} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
@@ -69,10 +61,10 @@ import {SidebarStateService} from '../../sidebar-state.service';
   ],
 })
 export class WorkspaceFileElementsComponent {
-  private maxgraphService = inject(MaxGraphService);
-  private modelApiService = inject(ModelApiService);
-  private modelLoaderService = inject<IModelLoaderService>(MODEL_LOADER_SERVICE, {optional: true});
-  private loadedFilesService = inject(LoadedFilesService);
+  private graphNavigator = inject(GraphNavigatorPort);
+  private modelApiService = inject(WorkspaceFacade);
+  private modelLoaderService = inject(ModelLoaderPort, {optional: true});
+  private loadedFilesService = inject(ModelSessionFacade);
   private destroyRef = inject(DestroyRef);
 
   public sidebarService = inject(SidebarStateService);
@@ -138,9 +130,9 @@ export class WorkspaceFileElementsComponent {
   }
 
   public elementImported(element: NamedElement): boolean {
-    this.maxgraphService.graphVersion?.();
+    this.graphNavigator.graphVersion();
     if (element?.aspectModelUrn) {
-      return !!this.maxgraphService.resolveCellByModelElement(element);
+      return this.graphNavigator.isElementRendered(element);
     }
     return false;
   }

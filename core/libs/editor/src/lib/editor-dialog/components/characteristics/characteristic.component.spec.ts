@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, NamespaceFile, RdfService} from '@ame/infrastructure';
-import {CONFIGURATION_SERVICE, MODEL_ELEMENT_NAMING_SERVICE, NotificationsService, SearchService} from '@ame/shared';
+import {ModelElementNamingPort, NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultAspect, DefaultCharacteristic, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -71,10 +72,10 @@ describe('CharacteristicComponent', () => {
         MockProvider(RdfService),
         MockProvider(SearchService),
         MockProvider(ShapeSettingsService),
-        MockProvider(MODEL_ELEMENT_NAMING_SERVICE, {
+        MockProvider(ModelElementNamingPort, {
           resolveElementNaming: vi.fn((el: any) => el),
         }),
-        {provide: CONFIGURATION_SERVICE, useValue: {getSettings: vi.fn(() => ({}))}},
+        {provide: ConfigurationService, useValue: {getSettings: vi.fn(() => ({}))}},
       ],
     }).compileComponents();
 

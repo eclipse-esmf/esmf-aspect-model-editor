@@ -24,15 +24,9 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {FiltersService, ModelElementNamingService} from '@ame/domain';
+import {EntityInstancePort, FiltersService, ModelElementNamingService, SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  ElementCreatorService,
-  ENTITY_INSTANCE_SERVICE,
-  LanguageTranslationService,
-  NotificationsService,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-} from '@ame/shared';
+import {ElementCreatorService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
@@ -169,13 +163,13 @@ describe('Single Shape Connection Handlers', () => {
         StructuredValueConnectionHandler,
         TraitConnectionHandler,
         FiltersService,
-        {provide: ENTITY_INSTANCE_SERVICE, useValue: {onNewProperty: vi.fn()}},
+        {provide: EntityInstancePort, useValue: {onNewProperty: vi.fn()}},
         {provide: MaxGraphService, useValue: mockMaxGraphService},
         {provide: ElementCreatorService, useValue: mockElementCreator},
         {provide: NotificationsService, useValue: mockNotificationsService},
         {provide: MaxGraphAttributeService, useValue: {graph: mockMaxGraphService.graph}},
         {provide: MaxGraphShapeOverlayService, useValue: {removeOverlay: vi.fn(), checkComplexEnumerationOverlays: vi.fn()}},
-        {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: {currentLanguage: 'en', addSammLanguageCode: vi.fn()}},
+        {provide: SammLanguageSettingsService, useValue: {currentLanguage: 'en', addSammLanguageCode: vi.fn()}},
         {provide: LanguageTranslationService, useValue: {language: {notificationService: {childForPredefinedElementError: 'err'}}}},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
         {

@@ -21,17 +21,15 @@ import {
   RdfModelUtil,
   WorkspaceStructure,
 } from '@ame/infrastructure';
-import {config, IModelCheckerService, isVersionOutdated} from '@ame/shared';
+import {config, isVersionOutdated, ModelCheckerPort} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {forkJoin, map, Observable, of, Subject, switchMap} from 'rxjs';
 import {ModelLoaderService} from './model-loader.service';
 
-export {IModelCheckerService};
-
 @Injectable({providedIn: 'root'})
-export class ModelCheckerService implements IModelCheckerService {
+export class ModelCheckerService implements ModelCheckerPort {
   private destroyRef = inject(DestroyRef);
   private modelApiService = inject(ModelApiService);
   private loadedFilesService = inject(LoadedFilesService);

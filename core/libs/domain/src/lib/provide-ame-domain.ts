@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MODEL_ELEMENT_NAMING_SERVICE} from '@ame/shared';
+import {ModelElementNamingPort} from '@ame/shared';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 import {ModelElementNamingService} from './meta-model/services/model-element-naming.service';
 
@@ -20,5 +20,5 @@ import {ModelElementNamingService} from './meta-model/services/model-element-nam
  * Binds domain implementations to their respective shared injection tokens.
  */
 export function provideAmeDomain(): EnvironmentProviders {
-  return makeEnvironmentProviders([{provide: MODEL_ELEMENT_NAMING_SERVICE, useExisting: ModelElementNamingService}]);
+  return makeEnvironmentProviders([{provide: ModelElementNamingPort, useExisting: ModelElementNamingService}]);
 }

@@ -11,11 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './lib/facades';
 export * from './lib/loader-filters';
 export * from './lib/meta-model';
+export * from './lib/ports';
 export * from './lib/provide-ame-domain';
 export * from './lib/state/features/with-request-status';
 export * from './lib/state/search/search.store';
+export * from './lib/state/settings/configuration.service';
+export * from './lib/state/settings/samm-language-settings.service';
 export * from './lib/state/tabs/tabs.models';
 export * from './lib/state/tabs/tabs.store';
 export * from './lib/state/ui-shell/ui-shell.store';

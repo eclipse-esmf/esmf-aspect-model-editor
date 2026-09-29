@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
+import {Observable} from 'rxjs';
 
-export interface IGraphFilterRenderer {
-  renderFilteredTree(filteredElements: any[], filter: any, selectedModelElement: any): void;
-  getSelectedModelElement(): any;
+export abstract class FileHandlingPort {
+  abstract importFilesToWorkspace(zip: File): Observable<unknown>;
 }
-
-export const GRAPH_FILTER_RENDERER = new InjectionToken<IGraphFilterRenderer>('GRAPH_FILTER_RENDERER');

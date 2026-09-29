@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GRAPH_VALIDATION_ERROR_HIGHLIGHTER, NotificationsService} from '@ame/shared';
+import {GraphValidationErrorHighlighterPort, NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {ViolationError} from './models';
 
 @Injectable({providedIn: 'root'})
 export class ModelValidatorService {
-  private readonly shapeHighlighter = inject(GRAPH_VALIDATION_ERROR_HIGHLIGHTER, {optional: true});
+  private readonly shapeHighlighter = inject(GraphValidationErrorHighlighterPort, {optional: true});
   private readonly notificationsService = inject(NotificationsService);
 
   constructor() {

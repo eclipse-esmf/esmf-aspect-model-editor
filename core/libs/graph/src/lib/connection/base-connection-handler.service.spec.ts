@@ -21,8 +21,8 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {FiltersService} from '@ame/domain';
-import {ElementCreatorService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {FiltersService, SammLanguageSettingsService} from '@ame/domain';
+import {ElementCreatorService} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {DefaultProperty} from '@esmf/aspect-model-loader';
@@ -60,7 +60,7 @@ describe('BaseConnectionHandler', () => {
         {provide: MaxGraphAttributeService, useValue: mockMaxGraphAttributeService},
         {provide: MaxGraphService, useValue: mockMaxGraphService},
         {provide: MaxGraphShapeOverlayService, useValue: mockMaxGraphShapeOverlayService},
-        {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: mockSammLangService},
+        {provide: SammLanguageSettingsService, useValue: mockSammLangService},
         {provide: ElementCreatorService, useValue: mockElementCreator},
       ],
     });

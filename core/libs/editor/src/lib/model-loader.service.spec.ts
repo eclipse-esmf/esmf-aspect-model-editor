@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService} from '@ame/domain';
 import {InstantiatorService, LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {BrowserService, CONFIGURATION_SERVICE, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
+import {BrowserService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -72,7 +73,7 @@ describe('ModelLoaderService', () => {
           isStartedAsTauriApp: vi.fn(() => false),
         }),
         MockProvider(TauriSignalsService, {call: vi.fn()}),
-        MockProvider(CONFIGURATION_SERVICE, {
+        MockProvider(ConfigurationService, {
           getSettings: vi.fn(() => ({copyrightHeader: []}) as any),
         }),
         MockProvider(TitleService, {updateTitle: vi.fn()}),

@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService, ModelService, NamespaceFile} from '@ame/infrastructure';
-import {ElementCreatorService, MODEL_ELEMENT_NAMING_SERVICE, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {ElementCreatorService, ModelElementNamingPort} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -49,11 +50,11 @@ describe('CharacteristicNameDropdownFieldComponent', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), null),
         }),
         MockProvider(ModelService),
-        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {getSammLanguageCodes: vi.fn(() => [])}),
+        MockProvider(SammLanguageSettingsService, {getSammLanguageCodes: vi.fn(() => [])}),
         MockProvider(ElementCreatorService, {
           createEmptyElement: vi.fn((cls: any) => new cls({aspectModelUrn: 'urn:test:1.0.0#New', name: 'New', metaModelVersion: '2.0.0'})),
         }),
-        MockProvider(MODEL_ELEMENT_NAMING_SERVICE, {
+        MockProvider(ModelElementNamingPort, {
           resolveElementNaming: vi.fn((el: any) => el),
         }),
       ],

@@ -11,15 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  BarItemComponent,
-  CONFIGURATION_SERVICE,
-  EDITOR_THEME_SERVICE,
-  IConfigurationService,
-  IEditorThemeService,
-  INFORMATION_HANDLING_SERVICE,
-  NotificationsService,
-} from '@ame/shared';
+import {ConfigurationService, EditorThemePort, InformationHandlingPort} from '@ame/domain';
+import {BarItemComponent, NotificationsService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, inject} from '@angular/core';
 import {MatBadge} from '@angular/material/badge';
@@ -35,9 +28,9 @@ import {SidebarStateService} from '../sidebar-state.service';
   imports: [BarItemComponent, MatTooltip, AsyncPipe, MatIconModule, MatBadge, TranslocoDirective],
 })
 export class SidebarMenuComponent {
-  private informationService = inject(INFORMATION_HANDLING_SERVICE);
-  private configurationService: IConfigurationService = inject(CONFIGURATION_SERVICE);
-  private themeService: IEditorThemeService = inject(EDITOR_THEME_SERVICE);
+  private informationService = inject(InformationHandlingPort);
+  private configurationService = inject(ConfigurationService);
+  private themeService = inject(EditorThemePort);
 
   public notificationService = inject(NotificationsService);
   public sidebarService = inject(SidebarStateService);

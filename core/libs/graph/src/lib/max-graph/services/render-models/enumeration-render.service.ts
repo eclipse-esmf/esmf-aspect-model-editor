@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
-import {IShapeConnectorService, SHAPE_CONNECTOR_SERVICE, useUpdater} from '@ame/shared';
+import {FiltersService, ShapeConnectorPort} from '@ame/domain';
+import {useUpdater} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
@@ -42,7 +42,7 @@ interface EnumerationForm {
 @Injectable({providedIn: 'root'})
 export class EnumerationRenderService extends BaseRenderService {
   private readonly filtersService = inject(FiltersService);
-  private readonly shapeConnectorService: IShapeConnectorService = inject(SHAPE_CONNECTOR_SERVICE);
+  private readonly shapeConnectorService = inject(ShapeConnectorPort);
   private readonly entityValueRenderer = inject(EntityValueRenderService);
   private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
   private readonly unitRendererService = inject(UnitRenderService);

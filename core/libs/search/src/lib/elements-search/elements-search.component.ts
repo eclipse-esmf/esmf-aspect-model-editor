@@ -11,20 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  ElementIconComponent,
-  ElementInfo,
-  ElementType,
-  IModelOpenerService,
-  IShapeSettingsService,
-  MODEL_OPENER_SERVICE,
-  mxCellSearchOption,
-  sammElements,
-  SearchService,
-  SHAPE_SETTINGS_SERVICE,
-} from '@ame/shared';
+import {GraphNavigatorPort, ModelOpenerPort, ModelSessionFacade, ShapeSettingsPort} from '@ame/domain';
+import {ElementIconComponent, ElementInfo, ElementType, sammElements} from '@ame/shared';
 import {AfterViewInit, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -33,7 +21,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {Cell} from '@maxgraph/core';
 import {SearchesStateService} from '../search-state.service';
 
 @Component({
@@ -43,13 +30,12 @@ import {SearchesStateService} from '../search-state.service';
   imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, ElementIconComponent, TranslocoDirective],
 })
 export class ElementsSearchComponent implements AfterViewInit {
-  private readonly maxgraphService = inject(MaxGraphService);
-  private readonly shapeSettingsService: IShapeSettingsService = inject(SHAPE_SETTINGS_SERVICE);
+  private readonly graphNavigator = inject(GraphNavigatorPort);
+  private readonly shapeSettingsService = inject(ShapeSettingsPort);
   private readonly searchesStateService = inject(SearchesStateService);
-  private readonly modelOpener: IModelOpenerService = inject(MODEL_OPENER_SERVICE);
-  private readonly searchService = inject(SearchService);
+  private readonly modelOpener = inject(ModelOpenerPort);
 
-  public readonly loadedFiles = inject(LoadedFilesService);
+  public readonly loadedFiles = inject(ModelSessionFacade);
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
@@ -69,11 +55,7 @@ export class ElementsSearchComponent implements AfterViewInit {
 
   constructor() {
     toObservable(this.searchQuery).subscribe(value => {
-      this.elements.set(
-        this.searchService
-          .search<Cell>(value, this.maxgraphService.getAllCells(), mxCellSearchOption)
-          ?.map(cell => MaxGraphHelper.getModelElement(cell)),
-      );
+      this.elements.set(this.graphNavigator.searchElements(value));
     });
   }
 
@@ -98,7 +80,7 @@ export class ElementsSearchComponent implements AfterViewInit {
     } else {
       this.shapeSettingsService.editModel(element);
       requestAnimationFrame(() => {
-        this.maxgraphService.navigateToCellByUrn(element.aspectModelUrn);
+        this.graphNavigator.navigateToElement(element.aspectModelUrn);
       });
     }
 

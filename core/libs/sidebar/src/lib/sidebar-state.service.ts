@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileStatus, UiShellStore, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
-import {LoadedFilesService, RdfModelUtil} from '@ame/infrastructure';
+import {FileStatus, ModelSessionFacade, UiShellStore, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
+import {RdfNamingUtil} from '@ame/shared';
 import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
 
 export {FileStatus};
@@ -78,7 +78,7 @@ export class Selection {
 
 @Injectable({providedIn: 'root'})
 export class SidebarStateService {
-  private loadedFilesService = inject(LoadedFilesService);
+  private loadedFilesService = inject(ModelSessionFacade);
   public readonly uiShellStore = inject(UiShellStore);
   public readonly workspaceStore = inject(WorkspaceStore);
 
@@ -108,7 +108,7 @@ export class SidebarStateService {
   updateWorkspace(fileStatus: FileStatus[] = []) {
     for (const status of fileStatus) {
       status.isLoadedInWorkspace = true;
-      const chunks = RdfModelUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
+      const chunks = RdfNamingUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
       const namespace = chunks[2];
       const version = chunks[3];
       this.namespacesState.setFile(`${namespace}:${version}`, status);

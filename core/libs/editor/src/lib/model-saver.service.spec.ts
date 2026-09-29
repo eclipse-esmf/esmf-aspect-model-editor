@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService, SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfSerializerService} from '@ame/infrastructure';
-import {CONFIGURATION_SERVICE, LanguageTranslationService, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -71,7 +72,7 @@ describe('ModelSaverService', () => {
             },
           } as any,
         }),
-        MockProvider(CONFIGURATION_SERVICE, {
+        MockProvider(ConfigurationService, {
           getSettings: vi.fn(
             () =>
               ({
@@ -82,7 +83,7 @@ describe('ModelSaverService', () => {
           ),
         }),
         {
-          provide: CONFIGURATION_SERVICE,
+          provide: ConfigurationService,
           useFactory: () =>
             ({
               getSettings: vi.fn(() => ({
@@ -94,7 +95,7 @@ describe('ModelSaverService', () => {
             }) as any,
         },
         {
-          provide: SAMM_LANGUAGE_SETTINGS_SERVICE,
+          provide: SammLanguageSettingsService,
           useValue: {
             getSettings: vi.fn(() => ({
               languages: ['en'],

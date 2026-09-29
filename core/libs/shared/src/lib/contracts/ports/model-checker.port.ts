@@ -11,12 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
-export interface IModelCheckerService {
-  detectWorkspaceErrors(signal?: Subject<string>): Observable<any[]>;
-  detectWorkspace(onlyAspectModels?: boolean): Observable<Record<string, any>>;
+export abstract class ModelCheckerPort {
+  abstract detectWorkspaceErrors(signal?: Subject<string>): Observable<any[]>;
+  abstract detectWorkspace(onlyAspectModels?: boolean): Observable<Record<string, any>>;
 }
-
-export const MODEL_CHECKER_SERVICE = new InjectionToken<IModelCheckerService>('MODEL_CHECKER_SERVICE');

@@ -12,21 +12,19 @@
  */
 
 import {
-  CONFIRM_DIALOG_SERVICE,
-  DRAGGABLE_SERVICE,
-  EDITOR_VALIDATION_SERVICE,
-  ENTITY_INSTANCE_SERVICE,
-  FILE_HANDLING_SERVICE,
-  INFORMATION_HANDLING_SERVICE,
-  MODEL_CHECKER_SERVICE,
-  MODEL_LOADER_SERVICE,
-  MODEL_OPENER_SERVICE,
-  MODEL_SAVER_TOKEN_SERVICE,
-  RENAME_MODEL_DIALOG_SERVICE,
-  SHAPE_SETTINGS_SERVICE,
-  SHAPE_SETTINGS_STATE_SERVICE,
-  TAURI_IPC_BRIDGES,
-} from '@ame/shared';
+  ConfirmDialogPort,
+  DraggablePort,
+  EditorValidationPort,
+  EntityInstancePort,
+  InformationHandlingPort,
+  ModelLoaderPort,
+  ModelOpenerPort,
+  ModelSaverPort,
+  RenameModelDialogPort,
+  ShapeSettingsPort,
+  ShapeSettingsStatePort,
+} from '@ame/domain';
+import {FileHandlingPort, ModelCheckerPort, TAURI_IPC_BRIDGES} from '@ame/shared';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {EntityInstanceService} from './editor-dialog/components/entity-instance/entity-instance-view/entity-instance.service';
@@ -45,19 +43,19 @@ import {EditorTauriBridge} from './tauri/editor-tauri-bridge.service';
 /** Binds all editor implementations to their shared contracts. */
 export function provideEditor(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    {provide: CONFIRM_DIALOG_SERVICE, useExisting: ConfirmDialogService},
-    {provide: RENAME_MODEL_DIALOG_SERVICE, useExisting: RenameModelDialogService},
-    {provide: ENTITY_INSTANCE_SERVICE, useExisting: EntityInstanceService},
-    {provide: MODEL_OPENER_SERVICE, useExisting: ModelOpenerService},
-    {provide: MODEL_LOADER_SERVICE, useExisting: ModelLoaderService},
-    {provide: MODEL_CHECKER_SERVICE, useExisting: ModelCheckerService},
-    {provide: DRAGGABLE_SERVICE, useExisting: EditorService},
-    {provide: INFORMATION_HANDLING_SERVICE, useExisting: InformationHandlingService},
-    {provide: SHAPE_SETTINGS_SERVICE, useExisting: ShapeSettingsService},
-    {provide: SHAPE_SETTINGS_STATE_SERVICE, useExisting: ShapeSettingsStateService},
-    {provide: EDITOR_VALIDATION_SERVICE, useExisting: EditorService},
-    {provide: MODEL_SAVER_TOKEN_SERVICE, useExisting: ModelSaverService},
-    {provide: FILE_HANDLING_SERVICE, useExisting: FileHandlingService},
+    {provide: ConfirmDialogPort, useExisting: ConfirmDialogService},
+    {provide: RenameModelDialogPort, useExisting: RenameModelDialogService},
+    {provide: EntityInstancePort, useExisting: EntityInstanceService},
+    {provide: ModelOpenerPort, useExisting: ModelOpenerService},
+    {provide: ModelLoaderPort, useExisting: ModelLoaderService},
+    {provide: ModelCheckerPort, useExisting: ModelCheckerService},
+    {provide: DraggablePort, useExisting: EditorService},
+    {provide: InformationHandlingPort, useExisting: InformationHandlingService},
+    {provide: ShapeSettingsPort, useExisting: ShapeSettingsService},
+    {provide: ShapeSettingsStatePort, useExisting: ShapeSettingsStateService},
+    {provide: EditorValidationPort, useExisting: EditorService},
+    {provide: ModelSaverPort, useExisting: ModelSaverService},
+    {provide: FileHandlingPort, useExisting: FileHandlingService},
     {provide: TAURI_IPC_BRIDGES, useExisting: EditorTauriBridge, multi: true},
   ]);
 }

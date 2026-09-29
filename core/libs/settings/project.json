@@ -18,5 +18,5 @@
       "executor": "@nx/eslint:lint"
     }
   },
-  "tags": ["scope:features", "layer:features", "type:feature"]
+  "tags": ["scope:features", "layer:features", "type:feature", "access:domain-only"]
 }

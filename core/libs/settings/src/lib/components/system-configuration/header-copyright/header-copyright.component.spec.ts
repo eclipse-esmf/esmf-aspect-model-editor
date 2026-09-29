@@ -11,21 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {
-  EDITOR_THEME_SERVICE,
-  EDITOR_VALIDATION_SERVICE,
-  LanguageTranslationService,
-  MAX_GRAPH_SETTINGS_SERVICE,
-  MODEL_SAVER_TOKEN_SERVICE,
-  TAURI_TUNNEL_SERVICE,
-  TitleService,
-} from '@ame/shared';
+  ConfigurationService,
+  EditorThemePort,
+  EditorValidationPort,
+  GraphSettingsPort,
+  ModelSaverPort,
+  ModelSessionFacade,
+  SammLanguageSettingsService,
+} from '@ame/domain';
+import {LanguageTranslationService, TauriTunnelPort, TitleService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ConfigurationService, SammLanguageSettingsService, SettingsFormService} from '../../../services';
+import {SettingsFormService} from '../../../services';
 import {HeaderCopyrightComponent} from './header-copyright.component';
 
 describe('HeaderCopyrightComponent', () => {
@@ -50,7 +50,7 @@ describe('HeaderCopyrightComponent', () => {
         ConfigurationService,
         SammLanguageSettingsService,
         {
-          provide: LoadedFilesService,
+          provide: ModelSessionFacade,
           useValue: {currentLoadedFile: {absoluteName: 'org.esmf:1.0.0:Aspect.ttl'}},
         },
         {
@@ -58,11 +58,11 @@ describe('HeaderCopyrightComponent', () => {
           useValue: {translateService: {getActiveLang: () => 'en', setActiveLang: vi.fn()}},
         },
         {provide: TitleService, useValue: {updateTitle: vi.fn()}},
-        {provide: TAURI_TUNNEL_SERVICE, useValue: {sendTranslationsToTauri: vi.fn()}},
-        {provide: MAX_GRAPH_SETTINGS_SERVICE, useValue: {formatShapes: vi.fn()}},
-        {provide: EDITOR_THEME_SERVICE, useValue: {applyTheme: vi.fn()}},
-        {provide: MODEL_SAVER_TOKEN_SERVICE, useValue: {enableAutoSave: vi.fn()}},
-        {provide: EDITOR_VALIDATION_SERVICE, useValue: {enableAutoValidation: vi.fn()}},
+        {provide: TauriTunnelPort, useValue: {sendTranslationsToTauri: vi.fn()}},
+        {provide: GraphSettingsPort, useValue: {formatShapes: vi.fn()}},
+        {provide: EditorThemePort, useValue: {applyTheme: vi.fn()}},
+        {provide: ModelSaverPort, useValue: {enableAutoSave: vi.fn()}},
+        {provide: EditorValidationPort, useValue: {enableAutoValidation: vi.fn()}},
       ],
     }).compileComponents();
 

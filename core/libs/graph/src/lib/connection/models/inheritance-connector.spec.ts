@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementCreatorService, LanguageTranslationService, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {SammLanguageSettingsService} from '@ame/domain';
+import {ElementCreatorService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -68,7 +69,7 @@ describe('Inheritance Connectors', () => {
         EntityInheritanceConnector,
         {provide: MaxGraphService, useValue: mockMaxGraphService},
         {provide: MaxGraphAttributeService, useValue: mockMaxGraphAttributeService},
-        {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: mockSammLangService},
+        {provide: SammLanguageSettingsService, useValue: mockSammLangService},
         {provide: NotificationsService, useValue: mockNotificationsService},
         {provide: LanguageTranslationService, useValue: mockTranslate},
         {provide: ElementCreatorService, useValue: mockElementCreator},

@@ -11,14 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementRelationUtil, ENTITY_INSTANCE_SERVICE, getModelElement, IEntityInstanceService, useUpdater} from '@ame/shared';
+import {ElementRelationUtil, getModelElement, useUpdater} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultStructuredValue, DefaultValue, HasExtends, NamedElement, ScalarValue} from '@esmf/aspect-model-loader';
+import {EntityInstancePort} from '../../ports/entity-instance.port';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class PropertyModelService extends BaseModelService {
-  private readonly entityInstanceService = inject<IEntityInstanceService>(ENTITY_INSTANCE_SERVICE, {optional: true});
+  private readonly entityInstanceService = inject(EntityInstancePort, {optional: true});
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultProperty;

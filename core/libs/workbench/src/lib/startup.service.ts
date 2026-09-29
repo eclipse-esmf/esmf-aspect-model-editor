@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {WorkspaceStore} from '@ame/domain';
+import {GraphNavigatorPort, WorkspaceStore} from '@ame/domain';
 import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService} from '@ame/editor';
-import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, LoadingScreenService, StartupPayload, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
@@ -23,7 +22,7 @@ import {TauriTunnelService} from './tauri-tunnel.service';
 
 @Injectable({providedIn: 'root'})
 export class StartupService {
-  private maxgraphService = inject(MaxGraphService);
+  private graphNavigator = inject(GraphNavigatorPort);
   private tauriSignalsService = inject(TauriSignalsService);
   private tauriTunnelService = inject(TauriTunnelService);
   private modelLoaderService = inject(ModelLoaderService);
@@ -38,7 +37,7 @@ export class StartupService {
     return this.router.events.pipe(
       filter(ev => ev instanceof NavigationEnd && ev.url.includes('/editor')),
       switchMap(() => this.tauriTunnelService.startUpData$.asObservable()),
-      sample(this.maxgraphService.graphInitialized$.pipe(filter(Boolean))),
+      sample(this.graphNavigator.graphInitialized$.pipe(filter(Boolean))),
       switchMap(data =>
         data?.model
           ? this.loadModel(data.model).pipe(

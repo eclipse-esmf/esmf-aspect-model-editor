@@ -11,12 +11,5 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
-
-export interface IGraphValidationErrorHighlighter {
-  showValidationErrorOnShape(focusNode: string): void;
-}
-
-export const GRAPH_VALIDATION_ERROR_HIGHLIGHTER = new InjectionToken<IGraphValidationErrorHighlighter>(
-  'GRAPH_VALIDATION_ERROR_HIGHLIGHTER',
-);
+export * from './model-session.facade';
+export * from './workspace.facade';

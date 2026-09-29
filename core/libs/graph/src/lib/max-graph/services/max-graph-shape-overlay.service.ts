@@ -11,15 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService, ModelTree} from '@ame/domain';
+import {FiltersService, ModelTree, SammLanguageSettingsService, ShapeConnectorPort} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  BrowserService,
-  ISammLanguageSettingsService,
-  IShapeConnectorService,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-  SHAPE_CONNECTOR_SERVICE,
-} from '@ame/shared';
+import {BrowserService} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {
   DefaultAspect,
@@ -51,7 +45,7 @@ export class MaxGraphShapeOverlayService {
   private readonly maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
   private readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
   private readonly filtersService = inject(FiltersService);
-  private readonly sammLangService: ISammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private readonly sammLangService = inject(SammLanguageSettingsService);
   protected readonly loadedFilesService = inject(LoadedFilesService);
 
   removeOverlay(cell: Cell, overlay?: CellOverlay): void {
@@ -114,7 +108,7 @@ export class MaxGraphShapeOverlayService {
   }
 
   private createAndConnectShape(cell: Cell, modelInfo: ModelInfo): void {
-    const maxgraphConnectorService = this.injector.get<IShapeConnectorService>(SHAPE_CONNECTOR_SERVICE);
+    const maxgraphConnectorService = this.injector.get<ShapeConnectorPort>(ShapeConnectorPort);
 
     const modelElement = MaxGraphHelper.getModelElement(this.maxgraphShapeSelectorService.getSelectedShape());
     maxgraphConnectorService.createAndConnectShape(modelElement, cell, modelInfo)?.subscribe?.(() => {

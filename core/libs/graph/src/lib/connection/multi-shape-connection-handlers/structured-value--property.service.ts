@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ISammLanguageSettingsService, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {SammLanguageSettingsService} from '@ame/domain';
+import {NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultStructuredValue} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -25,7 +26,7 @@ export class StructuredValueCharacteristicPropertyConnectionHandler implements M
 > {
   private maxgraphService = inject(MaxGraphService);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
-  private sammLangService: ISammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private sammLangService = inject(SammLanguageSettingsService);
   private notificationsService = inject(NotificationsService);
 
   connect(parentMetaModel: DefaultStructuredValue, childMetaModel: DefaultProperty, first: Cell, second: Cell): void {

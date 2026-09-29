@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {Settings} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {afterEach, beforeEach, describe, expect, it} from 'vitest';
-import {Settings} from '../model';
 import {ConfigurationService} from './configuration.service';
 
 describe('ConfigurationService', () => {

@@ -11,15 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
-import {
-  IGraphAdapter,
-  ISammLanguageSettingsService,
-  IShapeConnectorService,
-  ModelInfo,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-  SHAPE_CONNECTOR_SERVICE,
-} from '@ame/shared';
+import {FiltersService, GraphAdapterPort, SammLanguageSettingsService, ShapeConnectorPort} from '@ame/domain';
+import {ModelInfo} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {MaxGraphHelper, MaxGraphVisitorHelper} from '../helpers';
@@ -33,7 +26,7 @@ import {EntityValueRenderService} from './render-models/entity-value-render.serv
 import {ModelRenderService} from './render-models/model-render.service';
 
 @Injectable({providedIn: 'root'})
-export class MaxGraphDomainBridgeService implements IGraphAdapter {
+export class MaxGraphDomainBridgeService implements GraphAdapterPort {
   private readonly maxgraphService = inject(MaxGraphService);
   private readonly modelRenderService = inject(ModelRenderService);
   private readonly aspectRenderService = inject(AspectRenderService);
@@ -42,8 +35,8 @@ export class MaxGraphDomainBridgeService implements IGraphAdapter {
   private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
   private readonly themeService = inject(ThemeService, {optional: true});
   private readonly filtersService = inject(FiltersService, {optional: true});
-  private readonly sammLangService = inject<ISammLanguageSettingsService>(SAMM_LANGUAGE_SETTINGS_SERVICE, {optional: true});
-  private readonly shapeConnectorService = inject<IShapeConnectorService>(SHAPE_CONNECTOR_SERVICE, {optional: true});
+  private readonly sammLangService = inject(SammLanguageSettingsService, {optional: true});
+  private readonly shapeConnectorService = inject(ShapeConnectorPort, {optional: true});
 
   updateCell(cell: any, form?: any): void {
     if (cell) {

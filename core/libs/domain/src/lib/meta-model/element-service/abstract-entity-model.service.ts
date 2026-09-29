@@ -11,15 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementRelationUtil, ENTITY_INSTANCE_SERVICE, IEntityInstanceService, useUpdater} from '@ame/shared';
+import {ElementRelationUtil, useUpdater} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
+import {EntityInstancePort} from '../../ports/entity-instance.port';
 import {BaseEntityModelService} from './base-entity-model.service';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AbstractEntityModelService extends BaseModelService {
-  private readonly entityInstanceService = inject<IEntityInstanceService>(ENTITY_INSTANCE_SERVICE, {optional: true});
+  private readonly entityInstanceService = inject(EntityInstancePort, {optional: true});
   private readonly baseEntityModel = inject(BaseEntityModelService);
 
   isApplicable(metaModelElement: NamedElement): boolean {

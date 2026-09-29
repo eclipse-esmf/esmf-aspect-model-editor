@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
-import {DRAGGABLE_SERVICE} from '@ame/shared';
+import {DraggablePort, GraphNavigatorPort, ModelSessionFacade} from '@ame/domain';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TranslocoTestingModule} from '@jsverse/transloco';
@@ -24,16 +22,16 @@ import {SidebarSAMMElementsComponent} from './sidebar-samm-elements.component';
 describe('SidebarSAMMElementsComponent', () => {
   let component: SidebarSAMMElementsComponent;
   let fixture: ComponentFixture<SidebarSAMMElementsComponent>;
-  let maxgraphServiceMock: {
-    getAllCells: ReturnType<typeof vi.fn>;
+  let graphNavigatorMock: {
+    hasElements: ReturnType<typeof vi.fn>;
   };
   let hasAspectSignal = signal(false);
   let sidebarService: SidebarStateService;
 
   beforeEach(() => {
     hasAspectSignal = signal(false);
-    maxgraphServiceMock = {
-      getAllCells: vi.fn(() => []),
+    graphNavigatorMock = {
+      hasElements: vi.fn(() => false),
     };
 
     TestBed.configureTestingModule({
@@ -43,9 +41,9 @@ describe('SidebarSAMMElementsComponent', () => {
       ],
       providers: [
         SidebarStateService,
-        {provide: MaxGraphService, useValue: maxgraphServiceMock},
-        {provide: LoadedFilesService, useValue: {hasAspect: hasAspectSignal}},
-        {provide: DRAGGABLE_SERVICE, useValue: {makeDraggable: vi.fn()}},
+        {provide: GraphNavigatorPort, useValue: graphNavigatorMock},
+        {provide: ModelSessionFacade, useValue: {hasAspect: hasAspectSignal}},
+        {provide: DraggablePort, useValue: {makeDraggable: vi.fn()}},
       ],
     });
 
@@ -77,15 +75,12 @@ describe('SidebarSAMMElementsComponent', () => {
     expect(elements).not.toContain('entityInstance');
   });
 
-  it('should correctly report isEmptyModel based on maxgraph cells', () => {
-    maxgraphServiceMock.getAllCells.mockReturnValue([]);
+  it('should correctly report isEmptyModel based on rendered graph elements', () => {
+    graphNavigatorMock.hasElements.mockReturnValue(false);
     expect(component.isEmptyModel).toBe(true);
 
-    maxgraphServiceMock.getAllCells.mockReturnValue([{id: '1'}] as any);
+    graphNavigatorMock.hasElements.mockReturnValue(true);
     expect(component.isEmptyModel).toBe(false);
-
-    maxgraphServiceMock.getAllCells.mockReturnValue(null as any);
-    expect(component.isEmptyModel).toBe(true);
   });
 
   it('should close sammElements sidebar', () => {

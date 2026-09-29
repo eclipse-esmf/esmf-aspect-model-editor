@@ -11,11 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService} from '@ame/domain';
 import {IPC_RENDERER, TAURI_EVENTS} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
+import {MatDialog} from '@angular/material/dialog';
 import {describe, expect, it, vi} from 'vitest';
-import {SettingsTauriBridge} from './provide-settings';
-import {ConfigurationService} from './services/configuration.service';
+import {SettingDialogComponent} from './components/settings-dialog/setting-dialog.component';
+import {SettingsDialogService, SettingsTauriBridge} from './provide-settings';
 
 function createIpcMock() {
   const handlers = new Map<string, (...args: any[]) => void>();
@@ -43,5 +45,20 @@ describe('SettingsTauriBridge', () => {
 
     expect(configurationService.toggleToolbar).toHaveBeenCalled();
     expect(configurationService.toggleEditorMap).toHaveBeenCalled();
+  });
+});
+
+describe('SettingsDialogService', () => {
+  it('opens the settings dialog', () => {
+    const matDialog = {open: vi.fn()};
+    TestBed.configureTestingModule({providers: [{provide: MatDialog, useValue: matDialog}]});
+
+    TestBed.inject(SettingsDialogService).open();
+
+    expect(matDialog.open).toHaveBeenCalledWith(SettingDialogComponent, {
+      panelClass: 'settings-dialog-container',
+      width: '60%',
+      autoFocus: false,
+    });
   });
 });

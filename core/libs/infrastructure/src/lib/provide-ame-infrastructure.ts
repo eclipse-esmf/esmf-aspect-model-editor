@@ -11,10 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LOADED_FILES_SERVICE} from '@ame/shared';
-import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
+import {LoadedFilesPort} from '@ame/shared';
+import {EnvironmentProviders, inject, makeEnvironmentProviders, provideEnvironmentInitializer} from '@angular/core';
+import {DomainModelToRdfService} from './aspect-exporter';
 import {LoadedFilesService} from './cache';
 
 export function provideAmeInfrastructure(): EnvironmentProviders {
-  return makeEnvironmentProviders([{provide: LOADED_FILES_SERVICE, useExisting: LoadedFilesService}]);
+  return makeEnvironmentProviders([
+    {provide: LoadedFilesPort, useExisting: LoadedFilesService},
+    provideEnvironmentInitializer(() => inject(DomainModelToRdfService).listenForStoreUpdates()),
+  ]);
 }

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/infrastructure';
+import {WorkspaceFacade} from '@ame/domain';
 import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {NgOptimizedImage} from '@angular/common';
 import {Component, DestroyRef, OnInit, inject, signal} from '@angular/core';
@@ -32,7 +32,7 @@ export class LoadingComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly tauriTunnelService = inject(TauriTunnelService);
-  private readonly modelApiService = inject(ModelApiService);
+  private readonly modelApiService = inject(WorkspaceFacade);
   private readonly notificationsService = inject(NotificationsService);
   private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
 

@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/infrastructure';
-import {basicShapeGeometry, SHAPE_SETTINGS_STATE_SERVICE, smallCircleShapeGeometry} from '@ame/shared';
+import {basicShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
 import {Injector} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {
@@ -26,6 +26,7 @@ import {
   DefaultProperty,
 } from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ShapeSettingsStatePort} from '../../ports/ui.port';
 import {ModelFilter} from '../models';
 import {PropertiesFilterLoader} from './properties-filter';
 
@@ -47,7 +48,7 @@ describe('PropertiesFilterLoader', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        {provide: SHAPE_SETTINGS_STATE_SERVICE, useValue: shapeSettingsStateMock},
+        {provide: ShapeSettingsStatePort, useValue: shapeSettingsStateMock},
         {provide: LoadedFilesService, useValue: loadedFilesMock},
       ],
     });

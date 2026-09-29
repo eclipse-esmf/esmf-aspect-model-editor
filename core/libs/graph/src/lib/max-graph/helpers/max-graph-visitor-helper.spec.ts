@@ -1,4 +1,4 @@
-import {ISammLanguageSettingsService} from '@ame/shared';
+import {SammLanguageSettingsService} from '@ame/domain';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -26,14 +26,14 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {MaxGraphVisitorHelper} from './max-graph-visitor-helper';
 
 describe('MaxGraphVisitorHelper', () => {
-  let sammLangService: ISammLanguageSettingsService;
+  let sammLangService: SammLanguageSettingsService;
 
   beforeEach(() => {
     sammLangService = {
       addSammLanguageCode: vi.fn(),
       setSammLanguageCodes: vi.fn(),
       getSammLanguageCodes: vi.fn(() => []),
-    } as unknown as ISammLanguageSettingsService;
+    } as unknown as SammLanguageSettingsService;
   });
 
   describe('addDataType', () => {

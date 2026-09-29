@@ -1,5 +1,5 @@
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {ElementRelationUtil, GRAPH_ADAPTER} from '@ame/shared';
+import {ElementRelationUtil} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultConstraint,
@@ -12,6 +12,7 @@ import {
   DefaultRegularExpressionConstraint,
 } from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {ConstraintModelService} from './constraint-model.service';
 
 describe('ConstraintModelService', () => {
@@ -49,7 +50,7 @@ describe('ConstraintModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         ConstraintModelService,
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
         {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},

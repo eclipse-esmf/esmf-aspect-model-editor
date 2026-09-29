@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SearchStore} from '@ame/domain';
-import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
-import {DomainModelToRdfService} from '@ame/infrastructure';
-import {BrowserService, CONFIGURATION_SERVICE, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
+import {ConfigurationService, EditorThemePort, GraphNavigatorPort, SearchStore} from '@ame/domain';
+import {BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideRouter} from '@angular/router';
@@ -30,7 +28,6 @@ describe('AppShellInitializer', () => {
 
   let ipcRenderer: {showContextMenu: ReturnType<typeof vi.fn>};
   let titleService: {setTitle: ReturnType<typeof vi.fn>};
-  let domainModelToRdf: {listenForStoreUpdates: ReturnType<typeof vi.fn>};
   let browserService: {isStartedAsTauriApp: ReturnType<typeof vi.fn>};
   let tauriTunnelService: {subscribeMessages: ReturnType<typeof vi.fn>; sendTranslationsToTauri: ReturnType<typeof vi.fn>};
   let configurationService: {getSettings: ReturnType<typeof vi.fn>};
@@ -50,7 +47,7 @@ describe('AppShellInitializer', () => {
     toggleFilesSearch: ReturnType<typeof vi.fn>;
     closeFilesSearch: ReturnType<typeof vi.fn>;
   };
-  let maxgraphAttributeService: {graph: any};
+  let graphNavigator: {hasElements: ReturnType<typeof vi.fn>};
   let startupService: {listenForLoading: ReturnType<typeof vi.fn>};
 
   beforeEach(() => {
@@ -58,7 +55,6 @@ describe('AppShellInitializer', () => {
 
     ipcRenderer = {showContextMenu: vi.fn()};
     titleService = {setTitle: vi.fn()};
-    domainModelToRdf = {listenForStoreUpdates: vi.fn()};
     browserService = {isStartedAsTauriApp: vi.fn(() => false)};
     tauriTunnelService = {subscribeMessages: vi.fn(), sendTranslationsToTauri: vi.fn()};
     configurationService = {getSettings: vi.fn(() => ({darkMode: false}))};
@@ -78,7 +74,7 @@ describe('AppShellInitializer', () => {
       toggleFilesSearch: vi.fn(),
       closeFilesSearch: vi.fn(),
     };
-    maxgraphAttributeService = {graph: {getDataModel: () => ({cells: {}})}};
+    graphNavigator = {hasElements: vi.fn(() => false)};
     startupService = {listenForLoading: vi.fn(() => of(true))};
 
     TestBed.configureTestingModule({
@@ -88,14 +84,13 @@ describe('AppShellInitializer', () => {
         provideRouter([]),
         {provide: IPC_RENDERER, useValue: ipcRenderer},
         {provide: TitleService, useValue: titleService},
-        {provide: DomainModelToRdfService, useValue: domainModelToRdf},
         {provide: BrowserService, useValue: browserService},
         {provide: TauriTunnelService, useValue: tauriTunnelService},
-        {provide: CONFIGURATION_SERVICE, useValue: configurationService},
-        {provide: ThemeService, useValue: themeService},
+        {provide: ConfigurationService, useValue: configurationService},
+        {provide: EditorThemePort, useValue: themeService},
         {provide: LanguageTranslationService, useValue: translate},
         {provide: SearchStore, useValue: searchStore},
-        {provide: MaxGraphAttributeService, useValue: maxgraphAttributeService},
+        {provide: GraphNavigatorPort, useValue: graphNavigator},
         {provide: StartupService, useValue: startupService},
       ],
     });
@@ -106,10 +101,6 @@ describe('AppShellInitializer', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should set the MaxGraphHelper injector on construction', () => {
-    expect(MaxGraphHelper.injector).toBeTruthy();
   });
 
   describe('ngOnInit', () => {
@@ -173,11 +164,7 @@ describe('AppShellInitializer', () => {
 
   describe('search modals', () => {
     it('should toggle the elements search when the graph has vertices', () => {
-      maxgraphAttributeService.graph = {
-        getDataModel: () => ({
-          cells: {a: {isVertex: () => true}},
-        }),
-      };
+      graphNavigator.hasElements.mockReturnValue(true);
 
       component.openSearchElements();
 
@@ -185,9 +172,7 @@ describe('AppShellInitializer', () => {
     });
 
     it('should not toggle the elements search when the graph is empty', () => {
-      maxgraphAttributeService.graph = {
-        getDataModel: () => ({cells: {}}),
-      };
+      graphNavigator.hasElements.mockReturnValue(false);
 
       component.openSearchElements();
 

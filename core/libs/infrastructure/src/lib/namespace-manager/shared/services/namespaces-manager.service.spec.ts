@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FILE_HANDLING_SERVICE, FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
+import {FileHandlingPort, FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {of} from 'rxjs';
@@ -44,7 +44,7 @@ describe('NamespacesManagerService', () => {
       providers: [
         NamespacesManagerService,
         {provide: MatDialog, useValue: matDialog},
-        {provide: FILE_HANDLING_SERVICE, useValue: fileHandlingService},
+        {provide: FileHandlingPort, useValue: fileHandlingService},
         {provide: TauriSignalsService, useValue: tauriSignalsService},
         {provide: FileUploadService, useValue: fileUploadService},
       ],

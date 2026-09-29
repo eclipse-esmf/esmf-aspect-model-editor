@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {UiShellStore, WorkspaceStore} from '@ame/domain';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {ModelSessionFacade, UiShellStore, WorkspaceStore} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {FileStatus, Selection, SidebarStateService} from './sidebar-state.service';
@@ -92,7 +91,7 @@ describe('SidebarStateService and models', () => {
       };
 
       TestBed.configureTestingModule({
-        providers: [UiShellStore, WorkspaceStore, SidebarStateService, {provide: LoadedFilesService, useValue: mockLoadedFilesService}],
+        providers: [UiShellStore, WorkspaceStore, SidebarStateService, {provide: ModelSessionFacade, useValue: mockLoadedFilesService}],
       });
 
       service = TestBed.inject(SidebarStateService);

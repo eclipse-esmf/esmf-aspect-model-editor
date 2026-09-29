@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfNodeService, RdfService} from '@ame/infrastructure';
 import {
-  CONFIGURATION_SERVICE,
   IPC_RENDERER,
   LanguageTranslationService,
   LoadingScreenService,
@@ -94,7 +94,7 @@ describe('FileHandlingService', () => {
           translateService: {translate: vi.fn(() => '')} as any,
         }),
         MockProvider(TauriSignalsService, {call: vi.fn()}),
-        MockProvider(CONFIGURATION_SERVICE, {
+        MockProvider(ConfigurationService, {
           getSettings: vi.fn(() => ({copyrightHeader: ['# Header']}) as any),
         }),
         MockProvider(ModelSavingTrackerService, {

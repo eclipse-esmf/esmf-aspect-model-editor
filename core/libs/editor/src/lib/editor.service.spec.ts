@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementModelService, FilterAttributesService, FiltersService} from '@ame/domain';
+import {ConfigurationService, ElementModelService, FilterAttributesService, FiltersService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphService,
@@ -23,11 +23,10 @@ import {
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfService} from '@ame/infrastructure';
 import {
   AlertService,
-  CONFIGURATION_SERVICE,
   ElementCreatorService,
   LanguageTranslationService,
   LoadingScreenService,
-  MODEL_ELEMENT_NAMING_SERVICE,
+  ModelElementNamingPort,
   NotificationsService,
   TitleService,
 } from '@ame/shared';
@@ -73,7 +72,7 @@ describe('EditorService', () => {
         EditorService,
         {provide: FiltersService, useValue: mockFiltersService},
         {provide: FilterAttributesService, useValue: {isFiltering: false, changeState: vi.fn()}},
-        MockProvider(CONFIGURATION_SERVICE, {
+        MockProvider(ConfigurationService, {
           getSettings: vi.fn(
             () =>
               ({
@@ -162,7 +161,7 @@ describe('EditorService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(ElementCreatorService),
-        {provide: MODEL_ELEMENT_NAMING_SERVICE, useValue: mockNamingService},
+        {provide: ModelElementNamingPort, useValue: mockNamingService},
       ],
     });
 

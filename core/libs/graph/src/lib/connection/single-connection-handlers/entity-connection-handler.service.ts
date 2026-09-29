@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ENTITY_INSTANCE_SERVICE, IEntityInstanceService} from '@ame/shared';
+import {EntityInstancePort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, Entity} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -21,7 +21,7 @@ import {SingleShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})
 export class EntityConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Entity> {
-  private entityInstanceService = inject<IEntityInstanceService>(ENTITY_INSTANCE_SERVICE, {optional: true});
+  private entityInstanceService = inject(EntityInstancePort, {optional: true});
 
   public connect(entity: Entity, source: Cell) {
     const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty, {

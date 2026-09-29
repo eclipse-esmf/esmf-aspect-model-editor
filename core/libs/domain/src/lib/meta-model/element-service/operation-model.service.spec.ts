@@ -1,8 +1,9 @@
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {ElementRelationUtil, GRAPH_ADAPTER} from '@ame/shared';
+import {ElementRelationUtil} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultOperation, DefaultProperty} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {OperationModelService} from './operation-model.service';
 
 describe('OperationModelService', () => {
@@ -21,7 +22,7 @@ describe('OperationModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         OperationModelService,
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {
           provide: LoadedFilesService,
           useValue: {

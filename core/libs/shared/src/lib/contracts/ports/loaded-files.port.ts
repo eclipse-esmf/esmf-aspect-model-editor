@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
-
-export interface ILoadedFilesService {
-  currentLoadedFile?: {
+export abstract class LoadedFilesPort {
+  abstract currentLoadedFile?: {
     namespace: string;
     cachedFile?: {
       resolveInstance: (element: any) => any;
@@ -24,10 +22,8 @@ export interface ILoadedFilesService {
     };
     [key: string]: any;
   };
-  isElementExtern?: (element: any) => boolean;
-  isElementInCurrentFile?: (element: any) => boolean;
-  getElement?: (urn: string) => any;
+  abstract isElementExtern?: (element: any) => boolean;
+  abstract isElementInCurrentFile?: (element: any) => boolean;
+  abstract getElement?: (urn: string) => any;
   [key: string]: any;
 }
-
-export const LOADED_FILES_SERVICE = new InjectionToken<ILoadedFilesService>('LOADED_FILES_SERVICE');

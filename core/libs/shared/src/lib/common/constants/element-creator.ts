@@ -42,7 +42,7 @@ import {
   NamedElement,
   XsdDataTypes,
 } from '@esmf/aspect-model-loader';
-import {LOADED_FILES_SERVICE, MODEL_ELEMENT_NAMING_SERVICE} from '../../contracts';
+import {LoadedFilesPort, ModelElementNamingPort} from '../../contracts';
 import {config} from '../config';
 
 const characteristics: {new (...x: any[]): NamedElement}[] = [
@@ -73,8 +73,8 @@ type ElementConfig = Partial<{
 
 @Injectable({providedIn: 'root'})
 export class ElementCreatorService {
-  private modelElementNamingService = inject(MODEL_ELEMENT_NAMING_SERVICE, {optional: true});
-  private loadedFiles = inject(LOADED_FILES_SERVICE, {optional: true});
+  private modelElementNamingService = inject(ModelElementNamingPort, {optional: true});
+  private loadedFiles = inject(LoadedFilesPort, {optional: true});
 
   get currentFile() {
     return this.loadedFiles?.currentLoadedFile;

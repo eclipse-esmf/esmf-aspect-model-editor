@@ -11,15 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  createFile,
-  FILE_HANDLING_SERVICE,
-  FileInfo,
-  FileTypes,
-  FileUploadService,
-  IFileHandlingService,
-  TauriSignalsService,
-} from '@ame/shared';
+import {createFile, FileHandlingPort, FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {environment} from 'environments/environment';
@@ -30,7 +22,7 @@ import {SelectNamespacesComponent} from '../../namespace-exporter/components';
 @Injectable({providedIn: 'root'})
 export class NamespacesManagerService {
   private readonly matDialog = inject(MatDialog);
-  private readonly fileHandlingService: IFileHandlingService = inject(FILE_HANDLING_SERVICE);
+  private readonly fileHandlingService = inject(FileHandlingPort);
   private readonly tauriSignalsService = inject(TauriSignalsService);
   private readonly fileUploadService = inject(FileUploadService);
 

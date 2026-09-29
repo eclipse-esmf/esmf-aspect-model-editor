@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService} from '@ame/domain';
 import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
-import {BindingsService, CONFIGURATION_SERVICE, NotificationsService} from '@ame/shared';
+import {BindingsService, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
@@ -55,7 +56,7 @@ describe('EditorToolbarComponent', () => {
         MockProvider(ShapeConnectorService, {
           connectSelectedElements: vi.fn(),
         }),
-        MockProvider(CONFIGURATION_SERVICE, {
+        MockProvider(ConfigurationService, {
           settings$: of({} as any),
         }),
         MockProvider(BindingsService, {

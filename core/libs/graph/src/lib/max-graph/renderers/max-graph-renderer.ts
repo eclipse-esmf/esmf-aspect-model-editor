@@ -12,9 +12,8 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {ModelTree} from '@ame/domain';
+import {ModelTree, SammLanguageSettingsService} from '@ame/domain';
 import {RdfModelUtil} from '@ame/infrastructure';
-import {ISammLanguageSettingsService} from '@ame/shared';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -48,7 +47,7 @@ export class MaxGraphRenderer implements ModelRenderer<Cell, Cell> {
   constructor(
     private maxgraphService: MaxGraphService,
     private maxgraphShapeOverlayService: MaxGraphShapeOverlayService,
-    private sammLangService: ISammLanguageSettingsService,
+    private sammLangService: SammLanguageSettingsService,
     private rdfModel: RdfModel,
   ) {
     this.shapes = new Map<string, Cell>();

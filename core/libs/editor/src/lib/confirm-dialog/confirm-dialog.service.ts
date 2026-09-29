@@ -11,17 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfirmDialogEnum, DialogOptions, IConfirmDialogService} from '@ame/shared';
+import {ConfirmDialogEnum, ConfirmDialogPort, DialogOptions} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 
-export {DialogOptions, IConfirmDialogService};
+export {DialogOptions};
 
 @Injectable({providedIn: 'root'})
-export class ConfirmDialogService implements IConfirmDialogService {
+export class ConfirmDialogService implements ConfirmDialogPort {
   private matDialog = inject(MatDialog);
 
   open({phrases, title, closeButtonText, okButtonText, actionButtonText}: DialogOptions): Observable<ConfirmDialogEnum> {

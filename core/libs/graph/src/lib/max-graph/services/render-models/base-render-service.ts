@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {ISammLanguageSettingsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {inject} from '@angular/core';
 import {DefaultAspect, DefaultEntity, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {Cell, Graph} from '@maxgraph/core';
@@ -24,7 +24,7 @@ import {MaxGraphService} from '../max-graph.service';
 
 export abstract class BaseRenderService {
   protected readonly maxgraphService = inject(MaxGraphService);
-  protected readonly sammLangService: ISammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  protected readonly sammLangService = inject(SammLanguageSettingsService);
   protected readonly loadedFilesService = inject(LoadedFilesService);
   protected readonly maxgraphAttributeService = inject(MaxGraphAttributeService);
   protected readonly themeService = inject(ThemeService);

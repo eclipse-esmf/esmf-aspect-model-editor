@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService, NamespacesManagerService} from '@ame/infrastructure';
+import {WorkspaceFacade} from '@ame/domain';
 import {
   BrowserService,
   IPC_RENDERER,
   LanguageTranslationService,
-  MODEL_CHECKER_SERVICE,
+  ModelCheckerPort,
   NotificationsService,
   TauriSignalsService,
 } from '@ame/shared';
@@ -37,6 +37,7 @@ describe('WorkspaceComponent', () => {
   };
   let modelApiServiceMock: {
     getStoragePath: ReturnType<typeof vi.fn>;
+    importNamespaces: ReturnType<typeof vi.fn>;
   };
   let notificationsServiceMock: {
     info: ReturnType<typeof vi.fn>;
@@ -54,6 +55,7 @@ describe('WorkspaceComponent', () => {
     };
     modelApiServiceMock = {
       getStoragePath: vi.fn(() => of({path: '/workspace', storagePath: '/workspace'})),
+      importNamespaces: vi.fn(() => of(undefined)),
     };
     notificationsServiceMock = {
       info: vi.fn(),
@@ -71,11 +73,10 @@ describe('WorkspaceComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: MODEL_CHECKER_SERVICE, useValue: modelCheckerMock},
-        {provide: ModelApiService, useValue: modelApiServiceMock},
+        {provide: ModelCheckerPort, useValue: modelCheckerMock},
+        {provide: WorkspaceFacade, useValue: modelApiServiceMock},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
         {
           provide: LanguageTranslationService,
           useValue: {
@@ -174,11 +175,10 @@ describe('WorkspaceComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: MODEL_CHECKER_SERVICE, useValue: modelCheckerMock},
-        {provide: ModelApiService, useValue: modelApiServiceMock},
+        {provide: ModelCheckerPort, useValue: modelCheckerMock},
+        {provide: WorkspaceFacade, useValue: modelApiServiceMock},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
         {
           provide: BrowserService,
           useValue: {isStartedAsTauriApp: () => true, getAssetBasePath: () => './assets'},

@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {Settings} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Settings} from '../model';
 
 const DEFAULT_SETTINGS: Settings = {
   namespace: '',

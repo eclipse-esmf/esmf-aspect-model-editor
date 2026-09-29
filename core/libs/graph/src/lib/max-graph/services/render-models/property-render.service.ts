@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
-import {IShapeConnectorService, SHAPE_CONNECTOR_SERVICE} from '@ame/shared';
+import {FiltersService, ShapeConnectorPort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultValue, NamedElement} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -22,7 +21,7 @@ import {BaseRenderService} from './base-render-service';
 
 @Injectable({providedIn: 'root'})
 export class PropertyRenderService extends BaseRenderService {
-  private readonly shapeConnectorService: IShapeConnectorService = inject(SHAPE_CONNECTOR_SERVICE);
+  private readonly shapeConnectorService = inject(ShapeConnectorPort);
   private readonly filtersService = inject(FiltersService);
 
   update({cell, callback}: RendererUpdatePayload) {

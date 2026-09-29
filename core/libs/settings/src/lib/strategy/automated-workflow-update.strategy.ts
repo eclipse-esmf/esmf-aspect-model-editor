@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EDITOR_VALIDATION_SERVICE, IEditorValidationService, IModelSaverTokenService, MODEL_SAVER_TOKEN_SERVICE} from '@ame/shared';
+import {EditorValidationPort, ModelSaverPort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class AutomatedWorkflowUpdateStrategy implements SettingsUpdateStrategy {
-  private readonly modelSaverService: IModelSaverTokenService = inject(MODEL_SAVER_TOKEN_SERVICE, {optional: true})!;
-  private readonly editorService: IEditorValidationService = inject(EDITOR_VALIDATION_SERVICE, {optional: true})!;
+  private readonly modelSaverService = inject(ModelSaverPort, {optional: true})!;
+  private readonly editorService = inject(EditorValidationPort, {optional: true})!;
 
   updateSettings(model: SettingsFormData, settings: Settings): void {
     const automatedWorkflow = model?.automatedWorkflow;

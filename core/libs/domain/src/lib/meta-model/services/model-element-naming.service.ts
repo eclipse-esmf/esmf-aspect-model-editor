@@ -12,10 +12,11 @@
  */
 
 import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
-import {ElementRelationUtil, GRAPH_ADAPTER, IGraphAdapter} from '@ame/shared';
+import {ElementRelationUtil} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, of} from 'rxjs';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 
 @Injectable({providedIn: 'root'})
 export class ModelElementNamingService {
@@ -23,8 +24,8 @@ export class ModelElementNamingService {
   private readonly injector = inject(Injector);
   private readonly modelApiService = inject(ModelApiService);
 
-  private get graphAdapter(): IGraphAdapter | null {
-    return this.injector.get<IGraphAdapter | null>(GRAPH_ADAPTER, null, {optional: true});
+  private get graphAdapter(): GraphAdapterPort | null {
+    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
   }
 
   private isExistingElement(element: NamedElement): boolean {

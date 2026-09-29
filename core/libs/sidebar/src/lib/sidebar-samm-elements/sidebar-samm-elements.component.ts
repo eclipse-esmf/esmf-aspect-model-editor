@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {GraphNavigatorPort, ModelSessionFacade} from '@ame/domain';
 import {ElementIconComponent, ElementType, sammElements} from '@ame/shared';
 import {Component, computed, inject} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -28,8 +27,8 @@ import {SidebarStateService} from '../sidebar-state.service';
   imports: [MatIconModule, DraggableElementComponent, MatMiniFabButton, ElementIconComponent, TranslocoDirective],
 })
 export class SidebarSAMMElementsComponent {
-  private maxgraphService = inject(MaxGraphService);
-  private loadedFiles = inject(LoadedFilesService);
+  private graphNavigator = inject(GraphNavigatorPort);
+  private loadedFiles = inject(ModelSessionFacade);
 
   protected hasAspect = this.loadedFiles.hasAspect;
 
@@ -41,6 +40,6 @@ export class SidebarSAMMElementsComponent {
   );
 
   public get isEmptyModel(): boolean {
-    return !this.maxgraphService.getAllCells()?.length;
+    return !this.graphNavigator.hasElements();
   }
 }

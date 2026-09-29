@@ -13,7 +13,7 @@
 
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty, DefaultScalar, DefaultValue, Type} from '@esmf/aspect-model-loader';
-import {ILoadedFilesService, LOADED_FILES_SERVICE} from '../../contracts';
+import {LoadedFilesPort} from '../../contracts';
 import {simpleDataTypes} from '../constants/xsd-datatypes';
 
 export interface ValueTypeResolution {
@@ -39,12 +39,12 @@ export interface ValueTypeResolution {
 
 @Injectable({providedIn: 'root'})
 export class ValueTypeResolverService {
-  private loadedFilesService = inject(LOADED_FILES_SERVICE, {optional: true});
+  private loadedFilesService = inject(LoadedFilesPort, {optional: true});
 
   /**
    * Static helper to resolve value type from a DefaultValue.
    */
-  static resolveValueTypeStatic(value: DefaultValue, loadedFilesService?: ILoadedFilesService | null): ValueTypeResolution {
+  static resolveValueTypeStatic(value: DefaultValue, loadedFilesService?: LoadedFilesPort | null): ValueTypeResolution {
     if (!value) {
       return {
         type: null,

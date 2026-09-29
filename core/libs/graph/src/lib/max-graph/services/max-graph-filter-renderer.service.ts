@@ -11,16 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {EditorValidationPort, GraphFilterRendererPort, SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  EDITOR_VALIDATION_SERVICE,
-  IEditorValidationService,
-  IGraphFilterRenderer,
-  ISammLanguageSettingsService,
-  LanguageTranslationService,
-  LoadingScreenService,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-} from '@ame/shared';
+import {LanguageTranslationService, LoadingScreenService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {of, switchMap} from 'rxjs';
 import {MaxGraphHelper} from '../helpers/max-graph-helper';
@@ -30,15 +23,15 @@ import {MaxGraphShapeOverlayService} from './max-graph-shape-overlay.service';
 import {MaxGraphService} from './max-graph.service';
 
 @Injectable({providedIn: 'root'})
-export class MaxGraphFilterRendererService implements IGraphFilterRenderer {
+export class MaxGraphFilterRendererService implements GraphFilterRendererPort {
   private readonly maxGraphService = inject(MaxGraphService);
   private readonly maxGraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
-  private readonly sammLanguageSettingsService: ISammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private readonly sammLanguageSettingsService = inject(SammLanguageSettingsService);
   private readonly maxGraphAttributeService = inject(MaxGraphAttributeService);
   private readonly loadedFilesService = inject(LoadedFilesService);
   private readonly loadingScreen = inject(LoadingScreenService);
   private readonly translate = inject(LanguageTranslationService);
-  private readonly editorService = inject<IEditorValidationService>(EDITOR_VALIDATION_SERVICE, {optional: true});
+  private readonly editorService = inject(EditorValidationPort, {optional: true});
 
   getSelectedModelElement(): any {
     const selectedCell = this.maxGraphService.graph.selectionModel.cells?.[0];

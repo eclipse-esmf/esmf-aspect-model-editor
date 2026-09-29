@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, NamespaceFile, RdfService} from '@ame/infrastructure';
-import {NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE, SearchService} from '@ame/shared';
+import {NotificationsService, SearchService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {form, required} from '@angular/forms/signals';
@@ -59,7 +60,7 @@ describe('ShapeSettingsComponent', () => {
           updateMetaModelElement: vi.fn(),
           isReadOnly: vi.fn(() => false),
         }),
-        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {
+        MockProvider(SammLanguageSettingsService, {
           getSammLanguageCodes: vi.fn(() => ['en']),
         }),
         MockProvider(LoadedFilesService, {

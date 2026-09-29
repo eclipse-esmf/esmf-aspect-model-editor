@@ -12,10 +12,15 @@ export default [
           allow: ['^.*/environments/.*', '^.*/package.json$'],
           depConstraints: [
             // Feature libs are isolated: no dependency on the shell or on other features.
-            // Cross-feature communication goes through @ame/domain stores or @ame/shared tokens.
+            // Cross-feature communication goes through @ame/domain stores, facades and ports.
             {
               sourceTag: 'type:feature',
               notDependOnLibsWithTags: ['type:shell', 'type:feature'],
+            },
+            // UI features without own graph rendering only talk to the domain (stores, facades, ports).
+            {
+              sourceTag: 'access:domain-only',
+              onlyDependOnLibsWithTags: ['layer:domain', 'layer:shared', 'layer:esmf'],
             },
             // Layer hierarchy rules: strictly unidirectional flow downward
             {

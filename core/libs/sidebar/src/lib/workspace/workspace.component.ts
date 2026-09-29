@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelValidationStore, WorkspaceStore} from '@ame/domain';
-import {ModelApiService} from '@ame/infrastructure';
-import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
+import {ModelValidationStore, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
+import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, ModelCheckerPort, NotificationsService} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -44,8 +43,8 @@ import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-l
 })
 export class WorkspaceComponent {
   private destroyRef = inject(DestroyRef);
-  private modelChecker = inject(MODEL_CHECKER_SERVICE);
-  private modelApiService = inject(ModelApiService);
+  private modelChecker = inject(ModelCheckerPort);
+  private modelApiService = inject(WorkspaceFacade);
   private ipcRenderer = inject(IPC_RENDERER);
   private notificationsService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);

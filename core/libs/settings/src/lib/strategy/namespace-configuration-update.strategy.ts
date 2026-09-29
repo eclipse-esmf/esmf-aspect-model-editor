@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
+import {ModelSessionFacade} from '@ame/domain';
 import {TitleService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';
@@ -19,7 +19,7 @@ import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class NamespaceConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  private readonly loadedFilesService = inject(LoadedFilesService);
+  private readonly loadedFilesService = inject(ModelSessionFacade);
   private readonly titleService = inject(TitleService);
 
   updateSettings(model: SettingsFormData, settings: Settings): void {

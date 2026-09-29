@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FilterAttributesService, ModelTree} from '@ame/domain';
+import {ConfigurationService, FilterAttributesService, ModelTree} from '@ame/domain';
 import {CacheUtils, LoadedFilesService} from '@ame/infrastructure';
-import {CONFIGURATION_SERVICE, IConfigurationService, NotificationsService, overlayGeometry} from '@ame/shared';
+import {NotificationsService, overlayGeometry} from '@ame/shared';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {DefaultCharacteristic, DefaultEntityInstance, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
@@ -37,7 +37,7 @@ export interface Coordinates {
 export class MaxGraphService {
   private readonly filterAttributes = inject(FilterAttributesService);
   private readonly loadedFiles = inject(LoadedFilesService);
-  private readonly configurationService: IConfigurationService = inject(CONFIGURATION_SERVICE);
+  private readonly configurationService = inject(ConfigurationService);
   private readonly graphSetupService = inject(MaxGraphSetupService);
   private readonly maxgraphGeometryProviderService = inject(MaxGraphGeometryProviderService);
   private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);

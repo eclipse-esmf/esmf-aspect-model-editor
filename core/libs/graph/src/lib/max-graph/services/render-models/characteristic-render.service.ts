@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
-import {IShapeConnectorService, SHAPE_CONNECTOR_SERVICE, useUpdater} from '@ame/shared';
+import {FiltersService, ShapeConnectorPort} from '@ame/domain';
+import {useUpdater} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {
   DefaultCharacteristic,
@@ -40,7 +40,7 @@ import {UnitRenderService} from './unit-render.service';
 export class CharacteristicRenderService extends BaseRenderService {
   private metaModelElement: DefaultCharacteristic;
   private readonly filtersService = inject(FiltersService);
-  private readonly shapeConnectorService: IShapeConnectorService = inject(SHAPE_CONNECTOR_SERVICE);
+  private readonly shapeConnectorService = inject(ShapeConnectorPort);
   private readonly unitRendererService = inject(UnitRenderService);
   private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
 

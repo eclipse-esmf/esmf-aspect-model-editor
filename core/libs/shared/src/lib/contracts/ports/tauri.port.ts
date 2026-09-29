@@ -13,11 +13,9 @@
 
 import {InjectionToken} from '@angular/core';
 
-export interface ITauriTunnelService {
-  sendTranslationsToTauri(language: string, customMenuItem?: any): void;
+export abstract class TauriTunnelPort {
+  abstract sendTranslationsToTauri(language: string, customMenuItem?: any): void;
 }
-
-export const TAURI_TUNNEL_SERVICE = new InjectionToken<ITauriTunnelService>('TAURI_TUNNEL_SERVICE');
 
 /**
  * Feature-owned handlers for Tauri IPC/menu events. Each feature registers its own bridge (multi provider),

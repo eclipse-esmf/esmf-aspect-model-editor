@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
 import {Observable} from 'rxjs';
 
 export interface INamespaceFile {
@@ -33,8 +32,6 @@ export interface LoadSingleModelOptions {
   aspectModelUrn: string;
 }
 
-export interface IModelLoaderService {
-  loadSingleModel(options: LoadSingleModelOptions): Observable<INamespaceFile>;
+export abstract class ModelLoaderPort {
+  abstract loadSingleModel(options: LoadSingleModelOptions): Observable<INamespaceFile>;
 }
-
-export const MODEL_LOADER_SERVICE = new InjectionToken<IModelLoaderService>('MODEL_LOADER_SERVICE');

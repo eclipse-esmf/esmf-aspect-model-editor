@@ -11,18 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelOpenerPort, SidebarStatePort} from '@ame/domain';
 import {
   createDebouncedLoading,
   filesSearchOption,
-  IModelCheckerService,
-  IModelOpenerService,
-  ISidebarStateService,
   LanguageTranslationService,
-  MODEL_CHECKER_SERVICE,
-  MODEL_OPENER_SERVICE,
+  ModelCheckerPort,
   NotificationsService,
   SearchService,
-  SIDEBAR_STATE_SERVICE,
 } from '@ame/shared';
 import {AfterViewInit, Component, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
@@ -42,12 +38,12 @@ import {SearchesStateService} from '../search-state.service';
 })
 export class FilesSearchComponent implements AfterViewInit {
   private readonly searchesStateService = inject(SearchesStateService);
-  private readonly sidebarStateService: ISidebarStateService = inject(SIDEBAR_STATE_SERVICE);
+  private readonly sidebarStateService = inject(SidebarStatePort);
   private readonly notificationService = inject(NotificationsService);
-  private readonly modelOpener: IModelOpenerService = inject(MODEL_OPENER_SERVICE);
+  private readonly modelOpener = inject(ModelOpenerPort);
   private readonly searchService = inject(SearchService);
   private readonly translate = inject(LanguageTranslationService);
-  private readonly modelChecker: IModelCheckerService = inject(MODEL_CHECKER_SERVICE);
+  private readonly modelChecker = inject(ModelCheckerPort);
 
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 

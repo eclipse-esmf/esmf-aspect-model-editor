@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementModelService, SearchStore} from '@ame/domain';
+import {ConfigurationService, ElementModelService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
 import {EditorFormModel, EditorService, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
-import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
-import {CONFIGURATION_SERVICE} from '@ame/shared';
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -51,16 +48,16 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
         },
         {provide: ElementModelService, useValue: mockElementModel},
         {
-          provide: CONFIGURATION_SERVICE,
+          provide: ConfigurationService,
           useValue: {
             settings$: of({showEditorMap: true, toolbarVisibility: true}),
             getSettings: vi.fn(() => ({showEditorMap: true, toolbarVisibility: true})),
           },
         },
         {provide: SearchStore, useValue: {elementsSearchOpened: signal(false), filesSearchOpened: signal(false)}},
-        MockProvider(MaxGraphService, {getAllCells: vi.fn(() => []), isModelEmpty: signal(false)}),
+        MockProvider(GraphNavigatorPort, {isModelEmpty: signal(false), navigateToElement: vi.fn(), setScrollPosition: vi.fn()}),
         MockProvider(EditorService),
-        MockProvider(LoadedFilesService),
+        MockProvider(ModelSessionFacade),
         MockProvider(Router),
         MockProvider(ActivatedRoute, {queryParamMap: of(null)}),
       ],

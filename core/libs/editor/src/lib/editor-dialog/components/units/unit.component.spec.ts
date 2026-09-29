@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelApiService, NamespaceFile, RdfService} from '@ame/infrastructure';
-import {CONFIGURATION_SERVICE, NotificationsService, SearchService} from '@ame/shared';
+import {NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultUnit, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -65,7 +66,7 @@ describe('UnitComponent', () => {
         MockProvider(RdfService),
         MockProvider(SearchService),
         MockProvider(ShapeSettingsService),
-        {provide: CONFIGURATION_SERVICE, useValue: {getSettings: vi.fn(() => ({}))}},
+        {provide: ConfigurationService, useValue: {getSettings: vi.fn(() => ({}))}},
       ],
     }).compileComponents();
 

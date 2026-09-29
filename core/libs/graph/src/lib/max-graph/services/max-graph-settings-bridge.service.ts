@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IMaxGraphSettingsService} from '@ame/shared';
+import {GraphSettingsPort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {ShapeLanguageRemover} from '../renderers/shape-language-remover';
 import {MaxGraphService} from './max-graph.service';
 
 @Injectable({providedIn: 'root'})
-export class MaxGraphSettingsBridgeService implements IMaxGraphSettingsService {
+export class MaxGraphSettingsBridgeService implements GraphSettingsPort {
   private readonly maxGraphService = inject(MaxGraphService);
   private readonly shapeLanguageRemover = inject(ShapeLanguageRemover);
 

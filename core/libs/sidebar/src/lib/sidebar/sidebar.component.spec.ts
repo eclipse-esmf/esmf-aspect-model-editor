@@ -11,17 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
 import {
-  CONFIGURATION_SERVICE,
-  DRAGGABLE_SERVICE,
-  EDITOR_THEME_SERVICE,
-  INFORMATION_HANDLING_SERVICE,
-  MODEL_CHECKER_SERVICE,
-  NotificationsService,
-  TauriSignalsService,
-} from '@ame/shared';
+  ConfigurationService,
+  DraggablePort,
+  EditorThemePort,
+  GraphNavigatorPort,
+  InformationHandlingPort,
+  ModelSessionFacade,
+} from '@ame/domain';
+import {ModelCheckerPort, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -46,17 +44,17 @@ describe('SidebarComponent', () => {
       providers: [
         SidebarStateService,
         {
-          provide: INFORMATION_HANDLING_SERVICE,
+          provide: InformationHandlingPort,
           useValue: {openSettingsDialog: vi.fn(), openHelpDialog: vi.fn(), openNotificationDialog: vi.fn()},
         },
         {provide: NotificationsService, useValue: {badgeText: EMPTY, info: vi.fn(), error: vi.fn()}},
-        {provide: MaxGraphService, useValue: {getAllCells: () => []}},
-        {provide: LoadedFilesService, useValue: {hasAspect: signal(false), currentLoadedFile: null, getFile: () => null}},
-        {provide: DRAGGABLE_SERVICE, useValue: {makeDraggable: vi.fn()}},
-        {provide: MODEL_CHECKER_SERVICE, useValue: {detectWorkspaceErrors: () => EMPTY}},
+        {provide: GraphNavigatorPort, useValue: {hasElements: () => false}},
+        {provide: ModelSessionFacade, useValue: {hasAspect: signal(false), currentLoadedFile: null, getFile: () => null}},
+        {provide: DraggablePort, useValue: {makeDraggable: vi.fn()}},
+        {provide: ModelCheckerPort, useValue: {detectWorkspaceErrors: () => EMPTY}},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
-        {provide: CONFIGURATION_SERVICE, useValue: {getSettings: vi.fn(() => ({})), setSettings: vi.fn()}},
-        {provide: EDITOR_THEME_SERVICE, useValue: {currentTheme: 'light', applyTheme: vi.fn()}},
+        {provide: ConfigurationService, useValue: {getSettings: vi.fn(() => ({})), setSettings: vi.fn()}},
+        {provide: EditorThemePort, useValue: {currentTheme: 'light', applyTheme: vi.fn()}},
       ],
     });
 

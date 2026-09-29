@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService, NamespaceFile, RdfModelUtil} from '@ame/infrastructure';
-import {ISammLanguageSettingsService} from '@ame/shared';
 import {
   Aspect,
   Characteristic,
@@ -97,7 +97,7 @@ export class MaxGraphVisitorHelper {
 
   static addLocalizedDescriptions(
     metaModelElement: NamedElement & {extends_?: NamedElement},
-    sammLangService: ISammLanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
   ): ShapeAttribute[] {
     const languages: string[] =
       Array.from(metaModelElement.descriptions.keys()).length >= (metaModelElement?.extends_?.descriptions?.size || 0)
@@ -126,7 +126,7 @@ export class MaxGraphVisitorHelper {
 
   static addLocalizedPreferredNames(
     metaModelElement: NamedElement & {extends_?: NamedElement},
-    sammLangService: ISammLanguageSettingsService,
+    sammLangService: SammLanguageSettingsService,
   ): ShapeAttribute[] {
     const languages: string[] =
       Array.from(metaModelElement.preferredNames.keys()).length >= (metaModelElement?.extends_?.preferredNames.size || 0)
@@ -342,7 +342,7 @@ export class MaxGraphVisitorHelper {
     return characteristic.elements.map(element => (typeof element === 'string' ? element : element.name));
   }
 
-  static getOperationProperties(operation: DefaultOperation, sammLangService: ISammLanguageSettingsService) {
+  static getOperationProperties(operation: DefaultOperation, sammLangService: SammLanguageSettingsService) {
     return [
       ...this.addLocalizedPreferredNames(operation, sammLangService),
       ...this.addLocalizedDescriptions(operation, sammLangService),
@@ -350,7 +350,7 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getEntityProperties(entity: DefaultEntity, sammLangService: ISammLanguageSettingsService) {
+  static getEntityProperties(entity: DefaultEntity, sammLangService: SammLanguageSettingsService) {
     return [
       this.addExtends(entity),
       ...this.addLocalizedPreferredNames(entity, sammLangService),
@@ -359,11 +359,11 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getAbstractEntityProperties(entity: any, sammLangService: ISammLanguageSettingsService) {
+  static getAbstractEntityProperties(entity: any, sammLangService: SammLanguageSettingsService) {
     return this.getEntityProperties(entity, sammLangService);
   }
 
-  static getUnitProperties(unit: DefaultUnit, sammLangService: ISammLanguageSettingsService) {
+  static getUnitProperties(unit: DefaultUnit, sammLangService: SammLanguageSettingsService) {
     return [
       ...this.addLocalizedPreferredNames(unit, sammLangService),
       this.addCode(unit),
@@ -375,7 +375,7 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getPropertyProperties(property: DefaultProperty, sammLangService: ISammLanguageSettingsService) {
+  static getPropertyProperties(property: DefaultProperty, sammLangService: SammLanguageSettingsService) {
     return [
       this.addExtends(property),
       ...this.addLocalizedPreferredNames(property, sammLangService),
@@ -386,11 +386,11 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getAbstractPropertyProperties(abstractProperty: any, sammLangService: ISammLanguageSettingsService) {
+  static getAbstractPropertyProperties(abstractProperty: any, sammLangService: SammLanguageSettingsService) {
     return this.getPropertyProperties(abstractProperty, sammLangService);
   }
 
-  static getCharacteristicProperties(characteristic: DefaultCharacteristic, sammLangService: ISammLanguageSettingsService) {
+  static getCharacteristicProperties(characteristic: DefaultCharacteristic, sammLangService: SammLanguageSettingsService) {
     return [
       ...this.addLocalizedPreferredNames(characteristic, sammLangService),
       ...this.addLocalizedDescriptions(characteristic, sammLangService),
@@ -403,7 +403,7 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getAspectProperties(aspect: DefaultAspect, sammLangService: ISammLanguageSettingsService) {
+  static getAspectProperties(aspect: DefaultAspect, sammLangService: SammLanguageSettingsService) {
     return [
       ...this.addLocalizedPreferredNames(aspect, sammLangService),
       ...this.addLocalizedDescriptions(aspect, sammLangService),
@@ -412,7 +412,7 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getConstraintProperties(constraint: DefaultConstraint, sammLangService: ISammLanguageSettingsService) {
+  static getConstraintProperties(constraint: DefaultConstraint, sammLangService: SammLanguageSettingsService) {
     return [
       ...this.addLocalizedPreferredNames(constraint, sammLangService),
       ...this.addLocalizedDescriptions(constraint, sammLangService),
@@ -428,7 +428,7 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getEventProperties(event: DefaultEvent, sammLangService: ISammLanguageSettingsService) {
+  static getEventProperties(event: DefaultEvent, sammLangService: SammLanguageSettingsService) {
     return [
       ...this.addLocalizedPreferredNames(event, sammLangService),
       ...this.addLocalizedDescriptions(event, sammLangService),
@@ -436,7 +436,7 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getValueProperties(value: DefaultValue, sammLangService: ISammLanguageSettingsService) {
+  static getValueProperties(value: DefaultValue, sammLangService: SammLanguageSettingsService) {
     return [
       this.addValue(value),
       ...this.addLocalizedPreferredNames(value, sammLangService),
@@ -445,7 +445,7 @@ export class MaxGraphVisitorHelper {
     ].filter(e => !!e);
   }
 
-  static getElementProperties(element: NamedElement, sammLangService: ISammLanguageSettingsService) {
+  static getElementProperties(element: NamedElement, sammLangService: SammLanguageSettingsService) {
     if (element instanceof DefaultOperation) {
       return this.getOperationProperties(element, sammLangService);
     }

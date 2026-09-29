@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {form, FormField, pattern} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -27,6 +26,7 @@ import {finalize, map} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {AsyncApi, LoadedFilesService} from '@ame/infrastructure';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -57,7 +57,7 @@ export type {AsyncApi};
 })
 export class GenerateAsyncApiComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
-  private languageService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private languageService = inject(SammLanguageSettingsService);
   private editorService = inject(EditorService);
   private dialogRef = inject(MatDialogRef<GenerateAsyncApiComponent>);
   private loadedFilesService = inject(LoadedFilesService);

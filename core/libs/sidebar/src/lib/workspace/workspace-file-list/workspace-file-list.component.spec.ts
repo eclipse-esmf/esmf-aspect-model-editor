@@ -11,15 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
-import {
-  CONFIRM_DIALOG_SERVICE,
-  ConfirmDialogEnum,
-  LanguageTranslationService,
-  MODEL_OPENER_SERVICE,
-  NotificationsService,
-  TauriSignalsService,
-} from '@ame/shared';
+import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -77,10 +70,10 @@ describe('WorkspaceFileListComponent', () => {
         SidebarStateService,
         {provide: TauriSignalsService, useValue: tauriSignalsMock},
         {provide: NotificationsService, useValue: notificationMock},
-        {provide: CONFIRM_DIALOG_SERVICE, useValue: confirmDialogMock},
-        {provide: ModelApiService, useValue: modelApiMock},
-        {provide: LoadedFilesService, useValue: loadedFilesMock},
-        {provide: MODEL_OPENER_SERVICE, useValue: modelOpenerMock},
+        {provide: ConfirmDialogPort, useValue: confirmDialogMock},
+        {provide: WorkspaceFacade, useValue: modelApiMock},
+        {provide: ModelSessionFacade, useValue: loadedFilesMock},
+        {provide: ModelOpenerPort, useValue: modelOpenerMock},
         {
           provide: LanguageTranslationService,
           useValue: {

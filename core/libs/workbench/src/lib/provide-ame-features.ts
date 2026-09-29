@@ -17,7 +17,7 @@ import {provideAmeGraph} from '@ame/graph';
 import {provideAmeInfrastructure} from '@ame/infrastructure';
 import {provideSearch} from '@ame/search';
 import {provideSettings} from '@ame/settings';
-import {APP_CONFIG, config, TAURI_TUNNEL_SERVICE} from '@ame/shared';
+import {APP_CONFIG, config, TauriTunnelPort} from '@ame/shared';
 import {provideSidebar} from '@ame/sidebar';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 import {TauriTunnelService} from './tauri-tunnel.service';
@@ -29,7 +29,7 @@ import {TauriTunnelService} from './tauri-tunnel.service';
 export function provideAmeFeatures(): EnvironmentProviders {
   return makeEnvironmentProviders([
     {provide: APP_CONFIG, useValue: config},
-    {provide: TAURI_TUNNEL_SERVICE, useExisting: TauriTunnelService},
+    {provide: TauriTunnelPort, useExisting: TauriTunnelService},
     provideEditor(),
     provideSidebar(),
     provideSearch(),

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IModelCheckerService, LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
+import {LanguageTranslationService, ModelCheckerPort, NotificationsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
@@ -45,7 +45,7 @@ import {ModelApiService} from '../../../../api';
 })
 export class SelectNamespacesComponent implements OnInit {
   private readonly modelApiService = inject(ModelApiService);
-  private readonly modelCheckerService: IModelCheckerService = inject(MODEL_CHECKER_SERVICE);
+  private readonly modelCheckerService = inject(ModelCheckerPort);
   private readonly notificationService = inject(NotificationsService);
   private readonly translate = inject(LanguageTranslationService);
   private readonly dialogRef = inject(MatDialogRef<SelectNamespacesComponent>);

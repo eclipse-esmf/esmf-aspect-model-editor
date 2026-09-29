@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GRAPH_VALIDATION_ERROR_HIGHLIGHTER, NotificationsService} from '@ame/shared';
+import {GraphValidationErrorHighlighterPort, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {ModelValidatorService} from './model-validator.service';
@@ -39,7 +39,7 @@ describe('ModelValidatorService', () => {
     TestBed.configureTestingModule({
       providers: [
         ModelValidatorService,
-        {provide: GRAPH_VALIDATION_ERROR_HIGHLIGHTER, useValue: maxgraphService},
+        {provide: GraphValidationErrorHighlighterPort, useValue: maxgraphService},
         {provide: NotificationsService, useValue: notificationsService},
       ],
     });

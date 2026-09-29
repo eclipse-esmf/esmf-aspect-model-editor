@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
-import {IShapeConnectorService, SHAPE_CONNECTOR_SERVICE} from '@ame/shared';
+import {FiltersService, ShapeConnectorPort} from '@ame/domain';
 import {Injectable, inject} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultState} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -25,7 +24,7 @@ import {BaseRenderService} from './base-render-service';
 export class EntityValueRenderService extends BaseRenderService {
   private readonly filtersService = inject(FiltersService);
   private readonly maxgraphShapeOverlay = inject(MaxGraphShapeOverlayService);
-  private readonly shapeConnectorService: IShapeConnectorService = inject(SHAPE_CONNECTOR_SERVICE);
+  private readonly shapeConnectorService = inject(ShapeConnectorPort);
 
   isApplicable(cell: Cell): boolean {
     return MaxGraphHelper.getModelElement(cell) instanceof DefaultEntityInstance;

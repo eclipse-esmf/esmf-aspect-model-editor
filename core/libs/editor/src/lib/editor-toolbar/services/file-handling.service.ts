@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {UiShellStore, WorkspaceStore} from '@ame/domain';
+import {ConfigurationService, UiShellStore, WorkspaceStore} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {
   LoadedFilePayload,
@@ -25,12 +25,11 @@ import {
   RdfService,
 } from '@ame/infrastructure';
 import {
-  CONFIGURATION_SERVICE,
   decodeText,
+  FileHandlingPort,
   FileTypes,
   FileUploadService,
   GeneralConfig,
-  IFileHandlingService,
   IPC_RENDERER,
   LanguageTranslationService,
   LoadingScreenOptions,
@@ -60,8 +59,6 @@ import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
 import {TabStateService} from '../../tabs/tab-state.service';
 import {FileUploadOptions} from '../interfaces/file-upload-options';
 
-export {IFileHandlingService};
-
 export interface FileInfo {
   content: BufferSource;
   path: string;
@@ -90,7 +87,7 @@ interface ModelLoaderState {
 }
 
 @Injectable({providedIn: 'root'})
-export class FileHandlingService implements IFileHandlingService {
+export class FileHandlingService implements FileHandlingPort {
   private destroyRef = inject(DestroyRef);
   private editorService = inject(EditorService);
   private modelService = inject(ModelService);
@@ -103,7 +100,7 @@ export class FileHandlingService implements IFileHandlingService {
   private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private tauriSignalsService = inject(TauriSignalsService);
-  private configurationService = inject(CONFIGURATION_SERVICE);
+  private configurationService = inject(ConfigurationService);
   private modelSaveTracker = inject(ModelSavingTrackerService);
   private fileUploadService = inject(FileUploadService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);

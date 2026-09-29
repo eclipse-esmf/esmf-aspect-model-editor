@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService} from '@ame/infrastructure';
-import {AlertService, IMaxGraphSettingsService, LoadingScreenService, MAX_GRAPH_SETTINGS_SERVICE, TitleService} from '@ame/shared';
+import {GraphSettingsPort, ModelSessionFacade, SammLanguageSettingsService} from '@ame/domain';
+import {AlertService, LoadingScreenService, TitleService} from '@ame/shared';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {NgClass} from '@angular/common';
 import {Component, inject} from '@angular/core';
@@ -24,7 +24,7 @@ import {RdfModel} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
 import {NamespaceConfiguration} from '../../model';
-import {SammLanguageSettingsService, SettingsFormService} from '../../services';
+import {SettingsFormService} from '../../services';
 import {LanguageSettingsComponent} from '../model-configuration/language-settings/language-settings.component';
 import {NamespaceSettingsComponent} from '../model-configuration/namespace-settings/namespace-settings.component';
 import {AutomatedWorkflowComponent} from '../system-configuration/automated-workflow/automated-workflow.component';
@@ -128,11 +128,11 @@ export class SettingDialogComponent {
   private readonly settingDialogComponentMatDialogRef = inject(MatDialogRef<SettingDialogComponent>);
   private readonly formService = inject(SettingsFormService);
   private readonly alertService = inject(AlertService);
-  private readonly maxGraphSettingsService: IMaxGraphSettingsService = inject(MAX_GRAPH_SETTINGS_SERVICE, {optional: true});
+  private readonly maxGraphSettingsService = inject(GraphSettingsPort, {optional: true});
   private readonly sammLangService = inject(SammLanguageSettingsService);
   private readonly loadingScreen = inject(LoadingScreenService);
   private readonly titleService = inject(TitleService);
-  private readonly loadedFilesService = inject(LoadedFilesService);
+  private readonly loadedFilesService = inject(ModelSessionFacade);
 
   public readonly NodeNames = NodeNames;
 

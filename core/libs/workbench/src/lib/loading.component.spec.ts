@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/infrastructure';
+import {WorkspaceFacade} from '@ame/domain';
 import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Router} from '@angular/router';
@@ -59,7 +59,7 @@ describe('LoadingComponent', () => {
         {provide: Router, useValue: router},
         {provide: TauriSignalsService, useValue: tauriSignalsService},
         {provide: TauriTunnelService, useValue: tauriTunnelService},
-        {provide: ModelApiService, useValue: modelApiService},
+        {provide: WorkspaceFacade, useValue: modelApiService},
         {provide: NotificationsService, useValue: notificationsService},
       ],
     });

@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {ISammLanguageSettingsService, NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {
   DefaultCharacteristic,
@@ -33,7 +34,7 @@ export class CharacteristicEntityConnectionHandler implements MultiShapeConnecto
   private maxgraphService = inject(MaxGraphService);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
-  private sammLangService: ISammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private sammLangService = inject(SammLanguageSettingsService);
   private notificationsService = inject(NotificationsService);
   private loadedFiles = inject(LoadedFilesService);
 

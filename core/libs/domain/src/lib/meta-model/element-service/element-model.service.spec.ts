@@ -1,19 +1,12 @@
 import {LoadedFilesService, ModelService} from '@ame/infrastructure';
-import {
-  CONFIRM_DIALOG_SERVICE,
-  ConfirmDialogEnum,
-  ElementRelationUtil,
-  GRAPH_ADAPTER,
-  LanguageTranslationService,
-  NotificationsService,
-  RENAME_MODEL_DIALOG_SERVICE,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-  TitleService,
-} from '@ame/shared';
+import {ElementRelationUtil, LanguageTranslationService, NotificationsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ConfirmDialogEnum, ConfirmDialogPort, RenameModelDialogPort} from '../../ports/dialog.port';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
+import {SammLanguageSettingsService} from '../../state/settings/samm-language-settings.service';
 import {ModelElementNamingService} from '../services/model-element-naming.service';
 import {CharacteristicModelService} from './characteristic-model.service';
 import {ElementModelService} from './element-model.service';
@@ -76,16 +69,16 @@ describe('ElementModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         ElementModelService,
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {provide: ModelRootService, useValue: mockModelRootService},
         {provide: NotificationsService, useValue: mockNotificationService},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
         {provide: TitleService, useValue: {updateTitle: vi.fn()}},
         {provide: ModelService, useValue: {removeAspect: vi.fn()}},
-        {provide: RENAME_MODEL_DIALOG_SERVICE, useValue: {open: vi.fn()}},
-        {provide: CONFIRM_DIALOG_SERVICE, useValue: mockConfirmDialogService},
+        {provide: RenameModelDialogPort, useValue: {open: vi.fn()}},
+        {provide: ConfirmDialogPort, useValue: mockConfirmDialogService},
         {provide: ModelElementNamingService, useValue: mockNamingService},
-        {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: {setSammLanguageCodes: vi.fn(), addSammLanguageCode: vi.fn()}},
+        {provide: SammLanguageSettingsService, useValue: {setSammLanguageCodes: vi.fn(), addSammLanguageCode: vi.fn()}},
         {
           provide: LanguageTranslationService,
           useValue: {

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ENTITY_INSTANCE_SERVICE, IEntityInstanceService} from '@ame/shared';
+import {EntityInstancePort} from '@ame/domain';
 import {Injectable, inject} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -24,7 +24,7 @@ export class AbstractEntityAbstractPropertyConnectionHandler
   extends BaseConnectionHandler
   implements MultiShapeConnector<DefaultEntity, DefaultProperty>
 {
-  private entityInstanceService = inject<IEntityInstanceService>(ENTITY_INSTANCE_SERVICE, {optional: true});
+  private entityInstanceService = inject(EntityInstancePort, {optional: true});
 
   public connect(parentMetaModel: DefaultEntity, childMetaModel: DefaultProperty, parentCell: Cell, childCell: Cell) {
     if (!parentMetaModel.isAbstractEntity() || !childMetaModel.isAbstract) return;

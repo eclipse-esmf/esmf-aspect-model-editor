@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LanguageTranslationService, MODEL_CHECKER_SERVICE, NotificationsService} from '@ame/shared';
+import {LanguageTranslationService, ModelCheckerPort, NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -84,7 +84,7 @@ describe('SelectNamespacesComponent', () => {
       ],
       providers: [
         {provide: ModelApiService, useValue: modelApiService},
-        {provide: MODEL_CHECKER_SERVICE, useValue: modelCheckerService},
+        {provide: ModelCheckerPort, useValue: modelCheckerService},
         {provide: NotificationsService, useValue: notificationService},
         {provide: LanguageTranslationService, useValue: translate},
         {provide: MatDialogRef, useValue: dialogRef},

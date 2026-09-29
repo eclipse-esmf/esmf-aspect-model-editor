@@ -11,6 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './configuration.service';
-export * from './samm-language-settings.service';
 export * from './settings-form.service';

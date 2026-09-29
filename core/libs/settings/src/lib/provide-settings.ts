@@ -11,19 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  CONFIGURATION_SERVICE,
-  IPC_RENDERER,
-  ITauriIpcBridge,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-  SETTINGS_DIALOG_COMPONENT,
-  TAURI_EVENTS,
-  TAURI_IPC_BRIDGES,
-} from '@ame/shared';
+import {ConfigurationService, SettingsDialogPort} from '@ame/domain';
+import {IPC_RENDERER, ITauriIpcBridge, TAURI_EVENTS, TAURI_IPC_BRIDGES} from '@ame/shared';
 import {EnvironmentProviders, Injectable, inject, makeEnvironmentProviders} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {SettingDialogComponent} from './components/settings-dialog/setting-dialog.component';
-import {ConfigurationService} from './services/configuration.service';
-import {SammLanguageSettingsService} from './services/samm-language-settings.service';
 
 /** Handles settings related Tauri menu events (toolbar/minimap visibility). */
 @Injectable({providedIn: 'root'})
@@ -37,12 +29,20 @@ export class SettingsTauriBridge implements ITauriIpcBridge {
   }
 }
 
+/** Opens the settings dialog on behalf of other features. */
+@Injectable({providedIn: 'root'})
+export class SettingsDialogService implements SettingsDialogPort {
+  private matDialog = inject(MatDialog);
+
+  open(): void {
+    this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false});
+  }
+}
+
 /** Binds settings implementations to their shared contracts. */
 export function provideSettings(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    {provide: CONFIGURATION_SERVICE, useExisting: ConfigurationService},
-    {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useExisting: SammLanguageSettingsService},
-    {provide: SETTINGS_DIALOG_COMPONENT, useValue: SettingDialogComponent},
+    {provide: SettingsDialogPort, useExisting: SettingsDialogService},
     {provide: TAURI_IPC_BRIDGES, useExisting: SettingsTauriBridge, multi: true},
   ]);
 }

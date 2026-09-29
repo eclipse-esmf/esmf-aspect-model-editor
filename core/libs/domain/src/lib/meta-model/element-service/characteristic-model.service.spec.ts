@@ -1,5 +1,5 @@
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {ElementRelationUtil, GRAPH_ADAPTER} from '@ame/shared';
+import {ElementRelationUtil} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultCharacteristic,
@@ -11,6 +11,7 @@ import {
   DefaultValue,
 } from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {CharacteristicModelService} from './characteristic-model.service';
 
 describe('CharacteristicModelService', () => {
@@ -51,7 +52,7 @@ describe('CharacteristicModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         CharacteristicModelService,
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
         {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},

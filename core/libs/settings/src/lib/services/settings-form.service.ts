@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
+import {ConfigurationService, ModelSessionFacade, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
 import {GeneralConfig, LanguageTranslationService} from '@ame/shared';
 import {inject, Injectable, signal} from '@angular/core';
 import {disabled, form, pattern, required, validate} from '@angular/forms/signals';
@@ -23,8 +23,6 @@ import {EditorConfigurationUpdateStrategy} from '../strategy/editor-configuratio
 import {LanguageConfigurationUpdateStrategy} from '../strategy/language-configuration-update.strategy';
 import {NamespaceConfigurationUpdateStrategy} from '../strategy/namespace-configuration-update.strategy';
 import {SettingsUpdateStrategy} from '../strategy/settings-update.strategy';
-import {ConfigurationService} from './configuration.service';
-import {SammLanguageSettingsService} from './samm-language-settings.service';
 
 const createDefaultSettingsModel = (): SettingsFormData => ({
   automatedWorkflow: {
@@ -64,7 +62,7 @@ export class SettingsFormService {
   private readonly languageConfigStrategy = inject(LanguageConfigurationUpdateStrategy);
   private readonly namespaceConfigStrategy = inject(NamespaceConfigurationUpdateStrategy);
   private readonly copyrightHeaderUpdateStrategy = inject(CopyrightHeaderUpdateStrategy);
-  private readonly loadedFilesService = inject(LoadedFilesService);
+  private readonly loadedFilesService = inject(ModelSessionFacade);
 
   private get currentLoadedFile(): NamespaceFile | undefined {
     return this.loadedFilesService.currentLoadedFile;

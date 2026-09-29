@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {NotificationsService, SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -51,7 +52,7 @@ describe('GenerateOpenApiComponent', () => {
       ],
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
-        MockProvider(SAMM_LANGUAGE_SETTINGS_SERVICE, {
+        MockProvider(SammLanguageSettingsService, {
           getSammLanguageCodes: vi.fn(() => ['en']),
         }),
         MockProvider(EditorService, {

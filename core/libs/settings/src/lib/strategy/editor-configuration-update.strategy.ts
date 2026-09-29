@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EDITOR_THEME_SERVICE, IEditorThemeService, IMaxGraphSettingsService, MAX_GRAPH_SETTINGS_SERVICE} from '@ame/shared';
+import {EditorThemePort, GraphSettingsPort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
 
 @Injectable({providedIn: 'root'})
 export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy {
-  private readonly maxGraphSettingsService: IMaxGraphSettingsService = inject(MAX_GRAPH_SETTINGS_SERVICE, {optional: true});
-  private readonly themeService: IEditorThemeService = inject(EDITOR_THEME_SERVICE, {optional: true});
+  private readonly maxGraphSettingsService = inject(GraphSettingsPort, {optional: true});
+  private readonly themeService = inject(EditorThemePort, {optional: true});
 
   updateSettings(model: SettingsFormData, settings: Settings): void {
     const editorConfiguration = model?.editorConfiguration;

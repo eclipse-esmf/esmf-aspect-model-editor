@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SETTINGS_DIALOG_COMPONENT} from '@ame/shared';
+import {SettingsDialogPort} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {of} from 'rxjs';
@@ -19,8 +19,6 @@ import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {DocumentComponent} from '../components/help/document.component';
 import {NotificationsComponent} from '../components/notifications/notifications.component';
 import {InformationHandlingService} from './information-handling.service';
-
-class FakeSettingDialogComponent {}
 
 describe('InformationHandlingService', () => {
   let service: InformationHandlingService;
@@ -30,7 +28,7 @@ describe('InformationHandlingService', () => {
     TestBed.configureTestingModule({
       providers: [
         InformationHandlingService,
-        {provide: SETTINGS_DIALOG_COMPONENT, useValue: FakeSettingDialogComponent},
+        {provide: SettingsDialogPort, useValue: {open: vi.fn()}},
         {
           provide: MatDialog,
           useValue: {
@@ -44,13 +42,9 @@ describe('InformationHandlingService', () => {
     dialog = TestBed.inject(MatDialog);
   });
 
-  it('openSettingsDialog should open SettingDialogComponent', () => {
+  it('openSettingsDialog should delegate to the settings dialog port', () => {
     service.openSettingsDialog();
-    expect(dialog.open).toHaveBeenCalledWith(FakeSettingDialogComponent, {
-      panelClass: 'settings-dialog-container',
-      width: '60%',
-      autoFocus: false,
-    });
+    expect(TestBed.inject(SettingsDialogPort).open).toHaveBeenCalled();
   });
 
   it('openHelpDialog should open DocumentComponent', () => {

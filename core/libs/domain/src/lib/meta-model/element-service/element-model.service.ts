@@ -12,22 +12,11 @@
  */
 
 import {LoadedFilesService, ModelService} from '@ame/infrastructure';
-import {
-  CONFIRM_DIALOG_SERVICE,
-  ConfirmDialogEnum,
-  ElementRelationUtil,
-  GRAPH_ADAPTER,
-  IConfirmDialogService,
-  IGraphAdapter,
-  IRenameModelDialogService,
-  LanguageTranslationService,
-  NotificationsService,
-  RENAME_MODEL_DIALOG_SERVICE,
-  TitleService,
-  useUpdater,
-} from '@ame/shared';
+import {ElementRelationUtil, LanguageTranslationService, NotificationsService, TitleService, useUpdater} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {DefaultAspect, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
+import {ConfirmDialogEnum, ConfirmDialogPort, RenameModelDialogPort} from '../../ports/dialog.port';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {ModelElementNamingService} from '../services/model-element-naming.service';
 import {CharacteristicModelService} from './characteristic-model.service';
 import {ModelRootService} from './model-root.service';
@@ -37,13 +26,13 @@ export class ElementModelService {
   private readonly injector = inject(Injector);
   private readonly titleService = inject(TitleService);
 
-  private get graphAdapter(): IGraphAdapter | null {
-    return this.injector.get<IGraphAdapter | null>(GRAPH_ADAPTER, null, {optional: true});
+  private get graphAdapter(): GraphAdapterPort | null {
+    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
   }
   private readonly modelRootService = inject(ModelRootService);
   private readonly modelService = inject(ModelService);
-  private readonly renameModelService = inject<IRenameModelDialogService>(RENAME_MODEL_DIALOG_SERVICE, {optional: true});
-  private readonly confirmDialogService = inject<IConfirmDialogService>(CONFIRM_DIALOG_SERVICE, {optional: true});
+  private readonly renameModelService = inject(RenameModelDialogPort, {optional: true});
+  private readonly confirmDialogService = inject(ConfirmDialogPort, {optional: true});
   private readonly modelElementNamingService = inject(ModelElementNamingService);
   private readonly notificationService = inject(NotificationsService);
   private readonly translate = inject(LanguageTranslationService);

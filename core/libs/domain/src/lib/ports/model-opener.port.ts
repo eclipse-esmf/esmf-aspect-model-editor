@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
 import {Observable} from 'rxjs';
 
 export interface OpenModelOptions {
@@ -27,12 +26,10 @@ export interface PromptUploadOptions {
   modelContent: string;
 }
 
-export interface IModelOpenerService {
-  promptAndOpen(options: OpenModelOptions): Observable<any>;
-  openInCurrentWindow(options: OpenModelOptions): Observable<boolean>;
-  openInNewTab(options: OpenModelOptions): Observable<boolean>;
-  openInNewWindow(options: OpenModelOptions): void;
-  checkUnsavedChanges(): Observable<boolean>;
+export abstract class ModelOpenerPort {
+  abstract promptAndOpen(options: OpenModelOptions): Observable<any>;
+  abstract openInCurrentWindow(options: OpenModelOptions): Observable<boolean>;
+  abstract openInNewTab(options: OpenModelOptions): Observable<boolean>;
+  abstract openInNewWindow(options: OpenModelOptions): void;
+  abstract checkUnsavedChanges(): Observable<boolean>;
 }
-
-export const MODEL_OPENER_SERVICE = new InjectionToken<IModelOpenerService>('MODEL_OPENER_SERVICE');

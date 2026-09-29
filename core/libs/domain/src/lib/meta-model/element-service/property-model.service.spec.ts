@@ -1,13 +1,16 @@
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {ENTITY_INSTANCE_SERVICE, GRAPH_ADAPTER, IGraphAdapter, SAMM_LANGUAGE_SETTINGS_SERVICE, setElementNode} from '@ame/shared';
+import {setElementNode} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultProperty, DefaultValue} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {EntityInstancePort} from '../../ports/entity-instance.port';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
+import {SammLanguageSettingsService} from '../../state/settings/samm-language-settings.service';
 import {PropertyModelService} from './property-model.service';
 
 describe('PropertyModelService', () => {
   let service: PropertyModelService;
-  let mockGraphAdapter: Partial<IGraphAdapter>;
+  let mockGraphAdapter: Partial<GraphAdapterPort>;
   let mockEntityInstanceService: any;
 
   beforeEach(() => {
@@ -26,9 +29,9 @@ describe('PropertyModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         PropertyModelService,
-        {provide: ENTITY_INSTANCE_SERVICE, useValue: mockEntityInstanceService},
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
-        {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: {addSammLanguageCode: vi.fn(), getSammLanguageCodes: vi.fn(() => [])}},
+        {provide: EntityInstancePort, useValue: mockEntityInstanceService},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
+        {provide: SammLanguageSettingsService, useValue: {addSammLanguageCode: vi.fn(), getSammLanguageCodes: vi.fn(() => [])}},
         {
           provide: LoadedFilesService,
           useValue: {

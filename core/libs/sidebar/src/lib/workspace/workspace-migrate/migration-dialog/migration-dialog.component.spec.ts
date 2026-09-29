@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MigratorApiService} from '@ame/infrastructure';
+import {WorkspaceFacade} from '@ame/domain';
 import {APP_CONFIG, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
@@ -62,7 +62,7 @@ describe('MigrationDialogComponent', () => {
       providers: [
         {provide: MatDialogRef, useValue: dialogRefMock},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: MigratorApiService, useValue: migratorApiMock},
+        {provide: WorkspaceFacade, useValue: migratorApiMock},
         {
           provide: APP_CONFIG,
           useValue: {

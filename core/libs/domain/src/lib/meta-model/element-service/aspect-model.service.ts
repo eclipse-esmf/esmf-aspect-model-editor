@@ -11,15 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementRelationUtil, getModelElement, SIDEBAR_STATE_SERVICE, TitleService} from '@ame/shared';
+import {ElementRelationUtil, getModelElement, TitleService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, NamedElement} from '@esmf/aspect-model-loader';
+import {SidebarStatePort} from '../../ports/sidebar-state.port';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
 export class AspectModelService extends BaseModelService {
   private readonly titleService = inject(TitleService);
-  private readonly sidebarStateService = inject(SIDEBAR_STATE_SERVICE, {optional: true});
+  private readonly sidebarStateService = inject(SidebarStatePort, {optional: true});
 
   isApplicable(metaModelElement: NamedElement): boolean {
     return metaModelElement instanceof DefaultAspect;

@@ -1,13 +1,14 @@
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {GRAPH_ADAPTER, IGraphAdapter, setElementNode} from '@ame/shared';
+import {setElementNode} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity, DefaultEntityInstance, DefaultProperty, DefaultScalar} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {EntityValueModelService} from './entity-value-model.service';
 
 describe('EntityValueModelService', () => {
   let service: EntityValueModelService;
-  let mockGraphAdapter: Partial<IGraphAdapter>;
+  let mockGraphAdapter: Partial<GraphAdapterPort>;
 
   beforeEach(() => {
     mockGraphAdapter = {
@@ -18,7 +19,7 @@ describe('EntityValueModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         EntityValueModelService,
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {
           provide: LoadedFilesService,
           useValue: {

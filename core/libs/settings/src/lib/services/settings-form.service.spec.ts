@@ -11,20 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {
-  EDITOR_THEME_SERVICE,
-  EDITOR_VALIDATION_SERVICE,
-  LanguageTranslationService,
-  MAX_GRAPH_SETTINGS_SERVICE,
-  MODEL_SAVER_TOKEN_SERVICE,
-  TAURI_TUNNEL_SERVICE,
-  TitleService,
-} from '@ame/shared';
+  ConfigurationService,
+  EditorThemePort,
+  EditorValidationPort,
+  GraphSettingsPort,
+  ModelSaverPort,
+  ModelSessionFacade,
+  SammLanguageSettingsService,
+} from '@ame/domain';
+import {LanguageTranslationService, TauriTunnelPort, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ConfigurationService} from './configuration.service';
-import {SammLanguageSettingsService} from './samm-language-settings.service';
 import {SettingsFormService} from './settings-form.service';
 
 describe('SettingsFormService', () => {
@@ -65,14 +63,14 @@ describe('SettingsFormService', () => {
         SettingsFormService,
         ConfigurationService,
         SammLanguageSettingsService,
-        {provide: LoadedFilesService, useValue: loadedFilesService},
+        {provide: ModelSessionFacade, useValue: loadedFilesService},
         {provide: LanguageTranslationService, useValue: translateService},
         {provide: TitleService, useValue: {updateTitle: vi.fn()}},
-        {provide: TAURI_TUNNEL_SERVICE, useValue: {sendTranslationsToTauri: vi.fn()}},
-        {provide: MAX_GRAPH_SETTINGS_SERVICE, useValue: {formatShapes: vi.fn(), updateGraph: vi.fn(), removeUnnecessaryLanguages: vi.fn()}},
-        {provide: EDITOR_THEME_SERVICE, useValue: {applyTheme: vi.fn()}},
-        {provide: MODEL_SAVER_TOKEN_SERVICE, useValue: {enableAutoSave: vi.fn()}},
-        {provide: EDITOR_VALIDATION_SERVICE, useValue: {enableAutoValidation: vi.fn()}},
+        {provide: TauriTunnelPort, useValue: {sendTranslationsToTauri: vi.fn()}},
+        {provide: GraphSettingsPort, useValue: {formatShapes: vi.fn(), updateGraph: vi.fn(), removeUnnecessaryLanguages: vi.fn()}},
+        {provide: EditorThemePort, useValue: {applyTheme: vi.fn()}},
+        {provide: ModelSaverPort, useValue: {enableAutoSave: vi.fn()}},
+        {provide: EditorValidationPort, useValue: {enableAutoValidation: vi.fn()}},
       ],
     });
 

@@ -12,11 +12,12 @@
  */
 
 import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
-import {GRAPH_FILTER_RENDERER, IGraphFilterRenderer, SHAPE_SETTINGS_STATE_SERVICE} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphFilterRendererPort} from '../ports/graph-filter-renderer.port';
+import {ShapeSettingsStatePort} from '../ports/ui.port';
 import {FilterAttributesService} from './active-filter.session';
 import {DefaultFilter, PropertiesFilterLoader} from './filters';
 import {FiltersService} from './filters.service';
@@ -24,7 +25,7 @@ import {ModelFilter} from './models';
 
 describe('FiltersService', () => {
   let service: FiltersService;
-  let graphFilterRendererMock: IGraphFilterRenderer;
+  let graphFilterRendererMock: GraphFilterRendererPort;
   let loadedFilesMock: {
     currentLoadedFile: NamespaceFile;
     isElementExtern: ReturnType<typeof vi.fn>;
@@ -50,9 +51,9 @@ describe('FiltersService', () => {
     TestBed.configureTestingModule({
       providers: [
         FiltersService,
-        {provide: GRAPH_FILTER_RENDERER, useValue: graphFilterRendererMock},
+        {provide: GraphFilterRendererPort, useValue: graphFilterRendererMock},
         {provide: LoadedFilesService, useValue: loadedFilesMock},
-        {provide: SHAPE_SETTINGS_STATE_SERVICE, useValue: {isShapeSettingOpened: vi.fn(() => false) as any, closeShapeSettings: vi.fn()}},
+        {provide: ShapeSettingsStatePort, useValue: {isShapeSettingOpened: vi.fn(() => false) as any, closeShapeSettings: vi.fn()}},
       ],
     });
 
@@ -106,7 +107,7 @@ describe('FiltersService', () => {
     expect(node.shape).toBeDefined();
   });
 
-  it('should render graph by filter using GRAPH_FILTER_RENDERER', () => {
+  it('should render graph by filter using GraphFilterRendererPort', () => {
     const prop = new DefaultProperty({
       aspectModelUrn: `${namespace}prop1`,
       name: 'prop1',

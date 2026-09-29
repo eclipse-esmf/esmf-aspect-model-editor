@@ -1,14 +1,16 @@
-import {GRAPH_ADAPTER, IGraphAdapter, LanguageTranslationService, NotificationsService, SHAPE_CONNECTOR_SERVICE} from '@ame/shared';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
+import {ShapeConnectorPort} from '../../ports/shape-connector.port';
 import {BaseEntityModelService} from './base-entity-model.service';
 
 describe('BaseEntityModelService', () => {
   let service: BaseEntityModelService;
   let mockNotificationService: any;
   let mockShapeConnectorService: any;
-  let mockGraphAdapter: Partial<IGraphAdapter>;
+  let mockGraphAdapter: Partial<GraphAdapterPort>;
   let mockTranslate: any;
 
   beforeEach(() => {
@@ -31,8 +33,8 @@ describe('BaseEntityModelService', () => {
       providers: [
         BaseEntityModelService,
         {provide: NotificationsService, useValue: mockNotificationService},
-        {provide: SHAPE_CONNECTOR_SERVICE, useValue: mockShapeConnectorService},
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: ShapeConnectorPort, useValue: mockShapeConnectorService},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {provide: LanguageTranslationService, useValue: mockTranslate},
       ],
     });

@@ -12,9 +12,9 @@
  */
 
 import {LoadedFilesService} from '@ame/infrastructure';
-import {GRAPH_FILTER_RENDERER, IGraphFilterRenderer} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
+import {GraphFilterRendererPort} from '../ports/graph-filter-renderer.port';
 import {FilterAttributesService} from './active-filter.session';
 import {DefaultFilter} from './filters/default-filter';
 import {PropertiesFilterLoader} from './filters/properties-filter';
@@ -87,7 +87,7 @@ export class FiltersService {
   }
 
   renderByFilter(filter: ModelFilter): void {
-    const graphFilterRenderer = this.injector.get<IGraphFilterRenderer>(GRAPH_FILTER_RENDERER, null as any, {optional: true});
+    const graphFilterRenderer = this.injector.get<GraphFilterRendererPort>(GraphFilterRendererPort, null as any, {optional: true});
     const selectedModelElement = graphFilterRenderer?.getSelectedModelElement?.();
 
     this.filterAttributesService.isFiltering = true;

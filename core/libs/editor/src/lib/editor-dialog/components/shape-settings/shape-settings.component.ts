@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {ChangeDetectorRef, Component, DestroyRef, effect, inject, input, OnInit, output, signal, untracked} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButton, MatIconButton} from '@angular/material/button';
@@ -68,7 +68,7 @@ import {SharedSettingsTitleComponent} from './shared-settings-title/shared-setti
 })
 export class ShapeSettingsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
-  private languageSettings = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
+  private languageSettings = inject(SammLanguageSettingsService);
   private changeDetector = inject(ChangeDetectorRef);
 
   public metaModelDialogService = inject(EditorModelService);

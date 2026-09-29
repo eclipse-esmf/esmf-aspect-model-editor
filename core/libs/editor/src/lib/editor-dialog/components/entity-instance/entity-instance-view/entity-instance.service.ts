@@ -11,19 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {EntityInstancePort} from '@ame/domain';
 import {MaxGraphHelper} from '@ame/graph';
 import {CacheUtils, LoadedFilesService} from '@ame/infrastructure';
-import {config, IEntityInstanceService, NotificationsService} from '@ame/shared';
+import {config, NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultEntityInstance, DefaultEnumeration, DefaultProperty, Entity, Value} from '@esmf/aspect-model-loader';
 import {ConfirmDialogService} from '../../../../confirm-dialog/confirm-dialog.service';
 import {ConfirmDialogEnum} from '../../../../models/confirm-dialog.enum';
 import {EntityInstanceUtil} from '../utils/EntityInstanceUtil';
 
-export {IEntityInstanceService};
-
 @Injectable({providedIn: 'root'})
-export class EntityInstanceService implements IEntityInstanceService {
+export class EntityInstanceService implements EntityInstancePort {
   private confirmDialogService = inject(ConfirmDialogService);
   private notifications = inject(NotificationsService);
   private loadedFilesService = inject(LoadedFilesService);

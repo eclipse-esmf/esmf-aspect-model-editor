@@ -22,7 +22,7 @@ import {
   isVersionOutdated,
   readFile,
 } from '../common';
-import {ILoadedFilesService} from '../contracts';
+import {LoadedFilesPort} from '../contracts';
 
 export {
   createFile,
@@ -40,10 +40,10 @@ export {
  *
  * @param {NamedNode} modelElement - The model element whose name should be set.
  * @param {RdfModel} rdfModel - The RDF model in which the element resides.
- * @param {ILoadedFilesService} loadedFiles - The service to check for namespace collisions.
+ * @param {LoadedFilesPort} loadedFiles - The service to check for namespace collisions.
  * @param {string} [name] - An optional initial name suggestion for the element.
  */
-export const setUniqueElementName = (modelElement: NamedElement, rdfModel: RdfModel, loadedFiles: ILoadedFilesService, name?: string) => {
+export const setUniqueElementName = (modelElement: NamedElement, rdfModel: RdfModel, loadedFiles: LoadedFilesPort, name?: string) => {
   name = name || `${modelElement.className}`.replace('Default', '');
 
   if (modelElement instanceof DefaultProperty) {

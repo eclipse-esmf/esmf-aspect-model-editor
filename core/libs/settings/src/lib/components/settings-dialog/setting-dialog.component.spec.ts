@@ -11,23 +11,21 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {
-  AlertService,
-  EDITOR_VALIDATION_SERVICE,
-  LanguageTranslationService,
-  LoadingScreenService,
-  MAX_GRAPH_SETTINGS_SERVICE,
-  MODEL_SAVER_TOKEN_SERVICE,
-  TAURI_TUNNEL_SERVICE,
-  TitleService,
-} from '@ame/shared';
+  ConfigurationService,
+  EditorValidationPort,
+  GraphSettingsPort,
+  ModelSaverPort,
+  ModelSessionFacade,
+  SammLanguageSettingsService,
+} from '@ame/domain';
+import {AlertService, LanguageTranslationService, LoadingScreenService, TauriTunnelPort, TitleService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ConfigurationService, SammLanguageSettingsService, SettingsFormService} from '../../services';
+import {SettingsFormService} from '../../services';
 import {SettingDialogComponent} from './setting-dialog.component';
 
 describe('SettingDialogComponent', () => {
@@ -122,8 +120,8 @@ describe('SettingDialogComponent', () => {
         {provide: MatDialogRef, useValue: dialogRef},
         {provide: AlertService, useValue: alertService},
         {provide: LoadingScreenService, useValue: loadingScreen},
-        {provide: MAX_GRAPH_SETTINGS_SERVICE, useValue: maxGraphSettingsService},
-        {provide: LoadedFilesService, useValue: loadedFilesService},
+        {provide: GraphSettingsPort, useValue: maxGraphSettingsService},
+        {provide: ModelSessionFacade, useValue: loadedFilesService},
         {
           provide: LanguageTranslationService,
           useValue: {
@@ -132,9 +130,9 @@ describe('SettingDialogComponent', () => {
           },
         },
         {provide: TitleService, useValue: {updateTitle: vi.fn()}},
-        {provide: TAURI_TUNNEL_SERVICE, useValue: {sendTranslationsToTauri: vi.fn()}},
-        {provide: MODEL_SAVER_TOKEN_SERVICE, useValue: {enableAutoSave: vi.fn()}},
-        {provide: EDITOR_VALIDATION_SERVICE, useValue: {enableAutoValidation: vi.fn()}},
+        {provide: TauriTunnelPort, useValue: {sendTranslationsToTauri: vi.fn()}},
+        {provide: ModelSaverPort, useValue: {enableAutoSave: vi.fn()}},
+        {provide: EditorValidationPort, useValue: {enableAutoValidation: vi.fn()}},
       ],
     }).compileComponents();
 

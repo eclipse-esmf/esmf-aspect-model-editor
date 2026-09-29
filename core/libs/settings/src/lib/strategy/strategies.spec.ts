@@ -11,16 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  EDITOR_THEME_SERVICE,
-  EDITOR_VALIDATION_SERVICE,
-  LanguageTranslationService,
-  MAX_GRAPH_SETTINGS_SERVICE,
-  MODEL_SAVER_TOKEN_SERVICE,
-  TAURI_TUNNEL_SERVICE,
-  TitleService,
-} from '@ame/shared';
+import {EditorThemePort, EditorValidationPort, GraphSettingsPort, ModelSaverPort, ModelSessionFacade} from '@ame/domain';
+import {LanguageTranslationService, TauriTunnelPort, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {Settings, SettingsFormData} from '../model';
@@ -97,8 +89,8 @@ describe('Settings Update Strategies', () => {
       TestBed.configureTestingModule({
         providers: [
           AutomatedWorkflowUpdateStrategy,
-          {provide: MODEL_SAVER_TOKEN_SERVICE, useValue: modelSaverService},
-          {provide: EDITOR_VALIDATION_SERVICE, useValue: editorService},
+          {provide: ModelSaverPort, useValue: modelSaverService},
+          {provide: EditorValidationPort, useValue: editorService},
         ],
       });
 
@@ -136,8 +128,8 @@ describe('Settings Update Strategies', () => {
       TestBed.configureTestingModule({
         providers: [
           EditorConfigurationUpdateStrategy,
-          {provide: MAX_GRAPH_SETTINGS_SERVICE, useValue: maxGraphSettingsService},
-          {provide: EDITOR_THEME_SERVICE, useValue: themeService},
+          {provide: GraphSettingsPort, useValue: maxGraphSettingsService},
+          {provide: EditorThemePort, useValue: themeService},
         ],
       });
 
@@ -168,7 +160,7 @@ describe('Settings Update Strategies', () => {
         providers: [
           LanguageConfigurationUpdateStrategy,
           {provide: LanguageTranslationService, useValue: translate},
-          {provide: TAURI_TUNNEL_SERVICE, useValue: tauriTunnelService},
+          {provide: TauriTunnelPort, useValue: tauriTunnelService},
         ],
       });
 
@@ -203,7 +195,7 @@ describe('Settings Update Strategies', () => {
       TestBed.configureTestingModule({
         providers: [
           NamespaceConfigurationUpdateStrategy,
-          {provide: LoadedFilesService, useValue: loadedFilesService},
+          {provide: ModelSessionFacade, useValue: loadedFilesService},
           {provide: TitleService, useValue: titleService},
         ],
       });

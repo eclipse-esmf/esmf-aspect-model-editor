@@ -10,15 +10,9 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {filterRelations, ModelFilter, ModelTree} from '@ame/domain';
+import {filterRelations, ModelFilter, ModelTree, SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService, RdfModelUtil} from '@ame/infrastructure';
-import {
-  basicShapeGeometry,
-  ElementPropertyUtil,
-  ISammLanguageSettingsService,
-  ModelCompactTreeLayout,
-  ModelHierarchicalLayout,
-} from '@ame/shared';
+import {basicShapeGeometry, ElementPropertyUtil, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
 import {Injector} from '@angular/core';
 import {
   DefaultAspect,
@@ -666,7 +660,7 @@ export class MaxGraphHelper {
     return span;
   }
 
-  static updateLabel(cell: Cell, graph: Graph, sammLangService: ISammLanguageSettingsService) {
+  static updateLabel(cell: Cell, graph: Graph, sammLangService: SammLanguageSettingsService) {
     if (!cell) {
       return;
     }

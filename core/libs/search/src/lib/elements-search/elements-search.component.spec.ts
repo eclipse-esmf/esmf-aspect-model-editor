@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
-import {MODEL_OPENER_SERVICE, SearchService, SHAPE_SETTINGS_SERVICE} from '@ame/shared';
+import {GraphNavigatorPort, ModelOpenerPort, ModelSessionFacade, ShapeSettingsPort} from '@ame/domain';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
@@ -33,10 +31,9 @@ import {ElementsSearchComponent} from './elements-search.component';
 describe('ElementsSearchComponent', () => {
   let component: ElementsSearchComponent;
   let fixture: ComponentFixture<ElementsSearchComponent>;
-  let maxGraphService: MaxGraphService;
+  let graphNavigator: GraphNavigatorPort;
   let searchesStateService: SearchesStateService;
-  let searchService: SearchService;
-  let loadedFiles: LoadedFilesService;
+  let loadedFiles: ModelSessionFacade;
   let shapeSettingsService: any;
   let modelOpenerService: any;
 
@@ -53,16 +50,19 @@ describe('ElementsSearchComponent', () => {
       ],
       providers: [
         provideZonelessChangeDetection(),
-        MockProvider(LoadedFilesService, {
+        MockProvider(ModelSessionFacade, {
           isElementExtern: vi.fn(() => false),
           getFileFromElement: vi.fn(() => 'TestFile.ttl'),
         }),
-        MockProvider(MaxGraphService, {
-          getAllCells: vi.fn(() => []),
-          navigateToCellByUrn: vi.fn(),
-        }),
         {
-          provide: SHAPE_SETTINGS_SERVICE,
+          provide: GraphNavigatorPort,
+          useValue: {
+            searchElements: vi.fn(() => []),
+            navigateToElement: vi.fn(),
+          },
+        },
+        {
+          provide: ShapeSettingsPort,
           useValue: {
             editModel: vi.fn(),
           },
@@ -72,14 +72,11 @@ describe('ElementsSearchComponent', () => {
           filesSearch: {close: vi.fn()} as any,
         }),
         {
-          provide: MODEL_OPENER_SERVICE,
+          provide: ModelOpenerPort,
           useValue: {
             promptAndOpen: vi.fn(() => of(true)),
           },
         },
-        MockProvider(SearchService, {
-          search: vi.fn(() => []),
-        }),
         MockProvider(TranslocoService, {
           langChanges$: new BehaviorSubject('en'),
           events$: new Subject(),
@@ -95,12 +92,11 @@ describe('ElementsSearchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ElementsSearchComponent);
     component = fixture.componentInstance;
-    maxGraphService = TestBed.inject(MaxGraphService);
+    graphNavigator = TestBed.inject(GraphNavigatorPort);
     searchesStateService = TestBed.inject(SearchesStateService);
-    searchService = TestBed.inject(SearchService);
-    loadedFiles = TestBed.inject(LoadedFilesService);
-    shapeSettingsService = TestBed.inject(SHAPE_SETTINGS_SERVICE);
-    modelOpenerService = TestBed.inject(MODEL_OPENER_SERVICE);
+    loadedFiles = TestBed.inject(ModelSessionFacade);
+    shapeSettingsService = TestBed.inject(ShapeSettingsPort);
+    modelOpenerService = TestBed.inject(ModelOpenerPort);
     fixture.detectChanges();
   });
 
@@ -132,20 +128,18 @@ describe('ElementsSearchComponent', () => {
   });
 
   it('should filter elements when search query changes', async () => {
-    const mockCell = {} as any;
     const aspect = new DefaultAspect({
       name: 'TestAspect',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
       metaModelVersion: '2.0.0',
     });
-    vi.spyOn(MaxGraphHelper, 'getModelElement').mockReturnValue(aspect);
-    vi.spyOn(searchService, 'search').mockReturnValue([mockCell]);
+    vi.mocked(graphNavigator.searchElements).mockReturnValue([aspect]);
 
     await new Promise(resolve => setTimeout(resolve, 200));
     component.searchQuery.set('Test');
     TestBed.flushEffects();
 
-    expect(searchService.search).toHaveBeenCalled();
+    expect(graphNavigator.searchElements).toHaveBeenCalledWith('Test');
     expect(component.elements()).toEqual([aspect]);
   });
 
@@ -165,7 +159,7 @@ describe('ElementsSearchComponent', () => {
     component.openElement(aspect);
 
     expect(shapeSettingsService.editModel).toHaveBeenCalledWith(aspect);
-    expect(maxGraphService.navigateToCellByUrn).toHaveBeenCalledWith(aspect.aspectModelUrn);
+    expect(graphNavigator.navigateToElement).toHaveBeenCalledWith(aspect.aspectModelUrn);
     expect(searchesStateService.elementsSearch.close).toHaveBeenCalled();
     expect(component.searchQuery()).toBe('');
 

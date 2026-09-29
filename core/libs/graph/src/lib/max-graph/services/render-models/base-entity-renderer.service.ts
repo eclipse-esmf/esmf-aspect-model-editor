@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultFilter, FiltersService} from '@ame/domain';
+import {DefaultFilter, FiltersService, SammLanguageSettingsService, ShapeConnectorPort} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {ISammLanguageSettingsService, IShapeConnectorService, SAMM_LANGUAGE_SETTINGS_SERVICE, SHAPE_CONNECTOR_SERVICE} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {DefaultEntity, DefaultProperty, PredefinedEntitiesEnum, SammE} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -27,8 +26,8 @@ export class BaseEntityRendererService {
   private readonly filtersService = inject(FiltersService);
   private readonly loadedFiles = inject(LoadedFilesService);
   private readonly maxgraphService = inject(MaxGraphService);
-  private readonly sammLangService: ISammLanguageSettingsService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
-  private readonly shapeConnectorService: IShapeConnectorService = inject(SHAPE_CONNECTOR_SERVICE);
+  private readonly sammLangService = inject(SammLanguageSettingsService);
+  private readonly shapeConnectorService = inject(ShapeConnectorPort);
   private readonly maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
 
   public handleExtendsElement(cell: Cell) {

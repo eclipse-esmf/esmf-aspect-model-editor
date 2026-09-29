@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MigratorApiService} from '@ame/infrastructure';
+import {WorkspaceFacade} from '@ame/domain';
 import {createDebouncedLoading} from '@ame/shared';
 import {Component, DestroyRef, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -33,7 +33,7 @@ import {MigrationDialogComponent} from './migration-dialog';
 export class WorkspaceMigrateComponent {
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
-  private migratorApiService = inject(MigratorApiService);
+  private migratorApiService = inject(WorkspaceFacade);
   private sidebarService = inject(SidebarStateService);
 
   public readonly loading = createDebouncedLoading();

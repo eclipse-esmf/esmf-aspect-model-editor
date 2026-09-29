@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {SAMM_LANGUAGE_SETTINGS_SERVICE} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultCharacteristic} from '@esmf/aspect-model-loader';
 import {Cell, Geometry} from '@maxgraph/core';
@@ -68,7 +68,7 @@ describe('BaseRenderService', () => {
         TestRenderService,
         {provide: MaxGraphService, useValue: mockMaxgraphService},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: {currentLanguage: () => 'en', addSammLanguageCode: vi.fn()}},
+        {provide: SammLanguageSettingsService, useValue: {currentLanguage: () => 'en', addSammLanguageCode: vi.fn()}},
         {provide: MaxGraphAttributeService, useValue: {graph: mockGraph}},
         {provide: ThemeService, useValue: mockThemeService},
       ],

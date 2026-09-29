@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementModelService, SearchStore} from '@ame/domain';
+import {ConfigurationService, ElementModelService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
 import {
   EditorFormModel,
   EditorService,
@@ -21,10 +21,7 @@ import {
   ShapeSettingsService,
   ShapeSettingsStateService,
 } from '@ame/editor';
-import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
 import {ElementsSearchComponent, FilesSearchComponent} from '@ame/search';
-import {CONFIGURATION_SERVICE} from '@ame/shared';
 import {SidebarComponent} from '@ame/sidebar';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
@@ -65,13 +62,13 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   private destroyRef = inject(DestroyRef);
   private shapeSettingsService = inject(ShapeSettingsService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
-  private maxgraphService = inject(MaxGraphService);
+  private graphNavigator = inject(GraphNavigatorPort);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
-  private loadedFiles = inject(LoadedFilesService);
+  private loadedFiles = inject(ModelSessionFacade);
   private elementModelService = inject(ElementModelService);
   private editorService = inject(EditorService);
-  private configurationService = inject(CONFIGURATION_SERVICE);
+  private configurationService = inject(ConfigurationService);
   private searchStore = inject(SearchStore);
 
   public readonly sidebarWidth = signal(SIDEBAR_MIN_WIDTH);
@@ -89,7 +86,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
 
   public readonly isElementsSearchOpened = this.searchStore.elementsSearchOpened;
   public readonly isFilesSearchOpened = this.searchStore.filesSearchOpened;
-  public readonly isModelEmpty = this.maxgraphService.isModelEmpty;
+  public readonly isModelEmpty = this.graphNavigator.isModelEmpty;
 
   get selectedShapeForUpdate(): Cell | null {
     return this.shapeSettingsStateService.selectedShapeForUpdate();
@@ -105,9 +102,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
         takeUntilDestroyed(this.destroyRef),
         map(params => params?.get('urn')),
         filter(urn => !!urn),
-        tap(urn =>
-          this.maxgraphService.navigateToCellByUrn(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings(),
-        ),
+        tap(urn => (this.graphNavigator.navigateToElement(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings())),
         switchMap(() =>
           this.router.navigate([], {
             relativeTo: this.activatedRoute,
@@ -179,7 +174,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         debounceTime(250),
-        tap(event => this.maxgraphService.setScrollPosition(event)),
+        tap(event => this.graphNavigator.setScrollPosition(event)),
       )
       .subscribe();
   }

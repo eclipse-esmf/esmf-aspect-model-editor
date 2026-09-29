@@ -11,20 +11,23 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {provideAmeDomain} from '@ame/domain';
 import {
-  EDITOR_THEME_SERVICE,
-  GRAPH_ADAPTER,
-  GRAPH_FILTER_RENDERER,
-  GRAPH_VALIDATION_ERROR_HIGHLIGHTER,
-  MAX_GRAPH_SETTINGS_SERVICE,
-  SHAPE_CONNECTOR_SERVICE,
-} from '@ame/shared';
-import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
+  EditorThemePort,
+  GraphAdapterPort,
+  GraphFilterRendererPort,
+  GraphNavigatorPort,
+  GraphSettingsPort,
+  provideAmeDomain,
+  ShapeConnectorPort,
+} from '@ame/domain';
+import {GraphValidationErrorHighlighterPort} from '@ame/shared';
+import {EnvironmentProviders, inject, Injector, makeEnvironmentProviders, provideEnvironmentInitializer} from '@angular/core';
 import {ShapeConnectorService} from './connection';
 import {
   MaxGraphDomainBridgeService,
   MaxGraphFilterRendererService,
+  MaxGraphHelper,
+  MaxGraphNavigatorService,
   MaxGraphService,
   MaxGraphSettingsBridgeService,
   ThemeService,
@@ -36,12 +39,16 @@ import {
  */
 export function provideAmeGraph(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    {provide: GRAPH_FILTER_RENDERER, useExisting: MaxGraphFilterRendererService},
-    {provide: GRAPH_ADAPTER, useExisting: MaxGraphDomainBridgeService},
-    {provide: SHAPE_CONNECTOR_SERVICE, useExisting: ShapeConnectorService},
-    {provide: EDITOR_THEME_SERVICE, useExisting: ThemeService},
-    {provide: MAX_GRAPH_SETTINGS_SERVICE, useExisting: MaxGraphSettingsBridgeService},
-    {provide: GRAPH_VALIDATION_ERROR_HIGHLIGHTER, useExisting: MaxGraphService},
+    {provide: GraphFilterRendererPort, useExisting: MaxGraphFilterRendererService},
+    {provide: GraphAdapterPort, useExisting: MaxGraphDomainBridgeService},
+    {provide: ShapeConnectorPort, useExisting: ShapeConnectorService},
+    {provide: EditorThemePort, useExisting: ThemeService},
+    {provide: GraphSettingsPort, useExisting: MaxGraphSettingsBridgeService},
+    {provide: GraphValidationErrorHighlighterPort, useExisting: MaxGraphService},
+    {provide: GraphNavigatorPort, useExisting: MaxGraphNavigatorService},
+    provideEnvironmentInitializer(() => {
+      MaxGraphHelper.injector = inject(Injector);
+    }),
     provideAmeDomain(),
   ]);
 }

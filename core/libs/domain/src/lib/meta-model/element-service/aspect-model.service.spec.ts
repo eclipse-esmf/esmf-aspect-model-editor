@@ -1,13 +1,15 @@
 import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
-import {GRAPH_ADAPTER, IGraphAdapter, setElementNode, SIDEBAR_STATE_SERVICE, TitleService} from '@ame/shared';
+import {setElementNode, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {GraphAdapterPort} from '../../ports/graph-adapter.port';
+import {SidebarStatePort} from '../../ports/sidebar-state.port';
 import {AspectModelService} from './aspect-model.service';
 
 describe('AspectModelService', () => {
   let service: AspectModelService;
-  let mockGraphAdapter: Partial<IGraphAdapter>;
+  let mockGraphAdapter: Partial<GraphAdapterPort>;
   let mockTitleService: any;
   let mockSidebarStateService: any;
   let mockLoadedFilesService: any;
@@ -43,9 +45,9 @@ describe('AspectModelService', () => {
     TestBed.configureTestingModule({
       providers: [
         AspectModelService,
-        {provide: GRAPH_ADAPTER, useValue: mockGraphAdapter},
+        {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {provide: TitleService, useValue: mockTitleService},
-        {provide: SIDEBAR_STATE_SERVICE, useValue: mockSidebarStateService},
+        {provide: SidebarStatePort, useValue: mockSidebarStateService},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
         {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},

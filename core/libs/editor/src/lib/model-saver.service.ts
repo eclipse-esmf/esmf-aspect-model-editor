@@ -11,15 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {WorkspaceStore} from '@ame/domain';
+import {ConfigurationService, ModelSaverPort, WorkspaceStore} from '@ame/domain';
 import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfSerializerService} from '@ame/infrastructure';
-import {
-  CONFIGURATION_SERVICE,
-  IModelSaverTokenService,
-  LanguageTranslationService,
-  NotificationsService,
-  SaveValidateErrorsCodes,
-} from '@ame/shared';
+import {LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
@@ -29,10 +23,8 @@ import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
 import {TabStateService} from './tabs/tab-state.service';
 
-export {IModelSaverTokenService};
-
 @Injectable({providedIn: 'root'})
-export class ModelSaverService implements IModelSaverTokenService {
+export class ModelSaverService implements ModelSaverPort {
   private destroyRef = inject(DestroyRef);
   private modelApiService = inject(ModelApiService);
   private rdfSerializer = inject(RdfSerializerService);
@@ -42,7 +34,7 @@ export class ModelSaverService implements IModelSaverTokenService {
   private notificationsService = inject(NotificationsService);
   private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
-  private configurationService = inject(CONFIGURATION_SERVICE);
+  private configurationService = inject(ConfigurationService);
   private injector = inject(Injector);
 
   private get tabStateService(): TabStateService {

@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IModelOpenerService, OpenModelOptions, PromptUploadOptions, TauriSignals, TauriSignalsService} from '@ame/shared';
+import {ModelOpenerPort, OpenModelOptions, PromptUploadOptions} from '@ame/domain';
+import {TauriSignals, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {filter, first, map, Observable, of, switchMap, tap} from 'rxjs';
@@ -21,10 +22,10 @@ import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.ser
 import {TabStateService} from '../tabs/tab-state.service';
 import {OpenFileDialogComponent, OpenFileDialogData, OpenFileDialogResult} from './open-file-dialog/open-file-dialog.component';
 
-export {IModelOpenerService, OpenModelOptions, PromptUploadOptions};
+export {OpenModelOptions, PromptUploadOptions};
 
 @Injectable({providedIn: 'root'})
-export class ModelOpenerService implements IModelOpenerService {
+export class ModelOpenerService implements ModelOpenerPort {
   private readonly injector = inject(Injector);
   private readonly matDialog = inject(MatDialog);
   private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);

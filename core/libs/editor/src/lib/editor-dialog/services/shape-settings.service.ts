@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ShapeSettingsPort} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeSelectorService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {BindingsService, IShapeSettingsService} from '@ame/shared';
+import {BindingsService} from '@ame/shared';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';
@@ -22,10 +23,8 @@ import {EditorService} from '../../editor.service';
 import {OpenReferencedElementService} from '../../open-element-window/open-element-window.service';
 import {ShapeSettingsStateService} from './shape-settings-state.service';
 
-export {IShapeSettingsService};
-
 @Injectable({providedIn: 'root'})
-export class ShapeSettingsService implements IShapeSettingsService {
+export class ShapeSettingsService implements ShapeSettingsPort {
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private maxgraphService = inject(MaxGraphService);
   private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);

@@ -21,15 +21,9 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {FiltersService} from '@ame/domain';
+import {EntityInstancePort, FiltersService, SammLanguageSettingsService} from '@ame/domain';
 import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  ElementCreatorService,
-  ENTITY_INSTANCE_SERVICE,
-  LanguageTranslationService,
-  NotificationsService,
-  SAMM_LANGUAGE_SETTINGS_SERVICE,
-} from '@ame/shared';
+import {ElementCreatorService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultAspect,
@@ -163,12 +157,12 @@ describe('Multi Shape Connection Handlers', () => {
         StructuredValueCharacteristicPropertyConnectionHandler,
         TraitWithCharacteristicOrConstraintConnectionHandler,
         FiltersService,
-        {provide: ENTITY_INSTANCE_SERVICE, useValue: {onNewProperty: vi.fn()}},
+        {provide: EntityInstancePort, useValue: {onNewProperty: vi.fn()}},
         {provide: MaxGraphService, useValue: mockMaxGraphService},
         {provide: MaxGraphAttributeService, useValue: {graph: mockMaxGraphService.graph}},
         {provide: NotificationsService, useValue: mockNotificationsService},
         {provide: LanguageTranslationService, useValue: mockTranslate},
-        {provide: SAMM_LANGUAGE_SETTINGS_SERVICE, useValue: {currentLanguage: 'en', addSammLanguageCode: vi.fn()}},
+        {provide: SammLanguageSettingsService, useValue: {currentLanguage: 'en', addSammLanguageCode: vi.fn()}},
         {provide: LoadedFilesService, useValue: mockLoadedFiles},
         {provide: ElementCreatorService, useValue: mockElementCreator},
         {

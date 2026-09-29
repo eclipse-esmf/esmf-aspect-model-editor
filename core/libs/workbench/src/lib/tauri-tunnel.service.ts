@@ -13,7 +13,6 @@
 
 import {
   IPC_RENDERER,
-  ITauriTunnelService,
   LanguageTranslationService,
   NotificationsService,
   StartupData,
@@ -22,18 +21,17 @@ import {
   TAURI_IPC_BRIDGES,
   TauriSignals,
   TauriSignalsService,
+  TauriTunnelPort,
 } from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-
-export {ITauriTunnelService};
 
 /**
  * Shell-level Tauri integration: window lifecycle, notifications and menu translations.
  * Feature specific menu/IPC events are handled by feature bridges registered via TAURI_IPC_BRIDGES.
  */
 @Injectable({providedIn: 'root'})
-export class TauriTunnelService implements ITauriTunnelService {
+export class TauriTunnelService implements TauriTunnelPort {
   private ipcRenderer = inject(IPC_RENDERER);
   private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private notificationsService = inject(NotificationsService);

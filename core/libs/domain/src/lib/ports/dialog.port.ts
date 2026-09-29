@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InjectionToken} from '@angular/core';
 import {Observable} from 'rxjs';
 
 export enum ConfirmDialogEnum {
@@ -28,14 +27,10 @@ export interface DialogOptions {
   actionButtonText?: string;
 }
 
-export interface IConfirmDialogService {
-  open(options: DialogOptions): Observable<ConfirmDialogEnum>;
+export abstract class ConfirmDialogPort {
+  abstract open(options: DialogOptions): Observable<ConfirmDialogEnum>;
 }
 
-export const CONFIRM_DIALOG_SERVICE = new InjectionToken<IConfirmDialogService>('CONFIRM_DIALOG_SERVICE');
-
-export interface IRenameModelDialogService {
-  open(): Observable<any>;
+export abstract class RenameModelDialogPort {
+  abstract open(): Observable<any>;
 }
-
-export const RENAME_MODEL_DIALOG_SERVICE = new InjectionToken<IRenameModelDialogService>('RENAME_MODEL_DIALOG_SERVICE');
