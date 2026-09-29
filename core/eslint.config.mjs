@@ -30,58 +30,28 @@ export default [
             // Layer hierarchy rules: strictly unidirectional flow downward
             {
               sourceTag: 'layer:shell',
-              // The app is the composition root and wires all libraries together.
-              onlyDependOnLibsWithTags: [
-                'layer:features',
-                'layer:graph',
-                'layer:domain',
-                'layer:infrastructure',
-                'layer:shared',
-                'layer:esmf',
-              ],
+              // The app only plugs the workbench (UI + features + domain) together with the adapters.
+              onlyDependOnLibsWithTags: ['type:shell', 'layer:graph', 'layer:infrastructure'],
             },
             {
               sourceTag: 'layer:features',
-              onlyDependOnLibsWithTags: [
-                'layer:features',
-                'layer:graph',
-                'layer:domain',
-                'layer:shared',
-                'layer:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['layer:features', 'layer:graph', 'layer:domain', 'layer:shared', 'layer:esmf'],
             },
             {
               sourceTag: 'layer:graph',
-              onlyDependOnLibsWithTags: [
-                'layer:graph',
-                'layer:domain',
-                'layer:shared',
-                'layer:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['layer:graph', 'layer:domain', 'layer:shared', 'layer:esmf'],
             },
             {
               sourceTag: 'layer:domain',
-              onlyDependOnLibsWithTags: [
-                'layer:domain',
-                'layer:shared',
-                'layer:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['layer:domain', 'layer:shared', 'layer:esmf'],
             },
             {
               sourceTag: 'layer:infrastructure',
-              onlyDependOnLibsWithTags: [
-                'layer:infrastructure',
-                'layer:domain',
-                'layer:shared',
-                'layer:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['layer:infrastructure', 'layer:domain', 'layer:shared', 'layer:esmf'],
             },
             {
               sourceTag: 'layer:shared',
-              onlyDependOnLibsWithTags: [
-                'layer:shared',
-                'layer:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['layer:shared', 'layer:esmf'],
             },
             {
               sourceTag: 'layer:esmf',
@@ -101,46 +71,23 @@ export default [
             },
             {
               sourceTag: 'scope:features',
-              onlyDependOnLibsWithTags: [
-                'scope:features',
-                'scope:graph',
-                'scope:domain',
-                'scope:shared',
-                'scope:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['scope:features', 'scope:graph', 'scope:domain', 'scope:shared', 'scope:esmf'],
             },
             {
               sourceTag: 'scope:graph',
-              onlyDependOnLibsWithTags: [
-                'scope:graph',
-                'scope:domain',
-                'scope:shared',
-                'scope:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['scope:graph', 'scope:domain', 'scope:shared', 'scope:esmf'],
             },
             {
               sourceTag: 'scope:domain',
-              onlyDependOnLibsWithTags: [
-                'scope:domain',
-                'scope:shared',
-                'scope:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['scope:domain', 'scope:shared', 'scope:esmf'],
             },
             {
               sourceTag: 'scope:infrastructure',
-              onlyDependOnLibsWithTags: [
-                'scope:infrastructure',
-                'scope:domain',
-                'scope:shared',
-                'scope:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['scope:infrastructure', 'scope:domain', 'scope:shared', 'scope:esmf'],
             },
             {
               sourceTag: 'scope:shared',
-              onlyDependOnLibsWithTags: [
-                'scope:shared',
-                'scope:esmf',
-              ],
+              onlyDependOnLibsWithTags: ['scope:shared', 'scope:esmf'],
             },
             {
               sourceTag: 'scope:esmf',
