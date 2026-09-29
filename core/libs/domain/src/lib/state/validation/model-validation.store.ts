@@ -15,7 +15,7 @@ import {computed} from '@angular/core';
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 import {rxMethod} from '@ngrx/signals/rxjs-interop';
 import {pipe, tap} from 'rxjs';
-import {withRequestStatus, setFulfilled, setPending, setRejected} from '../features/with-request-status';
+import {setFulfilled, setPending, setRejected, withRequestStatus} from '../features/with-request-status';
 
 export interface WorkspaceValidationErrorModel {
   code: number;

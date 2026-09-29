@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {basicShapeGeometry, ElementPropertyUtil, ShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
 import {Injector} from '@angular/core';
 import {
@@ -25,6 +24,7 @@ import {
   DefaultUnit,
   NamedElement,
 } from '@esmf/aspect-model-loader';
+import {LoadedFilesService} from '../../model-session';
 import {ShapeSettingsStatePort} from '../../ports/ui.port';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 

@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/domain';
 import {getDescriptionsLocales, getPreferredNamesLocales, simpleDataTypes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultTrait, DefaultValue} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
-import {LoadedFilesService} from '../../../cache';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';

@@ -11,16 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {ElementRelationUtil, getModelElement, useUpdater} from '@ame/shared';
 import {inject, Injector} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultEnumeration, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 
 export abstract class BaseModelService {
-  protected readonly rdfService: RdfService = inject(RdfService);
   protected readonly modelService: ModelService = inject(ModelService);
-  protected readonly modelApiService: ModelApiService = inject(ModelApiService);
   protected readonly loadedFilesService: LoadedFilesService = inject(LoadedFilesService);
   protected readonly injector = inject(Injector);
 

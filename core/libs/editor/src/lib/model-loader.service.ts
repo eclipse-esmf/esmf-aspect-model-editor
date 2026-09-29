@@ -11,16 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, ModelLoaderPort} from '@ame/domain';
-import {
-  FileEntry,
-  FileInformation,
-  InstantiatorService,
-  LoadedFilesService,
-  ModelApiService,
-  NamespaceFile,
-  RdfModelUtil,
-} from '@ame/infrastructure';
+import {ConfigurationService, LoadedFilesService, ModelLoaderPort, NamespaceFile} from '@ame/domain';
+import {FileEntry, FileInformation, InstantiatorService, ModelApiService, RdfModelUtil} from '@ame/infrastructure';
 import {BrowserService, config, isVersionOutdated, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

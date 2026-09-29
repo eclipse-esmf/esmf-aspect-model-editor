@@ -1,8 +1,8 @@
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {ElementRelationUtil} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultOperation, DefaultProperty} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {OperationModelService} from './operation-model.service';
 
@@ -34,9 +34,7 @@ describe('OperationModelService', () => {
             },
           },
         },
-        {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},
-        {provide: ModelApiService, useValue: {}},
       ],
     });
 

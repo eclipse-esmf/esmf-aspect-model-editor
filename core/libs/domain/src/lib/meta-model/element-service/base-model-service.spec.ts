@@ -1,9 +1,9 @@
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {setElementNode} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultEntity, DefaultEntityInstance, DefaultProperty, NamedElement} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {BaseModelService} from './base-model-service';
 
 @Injectable()
@@ -51,13 +51,7 @@ describe('BaseModelService', () => {
     };
 
     TestBed.configureTestingModule({
-      providers: [
-        TestModelService,
-        {provide: RdfService, useValue: {}},
-        {provide: ModelService, useValue: {}},
-        {provide: ModelApiService, useValue: {}},
-        {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-      ],
+      providers: [TestModelService, {provide: ModelService, useValue: {}}, {provide: LoadedFilesService, useValue: mockLoadedFilesService}],
     });
 
     service = TestBed.inject(TestModelService);

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
+import {ModelApiService} from '@ame/infrastructure';
 import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -22,7 +22,7 @@ import {from, map, Observable, throwError} from 'rxjs';
 import {catchError, finalize, first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
-import {SammLanguageSettingsService} from '@ame/domain';
+import {LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {BrowserService, IPC_RENDERER} from '@ame/shared';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

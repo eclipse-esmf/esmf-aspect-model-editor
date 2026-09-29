@@ -13,6 +13,7 @@
 
 import {inject, Injectable} from '@angular/core';
 
+import {LoadedFilesService} from '@ame/domain';
 import {getDescriptionsLocales, getPreferredNamesLocales} from '@ame/shared';
 import {
   ComplexType,
@@ -27,7 +28,6 @@ import {
   DefaultTrait,
 } from '@esmf/aspect-model-loader';
 import {Quad_Subject} from 'n3';
-import {LoadedFilesService} from '../../../cache';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {BaseVisitor} from '../base-visitor';

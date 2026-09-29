@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ShapeSettingsPort} from '@ame/domain';
+import {LoadedFilesService, ShapeSettingsPort} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeSelectorService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
 import {BindingsService} from '@ame/shared';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';

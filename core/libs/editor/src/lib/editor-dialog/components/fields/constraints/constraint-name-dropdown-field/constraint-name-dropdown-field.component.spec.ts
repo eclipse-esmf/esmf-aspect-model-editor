@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammLanguageSettingsService} from '@ame/domain';
-import {LoadedFilesService, ModelService, NamespaceFile} from '@ame/infrastructure';
+import {LoadedFilesService, ModelService, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultEncodingConstraint, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';

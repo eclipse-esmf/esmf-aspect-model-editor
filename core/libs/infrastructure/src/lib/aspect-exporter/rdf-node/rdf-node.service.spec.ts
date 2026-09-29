@@ -13,11 +13,11 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel, Samm, SammC, SammU} from '@esmf/aspect-model-loader';
 import {DataFactory, Quad, Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {LoadedFilesService, NamespaceFile} from '../../cache';
 import {RdfModelUtil} from '../../rdf';
 import {RdfNodeService} from './rdf-node.service';
 

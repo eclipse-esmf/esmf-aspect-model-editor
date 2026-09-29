@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammLanguageSettingsService} from '@ame/domain';
-import {LoadedFilesService, ModelService} from '@ame/infrastructure';
+import {LoadedFilesService, ModelService, SammLanguageSettingsService} from '@ame/domain';
 import {Directive, inject, input, output} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement} from '@esmf/aspect-model-loader';
 import {filter, tap} from 'rxjs/operators';

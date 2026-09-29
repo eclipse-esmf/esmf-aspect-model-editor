@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService} from '@ame/domain';
 import {AfterViewInit, ChangeDetectorRef, Component, computed, effect, inject, input, OnDestroy, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {MatIcon} from '@angular/material/icon';

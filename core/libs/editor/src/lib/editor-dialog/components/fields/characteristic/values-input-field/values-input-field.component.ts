@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils} from '@ame/infrastructure';
+import {CacheUtils} from '@ame/domain';
 import {DataTypeService, ElementIconComponent} from '@ame/shared';
 import {ENTER} from '@angular/cdk/keycodes';
 import {Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild} from '@angular/core';

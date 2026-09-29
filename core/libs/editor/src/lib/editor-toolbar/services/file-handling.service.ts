@@ -11,19 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, UiShellStore, WorkspaceStore} from '@ame/domain';
-import {MaxGraphService} from '@ame/graph';
 import {
+  ConfigurationService,
   LoadedFilePayload,
   LoadedFilesService,
-  ModelApiService,
-  ModelData,
   ModelService,
   NamespaceFile,
-  RdfModelUtil,
-  RdfNodeService,
-  RdfService,
-} from '@ame/infrastructure';
+  UiShellStore,
+  WorkspaceStore,
+} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
+import {ModelApiService, ModelData, RdfModelUtil, RdfNodeService, RdfService} from '@ame/infrastructure';
 import {
   decodeText,
   FileHandlingPort,

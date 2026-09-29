@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
+import {LoadedFilesService} from '../model-session';
 import {GraphFilterRendererPort} from '../ports/graph-filter-renderer.port';
 import {FilterAttributesService} from './active-filter.session';
 import {DefaultFilter} from './filters/default-filter';

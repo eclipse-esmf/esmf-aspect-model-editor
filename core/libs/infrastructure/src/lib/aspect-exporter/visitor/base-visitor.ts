@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/domain';
 import {inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
-import {LoadedFilesService} from '../../cache';
 
 export abstract class BaseVisitor<T> {
   protected loadedFilesService = inject(LoadedFilesService);

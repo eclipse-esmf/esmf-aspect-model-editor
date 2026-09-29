@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammLanguageSettingsService} from '@ame/domain';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {

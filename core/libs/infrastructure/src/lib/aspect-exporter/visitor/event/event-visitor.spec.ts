@@ -13,11 +13,11 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEvent, DefaultProperty, ModelElementCache, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {LoadedFilesService, NamespaceFile} from '../../../cache';
 import {ListProperties, RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node/rdf-node.service';
 import {EventVisitor} from './event-visitor';

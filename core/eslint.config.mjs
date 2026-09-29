@@ -55,7 +55,6 @@ export default [
               sourceTag: 'layer:domain',
               onlyDependOnLibsWithTags: [
                 'layer:domain',
-                'layer:infrastructure',
                 'layer:shared',
                 'layer:esmf',
               ],
@@ -64,6 +63,7 @@ export default [
               sourceTag: 'layer:infrastructure',
               onlyDependOnLibsWithTags: [
                 'layer:infrastructure',
+                'layer:domain',
                 'layer:shared',
                 'layer:esmf',
               ],
@@ -112,7 +112,6 @@ export default [
               sourceTag: 'scope:domain',
               onlyDependOnLibsWithTags: [
                 'scope:domain',
-                'scope:infrastructure',
                 'scope:shared',
                 'scope:esmf',
               ],
@@ -121,6 +120,7 @@ export default [
               sourceTag: 'scope:infrastructure',
               onlyDependOnLibsWithTags: [
                 'scope:infrastructure',
+                'scope:domain',
                 'scope:shared',
                 'scope:esmf',
               ],

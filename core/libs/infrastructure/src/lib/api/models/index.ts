@@ -13,8 +13,6 @@
 
 export * from './api-specs';
 export * from './file-information';
-export * from './migration-status';
 export * from './named-rdf-model';
-export * from './storage-path-response';
 export * from './violation-error';
 export * from './workspace-structure';

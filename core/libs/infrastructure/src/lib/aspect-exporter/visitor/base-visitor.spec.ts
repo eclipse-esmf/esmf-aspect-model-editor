@@ -13,12 +13,12 @@
 
 import {vi} from 'vitest';
 
+import {LoadedFilesService} from '@ame/domain';
 import {Injectable} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {beforeEach, describe, expect, it} from 'vitest';
-import {LoadedFilesService} from '../../cache';
 import {BaseVisitor} from './base-visitor';
 
 @Injectable()

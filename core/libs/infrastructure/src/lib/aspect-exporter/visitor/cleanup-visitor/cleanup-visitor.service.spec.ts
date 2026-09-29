@@ -13,9 +13,9 @@
 
 import {beforeEach, describe, expect, it} from 'vitest';
 
+import {LoadedFilesService} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {DataFactory, Store} from 'n3';
-import {LoadedFilesService} from '../../../cache';
 import {CleanupVisitor} from './cleanup-visitor.service';
 
 describe('CleanupVisitor', () => {

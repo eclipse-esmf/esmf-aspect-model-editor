@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService, ModelTree, SammLanguageSettingsService, ShapeConnectorPort} from '@ame/domain';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {FiltersService, LoadedFilesService, ModelTree, SammLanguageSettingsService, ShapeConnectorPort} from '@ame/domain';
 import {BrowserService} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {

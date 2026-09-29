@@ -15,7 +15,7 @@ import {SaveValidateErrorsCodes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {environment} from 'environments/environment';
 import {Observable, Observer, Subject, throwError} from 'rxjs';
-import {LoadedFilesService} from '../../cache';
+import {LoadedFilesService} from './loaded-files.service';
 
 @Injectable({providedIn: 'root'})
 export class ModelService {

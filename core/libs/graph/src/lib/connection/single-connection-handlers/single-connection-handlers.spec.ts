@@ -24,8 +24,7 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {EntityInstancePort, FiltersService, ModelElementNamingService, SammLanguageSettingsService} from '@ame/domain';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {EntityInstancePort, FiltersService, LoadedFilesService, ModelElementNamingService, SammLanguageSettingsService} from '@ame/domain';
 import {ElementCreatorService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';

@@ -18,6 +18,8 @@ import {
   ElementModelService,
   FilterAttributesService,
   FiltersService,
+  LoadedFilesService,
+  ModelService,
   SammLanguageSettingsService,
 } from '@ame/domain';
 import {
@@ -31,7 +33,7 @@ import {
   ShapeConfiguration,
   ThemeService,
 } from '@ame/graph';
-import {AsyncApi, LoadedFilesService, ModelApiService, ModelService, OpenApi, RdfService, ViolationError} from '@ame/infrastructure';
+import {AsyncApi, ModelApiService, OpenApi, RdfService, ViolationError} from '@ame/infrastructure';
 import {
   AlertService,
   ChildrenArray,

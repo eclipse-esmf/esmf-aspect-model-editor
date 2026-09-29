@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
+import {FiltersService, LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphSetupService, MaxGraphShapeOverlayService} from '@ame/graph';
-import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {LanguageTranslationService, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';

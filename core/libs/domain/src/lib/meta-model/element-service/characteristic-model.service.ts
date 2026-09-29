@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, RdfModelUtil} from '@ame/infrastructure';
 import {config, ElementRelationUtil, simpleDataTypes, useUpdater} from '@ame/shared';
 import {Injectable} from '@angular/core';
 import {
@@ -33,6 +32,7 @@ import {
   ScalarValue,
   Type,
 } from '@esmf/aspect-model-loader';
+import {CacheUtils} from '../../model-session';
 import {BaseModelService} from './base-model-service';
 
 @Injectable({providedIn: 'root'})
@@ -126,7 +126,7 @@ export class CharacteristicModelService extends BaseModelService {
         this.removeUnusedEntityValues(metaModelElement);
       }
 
-      if (RdfModelUtil.isCharacteristicInstance(form.changedMetaModel.aspectModelUrn, this.loadedFile?.rdfModel?.sammC)) {
+      if (this.isCharacteristicInstance(form.changedMetaModel.aspectModelUrn)) {
         // in case this is a predefined characteristic, no need to update anything
         const children = [...(originalModelElement.children || [])];
         for (const child of children) {
@@ -371,5 +371,10 @@ export class CharacteristicModelService extends BaseModelService {
     this.updateParentModel(cell, form.changedMetaModel, metaModelElement);
     this.updateModelElementCache(metaModelElement, form.changedMetaModel);
     this.graphAdapter?.setElementFilterNode(cell, form.changedMetaModel);
+  }
+
+  private isCharacteristicInstance(urn: string): boolean {
+    const sammC = this.loadedFile?.rdfModel?.sammC;
+    return !!urn && !!sammC && urn.includes(sammC.getNamespace());
   }
 }

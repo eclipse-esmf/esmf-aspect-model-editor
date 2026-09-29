@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {Store} from 'n3';
-import {LoadedFilesService} from '../../../cache';
 
 @Injectable({providedIn: 'root'})
 export class CleanupVisitor {

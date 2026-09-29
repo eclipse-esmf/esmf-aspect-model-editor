@@ -11,13 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {NamespaceFile} from '@ame/domain';
 import {APP_CONFIG} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
 import {map, Observable, of} from 'rxjs';
 import {ModelApiService} from '../../api';
-import {NamespaceFile} from '../../cache';
 import {RdfSerializerService} from './rdf-serializer.service';
 
 @Injectable({providedIn: 'root'})

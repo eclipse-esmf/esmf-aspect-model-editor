@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService} from '@ame/domain';
 import {ElementIconComponent, LanguageTranslationService, sammElements} from '@ame/shared';
 import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';

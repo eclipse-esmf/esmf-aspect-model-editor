@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultCharacteristic,
@@ -28,7 +29,6 @@ import {
 import {DataFactory, Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {LoadedFilesService, NamespaceFile} from '../cache';
 import {InstantiatorService} from './instantiator.service';
 
 const {namedNode, quad, blankNode} = DataFactory;

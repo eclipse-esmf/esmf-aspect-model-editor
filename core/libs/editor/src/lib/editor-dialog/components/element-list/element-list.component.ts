@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {LoadedFilesService} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
 import {CounterPipe, ElementIconComponent, sammElements} from '@ame/shared';
 import {NgClass} from '@angular/common';
 import {Component, computed, inject, input} from '@angular/core';

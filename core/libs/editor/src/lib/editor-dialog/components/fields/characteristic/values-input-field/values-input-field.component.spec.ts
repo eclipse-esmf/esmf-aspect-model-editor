@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService, NamespaceFile, RdfService} from '@ame/infrastructure';
+import {RdfService} from '@ame/infrastructure';
 import {DataTypeService, NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';

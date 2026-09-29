@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorValidationPort, GraphFilterRendererPort, SammLanguageSettingsService} from '@ame/domain';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {EditorValidationPort, GraphFilterRendererPort, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {LanguageTranslationService, LoadingScreenService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {of, switchMap} from 'rxjs';

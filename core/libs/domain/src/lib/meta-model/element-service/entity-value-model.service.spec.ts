@@ -1,8 +1,8 @@
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {setElementNode} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity, DefaultEntityInstance, DefaultProperty, DefaultScalar} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {EntityValueModelService} from './entity-value-model.service';
 
@@ -36,9 +36,7 @@ describe('EntityValueModelService', () => {
             },
           },
         },
-        {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},
-        {provide: ModelApiService, useValue: {}},
       ],
     });
 

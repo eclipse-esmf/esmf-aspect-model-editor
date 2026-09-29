@@ -17,7 +17,7 @@ import {RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {Observer} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {LoadedFilesService} from '../../cache';
+import {LoadedFilesService} from './loaded-files.service';
 import {ModelService} from './model.service';
 
 describe('ModelService', () => {

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';

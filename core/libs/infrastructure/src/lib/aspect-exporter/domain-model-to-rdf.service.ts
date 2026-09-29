@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, ModelService} from '@ame/domain';
 import {Injectable, inject} from '@angular/core';
 import {
   DefaultAspect,
@@ -26,8 +27,6 @@ import {
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {filter, tap} from 'rxjs/operators';
-import {LoadedFilesService} from '../cache';
-import {ModelService} from '../rdf';
 import {
   AspectVisitor,
   CharacteristicVisitor,

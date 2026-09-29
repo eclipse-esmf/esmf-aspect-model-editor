@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
+import {FiltersService, LoadedFilesService} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
-import {LoadedFilesService, NamespacesManagerService} from '@ame/infrastructure';
+import {NamespacesManagerService} from '@ame/infrastructure';
 import {IPC_RENDERER, LanguageTranslationService, TAURI_EVENTS} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';

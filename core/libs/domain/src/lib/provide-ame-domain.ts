@@ -11,14 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelElementNamingPort} from '@ame/shared';
+import {LoadedFilesPort, ModelElementNamingPort} from '@ame/shared';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 import {ModelElementNamingService} from './meta-model/services/model-element-naming.service';
+import {LoadedFilesService} from './model-session';
 
 /**
  * Returns environment providers for all Aspect Model Editor domain services.
  * Binds domain implementations to their respective shared injection tokens.
  */
 export function provideAmeDomain(): EnvironmentProviders {
-  return makeEnvironmentProviders([{provide: ModelElementNamingPort, useExisting: ModelElementNamingService}]);
+  return makeEnvironmentProviders([
+    {provide: ModelElementNamingPort, useExisting: ModelElementNamingService},
+    {provide: LoadedFilesPort, useExisting: LoadedFilesService},
+  ]);
 }

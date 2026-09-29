@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, ModelSaverPort, WorkspaceStore} from '@ame/domain';
-import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfSerializerService} from '@ame/infrastructure';
+import {ConfigurationService, LoadedFilesService, ModelSaverPort, ModelService, NamespaceFile, WorkspaceStore} from '@ame/domain';
+import {ModelApiService, RdfSerializerService} from '@ame/infrastructure';
 import {LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

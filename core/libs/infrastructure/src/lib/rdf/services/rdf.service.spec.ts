@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {NamespaceFile} from '@ame/domain';
 import {APP_CONFIG} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {RdfModel} from '@esmf/aspect-model-loader';
@@ -18,7 +19,6 @@ import {Store} from 'n3';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ModelApiService} from '../../api';
-import {NamespaceFile} from '../../cache';
 import {RdfSerializerService} from './rdf-serializer.service';
 import {RdfService} from './rdf.service';
 

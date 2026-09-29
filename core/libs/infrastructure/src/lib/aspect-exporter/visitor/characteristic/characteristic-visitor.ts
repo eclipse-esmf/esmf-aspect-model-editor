@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/domain';
 import {simpleDataTypes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {
@@ -39,7 +40,6 @@ import {
   SammC,
 } from '@esmf/aspect-model-loader';
 import {DataFactory, Literal, NamedNode, Quad_Subject, Store} from 'n3';
-import {LoadedFilesService} from '../../../cache';
 import {RdfListService} from '../../rdf-list';
 import {RdfNodeService} from '../../rdf-node';
 import {BaseVisitor} from '../base-visitor';

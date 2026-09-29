@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 import {computed} from '@angular/core';
+import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 
 export interface SearchStateModel {
   elementsSearchOpened: boolean;

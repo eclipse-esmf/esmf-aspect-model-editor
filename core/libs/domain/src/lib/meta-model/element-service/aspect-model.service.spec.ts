@@ -1,8 +1,8 @@
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {setElementNode, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {SidebarStatePort} from '../../ports/sidebar-state.port';
 import {AspectModelService} from './aspect-model.service';
@@ -49,9 +49,7 @@ describe('AspectModelService', () => {
         {provide: TitleService, useValue: mockTitleService},
         {provide: SidebarStatePort, useValue: mockSidebarStateService},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},
-        {provide: ModelApiService, useValue: {}},
       ],
     });
 

@@ -16,7 +16,7 @@ import {patchState, signalStore, withComputed, withMethods, withState} from '@ng
 import {addEntities, removeEntity, setAllEntities, updateEntity, withEntities} from '@ngrx/signals/entities';
 import {rxMethod} from '@ngrx/signals/rxjs-interop';
 import {pipe, tap} from 'rxjs';
-import {withRequestStatus, setFulfilled, setPending, setRejected} from '../features/with-request-status';
+import {setFulfilled, setPending, withRequestStatus} from '../features/with-request-status';
 import {WorkspaceFileItem, WorkspaceSelection} from './workspace.models';
 
 export interface WorkspaceState {

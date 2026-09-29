@@ -11,44 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MigrationStatus, MigratorApiService, ModelApiService, NamespacesManagerService} from '@ame/infrastructure';
-import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 
-export type {MigrationStatus};
+export interface MigrationStatus {
+  success: string;
+  errors: string[];
+}
 
-/** Feature-facing workspace operations (storage, model files, migration) backed by the backend API. */
-@Injectable({providedIn: 'root'})
-export class WorkspaceFacade {
-  private readonly modelApi = inject(ModelApiService);
-  private readonly migratorApi = inject(MigratorApiService);
-  private readonly namespacesManager = inject(NamespacesManagerService);
+export interface StoragePathResponse {
+  path: string;
+  storagePath: string;
+}
 
-  getStoragePath(): ReturnType<ModelApiService['getStoragePath']> {
-    return this.modelApi.getStoragePath();
-  }
-
-  fetchAspectMetaModel(aspectModelUrn: string): Observable<{content: string; sourceLocation: string | null}> {
-    return this.modelApi.fetchAspectMetaModel(aspectModelUrn);
-  }
-
-  deleteAspectModel(aspectModelUrn: string): Observable<string> {
-    return this.modelApi.deleteAspectModel(aspectModelUrn);
-  }
-
-  hasFilesToMigrate(): Observable<boolean> {
-    return this.migratorApi.hasFilesToMigrate();
-  }
-
-  createBackup(): Observable<string> {
-    return this.migratorApi.createBackup();
-  }
-
-  migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus> {
-    return this.migratorApi.migrateWorkspace(setNewVersion);
-  }
-
-  importNamespaces(zip: File): Observable<unknown> {
-    return this.namespacesManager.importNamespaces(zip);
-  }
+/**
+ * Feature-facing workspace operations (storage, model files, migration).
+ * Implemented by the infrastructure layer (backend API) and bound in provideAmeInfrastructure().
+ */
+export abstract class WorkspaceFacade {
+  abstract getStoragePath(): Observable<StoragePathResponse>;
+  abstract fetchAspectMetaModel(aspectModelUrn: string): Observable<{content: string; sourceLocation: string | null}>;
+  abstract deleteAspectModel(aspectModelUrn: string): Observable<string>;
+  abstract hasFilesToMigrate(): Observable<boolean>;
+  abstract createBackup(): Observable<string>;
+  abstract migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus>;
+  abstract importNamespaces(zip: File): Observable<unknown>;
 }

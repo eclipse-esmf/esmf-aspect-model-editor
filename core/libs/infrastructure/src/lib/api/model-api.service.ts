@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {StoragePathResponse} from '@ame/domain';
 import {
   APP_CONFIG,
   AppConfig,
@@ -27,7 +28,7 @@ import {Observable, of, throwError} from 'rxjs';
 import {catchError, map, retry, switchMap, tap, timeout} from 'rxjs/operators';
 import {RdfModelUtil} from '../rdf';
 import {ModelValidatorService} from './model-validator.service';
-import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, StoragePathResponse, ViolationError, WorkspaceStructure} from './models';
+import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, ViolationError, WorkspaceStructure} from './models';
 
 @Injectable({providedIn: 'root'})
 export class ModelApiService {

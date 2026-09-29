@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService, SammLanguageSettingsService} from '@ame/domain';
+import {FiltersService, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -20,7 +20,6 @@ import {
   MaxGraphSetupService,
   MaxGraphShapeOverlayService,
 } from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
 import {LanguageTranslationService, LoadingScreenService, NotificationsService, ValidateStatus} from '@ame/shared';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

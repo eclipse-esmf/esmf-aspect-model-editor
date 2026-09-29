@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/domain';
 import {simpleDataTypes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultProperty, DefaultValue, RdfModel, Samm} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
 import {BlankNode, DataFactory, NamedNode, Quad, Quad_Object, Quad_Subject, Store, Triple, Util} from 'n3';
-import {LoadedFilesService} from '../../cache';
 import {RdfNodeService} from '../rdf-node';
 import {ValueVisitor} from '../visitor/value/value-visitor';
 import {RdfListHelper} from './rdf-list-helper';

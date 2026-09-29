@@ -1,3 +1,4 @@
+import {NamespaceFile} from '@ame/domain';
 /*
  * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
  *
@@ -10,8 +11,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-
-import {NamespaceFile} from '@ame/infrastructure';
 
 export interface EditorTab {
   id: string;

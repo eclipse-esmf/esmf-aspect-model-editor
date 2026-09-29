@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export interface StoragePathResponse {
-  path: string;
-  storagePath: string;
+import {Observable} from 'rxjs';
+
+/** Read access to the persisted aspect model repository (implemented by infrastructure). */
+export abstract class ModelRepositoryPort {
+  abstract checkElementExists(aspectModelUrn: string, fileName: string): Observable<boolean>;
 }

@@ -11,18 +11,19 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {ElementRelationUtil} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, of} from 'rxjs';
+import {LoadedFilesService} from '../../model-session';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
+import {ModelRepositoryPort} from '../../ports/model-repository.port';
 
 @Injectable({providedIn: 'root'})
 export class ModelElementNamingService {
   private readonly loadedFiles = inject(LoadedFilesService);
   private readonly injector = inject(Injector);
-  private readonly modelApiService = inject(ModelApiService);
+  private readonly modelRepository = inject(ModelRepositoryPort, {optional: true});
 
   private get graphAdapter(): GraphAdapterPort | null {
     return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
@@ -198,7 +199,7 @@ export class ModelElementNamingService {
   resolveElementNaming$<T extends NamedElement = NamedElement>(element: T, parentName?: string): Observable<T> {
     this.resolveElementNaming(element, parentName);
     const fileName = this.loadedFiles.currentLoadedFile?.name || '';
-    if (!this.modelApiService || !fileName) {
+    if (!this.modelRepository || !fileName) {
       return of(element);
     }
 
@@ -214,7 +215,7 @@ export class ModelElementNamingService {
       if (isCachedCollision) {
         return of({exists: true, name, urn});
       }
-      return this.modelApiService.checkElementExists(urn, fileName).pipe(
+      return this.modelRepository.checkElementExists(urn, fileName).pipe(
         map(exists => ({exists, name, urn})),
         catchError(() => of({exists: false, name, urn})),
       );

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, LoadedFilesService} from '@ame/infrastructure';
+import {CacheUtils, LoadedFilesService} from '@ame/domain';
 import {NgClass} from '@angular/common';
 import {AfterViewInit, Component, inject, OnInit, signal, viewChild} from '@angular/core';
 import {form} from '@angular/forms/signals';

@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService} from '@ame/infrastructure';
 import {ElementRelationUtil, LanguageTranslationService, NotificationsService, TitleService, useUpdater} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {DefaultAspect, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {ConfirmDialogEnum, ConfirmDialogPort, RenameModelDialogPort} from '../../ports/dialog.port';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {ModelElementNamingService} from '../services/model-element-naming.service';

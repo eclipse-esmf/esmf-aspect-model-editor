@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -35,7 +36,6 @@ import {
 } from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {describe, expect, test, vi} from 'vitest';
-import {LoadedFilesService, NamespaceFile} from '../../cache';
 import {RdfModelUtil} from './rdf-model-util';
 
 describe('Test RDF Model Util', () => {

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService} from '@ame/domain';
 import {SelectionModel} from '@angular/cdk/collections';
 import {Component, effect, inject, input, OnDestroy, OnInit, output, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';

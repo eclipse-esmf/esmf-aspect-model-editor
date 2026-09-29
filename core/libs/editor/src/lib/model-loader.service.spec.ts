@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService} from '@ame/domain';
-import {InstantiatorService, LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
+import {ConfigurationService, LoadedFilesService, NamespaceFile} from '@ame/domain';
+import {InstantiatorService, ModelApiService} from '@ame/infrastructure';
 import {BrowserService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';

@@ -11,11 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {inject, Injectable, Signal} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
-
-export type {NamespaceFile};
+import {LoadedFilesService, NamespaceFile} from '../model-session';
 
 /** Feature-facing access to the aspect model files currently loaded in the editor session. */
 @Injectable({providedIn: 'root'})

@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammLanguageSettingsService} from '@ame/domain';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {DefaultCharacteristic} from '@esmf/aspect-model-loader';
 import {Cell, Geometry} from '@maxgraph/core';

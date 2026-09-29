@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {computed, inject, Injectable, signal} from '@angular/core';
+import {LoadedFilesService} from '../../model-session';
 
 export class FileStatus {
   public loaded = false;

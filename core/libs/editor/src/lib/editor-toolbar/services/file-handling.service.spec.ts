@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService} from '@ame/domain';
+import {ConfigurationService, LoadedFilesService, ModelService, NamespaceFile} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfNodeService, RdfService} from '@ame/infrastructure';
+import {ModelApiService, RdfNodeService, RdfService} from '@ame/infrastructure';
 import {
   IPC_RENDERER,
   LanguageTranslationService,

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService} from '@ame/domain';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {DefaultConstraint, DefaultTrait} from '@esmf/aspect-model-loader';
 import {Cell, InternalEvent} from '@maxgraph/core';

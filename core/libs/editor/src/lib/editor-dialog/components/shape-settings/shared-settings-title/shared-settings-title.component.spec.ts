@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService} from '@ame/domain';
 import {LanguageTranslationService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DefaultAspect} from '@esmf/aspect-model-loader';

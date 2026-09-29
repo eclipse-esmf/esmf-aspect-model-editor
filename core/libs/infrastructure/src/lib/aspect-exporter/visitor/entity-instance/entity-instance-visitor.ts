@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEntityInstance, DefaultProperty, Value} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
-import {LoadedFilesService} from '../../../cache';
 import {BaseVisitor} from '../base-visitor';
 
 @Injectable({providedIn: 'root'})

@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {basicShapeGeometry, circleShapeGeometry, EdgeStyles, smallBasicShapeGeometry} from '@ame/shared';
 import {
   DefaultAspect,
@@ -27,6 +26,7 @@ import {
   DefaultValue,
 } from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService} from '../../model-session';
 import {ModelFilter} from '../models';
 import {DefaultFilter, ModelStyle} from './default-filter';
 

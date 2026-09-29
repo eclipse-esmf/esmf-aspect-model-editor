@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {basicShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
 import {Injector} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
@@ -26,6 +25,7 @@ import {
   DefaultProperty,
 } from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService} from '../../model-session';
 import {ShapeSettingsStatePort} from '../../ports/ui.port';
 import {ModelFilter} from '../models';
 import {PropertiesFilterLoader} from './properties-filter';

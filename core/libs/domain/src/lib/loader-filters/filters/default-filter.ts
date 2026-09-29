@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/infrastructure';
 import {
   EdgeStyles,
   ElementPropertyUtil,
@@ -34,6 +33,7 @@ import {
   DefaultValue,
   NamedElement,
 } from '@esmf/aspect-model-loader';
+import {LoadedFilesService} from '../../model-session';
 import {ArrowStyle, ChildrenArray, FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from '../models';
 
 const abstractRelations: Record<string, string[]> = {

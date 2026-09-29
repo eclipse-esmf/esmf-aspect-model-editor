@@ -13,6 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {simpleDataTypes} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
@@ -28,7 +29,6 @@ import {
 } from '@esmf/aspect-model-loader';
 import {DataFactory, NamedNode, Quad_Object, Store, Util} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {LoadedFilesService, NamespaceFile} from '../../cache';
 import {RdfNodeService} from '../rdf-node';
 import {ValueVisitor} from '../visitor/value/value-visitor';
 import {RdfListService} from './rdf-list.service';

@@ -20,7 +20,7 @@ import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '
 import {MatIconModule} from '@angular/material/icon';
 import {TranslocoDirective} from '@jsverse/transloco';
 
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService} from '@ame/domain';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';

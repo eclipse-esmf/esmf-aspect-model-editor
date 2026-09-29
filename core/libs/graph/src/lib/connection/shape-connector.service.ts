@@ -14,7 +14,7 @@ import {inject, Injectable} from '@angular/core';
 import {isObservable, Observable, of} from 'rxjs';
 import {ShapeConnectorUtil} from './shape-connector-util';
 
-import {LoadedFilesService} from '@ame/infrastructure';
+import {LoadedFilesService} from '@ame/domain';
 import {cellRelations, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {
   DefaultAspect,

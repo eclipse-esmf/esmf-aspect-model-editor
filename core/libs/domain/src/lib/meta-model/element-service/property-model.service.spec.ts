@@ -1,8 +1,8 @@
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {setElementNode} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultProperty, DefaultValue} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {EntityInstancePort} from '../../ports/entity-instance.port';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {SammLanguageSettingsService} from '../../state/settings/samm-language-settings.service';
@@ -44,9 +44,7 @@ describe('PropertyModelService', () => {
             },
           },
         },
-        {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},
-        {provide: ModelApiService, useValue: {}},
       ],
     });
 

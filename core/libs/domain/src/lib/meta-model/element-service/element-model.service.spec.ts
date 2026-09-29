@@ -1,9 +1,9 @@
-import {LoadedFilesService, ModelService} from '@ame/infrastructure';
 import {ElementRelationUtil, LanguageTranslationService, NotificationsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {ConfirmDialogEnum, ConfirmDialogPort, RenameModelDialogPort} from '../../ports/dialog.port';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {SammLanguageSettingsService} from '../../state/settings/samm-language-settings.service';

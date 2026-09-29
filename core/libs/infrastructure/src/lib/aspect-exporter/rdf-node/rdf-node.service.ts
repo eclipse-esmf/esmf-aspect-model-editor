@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService, ModelService} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEncodingConstraint, NamedElement, RdfModel, Type} from '@esmf/aspect-model-loader';
 import {BlankNode, DataFactory, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject} from 'n3';
-import {LoadedFilesService} from '../../cache';
-import {ModelService, RdfModelUtil} from '../../rdf';
+import {RdfModelUtil} from '../../rdf';
 import {PropertyEnum} from './enums/property.enum';
 import {BasePropertiesInterface, LocaleInterface} from './interfaces';
 

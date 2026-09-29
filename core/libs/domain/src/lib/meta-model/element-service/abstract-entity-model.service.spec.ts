@@ -1,8 +1,8 @@
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {ElementRelationUtil} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {EntityInstancePort} from '../../ports/entity-instance.port';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {SammLanguageSettingsService} from '../../state/settings/samm-language-settings.service';
@@ -56,9 +56,7 @@ describe('AbstractEntityModelService', () => {
         {provide: BaseEntityModelService, useValue: mockBaseEntityModel},
         {provide: SammLanguageSettingsService, useValue: {addSammLanguageCode: vi.fn(), getSammLanguageCodes: vi.fn(() => [])}},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},
-        {provide: ModelApiService, useValue: {}},
       ],
     });
 

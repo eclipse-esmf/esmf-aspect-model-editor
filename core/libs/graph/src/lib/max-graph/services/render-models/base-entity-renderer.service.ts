@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {DefaultFilter, FiltersService, SammLanguageSettingsService, ShapeConnectorPort} from '@ame/domain';
-import {LoadedFilesService} from '@ame/infrastructure';
+import {DefaultFilter, FiltersService, LoadedFilesService, SammLanguageSettingsService, ShapeConnectorPort} from '@ame/domain';
 import {Injectable, inject} from '@angular/core';
 import {DefaultEntity, DefaultProperty, PredefinedEntitiesEnum, SammE} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';

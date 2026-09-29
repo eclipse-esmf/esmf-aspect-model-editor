@@ -11,16 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileStatus, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
-import {
-  FileEntry,
-  FileInformation,
-  LoadedFilesService,
-  ModelApiService,
-  ModelData,
-  RdfModelUtil,
-  WorkspaceStructure,
-} from '@ame/infrastructure';
+import {FileStatus, LoadedFilesService, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
+import {FileEntry, FileInformation, ModelApiService, ModelData, RdfModelUtil, WorkspaceStructure} from '@ame/infrastructure';
 import {config, isVersionOutdated, ModelCheckerPort} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

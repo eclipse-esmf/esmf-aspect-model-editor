@@ -19,6 +19,7 @@ export * from './graph-filter-renderer.port';
 export * from './graph-navigator.port';
 export * from './model-loader.port';
 export * from './model-opener.port';
+export * from './model-repository.port';
 export * from './shape-connector.port';
 export * from './sidebar-state.port';
 export * from './ui.port';

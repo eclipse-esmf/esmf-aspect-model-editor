@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, NamespaceFile} from '../model-session';
 import {GraphFilterRendererPort} from '../ports/graph-filter-renderer.port';
 import {ShapeSettingsStatePort} from '../ports/ui.port';
 import {FilterAttributesService} from './active-filter.session';

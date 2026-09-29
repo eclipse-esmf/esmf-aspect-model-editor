@@ -1,8 +1,9 @@
-import {LoadedFilesService, ModelApiService} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
 import {firstValueFrom, of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService} from '../../model-session';
+import {ModelRepositoryPort} from '../../ports/model-repository.port';
 import {ModelElementNamingService} from './model-element-naming.service';
 
 describe('ModelElementNamingService', () => {
@@ -49,7 +50,7 @@ describe('ModelElementNamingService', () => {
       providers: [
         ModelElementNamingService,
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: ModelApiService, useValue: mockModelApiService},
+        {provide: ModelRepositoryPort, useValue: mockModelApiService},
       ],
     });
 

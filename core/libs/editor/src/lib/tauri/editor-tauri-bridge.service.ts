@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService} from '@ame/domain';
+import {FiltersService, LoadedFilesService} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
-import {LoadedFilesService, NamespacesManagerService} from '@ame/infrastructure';
+import {NamespacesManagerService} from '@ame/infrastructure';
 import {IPC_RENDERER, ITauriIpcBridge, LanguageTranslationService, ModelFilter, TAURI_EVENTS} from '@ame/shared';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

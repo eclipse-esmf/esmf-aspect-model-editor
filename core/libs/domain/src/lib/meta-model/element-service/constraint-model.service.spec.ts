@@ -1,4 +1,3 @@
-import {LoadedFilesService, ModelApiService, ModelService, RdfService} from '@ame/infrastructure';
 import {ElementRelationUtil} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
@@ -12,6 +11,7 @@ import {
   DefaultRegularExpressionConstraint,
 } from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {LoadedFilesService, ModelService} from '../../model-session';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {ConstraintModelService} from './constraint-model.service';
 
@@ -52,9 +52,7 @@ describe('ConstraintModelService', () => {
         ConstraintModelService,
         {provide: GraphAdapterPort, useValue: mockGraphAdapter},
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: RdfService, useValue: {}},
         {provide: ModelService, useValue: {}},
-        {provide: ModelApiService, useValue: {}},
       ],
     });
 
