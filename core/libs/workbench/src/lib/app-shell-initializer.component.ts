@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, EditorThemePort, GraphNavigatorPort, SearchStore} from '@ame/domain';
+import {ConfigurationService, GraphNavigatorPort, SearchStore, UiShellStore} from '@ame/domain';
 import {BindingsService, BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {take} from 'rxjs';
@@ -40,7 +40,7 @@ export class AppShellInitializer implements OnInit {
   private browserService = inject(BrowserService);
   private tauriTunnelService = inject(TauriTunnelService);
   private configurationService = inject(ConfigurationService);
-  private editorTheme = inject(EditorThemePort);
+  private uiShellStore = inject(UiShellStore);
   private translate = inject(LanguageTranslationService);
   private searchStore = inject(SearchStore);
   private graphNavigator = inject(GraphNavigatorPort);
@@ -63,7 +63,7 @@ export class AppShellInitializer implements OnInit {
     }
 
     const settings = this.configurationService.getSettings();
-    this.editorTheme.applyTheme(settings?.darkMode ? 'dark' : 'light');
+    this.uiShellStore.setDarkMode(!!settings?.darkMode);
 
     if (window.location.search.includes('?e2e=true')) {
       return;

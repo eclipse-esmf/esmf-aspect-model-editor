@@ -11,19 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {CacheStrategy, NamedElement} from '@esmf/aspect-model-loader';
+
+/** Minimal view of the currently loaded model file needed by shared helpers. */
+export interface LoadedFileView {
+  readonly namespace: string;
+  readonly cachedFile: CacheStrategy;
+}
+
+/** Read access to the model files loaded in the editor session (implemented by domain LoadedFilesService). */
 export abstract class LoadedFilesPort {
-  abstract currentLoadedFile?: {
-    namespace: string;
-    cachedFile?: {
-      resolveInstance: (element: any) => any;
-      updateElementKey?: (element: any, oldUrn: string) => void;
-      removeElement?: (element: any) => void;
-      [key: string]: any;
-    };
-    [key: string]: any;
-  };
-  abstract isElementExtern?: (element: any) => boolean;
-  abstract isElementInCurrentFile?: (element: any) => boolean;
-  abstract getElement?: (urn: string) => any;
-  [key: string]: any;
+  abstract readonly currentLoadedFile: LoadedFileView | null;
+  abstract isElementExtern(element: NamedElement): boolean;
+  abstract getElement<T extends NamedElement>(aspectModelUrn: string): T | null;
 }

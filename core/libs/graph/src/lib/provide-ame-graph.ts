@@ -11,17 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  EditorThemePort,
-  GraphAdapterPort,
-  GraphFilterRendererPort,
-  GraphNavigatorPort,
-  GraphSettingsPort,
-  provideAmeDomain,
-  ShapeConnectorPort,
-} from '@ame/domain';
+import {GraphFilterRendererPort, GraphNavigatorPort, GraphSettingsPort, provideAmeDomain, UiShellStore} from '@ame/domain';
 import {GraphValidationErrorHighlighterPort} from '@ame/shared';
 import {EnvironmentProviders, inject, Injector, makeEnvironmentProviders, provideEnvironmentInitializer} from '@angular/core';
+import {watchState} from '@ngrx/signals';
 import {ShapeConnectorService} from './connection';
 import {
   MaxGraphDomainBridgeService,
@@ -32,6 +25,7 @@ import {
   MaxGraphSettingsBridgeService,
   ThemeService,
 } from './max-graph';
+import {GraphAdapterPort, ShapeConnectorPort} from './ports';
 
 /**
  * Returns environment providers for all Aspect Model Editor graph services,
@@ -42,12 +36,20 @@ export function provideAmeGraph(): EnvironmentProviders {
     {provide: GraphFilterRendererPort, useExisting: MaxGraphFilterRendererService},
     {provide: GraphAdapterPort, useExisting: MaxGraphDomainBridgeService},
     {provide: ShapeConnectorPort, useExisting: ShapeConnectorService},
-    {provide: EditorThemePort, useExisting: ThemeService},
     {provide: GraphSettingsPort, useExisting: MaxGraphSettingsBridgeService},
     {provide: GraphValidationErrorHighlighterPort, useExisting: MaxGraphService},
     {provide: GraphNavigatorPort, useExisting: MaxGraphNavigatorService},
     provideEnvironmentInitializer(() => {
       MaxGraphHelper.injector = inject(Injector);
+    }),
+    provideEnvironmentInitializer(() => {
+      const themeService = inject(ThemeService);
+      // Synchronously apply theme changes so follow-up graph operations use the new colors.
+      watchState(inject(UiShellStore), ({theme}) => {
+        if (theme !== themeService.currentTheme) {
+          themeService.applyTheme(theme);
+        }
+      });
     }),
     provideAmeDomain(),
   ]);

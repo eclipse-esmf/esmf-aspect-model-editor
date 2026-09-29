@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, ElementModelService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
+import {ConfigurationService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
 import {
   EditorFormModel,
   EditorService,
@@ -21,6 +21,7 @@ import {
   ShapeSettingsService,
   ShapeSettingsStateService,
 } from '@ame/editor';
+import {ElementModelService} from '@ame/graph';
 import {ElementsSearchComponent, FilesSearchComponent} from '@ame/search';
 import {SidebarComponent} from '@ame/sidebar';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';

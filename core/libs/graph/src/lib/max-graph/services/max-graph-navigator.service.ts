@@ -45,6 +45,14 @@ export class MaxGraphNavigatorService extends GraphNavigatorPort {
     return !!this.maxGraphService.resolveCellByModelElement(element);
   }
 
+  getVisibleModelElements(): NamedElement[] {
+    const graph = this.maxGraphService.graph;
+    if (!graph) {
+      return [];
+    }
+    return (graph.getChildVertices(graph.getDefaultParent()) || []).map(cell => MaxGraphHelper.getModelElement(cell)).filter(Boolean);
+  }
+
   navigateToElement(aspectModelUrn: string): boolean {
     return !!this.maxGraphService.navigateToCellByUrn(aspectModelUrn);
   }

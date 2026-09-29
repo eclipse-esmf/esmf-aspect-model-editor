@@ -11,8 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {RdfNamingUtil} from '@ame/shared';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {LoadedFilesService} from '../../model-session';
+import {WorkspaceStore} from './workspace.store';
 
 export class FileStatus {
   public loaded = false;
@@ -30,6 +32,7 @@ export class FileStatus {
 @Injectable({providedIn: 'root'})
 export class WorkspaceNamespacesService {
   private loadedFilesService = inject(LoadedFilesService);
+  private workspaceStore = inject(WorkspaceStore);
   readonly namespaces = signal<Record<string, FileStatus[]>>({});
   readonly hasOutdatedFiles = signal(false);
   readonly namespacesKeys = computed(() => Object.keys(this.namespaces()));
@@ -65,5 +68,37 @@ export class WorkspaceNamespacesService {
 
   clear() {
     this.namespaces.set({});
+  }
+
+  /** Merges validated file statuses into the namespace map and syncs the WorkspaceStore. */
+  applyFileStatuses(fileStatus: FileStatus[] = []): Record<string, FileStatus[]> {
+    for (const status of fileStatus) {
+      status.isLoadedInWorkspace = true;
+      const chunks = RdfNamingUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
+      this.setFile(`${chunks[2]}:${chunks[3]}`, status);
+    }
+
+    const allNamespaces = this.namespaces();
+    this.hasOutdatedFiles.set(Object.values(allNamespaces).some(files => files.some(f => f.outdated)));
+
+    this.workspaceStore.setFiles(
+      Object.entries(allNamespaces).flatMap(([ns, files]) =>
+        files.map(f => ({
+          id: `${ns}:${f.name}`,
+          name: f.name,
+          namespace: ns,
+          aspectModelUrn: f.aspectModelUrn,
+          loaded: f.loaded,
+          outdated: f.outdated,
+          errored: f.errored,
+          isLoadedInWorkspace: f.isLoadedInWorkspace,
+          sammVersion: f.sammVersion,
+          dependencies: f.dependencies,
+          missingDependencies: f.missingDependencies,
+        })),
+      ),
+    );
+
+    return allNamespaces;
   }
 }

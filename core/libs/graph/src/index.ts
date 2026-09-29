@@ -12,5 +12,7 @@
  */
 
 export * from './lib/connection';
+export * from './lib/element-services';
 export * from './lib/max-graph';
+export * from './lib/ports';
 export * from './lib/provide-ame-graph';

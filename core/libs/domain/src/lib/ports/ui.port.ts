@@ -36,11 +36,6 @@ export abstract class ShapeSettingsStatePort {
   abstract closeShapeSettings(): void;
 }
 
-export abstract class EditorThemePort {
-  abstract currentTheme?: 'light' | 'dark';
-  abstract applyTheme(theme: string): void;
-}
-
 export abstract class GraphSettingsPort {
   abstract formatShapes(enableHierarchicalLayout?: boolean): void;
   abstract updateGraph(callback: () => void): void;

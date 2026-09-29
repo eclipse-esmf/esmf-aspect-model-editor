@@ -31,6 +31,8 @@ export abstract class GraphNavigatorPort {
   abstract hasElements(): boolean;
   abstract searchElements(query: string): NamedElement[];
   abstract isElementRendered(element: NamedElement): boolean;
+  /** Model elements currently rendered as top-level vertices. */
+  abstract getVisibleModelElements(): NamedElement[];
   abstract navigateToElement(aspectModelUrn: string): boolean;
   abstract setScrollPosition(event: Event): void;
 }

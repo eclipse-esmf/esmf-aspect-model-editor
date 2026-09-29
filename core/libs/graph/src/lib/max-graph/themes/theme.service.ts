@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorThemePort} from '@ame/domain';
 import {Injectable} from '@angular/core';
 import {Cell, CellStyle, Graph} from '@maxgraph/core';
 import {MaxGraphHelper} from '../helpers';
@@ -20,7 +19,7 @@ import {darkColors} from './dark-theme';
 import {lightColors} from './light-theme';
 
 @Injectable({providedIn: 'root'})
-export class ThemeService implements EditorThemePort {
+export class ThemeService {
   private root: HTMLElement = document.documentElement;
   private graph: Graph;
 

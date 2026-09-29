@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorThemePort, EditorValidationPort, GraphSettingsPort, ModelSaverPort, ModelSessionFacade} from '@ame/domain';
+import {EditorValidationPort, GraphSettingsPort, ModelSaverPort, ModelSessionFacade, UiShellStore} from '@ame/domain';
 import {LanguageTranslationService, TauriTunnelPort, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -119,17 +119,17 @@ describe('Settings Update Strategies', () => {
   describe('EditorConfigurationUpdateStrategy', () => {
     let strategy: EditorConfigurationUpdateStrategy;
     let maxGraphSettingsService: {formatShapes: ReturnType<typeof vi.fn>};
-    let themeService: {applyTheme: ReturnType<typeof vi.fn>};
+    let themeService: {setDarkMode: ReturnType<typeof vi.fn>; darkMode: ReturnType<typeof vi.fn>};
 
     beforeEach(() => {
       maxGraphSettingsService = {formatShapes: vi.fn()};
-      themeService = {applyTheme: vi.fn()};
+      themeService = {setDarkMode: vi.fn(), darkMode: vi.fn(() => false)};
 
       TestBed.configureTestingModule({
         providers: [
           EditorConfigurationUpdateStrategy,
           {provide: GraphSettingsPort, useValue: maxGraphSettingsService},
-          {provide: EditorThemePort, useValue: themeService},
+          {provide: UiShellStore, useValue: themeService},
         ],
       });
 
@@ -142,7 +142,7 @@ describe('Settings Update Strategies', () => {
       expect(initialSettings.enableHierarchicalLayout).toBe(true);
       expect(initialSettings.showConnectionLabels).toBe(true);
       expect(initialSettings.darkMode).toBe(true);
-      expect(themeService.applyTheme).toHaveBeenCalledWith('dark');
+      expect(themeService.setDarkMode).toHaveBeenCalledWith(true);
       expect(maxGraphSettingsService.formatShapes).toHaveBeenCalledWith(true);
     });
   });

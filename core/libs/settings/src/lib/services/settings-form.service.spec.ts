@@ -13,7 +13,6 @@
 
 import {
   ConfigurationService,
-  EditorThemePort,
   EditorValidationPort,
   GraphSettingsPort,
   ModelSaverPort,
@@ -68,7 +67,6 @@ describe('SettingsFormService', () => {
         {provide: TitleService, useValue: {updateTitle: vi.fn()}},
         {provide: TauriTunnelPort, useValue: {sendTranslationsToTauri: vi.fn()}},
         {provide: GraphSettingsPort, useValue: {formatShapes: vi.fn(), updateGraph: vi.fn(), removeUnnecessaryLanguages: vi.fn()}},
-        {provide: EditorThemePort, useValue: {applyTheme: vi.fn()}},
         {provide: ModelSaverPort, useValue: {enableAutoSave: vi.fn()}},
         {provide: EditorValidationPort, useValue: {enableAutoValidation: vi.fn()}},
       ],

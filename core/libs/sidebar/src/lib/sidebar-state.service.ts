@@ -12,7 +12,6 @@
  */
 
 import {FileStatus, ModelSessionFacade, UiShellStore, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
-import {RdfNamingUtil} from '@ame/shared';
 import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
 
 export {FileStatus};
@@ -106,37 +105,7 @@ export class SidebarStateService {
   }
 
   updateWorkspace(fileStatus: FileStatus[] = []) {
-    for (const status of fileStatus) {
-      status.isLoadedInWorkspace = true;
-      const chunks = RdfNamingUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
-      const namespace = chunks[2];
-      const version = chunks[3];
-      this.namespacesState.setFile(`${namespace}:${version}`, status);
-    }
-
-    const allNamespaces = this.namespacesState.namespaces();
-    const hasOutdated = Object.values(allNamespaces).some(files => files.some(f => f.outdated));
-    this.namespacesState.hasOutdatedFiles.set(hasOutdated);
-
-    // Sync into WorkspaceStore
-    const items = Object.entries(allNamespaces).flatMap(([ns, files]) =>
-      files.map(f => ({
-        id: `${ns}:${f.name}`,
-        name: f.name,
-        namespace: ns,
-        aspectModelUrn: f.aspectModelUrn,
-        loaded: f.loaded,
-        outdated: f.outdated,
-        errored: f.errored,
-        isLoadedInWorkspace: f.isLoadedInWorkspace,
-        sammVersion: f.sammVersion,
-        dependencies: f.dependencies,
-        missingDependencies: f.missingDependencies,
-      })),
-    );
-    this.workspaceStore.setFiles(items);
-
-    return allNamespaces;
+    return this.namespacesState.applyFileStatuses(fileStatus);
   }
 
   private manageSidebars() {

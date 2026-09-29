@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EntityInstancePort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty, Entity} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
 import {map, shareReplay} from 'rxjs';
 import {MaxGraphHelper} from '../../max-graph';
+import {EntityInstancePort} from '../../ports';
 import {BaseConnectionHandler} from '../base-connection-handler.service';
 import {SingleShapeConnector} from '../models';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';

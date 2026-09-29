@@ -11,16 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfigurationService, FilterAttributesService, FiltersService, LoadedFilesService, ModelService, NamespaceFile} from '@ame/domain';
 import {
-  ConfigurationService,
   ElementModelService,
-  FilterAttributesService,
-  FiltersService,
-  LoadedFilesService,
-  ModelService,
-  NamespaceFile,
-} from '@ame/domain';
-import {
   MaxGraphAttributeService,
   MaxGraphService,
   MaxGraphSetupService,

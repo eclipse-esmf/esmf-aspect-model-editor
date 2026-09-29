@@ -11,12 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ElementRelationUtil} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, of} from 'rxjs';
 import {LoadedFilesService} from '../../model-session';
-import {GraphAdapterPort} from '../../ports/graph-adapter.port';
+import {GraphNavigatorPort} from '../../ports/graph-navigator.port';
 import {ModelRepositoryPort} from '../../ports/model-repository.port';
 
 @Injectable({providedIn: 'root'})
@@ -25,8 +24,8 @@ export class ModelElementNamingService {
   private readonly injector = inject(Injector);
   private readonly modelRepository = inject(ModelRepositoryPort, {optional: true});
 
-  private get graphAdapter(): GraphAdapterPort | null {
-    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
+  private get graphNavigator(): GraphNavigatorPort | null {
+    return this.injector.get<GraphNavigatorPort | null>(GraphNavigatorPort, null, {optional: true});
   }
 
   private isExistingElement(element: NamedElement): boolean {
@@ -38,15 +37,7 @@ export class ModelElementNamingService {
       return true;
     }
 
-    if (this.graphAdapter) {
-      const vertices = this.graphAdapter.getChildVertices(this.graphAdapter.getDefaultParent()) || [];
-      for (const cell of vertices) {
-        if (ElementRelationUtil.getModelElement(cell) === element) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return !!this.graphNavigator?.getVisibleModelElements().includes(element);
   }
 
   /**
@@ -162,8 +153,8 @@ export class ModelElementNamingService {
       }
     }
 
-    if (this.graphAdapter) {
-      const visibleElements = this.graphAdapter.getVisibleModelElements() || [];
+    if (this.graphNavigator) {
+      const visibleElements = this.graphNavigator.getVisibleModelElements();
       for (const metaModel of visibleElements) {
         if (metaModel?.aspectModelUrn?.startsWith(mainAspectModelUrn) && metaModel !== element) {
           elements[metaModel.aspectModelUrn] = true;

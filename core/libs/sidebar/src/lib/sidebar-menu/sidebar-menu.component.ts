@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, EditorThemePort, InformationHandlingPort} from '@ame/domain';
+import {ConfigurationService, InformationHandlingPort, UiShellStore} from '@ame/domain';
 import {BarItemComponent, NotificationsService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, inject} from '@angular/core';
@@ -30,13 +30,13 @@ import {SidebarStateService} from '../sidebar-state.service';
 export class SidebarMenuComponent {
   private informationService = inject(InformationHandlingPort);
   private configurationService = inject(ConfigurationService);
-  private themeService = inject(EditorThemePort);
+  private uiShellStore = inject(UiShellStore);
 
   public notificationService = inject(NotificationsService);
   public sidebarService = inject(SidebarStateService);
 
   get isDarkMode(): boolean {
-    return this.themeService.currentTheme === 'dark';
+    return this.uiShellStore.darkMode();
   }
 
   toggleDarkMode(): void {
@@ -44,7 +44,7 @@ export class SidebarMenuComponent {
     const newDarkMode = !this.isDarkMode;
     settings.darkMode = newDarkMode;
     this.configurationService.setSettings(settings);
-    this.themeService.applyTheme(newDarkMode ? 'dark' : 'light');
+    this.uiShellStore.setDarkMode(newDarkMode);
   }
 
   openSettingsDialog() {

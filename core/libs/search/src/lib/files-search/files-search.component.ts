@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelOpenerPort, SidebarStatePort} from '@ame/domain';
+import {ModelOpenerPort, WorkspaceNamespacesService} from '@ame/domain';
 import {
   createDebouncedLoading,
   filesSearchOption,
@@ -38,7 +38,7 @@ import {SearchesStateService} from '../search-state.service';
 })
 export class FilesSearchComponent implements AfterViewInit {
   private readonly searchesStateService = inject(SearchesStateService);
-  private readonly sidebarStateService = inject(SidebarStatePort);
+  private readonly namespacesState = inject(WorkspaceNamespacesService);
   private readonly notificationService = inject(NotificationsService);
   private readonly modelOpener = inject(ModelOpenerPort);
   private readonly searchService = inject(SearchService);
@@ -54,7 +54,7 @@ export class FilesSearchComponent implements AfterViewInit {
   public readonly searchableFiles = signal<{file: string; namespace: string; aspectModelUrn?: string}[]>([]);
 
   public get namespaces() {
-    return this.sidebarStateService.namespacesState.namespaces();
+    return this.namespacesState.namespaces();
   }
 
   constructor() {
@@ -64,7 +64,7 @@ export class FilesSearchComponent implements AfterViewInit {
       this.loading.set(true);
       this.modelChecker
         .detectWorkspaceErrors()
-        .pipe(map(files => this.sidebarStateService.updateWorkspace(files)))
+        .pipe(map(files => this.namespacesState.applyFileStatuses(files)))
         .subscribe(n => {
           this.parseFiles(n);
           this.loading.set(false);
@@ -112,7 +112,7 @@ export class FilesSearchComponent implements AfterViewInit {
   }
 
   private checkFile(file: string, namespace: string): boolean {
-    const fileStatus = this.sidebarStateService.namespacesState.getFile(namespace, file);
+    const fileStatus = this.namespacesState.getFile(namespace, file);
     if (fileStatus && (fileStatus.errored || fileStatus.loaded)) {
       this.notificationService.warning({
         title: this.translate.language.searches.files.notifications.title,

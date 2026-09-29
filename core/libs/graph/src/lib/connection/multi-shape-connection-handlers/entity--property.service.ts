@@ -11,11 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EntityInstancePort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
 import {MaxGraphService} from '../../max-graph';
+import {EntityInstancePort} from '../../ports';
 import {MultiShapeConnector} from '../models';
 
 @Injectable({providedIn: 'root'})

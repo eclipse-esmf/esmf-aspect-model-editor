@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, ElementModelService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
+import {ConfigurationService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
 import {EditorFormModel, EditorService, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
+import {ElementModelService} from '@ame/graph';
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';

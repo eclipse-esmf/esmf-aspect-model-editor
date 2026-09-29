@@ -13,7 +13,7 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {ModelOpenerPort, SidebarStatePort} from '@ame/domain';
+import {ModelOpenerPort, WorkspaceNamespacesService} from '@ame/domain';
 import {LanguageTranslationService, ModelCheckerPort, NotificationsService, SearchService} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
@@ -36,7 +36,7 @@ describe('Files search', () => {
   let fixture: ComponentFixture<FilesSearchComponent>;
   let searchesStateService: SearchesStateService;
   let notificationService: NotificationsService;
-  let sidebarStateService: SidebarStatePort;
+  let namespacesState: WorkspaceNamespacesService;
   let searchService: SearchService;
   let modelOpenerService: any;
 
@@ -87,13 +87,11 @@ describe('Files search', () => {
           elementsSearch: {close: vi.fn()} as any,
         }),
         {
-          provide: SidebarStatePort,
+          provide: WorkspaceNamespacesService,
           useValue: {
-            namespacesState: {
-              namespaces: signal(namespaces),
-              getFile: vi.fn(),
-            } as any,
-            updateWorkspace: vi.fn(() => of({})) as any,
+            namespaces: signal(namespaces),
+            getFile: vi.fn(),
+            applyFileStatuses: vi.fn(() => ({})),
           },
         },
         {
@@ -133,7 +131,7 @@ describe('Files search', () => {
     component = fixture.componentInstance;
     searchesStateService = TestBed.inject(SearchesStateService);
     notificationService = TestBed.inject(NotificationsService);
-    sidebarStateService = TestBed.inject(SidebarStatePort);
+    namespacesState = TestBed.inject(WorkspaceNamespacesService);
     searchService = TestBed.inject(SearchService);
     modelOpenerService = TestBed.inject(ModelOpenerPort);
     fixture.detectChanges();
@@ -184,7 +182,7 @@ describe('Files search', () => {
       sammVersion: '2.1.0',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#SharedModel',
     };
-    vi.spyOn(sidebarStateService.namespacesState, 'getFile').mockReturnValue(mockFileStatus);
+    vi.spyOn(namespacesState, 'getFile').mockReturnValue(mockFileStatus);
 
     component.openFile({
       file: 'SharedModel.ttl',
@@ -210,7 +208,7 @@ describe('Files search', () => {
       sammVersion: '2.1.0',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#SharedModel',
     };
-    vi.spyOn(sidebarStateService.namespacesState, 'getFile').mockReturnValue(mockFileStatus);
+    vi.spyOn(namespacesState, 'getFile').mockReturnValue(mockFileStatus);
 
     component.openFile({
       file: 'SharedModel.ttl',

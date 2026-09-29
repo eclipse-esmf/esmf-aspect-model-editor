@@ -12,6 +12,5 @@
  */
 
 export * from './aspect-meta-model';
-export * from './element-service';
 export * from './services';
 export * from './types';

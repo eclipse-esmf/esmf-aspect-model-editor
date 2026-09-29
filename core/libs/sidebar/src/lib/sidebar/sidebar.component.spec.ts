@@ -11,14 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {
-  ConfigurationService,
-  DraggablePort,
-  EditorThemePort,
-  GraphNavigatorPort,
-  InformationHandlingPort,
-  ModelSessionFacade,
-} from '@ame/domain';
+import {ConfigurationService, DraggablePort, GraphNavigatorPort, InformationHandlingPort, ModelSessionFacade} from '@ame/domain';
 import {ModelCheckerPort, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -54,7 +47,6 @@ describe('SidebarComponent', () => {
         {provide: ModelCheckerPort, useValue: {detectWorkspaceErrors: () => EMPTY}},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: ConfigurationService, useValue: {getSettings: vi.fn(() => ({})), setSettings: vi.fn()}},
-        {provide: EditorThemePort, useValue: {currentTheme: 'light', applyTheme: vi.fn()}},
       ],
     });
 

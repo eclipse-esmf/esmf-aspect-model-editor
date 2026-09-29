@@ -24,7 +24,7 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {EntityInstancePort, FiltersService, LoadedFilesService, ModelElementNamingService, SammLanguageSettingsService} from '@ame/domain';
+import {FiltersService, LoadedFilesService, ModelElementNamingService, SammLanguageSettingsService} from '@ame/domain';
 import {ElementCreatorService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
@@ -46,6 +46,7 @@ import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Cell} from '@maxgraph/core';
 import {of} from 'rxjs';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService, ModelInfo} from '../../max-graph';
+import {EntityInstancePort} from '../../ports';
 import {EntityPropertyConnectionHandler, PropertyAbstractPropertyConnectionHandler} from '../multi-shape-connection-handlers';
 import {
   AbstractEntityConnectionHandler,

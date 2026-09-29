@@ -21,7 +21,7 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {EntityInstancePort, FiltersService, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
+import {FiltersService, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {ElementCreatorService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
@@ -42,6 +42,7 @@ import {
 } from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
 import {MaxGraphAttributeService, MaxGraphService, MaxGraphShapeOverlayService} from '../../max-graph';
+import {EntityInstancePort} from '../../ports';
 import {
   AbstractEntityAbstractEntityConnectionHandler,
   AbstractEntityAbstractPropertyConnectionHandler,

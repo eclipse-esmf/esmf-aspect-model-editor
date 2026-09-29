@@ -14,6 +14,8 @@
 import {computed} from '@angular/core';
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 
+export type EditorTheme = 'light' | 'dark';
+
 export type SidebarTab = 'sammElements' | 'workspace' | 'fileElements' | null;
 
 export interface UiShellState {
@@ -22,7 +24,7 @@ export interface UiShellState {
   toolbarVisible: boolean;
   minimapVisible: boolean;
   navigationVisible: boolean;
-  darkMode: boolean;
+  theme: EditorTheme;
   activeDialog: string | null;
 }
 
@@ -32,7 +34,7 @@ const initialState: UiShellState = {
   toolbarVisible: true,
   minimapVisible: true,
   navigationVisible: true,
-  darkMode: false,
+  theme: 'light',
   activeDialog: null,
 };
 
@@ -40,6 +42,7 @@ export const UiShellStore = signalStore(
   {providedIn: 'root'},
   withState(initialState),
   withComputed(store => ({
+    darkMode: computed(() => store.theme() === 'dark'),
     isSidebarExpanded: computed(() => store.sidebarOpen() && store.activeSidebarTab() !== null),
     isSammElementsOpen: computed(() => store.sidebarOpen() && store.activeSidebarTab() === 'sammElements'),
     isWorkspaceOpen: computed(() => store.sidebarOpen() && store.activeSidebarTab() === 'workspace'),
@@ -71,8 +74,11 @@ export const UiShellStore = signalStore(
     toggleMinimap() {
       patchState(store, {minimapVisible: !store.minimapVisible()});
     },
+    setTheme(theme: EditorTheme) {
+      patchState(store, {theme});
+    },
     setDarkMode(darkMode: boolean) {
-      patchState(store, {darkMode});
+      patchState(store, {theme: darkMode ? 'dark' : 'light'});
     },
     openDialog(dialogName: string) {
       patchState(store, {activeDialog: dialogName});

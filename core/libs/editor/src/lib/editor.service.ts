@@ -15,7 +15,6 @@ import {
   ConfigurationService,
   DraggablePort,
   EditorValidationPort,
-  ElementModelService,
   FilterAttributesService,
   FiltersService,
   LoadedFilesService,
@@ -23,6 +22,7 @@ import {
   SammLanguageSettingsService,
 } from '@ame/domain';
 import {
+  ElementModelService,
   MaxGraphAttributeService,
   MaxGraphHelper,
   MaxGraphRenderer,

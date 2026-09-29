@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorThemePort, GraphSettingsPort} from '@ame/domain';
+import {GraphSettingsPort, UiShellStore} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {Settings, SettingsFormData} from '../model';
 import {SettingsUpdateStrategy} from './settings-update.strategy';
@@ -19,7 +19,7 @@ import {SettingsUpdateStrategy} from './settings-update.strategy';
 @Injectable({providedIn: 'root'})
 export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy {
   private readonly maxGraphSettingsService = inject(GraphSettingsPort, {optional: true});
-  private readonly themeService = inject(EditorThemePort, {optional: true});
+  private readonly uiShellStore = inject(UiShellStore);
 
   updateSettings(model: SettingsFormData, settings: Settings): void {
     const editorConfiguration = model?.editorConfiguration;
@@ -29,7 +29,7 @@ export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy
     settings.showConnectionLabels = editorConfiguration.showConnectionLabels;
     settings.darkMode = editorConfiguration.darkMode;
 
-    this.themeService?.applyTheme(settings.darkMode ? 'dark' : 'light');
+    this.uiShellStore.setDarkMode(!!settings.darkMode);
     this.maxGraphSettingsService?.formatShapes(true);
   }
 }

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, EditorThemePort, GraphNavigatorPort, SearchStore} from '@ame/domain';
+import {ConfigurationService, GraphNavigatorPort, SearchStore, UiShellStore} from '@ame/domain';
 import {BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -31,7 +31,7 @@ describe('AppShellInitializer', () => {
   let browserService: {isStartedAsTauriApp: ReturnType<typeof vi.fn>};
   let tauriTunnelService: {subscribeMessages: ReturnType<typeof vi.fn>; sendTranslationsToTauri: ReturnType<typeof vi.fn>};
   let configurationService: {getSettings: ReturnType<typeof vi.fn>};
-  let themeService: {applyTheme: ReturnType<typeof vi.fn>; setCssVars: ReturnType<typeof vi.fn>};
+  let themeService: {setDarkMode: ReturnType<typeof vi.fn>; darkMode: ReturnType<typeof vi.fn>; setCssVars: ReturnType<typeof vi.fn>};
   let langChanges$: BehaviorSubject<string>;
   let translate: {
     translateService: {
@@ -58,7 +58,7 @@ describe('AppShellInitializer', () => {
     browserService = {isStartedAsTauriApp: vi.fn(() => false)};
     tauriTunnelService = {subscribeMessages: vi.fn(), sendTranslationsToTauri: vi.fn()};
     configurationService = {getSettings: vi.fn(() => ({darkMode: false}))};
-    themeService = {applyTheme: vi.fn(), setCssVars: vi.fn()};
+    themeService = {setDarkMode: vi.fn(), darkMode: vi.fn(() => false), setCssVars: vi.fn()};
     langChanges$ = new BehaviorSubject('en');
     translate = {
       translateService: {
@@ -87,7 +87,7 @@ describe('AppShellInitializer', () => {
         {provide: BrowserService, useValue: browserService},
         {provide: TauriTunnelService, useValue: tauriTunnelService},
         {provide: ConfigurationService, useValue: configurationService},
-        {provide: EditorThemePort, useValue: themeService},
+        {provide: UiShellStore, useValue: themeService},
         {provide: LanguageTranslationService, useValue: translate},
         {provide: SearchStore, useValue: searchStore},
         {provide: GraphNavigatorPort, useValue: graphNavigator},
@@ -144,7 +144,7 @@ describe('AppShellInitializer', () => {
 
       fixture.detectChanges();
 
-      expect(themeService.applyTheme).toHaveBeenCalledWith('light');
+      expect(themeService.setDarkMode).toHaveBeenCalledWith(false);
     });
 
     it('should apply the dark theme when dark mode is enabled', () => {
@@ -152,7 +152,7 @@ describe('AppShellInitializer', () => {
 
       fixture.detectChanges();
 
-      expect(themeService.applyTheme).toHaveBeenCalledWith('dark');
+      expect(themeService.setDarkMode).toHaveBeenCalledWith(true);
     });
 
     it('should listen for loading unless running under e2e', () => {
