@@ -11,16 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService} from '@ame/domain';
+import {LoadedFilesService, ModelService, RdfPort} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {RdfService} from '@ame/infrastructure';
 import {inject, Injectable} from '@angular/core';
 import {catchError, map, Observable, of, take} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class ModelSavingTrackerService {
   private readonly modelService = inject(ModelService);
-  private readonly rdfService = inject(RdfService);
+  private readonly rdfService = inject(RdfPort);
   private readonly maxgraphService = inject(MaxGraphService);
   private readonly loadedFilesService = inject(LoadedFilesService);
   private savedModel = '';

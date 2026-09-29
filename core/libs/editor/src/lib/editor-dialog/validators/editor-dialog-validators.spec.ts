@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/domain';
-import {ModelApiService} from '@ame/infrastructure';
+import {LoadedFilesService, ModelApiPort, NamespaceFile} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -23,14 +22,14 @@ import {EditorDialogValidators} from './editor-dialog-validators';
 
 describe('EditorDialogValidators', () => {
   let validators: EditorDialogValidators;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
   let loadedFilesService: LoadedFilesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         EditorDialogValidators,
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           checkElementExists: vi.fn(() => of(false)),
         }),
         MockProvider(LoadedFilesService, {
@@ -40,7 +39,7 @@ describe('EditorDialogValidators', () => {
     });
 
     validators = TestBed.inject(EditorDialogValidators);
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     loadedFilesService = TestBed.inject(LoadedFilesService);
   });
 

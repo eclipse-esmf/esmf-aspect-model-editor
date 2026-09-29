@@ -15,13 +15,17 @@ import {
   ConfigurationService,
   LoadedFilePayload,
   LoadedFilesService,
+  ModelApiPort,
+  ModelData,
   ModelService,
   NamespaceFile,
+  RdfModelUtil,
+  RdfNodePort,
+  RdfPort,
   UiShellStore,
   WorkspaceStore,
 } from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {ModelApiService, ModelData, RdfModelUtil, RdfNodeService, RdfService} from '@ame/infrastructure';
 import {
   decodeText,
   FileHandlingPort,
@@ -89,8 +93,8 @@ export class FileHandlingService implements FileHandlingPort {
   private destroyRef = inject(DestroyRef);
   private editorService = inject(EditorService);
   private modelService = inject(ModelService);
-  private rdfService = inject(RdfService);
-  private modelApiService = inject(ModelApiService);
+  private rdfService = inject(RdfPort);
+  private modelApiService = inject(ModelApiPort);
   private confirmDialogService = inject(ConfirmDialogService);
   private notificationsService = inject(NotificationsService);
   private loadingScreenService = inject(LoadingScreenService);
@@ -108,7 +112,7 @@ export class FileHandlingService implements FileHandlingPort {
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
   private ipcRenderer = inject(IPC_RENDERER, {optional: true});
-  private rdfNodeService = inject(RdfNodeService);
+  private rdfNodeService = inject(RdfNodePort);
   private injector = inject(Injector);
 
   private get tabStateService(): TabStateService {
@@ -773,7 +777,7 @@ export class FileHandlingService implements FileHandlingPort {
    * Adds files to LoadedFilesService accordingly.
    *
    * @param namespace - the target namespace to load models from
-   * @param modelsData - data of the models to load (typically taken from a workspace structure, e.g. from ModelApiService.loadNamespacesStructure method)
+   * @param modelsData - data of the models to load (typically taken from a workspace structure, e.g. from ModelApiPort.loadNamespacesStructure method)
    * @returns - a list of loaded files
    */
   private loadNamespaceModels(namespace: string, modelsData: ModelData[]) {

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/infrastructure';
+import {ModelApiPort} from '@ame/domain';
 import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -27,7 +27,7 @@ import {OpenElementWindowComponent} from './open-element-window.component';
 describe('OpenElementWindowComponent', () => {
   let component: OpenElementWindowComponent;
   let fixture: ComponentFixture<OpenElementWindowComponent>;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
   let modelLoaderService: ModelLoaderService;
   let tauriSignalsService: TauriSignalsService;
   let notificationService: NotificationsService;
@@ -49,7 +49,7 @@ describe('OpenElementWindowComponent', () => {
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
         {provide: MAT_DIALOG_DATA, useValue: {urn, file}},
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           fetchAspectMetaModel: vi.fn(() => of({content: 'model ttl content', sourceLocation: ''} as any)),
         }),
         MockProvider(ModelLoaderService),
@@ -62,7 +62,7 @@ describe('OpenElementWindowComponent', () => {
       ],
     }).compileComponents();
 
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     modelLoaderService = TestBed.inject(ModelLoaderService);
     tauriSignalsService = TestBed.inject(TauriSignalsService);
     notificationService = TestBed.inject(NotificationsService);

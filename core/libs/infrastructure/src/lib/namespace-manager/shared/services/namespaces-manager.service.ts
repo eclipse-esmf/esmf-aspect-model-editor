@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {NamespacesTransferPort} from '@ame/domain';
 import {createFile, FileHandlingPort, FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
@@ -20,7 +21,7 @@ import {take} from 'rxjs/operators';
 import {SelectNamespacesComponent} from '../../namespace-exporter/components';
 
 @Injectable({providedIn: 'root'})
-export class NamespacesManagerService {
+export class NamespacesManagerService implements NamespacesTransferPort {
   private readonly matDialog = inject(MatDialog);
   private readonly fileHandlingService = inject(FileHandlingPort);
   private readonly tauriSignalsService = inject(TauriSignalsService);

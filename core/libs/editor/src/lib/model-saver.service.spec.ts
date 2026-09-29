@@ -11,8 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, ModelService, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
-import {ModelApiService, RdfSerializerService} from '@ame/infrastructure';
+import {
+  ConfigurationService,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelService,
+  NamespaceFile,
+  RdfPort,
+  SammLanguageSettingsService,
+} from '@ame/domain';
 import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -26,7 +33,7 @@ import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
 describe('ModelSaverService', () => {
   let service: ModelSaverService;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
   let modelSavingTracker: ModelSavingTrackerService;
   let notificationsService: NotificationsService;
 
@@ -40,11 +47,11 @@ describe('ModelSaverService', () => {
     TestBed.configureTestingModule({
       providers: [
         ModelSaverService,
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           fetchFormatedAspectModel: vi.fn(() => of('formatted content')),
           saveAspectModel: vi.fn(() => of(null as any)),
         }),
-        MockProvider(RdfSerializerService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => '@prefix : <urn:test#> .\n:Aspect a samm:Aspect .'),
         }),
         MockProvider(LoadedFilesService, {
@@ -107,7 +114,7 @@ describe('ModelSaverService', () => {
     });
 
     service = TestBed.inject(ModelSaverService);
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     modelSavingTracker = TestBed.inject(ModelSavingTrackerService);
     notificationsService = TestBed.inject(NotificationsService);
   });

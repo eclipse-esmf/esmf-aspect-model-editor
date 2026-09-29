@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/domain';
-import {ModelApiService, RdfService} from '@ame/infrastructure';
+import {LoadedFilesService, ModelApiPort, RdfPort} from '@ame/domain';
 import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {form, FormField} from '@angular/forms/signals';
@@ -44,8 +43,8 @@ import {finalize, first, tap} from 'rxjs';
 })
 export class AASXGenerationModalComponent {
   private destroyRef = inject(DestroyRef);
-  private modelApiService = inject(ModelApiService);
-  private rdfService = inject(RdfService);
+  private modelApiService = inject(ModelApiPort);
+  private rdfService = inject(RdfPort);
   private dialogRef = inject(MatDialogRef<AASXGenerationModalComponent>);
   private loadedFilesService = inject(LoadedFilesService);
 

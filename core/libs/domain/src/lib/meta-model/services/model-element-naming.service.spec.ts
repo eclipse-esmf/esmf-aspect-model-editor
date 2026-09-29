@@ -3,7 +3,7 @@ import {DefaultAspect, DefaultCharacteristic, DefaultProperty} from '@esmf/aspec
 import {firstValueFrom, of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {LoadedFilesService} from '../../model-session';
-import {ModelRepositoryPort} from '../../ports/model-repository.port';
+import {ModelApiPort} from '../../ports/model-api.port';
 import {ModelElementNamingService} from './model-element-naming.service';
 
 describe('ModelElementNamingService', () => {
@@ -50,7 +50,7 @@ describe('ModelElementNamingService', () => {
       providers: [
         ModelElementNamingService,
         {provide: LoadedFilesService, useValue: mockLoadedFilesService},
-        {provide: ModelRepositoryPort, useValue: mockModelApiService},
+        {provide: ModelApiPort, useValue: mockModelApiService},
       ],
     });
 

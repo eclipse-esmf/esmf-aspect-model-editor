@@ -17,19 +17,17 @@ import {provideAmeGraph} from '@ame/graph';
 import {provideAmeInfrastructure} from '@ame/infrastructure';
 import {provideSearch} from '@ame/search';
 import {provideSettings} from '@ame/settings';
-import {APP_CONFIG, config, TauriTunnelPort} from '@ame/shared';
 import {provideSidebar} from '@ame/sidebar';
+import {provideWorkbench} from '@ame/workbench';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
-import {TauriTunnelService} from './tauri-tunnel.service';
 
 /**
- * Composition root of the Aspect Model Editor: every feature contributes its own providers,
- * the shell only adds app-level configuration and the Tauri tunnel.
+ * Composition root of the Aspect Model Editor: binds every library's implementations to the domain ports.
+ * This is the only place that knows all libraries.
  */
-export function provideAmeFeatures(): EnvironmentProviders {
+export function provideAme(): EnvironmentProviders {
   return makeEnvironmentProviders([
-    {provide: APP_CONFIG, useValue: config},
-    {provide: TauriTunnelPort, useExisting: TauriTunnelService},
+    provideWorkbench(),
     provideEditor(),
     provideSidebar(),
     provideSearch(),

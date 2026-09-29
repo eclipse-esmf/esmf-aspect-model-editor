@@ -16,13 +16,13 @@ import {NamedElement} from '@esmf/aspect-model-loader';
 import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, of} from 'rxjs';
 import {LoadedFilesService} from '../../model-session';
 import {GraphNavigatorPort} from '../../ports/graph-navigator.port';
-import {ModelRepositoryPort} from '../../ports/model-repository.port';
+import {ModelApiPort} from '../../ports/model-api.port';
 
 @Injectable({providedIn: 'root'})
 export class ModelElementNamingService {
   private readonly loadedFiles = inject(LoadedFilesService);
   private readonly injector = inject(Injector);
-  private readonly modelRepository = inject(ModelRepositoryPort, {optional: true});
+  private readonly modelRepository = inject(ModelApiPort, {optional: true});
 
   private get graphNavigator(): GraphNavigatorPort | null {
     return this.injector.get<GraphNavigatorPort | null>(GraphNavigatorPort, null, {optional: true});

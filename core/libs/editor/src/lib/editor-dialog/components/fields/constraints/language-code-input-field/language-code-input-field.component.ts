@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {RdfModelUtil} from '@ame/infrastructure';
+import {RdfModelUtil} from '@ame/domain';
 import {Component, computed, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {disabled, form, FormField, required} from '@angular/forms/signals';

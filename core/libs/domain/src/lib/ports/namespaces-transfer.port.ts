@@ -11,5 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './rdf-model-util';
-export * from './rdf-samm-namespaces';
+import {FileInfo} from '@ame/shared';
+
+/** Import/export of namespace packages. Implemented by infrastructure. */
+export abstract class NamespacesTransferPort {
+  abstract onImportNamespaces(fileInfo?: FileInfo): void;
+  abstract onExportNamespaces(): void;
+}

@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
-import {ModelApiService} from '@ame/infrastructure';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
 import {BrowserService, IPC_RENDERER} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -30,7 +29,7 @@ describe('GenerateDocumentationComponent', () => {
   let component: GenerateDocumentationComponent;
   let fixture: ComponentFixture<GenerateDocumentationComponent>;
   let dialogRef: MatDialogRef<GenerateDocumentationComponent>;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
 
   const aspect = new DefaultAspect({
     aspectModelUrn: 'urn:test:1.0.0#Aspect',
@@ -55,7 +54,7 @@ describe('GenerateDocumentationComponent', () => {
         MockProvider(SammLanguageSettingsService, {
           getSammLanguageCodes: vi.fn(() => ['en', 'de']),
         }),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           generateDocumentation: vi.fn(() => of('<html>Documentation</html>')),
         }),
         MockProvider(EditorService, {
@@ -70,7 +69,7 @@ describe('GenerateDocumentationComponent', () => {
       ],
     }).compileComponents();
 
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     fixture = TestBed.createComponent(GenerateDocumentationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

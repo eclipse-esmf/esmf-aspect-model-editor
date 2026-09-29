@@ -12,8 +12,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {ModelTree, SammLanguageSettingsService} from '@ame/domain';
-import {RdfModelUtil} from '@ame/infrastructure';
+import {ModelTree, RdfModelUtil, SammLanguageSettingsService} from '@ame/domain';
 import {
   DefaultAspect,
   DefaultCharacteristic,

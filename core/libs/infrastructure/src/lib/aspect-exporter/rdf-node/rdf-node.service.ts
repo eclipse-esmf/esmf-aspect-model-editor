@@ -11,23 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService} from '@ame/domain';
+import {LoadedFilesService, ModelService, QuadComponents, RdfModelUtil, RdfNodePort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {DefaultEncodingConstraint, NamedElement, RdfModel, Type} from '@esmf/aspect-model-loader';
 import {BlankNode, DataFactory, Quad, Quad_Graph, Quad_Object, Quad_Predicate, Quad_Subject} from 'n3';
-import {RdfModelUtil} from '../../rdf';
 import {PropertyEnum} from './enums/property.enum';
 import {BasePropertiesInterface, LocaleInterface} from './interfaces';
 
-interface QuadComponents {
-  subject?: Quad_Subject;
-  predicate?: Quad_Predicate;
-  object?: Quad_Object;
-  graph?: Quad_Graph;
-}
-
 @Injectable({providedIn: 'root'})
-export class RdfNodeService {
+export class RdfNodeService implements RdfNodePort {
   public modelService = inject(ModelService);
   public loadedFilesService = inject(LoadedFilesService);
 

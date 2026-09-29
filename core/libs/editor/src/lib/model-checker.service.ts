@@ -11,8 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileStatus, LoadedFilesService, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
-import {FileEntry, FileInformation, ModelApiService, ModelData, RdfModelUtil, WorkspaceStructure} from '@ame/infrastructure';
+import {
+  FileEntry,
+  FileInformation,
+  FileStatus,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelData,
+  RdfModelUtil,
+  WorkspaceNamespacesService,
+  WorkspaceStore,
+  WorkspaceStructure,
+} from '@ame/domain';
 import {config, isVersionOutdated, ModelCheckerPort} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -23,7 +33,7 @@ import {ModelLoaderService} from './model-loader.service';
 @Injectable({providedIn: 'root'})
 export class ModelCheckerService implements ModelCheckerPort {
   private destroyRef = inject(DestroyRef);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private loadedFilesService = inject(LoadedFilesService);
   private modelLoader = inject(ModelLoaderService);
   private workspaceNamespaces = inject(WorkspaceNamespacesService);

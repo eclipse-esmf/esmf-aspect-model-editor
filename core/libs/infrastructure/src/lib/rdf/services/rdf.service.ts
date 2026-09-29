@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespaceFile} from '@ame/domain';
+import {NamespaceFile, RdfPort} from '@ame/domain';
 import {APP_CONFIG} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {RdfModel} from '@esmf/aspect-model-loader';
@@ -21,7 +21,7 @@ import {ModelApiService} from '../../api';
 import {RdfSerializerService} from './rdf-serializer.service';
 
 @Injectable({providedIn: 'root'})
-export class RdfService {
+export class RdfService implements RdfPort {
   private readonly modelApiService = inject(ModelApiService);
   private readonly _rdfSerializer = inject(RdfSerializerService);
   public readonly config = inject(APP_CONFIG);

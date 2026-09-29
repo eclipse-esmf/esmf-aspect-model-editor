@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService, LoadedFilesService} from '@ame/domain';
+import {FiltersService, LoadedFilesService, NamespacesTransferPort} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
-import {NamespacesManagerService} from '@ame/infrastructure';
 import {IPC_RENDERER, LanguageTranslationService, TAURI_EVENTS} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
@@ -65,7 +64,7 @@ describe('EditorTauriBridge', () => {
         {provide: LoadedFilesService, useValue: {currentLoadedFile: {cachedFile: {get: vi.fn()}}}},
         {provide: MaxGraphService, useValue: {navigateToCellByUrn: vi.fn()}},
         {provide: ShapeConnectorService, useValue: {connectSelectedElements: vi.fn()}},
-        {provide: NamespacesManagerService, useValue: {onImportNamespaces: vi.fn(), onExportNamespaces: vi.fn()}},
+        {provide: NamespacesTransferPort, useValue: {onImportNamespaces: vi.fn(), onExportNamespaces: vi.fn()}},
         {provide: FiltersService, useValue: {renderByFilter: vi.fn()}},
         {provide: MatDialog, useValue: {open: vi.fn()}},
         {

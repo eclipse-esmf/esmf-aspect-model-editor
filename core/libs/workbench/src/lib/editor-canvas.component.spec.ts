@@ -13,7 +13,6 @@
 
 import {ConfigurationService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
 import {EditorFormModel, EditorService, ShapeSettingsService, ShapeSettingsStateService} from '@ame/editor';
-import {ElementModelService} from '@ame/graph';
 import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -27,7 +26,7 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
   let component: EditorCanvasComponent;
   let state: ShapeSettingsStateService;
   let shapeSettings: ShapeSettingsService;
-  let elementModel: ElementModelService;
+  let elementModel: EditorService;
 
   beforeEach(() => {
     const mockElementModel = {updateElement: vi.fn()};
@@ -47,7 +46,6 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
             closeShapeSettings: vi.fn(),
           } as unknown as ShapeSettingsStateService,
         },
-        {provide: ElementModelService, useValue: mockElementModel},
         {
           provide: ConfigurationService,
           useValue: {
@@ -57,7 +55,7 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
         },
         {provide: SearchStore, useValue: {elementsSearchOpened: signal(false), filesSearchOpened: signal(false)}},
         MockProvider(GraphNavigatorPort, {isModelEmpty: signal(false), navigateToElement: vi.fn(), setScrollPosition: vi.fn()}),
-        MockProvider(EditorService),
+        MockProvider(EditorService, mockElementModel),
         MockProvider(ModelSessionFacade),
         MockProvider(Router),
         MockProvider(ActivatedRoute, {queryParamMap: of(null)}),
@@ -67,7 +65,7 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
     component = TestBed.createComponent(EditorCanvasComponent).componentInstance;
     state = TestBed.inject(ShapeSettingsStateService);
     shapeSettings = TestBed.inject(ShapeSettingsService);
-    elementModel = TestBed.inject(ElementModelService);
+    elementModel = TestBed.inject(EditorService);
   });
 
   it('forwards the emitted Signal Forms value object to the selected shape', () => {

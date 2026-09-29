@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ModelApiService} from '@ame/infrastructure';
+import {ModelApiPort} from '@ame/domain';
 import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {Component, inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -47,7 +47,7 @@ export class OpenElementWindowComponent implements OnInit {
   private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private modelLoaderService = inject(ModelLoaderService);
   private dialogRef = inject(MatDialogRef<OpenElementWindowComponent>);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private notificationService = inject(NotificationsService);
   private elementInfo = inject<{urn: string; file: string}>(MAT_DIALOG_DATA);
 

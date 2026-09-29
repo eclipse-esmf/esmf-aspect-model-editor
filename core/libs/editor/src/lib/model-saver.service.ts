@@ -11,8 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, ModelSaverPort, ModelService, NamespaceFile, WorkspaceStore} from '@ame/domain';
-import {ModelApiService, RdfSerializerService} from '@ame/infrastructure';
+import {
+  ConfigurationService,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelSaverPort,
+  ModelService,
+  NamespaceFile,
+  RdfPort,
+  WorkspaceStore,
+} from '@ame/domain';
 import {LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
 import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -26,8 +34,8 @@ import {TabStateService} from './tabs/tab-state.service';
 @Injectable({providedIn: 'root'})
 export class ModelSaverService implements ModelSaverPort {
   private destroyRef = inject(DestroyRef);
-  private modelApiService = inject(ModelApiService);
-  private rdfSerializer = inject(RdfSerializerService);
+  private modelApiService = inject(ModelApiPort);
+  private rdfSerializer = inject(RdfPort);
   private loadedFiles = inject(LoadedFilesService);
   private modelService = inject(ModelService);
   private modelSavingTracker = inject(ModelSavingTrackerService);

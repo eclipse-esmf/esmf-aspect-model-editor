@@ -12,14 +12,19 @@
  */
 
 import {
+  AsyncApi,
   ConfigurationService,
   DraggablePort,
   EditorValidationPort,
   FilterAttributesService,
   FiltersService,
   LoadedFilesService,
+  ModelApiPort,
   ModelService,
+  OpenApi,
+  RdfPort,
   SammLanguageSettingsService,
+  ViolationError,
 } from '@ame/domain';
 import {
   ElementModelService,
@@ -33,7 +38,6 @@ import {
   ShapeConfiguration,
   ThemeService,
 } from '@ame/graph';
-import {AsyncApi, ModelApiService, OpenApi, RdfService, ViolationError} from '@ame/infrastructure';
 import {
   AlertService,
   ChildrenArray,
@@ -55,6 +59,7 @@ import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, Inter
 import {environment} from 'environments/environment';
 import {catchError, delayWhen, finalize, first, Observable, of, retry, Subscription, switchMap, take, tap, throwError, timer} from 'rxjs';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
+import type {EditorFormModel} from './editor-dialog/forms/editor-signal-form-context';
 import {ShapeSettingsStateService} from './editor-dialog/services/shape-settings-state.service';
 import {ModelSaverService} from './model-saver.service';
 import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
@@ -71,10 +76,10 @@ export class EditorService implements DraggablePort, EditorValidationPort {
   private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private notificationsService = inject(NotificationsService);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private modelService = inject(ModelService);
   private alertService = inject(AlertService);
-  private rdfService = inject(RdfService);
+  private rdfService = inject(RdfPort);
   private sammLangService = inject(SammLanguageSettingsService);
   private confirmDialogService = inject(ConfirmDialogService);
   private elementModelService = inject(ElementModelService);
@@ -104,6 +109,11 @@ export class EditorService implements DraggablePort, EditorValidationPort {
     if (!environment.production) {
       window['angular.editorService'] = this;
     }
+  }
+
+  /** Applies the edited form values to the model element behind the given cell. */
+  updateElement(cell: Cell, formData: EditorFormModel): void {
+    this.elementModelService.updateElement(cell, formData);
   }
 
   initCanvas(): void {

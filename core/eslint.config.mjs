@@ -17,6 +17,11 @@ export default [
               sourceTag: 'type:feature',
               notDependOnLibsWithTags: ['type:shell', 'type:feature'],
             },
+            // The workbench shell composes features and reads domain state; wiring lives in the app.
+            {
+              sourceTag: 'type:shell',
+              onlyDependOnLibsWithTags: ['layer:features', 'layer:domain', 'layer:shared', 'layer:esmf'],
+            },
             // UI features without own graph rendering only talk to the domain (stores, facades, ports).
             {
               sourceTag: 'access:domain-only',
@@ -25,13 +30,7 @@ export default [
             // Layer hierarchy rules: strictly unidirectional flow downward
             {
               sourceTag: 'layer:shell',
-              onlyDependOnLibsWithTags: [
-                'layer:features',
-                'layer:shared',
-              ],
-            },
-            {
-              sourceTag: 'layer:features',
+              // The app is the composition root and wires all libraries together.
               onlyDependOnLibsWithTags: [
                 'layer:features',
                 'layer:graph',
@@ -42,11 +41,20 @@ export default [
               ],
             },
             {
+              sourceTag: 'layer:features',
+              onlyDependOnLibsWithTags: [
+                'layer:features',
+                'layer:graph',
+                'layer:domain',
+                'layer:shared',
+                'layer:esmf',
+              ],
+            },
+            {
               sourceTag: 'layer:graph',
               onlyDependOnLibsWithTags: [
                 'layer:graph',
                 'layer:domain',
-                'layer:infrastructure',
                 'layer:shared',
                 'layer:esmf',
               ],
@@ -84,7 +92,11 @@ export default [
               sourceTag: 'scope:shell',
               onlyDependOnLibsWithTags: [
                 'scope:features',
+                'scope:graph',
+                'scope:domain',
+                'scope:infrastructure',
                 'scope:shared',
+                'scope:esmf',
               ],
             },
             {
@@ -93,7 +105,6 @@ export default [
                 'scope:features',
                 'scope:graph',
                 'scope:domain',
-                'scope:infrastructure',
                 'scope:shared',
                 'scope:esmf',
               ],
@@ -103,7 +114,6 @@ export default [
               onlyDependOnLibsWithTags: [
                 'scope:graph',
                 'scope:domain',
-                'scope:infrastructure',
                 'scope:shared',
                 'scope:esmf',
               ],

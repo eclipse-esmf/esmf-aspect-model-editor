@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/domain';
-import {ModelApiService, RdfService} from '@ame/infrastructure';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -28,7 +27,7 @@ describe('AASXGenerationModalComponent', () => {
   let component: AASXGenerationModalComponent;
   let fixture: ComponentFixture<AASXGenerationModalComponent>;
   let dialogRef: MatDialogRef<AASXGenerationModalComponent>;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
 
   const aspect = new DefaultAspect({
     aspectModelUrn: 'urn:test:1.0.0#Aspect',
@@ -49,11 +48,11 @@ describe('AASXGenerationModalComponent', () => {
       ],
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           generateAASX: vi.fn(() => of('aasx blob content')),
           generatetAASasXML: vi.fn(() => of('<xml></xml>')),
         }),
-        MockProvider(RdfService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
         MockProvider(LoadedFilesService, {
@@ -62,7 +61,7 @@ describe('AASXGenerationModalComponent', () => {
       ],
     }).compileComponents();
 
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     fixture = TestBed.createComponent(AASXGenerationModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

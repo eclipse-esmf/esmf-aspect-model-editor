@@ -11,14 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MigrationStatus} from '@ame/domain';
+import {MigrationStatus, NamedRdfModel} from '@ame/domain';
 import {APP_CONFIG, AppConfig, BrowserService, IPC_RENDERER, isVersionOutdated} from '@ame/shared';
 import {HttpClient} from '@angular/common/http';
 import {inject, Injectable, signal} from '@angular/core';
 import {RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
 import {forkJoin, map, Observable, of, switchMap} from 'rxjs';
 import {ModelApiService} from './model-api.service';
-import {NamedRdfModel} from './models';
 
 @Injectable({providedIn: 'root'})
 export class MigratorApiService {

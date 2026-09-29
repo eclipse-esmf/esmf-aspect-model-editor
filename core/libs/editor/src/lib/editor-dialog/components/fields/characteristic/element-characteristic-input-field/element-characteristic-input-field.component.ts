@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils} from '@ame/domain';
-import {RdfService} from '@ame/infrastructure';
+import {CacheUtils, RdfPort} from '@ame/domain';
 import {ElementCreatorService, NotificationsService} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -59,7 +58,7 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
   private elementCreator = inject(ElementCreatorService);
   private editorDialogValidators = inject(EditorDialogValidators);
 
-  public rdfService = inject(RdfService);
+  public rdfService = inject(RdfPort);
 
   private readonly displayModel = signal('');
   private readonly characteristicModel = signal<Characteristic | null>(null);

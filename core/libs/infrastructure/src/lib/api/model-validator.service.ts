@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ViolationError} from '@ame/domain';
 import {GraphValidationErrorHighlighterPort, NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
-import {ViolationError} from './models';
 
 @Injectable({providedIn: 'root'})
 export class ModelValidatorService {

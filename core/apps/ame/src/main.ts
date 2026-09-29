@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {provideAmeFeatures} from '@ame/workbench';
 import {HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import {enableProdMode, importProvidersFrom, inject, provideZonelessChangeDetection} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
@@ -21,6 +20,7 @@ import {provideTransloco, Translation, TranslocoLoader} from '@jsverse/transloco
 import {environment} from 'environments/environment';
 import {ToastrModule} from 'ngx-toastr';
 import {AppComponent} from './app/app.component';
+import {provideAme} from './app/app.config';
 import {APP_ROUTES} from './app/app.routes';
 
 (window as any)['global'] = window;
@@ -56,7 +56,7 @@ const bootstrap = () =>
           }
         },
       }),
-      provideAmeFeatures(),
+      provideAme(),
     ],
   });
 

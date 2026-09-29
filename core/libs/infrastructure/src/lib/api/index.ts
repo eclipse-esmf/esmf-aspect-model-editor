@@ -14,5 +14,4 @@
 export * from './migrator-api.service';
 export * from './model-api.service';
 export * from './model-validator.service';
-export * from './models';
 export * from './workspace-api.facade';

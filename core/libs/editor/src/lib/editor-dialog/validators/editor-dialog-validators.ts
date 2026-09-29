@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/domain';
-import {ModelApiService} from '@ame/infrastructure';
+import {LoadedFilesService, ModelApiPort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {map, Observable, of} from 'rxjs';
@@ -22,7 +21,7 @@ export type EditorValidationErrors = Record<string, unknown>;
 
 @Injectable({providedIn: 'root'})
 export class EditorDialogValidators {
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private loadedFileService = inject(LoadedFilesService);
 
   static seeURIValue(value: string): EditorValidationErrors | null {

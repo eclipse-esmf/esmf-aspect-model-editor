@@ -21,7 +21,6 @@ import {
   ShapeSettingsService,
   ShapeSettingsStateService,
 } from '@ame/editor';
-import {ElementModelService} from '@ame/graph';
 import {ElementsSearchComponent, FilesSearchComponent} from '@ame/search';
 import {SidebarComponent} from '@ame/sidebar';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
@@ -67,7 +66,6 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private loadedFiles = inject(ModelSessionFacade);
-  private elementModelService = inject(ElementModelService);
   private editorService = inject(EditorService);
   private configurationService = inject(ConfigurationService);
   private searchStore = inject(SearchStore);
@@ -157,7 +155,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
 
   onShapeSettingsSave(formData: EditorFormModel) {
     if (this.selectedShapeForUpdate) {
-      this.elementModelService.updateElement(this.selectedShapeForUpdate, formData);
+      this.editorService.updateElement(this.selectedShapeForUpdate, formData);
     } else {
       console.info('Skip shape update because nothing is selected.');
     }

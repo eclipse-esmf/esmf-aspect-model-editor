@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {RdfModelUtil, RdfPort} from '@ame/domain';
 import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
-import {RdfModelUtil, RdfService} from '@ame/infrastructure';
 import {config, DataTypeService, ElementIconComponent} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -71,7 +71,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   public dataTypeService = inject(DataTypeService);
   public maxgraphService = inject(MaxGraphService);
-  public rdfService = inject(RdfService);
+  public rdfService = inject(RdfPort);
 
   public entitiesDisabled = signal(false);
   private readonly displayModel = signal('');

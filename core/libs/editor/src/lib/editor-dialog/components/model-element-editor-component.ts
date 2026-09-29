@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {RdfModelUtil} from '@ame/infrastructure';
+import {RdfModelUtil} from '@ame/domain';
 import {Directive, inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {filter, tap} from 'rxjs/operators';

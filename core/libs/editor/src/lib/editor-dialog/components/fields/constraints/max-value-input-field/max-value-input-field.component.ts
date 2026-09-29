@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {RdfModelUtil} from '@ame/domain';
 import {MaxGraphHelper} from '@ame/graph';
-import {RdfModelUtil} from '@ame/infrastructure';
 import {DataTypeService} from '@ame/shared';
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

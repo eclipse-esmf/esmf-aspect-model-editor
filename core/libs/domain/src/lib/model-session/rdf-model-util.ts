@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService} from '@ame/domain';
 import {RdfNamingUtil, config, getDeepLookupDataType, simpleDataTypes} from '@ame/shared';
 import {
   DefaultAspect,
@@ -38,6 +37,7 @@ import {
   Value,
 } from '@esmf/aspect-model-loader';
 import {DataFactory, NamedNode, Quad} from 'n3';
+import {LoadedFilesService} from './loaded-files.service';
 import {getSammNamespaces} from './rdf-samm-namespaces';
 
 declare const sammUDefinition: any;

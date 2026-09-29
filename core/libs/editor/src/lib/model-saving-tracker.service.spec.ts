@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService} from '@ame/domain';
+import {LoadedFilesService, ModelService, RdfPort} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {RdfService} from '@ame/infrastructure';
 import {TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -49,7 +48,7 @@ describe('ModelSavingTrackerService', () => {
       providers: [
         ModelSavingTrackerService,
         {provide: ModelService, useValue: modelServiceMock},
-        {provide: RdfService, useValue: rdfServiceMock},
+        {provide: RdfPort, useValue: rdfServiceMock},
         {provide: MaxGraphService, useValue: maxgraphServiceMock},
         {provide: LoadedFilesService, useValue: loadedFilesServiceMock},
       ],

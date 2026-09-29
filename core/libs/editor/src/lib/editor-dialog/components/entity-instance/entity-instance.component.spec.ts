@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/domain';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {RdfService} from '@ame/infrastructure';
 import {NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -59,6 +58,7 @@ describe('EntityInstanceComponent', () => {
         TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
       ],
       providers: [
+        MockProvider(ModelApiPort),
         MockProvider(EditorModelService, {
           getMetaModelElement: vi.fn(() => of(entityInstance)),
           isReadOnly: vi.fn(() => false),
@@ -70,7 +70,7 @@ describe('EntityInstanceComponent', () => {
         EditorDialogValidators,
         MockProvider(MaxGraphService),
         MockProvider(NotificationsService),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
       ],
     }).compileComponents();

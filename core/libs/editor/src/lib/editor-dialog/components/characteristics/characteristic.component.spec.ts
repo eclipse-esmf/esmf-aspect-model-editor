@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, NamespaceFile} from '@ame/domain';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {ModelApiService, RdfService} from '@ame/infrastructure';
 import {ModelElementNamingPort, NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -66,10 +65,10 @@ describe('CharacteristicComponent', () => {
           isElementExtern: vi.fn(() => false),
         }),
         MockProvider(EditorDialogValidators),
-        MockProvider(ModelApiService),
+        MockProvider(ModelApiPort),
         MockProvider(MaxGraphService),
         MockProvider(NotificationsService),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
         MockProvider(ShapeSettingsService),
         MockProvider(ModelElementNamingPort, {

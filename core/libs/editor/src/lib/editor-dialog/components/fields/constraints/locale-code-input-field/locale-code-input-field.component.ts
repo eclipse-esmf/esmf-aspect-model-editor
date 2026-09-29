@@ -10,7 +10,6 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {RdfModelUtil} from '@ame/infrastructure';
 import {Component, computed, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {disabled, form, FormField, required} from '@angular/forms/signals';
@@ -20,6 +19,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
 import {InputFieldComponent} from '../../input-field.component';
 
+import {RdfModelUtil} from '@ame/domain';
 import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 

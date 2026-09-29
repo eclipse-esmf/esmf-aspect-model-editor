@@ -11,4 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export type {NamedRdfModel} from '@ame/infrastructure';
+export type {NamedRdfModel} from '@ame/domain';

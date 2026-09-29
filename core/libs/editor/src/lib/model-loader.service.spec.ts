@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, NamespaceFile} from '@ame/domain';
-import {InstantiatorService, ModelApiService} from '@ame/infrastructure';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelInstantiatorPort, NamespaceFile} from '@ame/domain';
 import {BrowserService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -51,14 +50,14 @@ describe('ModelLoaderService', () => {
           }),
           getFile: vi.fn(),
         }),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           loadNamespacesStructure: vi.fn(() => of({})),
           fetchAllAspectMetaModel: vi.fn(() => of([])),
           fetchAllNamespaceFilesContent: vi.fn(() => of([])),
         }),
         MockProvider(NotificationsService),
         {
-          provide: InstantiatorService,
+          provide: ModelInstantiatorPort,
           useValue: {
             instantiateRemainingElements: vi.fn(),
           },
@@ -98,7 +97,7 @@ describe('ModelLoaderService', () => {
   });
 
   it('should restore files on error when renderModel fails', async () => {
-    const modelApiService = TestBed.inject(ModelApiService);
+    const modelApiService = TestBed.inject(ModelApiPort);
     vi.spyOn(modelApiService, 'loadNamespacesStructure').mockReturnValue(throwError(() => new Error('Batch load failed')));
 
     const payload = {

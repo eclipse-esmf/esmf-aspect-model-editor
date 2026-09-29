@@ -10,8 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {filterRelations, LoadedFilesService, ModelFilter, ModelTree, SammLanguageSettingsService} from '@ame/domain';
-import {RdfModelUtil} from '@ame/infrastructure';
+import {filterRelations, LoadedFilesService, ModelFilter, ModelTree, RdfModelUtil, SammLanguageSettingsService} from '@ame/domain';
 import {basicShapeGeometry, ElementPropertyUtil, ModelCompactTreeLayout, ModelHierarchicalLayout} from '@ame/shared';
 import {Injector} from '@angular/core';
 import {

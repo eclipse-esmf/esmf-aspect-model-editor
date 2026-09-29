@@ -14,6 +14,6 @@
 export * from './app-shell-initializer.component';
 export * from './editor-canvas.component';
 export * from './loading.component';
-export * from './provide-ame-features';
+export * from './provide-workbench';
 export * from './startup.service';
 export * from './tauri-tunnel.service';

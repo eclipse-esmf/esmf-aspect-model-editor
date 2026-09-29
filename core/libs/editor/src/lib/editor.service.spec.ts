@@ -11,7 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, FilterAttributesService, FiltersService, LoadedFilesService, ModelService, NamespaceFile} from '@ame/domain';
+import {
+  ConfigurationService,
+  FilterAttributesService,
+  FiltersService,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelService,
+  NamespaceFile,
+  RdfPort,
+} from '@ame/domain';
 import {
   ElementModelService,
   MaxGraphAttributeService,
@@ -21,7 +30,6 @@ import {
   MaxGraphShapeSelectorService,
   ThemeService,
 } from '@ame/graph';
-import {ModelApiService, RdfService} from '@ame/infrastructure';
 import {
   AlertService,
   ElementCreatorService,
@@ -44,8 +52,8 @@ import {ModelSaverService} from './model-saver.service';
 
 describe('EditorService', () => {
   let service: EditorService;
-  let modelApiService: ModelApiService;
-  let rdfService: RdfService;
+  let modelApiService: ModelApiPort;
+  let rdfService: RdfPort;
 
   const aspect = new DefaultAspect({
     aspectModelUrn: 'urn:test:1.0.0#Aspect',
@@ -111,7 +119,7 @@ describe('EditorService', () => {
           } as any,
         }),
         MockProvider(NotificationsService),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           generateJsonSample: vi.fn(() => of('{}')),
           generateJsonSchema: vi.fn(() => of('{}')),
           generateOpenApiSpec: vi.fn(() => of('')),
@@ -122,7 +130,7 @@ describe('EditorService', () => {
           synchronizeModelToRdf: vi.fn(() => of(undefined)),
         }),
         MockProvider(AlertService),
-        MockProvider(RdfService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
         MockProvider(ConfirmDialogService),
@@ -167,8 +175,8 @@ describe('EditorService', () => {
     });
 
     service = TestBed.inject(EditorService);
-    modelApiService = TestBed.inject(ModelApiService);
-    rdfService = TestBed.inject(RdfService);
+    modelApiService = TestBed.inject(ModelApiPort);
+    rdfService = TestBed.inject(RdfPort);
   });
 
   it('generateJsonSample should serialize model and call api', async () => {

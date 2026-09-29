@@ -11,7 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {StoragePathResponse} from '@ame/domain';
+import {
+  AsyncApi,
+  FileEntry,
+  FileInformation,
+  ModelApiPort,
+  ModelData,
+  OpenApi,
+  RdfModelUtil,
+  StoragePathResponse,
+  ViolationError,
+  WorkspaceStructure,
+} from '@ame/domain';
 import {
   APP_CONFIG,
   AppConfig,
@@ -26,12 +37,10 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable, inject} from '@angular/core';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map, retry, switchMap, tap, timeout} from 'rxjs/operators';
-import {RdfModelUtil} from '../rdf';
 import {ModelValidatorService} from './model-validator.service';
-import {AsyncApi, FileEntry, FileInformation, ModelData, OpenApi, ViolationError, WorkspaceStructure} from './models';
 
 @Injectable({providedIn: 'root'})
-export class ModelApiService {
+export class ModelApiService implements ModelApiPort {
   private readonly ipcRenderer = inject(IPC_RENDERER);
   private readonly config: AppConfig = inject(APP_CONFIG);
   private readonly http = inject(HttpClient);

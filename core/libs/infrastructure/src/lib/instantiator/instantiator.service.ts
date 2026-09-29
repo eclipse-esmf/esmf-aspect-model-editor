@@ -11,14 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/domain';
+import {LoadedFilesService, ModelInstantiatorPort, RdfModelUtil} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {CacheStrategy, NamedElement, RdfModel, useLoader} from '@esmf/aspect-model-loader';
 import {NamedNode, Triple, Util} from 'n3';
-import {RdfModelUtil} from '../rdf';
 
 @Injectable({providedIn: 'root'})
-export class InstantiatorService {
+export class InstantiatorService implements ModelInstantiatorPort {
   private readonly loadedFilesService = inject(LoadedFilesService);
 
   public instantiateRemainingElements(mergedRdfModel: RdfModel, currentRdfModel: RdfModel, cache: CacheStrategy): void {

@@ -11,8 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, ModelLoaderPort, NamespaceFile} from '@ame/domain';
-import {FileEntry, FileInformation, InstantiatorService, ModelApiService, RdfModelUtil} from '@ame/infrastructure';
+import {
+  ConfigurationService,
+  FileEntry,
+  FileInformation,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelInstantiatorPort,
+  ModelLoaderPort,
+  NamespaceFile,
+  RdfModelUtil,
+} from '@ame/domain';
 import {BrowserService, config, isVersionOutdated, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -37,9 +46,9 @@ export class ModelLoaderService implements ModelLoaderPort {
   private destroyRef = inject(DestroyRef);
   private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private notificationsService = inject(NotificationsService);
-  private instantiatorService = inject(InstantiatorService);
+  private instantiatorService = inject(ModelInstantiatorPort);
   private modelRenderer = inject(ModelRendererService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);

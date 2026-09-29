@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, ModelService, NamespaceFile} from '@ame/domain';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelService, NamespaceFile, RdfNodePort, RdfPort} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {ModelApiService, RdfNodeService, RdfService} from '@ame/infrastructure';
 import {
   IPC_RENDERER,
   LanguageTranslationService,
@@ -41,7 +40,7 @@ import {FileUploadService} from './file-upload.service';
 
 describe('FileHandlingService', () => {
   let service: FileHandlingService;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
   let modelLoaderService: ModelLoaderService;
   let loadedFilesService: LoadedFilesService;
   let loadingScreenService: LoadingScreenService;
@@ -66,10 +65,10 @@ describe('FileHandlingService', () => {
         MockProvider(ModelService, {
           synchronizeModelToRdf: vi.fn(() => of(undefined)),
         }),
-        MockProvider(RdfService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           validate: vi.fn(() => of([])),
           fetchAspectMetaModel: vi.fn(() => of({content: 'model content', sourceLocation: ''} as any)),
           fetchFormatedAspectModel: vi.fn(() => of('formatted content')),
@@ -118,7 +117,7 @@ describe('FileHandlingService', () => {
         }),
         MockProvider(ModelSaverService),
         MockProvider(TitleService, {updateTitle: vi.fn()}),
-        {provide: RdfNodeService, useValue: {updateQuads: vi.fn()}},
+        {provide: RdfNodePort, useValue: {updateQuads: vi.fn()}},
         MockProvider(TabStateService, {
           onModelLoaded: vi.fn(),
           isActiveTabCleanEmpty: vi.fn(() => true),
@@ -130,7 +129,7 @@ describe('FileHandlingService', () => {
     });
 
     service = TestBed.inject(FileHandlingService);
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     modelLoaderService = TestBed.inject(ModelLoaderService);
     loadedFilesService = TestBed.inject(LoadedFilesService);
     loadingScreenService = TestBed.inject(LoadingScreenService);
