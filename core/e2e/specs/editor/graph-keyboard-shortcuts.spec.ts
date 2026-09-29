@@ -44,7 +44,8 @@ test.describe('Graph Keyboard Shortcuts', () => {
     // Open edit dialog
     await app.dbClickShape('AspectDefault');
 
-    const dialog = page.locator('mat-dialog-container');
+    // The edit dialog is rendered as the shape settings side panel
+    const dialog = page.locator('ame-shape-settings');
     await expect(dialog).toBeVisible();
 
     // Press Escape to dismiss

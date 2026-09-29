@@ -15,6 +15,7 @@ import {LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {ChangeDetectorRef, Component, DestroyRef, effect, inject, input, OnInit, output, signal, untracked} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement, Unit} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
@@ -40,6 +41,7 @@ import {SharedSettingsTitleComponent} from './shared-settings-title/shared-setti
   selector: 'ame-shape-settings',
   host: {
     '(window:keydown.control.enter)': 'saveOnKeyControlEnterEvent()',
+    '(window:keydown.escape)': 'closeOnEscapeEvent($event)',
   },
   templateUrl: './shape-settings.component.html',
   styleUrls: ['./shape-settings.component.scss'],
@@ -69,6 +71,7 @@ export class ShapeSettingsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private languageSettings = inject(SammLanguageSettingsService);
   private changeDetector = inject(ChangeDetectorRef);
+  private dialog = inject(MatDialog);
 
   public metaModelDialogService = inject(EditorModelService);
   public loadedFilesService = inject(LoadedFilesService);
@@ -101,6 +104,14 @@ export class ShapeSettingsComponent implements OnInit {
     if (this.isOpened()) {
       this.onSave();
     }
+  }
+
+  closeOnEscapeEvent(event: Event) {
+    // Nested overlays (autocomplete, select, menu) consume Escape themselves via preventDefault
+    if (!this.isOpened() || event.defaultPrevented || this.dialog.openDialogs.length > 0) {
+      return;
+    }
+    this.onClose();
   }
 
   ngOnInit() {

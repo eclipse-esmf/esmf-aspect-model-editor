@@ -57,8 +57,10 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
         body: JSON.stringify([
           {
             aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#SampleModel',
-            sourceLocation: 'SampleModel.ttl',
-            content: readFixture('default-models/aspect-default.txt'),
+            aspectModel: readFixture('default-models/aspect-default.txt'),
+            absoluteName: 'org.eclipse.examples.aspect:1.0.0:SampleModel.ttl',
+            fileName: 'SampleModel.ttl',
+            modelVersion: SAMM_VERSION_ACTUAL,
           },
         ]),
       });
@@ -72,6 +74,8 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
     await page.locator(SELECTOR_workspaceBtn).click({force: true});
     await expect(page.locator('ame-workspace-file-list')).toBeVisible();
 
+    // The file menu button is only rendered on hover of the file row
+    await page.getByRole('button', {name: 'Select file SampleModel.ttl'}).hover();
     const fileMenuBtn = page.locator(SELECTOR_openFileMenu).first();
     await expect(fileMenuBtn).toBeVisible({timeout: 10000});
     await fileMenuBtn.click();
@@ -105,22 +109,22 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
     await page.locator(SELECTOR_workspaceBtn).click({force: true});
     await expect(page.locator('ame-workspace-file-list')).toBeVisible();
 
+    // The file menu button is only rendered on hover of the file row
+    await page.getByRole('button', {name: 'Select file SampleModel.ttl'}).hover();
     const fileMenuBtn = page.locator(SELECTOR_openFileMenu).first();
     await expect(fileMenuBtn).toBeVisible({timeout: 10000});
     await fileMenuBtn.click();
 
     const deleteBtn = page.locator(SELECTOR_fileMenuDeleteButton);
-    if ((await deleteBtn.isVisible()) && (await deleteBtn.isEnabled())) {
-      await deleteBtn.click();
+    await expect(deleteBtn).toBeEnabled();
+    await deleteBtn.click();
 
-      // Confirm dialog appears
-      const dialog = page.locator('mat-dialog-container');
-      await expect(dialog).toBeVisible();
+    // Confirm dialog appears
+    const dialog = page.locator('mat-dialog-container');
+    await expect(dialog).toBeVisible();
 
-      // Cancel button aborts delete
-      const cancelBtn = dialog.locator('button').filter({hasText: /cancel/i});
-      await cancelBtn.click();
-      await expect(dialog).not.toBeVisible();
-    }
+    // Closing the confirmation aborts the delete
+    await dialog.locator('[data-testid="cancelBtn"]').click();
+    await expect(dialog).not.toBeVisible();
   });
 });

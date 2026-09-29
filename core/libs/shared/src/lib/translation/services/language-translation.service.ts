@@ -15,7 +15,7 @@ import {HttpClient} from '@angular/common/http';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Translation, TranslocoService} from '@jsverse/transloco';
-import {Observable, switchMap, tap} from 'rxjs';
+import {firstValueFrom, Observable, of, switchMap, tap} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class LanguageTranslationService {
@@ -29,6 +29,7 @@ export class LanguageTranslationService {
   ];
 
   public language: Translation;
+  private loadedLanguage: string | null = null;
 
   get supportedLanguages(): {code: string; language: string}[] {
     return this._supportedLanguages;
@@ -50,10 +51,28 @@ export class LanguageTranslationService {
       .subscribe();
   }
 
+  getApplicationLanguage(): string {
+    return localStorage.getItem('applicationLanguage') || this.translate.getDefaultLang();
+  }
+
+  /** Loads the translation of the application language up front so `language` is never undefined. */
+  preloadTranslation(): Promise<void> {
+    return firstValueFrom(this.getTranslation(this.getApplicationLanguage()))
+      .then(() => undefined)
+      .catch(() => undefined);
+  }
+
   getTranslation(language: string): Observable<Translation> {
+    if (this.language && this.loadedLanguage === language) {
+      return of(this.language);
+    }
+
     return this.http.get<Translation>(`./assets/i18n/${language}.json`).pipe(
       takeUntilDestroyed(this.destroyRef),
-      tap((translation: Translation) => (this.language = translation)),
+      tap((translation: Translation) => {
+        this.language = translation;
+        this.loadedLanguage = language;
+      }),
     );
   }
 }

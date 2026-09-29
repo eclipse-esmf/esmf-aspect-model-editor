@@ -30,7 +30,7 @@ test.describe('Unit field required validation for Measurement & Duration', () =>
     await page.locator(FIELD_characteristicName).click();
     await page.locator('mat-option[data-testid="Measurement"]').click();
 
-    const unitFormField = page.locator('input[data-cy="unit"]').locator('xpath=ancestor::mat-form-field');
+    const unitFormField = page.locator('input[data-testid="unit"]').locator('xpath=ancestor::mat-form-field');
     await expect(unitFormField.locator('.mat-mdc-form-field-required-marker')).toBeVisible();
   });
 
@@ -39,7 +39,7 @@ test.describe('Unit field required validation for Measurement & Duration', () =>
     await page.locator(FIELD_characteristicName).click();
     await page.locator('mat-option[data-testid="Duration"]').click();
 
-    const unitFormField = page.locator('input[data-cy="unit"]').locator('xpath=ancestor::mat-form-field');
+    const unitFormField = page.locator('input[data-testid="unit"]').locator('xpath=ancestor::mat-form-field');
     await expect(unitFormField.locator('.mat-mdc-form-field-required-marker')).toBeVisible();
   });
 
@@ -48,7 +48,7 @@ test.describe('Unit field required validation for Measurement & Duration', () =>
     await page.locator(FIELD_characteristicName).click();
     await page.locator('mat-option[data-testid="Quantifiable"]').click();
 
-    const unitFormField = page.locator('input[data-cy="unit"]').locator('xpath=ancestor::mat-form-field');
+    const unitFormField = page.locator('input[data-testid="unit"]').locator('xpath=ancestor::mat-form-field');
     await expect(unitFormField.locator('.mat-mdc-form-field-required-marker')).not.toBeVisible();
   });
 });

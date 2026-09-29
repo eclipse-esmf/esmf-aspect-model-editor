@@ -50,6 +50,11 @@ test.describe('Editor - Operations & Events', () => {
     await app.clickAddInputShapeIcon('operation1');
     await app.clickAddOutputShapeIcon('operation1');
 
+    // Wait until the asynchronously named properties are rendered before editing the operation
+    for (const property of ['property2', 'property3', 'property4']) {
+      await app.shapeExists(property);
+    }
+
     await app.dbClickShape('operation1');
     await page.locator(FIELD_name).clear();
     await page.locator(FIELD_name).fill('newOperation');

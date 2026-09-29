@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultCharacteristic, DefaultProperty} from '@esmf/aspect-model-loader';
-import {firstValueFrom, of} from 'rxjs';
+import {firstValueFrom, of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {LoadedFilesService} from '../../model-session';
 import {ModelApiPort} from '../../ports/model-api.port';
@@ -118,6 +118,21 @@ describe('ModelElementNamingService', () => {
 
     expect(resolved.name).toBe('Characteristic2');
     expect(resolved.aspectModelUrn).toBe('urn:samm:org.eclipse.esmf.test#Characteristic2');
+  });
+
+  it('should assign distinct names to concurrent asynchronous resolutions', () => {
+    const backend = new Subject<boolean>();
+    mockModelApiService.checkElementExists.mockReturnValue(backend);
+
+    const first = new DefaultProperty({name: 'property', aspectModelUrn: '', metaModelVersion: '2.2.0'});
+    const second = new DefaultProperty({name: 'property', aspectModelUrn: '', metaModelVersion: '2.2.0'});
+    service.resolveElementNaming$(first).subscribe();
+    service.resolveElementNaming$(second).subscribe();
+    backend.next(false);
+    backend.complete();
+
+    expect(first.name).toBe('property1');
+    expect(second.name).toBe('property2');
   });
 
   it('should resolve property and its child characteristic via RxJS when characteristic exists in backend', async () => {

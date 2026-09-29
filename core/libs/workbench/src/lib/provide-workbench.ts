@@ -11,14 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, config, TauriTunnelPort} from '@ame/shared';
-import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
+import {APP_CONFIG, config, LanguageTranslationService, TauriTunnelPort} from '@ame/shared';
+import {EnvironmentProviders, inject, makeEnvironmentProviders, provideAppInitializer} from '@angular/core';
 import {TauriTunnelService} from './tauri-tunnel.service';
 
-/** Shell-level providers: app configuration and the Tauri tunnel. */
+/** Shell-level providers: app configuration, the Tauri tunnel and preloaded translations. */
 export function provideWorkbench(): EnvironmentProviders {
   return makeEnvironmentProviders([
     {provide: APP_CONFIG, useValue: config},
     {provide: TauriTunnelPort, useExisting: TauriTunnelService},
+    provideAppInitializer(() => inject(LanguageTranslationService).preloadTranslation()),
   ]);
 }

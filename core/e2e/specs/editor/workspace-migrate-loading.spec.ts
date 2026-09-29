@@ -15,6 +15,7 @@ import {expect, test} from '@playwright/test';
 import {API_BASE_URL, NAMESPACES_URL, setUpDefaultRoutes} from '../../support/api-mocks';
 import {AppHelper} from '../../support/app-helper';
 import {SELECTOR_workspaceBtn} from '../../support/constants';
+import {readFixture} from '../../support/drag-drop-utils';
 
 test.describe('Workspace - Migration Button Loading State', () => {
   test('migration button displays spinner and is disabled while loading', async ({page}) => {
@@ -51,7 +52,15 @@ test.describe('Workspace - Migration Button Loading State', () => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify([]),
+        body: JSON.stringify([
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#OutdatedModel',
+            aspectModel: readFixture('default-models/aspect-default.txt'),
+            absoluteName: 'org.eclipse.examples.aspect:1.0.0:OutdatedModel.ttl',
+            fileName: 'OutdatedModel.ttl',
+            modelVersion: '1.0.0',
+          },
+        ]),
       });
     });
 

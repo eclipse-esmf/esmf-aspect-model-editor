@@ -13,7 +13,7 @@
 
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {catchError, concatMap, EMPTY, expand, forkJoin, last, map, Observable, of} from 'rxjs';
+import {catchError, concatMap, EMPTY, expand, finalize, forkJoin, last, map, Observable, of} from 'rxjs';
 import {LoadedFilesService} from '../../model-session';
 import {GraphNavigatorPort} from '../../ports/graph-navigator.port';
 import {ModelApiPort} from '../../ports/model-api.port';
@@ -23,6 +23,21 @@ export class ModelElementNamingService {
   private readonly loadedFiles = inject(LoadedFilesService);
   private readonly injector = inject(Injector);
   private readonly modelRepository = inject(ModelApiPort, {optional: true});
+  // URNs claimed by elements whose asynchronous name resolution is still in flight
+  private readonly pendingUrns = new Map<string, NamedElement>();
+
+  private isPendingForOther(urn: string, element: NamedElement): boolean {
+    const owner = this.pendingUrns.get(urn);
+    return !!owner && owner !== element;
+  }
+
+  private releaseUrn(element: NamedElement): void {
+    for (const [urn, owner] of this.pendingUrns) {
+      if (owner === element) {
+        this.pendingUrns.delete(urn);
+      }
+    }
+  }
 
   private get graphNavigator(): GraphNavigatorPort | null {
     return this.injector.get<GraphNavigatorPort | null>(GraphNavigatorPort, null, {optional: true});
@@ -177,6 +192,7 @@ export class ModelElementNamingService {
       parentName = undefined;
     } while (
       elements[candidateUrn] ||
+      this.isPendingForOther(candidateUrn, element) ||
       (this.loadedFiles.currentLoadedFile.cachedFile?.get<NamedElement>(candidateUrn) &&
         this.loadedFiles.currentLoadedFile.cachedFile.get<NamedElement>(candidateUrn) !== element)
     );
@@ -203,9 +219,11 @@ export class ModelElementNamingService {
     const checkCandidate = (name: string, urn: string): Observable<{exists: boolean; name: string; urn: string}> => {
       const cached = this.loadedFiles.currentLoadedFile.cachedFile?.get<NamedElement>(urn);
       const isCachedCollision = Boolean(cached && cached !== element);
-      if (isCachedCollision) {
+      if (isCachedCollision || this.isPendingForOther(urn, element)) {
         return of({exists: true, name, urn});
       }
+      this.releaseUrn(element);
+      this.pendingUrns.set(urn, element);
       return this.modelRepository.checkElementExists(urn, fileName).pipe(
         map(exists => ({exists, name, urn})),
         catchError(() => of({exists: false, name, urn})),
@@ -231,6 +249,7 @@ export class ModelElementNamingService {
         }
         return element;
       }),
+      finalize(() => this.releaseUrn(element)),
     );
   }
 

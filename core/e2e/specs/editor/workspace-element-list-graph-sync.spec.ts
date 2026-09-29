@@ -15,7 +15,7 @@ import {expect, test} from '@playwright/test';
 import {API_BASE_URL, MODELS_API_URL, NAMESPACES_URL, SAMM_VERSION_ACTUAL, setUpDefaultRoutes} from '../../support/api-mocks';
 import {AppHelper} from '../../support/app-helper';
 import {SELECTOR_tbDeleteButton, SELECTOR_workspaceBtn} from '../../support/constants';
-import {dragToEditor, readFixture} from '../../support/drag-drop-utils';
+import {dragElementToGraph, readFixture} from '../../support/drag-drop-utils';
 
 test.describe('Workspace element list dynamic update on graph element removal', () => {
   test('element in workspace list becomes disabled when added and re-enabled when deleted from graph', async ({page}) => {
@@ -62,8 +62,17 @@ test.describe('Workspace element list dynamic update on graph element removal', 
         body: JSON.stringify([
           {
             aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#AspectDefault',
-            sourceLocation: 'AspectDefault.ttl',
-            content: readFixture('default-models/aspect-default.txt'),
+            aspectModel: readFixture('default-models/aspect-default.txt'),
+            absoluteName: 'org.eclipse.examples.aspect:1.0.0:AspectDefault.ttl',
+            fileName: 'AspectDefault.ttl',
+            modelVersion: SAMM_VERSION_ACTUAL,
+          },
+          {
+            aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#AspectElements',
+            aspectModel: rdfString,
+            absoluteName: 'org.eclipse.examples.aspect:1.0.0:AspectElements.ttl',
+            fileName: 'AspectElements.ttl',
+            modelVersion: SAMM_VERSION_ACTUAL,
           },
         ]),
       });
@@ -92,20 +101,18 @@ test.describe('Workspace element list dynamic update on graph element removal', 
     await expect(draggableElement).toBeVisible();
     await expect(draggableElement).not.toHaveClass(/disabled/);
 
+    const elementUrn = (await draggableElement.getAttribute('data-urn')) ?? '';
+    const elementName = elementUrn.split('#').pop() ?? '';
+
     // Drag the element into the graph
-    await dragToEditor(page, draggableElement, 350, 250);
+    await dragElementToGraph(page, 'ame-draggable-element.element', 350, 250);
 
     // After adding to graph, the element in the workspace list should now be disabled
     await expect(draggableElement).toHaveClass(/disabled/, {timeout: 5000});
 
     // Delete element from the graph
-    await page.locator('svg').click({position: {x: 350, y: 250}});
-    const deleteBtn = page.locator(SELECTOR_tbDeleteButton);
-    if (await deleteBtn.isVisible()) {
-      await deleteBtn.click();
-    } else {
-      await page.keyboard.press('Delete');
-    }
+    await helper.clickShape(elementName);
+    await page.locator(SELECTOR_tbDeleteButton).click();
 
     // Element in workspace list must immediately update to enabled without manual refresh
     await expect(draggableElement).not.toHaveClass(/disabled/, {timeout: 5000});
