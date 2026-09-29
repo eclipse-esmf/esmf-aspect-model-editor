@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NAMESPACES_MANAGER_SERVICE, TauriSignalsService} from '@ame/shared';
+import {NamespacesManagerService} from '@ame/infrastructure';
+import {TauriSignalsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslocoTestingModule} from '@jsverse/transloco';
@@ -40,7 +41,7 @@ describe('WorkspaceEmptyComponent', () => {
         TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
       ],
       providers: [
-        {provide: NAMESPACES_MANAGER_SERVICE, useValue: namespacesManagerMock},
+        {provide: NamespacesManagerService, useValue: namespacesManagerMock},
         {provide: TauriSignalsService, useValue: tauriSignalsMock},
       ],
     });

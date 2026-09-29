@@ -11,20 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {FiltersService} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  FILTERS_SERVICE,
-  IFiltersService,
-  INamespacesManagerService,
-  IPC_RENDERER,
-  ITauriIpcBridge,
-  LanguageTranslationService,
-  MODEL_SAVING_TRACKER_SERVICE,
-  ModelFilter,
-  NAMESPACES_MANAGER_SERVICE,
-  TAURI_EVENTS,
-} from '@ame/shared';
+import {LoadedFilesService, NamespacesManagerService} from '@ame/infrastructure';
+import {IPC_RENDERER, ITauriIpcBridge, LanguageTranslationService, ModelFilter, TAURI_EVENTS} from '@ame/shared';
 import {DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
@@ -35,6 +25,7 @@ import {TextModelLoaderModalComponent} from '../editor-toolbar/components/text-m
 import {FileHandlingService, FileInfo} from '../editor-toolbar/services/file-handling.service';
 import {GenerateHandlingService} from '../editor-toolbar/services/generate-handling.service';
 import {EditorService} from '../editor.service';
+import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';
 
 const HAS_CELLS_MENU_IDS = [
@@ -65,15 +56,15 @@ export class EditorTauriBridge implements ITauriIpcBridge {
   private ipcRenderer = inject(IPC_RENDERER);
   private destroyRef = inject(DestroyRef);
   private loadedFiles = inject(LoadedFilesService);
-  private modelSavingTracker = inject(MODEL_SAVING_TRACKER_SERVICE);
+  private modelSavingTracker = inject(ModelSavingTrackerService);
   private saveModelDialogService = inject(SaveModelDialogService);
   private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
-  private namespacesManagerService: INamespacesManagerService = inject(NAMESPACES_MANAGER_SERVICE);
+  private namespacesManagerService = inject(NamespacesManagerService);
   private fileHandlingService = inject(FileHandlingService);
   private generateHandlingService = inject(GenerateHandlingService);
   private editorService = inject(EditorService);
-  private filtersService: IFiltersService = inject(FILTERS_SERVICE);
+  private filtersService = inject(FiltersService);
   private shapeConnectorService = inject(ShapeConnectorService);
   private matDialog = inject(MatDialog);
   private translate = inject(LanguageTranslationService);

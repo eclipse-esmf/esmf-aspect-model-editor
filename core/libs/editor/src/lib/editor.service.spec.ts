@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ElementModelService, FilterAttributesService, FiltersService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphService,
@@ -23,10 +24,7 @@ import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfSer
 import {
   AlertService,
   CONFIGURATION_SERVICE,
-  ELEMENT_MODEL_SERVICE,
   ElementCreatorService,
-  FILTER_ATTRIBUTES,
-  FILTERS_SERVICE,
   LanguageTranslationService,
   LoadingScreenService,
   MODEL_ELEMENT_NAMING_SERVICE,
@@ -73,8 +71,8 @@ describe('EditorService', () => {
     TestBed.configureTestingModule({
       providers: [
         EditorService,
-        {provide: FILTERS_SERVICE, useValue: mockFiltersService},
-        {provide: FILTER_ATTRIBUTES, useValue: {isFiltering: false, changeState: vi.fn()}},
+        {provide: FiltersService, useValue: mockFiltersService},
+        {provide: FilterAttributesService, useValue: {isFiltering: false, changeState: vi.fn()}},
         MockProvider(CONFIGURATION_SERVICE, {
           getSettings: vi.fn(
             () =>
@@ -128,7 +126,7 @@ describe('EditorService', () => {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
         MockProvider(ConfirmDialogService),
-        {provide: ELEMENT_MODEL_SERVICE, useValue: mockElementModel},
+        {provide: ElementModelService, useValue: mockElementModel},
         MockProvider(TitleService),
         MockProvider(ThemeService, {
           currentColors: {border: '#000000', font: '#000000'} as any,
@@ -188,7 +186,7 @@ describe('EditorService', () => {
   });
 
   it('deleteSelectedElements should delegate edge deletion to elementModelService when only edge is selected', () => {
-    const elementModelService = TestBed.inject(ELEMENT_MODEL_SERVICE);
+    const elementModelService = TestBed.inject(ElementModelService);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const edge = {isEdge: () => true, isVertex: () => false} as any;
     vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([edge]);
@@ -199,7 +197,7 @@ describe('EditorService', () => {
   });
 
   it('deleteSelectedElements should delete vertex cells only when both vertex and edge are selected', () => {
-    const elementModelService = TestBed.inject(ELEMENT_MODEL_SERVICE);
+    const elementModelService = TestBed.inject(ElementModelService);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const maxgraphService = TestBed.inject(MaxGraphService);
     (maxgraphService as any).graph = {getOutgoingEdges: vi.fn(() => [])};
@@ -217,7 +215,7 @@ describe('EditorService', () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const maxgraphSetupService = TestBed.inject(MaxGraphSetupService);
     const elementCreatorService = TestBed.inject(ElementCreatorService);
-    const filtersService = TestBed.inject(FILTERS_SERVICE);
+    const filtersService = TestBed.inject(FiltersService);
 
     (maxgraphService as any).isModelEmpty = vi.fn(() => true);
     maxgraphService.renderModelElement = vi.fn(() => ({id: 'mock-cell'}) as any);
@@ -247,7 +245,7 @@ describe('EditorService', () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const maxgraphAttributeService = TestBed.inject(MaxGraphAttributeService);
     const elementCreatorService = TestBed.inject(ElementCreatorService);
-    const filtersService = TestBed.inject(FILTERS_SERVICE);
+    const filtersService = TestBed.inject(FiltersService);
 
     const mockContainer = {clientWidth: 1000, clientHeight: 800} as HTMLDivElement;
     (maxgraphAttributeService as any).graph.getContainer = vi.fn(() => mockContainer);
@@ -273,7 +271,7 @@ describe('EditorService', () => {
   it('createElement with aspectModelUrn should render only the reference and clear any children', async () => {
     const maxgraphService = TestBed.inject(MaxGraphService);
     const loadedFilesService = TestBed.inject(LoadedFilesService);
-    const filtersService = TestBed.inject(FILTERS_SERVICE);
+    const filtersService = TestBed.inject(FiltersService);
 
     (maxgraphService as any).isModelEmpty = vi.fn(() => false);
     maxgraphService.resolveCellByModelElement = vi.fn(() => null);

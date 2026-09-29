@@ -17,7 +17,7 @@ import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {FILTER_ATTRIBUTES} from './active-filter.session';
+import {FilterAttributesService} from './active-filter.session';
 import {DefaultFilter, PropertiesFilterLoader} from './filters';
 import {FiltersService} from './filters.service';
 import {ModelFilter} from './models';
@@ -62,14 +62,14 @@ describe('FiltersService', () => {
   it('should be created and initialized with DefaultFilter', () => {
     expect(service).toBeTruthy();
     expect(service.currentFilter).toBeInstanceOf(DefaultFilter);
-    expect(TestBed.inject(FILTER_ATTRIBUTES).activeFilter).toBe(ModelFilter.DEFAULT);
+    expect(TestBed.inject(FilterAttributesService).activeFilter).toBe(ModelFilter.DEFAULT);
   });
 
   it('should switch to PropertiesFilter', () => {
     service.selectPropertiesFilter();
 
     expect(service.currentFilter).toBeInstanceOf(PropertiesFilterLoader);
-    expect(TestBed.inject(FILTER_ATTRIBUTES).activeFilter).toBe(ModelFilter.PROPERTIES);
+    expect(TestBed.inject(FilterAttributesService).activeFilter).toBe(ModelFilter.PROPERTIES);
   });
 
   it('should filter elements and store in filteredTree', () => {

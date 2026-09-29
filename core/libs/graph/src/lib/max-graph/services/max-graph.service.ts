@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FILTER_ATTRIBUTES, ModelTree} from '@ame/domain';
+import {FilterAttributesService, ModelTree} from '@ame/domain';
 import {CacheUtils, LoadedFilesService} from '@ame/infrastructure';
 import {CONFIGURATION_SERVICE, IConfigurationService, NotificationsService, overlayGeometry} from '@ame/shared';
 import {computed, inject, Injectable, signal} from '@angular/core';
@@ -35,7 +35,7 @@ export interface Coordinates {
 
 @Injectable({providedIn: 'root'})
 export class MaxGraphService {
-  private readonly filterAttributes = inject(FILTER_ATTRIBUTES);
+  private readonly filterAttributes = inject(FilterAttributesService);
   private readonly loadedFiles = inject(LoadedFilesService);
   private readonly configurationService: IConfigurationService = inject(CONFIGURATION_SERVICE);
   private readonly graphSetupService = inject(MaxGraphSetupService);

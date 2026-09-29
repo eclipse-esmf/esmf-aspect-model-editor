@@ -13,16 +13,8 @@
 
 import {SearchStore} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
-import {
-  BindingsService,
-  BrowserService,
-  CONFIGURATION_SERVICE,
-  DOMAIN_MODEL_TO_RDF_SERVICE,
-  IDomainModelToRdfService,
-  IPC_RENDERER,
-  LanguageTranslationService,
-  TitleService,
-} from '@ame/shared';
+import {DomainModelToRdfService} from '@ame/infrastructure';
+import {BindingsService, BrowserService, CONFIGURATION_SERVICE, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {Component, inject, Injector, OnInit, signal} from '@angular/core';
 import {take} from 'rxjs';
 import {StartupService} from './startup.service';
@@ -47,7 +39,7 @@ export class AppShellInitializer implements OnInit {
   private ipcRenderer = inject(IPC_RENDERER);
   private titleService = inject(TitleService);
   private bindingsService = inject(BindingsService);
-  private domainModelToRdf: IDomainModelToRdfService = inject(DOMAIN_MODEL_TO_RDF_SERVICE);
+  private domainModelToRdf = inject(DomainModelToRdfService);
   private browserService = inject(BrowserService);
   private tauriTunnelService = inject(TauriTunnelService);
   private configurationService = inject(CONFIGURATION_SERVICE);

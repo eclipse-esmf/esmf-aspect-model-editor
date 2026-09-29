@@ -15,7 +15,7 @@ import {LoadedFilesService} from '@ame/infrastructure';
 import {GRAPH_FILTER_RENDERER, IGraphFilterRenderer} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {FILTER_ATTRIBUTES} from './active-filter.session';
+import {FilterAttributesService} from './active-filter.session';
 import {DefaultFilter} from './filters/default-filter';
 import {PropertiesFilterLoader} from './filters/properties-filter';
 import {FilterLoader, ModelFilter, ModelTree, ModelTreeOptions} from './models';
@@ -33,7 +33,7 @@ export type FilteredTrees = {
 @Injectable({providedIn: 'root'})
 export class FiltersService {
   private readonly injector = inject(Injector);
-  private readonly filterAttributesService = inject(FILTER_ATTRIBUTES);
+  private readonly filterAttributesService = inject(FilterAttributesService);
 
   private readonly filtersMethods: Record<ModelFilter, () => void> = {
     [ModelFilter.DEFAULT]: () => this.selectDefaultFilter(),

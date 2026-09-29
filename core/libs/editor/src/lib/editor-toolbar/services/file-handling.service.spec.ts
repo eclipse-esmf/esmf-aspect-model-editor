@@ -12,14 +12,13 @@
  */
 
 import {MaxGraphService} from '@ame/graph';
-import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfService} from '@ame/infrastructure';
+import {LoadedFilesService, ModelApiService, ModelService, NamespaceFile, RdfNodeService, RdfService} from '@ame/infrastructure';
 import {
   CONFIGURATION_SERVICE,
   IPC_RENDERER,
   LanguageTranslationService,
   LoadingScreenService,
   NotificationsService,
-  RDF_NODE_SERVICE,
   TauriSignalsService,
   TitleService,
 } from '@ame/shared';
@@ -119,7 +118,7 @@ describe('FileHandlingService', () => {
         }),
         MockProvider(ModelSaverService),
         MockProvider(TitleService, {updateTitle: vi.fn()}),
-        {provide: RDF_NODE_SERVICE, useValue: {updateQuads: vi.fn()}},
+        {provide: RdfNodeService, useValue: {updateQuads: vi.fn()}},
         MockProvider(TabStateService, {
           onModelLoaded: vi.fn(),
           isActiveTabCleanEmpty: vi.fn(() => true),

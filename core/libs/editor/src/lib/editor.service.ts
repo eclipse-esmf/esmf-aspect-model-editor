@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ElementModelService, FilterAttributesService, FiltersService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -27,16 +28,10 @@ import {
   AlertService,
   ChildrenArray,
   CONFIGURATION_SERVICE,
-  ELEMENT_MODEL_SERVICE,
   ElementCreatorService,
-  FILTER_ATTRIBUTES,
-  FILTERS_SERVICE,
   IConfigurationService,
   IDraggableService,
   IEditorValidationService,
-  IElementModelService,
-  IFilterAttributesService,
-  IFiltersService,
   IModelElementNamingService,
   LanguageTranslationService,
   LoadingScreenService,
@@ -64,8 +59,8 @@ export {IDraggableService, IEditorValidationService};
 
 @Injectable({providedIn: 'root'})
 export class EditorService implements IDraggableService, IEditorValidationService {
-  private filtersService: IFiltersService = inject(FILTERS_SERVICE);
-  private filterAttributes: IFilterAttributesService = inject(FILTER_ATTRIBUTES);
+  private filtersService = inject(FiltersService);
+  private filterAttributes = inject(FilterAttributesService);
   private configurationService: IConfigurationService = inject(CONFIGURATION_SERVICE);
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
   private maxgraphService = inject(MaxGraphService);
@@ -80,7 +75,7 @@ export class EditorService implements IDraggableService, IEditorValidationServic
   private rdfService = inject(RdfService);
   private sammLangService = inject(SAMM_LANGUAGE_SETTINGS_SERVICE);
   private confirmDialogService = inject(ConfirmDialogService);
-  private elementModelService: IElementModelService = inject(ELEMENT_MODEL_SERVICE);
+  private elementModelService = inject(ElementModelService);
   private titleService = inject(TitleService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private loadingScreenService = inject(LoadingScreenService);

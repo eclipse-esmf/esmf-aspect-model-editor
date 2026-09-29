@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {INamespacesManagerService, NAMESPACES_MANAGER_SERVICE, TauriSignalsService} from '@ame/shared';
+import {NamespacesManagerService} from '@ame/infrastructure';
+import {TauriSignalsService} from '@ame/shared';
 import {Component, inject, input} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -24,7 +25,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
   imports: [MatProgressSpinner, MatButton, TranslocoDirective],
 })
 export class WorkspaceEmptyComponent {
-  private namespacesManagerService: INamespacesManagerService = inject(NAMESPACES_MANAGER_SERVICE);
+  private namespacesManagerService = inject(NamespacesManagerService);
   private tauriSignalsService = inject(TauriSignalsService);
 
   private file: File | null = null;

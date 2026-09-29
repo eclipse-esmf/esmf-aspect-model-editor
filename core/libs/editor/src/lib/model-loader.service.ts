@@ -11,14 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileEntry, FileInformation, LoadedFilesService, ModelApiService, NamespaceFile, RdfModelUtil} from '@ame/infrastructure';
+import {
+  FileEntry,
+  FileInformation,
+  InstantiatorService,
+  LoadedFilesService,
+  ModelApiService,
+  NamespaceFile,
+  RdfModelUtil,
+} from '@ame/infrastructure';
 import {
   BrowserService,
   config,
   CONFIGURATION_SERVICE,
-  IInstantiatorService,
   IModelLoaderService,
-  INSTANTIATOR_SERVICE,
   isVersionOutdated,
   NotificationsService,
   TauriSignalsService,
@@ -49,7 +55,7 @@ export class ModelLoaderService implements IModelLoaderService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelApiService = inject(ModelApiService);
   private notificationsService = inject(NotificationsService);
-  private instantiatorService: IInstantiatorService = inject(INSTANTIATOR_SERVICE);
+  private instantiatorService = inject(InstantiatorService);
   private modelRenderer = inject(ModelRendererService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);

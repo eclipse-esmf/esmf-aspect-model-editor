@@ -21,6 +21,7 @@ import {
   ModelService,
   NamespaceFile,
   RdfModelUtil,
+  RdfNodeService,
   RdfService,
 } from '@ame/infrastructure';
 import {
@@ -31,12 +32,10 @@ import {
   GeneralConfig,
   IFileHandlingService,
   IPC_RENDERER,
-  IRdfNodeService,
   LanguageTranslationService,
   LoadingScreenOptions,
   LoadingScreenService,
   NotificationsService,
-  RDF_NODE_SERVICE,
   readFile,
   SaveValidateErrorsCodes,
   TauriSignalsService,
@@ -114,7 +113,7 @@ export class FileHandlingService implements IFileHandlingService {
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
   private ipcRenderer = inject(IPC_RENDERER, {optional: true});
-  private rdfNodeService: IRdfNodeService = inject(RDF_NODE_SERVICE);
+  private rdfNodeService = inject(RdfNodeService);
   private injector = inject(Injector);
 
   private get tabStateService(): TabStateService {

@@ -11,14 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FILTER_ATTRIBUTES, IFilterAttributesService} from '@ame/shared';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {ModelFilter} from './models';
 
-export {FILTER_ATTRIBUTES, IFilterAttributesService};
-export type FilterAttributesService = IFilterAttributesService;
-
-class FilterAttributes implements FilterAttributesService {
+@Injectable({providedIn: 'root'})
+export class FilterAttributesService {
   #activeFilter = ModelFilter.DEFAULT;
   private activeFilterSubject$ = new BehaviorSubject<ModelFilter>(ModelFilter.DEFAULT);
 
@@ -36,8 +34,4 @@ class FilterAttributes implements FilterAttributesService {
   public get activeFilter$() {
     return this.activeFilterSubject$.asObservable();
   }
-}
-
-export function createFilterAttributes(): FilterAttributesService {
-  return new FilterAttributes();
 }

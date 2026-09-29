@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SearchStore} from '@ame/domain';
+import {ElementModelService, SearchStore} from '@ame/domain';
 import {
   EditorFormModel,
   EditorService,
@@ -24,7 +24,7 @@ import {
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
 import {ElementsSearchComponent, FilesSearchComponent} from '@ame/search';
-import {CONFIGURATION_SERVICE, ELEMENT_MODEL_SERVICE} from '@ame/shared';
+import {CONFIGURATION_SERVICE} from '@ame/shared';
 import {SidebarComponent} from '@ame/sidebar';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
@@ -69,7 +69,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private loadedFiles = inject(LoadedFilesService);
-  private elementModelService = inject(ELEMENT_MODEL_SERVICE);
+  private elementModelService = inject(ElementModelService);
   private editorService = inject(EditorService);
   private configurationService = inject(CONFIGURATION_SERVICE);
   private searchStore = inject(SearchStore);

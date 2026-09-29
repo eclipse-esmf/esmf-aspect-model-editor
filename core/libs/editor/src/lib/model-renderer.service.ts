@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {FiltersService} from '@ame/domain';
 import {
   MaxGraphAttributeService,
   MaxGraphHelper,
@@ -21,8 +22,6 @@ import {
 } from '@ame/graph';
 import {LoadedFilesService} from '@ame/infrastructure';
 import {
-  FILTERS_SERVICE,
-  IFiltersService,
   LanguageTranslationService,
   LoadingScreenService,
   NotificationsService,
@@ -42,7 +41,7 @@ export class ModelRendererService {
   private maxgraphService = inject(MaxGraphService);
   private largeFileWarningService = inject(LargeFileWarningService);
   private loadingScreenService = inject(LoadingScreenService);
-  private filtersService: IFiltersService = inject(FILTERS_SERVICE);
+  private filtersService = inject(FiltersService);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private shapeSettingsService = inject(ShapeSettingsService);
   private maxgraphSetupService = inject(MaxGraphSetupService);

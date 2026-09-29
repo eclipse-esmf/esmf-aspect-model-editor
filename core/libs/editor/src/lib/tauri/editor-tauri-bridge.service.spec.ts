@@ -11,16 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {FiltersService} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
-import {LoadedFilesService} from '@ame/infrastructure';
-import {
-  FILTERS_SERVICE,
-  IPC_RENDERER,
-  LanguageTranslationService,
-  MODEL_SAVING_TRACKER_SERVICE,
-  NAMESPACES_MANAGER_SERVICE,
-  TAURI_EVENTS,
-} from '@ame/shared';
+import {LoadedFilesService, NamespacesManagerService} from '@ame/infrastructure';
+import {IPC_RENDERER, LanguageTranslationService, TAURI_EVENTS} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, of} from 'rxjs';
@@ -29,6 +23,7 @@ import {ShapeSettingsService} from '../editor-dialog/services/shape-settings.ser
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
 import {GenerateHandlingService} from '../editor-toolbar/services/generate-handling.service';
 import {EditorService} from '../editor.service';
+import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';
 import {EditorTauriBridge} from './editor-tauri-bridge.service';
 
@@ -66,12 +61,12 @@ describe('EditorTauriBridge', () => {
         {provide: ShapeSettingsService, useValue: shapeSettingsService},
         {provide: GenerateHandlingService, useValue: {onGenerateDocumentation: vi.fn()}},
         {provide: SaveModelDialogService, useValue: {openDialog: vi.fn(() => of(true))}},
-        {provide: MODEL_SAVING_TRACKER_SERVICE, useValue: {isSaved$: of(true)}},
+        {provide: ModelSavingTrackerService, useValue: {isSaved$: of(true)}},
         {provide: LoadedFilesService, useValue: {currentLoadedFile: {cachedFile: {get: vi.fn()}}}},
         {provide: MaxGraphService, useValue: {navigateToCellByUrn: vi.fn()}},
         {provide: ShapeConnectorService, useValue: {connectSelectedElements: vi.fn()}},
-        {provide: NAMESPACES_MANAGER_SERVICE, useValue: {onImportNamespaces: vi.fn(), onExportNamespaces: vi.fn()}},
-        {provide: FILTERS_SERVICE, useValue: {renderByFilter: vi.fn()}},
+        {provide: NamespacesManagerService, useValue: {onImportNamespaces: vi.fn(), onExportNamespaces: vi.fn()}},
+        {provide: FiltersService, useValue: {renderByFilter: vi.fn()}},
         {provide: MatDialog, useValue: {open: vi.fn()}},
         {
           provide: LanguageTranslationService,

@@ -14,12 +14,12 @@
 import {TestBed} from '@angular/core/testing';
 import {firstValueFrom} from 'rxjs';
 import {describe, expect, it} from 'vitest';
-import {FILTER_ATTRIBUTES, FilterAttributesService} from './active-filter.session';
+import {FilterAttributesService} from './active-filter.session';
 import {ModelFilter} from './models';
 
-describe('FILTER_ATTRIBUTES InjectionToken', () => {
+describe('FilterAttributesService', () => {
   it('should provide a default FilterAttributes instance with DEFAULT filter', async () => {
-    const service: FilterAttributesService = TestBed.inject(FILTER_ATTRIBUTES);
+    const service: FilterAttributesService = TestBed.inject(FilterAttributesService);
 
     expect(service).toBeTruthy();
     expect(service.activeFilter).toBe(ModelFilter.DEFAULT);
@@ -30,7 +30,7 @@ describe('FILTER_ATTRIBUTES InjectionToken', () => {
   });
 
   it('should update activeFilter and emit through activeFilter$', async () => {
-    const service: FilterAttributesService = TestBed.inject(FILTER_ATTRIBUTES);
+    const service: FilterAttributesService = TestBed.inject(FilterAttributesService);
 
     service.activeFilter = ModelFilter.PROPERTIES;
     service.isFiltering = true;

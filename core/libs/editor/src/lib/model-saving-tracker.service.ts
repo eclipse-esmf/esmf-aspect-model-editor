@@ -13,14 +13,11 @@
 
 import {MaxGraphService} from '@ame/graph';
 import {LoadedFilesService, ModelService, RdfService} from '@ame/infrastructure';
-import {IModelSavingTrackerService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {catchError, map, Observable, of, take} from 'rxjs';
 
-export {IModelSavingTrackerService};
-
 @Injectable({providedIn: 'root'})
-export class ModelSavingTrackerService implements IModelSavingTrackerService {
+export class ModelSavingTrackerService {
   private readonly modelService = inject(ModelService);
   private readonly rdfService = inject(RdfService);
   private readonly maxgraphService = inject(MaxGraphService);

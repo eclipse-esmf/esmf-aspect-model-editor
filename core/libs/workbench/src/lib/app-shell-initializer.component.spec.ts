@@ -13,14 +13,8 @@
 
 import {SearchStore} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, ThemeService} from '@ame/graph';
-import {
-  BrowserService,
-  CONFIGURATION_SERVICE,
-  DOMAIN_MODEL_TO_RDF_SERVICE,
-  IPC_RENDERER,
-  LanguageTranslationService,
-  TitleService,
-} from '@ame/shared';
+import {DomainModelToRdfService} from '@ame/infrastructure';
+import {BrowserService, CONFIGURATION_SERVICE, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideRouter} from '@angular/router';
@@ -94,7 +88,7 @@ describe('AppShellInitializer', () => {
         provideRouter([]),
         {provide: IPC_RENDERER, useValue: ipcRenderer},
         {provide: TitleService, useValue: titleService},
-        {provide: DOMAIN_MODEL_TO_RDF_SERVICE, useValue: domainModelToRdf},
+        {provide: DomainModelToRdfService, useValue: domainModelToRdf},
         {provide: BrowserService, useValue: browserService},
         {provide: TauriTunnelService, useValue: tauriTunnelService},
         {provide: CONFIGURATION_SERVICE, useValue: configurationService},

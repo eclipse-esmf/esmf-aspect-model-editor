@@ -22,7 +22,6 @@ import {
   MODEL_LOADER_SERVICE,
   MODEL_OPENER_SERVICE,
   MODEL_SAVER_TOKEN_SERVICE,
-  MODEL_SAVING_TRACKER_SERVICE,
   RENAME_MODEL_DIALOG_SERVICE,
   SHAPE_SETTINGS_SERVICE,
   SHAPE_SETTINGS_STATE_SERVICE,
@@ -40,7 +39,6 @@ import {ModelCheckerService} from './model-checker.service';
 import {ModelLoaderService} from './model-loader.service';
 import {ModelOpenerService} from './model-opener/model-opener.service';
 import {ModelSaverService} from './model-saver.service';
-import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {RenameModelDialogService} from './rename-model/rename-model.service';
 import {EditorTauriBridge} from './tauri/editor-tauri-bridge.service';
 
@@ -59,7 +57,6 @@ export function provideEditor(): EnvironmentProviders {
     {provide: SHAPE_SETTINGS_STATE_SERVICE, useExisting: ShapeSettingsStateService},
     {provide: EDITOR_VALIDATION_SERVICE, useExisting: EditorService},
     {provide: MODEL_SAVER_TOKEN_SERVICE, useExisting: ModelSaverService},
-    {provide: MODEL_SAVING_TRACKER_SERVICE, useExisting: ModelSavingTrackerService},
     {provide: FILE_HANDLING_SERVICE, useExisting: FileHandlingService},
     {provide: TAURI_IPC_BRIDGES, useExisting: EditorTauriBridge, multi: true},
   ]);

@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ELEMENT_MODEL_SERVICE, FILTER_ATTRIBUTES, FILTERS_SERVICE, MODEL_ELEMENT_NAMING_SERVICE} from '@ame/shared';
+import {MODEL_ELEMENT_NAMING_SERVICE} from '@ame/shared';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
-import {createFilterAttributes} from './loader-filters/active-filter.session';
-import {FiltersService} from './loader-filters/filters.service';
-import {ElementModelService} from './meta-model/element-service/element-model.service';
 import {ModelElementNamingService} from './meta-model/services/model-element-naming.service';
 
 /**
@@ -23,10 +20,5 @@ import {ModelElementNamingService} from './meta-model/services/model-element-nam
  * Binds domain implementations to their respective shared injection tokens.
  */
 export function provideAmeDomain(): EnvironmentProviders {
-  return makeEnvironmentProviders([
-    {provide: FILTER_ATTRIBUTES, useFactory: createFilterAttributes},
-    {provide: FILTERS_SERVICE, useExisting: FiltersService},
-    {provide: ELEMENT_MODEL_SERVICE, useExisting: ElementModelService},
-    {provide: MODEL_ELEMENT_NAMING_SERVICE, useExisting: ModelElementNamingService},
-  ]);
+  return makeEnvironmentProviders([{provide: MODEL_ELEMENT_NAMING_SERVICE, useExisting: ModelElementNamingService}]);
 }

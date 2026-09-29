@@ -11,10 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LOADED_FILES_SERVICE} from '@ame/shared';
-import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
-import {LoadedFilesService} from './cache';
-
-export function provideAmeInfrastructure(): EnvironmentProviders {
-  return makeEnvironmentProviders([{provide: LOADED_FILES_SERVICE, useExisting: LoadedFilesService}]);
+export enum ModelFilter {
+  DEFAULT = 'default',
+  PROPERTIES = 'properties',
 }

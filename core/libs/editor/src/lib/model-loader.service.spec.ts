@@ -11,15 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
-import {
-  BrowserService,
-  CONFIGURATION_SERVICE,
-  INSTANTIATOR_SERVICE,
-  NotificationsService,
-  TauriSignalsService,
-  TitleService,
-} from '@ame/shared';
+import {InstantiatorService, LoadedFilesService, ModelApiService, NamespaceFile} from '@ame/infrastructure';
+import {BrowserService, CONFIGURATION_SERVICE, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -64,7 +57,7 @@ describe('ModelLoaderService', () => {
         }),
         MockProvider(NotificationsService),
         {
-          provide: INSTANTIATOR_SERVICE,
+          provide: InstantiatorService,
           useValue: {
             instantiateRemainingElements: vi.fn(),
           },
