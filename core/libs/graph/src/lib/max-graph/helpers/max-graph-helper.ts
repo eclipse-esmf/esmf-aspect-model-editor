@@ -450,22 +450,17 @@ export class MaxGraphHelper {
 
     if (targetModelElement instanceof DefaultProperty && sourceModelElement instanceof DefaultEntity) {
       const entityIncomingEdges = graph.getIncomingEdges(cell.source, null);
-      let hasEnumeration = false;
-      if (entityIncomingEdges) {
-        entityIncomingEdges.forEach((c: Cell) => {
-          // first check if it has a parent Enumeration
-          if (this.getElementNode(c.source) instanceof DefaultEnumeration) {
-            hasEnumeration = true;
-          }
-        });
-      }
+      // notInPayload is only allowed for Entities used as data type of an Enumeration
+      const hasEnumeration = !!entityIncomingEdges?.some(
+        (c: Cell) => MaxGraphHelper.getModelElement(c.source) instanceof DefaultEnumeration,
+      );
       if (!hasEnumeration) {
         return null;
       }
 
-      const propertyPayload = sourceModelElement.propertiesPayload[targetModelElement.aspectModelUrn];
+      const propertyPayload = sourceModelElement.propertiesPayload?.[targetModelElement.aspectModelUrn];
 
-      if (propertyPayload.notInPayload) {
+      if (propertyPayload?.notInPayload) {
         const p = document.createElement('p');
         p.className += ' edge-label property';
         p.innerText = 'not in payload';

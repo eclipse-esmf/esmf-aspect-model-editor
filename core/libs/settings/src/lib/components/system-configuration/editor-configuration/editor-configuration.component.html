@@ -32,7 +32,7 @@
         <div class="setting-item">
           <div class="setting-item__content">
             <div class="setting-item__toggle">
-              <mat-slide-toggle [formField]="form.editorConfiguration.showConnectionLabels">
+              <mat-slide-toggle [formField]="form.editorConfiguration.showConnectionLabels" data-testid="connectionLabelsToggle">
                 {{ t('settingsDialog.configuration.displayDisambiguationLabel') }}
               </mat-slide-toggle>
               <mat-icon
