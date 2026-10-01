@@ -31,7 +31,7 @@
   </div>
 
   <div class="namespaces">
-    @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace.value) {
+    @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace.key) {
       @if (searched()[namespace.key]?.length) {
         <button
           class="namespace"
@@ -50,7 +50,7 @@
         </button>
       }
       @if (!folded()[namespace.key] || searchString()) {
-        @for (file of searched()[namespace.key]; track file) {
+        @for (file of searched()[namespace.key]; track file.name) {
           <button
             class="file"
             [class.selected]="selection.isSelected(namespace.key, file.name)"

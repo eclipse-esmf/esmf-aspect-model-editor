@@ -284,7 +284,9 @@ test.describe('Editor Multi-Tab Management', () => {
 
     const refreshBtn = page.locator('[data-testid="workspaceRefreshButton"]');
     if (await refreshBtn.isVisible()) {
+      const refreshed = page.waitForResponse(response => response.url().includes('/models/namespaces'));
       await refreshBtn.click();
+      await refreshed;
     }
 
     // Unfold namespaces
@@ -295,7 +297,8 @@ test.describe('Editor Multi-Tab Management', () => {
 
     // Click more_horiz or right click on file
     const fileItem = page.locator('.file', {hasText: 'OtherModel.ttl'});
-    await expect(fileItem).toBeVisible({timeout: 10000});
+    await expect(fileItem).toHaveCount(1, {timeout: 10000});
+    await expect(fileItem).toBeVisible();
 
     // Hover on file to reveal menu button, or right click
     await fileItem.hover();

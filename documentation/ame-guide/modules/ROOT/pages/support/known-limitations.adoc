@@ -59,7 +59,7 @@ To run the application, use one of the following workarounds:
 +
 [source,bash]
 ----
-xattr -r -d com.apple.quarantine /path/to/Aspect-Model-Editor.app
+xattr -r -d com.apple.quarantine "/Applications/Aspect Model Editor.app"
 ----
 
 * Allow the app manually via *System Settings* -> *Privacy & Security*: after the first blocked launch attempt, scroll down to the security section and click *Open Anyway*.

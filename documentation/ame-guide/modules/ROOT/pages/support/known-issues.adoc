@@ -163,29 +163,6 @@ One of the following options can be used to fix the problem:
 .. (autoformat enabled) When importing from workspace, the format happens automatically and the elements will not overlap. In case of overlapping, click format button.
 |===
 
-[[uninstaller-not-available]]
-=== Uninstaller not available
-
-[%noheader,cols="15%,85%"]
-|===
-h| Error
-a|
-The "Aspect Model Editor Uninstaller" is not available when searching via Windows search bar, see
-
-image::uninstall-error.png[width=50%]
-
-h| Explanation
-a| Unknown root cause.
-
-h| Workaround
-a|
-Uninstall via context menu which will lead to add/remove programs
-
-image::uninstall-04.png[width=50%]
-
-image::uninstall-05.png[width=100%]
-|===
-
 [[macos-app-cannot-be-opened]]
 === macOS: Application cannot be opened or backend does not start
 

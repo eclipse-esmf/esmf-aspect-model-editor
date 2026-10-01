@@ -43,7 +43,10 @@ export class WorkspaceNamespacesService {
 
   setFile(namespace: string, fileStatus: FileStatus) {
     this.namespaces.update(map => {
-      const arr = map[namespace] ? [...map[namespace], fileStatus] : [fileStatus];
+      // Upsert by file name: repeated workspace validations must not duplicate entries.
+      const existing = map[namespace] ?? [];
+      const index = existing.findIndex(fs => fs.name === fileStatus.name);
+      const arr = index === -1 ? [...existing, fileStatus] : existing.map((fs, i) => (i === index ? fileStatus : fs));
       return {...map, [namespace]: arr};
     });
     return fileStatus;

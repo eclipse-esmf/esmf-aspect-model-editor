@@ -12,9 +12,10 @@
  */
 
 use std::{
+    fs,
     io::{BufRead, BufReader},
     net::TcpListener,
-    path::PathBuf,
+    path::{Path, PathBuf},
     process::{Child, Command, Stdio},
     sync::Mutex,
 };
@@ -58,41 +59,80 @@ fn get_backend_path(app: &AppHandle) -> Option<PathBuf> {
     println!("Tauri resource directory: {:?}", resource_dir);
 
     #[cfg(target_os = "macos")]
-    {
-        let app_bundle = resource_dir.join("backend/macos/ame-backend-DEV-SNAPSHOT-mac.app");
-
-        let executable = app_bundle.join("Contents/MacOS/ame-backend-DEV-SNAPSHOT-mac");
-
-        if executable.exists() {
-            return Some(executable);
-        }
-
-        eprintln!("macOS backend executable not found at {:?}", executable);
-    }
-
+    let backend_dir = resource_dir.join("backend/macos");
     #[cfg(target_os = "windows")]
-    {
-        let executable = resource_dir.join("backend/ame-backend/ame-backend.exe");
-
-        if executable.exists() {
-            return Some(executable);
-        }
-
-        eprintln!("Windows backend executable not found at {:?}", executable);
-    }
-
+    let backend_dir = resource_dir.join("backend/windows");
     #[cfg(target_os = "linux")]
-    {
-        let executable = resource_dir.join("backend/ame-backend/bin/ame-backend");
+    let backend_dir = resource_dir.join("backend/linux");
 
-        if executable.exists() {
-            return Some(executable);
-        }
+    let executable = find_backend_executable(&backend_dir);
 
-        eprintln!("Linux backend executable not found at {:?}", executable);
+    if executable.is_none() {
+        eprintln!("Backend executable not found in {:?}", backend_dir);
     }
 
-    None
+    executable
+}
+
+/// Locates the jpackage app-image launcher inside `dir`, independent of the version in its name.
+/// The app-image may sit directly in `dir` or in one wrapping folder (e.g. from an unpacked archive).
+fn find_backend_executable(dir: &Path) -> Option<PathBuf> {
+    launcher_in(dir).or_else(|| {
+        sorted_entries(dir)
+            .into_iter()
+            .filter(|p| p.is_dir())
+            .find_map(|p| launcher_in(&p))
+    })
+}
+
+#[cfg(target_os = "macos")]
+fn launcher_in(dir: &Path) -> Option<PathBuf> {
+    // <name>.app/Contents/MacOS/<launcher>
+    sorted_entries(dir)
+        .into_iter()
+        .filter(|bundle| bundle.extension().is_some_and(|ext| ext == "app"))
+        .find_map(|bundle| {
+            let macos_dir = bundle.join("Contents/MacOS");
+            let by_bundle_name = bundle
+                .file_stem()
+                .map(|stem| macos_dir.join(stem))
+                .filter(|file| file.is_file());
+            by_bundle_name.or_else(|| {
+                sorted_entries(&macos_dir)
+                    .into_iter()
+                    .find(|file| file.is_file() && file.extension().is_none())
+            })
+        })
+}
+
+#[cfg(target_os = "windows")]
+fn launcher_in(dir: &Path) -> Option<PathBuf> {
+    // <name>.exe next to the app/ and runtime/ folders
+    sorted_entries(dir).into_iter().find(|file| {
+        file.is_file()
+            && file
+                .extension()
+                .is_some_and(|ext| ext.eq_ignore_ascii_case("exe"))
+            && file
+                .file_name()
+                .is_some_and(|name| name.to_string_lossy().starts_with("ame-backend"))
+    })
+}
+
+#[cfg(target_os = "linux")]
+fn launcher_in(dir: &Path) -> Option<PathBuf> {
+    // <name>/bin/<name>
+    let name = dir.file_name()?;
+    let executable = dir.join("bin").join(name);
+    executable.is_file().then_some(executable)
+}
+
+fn sorted_entries(dir: &Path) -> Vec<PathBuf> {
+    let mut entries: Vec<PathBuf> = fs::read_dir(dir)
+        .map(|entries| entries.flatten().map(|entry| entry.path()).collect())
+        .unwrap_or_default();
+    entries.sort();
+    entries
 }
 
 pub fn start_backend(app: &AppHandle, state: &BackendState) {
@@ -188,5 +228,69 @@ pub fn clean_up_backend(state: &BackendState) {
         {
             let _ = child.kill();
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn temp_dir(name: &str) -> PathBuf {
+        let dir =
+            std::env::temp_dir().join(format!("ame-backend-test-{name}-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    fn touch(path: &Path) {
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(path, b"").unwrap();
+    }
+
+    #[cfg(target_os = "macos")]
+    fn app_image(root: &Path, name: &str) -> PathBuf {
+        let executable = root.join(format!("{name}.app/Contents/MacOS/{name}"));
+        touch(&executable);
+        touch(&root.join(format!("{name}.app/Contents/Info.plist")));
+        touch(&root.join(format!("{name}.app/Contents/MacOS/libapplauncher.dylib")));
+        executable
+    }
+
+    #[cfg(target_os = "windows")]
+    fn app_image(root: &Path, name: &str) -> PathBuf {
+        let executable = root.join(format!("{name}/{name}.exe"));
+        touch(&executable);
+        touch(&root.join(format!("{name}/app/{name}.cfg")));
+        executable
+    }
+
+    #[cfg(target_os = "linux")]
+    fn app_image(root: &Path, name: &str) -> PathBuf {
+        let executable = root.join(format!("{name}/bin/{name}"));
+        touch(&executable);
+        touch(&root.join(format!("{name}/lib/app/{name}.cfg")));
+        executable
+    }
+
+    #[test]
+    fn finds_versioned_app_image() {
+        let dir = temp_dir("versioned");
+        let executable = app_image(&dir, "ame-backend-6.2.0-os");
+        assert_eq!(find_backend_executable(&dir), Some(executable));
+    }
+
+    #[test]
+    fn finds_app_image_in_wrapping_folder() {
+        let dir = temp_dir("wrapped");
+        let executable = app_image(&dir.join("extracted"), "ame-backend-DEV-SNAPSHOT-os");
+        assert_eq!(find_backend_executable(&dir), Some(executable));
+    }
+
+    #[test]
+    fn returns_none_without_backend() {
+        let dir = temp_dir("empty");
+        assert_eq!(find_backend_executable(&dir), None);
+        assert_eq!(find_backend_executable(&dir.join("missing")), None);
     }
 }

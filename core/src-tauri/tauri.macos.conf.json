@@ -1,5 +1,6 @@
 {
   "bundle": {
+    "targets": ["app", "dmg"],
     "resources": {
       "../../backend/macos": "backend/macos"
     },

@@ -24,29 +24,26 @@ We offer assets for the following operating systems:
 
 To install the Aspect Model Editor, proceed as follows:
 
-. Download the executable installation file from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^,opts=nofollow] releases.
+. Download the installer `aspect-model-editor-v<VERSION>-win.exe` from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^,opts=nofollow] releases.
 . Double-click the `.exe` file to run the installer.
+No administrator permissions are required, the Aspect Model Editor is installed for the current user only.
 . Click *Next* on the Welcome screen.
-+
-image::installation-01.png[width=100% !important]
-. Select the preferred installation location, then click *Install*.
+. Select the preferred installation location (default: _%LOCALAPPDATA%\Aspect Model Editor_), then click *Next*.
 +
 NOTE: Long paths and paths containing whitespaces may lead to incorrect installation or incorrect behavior of the application.
-Choose a short destination path without whitespaces &ndash; preferably those suggested by the installer by default.
+Choose a short destination path &ndash; preferably the one suggested by the installer by default.
 For further information, see xref:support/known-issues.adoc[].
-+
-image::installation-02.png[width=100% !important]
+. Confirm the Start Menu folder (default: _ESMF_) and click *Install*.
 +
 → The installation is executed.
-The progress bar indicates the status of the process.
-+
-image::installation-03.png[width=100% !important]
-. Click *Finish* to close Setup.
-+
-image::installation-04.png[width=100% !important]
+If the Microsoft Edge WebView2 Runtime is not yet available on your system, the installer downloads and installs it.
+. Click *Finish* to close Setup. Keep *Create desktop shortcut* checked if you want a shortcut on your desktop.
 
-→ After the installation you will find the Aspect Model Editor in the folder you chose previously.
-In addition to that, you will find a link on your desktop.
+→ After the installation you will find the Aspect Model Editor in the folder you chose previously and in the Start Menu.
+Your workspace for Aspect Models is created at _%USERPROFILE%\aspect-model-editor_.
+
+NOTE: An installation of an earlier version that was installed with the former installer is removed automatically.
+You may be asked to confirm this with administrator permissions.
 
 [[startup-windows]]
 === Start the Aspect Model Editor on Windows
@@ -57,6 +54,8 @@ Use one of the following alternatives:
 
 * Navigate to the previously chosen installation location of the Aspect Model Editor and double-click the `Aspect-Model-Editor.exe` file.
 
+* Open the Start Menu folder *ESMF* and click *Aspect Model Editor*.
+
 * On Windows, press the *Windows key*, type `Aspect` to filter for the Aspect Model Editor, and click *Open*.
 
 image::search-app.png[width=45% !important]
@@ -66,9 +65,10 @@ image::search-app.png[width=45% !important]
 
 To install the Aspect Model Editor, proceed as follows:
 
-. Navigate to the released assets section and download the `.app` file.
-. Find the downloaded `.app` file on your computer.
-. Drag and drop it into your Applications folder.
+. Download the disk image `aspect-model-editor-v<VERSION>-mac.dmg` from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^,opts=nofollow] releases.
+. Double-click the downloaded `.dmg` file to open it.
+. Drag and drop *Aspect Model Editor* into the *Applications* folder shown in the window.
+. Eject the disk image.
 +
 In case you are prompted, agree that the sources come from a trustful source.
 +
@@ -87,17 +87,20 @@ NOTE: The Aspect Model Editor is currently not notarized or signed with an Apple
 
 To install the Aspect Model Editor, proceed as follows:
 
-. Download the Linux asset from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^,opts=nofollow] releases.
-. Install the downloaded package locally, or make the `AppImage` executable, depending on the asset type you downloaded.
+. Download one of the Linux assets from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^,opts=nofollow] releases:
+* `aspect-model-editor-v<VERSION>-linux-amd64.deb` for Debian-based distributions (e.g. Ubuntu),
+* `aspect-model-editor-v<VERSION>-linux-glibc-v<GLIBC-VERSION>.AppImage` as portable application for other distributions.
+The AppImage requires at least the glibc version stated in the file name.
+. Install the package, e.g. with `sudo apt install ./aspect-model-editor-v<VERSION>-linux-amd64.deb`, or make the AppImage executable with `chmod +x aspect-model-editor-v<VERSION>-linux-glibc-v<GLIBC-VERSION>.AppImage`.
 +
 In case you are prompted, agree that the sources come from a trustful source.
 
-→ By default, the workspace is created at _/Users/<YOUR-USER-NAME>/aspect-model-editor_ .
+→ By default, the workspace is created at _/home/<YOUR-USER-NAME>/aspect-model-editor_ .
 
 [[startup-linux]]
 === Start the Aspect Model Editor on Linux
 
-* Start the Aspect Model Editor from your application menu, or run the installed binary/AppImage from a terminal.
+* Start the Aspect Model Editor from your application menu, or run the AppImage.
 
 [[check-installation]]
 == Verify the installation
@@ -121,22 +124,16 @@ For more information on validation, see xref:getting-started/validation-and-noti
 
 To uninstall the Aspect Model Editor, proceed as follows:
 
-. Close any running instance of the Aspect Model Editor.
-. Navigate to the installation folder of the Aspect Model Editor.
-. Double-click the `Uninstall.exe` executable.
-. In the Uninstall dialog, click *Next* to continue.
+. Open *Settings* → *Apps* → *Installed apps* (on older Windows versions: *Apps & features*).
+. Search for *Aspect Model Editor*, click *...* (or select the entry) and click *Uninstall*.
 +
-image::uninstall-01.png[width=50% !important]
-. Click *Uninstall* to start the process.
+Alternatively, run `uninstall.exe` in the installation folder of the Aspect Model Editor.
+. Confirm the uninstallation. A running instance of the Aspect Model Editor is closed automatically.
 +
-image::uninstall-02.png[width=50% !important]
-. Click *Finish* to close the uninstaller.
-+
-image::uninstall-03.png[width=50% !important]
+Optionally, check *Delete the application data* to also remove the application settings.
 
-→ The Aspect Model Editor with all dependencies was deleted from your system.
-
-TIP: Alternatively, on Windows, you can also uninstall as follows: Open Windows menu → type Aspect Model Editor → click *Uninstall* → right-click on the Aspect Model Editor → click *Uninstall*.
+→ The Aspect Model Editor was deleted from your system.
+Your workspace folder at _%USERPROFILE%\aspect-model-editor_ is not removed automatically. Delete it manually if you no longer need your saved Aspect Models.
 
 [[uninstall-mac]]
 === Uninstall the Aspect Model Editor on Mac
@@ -157,10 +154,10 @@ Your workspace folder at _/Users/<YOUR-USER-NAME>/aspect-model-editor_ is not re
 To uninstall the Aspect Model Editor, proceed as follows:
 
 . Close any running instance of the Aspect Model Editor.
-. Remove the installed package via your distribution's package manager, or delete the `AppImage` file, depending on how you installed it.
+. Remove the installed package via your distribution's package manager (e.g. `sudo apt remove aspect-model-editor`), or delete the `AppImage` file, depending on how you installed it.
 
 → The Aspect Model Editor was deleted from your system.
-Your workspace folder at _/Users/<YOUR-USER-NAME>/aspect-model-editor_ is not removed automatically. Delete it manually if you no longer need your saved Aspect Models.
+Your workspace folder at _/home/<YOUR-USER-NAME>/aspect-model-editor_ is not removed automatically. Delete it manually if you no longer need your saved Aspect Models.
 
 [[upgrade]]
 == Upgrade the Aspect Model Editor
