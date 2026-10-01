@@ -63,7 +63,10 @@ pub fn open_external_link(link: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub fn open_in_vscode_or_default(vscode_url: String, file_path: Option<String>) -> Result<(), String> {
+pub fn open_in_vscode_or_default(
+    vscode_url: String,
+    file_path: Option<String>,
+) -> Result<(), String> {
     if open::that(&vscode_url).is_err() {
         if let Some(path) = file_path {
             #[cfg(target_os = "windows")]
@@ -87,9 +90,7 @@ pub fn open_in_vscode_or_default(vscode_url: String, file_path: Option<String>) 
 
 #[tauri::command]
 pub fn copy_to_clipboard(app: AppHandle, text: String) -> Result<(), String> {
-    app.clipboard()
-        .write_text(text)
-        .map_err(|e| e.to_string())
+    app.clipboard().write_text(text).map_err(|e| e.to_string())
 }
 
 #[tauri::command]
@@ -106,8 +107,17 @@ pub fn write_print_file(content: String) -> Result<String, String> {
 
 #[tauri::command]
 pub fn open_print_window(app: AppHandle, file_path: String) -> Result<(), String> {
-    let print_label = format!("print-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis());
-    let url = if file_path.starts_with("http://") || file_path.starts_with("https://") || file_path.starts_with("file://") {
+    let print_label = format!(
+        "print-{}",
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_millis()
+    );
+    let url = if file_path.starts_with("http://")
+        || file_path.starts_with("https://")
+        || file_path.starts_with("file://")
+    {
         file_path.parse().unwrap()
     } else {
         format!("file://{}", file_path).parse().unwrap()
@@ -134,11 +144,16 @@ pub fn create_window(
         let edit_elem = opts_val.get("editElement").and_then(|v| v.as_str());
 
         if let (Some(ns_str), Some(file_str)) = (ns, file) {
-            let opts_map = window_state.windows_options.lock().map_err(|e| e.to_string())?;
+            let opts_map = window_state
+                .windows_options
+                .lock()
+                .map_err(|e| e.to_string())?;
             for (label, existing_opts_val) in opts_map.iter() {
                 let ex_ns = existing_opts_val.get("namespace").and_then(|v| v.as_str());
                 let ex_file = existing_opts_val.get("file").and_then(|v| v.as_str());
-                let ex_from_ws = existing_opts_val.get("fromWorkspace").and_then(|v| v.as_bool());
+                let ex_from_ws = existing_opts_val
+                    .get("fromWorkspace")
+                    .and_then(|v| v.as_bool());
 
                 if ex_ns == Some(ns_str) && ex_file == Some(file_str) && ex_from_ws == Some(true) {
                     if let Some(existing_win) = app.get_webview_window(label) {
@@ -156,7 +171,13 @@ pub fn create_window(
         }
     }
 
-    let win_id = format!("win-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_millis());
+    let win_id = format!(
+        "win-{}",
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_millis()
+    );
     if let Some(opts) = options {
         if let Ok(mut map) = window_state.windows_options.lock() {
             map.insert(win_id.clone(), opts);
@@ -194,7 +215,10 @@ pub fn update_window_data(
     window_label: String,
     options: serde_json::Value,
 ) -> Result<(), String> {
-    let mut map = window_state.windows_options.lock().map_err(|e| e.to_string())?;
+    let mut map = window_state
+        .windows_options
+        .lock()
+        .map_err(|e| e.to_string())?;
     map.insert(window_label, options);
     Ok(())
 }
@@ -204,7 +228,10 @@ pub fn get_window_data(
     window_state: State<'_, AppWindowState>,
     window_label: String,
 ) -> Result<WindowData, String> {
-    let map = window_state.windows_options.lock().map_err(|e| e.to_string())?;
+    let map = window_state
+        .windows_options
+        .lock()
+        .map_err(|e| e.to_string())?;
     let options = map.get(&window_label).cloned();
     Ok(WindowData {
         id: window_label,
@@ -245,17 +272,27 @@ pub fn show_context_menu(app: AppHandle, href: Option<String>) -> Result<(), Str
         let open_item = MenuItem::with_id(
             &app,
             "ctx_open",
-            if link.starts_with("mailto:") { "Send email" } else { "Open in browser" },
+            if link.starts_with("mailto:") {
+                "Send email"
+            } else {
+                "Open in browser"
+            },
             true,
             None::<&str>,
-        ).map_err(|e| e.to_string())?;
+        )
+        .map_err(|e| e.to_string())?;
 
-        let copy_item = MenuItem::with_id(&app, "ctx_copy", "Copy link address", true, None::<&str>)
-            .map_err(|e| e.to_string())?;
+        let copy_item =
+            MenuItem::with_id(&app, "ctx_copy", "Copy link address", true, None::<&str>)
+                .map_err(|e| e.to_string())?;
 
         let menu = Menu::with_items(&app, &[&open_item, &copy_item]).map_err(|e| e.to_string())?;
 
-        if let Some(focused) = app.webview_windows().into_values().find(|w| w.is_focused().unwrap_or(false)) {
+        if let Some(focused) = app
+            .webview_windows()
+            .into_values()
+            .find(|w| w.is_focused().unwrap_or(false))
+        {
             let _ = menu.popup(focused.as_ref().window().clone());
         }
     }
@@ -263,7 +300,11 @@ pub fn show_context_menu(app: AppHandle, href: Option<String>) -> Result<(), Str
 }
 
 #[tauri::command]
-pub fn set_window_title(app: AppHandle, window_label: Option<String>, title: String) -> Result<(), String> {
+pub fn set_window_title(
+    app: AppHandle,
+    window_label: Option<String>,
+    title: String,
+) -> Result<(), String> {
     if let Some(ref label) = window_label {
         if let Some(win) = app.get_webview_window(label) {
             win.set_title(&title).map_err(|e| e.to_string())?;
@@ -283,7 +324,11 @@ pub fn set_window_title(app: AppHandle, window_label: Option<String>, title: Str
 }
 
 #[tauri::command]
-pub fn update_menu_item(app: AppHandle, ids: Vec<String>, payload: serde_json::Value) -> Result<(), String> {
+pub fn update_menu_item(
+    app: AppHandle,
+    ids: Vec<String>,
+    payload: serde_json::Value,
+) -> Result<(), String> {
     crate::menu::update_menu_items(&app, &ids, &payload);
     Ok(())
 }

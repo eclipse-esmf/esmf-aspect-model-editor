@@ -1,0 +1,7 @@
+{
+  "bundle": {
+    "resources": {
+      "../../backend/windows": "backend/windows"
+    }
+  }
+}

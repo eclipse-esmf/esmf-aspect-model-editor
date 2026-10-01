@@ -11,11 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-use std::io::{BufRead, BufReader};
-use std::net::TcpListener;
-use std::path::PathBuf;
-use std::process::{Child, Command, Stdio};
-use std::sync::Mutex;
+use std::{
+    io::{BufRead, BufReader},
+    net::TcpListener,
+    path::PathBuf,
+    process::{Child, Command, Stdio},
+    sync::Mutex,
+};
+
 use tauri::{AppHandle, Manager};
 
 pub struct BackendState {
@@ -34,72 +37,66 @@ impl BackendState {
 
 pub fn find_free_port() -> u16 {
     for port in 30000..31000 {
-        if let Ok(listener) = TcpListener::bind(format!("127.0.0.1:{}", port)) {
+        if let Ok(listener) = TcpListener::bind(("127.0.0.1", port)) {
             drop(listener);
             return port;
         }
     }
+
     if let Ok(listener) = TcpListener::bind("127.0.0.1:0") {
         if let Ok(addr) = listener.local_addr() {
             return addr.port();
         }
     }
+
     9090
 }
 
-pub fn get_backend_executable_path(app: &AppHandle) -> Option<PathBuf> {
-    let resource_dir = app.path().resource_dir().unwrap_or_else(|_| PathBuf::from("."));
-    let exe_dir = std::env::current_exe()
-        .ok()
-        .and_then(|p| p.parent().map(|p| p.to_path_buf()))
-        .unwrap_or_else(|| PathBuf::from("."));
+fn get_backend_path(app: &AppHandle) -> Option<PathBuf> {
+    let resource_dir = app.path().resource_dir().ok()?;
 
-    let candidates = [
-        resource_dir.join("backend"),
-        resource_dir.join("../backend"),
-        exe_dir.join("backend"),
-        exe_dir.join("../Resources/backend"),
-        PathBuf::from("./backend"),
-        PathBuf::from("../backend"),
-    ];
+    println!("Tauri resource directory: {:?}", resource_dir);
+
+    #[cfg(target_os = "macos")]
+    {
+        let app_bundle = resource_dir.join("backend/macos/ame-backend-DEV-SNAPSHOT-mac.app");
+
+        let executable = app_bundle.join("Contents/MacOS/ame-backend-DEV-SNAPSHOT-mac");
+
+        if executable.exists() {
+            return Some(executable);
+        }
+
+        eprintln!("macOS backend executable not found at {:?}", executable);
+    }
 
     #[cfg(target_os = "windows")]
-    let ext_filter = ".exe";
-    #[cfg(not(target_os = "windows"))]
-    let ext_filter = "";
+    {
+        let executable = resource_dir.join("backend/ame-backend/ame-backend.exe");
 
-    for dir in &candidates {
-        if !dir.exists() {
-            continue;
+        if executable.exists() {
+            return Some(executable);
         }
 
-        // Check inside signed_dir on Windows if present
-        #[cfg(target_os = "windows")]
-        let search_dirs = [dir.join("signed_dir"), dir.clone()];
-        #[cfg(not(target_os = "windows"))]
-        let search_dirs = [dir.clone()];
+        eprintln!("Windows backend executable not found at {:?}", executable);
+    }
 
-        for search_dir in &search_dirs {
-            if let Ok(entries) = std::fs::read_dir(search_dir) {
-                for entry in entries.flatten() {
-                    let path = entry.path();
-                    if let Some(file_name) = path.file_name().and_then(|n| n.to_str()) {
-                        if file_name.starts_with("ame-backend") && (!cfg!(target_os = "windows") || file_name.ends_with(ext_filter)) {
-                            return Some(path);
-                        }
-                    }
-                }
-            }
+    #[cfg(target_os = "linux")]
+    {
+        let executable = resource_dir.join("backend/ame-backend/bin/ame-backend");
+
+        if executable.exists() {
+            return Some(executable);
         }
+
+        eprintln!("Linux backend executable not found at {:?}", executable);
     }
 
     None
 }
 
 pub fn start_backend(app: &AppHandle, state: &BackendState) {
-    let dev_mode = cfg!(debug_assertions);
-
-    if dev_mode {
+    if cfg!(debug_assertions) {
         println!("Development mode: assuming backend running on port 9090");
         *state.port.lock().unwrap() = "9090".to_string();
         return;
@@ -108,60 +105,77 @@ pub fn start_backend(app: &AppHandle, state: &BackendState) {
     let port = find_free_port();
     *state.port.lock().unwrap() = port.to_string();
 
-    if let Some(binary_path) = get_backend_executable_path(app) {
-        println!("Starting backend process from: {:?}", binary_path);
-        match Command::new(&binary_path)
-            .arg(format!("-Dmicronaut.server.port={}", port))
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .spawn()
-        {
-            Ok(mut child) => {
-                if let Some(stdout) = child.stdout.take() {
-                    let app_handle = app.clone();
-                    std::thread::spawn(move || {
-                        let reader = BufReader::new(stdout);
-                        for line in reader.lines().flatten() {
-                            println!("[backend] {}", line);
-                            if line.contains("Server Running") {
-                                println!("AME Server Running on port {}", port);
-                                if let Some(splash) = app_handle.get_webview_window("splashscreen") {
-                                    let _ = splash.close();
-                                }
-                                if let Some(main_win) = app_handle.get_webview_window("main") {
-                                    let _ = main_win.show();
-                                    let _ = main_win.set_focus();
-                                }
+    let Some(binary_path) = get_backend_path(app) else {
+        eprintln!("Backend executable not found!");
+        return;
+    };
+
+    println!("Starting backend from: {:?}", binary_path);
+    println!("Backend port: {}", port);
+
+    match Command::new(&binary_path)
+        .arg(format!("-Dmicronaut.server.port={port}"))
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+    {
+        Ok(mut child) => {
+            println!("Backend started with PID {}", child.id());
+
+            if let Some(stdout) = child.stdout.take() {
+                let app_handle = app.clone();
+
+                std::thread::spawn(move || {
+                    let reader = BufReader::new(stdout);
+
+                    for line in reader.lines().flatten() {
+                        println!("[backend] {line}");
+
+                        if line.contains("Server Running") {
+                            println!("AME Server Running on port {port}");
+
+                            if let Some(splash) = app_handle.get_webview_window("splashscreen") {
+                                let _ = splash.close();
+                            }
+
+                            if let Some(main_window) = app_handle.get_webview_window("main") {
+                                let _ = main_window.show();
+                                let _ = main_window.set_focus();
                             }
                         }
-                    });
-                }
-
-                if let Some(stderr) = child.stderr.take() {
-                    std::thread::spawn(move || {
-                        let reader = BufReader::new(stderr);
-                        for line in reader.lines().flatten() {
-                            eprintln!("[backend err] {}", line);
-                        }
-                    });
-                }
-
-                *state.child_process.lock().unwrap() = Some(child);
+                    }
+                });
             }
-            Err(e) => {
-                eprintln!("Failed to spawn backend process: {}", e);
+
+            if let Some(stderr) = child.stderr.take() {
+                std::thread::spawn(move || {
+                    let reader = BufReader::new(stderr);
+
+                    for line in reader.lines().flatten() {
+                        eprintln!("[backend err] {line}");
+                    }
+                });
             }
+
+            *state.child_process.lock().unwrap() = Some(child);
         }
-    } else {
-        eprintln!("Backend executable not found!");
+
+        Err(error) => {
+            eprintln!(
+                "Failed to spawn backend process {:?}: {}",
+                binary_path, error
+            );
+        }
     }
 }
 
 pub fn clean_up_backend(state: &BackendState) {
     let mut child_guard = state.child_process.lock().unwrap();
+
     if let Some(mut child) = child_guard.take() {
         let pid = child.id();
-        println!("Cleaning up backend process PID {}", pid);
+
+        println!("Cleaning up backend process PID {pid}");
 
         #[cfg(target_os = "windows")]
         {

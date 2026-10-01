@@ -1,0 +1,10 @@
+{
+  "bundle": {
+    "resources": {
+      "../../backend/macos": "backend/macos"
+    },
+    "macOS": {
+      "entitlements": "../../entitlements.plist"
+    }
+  }
+}

@@ -21,46 +21,25 @@ use tauri::{Emitter, Manager, RunEvent, WindowEvent};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let backend_state = BackendState::new();
-    let window_state = AppWindowState::new();
-    let context_menu_state = ContextMenuState::new();
-
-    let app = tauri::Builder::default()
-        .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_clipboard_manager::init())
-        .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_process::init())
-        .manage(backend_state)
-        .manage(window_state)
-        .manage(context_menu_state)
-        .setup(|app| {
-            if cfg!(debug_assertions) {
-                let _ = app.handle().plugin(
-                    tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
-                        .build(),
-                );
-            }
-
-            let app_menu = menu::build_menu(app.handle())?;
-            app.set_menu(app_menu)?;
-
-            let handle = app.handle().clone();
-            let state = app.state::<BackendState>();
-            start_backend(&handle, &state);
-
-            Ok(())
-        })
-        .on_menu_event(|app, event| {
-            menu::handle_menu_click(app, event.id().as_ref());
-        })
-        .on_window_event(|window, event| {
-            if let WindowEvent::CloseRequested { api, .. } = event {
-                api.prevent_close();
-                let _ = window.emit("IS_FILE_SAVED", window.label());
-            }
-        })
-        .invoke_handler(tauri::generate_handler![
+  let app = tauri::Builder::default()
+    .plugin(tauri_plugin_shell::init())
+    .plugin(tauri_plugin_clipboard_manager::init())
+    .plugin(tauri_plugin_dialog::init())
+    .plugin(tauri_plugin_process::init())
+    .manage(BackendState::new())
+    .manage(AppWindowState::new())
+    .manage(ContextMenuState::new())
+    .setup(setup_app)
+    .on_menu_event(|app, event| {
+      menu::handle_menu_click(app, event.id().as_ref());
+    })
+    .on_window_event(|window, event| {
+      if let WindowEvent::CloseRequested { api, .. } = event {
+        api.prevent_close();
+        let _ = window.emit("IS_FILE_SAVED", window.label());
+      }
+    })
+    .invoke_handler(tauri::generate_handler![
             get_backend_port,
             open_external_link,
             open_in_vscode_or_default,
@@ -78,13 +57,44 @@ pub fn run() {
             update_menu_item,
             translate_menu_items,
         ])
-        .build(tauri::generate_context!())
-        .expect("error while building tauri application");
+    .build(tauri::generate_context!())
+    .expect("error while building Tauri application");
 
-    app.run(|app_handle, event| {
-        if let RunEvent::ExitRequested { .. } | RunEvent::Exit = event {
-            let state = app_handle.state::<BackendState>();
-            clean_up_backend(&state);
-        }
-    });
+  app.run(handle_app_event);
+}
+
+fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+  init_logging(app);
+  setup_menu(app);
+
+  start_backend(
+    app.handle(),
+    &app.state::<BackendState>(),
+  );
+
+  Ok(())
+}
+
+fn init_logging(app: &tauri::App) {
+  if cfg!(debug_assertions) {
+    let _ = app.handle().plugin(
+      tauri_plugin_log::Builder::default()
+        .level(log::LevelFilter::Info)
+        .build(),
+    );
+  }
+}
+
+fn setup_menu(app: &mut tauri::App) {
+  let app_menu = menu::build_menu(app.handle())
+    .expect("failed to build application menu");
+
+  app.set_menu(app_menu)
+    .expect("failed to set application menu");
+}
+
+fn handle_app_event(app_handle: &tauri::AppHandle, event: RunEvent) {
+  if matches!(event, RunEvent::ExitRequested { .. } | RunEvent::Exit) {
+    clean_up_backend(&app_handle.state::<BackendState>());
+  }
 }

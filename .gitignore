@@ -22,6 +22,7 @@ speed-measure-plugin.json
 .settings/
 *.sublime-workspace
 .log
+logs
 .package-lock.json
 
 # IDE - VSCode
@@ -46,6 +47,8 @@ Thumbs.db
 **/node
 
 *.iml
+
+backend/*
 
 # tauri & rust
 **/src-tauri/target

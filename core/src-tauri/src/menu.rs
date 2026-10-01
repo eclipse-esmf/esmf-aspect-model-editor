@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tauri::menu::{Menu, MenuItem, MenuItemKind, PredefinedMenuItem, Submenu};
 use tauri::{AppHandle, Emitter, Manager, Runtime};
 use tauri_plugin_clipboard_manager::ClipboardExt;
@@ -60,12 +60,30 @@ fn build_new_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri
 
 fn build_file_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
     let new_submenu = build_new_submenu(app)?;
-    let new_window = item(app, "NEW_WINDOW", "New Window", true, Some("CmdOrCtrl+Shift+N"))?;
+    let new_window = item(
+        app,
+        "NEW_WINDOW",
+        "New Window",
+        true,
+        Some("CmdOrCtrl+Shift+N"),
+    )?;
     let import_model = item(app, "IMPORT_MODEL", "Import Model", true, None)?;
     let import_package = item(app, "IMPORT_PACKAGE", "Import Package", true, None)?;
     let sep = PredefinedMenuItem::separator(app)?;
-    let copy_clipboard = item(app, "COPY_TO_CLIPBOARD", "Copy to Clipboard", false, Some("CmdOrCtrl+Shift+C"))?;
-    let save_workspace = item(app, "SAVE_TO_WORKSPACE", "Save to Workspace", false, Some("CmdOrCtrl+S"))?;
+    let copy_clipboard = item(
+        app,
+        "COPY_TO_CLIPBOARD",
+        "Copy to Clipboard",
+        false,
+        Some("CmdOrCtrl+Shift+C"),
+    )?;
+    let save_workspace = item(
+        app,
+        "SAVE_TO_WORKSPACE",
+        "Save to Workspace",
+        false,
+        Some("CmdOrCtrl+S"),
+    )?;
     let export_model = item(app, "EXPORT_MODEL", "Export Model", false, None)?;
     let export_package = item(app, "EXPORT_PACKAGE", "Export Package", true, None)?;
 
@@ -105,8 +123,20 @@ fn build_view_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, taur
     let sep = PredefinedMenuItem::separator(app)?;
     let zoom_in = item(app, "ZOOM_IN", "Zoom in", false, Some("CmdOrCtrl+Plus"))?;
     let zoom_out = item(app, "ZOOM_OUT", "Zoom out", false, Some("CmdOrCtrl+-"))?;
-    let zoom_fit = item(app, "ZOOM_TO_FIT", "Zoom to Fit", false, Some("CmdOrCtrl+9"))?;
-    let zoom_actual = item(app, "ZOOM_TO_ACTUAL", "Zoom to 100%", false, Some("CmdOrCtrl+0"))?;
+    let zoom_fit = item(
+        app,
+        "ZOOM_TO_FIT",
+        "Zoom to Fit",
+        false,
+        Some("CmdOrCtrl+9"),
+    )?;
+    let zoom_actual = item(
+        app,
+        "ZOOM_TO_ACTUAL",
+        "Zoom to 100%",
+        false,
+        Some("CmdOrCtrl+0"),
+    )?;
 
     Submenu::with_id_and_items(
         app,
@@ -127,11 +157,41 @@ fn build_view_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, taur
 }
 
 fn build_edit_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let open_selected = item(app, "OPEN_SELECTED_ELEMENT", "Open selected element", false, None)?;
-    let remove_selected = item(app, "REMOVE_SELECTED_ELEMENT", "Remove selected element", false, None)?;
-    let collapse_expand = item(app, "COLLAPSE_EXPAND_MODEL", "Collapse/Expand Model", false, None)?;
-    let format_model = item(app, "FORMAT_MODEL", "Format Model", false, Some("CmdOrCtrl+Shift+L"))?;
-    let connect_elements = item(app, "CONNECT_ELEMENTS", "Connect selected elements", false, None)?;
+    let open_selected = item(
+        app,
+        "OPEN_SELECTED_ELEMENT",
+        "Open selected element",
+        false,
+        None,
+    )?;
+    let remove_selected = item(
+        app,
+        "REMOVE_SELECTED_ELEMENT",
+        "Remove selected element",
+        false,
+        None,
+    )?;
+    let collapse_expand = item(
+        app,
+        "COLLAPSE_EXPAND_MODEL",
+        "Collapse/Expand Model",
+        false,
+        None,
+    )?;
+    let format_model = item(
+        app,
+        "FORMAT_MODEL",
+        "Format Model",
+        false,
+        Some("CmdOrCtrl+Shift+L"),
+    )?;
+    let connect_elements = item(
+        app,
+        "CONNECT_ELEMENTS",
+        "Connect selected elements",
+        false,
+        None,
+    )?;
     let sep1 = PredefinedMenuItem::separator(app)?;
     let undo = PredefinedMenuItem::undo(app, None)?;
     let redo = PredefinedMenuItem::redo(app, None)?;
@@ -165,17 +225,47 @@ fn build_edit_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, taur
 }
 
 fn build_validate_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let validate_model = item(app, "VALIDATE_MODEL", "Current Model", false, Some("CmdOrCtrl+Shift+V"))?;
+    let validate_model = item(
+        app,
+        "VALIDATE_MODEL",
+        "Current Model",
+        false,
+        Some("CmdOrCtrl+Shift+V"),
+    )?;
     Submenu::with_id_and_items(app, "MENU_VALIDATE", "Validate", true, &[&validate_model])
 }
 
 fn build_generate_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let gen_html = item(app, "GENERATE_HTML_DOCUMENTATION", "HTML Documentation", false, None)?;
-    let gen_openapi = item(app, "GENERATE_OPEN_API_SPECIFICATION", "OpenAPI Specification", false, None)?;
-    let gen_asyncapi = item(app, "GENERATE_ASYNC_API_SPECIFICATION", "AsyncAPI Specification", false, None)?;
+    let gen_html = item(
+        app,
+        "GENERATE_HTML_DOCUMENTATION",
+        "HTML Documentation",
+        false,
+        None,
+    )?;
+    let gen_openapi = item(
+        app,
+        "GENERATE_OPEN_API_SPECIFICATION",
+        "OpenAPI Specification",
+        false,
+        None,
+    )?;
+    let gen_asyncapi = item(
+        app,
+        "GENERATE_ASYNC_API_SPECIFICATION",
+        "AsyncAPI Specification",
+        false,
+        None,
+    )?;
     let gen_aasx = item(app, "GENERATE_AASX_XML", "AASX / XML", false, None)?;
     let sep = PredefinedMenuItem::separator(app)?;
-    let gen_json_sample = item(app, "GENERATE_JSON_PAYLOAD", "Sample JSON Payload", false, None)?;
+    let gen_json_sample = item(
+        app,
+        "GENERATE_JSON_PAYLOAD",
+        "Sample JSON Payload",
+        false,
+        None,
+    )?;
     let gen_json_schema = item(app, "GENERATE_JSON_SCHEMA", "JSON Schema", false, None)?;
 
     Submenu::with_id_and_items(
@@ -196,9 +286,27 @@ fn build_generate_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, 
 }
 
 fn build_search_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let search_elements = item(app, "SEARCH_ELEMENTS", "Elements", false, Some("CmdOrCtrl+F"))?;
-    let search_files = item(app, "SEARCH_FILES", "Files", true, Some("CmdOrCtrl+Shift+F"))?;
-    Submenu::with_id_and_items(app, "MENU_SEARCH", "Search", true, &[&search_elements, &search_files])
+    let search_elements = item(
+        app,
+        "SEARCH_ELEMENTS",
+        "Elements",
+        false,
+        Some("CmdOrCtrl+F"),
+    )?;
+    let search_files = item(
+        app,
+        "SEARCH_FILES",
+        "Files",
+        true,
+        Some("CmdOrCtrl+Shift+F"),
+    )?;
+    Submenu::with_id_and_items(
+        app,
+        "MENU_SEARCH",
+        "Search",
+        true,
+        &[&search_elements, &search_files],
+    )
 }
 
 fn build_window_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
@@ -254,13 +362,18 @@ pub fn build_menu<R: Runtime>(app: &AppHandle<R>) -> Result<Menu<R>, tauri::Erro
         let macos_app = build_macos_app_submenu(app)?;
         Menu::with_items(
             app,
-            &[&macos_app, &file, &view, &edit, &validate, &generate, &search, &window],
+            &[
+                &macos_app, &file, &view, &edit, &validate, &generate, &search, &window,
+            ],
         )
     }
 
     #[cfg(not(target_os = "macos"))]
     {
-        Menu::with_items(app, &[&file, &view, &edit, &validate, &generate, &search, &window])
+        Menu::with_items(
+            app,
+            &[&file, &view, &edit, &validate, &generate, &search, &window],
+        )
     }
 }
 
@@ -344,20 +457,38 @@ fn open_file_dialog_and_emit<R: Runtime>(
 }
 
 fn load_example_and_emit<R: Runtime>(app: &AppHandle<R>, name: &str) {
-    if let Some(path) = find_example_file(app, name) {
-        if let Ok(content) = std::fs::read(&path) {
-            let file_info = serde_json::json!({
-                "path": path.to_string_lossy(),
-                "name": name,
-                "content": content
-            });
-            emit_to_focused_or_app(app, "LOAD_SPECIFIC_FILE", file_info);
+    let Some(path) = find_example_file(app, name) else {
+        eprintln!("Example file not found: {name}");
+        return;
+    };
+
+    let content = match std::fs::read_to_string(&path) {
+        Ok(content) => content,
+        Err(error) => {
+            eprintln!("Failed to read example '{}': {error}", path.display());
+            return;
         }
-    }
+    };
+
+    let file_info = serde_json::json!({
+        "path": path,
+        "name": name,
+        "content": content,
+    });
+
+    emit_to_focused_or_app(app, "LOAD_SPECIFIC_FILE", file_info);
 }
 
-fn emit_to_focused_or_app<R: Runtime, T: serde::Serialize + Clone>(app: &AppHandle<R>, event: &str, payload: T) {
-    if let Some(focused) = app.webview_windows().into_values().find(|w| w.is_focused().unwrap_or(false)) {
+fn emit_to_focused_or_app<R: Runtime, T: serde::Serialize + Clone>(
+    app: &AppHandle<R>,
+    event: &str,
+    payload: T,
+) {
+    if let Some(focused) = app
+        .webview_windows()
+        .into_values()
+        .find(|w| w.is_focused().unwrap_or(false))
+    {
         let _ = focused.emit(event, payload);
     } else {
         let _ = app.emit(event, payload);
@@ -368,7 +499,10 @@ fn emit_to_focused_or_app<R: Runtime, T: serde::Serialize + Clone>(app: &AppHand
 // Menu Mutation (Enable/Disable & Dynamic Translations)
 // ---------------------------------------------------------------------------
 
-fn find_menu_item_recursive<R: Runtime>(items: &[MenuItemKind<R>], target_id: &str) -> Option<MenuItemKind<R>> {
+fn find_menu_item_recursive<R: Runtime>(
+    items: &[MenuItemKind<R>],
+    target_id: &str,
+) -> Option<MenuItemKind<R>> {
     for item in items {
         if item.id().as_ref() == target_id {
             return Some(item.clone());
@@ -384,7 +518,10 @@ fn find_menu_item_recursive<R: Runtime>(items: &[MenuItemKind<R>], target_id: &s
     None
 }
 
-pub fn get_menu_item_recursive<R: Runtime>(menu: &Menu<R>, target_id: &str) -> Option<MenuItemKind<R>> {
+pub fn get_menu_item_recursive<R: Runtime>(
+    menu: &Menu<R>,
+    target_id: &str,
+) -> Option<MenuItemKind<R>> {
     let items = menu.items().ok()?;
     find_menu_item_recursive(&items, target_id)
 }
@@ -402,7 +539,11 @@ fn get_all_active_menus<R: Runtime>(app: &AppHandle<R>) -> Vec<Menu<R>> {
     menus
 }
 
-pub fn update_menu_items<R: Runtime>(app: &AppHandle<R>, ids: &[String], payload: &serde_json::Value) {
+pub fn update_menu_items<R: Runtime>(
+    app: &AppHandle<R>,
+    ids: &[String],
+    payload: &serde_json::Value,
+) {
     let enabled_opt = payload.get("enabled").and_then(|v| v.as_bool());
     let menus = get_all_active_menus(app);
 
@@ -430,7 +571,9 @@ pub fn update_menu_items<R: Runtime>(app: &AppHandle<R>, ids: &[String], payload
 }
 
 pub fn translate_menu<R: Runtime>(app: &AppHandle<R>, translation: &serde_json::Value) {
-    let Some(menu_json) = translation.get("menu") else { return };
+    let Some(menu_json) = translation.get("menu") else {
+        return;
+    };
 
     let mut mappings: Vec<(&str, Option<&str>)> = Vec::new();
 
@@ -440,70 +583,160 @@ pub fn translate_menu<R: Runtime>(app: &AppHandle<R>, translation: &serde_json::
         if let Some(new_sub) = file.get("new") {
             mappings.push(("MENU_NEW", new_sub.get("label").and_then(|v| v.as_str())));
             if let Some(sub) = new_sub.get("submenu") {
-                mappings.push(("NEW_EMPTY_MODEL", sub.get("emptyModel").and_then(|v| v.as_str())));
+                mappings.push((
+                    "NEW_EMPTY_MODEL",
+                    sub.get("emptyModel").and_then(|v| v.as_str()),
+                ));
                 mappings.push(("LOAD_FILE", sub.get("loadFile").and_then(|v| v.as_str())));
-                mappings.push(("LOAD_FROM_TEXT", sub.get("copyPaste").and_then(|v| v.as_str())));
-                mappings.push(("EXAMPLES_HEADER", sub.get("examples").and_then(|v| v.as_str())));
+                mappings.push((
+                    "LOAD_FROM_TEXT",
+                    sub.get("copyPaste").and_then(|v| v.as_str()),
+                ));
+                mappings.push((
+                    "EXAMPLES_HEADER",
+                    sub.get("examples").and_then(|v| v.as_str()),
+                ));
             }
         }
         mappings.push(("NEW_WINDOW", file.get("newWindow").and_then(|v| v.as_str())));
-        mappings.push(("IMPORT_MODEL", file.get("importModel").and_then(|v| v.as_str())));
-        mappings.push(("IMPORT_PACKAGE", file.get("importPackage").and_then(|v| v.as_str())));
-        mappings.push(("COPY_TO_CLIPBOARD", file.get("copyToClipboard").and_then(|v| v.as_str())));
-        mappings.push(("SAVE_TO_WORKSPACE", file.get("saveToWorkspace").and_then(|v| v.as_str())));
-        mappings.push(("EXPORT_MODEL", file.get("exportModel").and_then(|v| v.as_str())));
-        mappings.push(("EXPORT_PACKAGE", file.get("exportPackage").and_then(|v| v.as_str())));
+        mappings.push((
+            "IMPORT_MODEL",
+            file.get("importModel").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "IMPORT_PACKAGE",
+            file.get("importPackage").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "COPY_TO_CLIPBOARD",
+            file.get("copyToClipboard").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "SAVE_TO_WORKSPACE",
+            file.get("saveToWorkspace").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "EXPORT_MODEL",
+            file.get("exportModel").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "EXPORT_PACKAGE",
+            file.get("exportPackage").and_then(|v| v.as_str()),
+        ));
     }
 
     // View
     if let Some(view) = menu_json.get("view") {
         mappings.push(("MENU_VIEW", view.get("label").and_then(|v| v.as_str())));
-        mappings.push(("SHOW_HIDE_TOOLBAR", view.get("toggleToolbar").and_then(|v| v.as_str())));
-        mappings.push(("SHOW_HIDE_MINIMAP", view.get("toggleMinimap").and_then(|v| v.as_str())));
+        mappings.push((
+            "SHOW_HIDE_TOOLBAR",
+            view.get("toggleToolbar").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "SHOW_HIDE_MINIMAP",
+            view.get("toggleMinimap").and_then(|v| v.as_str()),
+        ));
         if let Some(filter) = view.get("filter") {
-            mappings.push(("MENU_FILTER_MODEL_BY", filter.get("label").and_then(|v| v.as_str())));
+            mappings.push((
+                "MENU_FILTER_MODEL_BY",
+                filter.get("label").and_then(|v| v.as_str()),
+            ));
             if let Some(sub) = filter.get("submenu") {
-                mappings.push(("FILTER_MODEL_BY_NONE", sub.get("none").and_then(|v| v.as_str())));
-                mappings.push(("FILTER_MODEL_BY_PROPERTIES", sub.get("properties").and_then(|v| v.as_str())));
+                mappings.push((
+                    "FILTER_MODEL_BY_NONE",
+                    sub.get("none").and_then(|v| v.as_str()),
+                ));
+                mappings.push((
+                    "FILTER_MODEL_BY_PROPERTIES",
+                    sub.get("properties").and_then(|v| v.as_str()),
+                ));
             }
         }
         mappings.push(("ZOOM_IN", view.get("zoomIn").and_then(|v| v.as_str())));
         mappings.push(("ZOOM_OUT", view.get("zoomOut").and_then(|v| v.as_str())));
-        mappings.push(("ZOOM_TO_FIT", view.get("zoomToFit").and_then(|v| v.as_str())));
-        mappings.push(("ZOOM_TO_ACTUAL", view.get("zoomTo100").and_then(|v| v.as_str())));
+        mappings.push((
+            "ZOOM_TO_FIT",
+            view.get("zoomToFit").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "ZOOM_TO_ACTUAL",
+            view.get("zoomTo100").and_then(|v| v.as_str()),
+        ));
     }
 
     // Edit
     if let Some(edit) = menu_json.get("edit") {
         mappings.push(("MENU_EDIT", edit.get("label").and_then(|v| v.as_str())));
-        mappings.push(("OPEN_SELECTED_ELEMENT", edit.get("openSelectedElement").and_then(|v| v.as_str())));
-        mappings.push(("REMOVE_SELECTED_ELEMENT", edit.get("removeSelectedElement").and_then(|v| v.as_str())));
-        mappings.push(("COLLAPSE_EXPAND_MODEL", edit.get("collapseExpandModel").and_then(|v| v.as_str())));
-        mappings.push(("FORMAT_MODEL", edit.get("formatModel").and_then(|v| v.as_str())));
-        mappings.push(("CONNECT_ELEMENTS", edit.get("connectSelectedElements").and_then(|v| v.as_str())));
+        mappings.push((
+            "OPEN_SELECTED_ELEMENT",
+            edit.get("openSelectedElement").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "REMOVE_SELECTED_ELEMENT",
+            edit.get("removeSelectedElement").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "COLLAPSE_EXPAND_MODEL",
+            edit.get("collapseExpandModel").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "FORMAT_MODEL",
+            edit.get("formatModel").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "CONNECT_ELEMENTS",
+            edit.get("connectSelectedElements").and_then(|v| v.as_str()),
+        ));
     }
 
     // Validate
     if let Some(validate) = menu_json.get("validate") {
-        mappings.push(("MENU_VALIDATE", validate.get("label").and_then(|v| v.as_str())));
-        mappings.push(("VALIDATE_MODEL", validate.get("currentModel").and_then(|v| v.as_str())));
+        mappings.push((
+            "MENU_VALIDATE",
+            validate.get("label").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "VALIDATE_MODEL",
+            validate.get("currentModel").and_then(|v| v.as_str()),
+        ));
     }
 
     // Generate
     if let Some(gen) = menu_json.get("generate") {
         mappings.push(("MENU_GENERATE", gen.get("label").and_then(|v| v.as_str())));
-        mappings.push(("GENERATE_HTML_DOCUMENTATION", gen.get("htmlDocumentation").and_then(|v| v.as_str())));
-        mappings.push(("GENERATE_OPEN_API_SPECIFICATION", gen.get("openApiSpecification").and_then(|v| v.as_str())));
-        mappings.push(("GENERATE_ASYNC_API_SPECIFICATION", gen.get("asyncApiSpecification").and_then(|v| v.as_str())));
-        mappings.push(("GENERATE_AASX_XML", gen.get("aasxXml").and_then(|v| v.as_str())));
-        mappings.push(("GENERATE_JSON_PAYLOAD", gen.get("sampleJsonPayload").and_then(|v| v.as_str())));
-        mappings.push(("GENERATE_JSON_SCHEMA", gen.get("jsonSchema").and_then(|v| v.as_str())));
+        mappings.push((
+            "GENERATE_HTML_DOCUMENTATION",
+            gen.get("htmlDocumentation").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "GENERATE_OPEN_API_SPECIFICATION",
+            gen.get("openApiSpecification").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "GENERATE_ASYNC_API_SPECIFICATION",
+            gen.get("asyncApiSpecification").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "GENERATE_AASX_XML",
+            gen.get("aasxXml").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "GENERATE_JSON_PAYLOAD",
+            gen.get("sampleJsonPayload").and_then(|v| v.as_str()),
+        ));
+        mappings.push((
+            "GENERATE_JSON_SCHEMA",
+            gen.get("jsonSchema").and_then(|v| v.as_str()),
+        ));
     }
 
     // Search
     if let Some(search) = menu_json.get("search") {
         mappings.push(("MENU_SEARCH", search.get("label").and_then(|v| v.as_str())));
-        mappings.push(("SEARCH_ELEMENTS", search.get("elements").and_then(|v| v.as_str())));
+        mappings.push((
+            "SEARCH_ELEMENTS",
+            search.get("elements").and_then(|v| v.as_str()),
+        ));
         mappings.push(("SEARCH_FILES", search.get("files").and_then(|v| v.as_str())));
     }
 
@@ -532,13 +765,26 @@ pub fn translate_menu<R: Runtime>(app: &AppHandle<R>, translation: &serde_json::
 // ---------------------------------------------------------------------------
 
 fn find_example_file<R: Runtime>(app: &AppHandle<R>, name: &str) -> Option<PathBuf> {
-    let resource_dir = app.path().resource_dir().unwrap_or_else(|_| PathBuf::from("."));
-    let candidates = [
-        PathBuf::from(format!("apps/ame/src/assets/aspect-models/com.examples/1.0.0/{}", name)),
-        PathBuf::from(format!("../apps/ame/src/assets/aspect-models/com.examples/1.0.0/{}", name)),
-        resource_dir.join(format!("default-models/{}", name)),
-        resource_dir.join(format!("assets/aspect-models/com.examples/1.0.0/{}", name)),
+    let relative_path = Path::new("aspect-models")
+        .join("com.examples")
+        .join("1.0.0")
+        .join(name);
+
+    let dev_candidates = [
+        PathBuf::from("apps/ame/src/assets").join(&relative_path),
+        PathBuf::from("../apps/ame/src/assets").join(&relative_path),
     ];
 
-    candidates.into_iter().find(|path| path.exists())
+    if let Some(path) = dev_candidates.into_iter().find(|path| path.is_file()) {
+        return Some(path);
+    }
+
+    let resource_path = app
+        .path()
+        .resource_dir()
+        .ok()?
+        .join("assets")
+        .join(&relative_path);
+
+    resource_path.is_file().then_some(resource_path)
 }
