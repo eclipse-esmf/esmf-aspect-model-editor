@@ -30,8 +30,8 @@ export default [
             // Layer hierarchy rules: strictly unidirectional flow downward
             {
               sourceTag: 'layer:shell',
-              // The app only plugs the workbench (UI + features + domain) together with the adapters.
-              onlyDependOnLibsWithTags: ['type:shell', 'layer:graph', 'layer:infrastructure'],
+              // The app only plugs the workbench (UI + features + domain + graph) together with the infrastructure.
+              onlyDependOnLibsWithTags: ['type:shell', 'layer:infrastructure'],
             },
             {
               sourceTag: 'layer:features',

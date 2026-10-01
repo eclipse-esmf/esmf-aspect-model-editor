@@ -25,7 +25,7 @@ import {
   ShapeSettingsPort,
   ShapeSettingsStatePort,
 } from '@ame/domain';
-import {EntityInstancePort} from '@ame/graph';
+import {EntityInstancePort, provideAmeGraph} from '@ame/graph';
 import {TAURI_IPC_BRIDGES} from '@ame/shared';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
@@ -42,9 +42,10 @@ import {ModelSaverService} from './model-saver.service';
 import {RenameModelDialogService} from './rename-model/rename-model.service';
 import {EditorTauriBridge} from './tauri/editor-tauri-bridge.service';
 
-/** Binds all editor implementations to their shared contracts. */
+/** Binds all editor implementations to their shared contracts, including the graph rendering engine. */
 export function provideEditor(): EnvironmentProviders {
   return makeEnvironmentProviders([
+    provideAmeGraph(),
     {provide: ConfirmDialogPort, useExisting: ConfirmDialogService},
     {provide: RenameModelDialogPort, useExisting: RenameModelDialogService},
     {provide: EntityInstancePort, useExisting: EntityInstanceService},

@@ -11,15 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {provideAmeGraph} from '@ame/graph';
 import {provideAmeInfrastructure} from '@ame/infrastructure';
 import {provideWorkbench} from '@ame/workbench';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 
 /**
- * Composition root of the Aspect Model Editor: plugs the workbench (UI, features, domain)
- * together with the adapters (graph, infrastructure) that implement the domain ports.
+ * Composition root of the Aspect Model Editor: plugs the workbench (UI, features, domain, graph)
+ * together with the environment-specific infrastructure adapters.
  */
 export function provideAme(): EnvironmentProviders {
-  return makeEnvironmentProviders([provideWorkbench(), provideAmeGraph(), provideAmeInfrastructure()]);
+  return makeEnvironmentProviders([provideWorkbench(), provideAmeInfrastructure()]);
 }
