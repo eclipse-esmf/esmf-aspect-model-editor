@@ -212,7 +212,7 @@ pub fn start_backend(app: &AppHandle, state: &BackendState) {
 pub fn clean_up_backend(state: &BackendState) {
     let mut child_guard = state.child_process.lock().unwrap();
 
-    if let Some(mut child) = child_guard.take() {
+    if let Some(child) = child_guard.take() {
         let pid = child.id();
 
         println!("Cleaning up backend process PID {pid}");
