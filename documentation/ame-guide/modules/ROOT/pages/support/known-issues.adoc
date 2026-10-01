@@ -68,26 +68,7 @@ _Unsupported Namespaces_
 
 Check that your currently used namespaces in the TTL file are up to date.
 
-Hint: You can check the current default namespaces via looking at the Movement Example code. Display the Movement Example by clicking the New/Load icon > Create/Upload Aspect Model > Models > Movement Example.
-|===
-
-[[validation-does-not-stop]]
-=== Validation does not stop
-
-[%noheader,cols="15%,85%"]
-|===
-h| Error
-a| When loading a TTL file, units are not loaded correctly. After triggering a validation, this validation does not stop and the user cannot continue to edit the Aspect Model.
-
-h| Explanation
-a|
-The backend validation does not complete successfully. One reason can be that the backend service is not running.
-
-h| Workaround
-a|
-Restart the Aspect Model Editor.
-
-Fixed for Aspect Model Editor 2.2.0 and higher: If the backend is not available, a message is shown to the user.
+Hint: You can check the current default namespaces via looking at the Movement Example code. Load the Movement Example via *File* > *New...* > *Examples* > *Movement.ttl*.
 |===
 
 [[validation-timeout]]
@@ -100,33 +81,10 @@ a| After triggering a validation, the validation runs into a timeout.
 
 h| Explanation
 a| The backend validation does not complete successfully. One reason can be that the backend service is not running.
+If the backend is not available, a corresponding message is shown.
 
 h| Workaround
 a| Restart the Aspect Model Editor.
-|===
-
-[[editing-element]]
-=== Editing elements
-
-[%noheader,cols="15%,85%"]
-|===
-h| Error
-a| While the element edit view is displayed and you adjust something in the editor, the edit view is not updated.
-
-h| Workaround
-a| Close the edit elements view and reopen it.
-|===
-
-[[overlapping-elements]]
-=== Overlapping elements
-
-[%noheader,cols="15%,85%"]
-|===
-h| Error
-a| As soon as elements overlap, the last created one is displayed above all others.
-
-h| Workaround
-a| Move all elements to a free space so that you can see them again.
 |===
 
 [[other-known-issues]]
@@ -162,21 +120,6 @@ h| Workaround
 a| Should you need to relate this Characteristic with an Entity, change your Characteristic class first and modify your own Entity as suitable.
 |===
 
-[[key-press-not-recognized]]
-=== Key press not recognized
-
-[%noheader,cols="15%,85%"]
-|===
-h| Error
-a| During usage, a key press (e.g. delete to delete an element) is not recognized. Instead, no action happens.
-
-h| Explanation
-a| The Aspect Model Editor does not support keystrokes like "del". See xref:getting-started/get-started.adoc[Getting started].
-
-h| Workaround
-a| Use mouse actions instead, e.g. the toolbar on the top with the Delete icon. You can also change your focus back and forth to try again pressing the delete key.
-|===
-
 [[elements-missing-auto-format]]
 === Some elements seem missing when loading or auto-formatting
 
@@ -198,15 +141,16 @@ a|
 |===
 
 [[overlap-issue]]
-=== Dragging elements may lead to overlap
+=== Imported elements may overlap
 
 [%noheader,cols="15%,85%"]
 |===
 h| Error
-a| After importing elements from workspace the element subtree overlaps the present model or the overlap happened from other reason
+a| After importing elements from the workspace, the element subtree overlaps the present model.
 
 h| Explanation
 a| This happens due to autoformat not being enabled and/or the hierarchical layout being disabled.
+When you move elements manually, the Aspect Model Editor prevents them from being dropped on top of other elements.
 
 h| Workaround
 a|
@@ -242,8 +186,8 @@ image::uninstall-04.png[width=50%]
 image::uninstall-05.png[width=100%]
 |===
 
-[[javascript-mac-ame3.0.0]]
-=== macOS: JavaScript error occurred in the main process
+[[macos-app-cannot-be-opened]]
+=== macOS: Application cannot be opened or backend does not start
 
 NOTE: This issue is caused by the Aspect Model Editor not being notarized or signed with an Apple Developer certificate. See xref:support/known-limitations.adoc#current-known-limitations-macos[Current limitations on macOS] for background information.
 
@@ -251,37 +195,32 @@ NOTE: This issue is caused by the Aspect Model Editor not being notarized or sig
 |===
 h| Error
 a|
-Error message when starting the Aspect Model Editor on macOS.
+When starting the Aspect Model Editor on macOS, one of the following happens:
+
+* macOS reports that the application "is damaged and can't be opened" or that the developer cannot be verified.
+* The application starts, but validation, generation or saving fails because the backend service cannot be started.
 
 h| Explanation
 a|
-If your macOS version is running Apple's Gatekeeper security feature, it could happen that the application is started in a kind of sandbox. You can easily detect this by reading the following in the JavaScript error message: `Uncaught Exception: Error: spawn /private/var...` (see image below).
-
-image::error-mac-javascript-main-process.png[width=50%]
+macOS Gatekeeper quarantines applications downloaded from the internet.
+Quarantined applications are blocked or started from a randomized, read-only location (`/private/var/...`), which can prevent the bundled backend service from starting.
 
 h| Workaround
 a|
-The keyword here is `/private/var`, which means that your application is quarantined and can only be unlocked by you. For this you must open Terminal and execute the following command:
+Remove the quarantine attribute in Terminal:
 
 [source,bash]
 ----
-xattr -r -d com.apple.quarantine /Applications/AspectModelEditor/Aspect-Model-Editor.app
+xattr -r -d com.apple.quarantine "/Applications/Aspect Model Editor.app"
 ----
 
-Please note that the path to the application can change and this is only the default path.
+Please note that the path to the application can differ from the default path used above.
 
-Please keep in mind that this is not an official Apple-signed version, and it must be confirmed in the security settings first. You may be asked several times before the app opens.
+Alternatively, approve the application in the security settings:
 
-If your security settings are enabled to launch unverified applications, the following error messages may pop up. These must be pre-approved in the security settings of your system.
-
-image::error-mac-javascript-main-process-approval.png[width=70%]
-
-The following should be considered when approving:
-
-* Error messages must not be closed.
 * Go to *System Settings* and click on *Privacy & Security*.
 * Scroll down to the security section and click *Open Anyway*, entering your admin password if prompted.
-* Close messages and restart the Aspect Model Editor.
+* Restart the Aspect Model Editor.
 |===
 
 ++++
