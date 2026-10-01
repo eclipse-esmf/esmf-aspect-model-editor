@@ -11,15 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelOpenerPort, WorkspaceNamespacesService} from '@ame/domain';
-import {
-  createDebouncedLoading,
-  filesSearchOption,
-  LanguageTranslationService,
-  ModelCheckerPort,
-  NotificationsService,
-  SearchService,
-} from '@ame/shared';
+import {ModelCheckerPort, ModelOpenerPort, WorkspaceNamespacesService} from '@ame/domain';
+import {createDebouncedLoading, filesSearchOption, LanguageTranslationService, NotificationsService, SearchService} from '@ame/shared';
 import {AfterViewInit, Component, ElementRef, inject, signal, viewChild} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';

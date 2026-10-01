@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './element-creator';
 export * from './elements-relations';
 export * from './shape-geometry';
 export * from './xsd-datatypes';

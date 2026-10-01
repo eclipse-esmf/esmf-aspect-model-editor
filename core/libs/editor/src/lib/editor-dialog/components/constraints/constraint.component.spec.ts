@@ -22,6 +22,8 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {BehaviorSubject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
+import {TabStateService} from '../../../tabs/tab-state.service';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorDialogValidators} from '../../validators';
 import {ConstraintComponent} from './constraint.component';
@@ -67,6 +69,8 @@ describe('ConstraintComponent', () => {
           getSammLanguageCodes: vi.fn(() => ['en', 'de']),
         }),
         EditorDialogValidators,
+        MockProvider(TabStateService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(MaxGraphService),
         MockProvider(NotificationsService),
         MockProvider(RdfPort),

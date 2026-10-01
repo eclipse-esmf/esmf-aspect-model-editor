@@ -108,16 +108,18 @@ export class MaxGraphShapeOverlayService {
   }
 
   private createAndConnectShape(cell: Cell, modelInfo: ModelInfo): void {
-    const maxgraphConnectorService = this.injector.get<ShapeConnectorPort>(ShapeConnectorPort);
-
     const modelElement = MaxGraphHelper.getModelElement(this.maxgraphShapeSelectorService.getSelectedShape());
-    maxgraphConnectorService.createAndConnectShape(modelElement, cell, modelInfo)?.subscribe?.(() => {
-      cell['configuration'].fields = MaxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
-      this.maxgraphAttributeService.graph.labelChanged(cell, MaxGraphHelper.createPropertiesLabel(cell), null);
+    // Lazy on purpose: ShapeConnectorService injects this service (real DI cycle).
+    this.injector
+      .get(ShapeConnectorPort)
+      .createAndConnectShape(modelElement, cell, modelInfo)
+      ?.subscribe?.(() => {
+        cell['configuration'].fields = MaxGraphVisitorHelper.getElementProperties(modelElement, this.sammLangService);
+        this.maxgraphAttributeService.graph.labelChanged(cell, MaxGraphHelper.createPropertiesLabel(cell), null);
 
-      this.removeOverlaysByConnection(modelElement, cell);
-      this.maxgraphAttributeService.graph.clearSelection();
-    });
+        this.removeOverlaysByConnection(modelElement, cell);
+        this.maxgraphAttributeService.graph.clearSelection();
+      });
   }
 
   private addShapeAction(cell: Cell, event: MouseEvent, modelInfo: ModelInfo): void {

@@ -13,18 +13,15 @@
 
 import {LoadedFilesService, ModelService} from '@ame/domain';
 import {ElementRelationUtil, getModelElement, useUpdater} from '@ame/shared';
-import {inject, Injector} from '@angular/core';
+import {inject} from '@angular/core';
 import {DefaultAspect, DefaultEntityInstance, DefaultEnumeration, HasExtends, NamedElement} from '@esmf/aspect-model-loader';
 import {GraphAdapterPort} from '../ports/graph-adapter.port';
 
 export abstract class BaseModelService {
   protected readonly modelService: ModelService = inject(ModelService);
   protected readonly loadedFilesService: LoadedFilesService = inject(LoadedFilesService);
-  protected readonly injector = inject(Injector);
 
-  protected get graphAdapter(): GraphAdapterPort | null {
-    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
-  }
+  protected readonly graphAdapter = inject(GraphAdapterPort, {optional: true});
 
   get currentCachedFile() {
     return this.loadedFile.cachedFile;

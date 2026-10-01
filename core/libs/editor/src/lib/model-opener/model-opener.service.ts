@@ -26,19 +26,21 @@ export {OpenModelOptions, PromptUploadOptions};
 
 @Injectable({providedIn: 'root'})
 export class ModelOpenerService implements ModelOpenerPort {
-  private readonly injector = inject(Injector);
   private readonly matDialog = inject(MatDialog);
   private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private readonly modelSavingTracker = inject(ModelSavingTrackerService);
   private readonly saveModelDialog = inject(SaveModelDialogService);
 
+  private readonly injector = inject(Injector);
+
+  // Lazy on purpose: real DI cycles
+  // ModelOpener -> FileHandling -> ModelOpener
+  // ModelOpener -> FileHandling -> ModelLoader -> ModelRenderer -> ShapeSettings -> OpenReferencedElement -> ModelOpener
   private get fileHandlingService(): FileHandlingService {
     return this.injector.get(FileHandlingService);
   }
 
-  private get tabStateService(): TabStateService {
-    return this.injector.get(TabStateService);
-  }
+  private readonly tabStateService = inject(TabStateService);
 
   constructor() {
     if (typeof window !== 'undefined') {

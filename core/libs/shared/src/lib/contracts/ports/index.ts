@@ -11,9 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './file-handling.port';
-export * from './graph-validation.port';
-export * from './loaded-files.port';
-export * from './model-checker.port';
-export * from './model-element-naming.port';
 export * from './tauri.port';

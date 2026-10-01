@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LanguageTranslationService, ModelCheckerPort, NotificationsService} from '@ame/shared';
+import {ModelCheckerPort} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

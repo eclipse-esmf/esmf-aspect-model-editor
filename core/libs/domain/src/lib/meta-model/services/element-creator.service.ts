@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {config} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {
   DefaultAspect,
@@ -42,8 +43,8 @@ import {
   NamedElement,
   XsdDataTypes,
 } from '@esmf/aspect-model-loader';
-import {LoadedFilesPort, ModelElementNamingPort} from '../../contracts';
-import {config} from '../config';
+import {LoadedFilesService} from '../../model-session';
+import {ModelElementNamingService} from './model-element-naming.service';
 
 const characteristics: {new (...x: any[]): NamedElement}[] = [
   DefaultCharacteristic,
@@ -73,8 +74,8 @@ type ElementConfig = Partial<{
 
 @Injectable({providedIn: 'root'})
 export class ElementCreatorService {
-  private modelElementNamingService = inject(ModelElementNamingPort, {optional: true});
-  private loadedFiles = inject(LoadedFilesPort, {optional: true});
+  private modelElementNamingService = inject(ModelElementNamingService);
+  private loadedFiles = inject(LoadedFilesService);
 
   get currentFile() {
     return this.loadedFiles?.currentLoadedFile;
@@ -189,7 +190,7 @@ export class ElementCreatorService {
         element = null;
     }
 
-    if (elementConfig.resolveNaming && this.modelElementNamingService) {
+    if (elementConfig.resolveNaming) {
       return this.modelElementNamingService.resolveMetaModelElement(element, elementConfig.cached) as T;
     } else if (elementConfig.cached && this.currentFile?.cachedFile) {
       return this.currentFile.cachedFile.resolveInstance(element);

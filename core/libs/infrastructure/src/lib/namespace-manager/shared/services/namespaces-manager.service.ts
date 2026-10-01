@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesTransferPort} from '@ame/domain';
-import {createFile, FileHandlingPort, FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
+import {FileHandlingPort, NamespacesTransferPort} from '@ame/domain';
+import {createFile, FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {environment} from 'environments/environment';

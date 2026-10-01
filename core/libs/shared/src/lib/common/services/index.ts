@@ -22,4 +22,3 @@ export * from './notifications.service';
 export * from './search.service';
 export * from './tauri-signals.service';
 export * from './title.service';
-export * from './value-type-resolver.service';

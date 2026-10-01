@@ -17,13 +17,15 @@ import {
   FileStatus,
   LoadedFilesService,
   ModelApiPort,
+  ModelCheckerPort,
   ModelData,
   RdfModelUtil,
+  WorkspaceFileLocation,
   WorkspaceNamespacesService,
   WorkspaceStore,
   WorkspaceStructure,
 } from '@ame/domain';
-import {config, isVersionOutdated, ModelCheckerPort} from '@ame/shared';
+import {config, isVersionOutdated} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
@@ -157,7 +159,7 @@ export class ModelCheckerService implements ModelCheckerPort {
     return this.modelApiService.loadNamespacesStructure(onlyAspectModels).pipe(
       takeUntilDestroyed(this.destroyRef),
       map(structure => {
-        const requests = {};
+        const requests: Record<string, WorkspaceFileLocation> = {};
         for (const namespace in structure) {
           for (const element of structure[namespace]) {
             for (const value of element.models) {

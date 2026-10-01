@@ -12,12 +12,13 @@
  */
 
 import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelInstantiatorPort, NamespaceFile} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {BrowserService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of, throwError} from 'rxjs';
+import {of, Subject, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ModelLoaderService} from './model-loader.service';
 import {ModelRendererService} from './model-renderer.service';
@@ -55,6 +56,7 @@ describe('ModelLoaderService', () => {
           fetchAllAspectMetaModel: vi.fn(() => of([])),
           fetchAllNamespaceFilesContent: vi.fn(() => of([])),
         }),
+        MockProvider(MaxGraphService, {graphModelChanged$: new Subject<void>()}),
         MockProvider(NotificationsService),
         {
           provide: ModelInstantiatorPort,

@@ -15,6 +15,7 @@ import {inject, Injectable, Injector} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {LoadedFilesService} from '../model-session';
 import {GraphFilterRendererPort} from '../ports/graph-filter-renderer.port';
+import {ShapeSettingsStatePort} from '../ports/ui.port';
 import {FilterAttributesService} from './active-filter.session';
 import {DefaultFilter} from './filters/default-filter';
 import {PropertiesFilterLoader} from './filters/properties-filter';
@@ -32,8 +33,18 @@ export type FilteredTrees = {
 
 @Injectable({providedIn: 'root'})
 export class FiltersService {
-  private readonly injector = inject(Injector);
   private readonly filterAttributesService = inject(FilterAttributesService);
+  private readonly loadedFilesService = inject(LoadedFilesService);
+  private readonly injector = inject(Injector);
+
+  // Lazy on purpose: the adapters behind these ports (graph/editor) depend on services that inject FiltersService (real DI cycle).
+  private get shapeSettingsState(): ShapeSettingsStatePort | null {
+    return this.injector.get(ShapeSettingsStatePort, null, {optional: true});
+  }
+
+  private get graphFilterRenderer(): GraphFilterRendererPort | null {
+    return this.injector.get(GraphFilterRendererPort, null, {optional: true});
+  }
 
   private readonly filtersMethods: Record<ModelFilter, () => void> = {
     [ModelFilter.DEFAULT]: () => this.selectDefaultFilter(),
@@ -50,12 +61,12 @@ export class FiltersService {
   }
 
   selectDefaultFilter(): void {
-    this.currentFilter = new DefaultFilter(this.injector.get(LoadedFilesService));
+    this.currentFilter = new DefaultFilter(this.loadedFilesService);
     this.filterAttributesService.activeFilter = ModelFilter.DEFAULT;
   }
 
   selectPropertiesFilter(): void {
-    this.currentFilter = new PropertiesFilterLoader(this.injector);
+    this.currentFilter = new PropertiesFilterLoader(this.loadedFilesService, this.shapeSettingsState);
     this.filterAttributesService.activeFilter = ModelFilter.PROPERTIES;
   }
 
@@ -87,13 +98,12 @@ export class FiltersService {
   }
 
   renderByFilter(filter: ModelFilter): void {
-    const graphFilterRenderer = this.injector.get<GraphFilterRendererPort>(GraphFilterRendererPort, null as any, {optional: true});
+    const graphFilterRenderer = this.graphFilterRenderer;
     const selectedModelElement = graphFilterRenderer?.getSelectedModelElement?.();
 
     this.filterAttributesService.isFiltering = true;
     this.filtersMethods[filter]?.();
-    const loadedFilesService = this.injector.get(LoadedFilesService);
-    const cachedFile = loadedFilesService.currentLoadedFile.cachedFile;
+    const cachedFile = this.loadedFilesService.currentLoadedFile.cachedFile;
     const rootElements = cachedFile.getKeys().reduce<NamedElement[]>((acc, e) => {
       const cachedElement = cachedFile.get<NamedElement>(e);
       if (cachedElement && cachedElement.parents.length <= 0) {

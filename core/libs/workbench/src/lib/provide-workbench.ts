@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {provideAmeDomain} from '@ame/domain';
 import {provideEditor} from '@ame/editor';
 import {provideSearch} from '@ame/search';
 import {provideSettings} from '@ame/settings';
@@ -20,7 +19,7 @@ import {provideSidebar} from '@ame/sidebar';
 import {EnvironmentProviders, inject, makeEnvironmentProviders, provideAppInitializer} from '@angular/core';
 import {TauriTunnelService} from './tauri-tunnel.service';
 
-/** Workbench providers: shell configuration plus all UI features and the domain. */
+/** Workbench providers: shell configuration plus all UI features. */
 export function provideWorkbench(): EnvironmentProviders {
   return makeEnvironmentProviders([
     {provide: APP_CONFIG, useValue: config},
@@ -30,6 +29,5 @@ export function provideWorkbench(): EnvironmentProviders {
     provideSidebar(),
     provideSearch(),
     provideSettings(),
-    provideAmeDomain(),
   ]);
 }

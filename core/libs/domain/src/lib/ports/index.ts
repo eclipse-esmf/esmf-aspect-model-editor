@@ -13,9 +13,12 @@
 
 export * from './dialog.port';
 export * from './editor-actions.port';
+export * from './file-handling.port';
 export * from './graph-filter-renderer.port';
 export * from './graph-navigator.port';
+export * from './graph-validation.port';
 export * from './model-api.port';
+export * from './model-checker.port';
 export * from './model-loader.port';
 export * from './model-opener.port';
 export * from './namespaces-transfer.port';

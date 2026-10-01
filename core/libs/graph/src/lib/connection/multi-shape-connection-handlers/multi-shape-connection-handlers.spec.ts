@@ -21,8 +21,8 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {FiltersService, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
-import {ElementCreatorService, LanguageTranslationService, NotificationsService} from '@ame/shared';
+import {ElementCreatorService, FiltersService, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
   DefaultAspect,

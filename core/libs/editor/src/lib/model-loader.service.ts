@@ -23,7 +23,7 @@ import {
   RdfModelUtil,
 } from '@ame/domain';
 import {BrowserService, config, isVersionOutdated, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
-import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
@@ -44,7 +44,6 @@ interface TmpLoadedFiles {
 @Injectable({providedIn: 'root'})
 export class ModelLoaderService implements ModelLoaderPort {
   private destroyRef = inject(DestroyRef);
-  private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
   private modelApiService = inject(ModelApiPort);
   private notificationsService = inject(NotificationsService);
@@ -56,9 +55,7 @@ export class ModelLoaderService implements ModelLoaderPort {
   private configurationService = inject(ConfigurationService);
   private titleService = inject(TitleService);
 
-  private get tabStateService(): TabStateService {
-    return this.injector.get(TabStateService);
-  }
+  private readonly tabStateService = inject(TabStateService);
 
   private tmpLoadedFiles: TmpLoadedFiles;
 

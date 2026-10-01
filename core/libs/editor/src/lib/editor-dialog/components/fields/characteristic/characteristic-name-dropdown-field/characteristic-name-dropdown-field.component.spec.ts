@@ -3,8 +3,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
-import {ElementCreatorService, ModelElementNamingPort} from '@ame/shared';
+import {
+  ElementCreatorService,
+  LoadedFilesService,
+  ModelElementNamingService,
+  ModelService,
+  NamespaceFile,
+  SammLanguageSettingsService,
+} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -53,7 +59,7 @@ describe('CharacteristicNameDropdownFieldComponent', () => {
         MockProvider(ElementCreatorService, {
           createEmptyElement: vi.fn((cls: any) => new cls({aspectModelUrn: 'urn:test:1.0.0#New', name: 'New', metaModelVersion: '2.0.0'})),
         }),
-        MockProvider(ModelElementNamingPort, {
+        MockProvider(ModelElementNamingService, {
           resolveElementNaming: vi.fn((el: any) => el),
         }),
       ],

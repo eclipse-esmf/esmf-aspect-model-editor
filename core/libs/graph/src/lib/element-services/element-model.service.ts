@@ -20,7 +20,7 @@ import {
   RenameModelDialogPort,
 } from '@ame/domain';
 import {ElementRelationUtil, LanguageTranslationService, NotificationsService, TitleService, useUpdater} from '@ame/shared';
-import {inject, Injectable, Injector} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {GraphAdapterPort} from '../ports/graph-adapter.port';
 import {CharacteristicModelService} from './characteristic-model.service';
@@ -28,13 +28,11 @@ import {ModelRootService} from './model-root.service';
 
 @Injectable({providedIn: 'root'})
 export class ElementModelService {
-  private readonly injector = inject(Injector);
   private readonly titleService = inject(TitleService);
 
-  private get graphAdapter(): GraphAdapterPort | null {
-    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
-  }
+  private readonly graphAdapter = inject(GraphAdapterPort, {optional: true});
   private readonly modelRootService = inject(ModelRootService);
+  private readonly characteristicModelService = inject(CharacteristicModelService);
   private readonly modelService = inject(ModelService);
   private readonly renameModelService = inject(RenameModelDialogPort, {optional: true});
   private readonly confirmDialogService = inject(ConfirmDialogPort, {optional: true});
@@ -51,11 +49,12 @@ export class ElementModelService {
     if (!cell || cell.isEdge?.()) {
       return;
     }
-    const characteristicModelService = this.injector.get(CharacteristicModelService);
     const modelElement = ElementRelationUtil.getModelElement(cell);
 
     const modelService =
-      modelElement instanceof DefaultEnumeration ? characteristicModelService : this.modelRootService.getElementModelService(modelElement);
+      modelElement instanceof DefaultEnumeration
+        ? this.characteristicModelService
+        : this.modelRootService.getElementModelService(modelElement);
     modelService.update(cell, form);
     this.graphAdapter?.notifyGraphModelChanged();
   }

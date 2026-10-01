@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelValidationStore, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
-import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, ModelCheckerPort, NotificationsService} from '@ame/shared';
+import {ModelCheckerPort, ModelValidationStore, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
+import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';

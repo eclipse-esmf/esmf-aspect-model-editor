@@ -12,8 +12,6 @@
  */
 
 import {basicShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
-import {Injector} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
 import {
   DefaultAspect,
   DefaultCharacteristic,
@@ -32,7 +30,6 @@ import {PropertiesFilterLoader} from './properties-filter';
 
 describe('PropertiesFilterLoader', () => {
   let filter: PropertiesFilterLoader;
-  let injector: Injector;
   let loadedFilesMock: {isElementExtern: ReturnType<typeof vi.fn>};
   let shapeSettingsStateMock: {isShapeSettingOpened: boolean; closeShapeSettings: ReturnType<typeof vi.fn>};
 
@@ -46,15 +43,10 @@ describe('PropertiesFilterLoader', () => {
       isElementExtern: vi.fn(() => false),
     };
 
-    TestBed.configureTestingModule({
-      providers: [
-        {provide: ShapeSettingsStatePort, useValue: shapeSettingsStateMock},
-        {provide: LoadedFilesService, useValue: loadedFilesMock},
-      ],
-    });
-
-    injector = TestBed.inject(Injector);
-    filter = new PropertiesFilterLoader(injector);
+    filter = new PropertiesFilterLoader(
+      loadedFilesMock as unknown as LoadedFilesService,
+      shapeSettingsStateMock as unknown as ShapeSettingsStatePort,
+    );
   });
 
   describe('filter', () => {

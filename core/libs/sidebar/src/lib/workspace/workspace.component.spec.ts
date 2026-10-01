@@ -11,15 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {WorkspaceFacade} from '@ame/domain';
-import {
-  BrowserService,
-  IPC_RENDERER,
-  LanguageTranslationService,
-  ModelCheckerPort,
-  NotificationsService,
-  TauriSignalsService,
-} from '@ame/shared';
+import {ModelCheckerPort, WorkspaceFacade} from '@ame/domain';
+import {BrowserService, IPC_RENDERER, LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

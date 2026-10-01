@@ -13,6 +13,8 @@
 
 import {
   ConfigurationService,
+  FileHandlingPort,
+  getNamespaceModels,
   LoadedFilePayload,
   LoadedFilesService,
   ModelApiPort,
@@ -28,7 +30,6 @@ import {
 import {MaxGraphService} from '@ame/graph';
 import {
   decodeText,
-  FileHandlingPort,
   FileTypes,
   FileUploadService,
   GeneralConfig,
@@ -42,7 +43,7 @@ import {
   TauriSignalsService,
   TitleService,
 } from '@ame/shared';
-import {DestroyRef, inject, Injectable, Injector} from '@angular/core';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
@@ -113,15 +114,10 @@ export class FileHandlingService implements FileHandlingPort {
   private titleService = inject(TitleService);
   private ipcRenderer = inject(IPC_RENDERER, {optional: true});
   private rdfNodeService = inject(RdfNodePort);
-  private injector = inject(Injector);
 
-  private get tabStateService(): TabStateService {
-    return this.injector.get(TabStateService);
-  }
+  private readonly tabStateService = inject(TabStateService);
 
-  private get modelOpenerService(): ModelOpenerService {
-    return this.injector.get(ModelOpenerService);
-  }
+  private readonly modelOpenerService = inject(ModelOpenerService);
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
@@ -763,13 +759,9 @@ export class FileHandlingService implements FileHandlingPort {
    * @returns - a list of model data objects
    */
   private getAllWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
-    return this.modelApiService.loadNamespacesStructure().pipe(
-      map(namespacesStructure => {
-        const targetNamespaces = namespacesStructure?.[namespaceName];
-        const targetNamespace = targetNamespaces?.find(ns => ns?.version === namespaceVersion);
-        return targetNamespace?.models ?? [];
-      }),
-    );
+    return this.modelApiService
+      .loadNamespacesStructure()
+      .pipe(map(namespacesStructure => getNamespaceModels(namespacesStructure, namespaceName, namespaceVersion)));
   }
 
   /**
@@ -829,11 +821,5 @@ export class FileHandlingService implements FileHandlingPort {
         fromWorkspace: true,
       } as LoadedFilePayload;
     });
-  }
-
-  isFileExistOnWorkspace(namespaceName: string, namespaceVersion: string, fileName: string): Observable<boolean> {
-    return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
-      map((models: ModelData[]) => models.some((model: ModelData) => model.name === fileName)),
-    );
   }
 }

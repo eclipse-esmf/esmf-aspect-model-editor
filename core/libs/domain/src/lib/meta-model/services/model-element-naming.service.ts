@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {inject, Injectable, Injector} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {catchError, concatMap, EMPTY, expand, finalize, forkJoin, last, map, Observable, of} from 'rxjs';
 import {LoadedFilesService} from '../../model-session';
@@ -21,7 +21,6 @@ import {ModelApiPort} from '../../ports/model-api.port';
 @Injectable({providedIn: 'root'})
 export class ModelElementNamingService {
   private readonly loadedFiles = inject(LoadedFilesService);
-  private readonly injector = inject(Injector);
   private readonly modelRepository = inject(ModelApiPort, {optional: true});
   // URNs claimed by elements whose asynchronous name resolution is still in flight
   private readonly pendingUrns = new Map<string, NamedElement>();
@@ -39,9 +38,7 @@ export class ModelElementNamingService {
     }
   }
 
-  private get graphNavigator(): GraphNavigatorPort | null {
-    return this.injector.get<GraphNavigatorPort | null>(GraphNavigatorPort, null, {optional: true});
-  }
+  private readonly graphNavigator = inject(GraphNavigatorPort, {optional: true});
 
   private isExistingElement(element: NamedElement): boolean {
     if (!element?.aspectModelUrn) {

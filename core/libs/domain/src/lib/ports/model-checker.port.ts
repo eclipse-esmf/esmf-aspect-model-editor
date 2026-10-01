@@ -12,8 +12,16 @@
  */
 
 import {Observable, Subject} from 'rxjs';
+import type {FileStatus} from '../state/workspace/workspace-namespaces.service';
+
+/** Location of a workspace file, keyed by aspect model URN in {@link ModelCheckerPort.detectWorkspace}. */
+export interface WorkspaceFileLocation {
+  namespace: string;
+  model: string;
+  version: string;
+}
 
 export abstract class ModelCheckerPort {
-  abstract detectWorkspaceErrors(signal?: Subject<string>): Observable<any[]>;
-  abstract detectWorkspace(onlyAspectModels?: boolean): Observable<Record<string, any>>;
+  abstract detectWorkspaceErrors(signal?: Subject<string>): Observable<FileStatus[]>;
+  abstract detectWorkspace(onlyAspectModels?: boolean): Observable<Record<string, WorkspaceFileLocation>>;
 }

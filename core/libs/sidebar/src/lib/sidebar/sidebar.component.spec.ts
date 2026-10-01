@@ -11,8 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, DraggablePort, GraphNavigatorPort, InformationHandlingPort, ModelSessionFacade} from '@ame/domain';
-import {ModelCheckerPort, NotificationsService, TauriSignalsService} from '@ame/shared';
+import {
+  ConfigurationService,
+  DraggablePort,
+  GraphNavigatorPort,
+  InformationHandlingPort,
+  ModelCheckerPort,
+  ModelSessionFacade,
+} from '@ame/domain';
+import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';

@@ -15,7 +15,9 @@ import {
   ConfirmDialogPort,
   DraggablePort,
   EditorValidationPort,
+  FileHandlingPort,
   InformationHandlingPort,
+  ModelCheckerPort,
   ModelLoaderPort,
   ModelOpenerPort,
   ModelSaverPort,
@@ -24,7 +26,7 @@ import {
   ShapeSettingsStatePort,
 } from '@ame/domain';
 import {EntityInstancePort} from '@ame/graph';
-import {FileHandlingPort, ModelCheckerPort, TAURI_IPC_BRIDGES} from '@ame/shared';
+import {TAURI_IPC_BRIDGES} from '@ame/shared';
 import {EnvironmentProviders, makeEnvironmentProviders} from '@angular/core';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {EntityInstanceService} from './editor-dialog/components/entity-instance/entity-instance-view/entity-instance.service';

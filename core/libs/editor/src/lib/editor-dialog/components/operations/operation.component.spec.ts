@@ -22,6 +22,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 import {EditorModelService} from '../../editor-model.service';
 import {ShapeSettingsService} from '../../services/shape-settings.service';
 import {EditorDialogValidators} from '../../validators';
@@ -59,6 +60,7 @@ describe('OperationComponent', () => {
           checkElementExists: vi.fn(() => of(false)),
         }),
         MockProvider(MaxGraphService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(NotificationsService),
         MockProvider(RdfPort),
         MockProvider(SearchService),

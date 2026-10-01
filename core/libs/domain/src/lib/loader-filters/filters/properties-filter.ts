@@ -12,7 +12,6 @@
  */
 
 import {basicShapeGeometry, ElementPropertyUtil, ShapeGeometry, smallCircleShapeGeometry} from '@ame/shared';
-import {Injector} from '@angular/core';
 import {
   DefaultAspect,
   DefaultEither,
@@ -35,18 +34,14 @@ export class PropertiesFilterLoader implements FilterLoader {
   readonly filterType: ModelFilter = ModelFilter.PROPERTIES;
   readonly visibleElements = [DefaultAspect, DefaultProperty];
 
-  private readonly loadedFiles: LoadedFilesService;
-
-  constructor(private readonly injector: Injector) {
-    this.loadedFiles = this.injector.get(LoadedFilesService);
-  }
+  constructor(
+    private readonly loadedFiles: LoadedFilesService,
+    private readonly shapeSettingsState: ShapeSettingsStatePort | null = null,
+  ) {}
 
   filter(rootElements: NamedElement[]): ModelTree<NamedElement>[] {
-    const shapeSettingsStateService = this.injector.get<ShapeSettingsStatePort>(ShapeSettingsStatePort, null as any, {
-      optional: true,
-    });
-    if (shapeSettingsStateService?.isShapeSettingOpened()) {
-      shapeSettingsStateService.closeShapeSettings();
+    if (this.shapeSettingsState?.isShapeSettingOpened()) {
+      this.shapeSettingsState.closeShapeSettings();
     }
 
     return (rootElements || [])

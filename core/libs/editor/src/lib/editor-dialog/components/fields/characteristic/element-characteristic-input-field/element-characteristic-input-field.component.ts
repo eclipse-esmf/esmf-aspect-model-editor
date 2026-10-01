@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, RdfPort} from '@ame/domain';
-import {ElementCreatorService, NotificationsService} from '@ame/shared';
+import {CacheUtils, ElementCreatorService, RdfPort} from '@ame/domain';
+import {NotificationsService} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {disabled, form, FormField, validateAsync} from '@angular/forms/signals';

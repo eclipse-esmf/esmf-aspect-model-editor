@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService, SammLanguageSettingsService} from '@ame/domain';
-import {ElementCreatorService, ModelElementNamingPort} from '@ame/shared';
+import {ElementCreatorService, LoadedFilesService, ModelElementNamingService, ModelService, SammLanguageSettingsService} from '@ame/domain';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, inject, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -51,7 +50,7 @@ import {DropdownFieldComponent} from '../../dropdown-field.component';
 })
 export class CharacteristicNameDropdownFieldComponent extends DropdownFieldComponent<DefaultCharacteristic> implements OnInit {
   private destroyRef = inject(DestroyRef);
-  private modelElementNamingService = inject(ModelElementNamingPort);
+  private modelElementNamingService = inject(ModelElementNamingService);
   private elementCreator = inject(ElementCreatorService);
 
   public editorModelService = inject(EditorModelService);

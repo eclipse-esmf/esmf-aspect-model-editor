@@ -14,7 +14,6 @@
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {lastValueFrom} from 'rxjs';
 import {describe, expect, it, vi} from 'vitest';
-import {LoadedFilesPort} from '../contracts';
 import {createTestAspect, createTestCharacteristic, createTestProperty, createTestScalar, createTestTrait} from '../testing';
 import {
   createFile,
@@ -110,7 +109,7 @@ describe('utils', () => {
 
       const loadedFilesMock = {
         getElement: vi.fn((urn: string) => (urn === 'urn:samm:org.eclipse.examples:1.0.0#Aspect1' ? {} : null)),
-      } as unknown as LoadedFilesPort;
+      } as unknown as Parameters<typeof setUniqueElementName>[2];
 
       setUniqueElementName(aspect, rdfModel, loadedFilesMock);
 
@@ -126,7 +125,7 @@ describe('utils', () => {
 
       const loadedFilesMock = {
         getElement: vi.fn(() => null),
-      } as unknown as LoadedFilesPort;
+      } as unknown as Parameters<typeof setUniqueElementName>[2];
 
       setUniqueElementName(prop, rdfModel, loadedFilesMock, 'MyProperty');
 

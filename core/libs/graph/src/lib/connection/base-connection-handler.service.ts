@@ -11,8 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FiltersService, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
-import {ElementCreatorService, ModelElementNamingPort} from '@ame/shared';
+import {
+  ElementCreatorService,
+  FiltersService,
+  LoadedFilesService,
+  ModelElementNamingService,
+  SammLanguageSettingsService,
+} from '@ame/domain';
 import {Directive, inject} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {Cell} from '@maxgraph/core';
@@ -34,7 +39,7 @@ export class BaseConnectionHandler {
   protected readonly filtersService = inject(FiltersService);
   protected readonly maxgraphShapeOverlay = inject(MaxGraphShapeOverlayService);
   protected readonly loadedFilesService = inject(LoadedFilesService);
-  protected readonly modelElementNamingService = inject(ModelElementNamingPort);
+  protected readonly modelElementNamingService = inject(ModelElementNamingService);
 
   refreshPropertiesLabel(cell: Cell, modelElement: NamedElement) {
     if (cell && (cell as any).configuration) {

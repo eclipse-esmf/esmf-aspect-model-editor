@@ -13,10 +13,12 @@
 
 import {
   ConfigurationService,
+  ElementCreatorService,
   FilterAttributesService,
   FiltersService,
   LoadedFilesService,
   ModelApiPort,
+  ModelElementNamingService,
   ModelService,
   NamespaceFile,
   RdfPort,
@@ -30,15 +32,7 @@ import {
   MaxGraphShapeSelectorService,
   ThemeService,
 } from '@ame/graph';
-import {
-  AlertService,
-  ElementCreatorService,
-  LanguageTranslationService,
-  LoadingScreenService,
-  ModelElementNamingPort,
-  NotificationsService,
-  TitleService,
-} from '@ame/shared';
+import {AlertService, LanguageTranslationService, LoadingScreenService, NotificationsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -170,7 +164,7 @@ describe('EditorService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(ElementCreatorService),
-        {provide: ModelElementNamingPort, useValue: mockNamingService},
+        {provide: ModelElementNamingService, useValue: mockNamingService},
       ],
     });
 

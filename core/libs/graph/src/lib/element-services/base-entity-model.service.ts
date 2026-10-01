@@ -12,7 +12,7 @@
  */
 
 import {LanguageTranslationService, NotificationsService} from '@ame/shared';
-import {inject, Injectable, Injector} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {GraphAdapterPort} from '../ports/graph-adapter.port';
 import {ShapeConnectorPort} from '../ports/shape-connector.port';
@@ -21,12 +21,9 @@ import {ShapeConnectorPort} from '../ports/shape-connector.port';
 export class BaseEntityModelService {
   private readonly notificationService = inject(NotificationsService);
   private readonly shapeConnectorService = inject(ShapeConnectorPort);
-  private readonly injector = inject(Injector);
   private readonly translate = inject(LanguageTranslationService);
 
-  private get graphAdapter(): GraphAdapterPort | null {
-    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
-  }
+  private readonly graphAdapter = inject(GraphAdapterPort, {optional: true});
 
   checkExtendedElement(metaModelElement: DefaultEntity, extendedElement: DefaultEntity) {
     if (!(extendedElement instanceof DefaultEntity)) {

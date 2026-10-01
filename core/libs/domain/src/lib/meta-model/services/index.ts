@@ -11,4 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './element-creator.service';
 export * from './model-element-naming.service';
+export * from './value-type-resolver.service';

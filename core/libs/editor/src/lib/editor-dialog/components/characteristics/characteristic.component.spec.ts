@@ -11,9 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort} from '@ame/domain';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelElementNamingService, NamespaceFile, RdfPort} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {ModelElementNamingPort, NotificationsService, SearchService} from '@ame/shared';
+import {NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultAspect, DefaultCharacteristic, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -22,6 +22,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {BehaviorSubject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {ShapeSettingsService} from '../../services/shape-settings.service';
@@ -67,11 +68,12 @@ describe('CharacteristicComponent', () => {
         MockProvider(EditorDialogValidators),
         MockProvider(ModelApiPort),
         MockProvider(MaxGraphService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(NotificationsService),
         MockProvider(RdfPort),
         MockProvider(SearchService),
         MockProvider(ShapeSettingsService),
-        MockProvider(ModelElementNamingPort, {
+        MockProvider(ModelElementNamingService, {
           resolveElementNaming: vi.fn((el: any) => el),
         }),
         {provide: ConfigurationService, useValue: {getSettings: vi.fn(() => ({}))}},

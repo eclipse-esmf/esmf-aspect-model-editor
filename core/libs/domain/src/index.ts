@@ -17,7 +17,6 @@ export * from './lib/meta-model';
 export * from './lib/model-api';
 export * from './lib/model-session';
 export * from './lib/ports';
-export * from './lib/provide-ame-domain';
 export * from './lib/state/features/with-request-status';
 export * from './lib/state/search/search.store';
 export * from './lib/state/settings/configuration.service';

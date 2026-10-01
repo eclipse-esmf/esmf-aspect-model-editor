@@ -24,3 +24,12 @@ export interface WorkspaceStructure {
     models: ModelData[];
   }[];
 }
+
+/** Returns the models of `namespaceName` in `namespaceVersion`, or an empty list if the namespace is unknown. */
+export function getNamespaceModels(
+  structure: WorkspaceStructure | null | undefined,
+  namespaceName: string,
+  namespaceVersion: string,
+): ModelData[] {
+  return structure?.[namespaceName]?.find(ns => ns?.version === namespaceVersion)?.models ?? [];
+}

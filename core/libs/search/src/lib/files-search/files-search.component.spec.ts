@@ -13,8 +13,8 @@
 
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 
-import {ModelOpenerPort, WorkspaceNamespacesService} from '@ame/domain';
-import {LanguageTranslationService, ModelCheckerPort, NotificationsService, SearchService} from '@ame/shared';
+import {ModelCheckerPort, ModelOpenerPort, WorkspaceNamespacesService} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService, SearchService} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideZonelessChangeDetection, signal} from '@angular/core';

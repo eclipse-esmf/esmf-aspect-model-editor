@@ -22,6 +22,8 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
+import {TabStateService} from '../../../tabs/tab-state.service';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorDialogValidators} from '../../validators';
 import {PropertyComponent} from './property.component';
@@ -56,6 +58,8 @@ describe('PropertyComponent', () => {
         MockProvider(ModelApiPort, {
           checkElementExists: vi.fn(() => of(false)),
         }),
+        MockProvider(TabStateService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(MaxGraphService),
         MockProvider(NotificationsService),
         MockProvider(RdfPort),

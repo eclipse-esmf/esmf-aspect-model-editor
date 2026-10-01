@@ -22,7 +22,6 @@ import {
   isVersionOutdated,
   readFile,
 } from '../common';
-import {LoadedFilesPort} from '../contracts';
 
 export {
   createFile,
@@ -40,10 +39,15 @@ export {
  *
  * @param {NamedNode} modelElement - The model element whose name should be set.
  * @param {RdfModel} rdfModel - The RDF model in which the element resides.
- * @param {LoadedFilesPort} loadedFiles - The service to check for namespace collisions.
+ * @param loadedFiles - Lookup used to check for name collisions.
  * @param {string} [name] - An optional initial name suggestion for the element.
  */
-export const setUniqueElementName = (modelElement: NamedElement, rdfModel: RdfModel, loadedFiles: LoadedFilesPort, name?: string) => {
+export const setUniqueElementName = (
+  modelElement: NamedElement,
+  rdfModel: RdfModel,
+  loadedFiles: {getElement(aspectModelUrn: string): NamedElement | null},
+  name?: string,
+) => {
   name = name || `${modelElement.className}`.replace('Default', '');
 
   if (modelElement instanceof DefaultProperty) {

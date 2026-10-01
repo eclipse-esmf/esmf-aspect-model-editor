@@ -25,8 +25,9 @@ import {
   DefaultValue,
 } from '@esmf/aspect-model-loader';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {LoadedFilesPort, ModelElementNamingPort} from '../../contracts';
-import {ElementCreatorService} from './element-creator';
+import {LoadedFilesService} from '../../model-session';
+import {ElementCreatorService} from './element-creator.service';
+import {ModelElementNamingService} from './model-element-naming.service';
 
 describe('ElementCreatorService', () => {
   let service: ElementCreatorService;
@@ -53,8 +54,8 @@ describe('ElementCreatorService', () => {
     TestBed.configureTestingModule({
       providers: [
         ElementCreatorService,
-        {provide: LoadedFilesPort, useValue: loadedFilesServiceMock},
-        {provide: ModelElementNamingPort, useValue: namingServiceMock},
+        {provide: LoadedFilesService, useValue: loadedFilesServiceMock},
+        {provide: ModelElementNamingService, useValue: namingServiceMock},
       ],
     });
 

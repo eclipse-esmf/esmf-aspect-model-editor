@@ -16,10 +16,12 @@ import {
   ConfigurationService,
   DraggablePort,
   EditorValidationPort,
+  ElementCreatorService,
   FilterAttributesService,
   FiltersService,
   LoadedFilesService,
   ModelApiPort,
+  ModelElementNamingService,
   ModelService,
   OpenApi,
   RdfPort,
@@ -41,10 +43,8 @@ import {
 import {
   AlertService,
   ChildrenArray,
-  ElementCreatorService,
   LanguageTranslationService,
   LoadingScreenService,
-  ModelElementNamingPort,
   NotificationsService,
   sammElements,
   SaveValidateErrorsCodes,
@@ -89,7 +89,7 @@ export class EditorService implements DraggablePort, EditorValidationPort {
   private translate = inject(LanguageTranslationService);
   private loadedFilesService = inject(LoadedFilesService);
   private elementCreator = inject(ElementCreatorService);
-  private modelElementNamingService = inject(ModelElementNamingPort);
+  private modelElementNamingService = inject(ModelElementNamingService);
   private themeService = inject(ThemeService);
   private destroyRef = inject(DestroyRef);
 

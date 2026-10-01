@@ -13,6 +13,7 @@
 
 import {
   ConfigurationService,
+  getNamespaceModels,
   LoadedFilesService,
   ModelApiPort,
   ModelSaverPort,
@@ -22,11 +23,10 @@ import {
   WorkspaceStore,
 } from '@ame/domain';
 import {LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
-import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {catchError, delayWhen, first, map, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
-import {FileHandlingService} from './editor-toolbar/services/file-handling.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
 import {TabStateService} from './tabs/tab-state.service';
@@ -43,11 +43,8 @@ export class ModelSaverService implements ModelSaverPort {
   private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private configurationService = inject(ConfigurationService);
-  private injector = inject(Injector);
 
-  private get tabStateService(): TabStateService {
-    return this.injector.get(TabStateService);
-  }
+  private readonly tabStateService = inject(TabStateService);
 
   private saveModelSubscription$: Subscription;
 
@@ -156,17 +153,15 @@ export class ModelSaverService implements ModelSaverPort {
         }
 
         if (this.currentFile?.isNameChanged || this.currentFile?.isNamespaceChanged) {
-          return runInInjectionContext(this.injector, () => {
-            const model = this.currentFile?.originalNamespace.split(':');
-            const [namespaceName, namespaceVersion] = model && model.length === 2 ? model : ['', ''];
+          const model = this.currentFile?.originalNamespace.split(':');
+          const [namespaceName, namespaceVersion] = model && model.length === 2 ? model : ['', ''];
+          const originalName = this.currentFile?.originalName;
 
-            return inject(FileHandlingService)
-              .isFileExistOnWorkspace(namespaceName, namespaceVersion, this.currentFile?.originalName)
-              .pipe(
-                map(exists => (exists ? this.modelApiService.deleteAspectModel(originalAspectModelUrn) : of(null))),
-                switchMap(() => saveModel()),
-              );
-          });
+          return this.modelApiService.loadNamespacesStructure().pipe(
+            map(structure => getNamespaceModels(structure, namespaceName, namespaceVersion).some(m => m.name === originalName)),
+            map(exists => (exists ? this.modelApiService.deleteAspectModel(originalAspectModelUrn) : of(null))),
+            switchMap(() => saveModel()),
+          );
         }
 
         return saveModel();

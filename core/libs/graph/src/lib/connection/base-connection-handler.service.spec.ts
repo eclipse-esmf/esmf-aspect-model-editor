@@ -21,8 +21,7 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {FiltersService, SammLanguageSettingsService} from '@ame/domain';
-import {ElementCreatorService} from '@ame/shared';
+import {ElementCreatorService, FiltersService, SammLanguageSettingsService} from '@ame/domain';
 import {Injectable} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {DefaultProperty} from '@esmf/aspect-model-loader';

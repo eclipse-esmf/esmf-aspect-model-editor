@@ -11,8 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GraphFilterRendererPort, GraphNavigatorPort, GraphSettingsPort, provideAmeDomain, UiShellStore} from '@ame/domain';
-import {GraphValidationErrorHighlighterPort} from '@ame/shared';
+import {
+  GraphFilterRendererPort,
+  GraphNavigatorPort,
+  GraphSettingsPort,
+  GraphValidationErrorHighlighterPort,
+  UiShellStore,
+} from '@ame/domain';
 import {EnvironmentProviders, inject, Injector, makeEnvironmentProviders, provideEnvironmentInitializer} from '@angular/core';
 import {watchState} from '@ngrx/signals';
 import {ShapeConnectorService} from './connection';
@@ -28,8 +33,7 @@ import {
 import {GraphAdapterPort, ShapeConnectorPort} from './ports';
 
 /**
- * Returns environment providers for all Aspect Model Editor graph services,
- * and delegates to provideAmeDomain() to bundle graph and domain capabilities.
+ * Returns environment providers for all Aspect Model Editor graph services.
  */
 export function provideAmeGraph(): EnvironmentProviders {
   return makeEnvironmentProviders([
@@ -51,6 +55,5 @@ export function provideAmeGraph(): EnvironmentProviders {
         }
       });
     }),
-    provideAmeDomain(),
   ]);
 }

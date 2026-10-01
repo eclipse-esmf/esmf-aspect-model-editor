@@ -11,10 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {simpleDataTypes} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultProperty, DefaultScalar, DefaultValue, Type} from '@esmf/aspect-model-loader';
-import {LoadedFilesPort} from '../../contracts';
-import {simpleDataTypes} from '../constants/xsd-datatypes';
+import {LoadedFilesService} from '../../model-session';
 
 export interface ValueTypeResolution {
   /** The effective type for this value, or null if unresolvable or conflicting */
@@ -39,12 +39,12 @@ export interface ValueTypeResolution {
 
 @Injectable({providedIn: 'root'})
 export class ValueTypeResolverService {
-  private loadedFilesService = inject(LoadedFilesPort, {optional: true});
+  private loadedFilesService = inject(LoadedFilesService);
 
   /**
    * Static helper to resolve value type from a DefaultValue.
    */
-  static resolveValueTypeStatic(value: DefaultValue, loadedFilesService?: LoadedFilesPort | null): ValueTypeResolution {
+  static resolveValueTypeStatic(value: DefaultValue, loadedFilesService?: LoadedFilesService | null): ValueTypeResolution {
     if (!value) {
       return {
         type: null,

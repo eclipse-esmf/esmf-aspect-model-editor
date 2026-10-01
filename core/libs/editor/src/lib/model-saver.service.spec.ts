@@ -20,14 +20,14 @@ import {
   RdfPort,
   SammLanguageSettingsService,
 } from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {FileHandlingService} from './editor-toolbar/services/file-handling.service';
 import {ModelSaverService} from './model-saver.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
@@ -47,9 +47,11 @@ describe('ModelSaverService', () => {
     TestBed.configureTestingModule({
       providers: [
         ModelSaverService,
+        MockProvider(MaxGraphService, {graphModelChanged$: new Subject<void>()}),
         MockProvider(ModelApiPort, {
           fetchFormatedAspectModel: vi.fn(() => of('formatted content')),
           saveAspectModel: vi.fn(() => of(null as any)),
+          loadNamespacesStructure: vi.fn(() => of({})),
         }),
         MockProvider(RdfPort, {
           serializeModel: vi.fn(() => '@prefix : <urn:test#> .\n:Aspect a samm:Aspect .'),
@@ -66,9 +68,6 @@ describe('ModelSaverService', () => {
         MockProvider(NotificationsService, {
           info: vi.fn(),
           error: vi.fn(),
-        }),
-        MockProvider(FileHandlingService, {
-          isFileExistOnWorkspace: vi.fn(() => of(false)),
         }),
         MockProvider(LanguageTranslationService, {
           language: {

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ValueTypeResolution, ValueTypeResolverService} from '@ame/shared';
+import {ValueTypeResolution, ValueTypeResolverService} from '@ame/domain';
 import {Component, effect, inject, OnDestroy, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {form, FormField, required, validate} from '@angular/forms/signals';

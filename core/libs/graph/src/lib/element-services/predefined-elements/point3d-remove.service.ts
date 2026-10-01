@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {ElementRelationUtil} from '@ame/shared';
-import {inject, Injectable, Injector} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {NamedElement, PredefinedEntitiesEnum, PredefinedPropertiesEnum} from '@esmf/aspect-model-loader';
 import {GraphAdapterPort} from '../../ports/graph-adapter.port';
 import {ModelRootService} from '../model-root.service';
@@ -20,11 +20,8 @@ import {PredefinedRemove} from './predefined-remove.type';
 @Injectable({providedIn: 'root'})
 export class Point3dRemoveService implements PredefinedRemove {
   private readonly modelRootService = inject(ModelRootService);
-  private readonly injector = inject(Injector);
 
-  private get graphAdapter(): GraphAdapterPort | null {
-    return this.injector.get<GraphAdapterPort | null>(GraphAdapterPort, null, {optional: true});
-  }
+  private readonly graphAdapter = inject(GraphAdapterPort, {optional: true});
 
   delete(cell: any): boolean {
     const modelElement = ElementRelationUtil.getModelElement(cell);

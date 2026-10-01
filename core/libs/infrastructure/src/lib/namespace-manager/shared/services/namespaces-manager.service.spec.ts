@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileHandlingPort, FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
+import {FileHandlingPort} from '@ame/domain';
+import {FileInfo, FileTypes, FileUploadService, TauriSignalsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {of} from 'rxjs';

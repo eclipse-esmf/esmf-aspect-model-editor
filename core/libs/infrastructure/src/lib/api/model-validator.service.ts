@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ViolationError} from '@ame/domain';
-import {GraphValidationErrorHighlighterPort, NotificationsService} from '@ame/shared';
+import {GraphValidationErrorHighlighterPort, ViolationError} from '@ame/domain';
+import {NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 
 @Injectable({providedIn: 'root'})

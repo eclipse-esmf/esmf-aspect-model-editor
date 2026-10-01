@@ -26,7 +26,6 @@ import {EditorTab} from './tab.model';
 @Injectable({providedIn: 'root'})
 export class TabStateService {
   public readonly tabsStore = inject(TabsStore);
-  private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
   private readonly loadedFilesService = inject(LoadedFilesService);
   private readonly modelSavingTracker = inject(ModelSavingTrackerService);
@@ -35,10 +34,13 @@ export class TabStateService {
   private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private readonly saveModelDialog = inject(SaveModelDialogService);
 
-  private get maxGraphService(): MaxGraphService {
-    return this.injector.get(MaxGraphService);
-  }
+  private readonly maxGraphService = inject(MaxGraphService);
 
+  private readonly injector = inject(Injector);
+
+  // Lazy on purpose: real DI cycles
+  // TabState -> ModelRenderer -> ShapeSettings -> Editor -> ModelSaver -> TabState
+  // TabState -> FileHandling -> ModelLoader -> TabState
   private get modelRenderer(): ModelRendererService {
     return this.injector.get(ModelRendererService);
   }

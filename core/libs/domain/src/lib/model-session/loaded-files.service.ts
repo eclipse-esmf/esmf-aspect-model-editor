@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesPort} from '@ame/shared';
 import {computed, Injectable, signal} from '@angular/core';
 import {Aspect, CacheStrategy, DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
@@ -103,7 +102,7 @@ export class NamespaceFile {
 }
 
 @Injectable({providedIn: 'root'})
-export class LoadedFilesService implements LoadedFilesPort {
+export class LoadedFilesService {
   private filesSignal = signal<Record<string, NamespaceFile>>({});
 
   readonly currentLoadedFileSignal = computed<NamespaceFile | null>(() => {
