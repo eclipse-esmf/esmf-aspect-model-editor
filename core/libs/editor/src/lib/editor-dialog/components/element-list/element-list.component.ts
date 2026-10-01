@@ -48,17 +48,21 @@ export class ElementListComponent {
   public readonly label = input('');
   public readonly iconRotation = input<'rotate0' | 'rotate90' | 'rotate270'>('rotate90');
   public readonly isAspect = input<boolean>(false);
-  public readonly elements = input<NamedElement[]>([]);
+  public readonly element = input<NamedElement | null | undefined>(null);
+  public readonly relation = input<'parents' | 'children'>('children');
+
+  private maxgraphService = inject(MaxGraphService);
 
   public filteredElements = computed(() => {
-    const list = Array.from(this.elements() || []).filter(e => e instanceof NamedElement);
+    // parents/children change through graph edits without a signal, so re-read them on each graph change.
+    this.maxgraphService.graphVersion?.();
+    const list = Array.from(this.element()?.[this.relation()] || []).filter(e => e instanceof NamedElement);
     if (list.length > 1) {
       return list.sort(this.compareByName);
     }
     return list;
   });
 
-  private maxgraphService = inject(MaxGraphService);
   private shapeSettingsService = inject(ShapeSettingsService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private openReferencedElementService = inject(OpenReferencedElementService);

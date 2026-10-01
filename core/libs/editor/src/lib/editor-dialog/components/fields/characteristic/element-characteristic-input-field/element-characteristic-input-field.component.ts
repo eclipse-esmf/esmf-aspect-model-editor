@@ -108,6 +108,14 @@ export class ElementCharacteristicInputFieldComponent extends InputFieldComponen
     this.fieldName = 'elementCharacteristic';
   }
 
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.elementCharacteristic ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setElementCharacteristicControl();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

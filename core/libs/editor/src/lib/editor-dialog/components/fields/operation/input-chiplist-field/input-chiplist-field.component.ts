@@ -100,6 +100,14 @@ export class InputChiplistFieldComponent extends InputFieldComponent<DefaultOper
     return this.loadedFiles.currentLoadedFile.rdfModel;
   }
 
+  protected override graphRelation(): unknown {
+    return this.metaModelElement?.input ?? [];
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setInputControl();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

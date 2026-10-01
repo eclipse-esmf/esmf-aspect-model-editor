@@ -14,7 +14,7 @@
 import {LoadedFilesService} from '@ame/domain';
 import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
 import {mxCellSearchOption, SearchService} from '@ame/shared';
-import {DestroyRef, Directive, effect, inject, input, OnDestroy} from '@angular/core';
+import {DestroyRef, Directive, effect, inject, input, OnDestroy, untracked} from '@angular/core';
 import {
   DefaultCharacteristic,
   DefaultConstraint,
@@ -51,8 +51,14 @@ export abstract class InputFieldComponent<T extends NamedElement> implements OnD
   public metaModelElement: T;
   protected resetFormOnDestroy = true;
   protected fieldName: string = null;
+  private graphRelationSnapshot: string | undefined;
 
   constructor() {
+    effect(() => {
+      this.maxgraphService.graphVersion?.();
+      untracked(() => this.checkGraphRelation());
+    });
+
     effect(() => {
       const prevData = this.previousData();
       if (
@@ -126,8 +132,39 @@ export abstract class InputFieldComponent<T extends NamedElement> implements OnD
       filter((metaModelElement): metaModelElement is T => Boolean(metaModelElement)),
       tap(metaModelElement => {
         this.metaModelElement = <T>metaModelElement;
+        this.graphRelationSnapshot = this.graphRelationSignature();
       }),
     );
+  }
+
+  /** Element relation mirrored by this field that can also be changed in the graph (e.g. by connecting shapes). */
+  protected graphRelation(): unknown {
+    return undefined;
+  }
+
+  /** Re-reads the field value from the element after its graph relation changed while the editor is open. */
+  protected syncGraphRelation(): void {}
+
+  private checkGraphRelation(): void {
+    if (!this.metaModelElement || this.graphRelationSnapshot === undefined) {
+      return;
+    }
+
+    const signature = this.graphRelationSignature();
+    if (signature !== this.graphRelationSnapshot) {
+      this.graphRelationSnapshot = signature;
+      this.syncGraphRelation();
+    }
+  }
+
+  private graphRelationSignature(): string | undefined {
+    const relation = this.graphRelation();
+    if (relation === undefined) {
+      return undefined;
+    }
+
+    const identify = (value: any): string => value?.aspectModelUrn ?? value?.urn ?? value?.getUrn?.() ?? value?.name ?? String(value ?? '');
+    return Array.isArray(relation) ? relation.map(identify).join('|') : identify(relation);
   }
 
   inSearchList(type, value: string) {

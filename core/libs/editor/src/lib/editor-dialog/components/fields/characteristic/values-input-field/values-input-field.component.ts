@@ -137,6 +137,15 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
     });
   }
 
+  protected override graphRelation(): unknown {
+    return this.metaModelElement?.values ?? [];
+  }
+
+  protected override syncGraphRelation(): void {
+    this.enumValues.set(this.metaModelElement.values || []);
+    this.syncFormValues();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

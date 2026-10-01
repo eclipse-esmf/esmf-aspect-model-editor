@@ -113,6 +113,14 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
     this.fieldName = 'extends';
   }
 
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.extends_ ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setExtendsControl();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

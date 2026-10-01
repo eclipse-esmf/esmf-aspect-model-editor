@@ -101,6 +101,8 @@ export class MaxGraphService {
     this.graph.addListener(InternalEvent.CELLS_ADDED, updateCount);
     this.graph.addListener(InternalEvent.CELLS_REMOVED, updateCount);
     this.graph.model.addListener(InternalEvent.CHANGE, () => {
+      // Bump on every committed model transaction (e.g. new edges) so zoneless views re-read mutable domain objects.
+      updateCount();
       this.graphModelChanged$.next();
     });
   }

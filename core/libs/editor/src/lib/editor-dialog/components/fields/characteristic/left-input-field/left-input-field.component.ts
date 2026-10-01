@@ -104,6 +104,14 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
     this.fieldName = 'leftCharacteristic';
   }
 
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.left ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setLeftControl();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

@@ -89,6 +89,14 @@ export class OutputInputFieldComponent extends InputFieldComponent<DefaultOperat
     return [...properties, ...this.searchExtProperty(value)].filter(type => this.inSearchList(type, value));
   });
 
+  protected override graphRelation(): unknown {
+    return this.metaModelElement?.output ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setOutputControl();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

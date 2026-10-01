@@ -108,6 +108,14 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
     return this.previousData()?.[this.fieldName] || this.metaModelElement?.right || null;
   }
 
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.right ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setRightControl();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

@@ -130,6 +130,14 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
     this.fieldName = 'dataTypeEntity';
   }
 
+  protected override graphRelation(): unknown {
+    return this.metaModelElement?.dataType ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setDataTypeControl();
+  }
+
   ngOnInit(): void {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

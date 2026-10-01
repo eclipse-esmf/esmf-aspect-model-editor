@@ -70,9 +70,14 @@
 
     <ame-element-list
       [label]="t('editorCanvas.shapeSetting.ameElementListLabel.incomingEdges')"
-      [elements]="element()?.parents"
+      [element]="element()"
+      relation="parents"
       iconRotation="rotate270"
     />
-    <ame-element-list [label]="t('editorCanvas.shapeSetting.ameElementListLabel.outgoingEdges')" [elements]="element()?.children" />
+    <ame-element-list
+      [label]="t('editorCanvas.shapeSetting.ameElementListLabel.outgoingEdges')"
+      [element]="element()"
+      relation="children"
+    />
   }
 </ng-container>

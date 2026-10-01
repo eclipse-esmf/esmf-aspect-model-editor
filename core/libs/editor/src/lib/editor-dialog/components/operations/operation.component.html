@@ -17,11 +17,13 @@
   <ame-output-input-field [signalForm]="signalForm()"></ame-output-input-field>
   <ame-element-list
     [label]="t('editorCanvas.shapeSetting.ameElementListLabel.incomingEdges')"
-    [elements]="element()?.parents"
+    [element]="element()"
+    relation="parents"
     iconRotation="rotate270"
   ></ame-element-list>
   <ame-element-list
     [label]="t('editorCanvas.shapeSetting.ameElementListLabel.outgoingEdges')"
-    [elements]="element()?.children"
+    [element]="element()"
+    relation="children"
   ></ame-element-list>
 </ng-container>
