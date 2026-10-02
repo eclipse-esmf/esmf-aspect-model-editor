@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {SidebarStateService} from '@ame/sidebar';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, WorkspaceNamespacesService} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -25,13 +23,13 @@ import {ModelLoaderService} from './model-loader.service';
 
 describe('ModelCheckerService', () => {
   let service: ModelCheckerService;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         ModelCheckerService,
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           loadNamespacesStructure: vi.fn(() => of({})),
           fetchAllAspectMetaModel: vi.fn(() => of([])),
         }),
@@ -39,16 +37,14 @@ describe('ModelCheckerService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), null),
         }),
         MockProvider(ModelLoaderService),
-        MockProvider(SidebarStateService, {
-          namespacesState: {
-            namespaces: vi.fn(() => ({})),
-          } as any,
-        }),
+        MockProvider(WorkspaceNamespacesService, {
+          namespaces: vi.fn(() => ({})),
+        } as any),
       ],
     });
 
     service = TestBed.inject(ModelCheckerService);
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
   });
 
   it('detectWorkspace should map workspace structure into urn key map', async () => {

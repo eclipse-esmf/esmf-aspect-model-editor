@@ -11,22 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {RdfNodeService} from '@ame/aspect-exporter';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {ConfigurationService} from '@ame/settings-dialog';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelService, NamespaceFile, RdfNodePort, RdfPort} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {
-  ElectronSignalsService,
   IPC_RENDERER,
+  LanguageTranslationService,
   LoadingScreenService,
-  ModelSavingTrackerService,
   NotificationsService,
+  TauriSignalsService,
   TitleService,
 } from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -37,13 +31,16 @@ import {ConfirmDialogService} from '../../confirm-dialog/confirm-dialog.service'
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
 import {EditorService} from '../../editor.service';
 import {ModelLoaderService} from '../../model-loader.service';
+import {ModelOpenerService} from '../../model-opener/model-opener.service';
 import {ModelSaverService} from '../../model-saver.service';
+import {ModelSavingTrackerService} from '../../model-saving-tracker.service';
+import {TabStateService} from '../../tabs/tab-state.service';
 import {FileHandlingService} from './file-handling.service';
 import {FileUploadService} from './file-upload.service';
 
 describe('FileHandlingService', () => {
   let service: FileHandlingService;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
   let modelLoaderService: ModelLoaderService;
   let loadedFilesService: LoadedFilesService;
   let loadingScreenService: LoadingScreenService;
@@ -68,10 +65,10 @@ describe('FileHandlingService', () => {
         MockProvider(ModelService, {
           synchronizeModelToRdf: vi.fn(() => of(undefined)),
         }),
-        MockProvider(RdfService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           validate: vi.fn(() => of([])),
           fetchAspectMetaModel: vi.fn(() => of({content: 'model content', sourceLocation: ''} as any)),
           fetchFormatedAspectModel: vi.fn(() => of('formatted content')),
@@ -87,10 +84,6 @@ describe('FileHandlingService', () => {
           open: vi.fn(),
           close: vi.fn(),
         }),
-        MockProvider(SidebarStateService, {
-          workspace: {close: vi.fn(), refresh: vi.fn()} as any,
-          sammElements: {open: vi.fn()} as any,
-        }),
         MockProvider(LanguageTranslationService, {
           language: {
             notificationDialog: {LOADING: 'Loading', CONTENT: 'Wait', VALIDATING: 'Validating'},
@@ -99,7 +92,7 @@ describe('FileHandlingService', () => {
           } as any,
           translateService: {translate: vi.fn(() => '')} as any,
         }),
-        MockProvider(ElectronSignalsService, {call: vi.fn()}),
+        MockProvider(TauriSignalsService, {call: vi.fn()}),
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(() => ({copyrightHeader: ['# Header']}) as any),
         }),
@@ -124,12 +117,19 @@ describe('FileHandlingService', () => {
         }),
         MockProvider(ModelSaverService),
         MockProvider(TitleService, {updateTitle: vi.fn()}),
-        MockProvider(RdfNodeService),
+        {provide: RdfNodePort, useValue: {updateQuads: vi.fn()}},
+        MockProvider(TabStateService, {
+          onModelLoaded: vi.fn(),
+          isActiveTabCleanEmpty: vi.fn(() => true),
+        }),
+        MockProvider(ModelOpenerService, {
+          promptForUpload: vi.fn(() => of(true)),
+        }),
       ],
     });
 
     service = TestBed.inject(FileHandlingService);
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     modelLoaderService = TestBed.inject(ModelLoaderService);
     loadedFilesService = TestBed.inject(LoadedFilesService);
     loadingScreenService = TestBed.inject(LoadingScreenService);

@@ -22,7 +22,7 @@
       <textarea
         [value]="content()"
         (input)="content.set($any($event.target).value)"
-        data-cy="dialogContent"
+        data-testid="dialogContent"
         spellcheck="false"
         matInput
       ></textarea>
@@ -33,7 +33,7 @@
     <button mat-flat-button mat-dialog-close>{{ t('previewDialog.cancel') }}</button>
     <button (click)="reset()" mat-raised-button>{{ t('previewDialog.resetContent') }}</button>
     <button (click)="onCopyToClipboard()" mat-raised-button>{{ t('previewDialog.copyToClipboard') }}</button>
-    <button (click)="onDownload()" mat-raised-button color="primary" data-cy="downloadFileButton">
+    <button (click)="onDownload()" mat-raised-button color="primary" data-testid="downloadFileButton">
       {{ t('previewDialog.downloadFile') }}
     </button>
   </mat-dialog-actions>

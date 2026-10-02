@@ -15,7 +15,7 @@
   <div class="search">
     <mat-form-field appearance="outline">
       <mat-icon matPrefix>search</mat-icon>
-      <input [placeholder]="t('sidebar.actions.searchFile')" (keyup)="search($event)" matInput data-cy="workspaceSearchInput" />
+      <input [placeholder]="t('sidebar.actions.searchFile')" (keyup)="search($event)" matInput data-testid="workspaceSearchInput" />
     </mat-form-field>
 
     <button
@@ -24,14 +24,14 @@
       (click)="toggleFold()"
       matTooltipPosition="right"
       mat-mini-fab
-      data-cy="workspaceToggleFold"
+      data-testid="workspaceToggleFold"
     >
       <mat-icon>{{ foldedStatus() ? 'unfold_more' : 'unfold_less' }}</mat-icon>
     </button>
   </div>
 
   <div class="namespaces">
-    @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace.value) {
+    @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace.key) {
       @if (searched()[namespace.key]?.length) {
         <button
           class="namespace"
@@ -50,7 +50,7 @@
         </button>
       }
       @if (!folded()[namespace.key] || searchString()) {
-        @for (file of searched()[namespace.key]; track file) {
+        @for (file of searched()[namespace.key]; track file.name) {
           <button
             class="file"
             [class.selected]="selection.isSelected(namespace.key, file.name)"
@@ -58,7 +58,8 @@
             [class.errored]="file.errored"
             [matTooltip]="getFileTooltip(namespace.key, file)"
             (click)="selectFile(namespace.key, file)"
-            (dblclick)="prepare(namespace.key, file); loadInNewWindow()"
+            (dblclick)="promptOpenFile(namespace.key, file)"
+            (contextmenu)="openContextMenu($event, namespace.key, file, menuTrigger)"
             (keyup.enter)="selectFile(namespace.key, file)"
             (keyup.space)="selectFile(namespace.key, file)"
             type="button"
@@ -77,11 +78,12 @@
               <span>{{ file.name }}</span>
             </div>
             <button
+              #menuTrigger="matMenuTrigger"
               [matMenuTriggerFor]="menu"
               (click)="prepare(namespace.key, file); $event.stopPropagation()"
               (keyup.enter)="prepare(namespace.key, file); $event.stopPropagation()"
               mat-mini-fab
-              data-cy="openFileMenu"
+              data-testid="openFileMenu"
               aria-label="Open menu for {{ file.name }}"
               title="Open menu"
             >
@@ -95,25 +97,45 @@
 
   <mat-menu #menu="matMenu">
     @if (menuSelection()) {
-      <button [disabled]="!isOpenable()" (click)="loadInNewWindow()" mat-menu-item data-cy="fileMenuLoadAspectModelButton">
-        {{ t('sidebar.fileMenu.newWindow') }}
+      <button [matMenuTriggerFor]="openSubMenu" [disabled]="!isOpenable()" mat-menu-item data-testid="fileMenuOpenSubMenuButton">
+        <mat-icon>open_in_new</mat-icon>
+        <span>{{ t('sidebar.fileMenu.open') }}</span>
       </button>
-      <button [disabled]="isLoadDisabled()" (click)="openFile()" mat-menu-item data-cy="fileMenuLoadAspectModelButton">
-        {{ t('sidebar.fileMenu.openCurrent') }}
-      </button>
+
       <button
         [disabled]="!isOpenable() || !sidebarService.isCurrentFileLoaded()"
         (click)="selectFile(menuSelection().namespace, menuSelection().file)"
         mat-menu-item
-        data-cy="fileMenuFindElements"
+        data-testid="fileMenuFindElements"
       >
-        {{ t('sidebar.fileMenu.findElements') }}
+        <mat-icon>manage_search</mat-icon>
+        <span>{{ t('sidebar.fileMenu.findElements') }}</span>
       </button>
-      <button (click)="copyFilePath()" mat-menu-item data-cy="fileMenuCopyToClipboardButton">
+      <button (click)="copyFilePath()" mat-menu-item data-testid="fileMenuCopyToClipboardButton">
         {{ t('sidebar.fileMenu.copyFilePath') }}
+        <mat-icon>content_copy</mat-icon>
       </button>
-      <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-cy="fileMenuDeleteButton">
-        {{ t('sidebar.fileMenu.delete') }}
+
+      <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-testid="fileMenuDeleteButton">
+        <mat-icon>delete</mat-icon>
+        <span>{{ t('sidebar.fileMenu.delete') }}</span>
+      </button>
+    }
+  </mat-menu>
+
+  <mat-menu #openSubMenu="matMenu">
+    @if (menuSelection()) {
+      <button [disabled]="isLoadDisabled()" (click)="openFile()" mat-menu-item data-testid="fileMenuLoadAspectModelCurrentButton">
+        <mat-icon>tab</mat-icon>
+        <span>{{ t('sidebar.fileMenu.openCurrent') }}</span>
+      </button>
+      <button [disabled]="!isOpenable()" (click)="loadInNewTab()" mat-menu-item data-testid="fileMenuLoadAspectModelNewTabButton">
+        <mat-icon>tab_unselected</mat-icon>
+        <span>{{ t('sidebar.fileMenu.openTab') }}</span>
+      </button>
+      <button [disabled]="!isOpenable()" (click)="loadInNewWindow()" mat-menu-item data-testid="fileMenuLoadAspectModelButton">
+        <mat-icon>open_in_browser</mat-icon>
+        <span>{{ t('sidebar.fileMenu.newWindow') }}</span>
       </button>
     }
   </mat-menu>

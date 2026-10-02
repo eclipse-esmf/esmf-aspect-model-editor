@@ -11,13 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {RenameModelDialogPort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {first} from 'rxjs/operators';
 import {RenameModelComponent} from './rename-model.component';
 
 @Injectable({providedIn: 'root'})
-export class RenameModelDialogService {
+export class RenameModelDialogService implements RenameModelDialogPort {
   private matDialog = inject(MatDialog);
 
   open() {

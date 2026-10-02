@@ -11,16 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf/services';
-import {LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, ModelService} from '@ame/domain';
+import {LanguageTranslationService, LoadingScreenOptions, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {environment} from 'environments/environment';
 import {catchError, map, Observable, switchMap, throwError} from 'rxjs';
 import {finalize, first} from 'rxjs/operators';
-import {environment} from '../../../../../../environments/environment';
 import {EditorService} from '../../editor.service';
 import {PreviewDialogComponent} from '../../preview-dialog';
 import {AASXGenerationModalComponent} from '../components/aasx-generation-modal/aasx-generation-modal.component';

@@ -10,29 +10,29 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {LoadedFilesService} from '@ame/cache';
-import {
-  BaseInputComponent,
-  CharacteristicClassType,
-  CharacteristicNameDropdownFieldComponent,
-  DataTypeInputFieldComponent,
-  ElementCharacteristicInputFieldComponent,
-  ElementListComponent,
-  LeftInputFieldComponent,
-  RightInputFieldComponent,
-  UnitInputFieldComponent,
-  ValuesInputFieldComponent,
-} from '@ame/editor';
+import {LoadedFilesService} from '@ame/domain';
 import {Component, computed, DestroyRef, inject, input, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {MatIcon} from '@angular/material/icon';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {TranslocoDirective} from '@jsverse/transloco';
+import {CharacteristicClassType} from '../../../editor.types';
 import {StateCharacteristicComponent} from '../../components/characteristics/state-characteristic/state-characteristic.component';
 import {StructuredValueComponent} from '../../components/characteristics/structured-value/structured-value.component';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {PreviousFormDataSnapshot} from '../../interfaces';
+import {ElementListComponent} from '../element-list/element-list.component';
+import {BaseInputComponent} from '../fields/base/base-input/base-input.component';
+import {
+  CharacteristicNameDropdownFieldComponent,
+  DataTypeInputFieldComponent,
+  ElementCharacteristicInputFieldComponent,
+  LeftInputFieldComponent,
+  RightInputFieldComponent,
+  UnitInputFieldComponent,
+  ValuesInputFieldComponent,
+} from '../fields/characteristic';
 
 @Component({
   selector: 'ame-characteristic',

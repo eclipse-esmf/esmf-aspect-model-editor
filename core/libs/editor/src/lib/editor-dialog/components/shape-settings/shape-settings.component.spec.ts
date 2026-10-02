@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {RdfService} from '@ame/rdf/services';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort, SammLanguageSettingsService} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {NotificationsService, SearchService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -27,6 +24,8 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
+import {TabStateService} from '../../../tabs/tab-state.service';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
 import {EditorDialogValidators} from '../../validators';
@@ -50,6 +49,13 @@ describe('ShapeSettingsComponent', () => {
         TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
       ],
       providers: [
+        {
+          provide: 'DEBUG_PRINT',
+          useFactory: () => {
+            console.log('ShapeSettingsComponent:', ShapeSettingsComponent);
+            return null;
+          },
+        },
         MockProvider(EditorModelService, {
           getMetaModelElement: vi.fn(() => of(aspect)),
           updateMetaModelElement: vi.fn(),
@@ -63,10 +69,12 @@ describe('ShapeSettingsComponent', () => {
           isElementExtern: vi.fn(() => false),
         }),
         MockProvider(EditorDialogValidators),
-        MockProvider(ModelApiService),
+        MockProvider(ModelApiPort),
+        MockProvider(TabStateService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(MaxGraphService),
         MockProvider(NotificationsService),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
       ],
     }).compileComponents();

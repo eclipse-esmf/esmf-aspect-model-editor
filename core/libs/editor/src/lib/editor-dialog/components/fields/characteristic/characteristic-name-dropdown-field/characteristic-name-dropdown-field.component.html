@@ -18,13 +18,13 @@
     [disabled]="this.loadedFilesService.isElementExtern(selectedMetaModelElement)"
     [value]="metaModelClassName"
     (selectionChange)="onCharacteristicChange($event.value)"
-    data-cy="characteristicName"
+    data-testid="characteristicName"
     panelClass="characteristic-items-panel"
   >
     @for (group of listCharacteristicGroup() | keyvalue; track group.key) {
       <mat-optgroup [label]="group.key" [disabled]="group['disabled']">
         @for (characteristicName of group.value; track characteristicName) {
-          <mat-option [value]="characteristicName" [attr.cy-value]="characteristicName">
+          <mat-option [value]="characteristicName" [attr.data-testid]="characteristicName">
             {{ characteristicName }}
           </mat-option>
         }

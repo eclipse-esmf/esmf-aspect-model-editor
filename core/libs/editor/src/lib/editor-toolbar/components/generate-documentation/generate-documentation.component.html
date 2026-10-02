@@ -21,7 +21,7 @@
     @if (!isGenerating()) {
       <mat-form-field appearance="fill">
         <mat-label>{{ t('generateHtmlDocDialog.language') }}</mat-label>
-        <mat-select [formField]="docForm.language" data-cy="htmlGenerationLanguage">
+        <mat-select [formField]="docForm.language" data-testid="htmlGenerationLanguage">
           @for (language of languages(); track language) {
             <mat-option [value]="language.tag">{{ language.name }}</mat-option>
           }
@@ -37,10 +37,10 @@
 
   <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close>{{ t('generateHtmlDocDialog.button.cancel') }}</button>
-    <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbOpenDoc">
+    <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-testid="tbOpenDoc">
       {{ t('generateHtmlDocDialog.button.openDoc') }}
     </button>
-    <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbDownloadDoc">
+    <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-testid="tbDownloadDoc">
       {{ t('generateHtmlDocDialog.button.downloadDoc') }}
     </button>
   </mat-dialog-actions>

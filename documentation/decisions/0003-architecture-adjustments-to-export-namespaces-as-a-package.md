@@ -4,7 +4,7 @@
 
 * New package management necessitates options to export/download a zip file to the local file system.
 * This task is usually handled by the backend but is currently facing limitations due to minimal windows privileges, restricting saving to user-chosen locations.
-* The frontend (electron) allows users to freely choose a download location, creating a discrepancy with backend restrictions.
+* The frontend (Tauri) allows users to freely choose a download location, creating a discrepancy with backend restrictions.
 
 ### Consequences:
 

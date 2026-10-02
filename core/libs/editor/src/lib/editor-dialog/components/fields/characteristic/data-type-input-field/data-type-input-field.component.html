@@ -14,9 +14,9 @@
 <ng-container *transloco="let t">
   <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
     <mat-label>dataType</mat-label>
-    <input #dataType [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="dataType" />
+    <input #dataType [matAutocomplete]="auto" [formField]="displayField" matInput data-testid="dataType" />
     @if (!frozen() && displayField().disabled() && loadedFiles.isElementInCurrentFile(metaModelElement)) {
-      <button (click)="unlockDataType()" data-cy="clear-dataType-button" type="button" matSuffix mat-icon-button tabindex="-1">
+      <button (click)="unlockDataType()" data-testid="clear-dataType-button" type="button" matSuffix mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>
       </button>
     }
@@ -78,7 +78,7 @@
               <mat-option
                 [value]="dataType.name"
                 (onSelectionChange)="onSelectionChange('dataType', dataType, $event)"
-                data-cy="dataTypeOption"
+                data-testid="dataTypeOption"
               >
                 <span class="option-title">{{ dataType.name }}</span
                 ><span class="option-description">{{ dataType.getDescription('en') }}</span>

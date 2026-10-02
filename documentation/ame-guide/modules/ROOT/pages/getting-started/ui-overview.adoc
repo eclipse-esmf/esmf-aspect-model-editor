@@ -15,6 +15,10 @@ image::ame-ui-overview-numbers.png[Numbered UI overview, width=80%]
 
 <<edit-dialog>>
 
+<<editor-tabs>>
+
+<<keyboard-shortcuts>>
+
 [[menu]]
 == 1. Menu
 
@@ -30,7 +34,14 @@ image:menu-bar/menu-file.png[, width=30%, align="center"]
 
 | image:toolbar-icons/add.png[,15%,20%]
 | *New...*
-| Create, import, duplicate Aspect Models, or use a template.
+| Opens a submenu to start a new model:
+
+* *Empty Model* (header only),
+* *Load File...* &ndash; open a `.ttl` file from your file system,
+* *Copy Paste* &ndash; paste the Turtle (RDF) content of a model,
+* *Examples* &ndash; load one of the built-in examples (`SimpleAspect.ttl`, `Movement.ttl`).
+
+Each loaded model is opened in its own xref:getting-started/ui-overview.adoc#editor-tabs[editor tab].
 
 | image:toolbar-icons/note_add.png[,15%,20%]
 | *New Window*
@@ -46,7 +57,7 @@ image:menu-bar/menu-file.png[, width=30%, align="center"]
 
 | image:toolbar-icons/conntent.png[,15%,20%]
 | *Copy to Clipboard*
-| Copy the current Model's information for use elsewhere.
+| Copy the Turtle (RDF) serialization of the current Model to the system clipboard.
 
 | image:toolbar-icons/save.png[,15%,20%]
 | *Save to Workspace*
@@ -134,6 +145,9 @@ image:menu-bar/menu-edit.png[, width=30%, align="center"]
 | Create a linkage between two selected elements, establishing a relationship or flow that reflects their interaction within the model.
 |===
 
+In addition, the Edit menu contains the standard text editing commands (*Undo*, *Redo*, *Cut*, *Copy*, *Paste*, *Select All*).
+These only apply to text input fields (e.g., in the Edit dialog), not to elements of the graph.
+
 {nbsp}
 [[menu-valiadate]]
 === Validate Menu
@@ -169,6 +183,10 @@ image:menu-bar/menu-generate.png[, width=30%, align="center"]
 | OpenApi Specification
 | Generate OpenAPI specification.
 
+| image:toolbar-icons/api.png[,20%,20%]
+| AsyncAPI Specification
+| Generate AsyncAPI specification.
+
 | image:toolbar-icons/data_array.png[,20%,20%]
 | AASX/XML
 | Generate AASX/XML.
@@ -201,6 +219,12 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Files
 | Search for files.
 |===
+
+{nbsp}
+[[menu-window]]
+=== Window Menu
+
+Contains the standard window commands *Minimize*, *Close Window* and *Toggle Full Screen*.
 
 
 [[toolbar]]
@@ -314,5 +338,51 @@ How to access the details of an element in the Edit dialog:
 * Select the element and right-click to open the context menu. Then select *Open in detail view* image:toolbar-icons/jump.png[Edit icon].
 * Select the element and click the *Edit highlighted cell* button image:toolbar-icons/jump.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
+At the bottom of the Edit dialog, the lists *Incoming edges* and *Outgoing edges* show all elements that are connected to the edited element.
+Use the buttons of an entry to locate the element in the graph area canvas, open it in the Edit dialog, or &ndash; for elements from another file &ndash; open it in a new tab.
+These lists, as well as the connection-related fields (e.g., the data type of a Characteristic), are updated immediately when you add or remove connections in the graph area canvas while the Edit dialog is open.
+
 For more information, see xref:modeling/edit-elements.adoc[Edit elements].
+
+{nbsp}
+[[editor-tabs]]
+== 6. Editor tabs
+
+The Aspect Model Editor can keep several models open at the same time.
+Each opened model is shown as a tab in the tab bar above the graph area canvas.
+
+* The tab shows the file name of the model. Hover over a tab to see its namespace and file name.
+* A dot next to the file name indicates that the model has unsaved changes.
+* Click a tab to switch to that model. The open Edit dialog of a tab is restored as well.
+* Click the *+* button to open a new tab with an empty model (`new-model.ttl`, `new-model-2.ttl`, ...).
+* Click the *x* button of a tab to close it. If the model has unsaved changes, you are asked whether you want to save them first.
+When you close the last tab, a new empty model is opened.
+* Opening a model that is already open (e.g., from the Workspace sidebar) switches to its existing tab instead of opening it twice.
+* Loading a model while an untouched empty model tab is active replaces that empty tab.
+* If there are more tabs than fit into the tab bar, use the arrow buttons or the mouse wheel to scroll through them.
+
+{nbsp}
+[[keyboard-shortcuts]]
+== 7. Keyboard shortcuts
+
+On macOS use *Cmd*, on Windows and Linux use *Ctrl*.
+
+[cols="40%,60%"]
+|===
+| Shortcut | Action
+
+| `Cmd/Ctrl+O` | File > New... > Load File...
+| `Cmd/Ctrl+Shift+N` | File > New Window
+| `Cmd/Ctrl+Shift+C` | File > Copy to Clipboard
+| `Cmd/Ctrl+S` | File > Save to Workspace
+| `Cmd/Ctrl+Plus` | View > Zoom in
+| `Cmd/Ctrl+-` | View > Zoom out
+| `Cmd/Ctrl+9` | View > Zoom to Fit
+| `Cmd/Ctrl+0` | View > Zoom to 100%
+| `Cmd/Ctrl+Shift+L` | Edit > Format Model
+| `Cmd/Ctrl+Shift+V` | Validate > Current Model
+| `Cmd/Ctrl+F` | Search > Elements
+| `Cmd/Ctrl+Shift+F` | Search > Files
+| `Delete` | Delete the selected element(s) in the graph area canvas
+|===
 

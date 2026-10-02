@@ -33,7 +33,7 @@
         [attr.aria-label]="t('editorCanvas.shapeSetting.anonymous')"
         (change)="onAnonymousToggleChange($event.checked)"
         color="primary"
-        data-cy="anonymousToggle"
+        data-testid="anonymousToggle"
       />
     </div>
   }
@@ -74,11 +74,13 @@
 
   <ame-element-list
     [label]="t('editorCanvas.shapeSetting.ameElementListLabel.incomingEdges')"
-    [elements]="element()?.parents"
+    [element]="element()"
+    relation="parents"
     iconRotation="rotate270"
   ></ame-element-list>
   <ame-element-list
     [label]="t('editorCanvas.shapeSetting.ameElementListLabel.outgoingEdges')"
-    [elements]="element()?.children"
+    [element]="element()"
+    relation="children"
   ></ame-element-list>
 </ng-container>

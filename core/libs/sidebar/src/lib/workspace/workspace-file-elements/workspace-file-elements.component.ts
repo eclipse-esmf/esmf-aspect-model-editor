@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelLoaderService} from '@ame/editor';
-import {MaxGraphService} from '@ame/max-graph';
-import {ElementIconComponent, ElementType, sammElements} from '@ame/shared';
+import {GraphNavigatorPort, ModelLoaderPort, ModelSessionFacade, NamespaceFile, WorkspaceFacade} from '@ame/domain';
+import {createDebouncedLoading, ElementIconComponent, ElementType, sammElements} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal, untracked} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
@@ -40,7 +37,7 @@ import {
   NamedElement,
 } from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {first, switchMap} from 'rxjs';
+import {first, of, switchMap} from 'rxjs';
 import {DraggableElementComponent} from '../../draggable-element/draggable-element.component';
 import {SidebarStateService} from '../../sidebar-state.service';
 
@@ -64,17 +61,17 @@ import {SidebarStateService} from '../../sidebar-state.service';
   ],
 })
 export class WorkspaceFileElementsComponent {
-  private maxgraphService = inject(MaxGraphService);
-  private modelApiService = inject(ModelApiService);
-  private modelLoaderService = inject(ModelLoaderService);
-  private loadedFilesService = inject(LoadedFilesService);
+  private graphNavigator = inject(GraphNavigatorPort);
+  private modelApiService = inject(WorkspaceFacade);
+  private modelLoaderService = inject(ModelLoaderPort, {optional: true});
+  private loadedFilesService = inject(ModelSessionFacade);
   private destroyRef = inject(DestroyRef);
 
   public sidebarService = inject(SidebarStateService);
 
   public readonly elements = signal<Record<string, any>>({});
   public readonly searched = signal<Record<string, any[]>>({});
-  public readonly loadingElements = signal(false);
+  public readonly loadingElements = createDebouncedLoading();
 
   public elementsOrder: ElementType[] = [
     'property',
@@ -133,9 +130,9 @@ export class WorkspaceFileElementsComponent {
   }
 
   public elementImported(element: NamedElement): boolean {
-    this.maxgraphService.graphVersion?.();
+    this.graphNavigator.graphVersion();
     if (element?.aspectModelUrn) {
-      return !!this.maxgraphService.resolveCellByModelElement(element);
+      return this.graphNavigator.isElementRendered(element);
     }
     return false;
   }
@@ -330,13 +327,15 @@ export class WorkspaceFileElementsComponent {
       .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
         switchMap(model =>
-          this.modelLoaderService.loadSingleModel({
-            aspectModelUri: model.sourceLocation,
-            rdfAspectModel: model.content,
-            fromWorkspace: true,
-            namespaceFileName: absoluteName,
-            aspectModelUrn,
-          }),
+          this.modelLoaderService
+            ? this.modelLoaderService.loadSingleModel({
+                aspectModelUri: model.sourceLocation,
+                rdfAspectModel: model.content,
+                fromWorkspace: true,
+                namespaceFileName: absoluteName,
+                aspectModelUrn,
+              })
+            : of(null as any),
         ),
         first(),
       )

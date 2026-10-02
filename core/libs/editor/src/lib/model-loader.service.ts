@@ -11,21 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileEntry, FileInformation, ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {InstantiatorService} from '@ame/instantiator';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, config, ElectronSignalsService, ModelSavingTrackerService, NotificationsService, TitleService} from '@ame/shared';
-import {isVersionOutdated} from '@ame/utils';
+import {
+  ConfigurationService,
+  FileEntry,
+  FileInformation,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelInstantiatorPort,
+  ModelLoaderPort,
+  NamespaceFile,
+  RdfModelUtil,
+} from '@ame/domain';
+import {BrowserService, config, isVersionOutdated, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
 import {catchError, concatMap, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
 import {ModelRendererService} from './model-renderer.service';
+import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LoadingCodeErrors} from './models/loading-errors';
+import {TabStateService} from './tabs/tab-state.service';
 
 interface TmpLoadedFiles {
   files: LoadedFilesService['files'];
@@ -35,18 +42,20 @@ interface TmpLoadedFiles {
 }
 
 @Injectable({providedIn: 'root'})
-export class ModelLoaderService {
+export class ModelLoaderService implements ModelLoaderPort {
   private destroyRef = inject(DestroyRef);
   private loadedFilesService = inject(LoadedFilesService);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private notificationsService = inject(NotificationsService);
-  private instantiatorService = inject(InstantiatorService);
+  private instantiatorService = inject(ModelInstantiatorPort);
   private modelRenderer = inject(ModelRendererService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);
-  private electronSignalsService = inject(ElectronSignalsService);
+  private tauriSignalsService = inject(TauriSignalsService);
   private configurationService = inject(ConfigurationService);
   private titleService = inject(TitleService);
+
+  private readonly tabStateService = inject(TabStateService);
 
   private tmpLoadedFiles: TmpLoadedFiles;
 
@@ -72,9 +81,9 @@ export class ModelLoaderService {
       switchMap(() => this.modelRenderer.renderModel(payload.editElementUrn)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
-        if (this.browserService.isStartedAsElectronApp()) {
+        if (this.browserService.isStartedAsTauriApp()) {
           const currentFile = this.loadedFilesService.currentLoadedFile;
-          this.electronSignalsService.call('updateWindowInfo', {
+          this.tauriSignalsService.call('updateWindowInfo', {
             namespace: currentFile.namespace,
             fromWorkspace: payload.fromWorkspace,
             file: currentFile.name,
@@ -84,6 +93,7 @@ export class ModelLoaderService {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
           this.titleService.updateTitle(this.loadedFilesService.currentLoadedFile?.absoluteName);
         }
+        this.tabStateService.onModelLoaded(this.loadedFilesService.currentLoadedFile, payload.fromWorkspace, payload.editElementUrn);
       }),
       tap(() => (this.loadedFilesService.currentLoadedFile.namespaceFiles = {})),
     );

@@ -21,7 +21,7 @@
           }
           {{ input['name'] }}
           @if (removable()) {
-            <mat-icon matChipRemove data-cy="input">close</mat-icon>
+            <mat-icon matChipRemove data-testid="input">close</mat-icon>
           }
         </mat-chip-row>
       }
@@ -35,7 +35,7 @@
         [placeholder]="t('editorCanvas.shapeSetting.field.operation.addValueClickOption')"
         matInput
         spellcheck="false"
-        data-cy="inputValues"
+        data-testid="inputValues"
       />
     </mat-chip-grid>
 

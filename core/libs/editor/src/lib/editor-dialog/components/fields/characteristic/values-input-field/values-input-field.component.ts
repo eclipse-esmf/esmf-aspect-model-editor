@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils} from '@ame/cache';
+import {CacheUtils} from '@ame/domain';
 import {DataTypeService, ElementIconComponent} from '@ame/shared';
 import {ENTER} from '@angular/cdk/keycodes';
 import {Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
@@ -135,6 +135,15 @@ export class ValuesInputFieldComponent extends InputFieldComponent<DefaultEnumer
         }
       }
     });
+  }
+
+  protected override graphRelation(): unknown {
+    return this.metaModelElement?.values ?? [];
+  }
+
+  protected override syncGraphRelation(): void {
+    this.enumValues.set(this.metaModelElement.values || []);
+    this.syncFormValues();
   }
 
   ngOnInit(): void {

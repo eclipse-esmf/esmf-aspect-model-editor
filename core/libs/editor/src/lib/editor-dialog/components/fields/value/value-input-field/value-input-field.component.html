@@ -13,7 +13,7 @@
   -->
   <mat-form-field appearance="fill">
     <mat-label>value</mat-label>
-    <input [formField]="field" matInput data-cy="valueElement" />
+    <input [formField]="field" matInput data-testid="valueElement" />
     @if (hasError('required')) {
       <mat-error>{{ t('editorCanvas.shapeSetting.field.value.pleaseDefine') }}</mat-error>
     }

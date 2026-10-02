@@ -11,25 +11,32 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {OpenElementWindowComponent} from './open-element-window.component';
+import {ModelOpenerService} from '../model-opener/model-opener.service';
 
 @Injectable({providedIn: 'root'})
 export class OpenReferencedElementService {
-  private loadedFiles = inject(LoadedFilesService);
-  private matDialog = inject(MatDialog);
+  private readonly loadedFiles = inject(LoadedFilesService);
+  private readonly modelOpener = inject(ModelOpenerService);
 
   openReferencedElement(element: NamedElement) {
     if (!element) {
-      // error notification
       return;
     }
 
-    this.matDialog.open(OpenElementWindowComponent, {
-      data: {file: this.loadedFiles.getFileFromElement(element), urn: element.aspectModelUrn},
-    });
+    const namespaceFile = this.loadedFiles.getNamespaceFileFromElement(element);
+    const file = namespaceFile?.name || this.loadedFiles.getFileFromElement(element) || 'aspect.ttl';
+    const namespace = namespaceFile?.namespace || element.aspectModelUrn.split('#')[0].replace('urn:samm:', '').replace('urn:bamm:', '');
+
+    this.modelOpener
+      .promptAndOpen({
+        file,
+        namespace,
+        aspectModelUrn: element.aspectModelUrn,
+        editElementUrn: element.aspectModelUrn,
+      })
+      .subscribe();
   }
 }

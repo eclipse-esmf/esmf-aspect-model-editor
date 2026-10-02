@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
   <mat-label>upperBoundDefinition</mat-label>
-  <mat-select [formField]="field" data-cy="upperBoundDefinition">
+  <mat-select [formField]="field" data-testid="upperBoundDefinition">
     @for (upperBoundDefinition of upperBoundDefinitionList(); track upperBoundDefinition) {
       <mat-option [value]="upperBoundDefinition.value">
         {{ upperBoundDefinition.value }}

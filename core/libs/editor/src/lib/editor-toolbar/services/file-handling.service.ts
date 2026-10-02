@@ -11,43 +11,56 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService, ModelData} from '@ame/api';
-import {RdfNodeService} from '@ame/aspect-exporter';
-import {LoadedFilePayload, LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {ConfigurationService} from '@ame/settings-dialog';
 import {
-  ElectronSignalsService,
+  ConfigurationService,
+  FileHandlingPort,
+  getNamespaceModels,
+  LoadedFilePayload,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelData,
+  ModelService,
+  NamespaceFile,
+  RdfModelUtil,
+  RdfNodePort,
+  RdfPort,
+  UiShellStore,
+  WorkspaceStore,
+} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
+import {
+  decodeText,
+  FileTypes,
+  FileUploadService,
   GeneralConfig,
   IPC_RENDERER,
+  LanguageTranslationService,
   LoadingScreenOptions,
   LoadingScreenService,
-  ModelSavingTrackerService,
   NotificationsService,
+  readFile,
   SaveValidateErrorsCodes,
+  TauriSignalsService,
   TitleService,
 } from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslationService} from '@ame/translation';
-import {decodeText, readFile} from '@ame/utils';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {environment} from 'environments/environment';
 import {saveAs} from 'file-saver';
 import {BlankNode, NamedNode, Store} from 'n3';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
-import {environment} from '../../../../../../environments/environment';
 import {ConfirmDialogService, DialogOptions} from '../../confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
 import {EditorService} from '../../editor.service';
 import {ModelLoaderService} from '../../model-loader.service';
+import {ModelOpenerService} from '../../model-opener/model-opener.service';
 import {ModelSaverService} from '../../model-saver.service';
+import {ModelSavingTrackerService} from '../../model-saving-tracker.service';
 import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
+import {TabStateService} from '../../tabs/tab-state.service';
 import {FileUploadOptions} from '../interfaces/file-upload-options';
-import {FileTypes, FileUploadService} from './file-upload.service';
 
 export interface FileInfo {
   content: BufferSource;
@@ -77,18 +90,19 @@ interface ModelLoaderState {
 }
 
 @Injectable({providedIn: 'root'})
-export class FileHandlingService {
+export class FileHandlingService implements FileHandlingPort {
   private destroyRef = inject(DestroyRef);
   private editorService = inject(EditorService);
   private modelService = inject(ModelService);
-  private rdfService = inject(RdfService);
-  private modelApiService = inject(ModelApiService);
+  private rdfService = inject(RdfPort);
+  private modelApiService = inject(ModelApiPort);
   private confirmDialogService = inject(ConfirmDialogService);
   private notificationsService = inject(NotificationsService);
   private loadingScreenService = inject(LoadingScreenService);
-  private sidebarService = inject(SidebarStateService);
+  private uiShellStore = inject(UiShellStore);
+  private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
-  private electronSignalsService = inject(ElectronSignalsService);
+  private tauriSignalsService = inject(TauriSignalsService);
   private configurationService = inject(ConfigurationService);
   private modelSaveTracker = inject(ModelSavingTrackerService);
   private fileUploadService = inject(FileUploadService);
@@ -98,8 +112,12 @@ export class FileHandlingService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
-  private rdfNodeService = inject(RdfNodeService);
   private ipcRenderer = inject(IPC_RENDERER, {optional: true});
+  private rdfNodeService = inject(RdfNodePort);
+
+  private readonly tabStateService = inject(TabStateService);
+
+  private readonly modelOpenerService = inject(ModelOpenerService);
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
@@ -112,7 +130,24 @@ export class FileHandlingService {
   }
 
   onLoadModel(fileInfo?: FileInfo) {
-    this.loadModel(decodeText(fileInfo.content)).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
+    if (!fileInfo) return;
+    const modelContent = decodeText(fileInfo.content);
+    if (!modelContent) return;
+
+    if (this.tabStateService.isActiveTabCleanEmpty()) {
+      this.loadModel(modelContent).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
+      return;
+    }
+
+    const fileName = fileInfo.name || fileInfo.path?.split(/[/\\]/).pop() || 'Model.ttl';
+    const namespaceMatch =
+      modelContent.match(/@prefix\s+:[ \t]*<urn:samm:([^#]+)#>/i) || modelContent.match(/@prefix\s+\w+:[ \t]*<urn:samm:([^#]+)#>/i);
+    const namespace = namespaceMatch ? namespaceMatch[1] : '';
+
+    this.modelOpenerService
+      .promptForUpload({fileName, namespace, modelContent})
+      .pipe(takeUntilDestroyed(this.destroyRef), first())
+      .subscribe();
   }
 
   loadModel(modelContent: string): Observable<any> {
@@ -146,7 +181,7 @@ export class FileHandlingService {
         if (this.currentLoadedFile?.rdfModel) {
           this.shapeSettingsStateService.closeShapeSettings();
         }
-        this.sidebarService.workspace.close();
+        this.uiShellStore.closeSidebar();
       }),
     );
   }
@@ -230,7 +265,7 @@ export class FileHandlingService {
 
     return of(true).pipe(
       map(() => {
-        this.sidebarService.sammElements.open();
+        this.uiShellStore.openSidebar('sammElements');
 
         if (this.maxgraphService.graph?.model) {
           this.maxgraphService.deleteAllShapes();
@@ -238,6 +273,7 @@ export class FileHandlingService {
 
         this.modelSaveTracker.updateSavedModel(true);
         this.titleService.updateTitle(absoluteName);
+        this.tabStateService.onModelLoaded(this.loadedFilesService.currentLoadedFile);
       }),
       finalize(() => this.loadingScreenService.close()),
     );
@@ -397,7 +433,7 @@ export class FileHandlingService {
 
   addFileToNamespace(fileInfo: FileInfoParsed): Observable<any> {
     return this.addFileToWorkspace(fileInfo.name, fileInfo.content, {showNotifications: true}).pipe(
-      map(() => this.electronSignalsService.call('requestRefreshWorkspaces')),
+      map(() => this.tauriSignalsService.call('requestRefreshWorkspaces')),
     );
   }
 
@@ -466,7 +502,7 @@ export class FileHandlingService {
             message: this.translate.language.notificationService.fileAddedSuccessMessage,
           });
         }
-        this.sidebarService.workspace.refresh();
+        this.workspaceStore.triggerRefresh();
       }),
       switchMap(() => this.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),
       catchError(httpError => {
@@ -685,7 +721,7 @@ export class FileHandlingService {
     this.currentLoadedFile?.resetOriginalUrn();
     this.currentLoadedFile?.setExistsInWorkspace();
 
-    this.electronSignalsService.call('updateWindowInfo', {
+    this.tauriSignalsService.call('updateWindowInfo', {
       namespace: this.currentLoadedFile?.namespace || '',
       fromWorkspace: true,
       file: this.currentLoadedFile?.name,
@@ -723,13 +759,9 @@ export class FileHandlingService {
    * @returns - a list of model data objects
    */
   private getAllWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
-    return this.modelApiService.loadNamespacesStructure().pipe(
-      map(namespacesStructure => {
-        const targetNamespaces = namespacesStructure?.[namespaceName];
-        const targetNamespace = targetNamespaces?.find(ns => ns?.version === namespaceVersion);
-        return targetNamespace?.models ?? [];
-      }),
-    );
+    return this.modelApiService
+      .loadNamespacesStructure()
+      .pipe(map(namespacesStructure => getNamespaceModels(namespacesStructure, namespaceName, namespaceVersion)));
   }
 
   /**
@@ -737,7 +769,7 @@ export class FileHandlingService {
    * Adds files to LoadedFilesService accordingly.
    *
    * @param namespace - the target namespace to load models from
-   * @param modelsData - data of the models to load (typically taken from a workspace structure, e.g. from ModelApiService.loadNamespacesStructure method)
+   * @param modelsData - data of the models to load (typically taken from a workspace structure, e.g. from ModelApiPort.loadNamespacesStructure method)
    * @returns - a list of loaded files
    */
   private loadNamespaceModels(namespace: string, modelsData: ModelData[]) {
@@ -789,11 +821,5 @@ export class FileHandlingService {
         fromWorkspace: true,
       } as LoadedFilePayload;
     });
-  }
-
-  isFileExistOnWorkspace(namespaceName: string, namespaceVersion: string, fileName: string): Observable<boolean> {
-    return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
-      map((models: ModelData[]) => models.some((model: ModelData) => model.name === fileName)),
-    );
   }
 }

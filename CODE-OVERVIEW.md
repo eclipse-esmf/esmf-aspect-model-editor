@@ -22,11 +22,11 @@ To start contributing you need to have a basic knowledge about:
   - [Deprecated Github Repository](https://github.com/jgraph/mxgraph?tab=readme-ov-file) - here can be fund examples on how things are done
   - [MaxGraph Github Repository](https://github.com/maxGraph/maxGraph) - this repository is open source and was taken by the community. The progress is slow but at least there is a progress
 - [Aspect Model Loader]() - _Documentation to be made_
-- [Electron](https://www.electronjs.org/docs/latest/) - Technology used to run a frontend application as a native desktop application
+- [Tauri](https://v2.tauri.app/) - Technology used to run the frontend application as a lightweight native desktop application (Rust backend)
 
 ## Project architecture
 
-_This project was created using Nx and Angular as the base frontend framework, so the file structure is nothing out of the ordinary for an Angular Dev._
+_This project was created using Nx and Angular as the base frontend framework, with Tauri 2 as the native desktop shell._
 
 The application files are located in the `core` folder. Inside this folder any command can be run.
 
@@ -34,8 +34,14 @@ The main structure of interest is
 
 - core
   - apps
-- ame
-  - electron
+    - ame
+  - src-tauri
+    - src
+      - backend.rs
+      - commands.rs
+      - lib.rs
+      - main.rs
+      - menu.rs
   - libs
     - aspect-explorer
     - aspect-model-loader _(library extracted from [Aspect Model Loader]() which will be removed in the future from this project and be imported as a library)_
@@ -62,10 +68,9 @@ The main structure of interest is
 
 Contains only the container type components and the routing system
 
-### electron
+### src-tauri
 
-Contains all scripts related to electron. From application start to menus, creating new windows and communication with the angular application.
-The scripts are somehow basic for an electron application, so nothing out of the ordinary from what is found in [Electron](https://www.electronjs.org/docs/latest/) documentation.
+Contains all native Rust code and configuration for the Tauri desktop application. It manages native menus, multi-window lifecycles, backend binary execution, and bidirectional IPC with the Angular frontend.
 
 ### libs -> aspect-explorer
 

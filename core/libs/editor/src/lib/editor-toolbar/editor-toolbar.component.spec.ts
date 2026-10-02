@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ShapeConnectorService} from '@ame/connection';
-import {FiltersService} from '@ame/loader-filters';
-import {MaxGraphService, MaxGraphShapeSelectorService} from '@ame/max-graph';
-import {ConfigurationService} from '@ame/settings-dialog';
+import {ConfigurationService} from '@ame/domain';
+import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
 import {BindingsService, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -66,6 +64,7 @@ describe('EditorToolbarComponent', () => {
         }),
         MockProvider(MaxGraphShapeSelectorService, {
           selectedCells: signal([]),
+          hasSelection: signal(false),
           selectTree: vi.fn(),
         }),
         MockProvider(MatDialog),
@@ -76,7 +75,6 @@ describe('EditorToolbarComponent', () => {
           isModelEmpty: signal(false),
         }),
         MockProvider(NotificationsService),
-        MockProvider(FiltersService),
       ],
     }).compileComponents();
 

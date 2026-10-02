@@ -11,22 +11,28 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {FILTER_ATTRIBUTES, FiltersService} from '@ame/loader-filters';
 import {
+  ConfigurationService,
+  ElementCreatorService,
+  FilterAttributesService,
+  FiltersService,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelElementNamingService,
+  ModelService,
+  NamespaceFile,
+  RdfPort,
+} from '@ame/domain';
+import {
+  ElementModelService,
   MaxGraphAttributeService,
   MaxGraphService,
   MaxGraphSetupService,
   MaxGraphShapeOverlayService,
   MaxGraphShapeSelectorService,
   ThemeService,
-} from '@ame/max-graph';
-import {ElementModelService, ModelElementNamingService} from '@ame/meta-model';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
-import {AlertService, ElementCreatorService, LoadingScreenService, NotificationsService, TitleService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+} from '@ame/graph';
+import {AlertService, LanguageTranslationService, LoadingScreenService, NotificationsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -40,8 +46,8 @@ import {ModelSaverService} from './model-saver.service';
 
 describe('EditorService', () => {
   let service: EditorService;
-  let modelApiService: ModelApiService;
-  let rdfService: RdfService;
+  let modelApiService: ModelApiPort;
+  let rdfService: RdfPort;
 
   const aspect = new DefaultAspect({
     aspectModelUrn: 'urn:test:1.0.0#Aspect',
@@ -50,11 +56,25 @@ describe('EditorService', () => {
   });
 
   beforeEach(() => {
+    const mockElementModel = {
+      deleteElement: vi.fn(),
+      updateElement: vi.fn(),
+    };
+    const mockFiltersService = {
+      createNode: vi.fn(),
+      filter: vi.fn(elements => elements),
+    };
+    const mockNamingService = {
+      resolveMetaModelElement$: vi.fn().mockImplementation(el => of(el)),
+      resolveMetaModelElement: vi.fn().mockImplementation(el => el),
+      resolveElementNaming: vi.fn().mockImplementation(el => el),
+    };
+
     TestBed.configureTestingModule({
       providers: [
         EditorService,
-        MockProvider(FiltersService),
-        {provide: FILTER_ATTRIBUTES, useValue: {isFiltering: false, changeState: vi.fn()}},
+        {provide: FiltersService, useValue: mockFiltersService},
+        {provide: FilterAttributesService, useValue: {isFiltering: false, changeState: vi.fn()}},
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(
             () =>
@@ -80,6 +100,7 @@ describe('EditorService', () => {
         MockProvider(MaxGraphShapeOverlayService),
         MockProvider(MaxGraphShapeSelectorService, {
           getSelectedCells: vi.fn(() => []),
+          getSelectedEdges: vi.fn(() => []),
         }),
         MockProvider(MaxGraphAttributeService, {
           graph: {
@@ -93,7 +114,7 @@ describe('EditorService', () => {
           } as any,
         }),
         MockProvider(NotificationsService),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           generateJsonSample: vi.fn(() => of('{}')),
           generateJsonSchema: vi.fn(() => of('{}')),
           generateOpenApiSpec: vi.fn(() => of('')),
@@ -104,15 +125,11 @@ describe('EditorService', () => {
           synchronizeModelToRdf: vi.fn(() => of(undefined)),
         }),
         MockProvider(AlertService),
-        MockProvider(RdfService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
-        MockProvider(SammLanguageSettingsService),
         MockProvider(ConfirmDialogService),
-        MockProvider(ElementModelService, {
-          deleteElement: vi.fn(),
-          updateElement: vi.fn(),
-        }),
+        {provide: ElementModelService, useValue: mockElementModel},
         MockProvider(TitleService),
         MockProvider(ThemeService, {
           currentColors: {border: '#000000', font: '#000000'} as any,
@@ -148,15 +165,13 @@ describe('EditorService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(ElementCreatorService),
-        MockProvider(ModelElementNamingService, {
-          resolveMetaModelElement$: vi.fn().mockImplementation(el => of(el)),
-        }),
+        {provide: ModelElementNamingService, useValue: mockNamingService},
       ],
     });
 
     service = TestBed.inject(EditorService);
-    modelApiService = TestBed.inject(ModelApiService);
-    rdfService = TestBed.inject(RdfService);
+    modelApiService = TestBed.inject(ModelApiPort);
+    rdfService = TestBed.inject(RdfPort);
   });
 
   it('generateJsonSample should serialize model and call api', async () => {
@@ -173,30 +188,32 @@ describe('EditorService', () => {
     expect(modelApiService.validate).toHaveBeenCalled();
   });
 
-  it('deleteSelectedElements should delegate edge deletion to elementModelService when only edge is selected', () => {
+  it('deleteSelectedElements should delegate edge deletion to elementModelService when only edges are selected', () => {
     const elementModelService = TestBed.inject(ElementModelService);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const edge = {isEdge: () => true, isVertex: () => false} as any;
-    vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([edge]);
+    const otherEdge = {isEdge: () => true, isVertex: () => false} as any;
+    vi.spyOn(shapeSelectorService, 'getSelectedEdges').mockReturnValue([edge, otherEdge]);
 
     service.deleteSelectedElements();
 
     expect(elementModelService.deleteElement).toHaveBeenCalledWith(edge);
+    expect(elementModelService.deleteElement).toHaveBeenCalledWith(otherEdge);
   });
 
-  it('deleteSelectedElements should delete vertex cells only when both vertex and edge are selected', () => {
+  it('deleteSelectedElements should delete vertex cells before the selected edges', () => {
     const elementModelService = TestBed.inject(ElementModelService);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const maxgraphService = TestBed.inject(MaxGraphService);
     (maxgraphService as any).graph = {getOutgoingEdges: vi.fn(() => [])};
     const vertex = {isEdge: () => false, isVertex: () => true} as any;
     const edge = {isEdge: () => true, isVertex: () => false} as any;
-    vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([vertex, edge]);
+    vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([vertex]);
+    vi.spyOn(shapeSelectorService, 'getSelectedEdges').mockReturnValue([edge]);
 
     service.deleteSelectedElements();
 
-    expect(elementModelService.deleteElement).toHaveBeenCalledWith(vertex);
-    expect(elementModelService.deleteElement).not.toHaveBeenCalledWith(edge);
+    expect(vi.mocked(elementModelService.deleteElement).mock.calls.map(([cell]) => cell)).toEqual([vertex, edge]);
   });
 
   it('createElement should center element coordinates when the graph is empty', async () => {

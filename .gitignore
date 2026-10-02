@@ -22,6 +22,7 @@ speed-measure-plugin.json
 .settings/
 *.sublime-workspace
 .log
+logs
 .package-lock.json
 
 # IDE - VSCode
@@ -47,16 +48,18 @@ Thumbs.db
 
 *.iml
 
-# electron
+backend/*
+
+# tauri & rust
+**/src-tauri/target
 **/out
 **/.cache
-**/.electron
 **/.files
 lsp
 
-# cypress
-**/.nyc_output
-**/cypress
+# playwright
+**/playwright-report
+**/test-results
 
 #jest
 jest-coverage

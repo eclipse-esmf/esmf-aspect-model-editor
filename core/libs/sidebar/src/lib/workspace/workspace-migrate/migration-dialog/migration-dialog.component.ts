@@ -10,9 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MigrationStatus, MigratorApiService} from '@ame/api';
-import {APP_CONFIG, AppConfig, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {MigrationStatus, WorkspaceFacade} from '@ame/domain';
+import {APP_CONFIG, AppConfig, createDebouncedLoading, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {Component, inject, signal, viewChild} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatCheckbox, MatCheckboxChange} from '@angular/material/checkbox';
@@ -46,13 +45,13 @@ export class MigrationDialogComponent {
   private stepper = viewChild('stepper', {read: MatStepper});
 
   private dialogRef = inject(MatDialogRef<MigrationDialogComponent>);
-  private migratorApiService = inject(MigratorApiService);
+  private migratorApiService = inject(WorkspaceFacade);
   private notificationsService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);
 
   public config = inject(APP_CONFIG) as AppConfig;
 
-  public loading = signal(false);
+  public readonly loading = createDebouncedLoading();
 
   public migrationStatus = signal<MigrationStatus>(undefined);
   public increaseNamespaceVersion = signal(true);

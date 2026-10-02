@@ -28,7 +28,12 @@
       </p>
 
       <mat-form-field>
-        <input [formField]="renameForm.fileName" [placeholder]="t('declareNameDialog.namePlaceholder')" matInput data-cy="file-rename" />
+        <input
+          [formField]="renameForm.fileName"
+          [placeholder]="t('declareNameDialog.namePlaceholder')"
+          matInput
+          data-testid="file-rename"
+        />
         <span class="input-suffix" matSuffix>.ttl</span>
         @if (renameForm.fileName().invalid()) {
           @for (error of renameForm.fileName().errors(); track error) {
@@ -57,7 +62,7 @@
       (click)="closeAndGiveResult(true)"
       mat-flat-button
       color="primary"
-      data-cy="file-rename-confirm"
+      data-testid="file-rename-confirm"
     >
       {{ t('declareNameDialog.removeAspect') }}
     </button>

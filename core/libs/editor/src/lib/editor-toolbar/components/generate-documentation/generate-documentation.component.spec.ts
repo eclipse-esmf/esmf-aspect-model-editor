@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
 import {BrowserService, IPC_RENDERER} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -31,7 +29,7 @@ describe('GenerateDocumentationComponent', () => {
   let component: GenerateDocumentationComponent;
   let fixture: ComponentFixture<GenerateDocumentationComponent>;
   let dialogRef: MatDialogRef<GenerateDocumentationComponent>;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
 
   const aspect = new DefaultAspect({
     aspectModelUrn: 'urn:test:1.0.0#Aspect',
@@ -56,7 +54,7 @@ describe('GenerateDocumentationComponent', () => {
         MockProvider(SammLanguageSettingsService, {
           getSammLanguageCodes: vi.fn(() => ['en', 'de']),
         }),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           generateDocumentation: vi.fn(() => of('<html>Documentation</html>')),
         }),
         MockProvider(EditorService, {
@@ -66,12 +64,12 @@ describe('GenerateDocumentationComponent', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(BrowserService, {
-          isStartedAsElectronApp: vi.fn(() => false),
+          isStartedAsTauriApp: vi.fn(() => false),
         }),
       ],
     }).compileComponents();
 
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     fixture = TestBed.createComponent(GenerateDocumentationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

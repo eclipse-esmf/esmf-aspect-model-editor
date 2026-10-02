@@ -11,10 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {EditorService, ModelLoaderService} from '@ame/editor';
-import {MaxGraphService} from '@ame/max-graph';
+import {DraggablePort, GraphNavigatorPort, ModelLoaderPort, ModelSessionFacade, WorkspaceFacade} from '@ame/domain';
 import {provideZonelessChangeDetection, signal, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -30,7 +27,7 @@ describe('WorkspaceFileElementsComponent', () => {
   let fixture: ComponentFixture<WorkspaceFileElementsComponent>;
   let sidebarService: SidebarStateService;
   let maxgraphMock: {
-    resolveCellByModelElement: ReturnType<typeof vi.fn>;
+    isElementRendered: ReturnType<typeof vi.fn>;
     graphVersion: WritableSignal<number>;
   };
   let modelApiMock: {fetchAspectMetaModel: ReturnType<typeof vi.fn>};
@@ -41,7 +38,7 @@ describe('WorkspaceFileElementsComponent', () => {
     vi.useFakeTimers();
 
     maxgraphMock = {
-      resolveCellByModelElement: vi.fn(),
+      isElementRendered: vi.fn(),
       graphVersion: signal(0),
     };
     modelApiMock = {
@@ -86,11 +83,11 @@ describe('WorkspaceFileElementsComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: MaxGraphService, useValue: maxgraphMock},
-        {provide: ModelApiService, useValue: modelApiMock},
-        {provide: ModelLoaderService, useValue: modelLoaderMock},
-        {provide: LoadedFilesService, useValue: loadedFilesMock},
-        {provide: EditorService, useValue: {makeDraggable: vi.fn()}},
+        {provide: GraphNavigatorPort, useValue: maxgraphMock},
+        {provide: WorkspaceFacade, useValue: modelApiMock},
+        {provide: ModelLoaderPort, useValue: modelLoaderMock},
+        {provide: ModelSessionFacade, useValue: loadedFilesMock},
+        {provide: DraggablePort, useValue: {makeDraggable: vi.fn()}},
       ],
     });
 
@@ -147,10 +144,10 @@ describe('WorkspaceFileElementsComponent', () => {
       aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#prop1',
       metaModelVersion: '2.1.0',
     });
-    maxgraphMock.resolveCellByModelElement.mockReturnValue(true);
+    maxgraphMock.isElementRendered.mockReturnValue(true);
     expect(component.elementImported(element)).toBe(true);
 
-    maxgraphMock.resolveCellByModelElement.mockReturnValue(null);
+    maxgraphMock.isElementRendered.mockReturnValue(false);
     expect(component.elementImported(element)).toBe(false);
 
     expect(component.elementImported(null as any)).toBe(false);
@@ -345,10 +342,10 @@ describe('WorkspaceFileElementsComponent', () => {
       metaModelVersion: '2.1.0',
     });
 
-    maxgraphMock.resolveCellByModelElement.mockReturnValue({id: 'cell-1'});
+    maxgraphMock.isElementRendered.mockReturnValue(true);
     expect(component.elementImported(mockProperty)).toBe(true);
 
-    maxgraphMock.resolveCellByModelElement.mockReturnValue(null);
+    maxgraphMock.isElementRendered.mockReturnValue(false);
     maxgraphMock.graphVersion.update(v => v + 1);
     TestBed.flushEffects();
 

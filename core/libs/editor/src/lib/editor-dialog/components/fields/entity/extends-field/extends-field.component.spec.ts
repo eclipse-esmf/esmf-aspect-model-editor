@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService, NamespaceFile, RdfPort} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {NotificationsService, SearchService} from '@ame/shared';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
@@ -76,7 +75,7 @@ describe('EntityExtendsFieldComponent', () => {
             of(value === 'UsedByProperty' ? {checkShapeName: true, foundModel: {name: value}} : null),
           ),
         }),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
         MockProvider(MaxGraphService),
       ],

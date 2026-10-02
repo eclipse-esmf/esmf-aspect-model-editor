@@ -24,12 +24,12 @@
       @for (element of elements(); track element.urn) {
         <mat-chip-row
           [matTooltip]="element.urn"
-          [attr.data-cy]="'chip__' + (element.name || element.urn)"
+          [attr.data-testid]="'chip__' + (element.name || element.urn)"
           (removed)="removeElement(element)"
           matTooltipClass="mat-tooltip--long"
         >
           <span class="chip-content">{{ element.name || element.urn }}</span>
-          <button data-cy="see-remove-chip" type="button" matChipRemove>
+          <button data-testid="see-remove-chip" type="button" matChipRemove>
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip-row>
@@ -43,17 +43,17 @@
       [matChipInputFor]="chipList"
       [placeholder]="t('editorCanvas.shapeSetting.field.seeInput.typeToSearch')"
       matInput
-      data-cy="see"
+      data-testid="see"
     />
 
     <mat-autocomplete #auto="matAutocomplete">
       @if (!(shapes$ | async)?.length && see.value) {
-        <mat-option [value]="see.value" [attr.data-cy]="'option__' + see.value" (click)="addElementToList()">
+        <mat-option [value]="see.value" [attr.data-testid]="'option__' + see.value" (click)="addElementToList()">
           <span>{{ see.value }}</span>
         </mat-option>
       }
       @for (shape of shapes$ | async; track shape.aspectModelUrn) {
-        <mat-option [value]="shape.aspectModelUrn" [attr.data-cy]="'option__' + shape.name" (click)="addElementToList(shape.name)">
+        <mat-option [value]="shape.aspectModelUrn" [attr.data-testid]="'option__' + shape.name" (click)="addElementToList(shape.name)">
           <span class="shape-name">{{ shape.name }}</span>
           <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
         </mat-option>

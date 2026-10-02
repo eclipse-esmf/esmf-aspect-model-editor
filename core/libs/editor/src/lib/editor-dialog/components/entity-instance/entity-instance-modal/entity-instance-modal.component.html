@@ -27,7 +27,7 @@
           [ngClass]="hasNameError('checkShapeName') || hasNameError('whitespace') ? 'ng-invalid-error' : ''"
           matInput
           type="text"
-          data-cy="entityValueName"
+          data-testid="entityValueName"
         />
         @if (hasNameError('required')) {
           <mat-error class="entity-form-field__error">{{ t('editorCanvas.shapeSetting.field.name.pleaseDefine') }}</mat-error>
@@ -48,10 +48,10 @@
     </mat-dialog-content>
 
     <mat-dialog-actions class="sticky-dialog-actions" align="end">
-      <button (click)="onClose()" type="button" mat-raised-button data-cy="entityCancelButton">
+      <button (click)="onClose()" type="button" mat-raised-button data-testid="entityCancelButton">
         {{ t('editorCanvas.shapeSetting.propertiesModal.cancel') }}
       </button>
-      <button [disabled]="!valid()" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">
+      <button [disabled]="!valid()" mat-raised-button color="primary" type="submit" data-testid="entitySaveButton">
         {{ t('editorCanvas.shapeSetting.propertiesModal.save') }}
       </button>
     </mat-dialog-actions>

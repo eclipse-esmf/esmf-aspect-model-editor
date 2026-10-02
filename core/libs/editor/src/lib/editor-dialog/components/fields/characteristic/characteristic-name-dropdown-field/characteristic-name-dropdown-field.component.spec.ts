@@ -3,12 +3,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {CharacteristicClassType} from '@ame/editor';
-import {ModelElementNamingService} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {ElementCreatorService} from '@ame/shared';
+import {
+  ElementCreatorService,
+  LoadedFilesService,
+  ModelElementNamingService,
+  ModelService,
+  NamespaceFile,
+  SammLanguageSettingsService,
+} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
@@ -23,6 +25,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {CharacteristicClassType} from '../../../../../editor.types';
 import {EditorModelService} from '../../../../editor-model.service';
 import {EditorSignalFormContext} from '../../../../forms/editor-signal-form-context';
 import {CharacteristicNameDropdownFieldComponent} from './characteristic-name-dropdown-field.component';
@@ -51,11 +54,13 @@ describe('CharacteristicNameDropdownFieldComponent', () => {
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), null),
         }),
-        MockProvider(ModelElementNamingService),
         MockProvider(ModelService),
         MockProvider(SammLanguageSettingsService, {getSammLanguageCodes: vi.fn(() => [])}),
         MockProvider(ElementCreatorService, {
           createEmptyElement: vi.fn((cls: any) => new cls({aspectModelUrn: 'urn:test:1.0.0#New', name: 'New', metaModelVersion: '2.0.0'})),
+        }),
+        MockProvider(ModelElementNamingService, {
+          resolveElementNaming: vi.fn((el: any) => el),
         }),
       ],
     });

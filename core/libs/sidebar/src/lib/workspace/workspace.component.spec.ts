@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {ConfirmDialogService, FileHandlingService, ModelCheckerService, ModelSaverService} from '@ame/editor';
-import {NamespacesManagerService} from '@ame/namespace-manager';
-import {BrowserService, ElectronSignalsService, IPC_RENDERER, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ModelCheckerPort, WorkspaceFacade} from '@ame/domain';
+import {BrowserService, IPC_RENDERER, LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -33,6 +30,7 @@ describe('WorkspaceComponent', () => {
   };
   let modelApiServiceMock: {
     getStoragePath: ReturnType<typeof vi.fn>;
+    importNamespaces: ReturnType<typeof vi.fn>;
   };
   let notificationsServiceMock: {
     info: ReturnType<typeof vi.fn>;
@@ -50,6 +48,7 @@ describe('WorkspaceComponent', () => {
     };
     modelApiServiceMock = {
       getStoragePath: vi.fn(() => of({path: '/workspace', storagePath: '/workspace'})),
+      importNamespaces: vi.fn(() => of(undefined)),
     };
     notificationsServiceMock = {
       info: vi.fn(),
@@ -67,14 +66,10 @@ describe('WorkspaceComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: ModelCheckerService, useValue: modelCheckerMock},
-        {provide: ModelApiService, useValue: modelApiServiceMock},
-        {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
+        {provide: ModelCheckerPort, useValue: modelCheckerMock},
+        {provide: WorkspaceFacade, useValue: modelApiServiceMock},
+        {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: ConfirmDialogService, useValue: {open: vi.fn()}},
-        {provide: ModelSaverService, useValue: {saveModel: vi.fn()}},
-        {provide: FileHandlingService, useValue: {loadNamespaceFile: vi.fn()}},
-        {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
         {
           provide: LanguageTranslationService,
           useValue: {
@@ -161,7 +156,7 @@ describe('WorkspaceComponent', () => {
     expect(refreshSpy).toHaveBeenCalled();
   });
 
-  it('should copy storagePath to clipboard using ipcRenderer when in electron app', () => {
+  it('should copy storagePath to clipboard using ipcRenderer when in tauri app', () => {
     const copyToClipboardMock = vi.fn();
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
@@ -173,17 +168,13 @@ describe('WorkspaceComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: ModelCheckerService, useValue: modelCheckerMock},
-        {provide: ModelApiService, useValue: modelApiServiceMock},
-        {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
+        {provide: ModelCheckerPort, useValue: modelCheckerMock},
+        {provide: WorkspaceFacade, useValue: modelApiServiceMock},
+        {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: ConfirmDialogService, useValue: {open: vi.fn()}},
-        {provide: ModelSaverService, useValue: {saveModel: vi.fn()}},
-        {provide: FileHandlingService, useValue: {loadNamespaceFile: vi.fn()}},
-        {provide: NamespacesManagerService, useValue: {importNamespaces: vi.fn(() => of(undefined))}},
         {
           provide: BrowserService,
-          useValue: {isStartedAsElectronApp: () => true, getAssetBasePath: () => './assets'},
+          useValue: {isStartedAsTauriApp: () => true, getAssetBasePath: () => './assets'},
         },
         {
           provide: IPC_RENDERER,

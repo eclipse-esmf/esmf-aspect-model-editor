@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {NamespacesManagerService} from '@ame/namespace-manager';
-import {ElectronSignalsService} from '@ame/shared';
+import {WorkspaceFacade} from '@ame/domain';
+import {TauriSignalsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {TranslocoTestingModule} from '@jsverse/transloco';
@@ -24,13 +24,13 @@ describe('WorkspaceEmptyComponent', () => {
   let component: WorkspaceEmptyComponent;
   let fixture: ComponentFixture<WorkspaceEmptyComponent>;
   let namespacesManagerMock: {importNamespaces: ReturnType<typeof vi.fn>};
-  let electronSignalsMock: {call: ReturnType<typeof vi.fn>};
+  let tauriSignalsMock: {call: ReturnType<typeof vi.fn>};
 
   beforeEach(() => {
     namespacesManagerMock = {
       importNamespaces: vi.fn(() => of(undefined)),
     };
-    electronSignalsMock = {
+    tauriSignalsMock = {
       call: vi.fn(),
     };
 
@@ -41,8 +41,8 @@ describe('WorkspaceEmptyComponent', () => {
         TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
       ],
       providers: [
-        {provide: NamespacesManagerService, useValue: namespacesManagerMock},
-        {provide: ElectronSignalsService, useValue: electronSignalsMock},
+        {provide: WorkspaceFacade, useValue: namespacesManagerMock},
+        {provide: TauriSignalsService, useValue: tauriSignalsMock},
       ],
     });
 
@@ -66,12 +66,12 @@ describe('WorkspaceEmptyComponent', () => {
     component.onFileInput(fileList);
 
     expect(namespacesManagerMock.importNamespaces).toHaveBeenCalledWith(file);
-    expect(electronSignalsMock.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
+    expect(tauriSignalsMock.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
   });
 
   it('should ignore null file input', () => {
     component.onFileInput(null);
     expect(namespacesManagerMock.importNamespaces).not.toHaveBeenCalled();
-    expect(electronSignalsMock.call).not.toHaveBeenCalled();
+    expect(tauriSignalsMock.call).not.toHaveBeenCalled();
   });
 });

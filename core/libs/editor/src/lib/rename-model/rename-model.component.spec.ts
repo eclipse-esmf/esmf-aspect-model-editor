@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {LoadedFilesService, ModelApiPort, NamespaceFile} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -49,7 +48,7 @@ describe('RenameModelComponent', () => {
       providers: [
         {provide: MatDialogRef, useValue: dialogRef},
         {provide: MAT_DIALOG_DATA, useValue: {namespaces: 'com.example:1.0.0', rdfModel: new RdfModel(new Store())}},
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           fetchAllNamespaceFilesContent: vi.fn(() =>
             of([
               {

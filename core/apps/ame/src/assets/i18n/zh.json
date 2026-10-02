@@ -7,10 +7,10 @@
     "cancel": "拒绝"
   },
   "saveModalDialog": {
-    "title": "关闭前保存更改?",
-    "content": "您有未保存的更改.",
-    "continueButton": "继续编辑",
-    "discardButton": "放弃更改",
+    "title": "是否保存更改?",
+    "content": "如果不保存，您的更改将会丢失。",
+    "continueButton": "取消",
+    "discardButton": "不保存",
     "saveButton": "保存"
   },
   "sammMigration": {
@@ -54,7 +54,8 @@
   },
   "notificationService": {
     "cannotDeleteEdgeTitle": "无法删除连接",
-    "cannotDeleteEdgeMessage": "无法直接删除连接。请删除相应的元素或重新连接它们。",
+    "cannotDeleteEdgeMessage": "无法删除来自外部命名空间的元素的连接。",
+    "cannotDeleteEdgeFilteredMessage": "只有在模型未被筛选时才能删除连接。",
     "onlyTwoElementsConnection": "请只选择两个元素来连接它们",
     "referneceConnectionError": "无法连接引用",
     "recursiveElements": "递归的elements",
@@ -337,6 +338,7 @@
     "theRootOfAvailableNamespaces": "所有本地可获取namespaces的根",
     "workspaceTip": "要在下面的列表中查看您当前的Model, 请将其保存到Workspace",
     "sammElements": "SAMM 元素",
+    "sammElementsDocumentation": "打开 SAMM {{version}} 元模型元素文档",
     "dragIntoView": "拖到视图中",
     "empty": {
       "loadingNamespaces": "加载Namespaces...",
@@ -362,8 +364,10 @@
       "copiedWorkspacePath": "工作区路径已复制到剪贴板"
     },
     "fileMenu": {
+      "open": "打开",
       "newWindow": "在新窗口中打开",
-      "openCurrent": "在当前打开",
+      "openTab": "在新标签页中打开",
+      "openCurrent": "在当前标签页中打开",
       "findElements": "寻找元素",
       "copyFilePath": "复制文件路径",
       "copiedFilePath": "文件路径已复制到剪贴板",
@@ -428,21 +432,6 @@
       }
     }
   },
-  "elementModelDescription": {
-    "aspect": "每个Aspect Model的根元素",
-    "abstractProperty": "抽象命名值",
-    "property": "命名值",
-    "characteristic": "Property对于Aspect的意义",
-    "abstractEntity": "多个Value的逻辑封装的抽象",
-    "entity": "多个Value的逻辑封装",
-    "unit": "一个物理单位的定义",
-    "constraint": "应用于Characteristic的限制",
-    "trait": "封装对于Characteristics的多个限制",
-    "operation": "操作代表可以在 Aspect 上触发的操作",
-    "event": "Aspect支持的一个事件定义",
-    "entityInstance": "实体的一个实例",
-    "value": "一个带有语义元数据的值"
-  },
   "editorCanvas": {
     "dragElementPrompt": "拖动一个元素开始创建模型",
     "dragElementLine1": "拖动一个元素",
@@ -458,6 +447,7 @@
       "selectAllReferences": "选择所有的参考",
       "format": "格式化",
       "delete": "删除",
+      "deleteConnection": "删除连接",
       "copyToClipboard": "复制到剪切板"
     },
     "shapeSetting": {
@@ -668,7 +658,8 @@
     "foldNamespaces": "折叠namespaces",
     "outdatedFile": "此文件基于较旧的SAMM版本({{sammVersion}})",
     "erroredFile": "这个文件加载出错",
-    "currentFile": "该文件在当前窗口中打开"
+    "currentFile": "该文件在当前窗口中打开",
+    "openNewModelTab": "打开新模型标签页"
   },
   "searches": {
     "elementsLabel": "寻找元素...",
@@ -684,6 +675,7 @@
         "content": "您即将从命名空间<b>{{namespace}}</b>打开文件<b>{{fileName}}</b>。<br />请选择打开的位置",
         "cancel": "取消",
         "openInThisWindow": "在当前窗口打开",
+        "openInNewTab": "在新标签页打开",
         "openInNewWindow": "在新窗口打开"
       }
     }
@@ -727,6 +719,36 @@
   "loading": {
     "errorMessage": "打开编辑器时出错。",
     "openingEditor": "正在打开编辑器..."
+  },
+  "backendStatus": {
+    "startingTitle": "正在启动后端...",
+    "startingDescription": "Aspect Model Editor 正在启动其后端服务，这可能需要一点时间。",
+    "failedTitle": "无法启动后端",
+    "failedDescription": "您可以尝试重新启动后端或关闭应用程序。",
+    "retry": "重试",
+    "quit": "关闭应用程序"
+  },
+  "textView": {
+    "toggleLabel": "编辑器视图",
+    "graph": "编辑",
+    "aspectModel": "方面模型",
+    "graphTooltip": "显示图形化模型编辑器",
+    "textTooltip": "以 Turtle 文本显示方面模型",
+    "title": "方面模型 (Turtle)",
+    "readOnly": "只读",
+    "unformatted": "未格式化",
+    "unformattedTooltip": "后端格式化程序不可用，显示的是模型的原始序列化结果。",
+    "lines": "{{count}} 行",
+    "violations": "验证问题：{{count}}",
+    "nextViolation": "转到下一个验证问题",
+    "search": "搜索 (Ctrl+F)",
+    "refresh": "重新加载",
+    "copy": "复制到剪贴板",
+    "copied": "方面模型已复制到剪贴板",
+    "loading": "正在准备方面模型文本...",
+    "empty": "模型为空。请在图形视图中添加元素以查看其 Turtle 表示。",
+    "loadError": "无法创建方面模型的文本表示。",
+    "retry": "重试"
   },
   "menu": {
     "file": {

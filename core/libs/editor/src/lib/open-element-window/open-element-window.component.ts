@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ModelApiService} from '@ame/api';
-import {ElectronSignals, ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {ModelApiPort} from '@ame/domain';
+import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {Component, inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -44,10 +44,10 @@ import {ModelLoaderService} from '../model-loader.service';
   imports: [MatDialogModule, MatProgressSpinnerModule, TranslocoDirective],
 })
 export class OpenElementWindowComponent implements OnInit {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
+  private tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private modelLoaderService = inject(ModelLoaderService);
   private dialogRef = inject(MatDialogRef<OpenElementWindowComponent>);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private notificationService = inject(NotificationsService);
   private elementInfo = inject<{urn: string; file: string}>(MAT_DIALOG_DATA);
 
@@ -61,7 +61,7 @@ export class OpenElementWindowComponent implements OnInit {
         tap(rdfModel => {
           const quads = rdfModel.store.getQuads(new NamedNode(this.elementInfo.urn), null, null, null);
           if (quads.length) {
-            this.electronSignalsService.call('openWindow', {
+            this.tauriSignalsService.call('openWindow', {
               namespace: namespace,
               file: this.elementInfo.file,
               editElement: this.elementInfo.urn,

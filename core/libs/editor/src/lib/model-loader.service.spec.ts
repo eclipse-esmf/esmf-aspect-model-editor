@@ -11,19 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {InstantiatorService} from '@ame/instantiator';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, ElectronSignalsService, ModelSavingTrackerService, NotificationsService, TitleService} from '@ame/shared';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelInstantiatorPort, NamespaceFile} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
+import {BrowserService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of, throwError} from 'rxjs';
+import {of, Subject, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ModelLoaderService} from './model-loader.service';
 import {ModelRendererService} from './model-renderer.service';
+import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
 describe('ModelLoaderService', () => {
   let service: ModelLoaderService;
@@ -52,15 +51,19 @@ describe('ModelLoaderService', () => {
           }),
           getFile: vi.fn(),
         }),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           loadNamespacesStructure: vi.fn(() => of({})),
           fetchAllAspectMetaModel: vi.fn(() => of([])),
           fetchAllNamespaceFilesContent: vi.fn(() => of([])),
         }),
+        MockProvider(MaxGraphService, {graphModelChanged$: new Subject<void>()}),
         MockProvider(NotificationsService),
-        MockProvider(InstantiatorService, {
-          instantiateRemainingElements: vi.fn(),
-        }),
+        {
+          provide: ModelInstantiatorPort,
+          useValue: {
+            instantiateRemainingElements: vi.fn(),
+          },
+        },
         MockProvider(ModelRendererService, {
           renderModel: vi.fn(() => of(true)),
         }),
@@ -68,9 +71,9 @@ describe('ModelLoaderService', () => {
           updateSavedModel: vi.fn(),
         }),
         MockProvider(BrowserService, {
-          isStartedAsElectronApp: vi.fn(() => false),
+          isStartedAsTauriApp: vi.fn(() => false),
         }),
-        MockProvider(ElectronSignalsService, {call: vi.fn()}),
+        MockProvider(TauriSignalsService, {call: vi.fn()}),
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(() => ({copyrightHeader: []}) as any),
         }),
@@ -96,7 +99,7 @@ describe('ModelLoaderService', () => {
   });
 
   it('should restore files on error when renderModel fails', async () => {
-    const modelApiService = TestBed.inject(ModelApiService);
+    const modelApiService = TestBed.inject(ModelApiPort);
     vi.spyOn(modelApiService, 'loadNamespacesStructure').mockReturnValue(throwError(() => new Error('Batch load failed')));
 
     const payload = {

@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {InformationHandlingService} from '@ame/editor';
-import {ThemeService} from '@ame/max-graph';
-import {ConfigurationService} from '@ame/settings-dialog';
+import {ConfigurationService, InformationHandlingPort, UiShellStore} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -38,10 +36,7 @@ describe('SidebarMenuComponent', () => {
     getSettings: ReturnType<typeof vi.fn>;
     setSettings: ReturnType<typeof vi.fn>;
   };
-  let themeServiceMock: {
-    currentTheme: string;
-    applyTheme: ReturnType<typeof vi.fn>;
-  };
+  let uiShellStore: InstanceType<typeof UiShellStore>;
   let sidebarService: SidebarStateService;
 
   beforeEach(() => {
@@ -60,11 +55,6 @@ describe('SidebarMenuComponent', () => {
       setSettings: vi.fn(),
     };
 
-    themeServiceMock = {
-      currentTheme: 'light',
-      applyTheme: vi.fn(),
-    };
-
     TestBed.configureTestingModule({
       imports: [
         SidebarMenuComponent,
@@ -73,14 +63,14 @@ describe('SidebarMenuComponent', () => {
       ],
       providers: [
         SidebarStateService,
-        {provide: InformationHandlingService, useValue: informationServiceMock},
+        {provide: InformationHandlingPort, useValue: informationServiceMock},
         {provide: NotificationsService, useValue: notificationsServiceMock},
         {provide: ConfigurationService, useValue: configurationServiceMock},
-        {provide: ThemeService, useValue: themeServiceMock},
       ],
     });
 
     sidebarService = TestBed.inject(SidebarStateService);
+    uiShellStore = TestBed.inject(UiShellStore);
     fixture = TestBed.createComponent(SidebarMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -96,7 +86,7 @@ describe('SidebarMenuComponent', () => {
     component.toggleDarkMode();
 
     expect(configurationServiceMock.setSettings).toHaveBeenCalledWith(expect.objectContaining({darkMode: true}));
-    expect(themeServiceMock.applyTheme).toHaveBeenCalledWith('dark');
+    expect(uiShellStore.darkMode()).toBe(true);
   });
 
   it('should delegate opening dialogs to InformationHandlingService', () => {

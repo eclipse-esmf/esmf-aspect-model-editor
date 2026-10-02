@@ -15,8 +15,8 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
-import {ElementListComponent} from '../element-list';
-import {BaseInputComponent} from '../fields';
+import {ElementListComponent} from '../element-list/element-list.component';
+import {BaseInputComponent} from '../fields/base/base-input/base-input.component';
 
 @Component({
   selector: 'ame-abstract-property',

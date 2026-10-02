@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/domain';
 import {Component, computed, effect, inject, input, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {MatIcon} from '@angular/material/icon';
@@ -19,7 +19,7 @@ import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../../editor-model.service';
 import {EditorSignalFormContext} from '../../../forms/editor-signal-form-context';
-import {ElementListComponent} from '../../element-list';
+import {ElementListComponent} from '../../element-list/element-list.component';
 import {BaseInputComponent} from '../../fields';
 
 @Component({

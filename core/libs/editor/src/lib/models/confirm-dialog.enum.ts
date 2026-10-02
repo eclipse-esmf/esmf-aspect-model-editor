@@ -11,8 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export enum ConfirmDialogEnum {
-  ok = 'ok',
-  action = 'action',
-  cancel = 'cancel',
-}
+export {ConfirmDialogEnum} from '@ame/domain';

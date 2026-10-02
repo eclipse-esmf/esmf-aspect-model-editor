@@ -1,0 +1,116 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {simpleDataTypes} from '@ame/shared';
+import {
+  DefaultAspect,
+  DefaultEntity,
+  DefaultProperty,
+  DefaultValue,
+  PropertyPayload,
+  PropertyUrn,
+  Samm,
+  SammC,
+  ScalarValue,
+  Type,
+} from '@esmf/aspect-model-loader';
+import {DataFactory, NamedNode} from 'n3';
+import {ListElement, ListElementType, ListProperties, PropertyListElement, ResolvedListElements, SourceElementType} from '.';
+
+// TODO should be refactored to make it more easier to read and more understandable
+export class RdfListHelper {
+  static resolveNewElements(source: SourceElementType & {dataType?: Type}, elements: ListElementType[]): ResolvedListElements {
+    const overWrittenListElements: PropertyListElement[] = [];
+    let propertiesPayload: Record<PropertyUrn, PropertyPayload>;
+
+    if (source instanceof DefaultEntity || source instanceof DefaultAspect) {
+      propertiesPayload = source.propertiesPayload;
+    }
+
+    const defaultDataTypeUrn =
+      source?.dataType?.urn ||
+      source?.dataType?.aspectModelUrn ||
+      (typeof source?.dataType === 'string' ? source.dataType : null) ||
+      simpleDataTypes.string.isDefinedBy;
+
+    const listElements = elements.map(metaModelElement => {
+      const property: DefaultProperty = metaModelElement;
+      const propertyPayload: PropertyPayload = propertiesPayload?.[metaModelElement.aspectModelUrn];
+
+      if (
+        property instanceof DefaultProperty &&
+        (propertyPayload?.optional || propertyPayload?.notInPayload || propertyPayload?.payloadName || metaModelElement.getExtends())
+      ) {
+        const blankNode = DataFactory.blankNode();
+        overWrittenListElements.push({
+          metaModelElement,
+          propertyPayload,
+          blankNode,
+        });
+        return blankNode;
+      }
+
+      if (metaModelElement instanceof DefaultValue && metaModelElement.isAnonymous?.()) {
+        const blankNode = DataFactory.blankNode();
+        overWrittenListElements.push({
+          metaModelElement,
+          propertyPayload,
+          blankNode,
+        });
+        return blankNode;
+      }
+
+      if (metaModelElement.aspectModelUrn) {
+        return DataFactory.namedNode(metaModelElement.aspectModelUrn);
+      } else if (metaModelElement?.value && !(metaModelElement instanceof ScalarValue)) {
+        return DataFactory.namedNode(metaModelElement?.value);
+      }
+
+      if (metaModelElement instanceof ScalarValue) {
+        const dtUrn = defaultDataTypeUrn || metaModelElement.type?.urn || metaModelElement.type?.aspectModelUrn;
+        return DataFactory.literal(`${metaModelElement.value}`, DataFactory.namedNode(dtUrn));
+      }
+
+      return DataFactory.literal(metaModelElement, DataFactory.namedNode(defaultDataTypeUrn));
+    });
+
+    return {
+      listElements,
+      overWrittenListElements,
+    };
+  }
+
+  static getElementValue(element: ListElementType) {
+    return element?.aspectModelUrn || element?.property?.aspectModelUrn || element?.value || element;
+  }
+
+  static filterDuplicates(elements: ListElementType[], exitingElements: ListElement[]) {
+    return elements.filter(e => !exitingElements.find(({node, name}) => (name ? name : node.value) === RdfListHelper.getElementValue(e)));
+  }
+
+  static getPredicateByKey(key: ListProperties, samm: Samm, sammC: SammC): NamedNode<string> {
+    const predicates = {
+      [ListProperties.elements]: sammC.ElementsProperty(),
+      [ListProperties.values]: sammC.ValuesProperty(),
+      [ListProperties.operations]: samm.OperationsProperty(),
+      [ListProperties.properties]: samm.PropertiesProperty(),
+      [ListProperties.abstractProperties]: samm.PropertiesProperty(),
+      [ListProperties.input]: samm.InputProperty(),
+      [ListProperties.quantityKinds]: samm.QuantityKindsProperty(),
+      [ListProperties.events]: samm.EventsProperty(),
+      [ListProperties.parameters]: samm.ParametersProperty(),
+    };
+
+    return predicates[key];
+  }
+}

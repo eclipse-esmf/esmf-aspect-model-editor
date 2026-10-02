@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelService} from '@ame/rdf/services';
-import {LoadingScreenService, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, ModelService, NamespaceFile} from '@ame/domain';
+import {LanguageTranslationService, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';

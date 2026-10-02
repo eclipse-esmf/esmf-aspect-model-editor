@@ -1,0 +1,79 @@
+<!--
+  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+@if (isToolbarVisible()) {
+  <ame-editor-toolbar class="toolbar"></ame-editor-toolbar>
+}
+
+<ame-editor-tab-bar class="tab-bar"></ame-editor-tab-bar>
+
+<ame-sidebar class="sidebar"></ame-sidebar>
+
+@if (isShapeSettingsOpened(); as isOpened) {
+  <section class="info-section" [style.width.px]="sidebarWidth()" cdkDragLockAxis="x" cdkDrag>
+    <div
+      class="info-section__gutter"
+      [cdkDragFreeDragPosition]="sidebarDragPosition()"
+      (cdkDragEnded)="onDragEnded($event)"
+      data-testid="info-section-drag"
+      cdkDrag
+      cdkDragHandle
+      cdkDragLockAxis="x"
+    >
+      <div class="info-section__indication-line"></div>
+      <mat-icon class="info-section__icon">more_vert</mat-icon>
+    </div>
+    <ame-shape-settings
+      [modelElement]="modelElement"
+      [isOpened]="isOpened"
+      (save)="onShapeSettingsSave($event)"
+      (afterClose)="resetSelectedShapeForUpdate()"
+    >
+    </ame-shape-settings>
+  </section>
+} @else if (isElementsSearchOpened()) {
+  <ame-elements-search></ame-elements-search>
+} @else if (isFilesSearchOpened()) {
+  <ame-files-search></ame-files-search>
+}
+
+<div class="canvas-area" [class.canvas-area--text]="isTextView()" [attr.data-view-mode]="viewMode.mode()" data-testid="canvas-area">
+  <div id="graph" #graph [attr.aria-hidden]="isTextView()"></div>
+
+  @if (isTextView()) {
+    <ame-aspect-model-text-view></ame-aspect-model-text-view>
+  }
+
+  @if (isModelEmpty() && !isTextView()) {
+    <div class="empty-model" *transloco="let t">
+      <span>
+        {{ t('editorCanvas.dragElementLine1') }} <br />
+        {{ t('editorCanvas.dragElementLine2') }}
+      </span>
+    </div>
+  }
+
+  <div class="map-graph" id="outline" [class.hidden]="isMapVisible() === false">
+    <div
+      class="map"
+      (click)="toggleMap()"
+      (keyup.enter)="toggleMap()"
+      (keyup.space)="toggleMap()"
+      tabindex="0"
+      role="button"
+      aria-label="Toggle map visibility"
+    >
+      <mat-icon>map</mat-icon>
+    </div>
+  </div>
+</div>

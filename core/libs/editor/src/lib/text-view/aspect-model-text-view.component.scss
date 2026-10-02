@@ -1,0 +1,174 @@
+/*!
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  --ame-tv-comment: #6a737d;
+  --ame-tv-string: #067d17;
+  --ame-tv-keyword: #0033b3;
+  --ame-tv-language: #8c6c00;
+  --ame-tv-iri: #2a6bb5;
+  --ame-tv-number: #1750eb;
+  --ame-tv-prefix: #871094;
+  --ame-tv-subject: #00627a;
+  --ame-tv-predicate: #7a3e9d;
+  --ame-tv-object: #1f2328;
+  --ame-tv-blank-node: #9e880d;
+  --ame-tv-datatype: #0e7c86;
+  --ame-tv-punctuation: #6e7781;
+  --ame-tv-active-line: rgba(0, 0, 0, 0.035);
+  --ame-tv-selection: rgba(33, 150, 243, 0.22);
+  --ame-tv-search-match: rgba(255, 213, 0, 0.35);
+  --ame-tv-search-outline: rgba(201, 160, 0, 0.6);
+  --ame-tv-search-selected: rgba(255, 152, 0, 0.5);
+  --ame-tv-target-line: rgba(33, 150, 243, 0.14);
+  --ame-tv-violation-line: rgba(220, 38, 38, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: var(--ame-surface, #ffffff);
+  color: var(--ame-font, inherit);
+}
+
+:host-context(.dark-theme) {
+  --ame-tv-comment: #7f848e;
+  --ame-tv-string: #98c379;
+  --ame-tv-keyword: #c678dd;
+  --ame-tv-language: #d19a66;
+  --ame-tv-iri: #61afef;
+  --ame-tv-number: #d19a66;
+  --ame-tv-prefix: #e06c75;
+  --ame-tv-subject: #56b6c2;
+  --ame-tv-predicate: #e5c07b;
+  --ame-tv-object: #dcdfe4;
+  --ame-tv-blank-node: #e5c07b;
+  --ame-tv-datatype: #56b6c2;
+  --ame-tv-punctuation: #8b9099;
+  --ame-tv-active-line: rgba(255, 255, 255, 0.04);
+  --ame-tv-selection: rgba(97, 175, 239, 0.3);
+  --ame-tv-search-match: rgba(229, 192, 123, 0.3);
+  --ame-tv-search-outline: rgba(229, 192, 123, 0.6);
+  --ame-tv-search-selected: rgba(209, 154, 102, 0.55);
+  --ame-tv-target-line: rgba(97, 175, 239, 0.16);
+  --ame-tv-violation-line: rgba(248, 113, 113, 0.12);
+}
+
+.text-view-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  height: 44px;
+  padding: 0 8px 0 16px;
+  box-sizing: border-box;
+  background: var(--ame-surface-card, #f5f5f6);
+  border-bottom: 1px solid var(--ame-gray-10, #cfd0d1);
+
+  &__icon {
+    color: var(--ame-primary);
+  }
+
+  &__title {
+    font-weight: 500;
+  }
+
+  &__badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--ame-gray-600);
+    border: 1px solid var(--ame-gray-10);
+  }
+
+  &__hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--ame-gray-600);
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__spacer {
+    flex: 1 1 auto;
+  }
+
+  &__violations {
+    --mat-button-text-label-text-color: var(--ame-error);
+    --mat-button-text-icon-color: var(--ame-error);
+    color: var(--ame-error);
+  }
+
+  &__meta {
+    font-size: 12px;
+    color: var(--ame-gray-600);
+    margin-right: 4px;
+  }
+}
+
+.text-view-body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.text-view-editor {
+  position: absolute;
+  inset: 0;
+
+  &--hidden {
+    visibility: hidden;
+  }
+}
+
+.text-view-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ame-gray-600);
+  text-align: center;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  &--error mat-icon {
+    color: var(--ame-error);
+  }
+}
+
+.text-view-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--ame-gray-600);
+  background: color-mix(in srgb, var(--ame-surface, #ffffff) 75%, transparent);
+}

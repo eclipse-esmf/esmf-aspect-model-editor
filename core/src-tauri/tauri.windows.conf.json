@@ -1,0 +1,13 @@
+{
+  "mainBinaryName": "Aspect-Model-Editor",
+  "bundle": {
+    "targets": ["nsis"],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "startMenuFolder": "ESMF",
+        "installerHooks": "windows/installer-hooks.nsh"
+      }
+    }
+  }
+}

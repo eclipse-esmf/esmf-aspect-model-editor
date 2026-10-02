@@ -13,9 +13,21 @@
   -->
 
   <div class="header">
-    <h2>{{ t('sidebar.sammElements') }}</h2>
+    <a
+      class="title"
+      [href]="sammDocumentationUrl"
+      [matTooltip]="t('sidebar.sammElementsDocumentation', {version: sammVersion})"
+      [attr.aria-label]="t('sidebar.sammElementsDocumentation', {version: sammVersion})"
+      ameExternalLink
+      target="_blank"
+      rel="noopener noreferrer"
+      data-testid="samm-elements-docs-link"
+    >
+      <h2>{{ t('sidebar.sammElements') }}</h2>
+      <mat-icon class="info-icon">info_outline</mat-icon>
+    </a>
     @if (!isEmptyModel) {
-      <button (click)="sidebarService.sammElements.close()" mat-mini-fab data-cy="sidebar-close">
+      <button (click)="sidebarService.sammElements.close()" mat-mini-fab data-testid="sidebar-close">
         <mat-icon>close</mat-icon>
       </button>
     }
@@ -24,11 +36,7 @@
   <div class="content">
     @for (element of availableElements(); track element) {
       <ame-draggable-element [type]="element">
-        <ame-element
-          [type]="sammElements[element]"
-          [name]="sammElements[element].name"
-          [description]="t(sammElements[element].description)"
-        ></ame-element>
+        <ame-element [type]="sammElements[element]" [name]="sammElements[element].name"></ame-element>
       </ame-draggable-element>
     }
   </div>

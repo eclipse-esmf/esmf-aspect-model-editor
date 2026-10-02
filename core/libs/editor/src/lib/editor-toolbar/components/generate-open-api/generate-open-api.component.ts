@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {OpenApi, OpenApiModel} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService, OpenApi, OpenApiModel, SammLanguageSettingsService} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {CommonModule} from '@angular/common';
 import {Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, untracked, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';

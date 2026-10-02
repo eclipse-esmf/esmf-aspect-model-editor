@@ -13,10 +13,10 @@
 
 <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill">
   <mat-label>defaultValue</mat-label>
-  <input #valuesInput [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="defaultValue" />
+  <input #valuesInput [matAutocomplete]="auto" [formField]="displayField" matInput data-testid="defaultValue" />
 
   @if (displayField().disabled()) {
-    <button (click)="unlockDefaultValue()" data-cy="clear-example-value-button" type="button" matSuffix mat-icon-button tabindex="-1">
+    <button (click)="unlockDefaultValue()" data-testid="clear-example-value-button" type="button" matSuffix mat-icon-button tabindex="-1">
       <mat-icon>close</mat-icon>
     </button>
   }

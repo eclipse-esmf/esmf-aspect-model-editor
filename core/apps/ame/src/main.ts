@@ -11,18 +11,17 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AppComponent} from '@ame/app/app.component';
-import {APP_ROUTES} from '@ame/app/app.routes';
-import {APP_CONFIG, config} from '@ame/shared';
-import {TranslocoHttpLoader} from '@ame/translation';
-import {provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
-import {enableProdMode, importProvidersFrom, provideZonelessChangeDetection} from '@angular/core';
+import {HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {enableProdMode, importProvidersFrom, inject, provideZonelessChangeDetection} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 import {PreloadAllModules, provideRouter, withPreloading} from '@angular/router';
-import {provideTransloco} from '@jsverse/transloco';
+import {provideTransloco, Translation, TranslocoLoader} from '@jsverse/transloco';
 import {environment} from 'environments/environment';
 import {ToastrModule} from 'ngx-toastr';
+import {AppComponent} from './app/app.component';
+import {provideAme} from './app/app.config';
+import {APP_ROUTES} from './app/app.routes';
 
 (window as any)['global'] = window;
 
@@ -49,9 +48,15 @@ const bootstrap = () =>
           reRenderOnLangChange: true,
           prodMode: environment.production,
         },
-        loader: TranslocoHttpLoader,
+        loader: class implements TranslocoLoader {
+          private readonly http = inject(HttpClient);
+
+          getTranslation(lang: string) {
+            return this.http.get<Translation>(`./assets/i18n/${lang}.json`);
+          }
+        },
       }),
-      {provide: APP_CONFIG, useValue: config},
+      provideAme(),
     ],
   });
 

@@ -11,12 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {FiltersService} from '@ame/loader-filters';
-import {MaxGraphAttributeService, MaxGraphService, MaxGraphSetupService, MaxGraphShapeOverlayService} from '@ame/max-graph';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {LoadingScreenService, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {FiltersService, LoadedFilesService, NamespaceFile} from '@ame/domain';
+import {MaxGraphAttributeService, MaxGraphService, MaxGraphSetupService, MaxGraphShapeOverlayService} from '@ame/graph';
+import {LanguageTranslationService, LoadingScreenService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -54,10 +51,13 @@ describe('ModelRendererService', () => {
           open: vi.fn(),
           close: vi.fn(),
         }),
-        MockProvider(FiltersService, {
-          currentFilter: {filterType: 'ALL'} as any,
-          filter: vi.fn(elements => elements),
-        }),
+        {
+          provide: FiltersService,
+          useValue: {
+            currentFilter: {filterType: 'ALL'} as any,
+            filter: vi.fn(elements => elements),
+          },
+        },
         MockProvider(MaxGraphAttributeService, {
           inCollapsedMode: false,
         }),
@@ -75,7 +75,6 @@ describe('ModelRendererService', () => {
         }),
         MockProvider(NotificationsService),
         MockProvider(MaxGraphShapeOverlayService),
-        MockProvider(SammLanguageSettingsService),
       ],
     });
 

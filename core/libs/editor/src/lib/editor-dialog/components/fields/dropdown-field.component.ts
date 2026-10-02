@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {ModelService} from '@ame/rdf/services';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {LoadedFilesService, ModelService, SammLanguageSettingsService} from '@ame/domain';
 import {Directive, inject, input, output} from '@angular/core';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement} from '@esmf/aspect-model-loader';
 import {filter, tap} from 'rxjs/operators';
@@ -48,6 +46,25 @@ export abstract class DropdownFieldComponent<T extends DefaultCharacteristic | D
     }
 
     const formValue = this.signalForm().value();
+    if (typeof formValue.name === 'string' && this.metaModelElement) {
+      this.metaModelElement.name = formValue.name;
+      if (this.selectedMetaModelElement) {
+        this.selectedMetaModelElement.name = formValue.name;
+      }
+    }
+    if (typeof formValue.description === 'string' && this.metaModelElement) {
+      this.metaModelElement.descriptions?.set('en', formValue.description);
+      if (this.selectedMetaModelElement) {
+        this.selectedMetaModelElement.descriptions?.set('en', formValue.description);
+      }
+    }
+    if (typeof formValue.preferredName === 'string' && this.metaModelElement) {
+      this.metaModelElement.preferredNames?.set('en', formValue.preferredName);
+      if (this.selectedMetaModelElement) {
+        this.selectedMetaModelElement.preferredNames?.set('en', formValue.preferredName);
+      }
+    }
+
     this._previousData = {
       ...this.previousDataSnapshot(),
       ...this._previousData,

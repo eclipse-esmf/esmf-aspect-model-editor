@@ -11,10 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {EditorService, InformationHandlingService, ModelCheckerService} from '@ame/editor';
-import {MaxGraphService} from '@ame/max-graph';
-import {ElectronSignalsService, NotificationsService} from '@ame/shared';
+import {
+  ConfigurationService,
+  DraggablePort,
+  GraphNavigatorPort,
+  InformationHandlingPort,
+  ModelCheckerPort,
+  ModelSessionFacade,
+} from '@ame/domain';
+import {NotificationsService, TauriSignalsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -39,15 +44,16 @@ describe('SidebarComponent', () => {
       providers: [
         SidebarStateService,
         {
-          provide: InformationHandlingService,
+          provide: InformationHandlingPort,
           useValue: {openSettingsDialog: vi.fn(), openHelpDialog: vi.fn(), openNotificationDialog: vi.fn()},
         },
         {provide: NotificationsService, useValue: {badgeText: EMPTY, info: vi.fn(), error: vi.fn()}},
-        {provide: MaxGraphService, useValue: {getAllCells: () => []}},
-        {provide: LoadedFilesService, useValue: {hasAspect: signal(false), currentLoadedFile: null, getFile: () => null}},
-        {provide: EditorService, useValue: {makeDraggable: vi.fn()}},
-        {provide: ModelCheckerService, useValue: {detectWorkspaceErrors: () => EMPTY}},
-        {provide: ElectronSignalsService, useValue: {call: vi.fn()}},
+        {provide: GraphNavigatorPort, useValue: {hasElements: () => false}},
+        {provide: ModelSessionFacade, useValue: {hasAspect: signal(false), currentLoadedFile: null, getFile: () => null}},
+        {provide: DraggablePort, useValue: {makeDraggable: vi.fn()}},
+        {provide: ModelCheckerPort, useValue: {detectWorkspaceErrors: () => EMPTY}},
+        {provide: TauriSignalsService, useValue: {call: vi.fn()}},
+        {provide: ConfigurationService, useValue: {getSettings: vi.fn(() => ({})), setSettings: vi.fn()}},
       ],
     });
 

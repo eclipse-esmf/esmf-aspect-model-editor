@@ -11,4 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export type {ViolationError} from '@ame/api';
+export type {ViolationError} from '@ame/domain';

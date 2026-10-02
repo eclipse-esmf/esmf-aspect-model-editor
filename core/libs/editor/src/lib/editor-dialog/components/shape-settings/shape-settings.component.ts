@@ -11,35 +11,37 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {ChangeDetectorRef, Component, DestroyRef, effect, inject, input, OnInit, output, signal, untracked} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {DefaultCharacteristic, DefaultConstraint, NamedElement, Unit} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorFormModel, EditorSignalFormContext} from '../../forms/editor-signal-form-context';
-import {AbstractEntityComponent} from '../abstract-entities';
-import {AbstractPropertyComponent} from '../abstract-property';
-import {AspectComponent} from '../aspect';
-import {CharacteristicComponent, TraitCharacteristicComponent} from '../characteristics';
-import {ConstraintComponent} from '../constraints';
-import {EntityComponent} from '../entities';
-import {EntityInstanceComponent} from '../entity-instance';
-import {EventComponent} from '../events';
-import {LocateElementComponent} from '../fields';
-import {OperationComponent} from '../operations';
-import {PropertyComponent} from '../properties';
-import {UnitComponent} from '../units';
-import {ValueComponent} from '../value';
+import {AbstractEntityComponent} from '../abstract-entities/abstract-entity.component';
+import {AbstractPropertyComponent} from '../abstract-property/abstract-property.component';
+import {AspectComponent} from '../aspect/aspect.component';
+import {CharacteristicComponent} from '../characteristics/characteristic.component';
+import {TraitCharacteristicComponent} from '../characteristics/trait-characteristic/trait-characteristic.component';
+import {ConstraintComponent} from '../constraints/constraint.component';
+import {EntityComponent} from '../entities/entity.component';
+import {EntityInstanceComponent} from '../entity-instance/entity-instance.component';
+import {EventComponent} from '../events/event.component';
+import {LocateElementComponent} from '../fields/base/locate-element/locate-element.component';
+import {OperationComponent} from '../operations/operation.component';
+import {PropertyComponent} from '../properties/property.component';
+import {UnitComponent} from '../units/unit.component';
+import {ValueComponent} from '../value/value.component';
 import {SharedSettingsTitleComponent} from './shared-settings-title/shared-settings-title.component';
 
 @Component({
   selector: 'ame-shape-settings',
   host: {
     '(window:keydown.control.enter)': 'saveOnKeyControlEnterEvent()',
+    '(window:keydown.escape)': 'closeOnEscapeEvent($event)',
   },
   templateUrl: './shape-settings.component.html',
   styleUrls: ['./shape-settings.component.scss'],
@@ -69,6 +71,7 @@ export class ShapeSettingsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private languageSettings = inject(SammLanguageSettingsService);
   private changeDetector = inject(ChangeDetectorRef);
+  private dialog = inject(MatDialog);
 
   public metaModelDialogService = inject(EditorModelService);
   public loadedFilesService = inject(LoadedFilesService);
@@ -101,6 +104,14 @@ export class ShapeSettingsComponent implements OnInit {
     if (this.isOpened()) {
       this.onSave();
     }
+  }
+
+  closeOnEscapeEvent(event: Event) {
+    // Nested overlays (autocomplete, select, menu) consume Escape themselves via preventDefault
+    if (!this.isOpened() || event.defaultPrevented || this.dialog.openDialogs.length > 0) {
+      return;
+    }
+    this.onClose();
   }
 
   ngOnInit() {

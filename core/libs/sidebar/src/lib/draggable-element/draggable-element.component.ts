@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService} from '@ame/editor';
+import {DraggablePort} from '@ame/domain';
 import {basicShapeGeometry, circleShapeGeometry, ElementType} from '@ame/shared';
 import {AfterViewInit, Component, ElementRef, inject, input, Renderer2} from '@angular/core';
 
@@ -28,7 +28,7 @@ export class DraggableElementComponent implements AfterViewInit {
   private elementRef = inject(ElementRef<HTMLDivElement>);
   private renderer = inject(Renderer2);
 
-  public editorService = inject(EditorService);
+  public editorService = inject(DraggablePort);
 
   ngAfterViewInit(): void {
     if (this.readonly()) {

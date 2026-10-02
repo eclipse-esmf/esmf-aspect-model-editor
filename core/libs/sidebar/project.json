@@ -10,20 +10,13 @@
       "outputs": ["{workspaceRoot}/coverage/libs/sidebar"],
       "options": {
         "tsConfig": "libs/sidebar/tsconfig.spec.json",
-        "buildTarget": "sidebar:build",
-        "watch": false
+        "watch": false,
+        "buildTarget": "ame:build:development"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
-    },
-    "build": {
-      "executor": "@angular/build:ng-packagr",
-      "outputs": ["{workspaceRoot}/dist/libs/sidebar"],
-      "options": {
-        "project": "libs/sidebar/ng-package.json"
-      },
-      "dependsOn": []
     }
-  }
+  },
+  "tags": ["scope:features", "layer:features", "type:feature", "access:domain-only"]
 }

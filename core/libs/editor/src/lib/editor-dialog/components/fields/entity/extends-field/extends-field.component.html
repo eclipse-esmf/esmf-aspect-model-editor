@@ -13,9 +13,9 @@
   -->
   <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
     <mat-label>extends</mat-label>
-    <input #extends [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="extendsValue" />
+    <input #extends [matAutocomplete]="auto" [formField]="displayField" matInput data-testid="extendsValue" />
     @if (displayField().disabled() && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
-      <button (click)="unlockExtends()" data-cy="clear-extends-button" type="button" matSuffix mat-icon-button tabindex="-1">
+      <button (click)="unlockExtends()" data-testid="clear-extends-button" type="button" matSuffix mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>
       </button>
     }
@@ -24,7 +24,7 @@
       <mat-optgroup label="Predefined Elements">
         @for (element of predefinedEntities; track element) {
           @if (element.name.includes(displayValue())) {
-            <mat-option [attr.data-cy]="element.name" [value]="element.name" (click)="onSelectionChange(element)">
+            <mat-option [attr.data-testid]="element.name" [value]="element.name" (click)="onSelectionChange(element)">
               <div class="result">
                 <div class="ellipsis">
                   {{ element.name }}<br />

@@ -11,25 +11,29 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelService, RdfSerializerService} from '@ame/rdf/services';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {ModelSavingTrackerService, NotificationsService} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslationService} from '@ame/translation';
+import {
+  ConfigurationService,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelService,
+  NamespaceFile,
+  RdfPort,
+  SammLanguageSettingsService,
+} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {FileHandlingService} from './editor-toolbar/services/file-handling.service';
 import {ModelSaverService} from './model-saver.service';
+import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
 describe('ModelSaverService', () => {
   let service: ModelSaverService;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
   let modelSavingTracker: ModelSavingTrackerService;
   let notificationsService: NotificationsService;
 
@@ -43,11 +47,13 @@ describe('ModelSaverService', () => {
     TestBed.configureTestingModule({
       providers: [
         ModelSaverService,
-        MockProvider(ModelApiService, {
+        MockProvider(MaxGraphService, {graphModelChanged$: new Subject<void>()}),
+        MockProvider(ModelApiPort, {
           fetchFormatedAspectModel: vi.fn(() => of('formatted content')),
           saveAspectModel: vi.fn(() => of(null as any)),
+          loadNamespacesStructure: vi.fn(() => of({})),
         }),
-        MockProvider(RdfSerializerService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => '@prefix : <urn:test#> .\n:Aspect a samm:Aspect .'),
         }),
         MockProvider(LoadedFilesService, {
@@ -62,12 +68,6 @@ describe('ModelSaverService', () => {
         MockProvider(NotificationsService, {
           info: vi.fn(),
           error: vi.fn(),
-        }),
-        MockProvider(SidebarStateService, {
-          workspace: {refresh: vi.fn()} as any,
-        }),
-        MockProvider(FileHandlingService, {
-          isFileExistOnWorkspace: vi.fn(() => of(false)),
         }),
         MockProvider(LanguageTranslationService, {
           language: {
@@ -88,11 +88,32 @@ describe('ModelSaverService', () => {
               }) as any,
           ),
         }),
+        {
+          provide: ConfigurationService,
+          useFactory: () =>
+            ({
+              getSettings: vi.fn(() => ({
+                copyrightHeader: ['# Copyright'],
+                autoSaveEnabled: false,
+                saveTimerSeconds: 60,
+                editorTheme: 'light',
+              })),
+            }) as any,
+        },
+        {
+          provide: SammLanguageSettingsService,
+          useValue: {
+            getSettings: vi.fn(() => ({
+              languages: ['en'],
+              defaultLanguage: 'en',
+            })),
+          },
+        },
       ],
     });
 
     service = TestBed.inject(ModelSaverService);
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     modelSavingTracker = TestBed.inject(ModelSavingTrackerService);
     notificationsService = TestBed.inject(NotificationsService);
   });

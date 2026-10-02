@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
-import {BrowserService, ElectronSignals, ElectronSignalsService, IPC_RENDERER, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -26,7 +23,6 @@ import {MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {filter, finalize, switchMap} from 'rxjs';
 import {FileStatus, SidebarStateService} from '../../sidebar-state.service';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
@@ -49,19 +45,17 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
   ],
 })
 export class WorkspaceFileListComponent {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-  private modelSaverService = inject(ModelSaverService);
-  private notificationService = inject(NotificationsService);
-  private confirmDialogService = inject(ConfirmDialogService);
-  private modelApiService = inject(ModelApiService);
-  private fileHandlingService = inject(FileHandlingService);
-  private translate = inject(LanguageTranslationService);
-  private loadedFiles = inject(LoadedFilesService);
-  private destroyRef = inject(DestroyRef);
-  private ipcRenderer = inject(IPC_RENDERER);
-  private browserService = inject(BrowserService);
+  private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
+  private readonly notificationService = inject(NotificationsService);
+  private readonly confirmDialogService = inject(ConfirmDialogPort, {optional: true});
+  private readonly modelApiService = inject(WorkspaceFacade);
+  private readonly modelOpener = inject(ModelOpenerPort, {optional: true});
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly loadedFiles = inject(ModelSessionFacade);
+  private readonly destroyRef = inject(DestroyRef);
 
-  public sidebarService = inject(SidebarStateService);
+  public readonly sidebarService = inject(SidebarStateService);
+  public readonly workspaceStore = inject(WorkspaceStore);
 
   public readonly menuSelection = signal<{namespace: string; file: FileStatus} | null>(null);
   public readonly foldedStatus = signal(false);
@@ -169,32 +163,51 @@ export class WorkspaceFileListComponent {
     const selection = this.menuSelection();
     if (!selection) return false;
 
-    const {namespace, file} = selection;
-    return !(this.sidebarService.isCurrentFile(namespace, file.name) || file.outdated || file.errored);
+    const {file} = selection;
+    return !(file.outdated || file.errored);
+  }
+
+  public openContextMenu($event: MouseEvent, namespace: string, file: FileStatus, trigger: MatMenuTrigger) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.prepare(namespace, file);
+    trigger.openMenu();
+  }
+
+  public loadInNewTab() {
+    const selection = this.menuSelection();
+    if (!selection || selection.file.outdated || selection.file.errored) return;
+
+    this.modelOpener
+      ?.openInNewTab({
+        file: selection.file.name,
+        namespace: selection.namespace,
+        aspectModelUrn: selection.file.aspectModelUrn,
+      })
+      .subscribe();
+
+    this.menuSelection.set(null);
   }
 
   public loadInNewWindow() {
     const selection = this.menuSelection();
-    if (!selection) return;
+    if (!selection || selection.file.outdated || selection.file.errored) return;
 
-    const {namespace, file} = selection;
-
-    if (file.outdated || file.errored) {
-      return;
-    }
-
-    this.electronSignalsService.call('openWindow', {
-      namespace,
-      file: file.name,
-      fromWorkspace: true,
-      aspectModelUrn: file.aspectModelUrn,
+    this.modelOpener?.openInNewWindow({
+      namespace: selection.namespace,
+      file: selection.file.name,
+      aspectModelUrn: selection.file.aspectModelUrn,
     });
 
     this.menuSelection.set(null);
   }
 
   public isLoadDisabled() {
-    return !this.isOpenable();
+    const selection = this.menuSelection();
+    if (!selection) return true;
+
+    const {namespace, file} = selection;
+    return this.sidebarService.isCurrentFile(namespace, file.name) || !this.isOpenable();
   }
 
   public isCurrentFile(namespace?: string, fileName?: string): boolean {
@@ -209,33 +222,33 @@ export class WorkspaceFileListComponent {
     return this.sidebarService.isCurrentFile(namespace, file.name);
   }
 
-  public openFile() {
-    const selection = this.menuSelection();
-    if (!selection) return;
-
-    const {namespace, file} = selection;
-    const absoluteFileName = `${namespace}:${file.name}`;
-
-    if (file.outdated || file.errored) {
+  public promptOpenFile(namespace: string, file: FileStatus) {
+    if (file.outdated || file.errored || this.isCurrentFile(namespace, file.name)) {
       return;
     }
 
-    this.confirmDialogService
-      .open({
-        phrases: [
-          this.translate.translateService.translate('confirmDialog.saveBeforeLoad.phrase1', {fileName: file.name}),
-          this.translate.language.confirmDialog.saveBeforeLoad.phrase2,
-        ],
-        title: this.translate.language.confirmDialog.saveBeforeLoad.title,
-        closeButtonText: this.translate.language.confirmDialog.saveBeforeLoad.cancelButton,
-        okButtonText: this.translate.language.confirmDialog.saveBeforeLoad.okButton,
+    this.modelOpener
+      ?.promptAndOpen({
+        file: file.name,
+        namespace,
+        aspectModelUrn: file.aspectModelUrn,
       })
-      .pipe(
-        filter((confirmed: ConfirmDialogEnum) => confirmed !== ConfirmDialogEnum.cancel),
-        switchMap(() => this.modelSaverService.saveModel()),
-        finalize(() => this.fileHandlingService.loadNamespaceFile(absoluteFileName, file.aspectModelUrn)),
-      )
       .subscribe();
+  }
+
+  public openFile() {
+    const selection = this.menuSelection();
+    if (!selection || selection.file.outdated || selection.file.errored) return;
+
+    this.modelOpener
+      ?.openInCurrentWindow({
+        file: selection.file.name,
+        namespace: selection.namespace,
+        aspectModelUrn: selection.file.aspectModelUrn,
+      })
+      .subscribe();
+
+    this.menuSelection.set(null);
   }
 
   public deleteFile() {
@@ -261,7 +274,7 @@ export class WorkspaceFileListComponent {
           this.modelApiService.deleteAspectModel(selection.file.aspectModelUrn).subscribe(() => {
             this.sidebarService.namespacesState.clear();
             this.sidebarService.workspace.refresh();
-            this.electronSignalsService.call('requestRefreshWorkspaces');
+            this.tauriSignalsService.call('requestRefreshWorkspaces');
           });
         }
       });
@@ -307,9 +320,7 @@ export class WorkspaceFileListComponent {
   }
 
   private copyToClipboard(text: string) {
-    if (this.browserService.isStartedAsElectronApp() && this.ipcRenderer?.copyToClipboard) {
-      this.ipcRenderer.copyToClipboard(text);
-    } else if (navigator.clipboard?.writeText && document.hasFocus()) {
+    if (navigator.clipboard?.writeText && document.hasFocus()) {
       navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
     } else {
       this.fallbackCopy(text);

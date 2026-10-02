@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ShapeConnectorService} from '@ame/connection';
-import {FiltersService} from '@ame/loader-filters';
-import {MaxGraphService, MaxGraphShapeSelectorService} from '@ame/max-graph';
+import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
 import {BarItemComponent, BindingsService, NotificationsService} from '@ame/shared';
 import {CommonModule} from '@angular/common';
 import {AfterViewInit, Component, DestroyRef, inject, OnDestroy} from '@angular/core';
@@ -24,8 +22,9 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {first} from 'rxjs/operators';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
-import {ShapeSettingsService} from '../editor-dialog';
+import {ShapeSettingsService} from '../editor-dialog/services/shape-settings.service';
 import {EditorService} from '../editor.service';
+import {EditorViewModeService} from '../text-view/editor-view-mode.service';
 import {FileHandlingService} from './services';
 
 @Component({
@@ -47,11 +46,12 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
 
   public notificationsService = inject(NotificationsService);
 
-  public filtersService = inject(FiltersService);
   public isAllShapesExpanded = this.editorService.isAllShapesExpanded;
 
   protected isModelEmpty = this.maxgraphService.isModelEmpty;
   protected selectedCells = this.maxgraphShapeSelectorService.selectedCells;
+  protected hasSelection = this.maxgraphShapeSelectorService.hasSelection;
+  protected isTextView = inject(EditorViewModeService).isTextView;
 
   private checkChangesInterval: NodeJS.Timeout;
 

@@ -13,6 +13,7 @@
 
 export * from './draggable-element/draggable-element.component';
 export * from './helper';
+export * from './provide-sidebar';
 export * from './sidebar-menu/sidebar-menu.component';
 export * from './sidebar-samm-elements/sidebar-samm-elements.component';
 export * from './sidebar-state.service';

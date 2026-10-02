@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {inject, Injectable} from '@angular/core';
+import {DefaultOperation, DefaultProperty} from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
+import {MaxGraphService} from '../../max-graph';
+import {MultiShapeConnectorWithProperty} from '../models';
+
+@Injectable({providedIn: 'root'})
+export class OperationPropertyInputConnectionHandler implements MultiShapeConnectorWithProperty<DefaultOperation, DefaultProperty> {
+  private maxgraphService = inject(MaxGraphService);
+
+  public connect(parentMetaModel: DefaultOperation, childMetaModel: DefaultProperty, parent: Cell, child: Cell) {
+    const isInputAlreadyDefined = parentMetaModel.input.some(value => value.aspectModelUrn === childMetaModel.aspectModelUrn);
+    if (!isInputAlreadyDefined) {
+      parentMetaModel.input.push(childMetaModel);
+    }
+    this.maxgraphService.assignToParent(child, parent);
+  }
+}

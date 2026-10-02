@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
-import {ElectronSignalsService, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -29,29 +26,37 @@ describe('WorkspaceFileListComponent', () => {
   let component: WorkspaceFileListComponent;
   let fixture: ComponentFixture<WorkspaceFileListComponent>;
   let sidebarService: SidebarStateService;
-  let electronSignalsMock: {call: ReturnType<typeof vi.fn>};
-  let modelSaverMock: {saveModel: ReturnType<typeof vi.fn>};
+  let tauriSignalsMock: {call: ReturnType<typeof vi.fn>};
   let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn>};
   let confirmDialogMock: {open: ReturnType<typeof vi.fn>};
   let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>; getStoragePath: ReturnType<typeof vi.fn>};
-  let fileHandlingMock: {loadNamespaceFile: ReturnType<typeof vi.fn>};
   let loadedFilesMock: {currentLoadedFile: any; removeFile: ReturnType<typeof vi.fn>};
+  let modelOpenerMock: {
+    promptAndOpen: ReturnType<typeof vi.fn>;
+    openInCurrentWindow: ReturnType<typeof vi.fn>;
+    openInNewTab: ReturnType<typeof vi.fn>;
+    openInNewWindow: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     vi.useFakeTimers();
 
-    electronSignalsMock = {call: vi.fn()};
-    modelSaverMock = {saveModel: vi.fn(() => of(true))};
-    notificationMock = {info: vi.fn(), error: vi.fn(), success: vi.fn()};
+    tauriSignalsMock = {call: vi.fn()};
+    notificationMock = {info: vi.fn(), error: vi.fn(), success: vi.fn(() => of(true))};
     confirmDialogMock = {open: vi.fn(() => of(ConfirmDialogEnum.ok))};
     modelApiMock = {
       deleteAspectModel: vi.fn(() => of(undefined)),
-      getStoragePath: vi.fn(() => of({storagePath: '/workspace', path: '/workspace'})),
+      getStoragePath: vi.fn(() => of({storagePath: '/workspace'})),
     };
-    fileHandlingMock = {loadNamespaceFile: vi.fn()};
     loadedFilesMock = {
       currentLoadedFile: {namespace: 'org.eclipse.esmf:1.0.0', name: 'Current.ttl'},
       removeFile: vi.fn(),
+    };
+    modelOpenerMock = {
+      promptAndOpen: vi.fn(() => of(true)),
+      openInCurrentWindow: vi.fn(() => of(true)),
+      openInNewTab: vi.fn(() => of(true)),
+      openInNewWindow: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -63,13 +68,12 @@ describe('WorkspaceFileListComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: ElectronSignalsService, useValue: electronSignalsMock},
-        {provide: ModelSaverService, useValue: modelSaverMock},
+        {provide: TauriSignalsService, useValue: tauriSignalsMock},
         {provide: NotificationsService, useValue: notificationMock},
-        {provide: ConfirmDialogService, useValue: confirmDialogMock},
-        {provide: ModelApiService, useValue: modelApiMock},
-        {provide: FileHandlingService, useValue: fileHandlingMock},
-        {provide: LoadedFilesService, useValue: loadedFilesMock},
+        {provide: ConfirmDialogPort, useValue: confirmDialogMock},
+        {provide: WorkspaceFacade, useValue: modelApiMock},
+        {provide: ModelSessionFacade, useValue: loadedFilesMock},
+        {provide: ModelOpenerPort, useValue: modelOpenerMock},
         {
           provide: LanguageTranslationService,
           useValue: {
@@ -183,7 +187,7 @@ describe('WorkspaceFileListComponent', () => {
     }
   });
 
-  it('should load file in new window', () => {
+  it('should load file in new window via ModelOpenerService', () => {
     const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
     expect(file).toBeDefined();
     if (file) {
@@ -192,17 +196,55 @@ describe('WorkspaceFileListComponent', () => {
       expect(component.isOpenable()).toBe(true);
       component.loadInNewWindow();
 
-      expect(electronSignalsMock.call).toHaveBeenCalledWith('openWindow', {
+      expect(modelOpenerMock.openInNewWindow).toHaveBeenCalledWith({
         namespace: 'org.eclipse.esmf:1.0.0',
         file: 'File1.ttl',
-        fromWorkspace: true,
         aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
       });
       expect(component.menuSelection()).toBeNull();
     }
   });
 
-  it('should open file after confirming and saving model', () => {
+  it('should load file in new tab via ModelOpenerService', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    expect(file).toBeDefined();
+    if (file) {
+      component.prepare('org.eclipse.esmf:1.0.0', file);
+
+      expect(component.isOpenable()).toBe(true);
+      component.loadInNewTab();
+
+      expect(modelOpenerMock.openInNewTab).toHaveBeenCalledWith({
+        namespace: 'org.eclipse.esmf:1.0.0',
+        file: 'File1.ttl',
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
+      });
+      expect(component.menuSelection()).toBeNull();
+    }
+  });
+
+  it('should handle context menu event on file item', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    expect(file).toBeDefined();
+    if (file) {
+      const event = {
+        preventDefault: vi.fn(),
+        stopPropagation: vi.fn(),
+      } as unknown as MouseEvent;
+      const triggerMock = {
+        openMenu: vi.fn(),
+      } as any;
+
+      component.openContextMenu(event, 'org.eclipse.esmf:1.0.0', file, triggerMock);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(component.menuSelection()).toEqual({namespace: 'org.eclipse.esmf:1.0.0', file});
+      expect(triggerMock.openMenu).toHaveBeenCalled();
+    }
+  });
+
+  it('should open file in current window via ModelOpenerService', () => {
     const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
     expect(file).toBeDefined();
     if (file) {
@@ -210,9 +252,11 @@ describe('WorkspaceFileListComponent', () => {
 
       component.openFile();
 
-      expect(confirmDialogMock.open).toHaveBeenCalled();
-      expect(modelSaverMock.saveModel).toHaveBeenCalled();
-      expect(fileHandlingMock.loadNamespaceFile).toHaveBeenCalledWith('org.eclipse.esmf:1.0.0:File1.ttl', file.aspectModelUrn);
+      expect(modelOpenerMock.openInCurrentWindow).toHaveBeenCalledWith({
+        namespace: 'org.eclipse.esmf:1.0.0',
+        file: 'File1.ttl',
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
+      });
     }
   });
 
@@ -228,7 +272,7 @@ describe('WorkspaceFileListComponent', () => {
       expect(confirmDialogMock.open).toHaveBeenCalled();
       expect(modelApiMock.deleteAspectModel).toHaveBeenCalledWith(file.aspectModelUrn);
       expect(loadedFilesMock.removeFile).toHaveBeenCalledWith('org.eclipse.esmf:1.0.0:File1.ttl');
-      expect(electronSignalsMock.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
+      expect(tauriSignalsMock.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
     }
   });
 
@@ -296,5 +340,28 @@ describe('WorkspaceFileListComponent', () => {
 
     const normalFile = new FileStatus('Normal.ttl');
     expect(component.getFileTooltip('other.namespace:1.0.0', normalFile)).toBe('Normal.ttl');
+  });
+
+  it('should prompt open dialog via ModelOpenerService on promptOpenFile', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    expect(file).toBeDefined();
+    if (file) {
+      component.promptOpenFile('org.eclipse.esmf:1.0.0', file);
+
+      expect(modelOpenerMock.promptAndOpen).toHaveBeenCalledWith({
+        file: 'File1.ttl',
+        namespace: 'org.eclipse.esmf:1.0.0',
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#File1',
+      });
+    }
+  });
+
+  it('should not prompt open dialog if file is current loaded file', () => {
+    const currentFile = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'Current.ttl');
+    expect(currentFile).toBeDefined();
+    if (currentFile) {
+      component.promptOpenFile('org.eclipse.esmf:1.0.0', currentFile);
+      expect(modelOpenerMock.promptAndOpen).not.toHaveBeenCalled();
+    }
   });
 });

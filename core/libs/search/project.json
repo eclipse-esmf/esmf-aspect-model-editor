@@ -1,0 +1,22 @@
+{
+  "name": "search",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/search/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/search"],
+      "options": {
+        "tsConfig": "libs/search/tsconfig.spec.json",
+        "watch": false,
+        "buildTarget": "ame:build:development"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "tags": ["scope:features", "layer:features", "type:feature", "access:domain-only"]
+}

@@ -11,10 +11,25 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AsyncApi, ModelApiService, OpenApi, ViolationError} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {ChildrenArray, FILTER_ATTRIBUTES, FilterAttributesService, FiltersService} from '@ame/loader-filters';
 import {
+  AsyncApi,
+  ConfigurationService,
+  DraggablePort,
+  EditorValidationPort,
+  ElementCreatorService,
+  FilterAttributesService,
+  FiltersService,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelElementNamingService,
+  ModelService,
+  OpenApi,
+  RdfPort,
+  SammLanguageSettingsService,
+  ViolationError,
+} from '@ame/domain';
+import {
+  ElementModelService,
   MaxGraphAttributeService,
   MaxGraphHelper,
   MaxGraphRenderer,
@@ -24,38 +39,36 @@ import {
   MaxGraphShapeSelectorService,
   ShapeConfiguration,
   ThemeService,
-} from '@ame/max-graph';
-import {ElementModelService, ModelElementNamingService} from '@ame/meta-model';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {ConfigurationService, SammLanguageSettingsService} from '@ame/settings-dialog';
+} from '@ame/graph';
 import {
   AlertService,
-  ElementCreatorService,
+  ChildrenArray,
+  LanguageTranslationService,
   LoadingScreenService,
   NotificationsService,
   sammElements,
   SaveValidateErrorsCodes,
   TitleService,
+  useUpdater,
   ValidateStatus,
 } from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
-import {useUpdater} from '@ame/utils';
-import {DestroyRef, inject, Injectable, Injector, signal} from '@angular/core';
+import {DestroyRef, inject, Injectable, signal} from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, InternalEvent} from '@maxgraph/core';
 import {environment} from 'environments/environment';
-import {catchError, delayWhen, first, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
+import {catchError, delayWhen, finalize, first, Observable, of, retry, Subscription, switchMap, take, tap, throwError, timer} from 'rxjs';
 import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
-import {ShapeSettingsService, ShapeSettingsStateService} from './editor-dialog';
+import type {EditorFormModel} from './editor-dialog/forms/editor-signal-form-context';
+import {ShapeSettingsStateService} from './editor-dialog/services/shape-settings-state.service';
 import {ModelSaverService} from './model-saver.service';
 import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
 
 @Injectable({providedIn: 'root'})
-export class EditorService {
-  private filtersService: FiltersService = inject(FiltersService);
-  private filterAttributes: FilterAttributesService = inject(FILTER_ATTRIBUTES);
-  private configurationService: ConfigurationService = inject(ConfigurationService);
+export class EditorService implements DraggablePort, EditorValidationPort {
+  private filtersService = inject(FiltersService);
+  private filterAttributes = inject(FilterAttributesService);
+  private configurationService = inject(ConfigurationService);
   private modelSaverService: ModelSaverService = inject(ModelSaverService);
   private maxgraphService = inject(MaxGraphService);
   private maxgraphSetupService = inject(MaxGraphSetupService);
@@ -63,10 +76,10 @@ export class EditorService {
   private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private notificationsService = inject(NotificationsService);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private modelService = inject(ModelService);
   private alertService = inject(AlertService);
-  private rdfService = inject(RdfService);
+  private rdfService = inject(RdfPort);
   private sammLangService = inject(SammLanguageSettingsService);
   private confirmDialogService = inject(ConfirmDialogService);
   private elementModelService = inject(ElementModelService);
@@ -74,7 +87,6 @@ export class EditorService {
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
   private loadingScreenService = inject(LoadingScreenService);
   private translate = inject(LanguageTranslationService);
-  private injector = inject(Injector);
   private loadedFilesService = inject(LoadedFilesService);
   private elementCreator = inject(ElementCreatorService);
   private modelElementNamingService = inject(ModelElementNamingService);
@@ -89,10 +101,6 @@ export class EditorService {
     return this.configurationService.getSettings();
   }
 
-  get shapeSettingsService(): ShapeSettingsService {
-    return this.injector.get(ShapeSettingsService);
-  }
-
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
   }
@@ -101,6 +109,11 @@ export class EditorService {
     if (!environment.production) {
       window['angular.editorService'] = this;
     }
+  }
+
+  /** Applies the edited form values to the model element behind the given cell. */
+  updateElement(cell: Cell, formData: EditorFormModel): void {
+    this.elementModelService.updateElement(cell, formData);
   }
 
   initCanvas(): void {
@@ -125,7 +138,8 @@ export class EditorService {
 
     // Enforce parent domain object will be updated if a cell e.g. unit will be deleted
     this.maxgraphAttributeService.graph.addListener(InternalEvent.CELLS_REMOVED, (_source: Graph, event: EventObject) => {
-      if (this.filterAttributes.isFiltering) {
+      // Clearing the graph for re-rendering (e.g. switching the filter) must keep the model untouched.
+      if (this.filterAttributes.isFiltering || this.maxgraphService.isClearingGraph) {
         return;
       }
 
@@ -319,6 +333,7 @@ export class EditorService {
   deleteSelectedElements() {
     const result: Cell[] = [];
     const selectedCells = this.maxgraphShapeSelectorService.getSelectedCells();
+    const selectedEdges = this.maxgraphShapeSelectorService.getSelectedEdges();
 
     result.push(...selectedCells);
 
@@ -331,7 +346,7 @@ export class EditorService {
     });
 
     externElements.forEach(element => this.deletePrefixForExternalNamespaceReference(element));
-    this.deleteElements(result);
+    this.deleteElements([...result, ...selectedEdges]);
   }
 
   private deletePrefixForExternalNamespaceReference(cell: Cell) {
@@ -393,90 +408,88 @@ export class EditorService {
         );
         this.elementModelService.deleteElement(cell);
       });
-    } else if (edgeCells.length > 0) {
-      this.elementModelService.deleteElement(edgeCells[0]);
     }
+
+    // Edges already removed together with a deleted element are skipped by the edge removal.
+    edgeCells.forEach(edge => this.elementModelService.deleteElement(edge));
   }
 
   zoomIn() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.zoomInProgress,
-        content: this.translate.language.loadingScreenDialog.zoomInWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.zoomIn();
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.zoomInProgress,
+      content: this.translate.language.loadingScreenDialog.zoomInWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.zoomIn();
+    } finally {
+      handle.close();
+    }
   }
 
   zoomOut() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.zoomOutProgress,
-        content: this.translate.language.loadingScreenDialog.zoomInWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.zoomOut();
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.zoomOutProgress,
+      content: this.translate.language.loadingScreenDialog.zoomInWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.zoomOut();
+    } finally {
+      handle.close();
+    }
   }
 
   fit() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.fittingProgress,
-        content: this.translate.language.loadingScreenDialog.fittingWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.getPlugin<FitPlugin>('fit')?.fit();
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.fittingProgress,
+      content: this.translate.language.loadingScreenDialog.fittingWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.getPlugin<FitPlugin>('fit')?.fit();
+    } finally {
+      handle.close();
+    }
   }
 
   actualSize() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.fitToViewProgress,
-        content: this.translate.language.loadingScreenDialog.fittingWait,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphAttributeService.graph.zoomTo(1, true);
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.fitToViewProgress,
+      content: this.translate.language.loadingScreenDialog.fittingWait,
+    });
+    try {
+      this.maxgraphAttributeService.graph.zoomTo(1, true);
+    } finally {
+      handle.close();
+    }
   }
 
   toggleExpand() {
     const isExpanded = this.isAllShapesExpanded();
-    this.loadingScreenService
-      .open({
-        title: isExpanded ? this.translate.language.loadingScreenDialog.folding : this.translate.language.loadingScreenDialog.expanding,
-        content: this.translate.language.loadingScreenDialog.actionWait,
-      })
-      .afterOpened()
-      .pipe(switchMap(() => (isExpanded ? this.maxgraphService.foldCells() : this.maxgraphService.expandCells())))
+    const handle = this.loadingScreenService.open({
+      title: isExpanded ? this.translate.language.loadingScreenDialog.folding : this.translate.language.loadingScreenDialog.expanding,
+      content: this.translate.language.loadingScreenDialog.actionWait,
+    });
+    const op$ = isExpanded ? this.maxgraphService.foldCells() : this.maxgraphService.expandCells();
+    op$
+      .pipe(
+        take(1),
+        finalize(() => handle.close()),
+      )
       .subscribe(() => {
         this.isAllShapesExpanded.set(!isExpanded);
         this.maxgraphService.formatShapes(true);
-        this.loadingScreenService.close();
       });
   }
 
   formatModel() {
-    this.loadingScreenService
-      .open({
-        title: this.translate.language.loadingScreenDialog.formatting,
-        content: this.translate.language.loadingScreenDialog.waitFormat,
-      })
-      .afterOpened()
-      .subscribe(() => {
-        this.maxgraphService.formatShapes(true, true);
-        this.loadingScreenService.close();
-      });
+    const handle = this.loadingScreenService.open({
+      title: this.translate.language.loadingScreenDialog.formatting,
+      content: this.translate.language.loadingScreenDialog.waitFormat,
+    });
+    try {
+      this.maxgraphService.formatShapes(true, true);
+    } finally {
+      handle.close();
+    }
   }
 
   enableAutoValidation() {

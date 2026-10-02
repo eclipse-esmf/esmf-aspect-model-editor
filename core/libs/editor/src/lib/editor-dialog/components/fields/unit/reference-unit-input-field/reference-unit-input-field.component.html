@@ -14,9 +14,9 @@
 @if (metaModelElement?.referenceUnit || !metaModelElement.isPredefined) {
   <mat-form-field [floatLabel]="displayField().disabled() ? 'always' : 'auto'" appearance="fill">
     <mat-label>referenceUnit</mat-label>
-    <input #unit [matAutocomplete]="auto" [formField]="displayField" matInput data-cy="referenceUnit" />
+    <input #unit [matAutocomplete]="auto" [formField]="displayField" matInput data-testid="referenceUnit" />
     @if (displayField().disabled() && !loadedFiles.isElementExtern(metaModelElement) && !metaModelElement.isPredefined) {
-      <button (click)="unlockUnit()" data-cy="clear-unit-button" type="button" matSuffix mat-icon-button tabindex="-1">
+      <button (click)="unlockUnit()" data-testid="clear-unit-button" type="button" matSuffix mat-icon-button tabindex="-1">
         <mat-icon>close</mat-icon>
       </button>
     }

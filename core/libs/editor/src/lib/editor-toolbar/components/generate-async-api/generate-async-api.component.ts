@@ -11,7 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {form, FormField, pattern} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -27,8 +26,7 @@ import {finalize, map} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
-import {AsyncApi} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
+import {AsyncApi, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatIcon} from '@angular/material/icon';

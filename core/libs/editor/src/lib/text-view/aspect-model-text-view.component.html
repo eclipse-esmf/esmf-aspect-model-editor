@@ -1,0 +1,89 @@
+<!--
+  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+  ~
+  ~ See the AUTHORS file(s) distributed with this work for
+  ~ additional information regarding authorship.
+  ~
+  ~ This Source Code Form is subject to the terms of the Mozilla Public
+  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+  ~
+  ~ SPDX-License-Identifier: MPL-2.0
+  -->
+
+<ng-container *transloco="let t">
+  <div class="text-view-header">
+    <mat-icon class="text-view-header__icon">code</mat-icon>
+    <span class="text-view-header__title">{{ t('textView.title') }}</span>
+    <span class="text-view-header__badge" data-testid="text-view-readonly">{{ t('textView.readOnly') }}</span>
+
+    @if (state() === 'ready' && !formatted()) {
+      <span class="text-view-header__hint" [matTooltip]="t('textView.unformattedTooltip')" data-testid="text-view-unformatted">
+        <mat-icon>info</mat-icon>
+        {{ t('textView.unformatted') }}
+      </span>
+    }
+
+    <span class="text-view-header__spacer"></span>
+
+    @if (violationLines().length) {
+      <button
+        class="text-view-header__violations"
+        [matTooltip]="t('textView.nextViolation')"
+        (click)="goToNextViolation()"
+        mat-button
+        data-testid="text-view-violations"
+      >
+        <mat-icon>error_outline</mat-icon>
+        {{ t('textView.violations', {count: violationLines().length}) }}
+      </button>
+    }
+
+    @if (lineCount()) {
+      <span class="text-view-header__meta" data-testid="text-view-line-count">{{ t('textView.lines', {count: lineCount()}) }}</span>
+    }
+
+    <button
+      [matTooltip]="t('textView.search')"
+      [disabled]="state() !== 'ready'"
+      (click)="openSearch()"
+      mat-icon-button
+      data-testid="text-view-search"
+    >
+      <mat-icon>search</mat-icon>
+    </button>
+    <button [matTooltip]="t('textView.refresh')" [disabled]="loading()" (click)="reload()" mat-icon-button data-testid="text-view-refresh">
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button [matTooltip]="t('textView.copy')" [disabled]="!content()" (click)="copy()" mat-icon-button data-testid="text-view-copy">
+      <mat-icon>content_copy</mat-icon>
+    </button>
+  </div>
+
+  <div class="text-view-body">
+    <div class="text-view-editor" #host [class.text-view-editor--hidden]="state() !== 'ready'" data-testid="text-view-editor"></div>
+
+    @switch (state()) {
+      @case ('empty') {
+        <div class="text-view-placeholder" data-testid="text-view-empty">
+          <mat-icon>data_object</mat-icon>
+          <span>{{ t('textView.empty') }}</span>
+        </div>
+      }
+      @case ('error') {
+        <div class="text-view-placeholder text-view-placeholder--error" data-testid="text-view-error">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ t('textView.loadError') }}</span>
+          <button (click)="reload()" mat-stroked-button>{{ t('textView.retry') }}</button>
+        </div>
+      }
+    }
+
+    @if (loading()) {
+      <div class="text-view-loading" data-testid="text-view-loading">
+        <mat-spinner diameter="36"></mat-spinner>
+        <span>{{ t('textView.loading') }}</span>
+      </div>
+    }
+  </div>
+</ng-container>
