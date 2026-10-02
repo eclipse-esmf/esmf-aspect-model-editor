@@ -12,6 +12,7 @@
  */
 
 import {DraggablePort, GraphNavigatorPort, ModelSessionFacade} from '@ame/domain';
+import {APP_CONFIG, BrowserService, IPC_RENDERER, config} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TranslocoTestingModule} from '@jsverse/transloco';
@@ -27,8 +28,14 @@ describe('SidebarSAMMElementsComponent', () => {
   };
   let hasAspectSignal = signal(false);
   let sidebarService: SidebarStateService;
+  let isTauri: boolean;
+  let ipcRendererMock: {openExternalLink: ReturnType<typeof vi.fn>};
+
+  const docsLink = (): HTMLAnchorElement => fixture.nativeElement.querySelector('[data-testid="samm-elements-docs-link"]');
 
   beforeEach(() => {
+    isTauri = false;
+    ipcRendererMock = {openExternalLink: vi.fn().mockResolvedValue(undefined)};
     hasAspectSignal = signal(false);
     graphNavigatorMock = {
       hasElements: vi.fn(() => false),
@@ -44,6 +51,9 @@ describe('SidebarSAMMElementsComponent', () => {
         {provide: GraphNavigatorPort, useValue: graphNavigatorMock},
         {provide: ModelSessionFacade, useValue: {hasAspect: hasAspectSignal}},
         {provide: DraggablePort, useValue: {makeDraggable: vi.fn()}},
+        {provide: APP_CONFIG, useValue: {...config, currentSammVersion: '9.8.7'}},
+        {provide: BrowserService, useValue: {isStartedAsTauriApp: () => isTauri}},
+        {provide: IPC_RENDERER, useValue: ipcRendererMock},
       ],
     });
 
@@ -89,5 +99,54 @@ describe('SidebarSAMMElementsComponent', () => {
 
     sidebarService.sammElements.close();
     expect(sidebarService.sammElements.isOpened()).toBe(false);
+  });
+
+  it('should link to the SAMM meta model elements documentation of the configured SAMM version', () => {
+    const link = docsLink();
+
+    expect(link).toBeTruthy();
+    expect(link.getAttribute('href')).toBe('https://eclipse-esmf.github.io/samm-specification/9.8.7/meta-model-elements.html');
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toContain('noopener');
+  });
+
+  it('should make the whole header title the documentation link', () => {
+    const link = docsLink();
+
+    expect(link.textContent).toContain('sidebar.sammElements');
+    expect(link.querySelector('h2')).toBeTruthy();
+    expect(link.querySelector('mat-icon')?.textContent?.trim()).toBe('info_outline');
+  });
+
+  it('should let the browser open the documentation in a new tab when not started as Tauri app', () => {
+    const event = new MouseEvent('click', {bubbles: true, cancelable: true});
+    (docsLink().querySelector('h2') as HTMLElement).dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(false);
+    expect(ipcRendererMock.openExternalLink).not.toHaveBeenCalled();
+  });
+
+  it('should open the documentation exactly once via IPC when started as Tauri app', () => {
+    isTauri = true;
+    const bodyListener = vi.fn();
+    document.body.addEventListener('click', bodyListener);
+
+    const event = new MouseEvent('click', {bubbles: true, cancelable: true});
+    (docsLink().querySelector('mat-icon') as HTMLElement).dispatchEvent(event);
+    document.body.removeEventListener('click', bodyListener);
+
+    expect(event.defaultPrevented).toBe(true);
+    expect(bodyListener).not.toHaveBeenCalled();
+    expect(ipcRendererMock.openExternalLink).toHaveBeenCalledTimes(1);
+    expect(ipcRendererMock.openExternalLink).toHaveBeenCalledWith(
+      'https://eclipse-esmf.github.io/samm-specification/9.8.7/meta-model-elements.html',
+    );
+  });
+
+  it('should not render element descriptions', () => {
+    const elements = fixture.nativeElement.querySelectorAll('ame-element');
+
+    expect(elements.length).toBeGreaterThan(0);
+    expect(fixture.nativeElement.querySelector('.element-description')).toBeNull();
   });
 });

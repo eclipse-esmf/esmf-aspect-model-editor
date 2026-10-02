@@ -334,6 +334,7 @@
     "theRootOfAvailableNamespaces": "The root of all locally available namespaces",
     "workspaceTip": "To see your current Model in the below list, save it to workspace.",
     "sammElements": "SAMM Elements",
+    "sammElementsDocumentation": "Open the SAMM {{version}} documentation of the meta model elements",
     "dragIntoView": "Drag into view",
     "empty": {
       "loadingNamespaces": "Loading Namespaces...",
@@ -426,21 +427,6 @@
         "invalidVersion": "Not a valid version"
       }
     }
-  },
-  "elementModelDescription": {
-    "aspect": "The root element of each Aspect Model",
-    "abstractProperty": "Abstract named value",
-    "property": "Named Value",
-    "characteristic": "The meaning of a Property in the context of the Aspect",
-    "abstractEntity": "The abstraction of a logical encapsulation of multiple values",
-    "entity": "The logical encapsulation of multiple values",
-    "unit": "A definition of a physical unit",
-    "constraint": "A limitation applied to a Characteristic",
-    "trait": "Encapsulates multiple limitations to Characteristics",
-    "operation": "An Operation represents an action that can be triggered on the Aspect",
-    "event": "A definition of an Event supported by the Aspect",
-    "entityInstance": "An instance of an Entity",
-    "value": "Represent a value enriched with semantic metadata"
   },
   "editorCanvas": {
     "dragElementPrompt": "Drag an element to start creating a model",
@@ -739,11 +725,11 @@
   },
   "textView": {
     "toggleLabel": "Editor view",
-    "graph": "Graph",
+    "graph": "Edit",
     "aspectModel": "Aspect Model",
     "graphTooltip": "Show the graphical model editor",
-    "textTooltip": "Show the aspect model as Turtle text",
-    "title": "Aspect Model (Turtle)",
+    "textTooltip": "Show the aspect model as ttl text",
+    "title": "Aspect Model",
     "readOnly": "Read-only",
     "unformatted": "Unformatted",
     "unformattedTooltip": "The backend formatter is not available. The raw serialization of the model is shown.",

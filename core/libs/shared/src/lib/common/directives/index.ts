@@ -11,10 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './debounced-loading';
-export * from './element-updater';
-export * from './element.utils';
-export * from './file.utils';
-export * from './rdf-naming.utils';
-export * from './samm-specification.utils';
-export * from './version.utils';
+export * from './external-link.directive';

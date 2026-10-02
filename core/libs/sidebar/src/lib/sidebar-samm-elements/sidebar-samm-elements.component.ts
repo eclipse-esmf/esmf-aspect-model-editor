@@ -12,10 +12,11 @@
  */
 
 import {GraphNavigatorPort, ModelSessionFacade} from '@ame/domain';
-import {ElementIconComponent, ElementType, sammElements} from '@ame/shared';
+import {APP_CONFIG, ElementIconComponent, ElementType, ExternalLinkDirective, sammElements, sammSpecificationUrl} from '@ame/shared';
 import {Component, computed, inject} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {DraggableElementComponent} from '../draggable-element/draggable-element.component';
 import {SidebarStateService} from '../sidebar-state.service';
@@ -24,13 +25,23 @@ import {SidebarStateService} from '../sidebar-state.service';
   selector: 'ame-sidebar-samm-elements',
   templateUrl: './sidebar-samm-elements.component.html',
   styleUrls: ['./sidebar-samm-elements.component.scss'],
-  imports: [MatIconModule, DraggableElementComponent, MatMiniFabButton, ElementIconComponent, TranslocoDirective],
+  imports: [
+    MatIconModule,
+    DraggableElementComponent,
+    MatMiniFabButton,
+    ExternalLinkDirective,
+    MatTooltipModule,
+    ElementIconComponent,
+    TranslocoDirective,
+  ],
 })
 export class SidebarSAMMElementsComponent {
   private graphNavigator = inject(GraphNavigatorPort);
   private loadedFiles = inject(ModelSessionFacade);
 
   protected hasAspect = this.loadedFiles.hasAspect;
+  protected readonly sammVersion = inject(APP_CONFIG).currentSammVersion;
+  protected readonly sammDocumentationUrl = sammSpecificationUrl(this.sammVersion, 'meta-model-elements.html');
 
   public sidebarService = inject(SidebarStateService);
   public sammElements = sammElements;

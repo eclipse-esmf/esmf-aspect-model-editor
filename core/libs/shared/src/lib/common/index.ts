@@ -15,6 +15,7 @@ export * from '../contracts';
 export * from './components';
 export * from './config';
 export * from './constants';
+export * from './directives';
 export * from './enums';
 export * from './general-config';
 export * from './http-error.interceptor';

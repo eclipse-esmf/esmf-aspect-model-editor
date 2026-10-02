@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export * from './debounced-loading';
-export * from './element-updater';
-export * from './element.utils';
-export * from './file.utils';
-export * from './rdf-naming.utils';
-export * from './samm-specification.utils';
-export * from './version.utils';
+const SAMM_SPECIFICATION_BASE_URL = 'https://eclipse-esmf.github.io/samm-specification';
+
+export function sammSpecificationUrl(sammVersion: string, page = 'index.html'): string {
+  return `${SAMM_SPECIFICATION_BASE_URL}/${encodeURIComponent(sammVersion)}/${page}`;
+}

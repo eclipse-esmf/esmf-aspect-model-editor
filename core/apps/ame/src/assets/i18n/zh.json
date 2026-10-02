@@ -337,6 +337,7 @@
     "theRootOfAvailableNamespaces": "所有本地可获取namespaces的根",
     "workspaceTip": "要在下面的列表中查看您当前的Model, 请将其保存到Workspace",
     "sammElements": "SAMM 元素",
+    "sammElementsDocumentation": "打开 SAMM {{version}} 元模型元素文档",
     "dragIntoView": "拖到视图中",
     "empty": {
       "loadingNamespaces": "加载Namespaces...",
@@ -429,21 +430,6 @@
         "invalidVersion": "无效的版本"
       }
     }
-  },
-  "elementModelDescription": {
-    "aspect": "每个Aspect Model的根元素",
-    "abstractProperty": "抽象命名值",
-    "property": "命名值",
-    "characteristic": "Property对于Aspect的意义",
-    "abstractEntity": "多个Value的逻辑封装的抽象",
-    "entity": "多个Value的逻辑封装",
-    "unit": "一个物理单位的定义",
-    "constraint": "应用于Characteristic的限制",
-    "trait": "封装对于Characteristics的多个限制",
-    "operation": "操作代表可以在 Aspect 上触发的操作",
-    "event": "Aspect支持的一个事件定义",
-    "entityInstance": "实体的一个实例",
-    "value": "一个带有语义元数据的值"
   },
   "editorCanvas": {
     "dragElementPrompt": "拖动一个元素开始创建模型",
@@ -742,7 +728,7 @@
   },
   "textView": {
     "toggleLabel": "编辑器视图",
-    "graph": "图形",
+    "graph": "编辑",
     "aspectModel": "方面模型",
     "graphTooltip": "显示图形化模型编辑器",
     "textTooltip": "以 Turtle 文本显示方面模型",
