@@ -564,7 +564,8 @@ export class MaxGraphHelper {
       title.classList.add('simple');
     } else {
       if (iconsBar && !(modelElement instanceof DefaultEntityInstance)) {
-        div.appendChild(iconsBar);
+        // Lives inside the title (see shape-label.scss) so that no CSS positioning is needed.
+        title.prepend(iconsBar);
       }
       const fields = cell['configuration']?.fields || [];
       const extendedFields = fields.filter(({extended}) => extended);

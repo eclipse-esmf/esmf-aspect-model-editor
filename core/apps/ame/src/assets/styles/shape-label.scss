@@ -19,15 +19,24 @@
   cursor: default;
 }
 
+// Labels are HTML inside an SVG <foreignObject>. WebKit (Safari, Tauri on macOS) ignores the zoom transform of the
+// foreignObject for HTML content using `position`, `transform` or `opacity` (https://bugs.webkit.org/show_bug.cgi?id=23113),
+// which places such labels somewhere in the graph when zooming. Therefore labels must not use these properties.
+//
+// The icons bar is a zero-sized float at the start of the title: it shows the icons in the top left corner of the
+// shape without taking space and without shifting the centered title.
 .icons-bar {
   display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 0 7px;
-  box-sizing: border-box;
-  position: absolute;
-  left: 3px;
-  top: -2px;
+  align-items: flex-start;
+  float: left;
+  width: 0;
+  height: 0;
+  margin-left: 10px;
+  overflow: visible;
+
+  & > * {
+    flex-shrink: 0;
+  }
 
   & > *:not(:last-child) {
     margin-right: 5px;
@@ -45,7 +54,6 @@
   align-items: center;
   font-weight: 400;
   color: var(--ame-font, #000000);
-  position: relative;
   pointer-events: none;
 
   .element-name {
@@ -98,5 +106,7 @@
   border-radius: 3px;
   padding: 2px 4px;
   color: var(--ame-font, #000000);
-  transform: translate(0, -4px);
+  // Moves the label 4px up without `transform` (see the WebKit note above).
+  margin-top: calc(1em - 4px);
+  margin-bottom: calc(1em + 4px);
 }
