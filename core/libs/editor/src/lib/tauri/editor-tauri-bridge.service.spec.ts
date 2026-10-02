@@ -47,6 +47,7 @@ describe('EditorTauriBridge', () => {
     fileHandlingService = {loadEmptyModel: vi.fn(() => of(true)), onValidateFile: vi.fn(), onCopyToClipboard: vi.fn()};
     shapeSettingsService = {
       selectedCells$: new BehaviorSubject([]),
+      hasSelection$: new BehaviorSubject(false),
       hasCellsSubject$: new BehaviorSubject(false),
       editModel: vi.fn(),
       editSelectedCell: vi.fn(),
@@ -103,7 +104,15 @@ describe('EditorTauriBridge', () => {
     shapeSettingsService.selectedCells$.next([{}]);
     expect(ipcMock.send).toHaveBeenCalledWith(
       TAURI_EVENTS.SIGNAL.UPDATE_MENU_ITEM,
-      expect.objectContaining({ids: ['OPEN_SELECTED_ELEMENT', 'REMOVE_SELECTED_ELEMENT', 'CONNECT_ELEMENTS']}),
+      expect.objectContaining({ids: ['OPEN_SELECTED_ELEMENT', 'CONNECT_ELEMENTS']}),
+    );
+  });
+
+  it('enables the remove menu item when only a connection is selected', () => {
+    shapeSettingsService.hasSelection$.next(true);
+    expect(ipcMock.send).toHaveBeenCalledWith(
+      TAURI_EVENTS.SIGNAL.UPDATE_MENU_ITEM,
+      expect.objectContaining({ids: ['REMOVE_SELECTED_ELEMENT'], payload: expect.objectContaining({enabled: true})}),
     );
   });
 });

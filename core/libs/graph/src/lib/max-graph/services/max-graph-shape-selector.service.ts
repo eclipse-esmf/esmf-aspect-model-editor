@@ -24,28 +24,39 @@ export class MaxGraphShapeSelectorService {
   private readonly loadedFiles = inject(LoadedFilesService);
 
   private selectedCellsSignal = signal<Cell[]>([]);
+  private selectedEdgesSignal = signal<Cell[]>([]);
 
+  /** Selected element (vertex) cells. Selected edges are tracked separately in {@link selectedEdges}. */
   readonly selectedCells = this.selectedCellsSignal.asReadonly();
-  readonly selectedShape = computed<Cell | null>(() => {
-    const selected = this.selectedCellsSignal();
-    const selectedCell = selected?.[0];
-    return selectedCell ? (selectedCell.isEdge() ? null : selectedCell) : null;
-  });
+  readonly selectedEdges = this.selectedEdgesSignal.asReadonly();
+  readonly hasSelection = computed(() => this.selectedCellsSignal().length > 0 || this.selectedEdgesSignal().length > 0);
+  readonly selectedShape = computed<Cell | null>(() => this.selectedCellsSignal()?.[0] ?? null);
 
   public initSelectionListener(): void {
     this.maxgraphAttributeService.graph.getSelectionModel().addListener(InternalEvent.CHANGE, () => {
       this.selectedCellsSignal.set(this.getSelectedCells());
+      this.selectedEdgesSignal.set(this.getSelectedEdges());
     });
   }
 
   /**
-   * @returns array of selected cells
+   * @returns array of selected edges (connections)
+   */
+  public getSelectedEdges(): Array<Cell> {
+    return this.maxgraphAttributeService.graph.selectionModel.cells.filter((cell: Cell) => cell.isEdge());
+  }
+
+  /**
+   * @returns array of selected element cells (edges excluded)
    */
   public getSelectedCells(): Array<Cell> {
     const tempCurrentSelection = []; // used to keep track of already selected cells to prevent infinite loop
     // only return the parent elements in case of child cells
     const selectedElementCells: Array<Cell> = [];
     this.maxgraphAttributeService.graph.selectionModel.cells.forEach((cell: Cell) => {
+      if (cell.isEdge()) {
+        return;
+      }
       if (cell.style?.fillColor?.includes('_property')) {
         const parentCell: Cell = cell.getParent();
         if (!selectedElementCells.includes(parentCell)) {
@@ -95,7 +106,11 @@ export class MaxGraphShapeSelectorService {
    */
   public selectTree() {
     const graph = this.maxgraphAttributeService.graph;
-    const selectedCell = graph.getSelectionCell();
+    const selectionCell = graph.getSelectionCell();
+    const selectedCell = selectionCell?.isEdge() ? selectionCell.source : selectionCell;
+    if (!selectedCell) {
+      return;
+    }
     const cellsToSelect = [];
     const stack = [selectedCell];
 
@@ -117,7 +132,7 @@ export class MaxGraphShapeSelectorService {
         }
       });
     }
-    graph.selectCellsForEvent(cellsToSelect, null);
+    graph.setSelectionCells(cellsToSelect);
   }
 
   private getExternalUpperReferenceCells(cell: Cell, currentSelection: Cell[]): Cell[] {

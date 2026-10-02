@@ -83,7 +83,16 @@ export class EditorTauriBridge implements ITauriIpcBridge {
         takeUntilDestroyed(this.destroyRef),
         map(selectedCells => selectedCells.length),
         distinctUntilChanged(),
-        tap(cellsCount => this.sendMenuUpdate(['OPEN_SELECTED_ELEMENT', 'REMOVE_SELECTED_ELEMENT', 'CONNECT_ELEMENTS'], !!cellsCount)),
+        tap(cellsCount => this.sendMenuUpdate(['OPEN_SELECTED_ELEMENT', 'CONNECT_ELEMENTS'], !!cellsCount)),
+      )
+      .subscribe();
+
+    // Selected connections (edges) can be removed as well.
+    this.shapeSettingsService.hasSelection$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        distinctUntilChanged(),
+        tap(hasSelection => this.sendMenuUpdate(['REMOVE_SELECTED_ELEMENT'], hasSelection)),
       )
       .subscribe();
   }

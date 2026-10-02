@@ -85,6 +85,21 @@ test.describe('Editor - Graph / Aspect Model text view', () => {
     await expect(page.locator('ame-aspect-model-text-view')).toHaveCount(0);
   });
 
+  test('closes an open sidebar when switching to the text view', async ({page}) => {
+    await page.getByTestId('elementsBtn').click();
+    await expect(page.locator('ame-sidebar-samm-elements')).toBeVisible();
+
+    await openTextView(page);
+    await expect(page.locator('ame-sidebar-samm-elements')).toHaveCount(0);
+    await expect(page.getByTestId('elementsBtn')).not.toHaveClass(/selected/);
+
+    await page.getByTestId('workspaceBtn').click();
+    await expect(page.locator('ame-workspace')).toBeVisible();
+    await page.getByTestId('editor-view-graph').click();
+    await openTextView(page);
+    await expect(page.locator('ame-workspace')).toHaveCount(0);
+  });
+
   test('shows the formatted model as it would be saved', async ({page}) => {
     await routeFormat(page, FORMATTED_MODEL);
     await openTextView(page);

@@ -16,7 +16,7 @@ import {ModelInfo} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {DefaultCharacteristic, DefaultEntity, DefaultProperty} from '@esmf/aspect-model-loader';
 import {GraphAdapterPort, ShapeConnectorPort} from '../../ports';
-import {MaxGraphHelper, MaxGraphVisitorHelper} from '../helpers';
+import {MaxGraphCharacteristicHelper, MaxGraphHelper, MaxGraphVisitorHelper} from '../helpers';
 import {ModelStyleResolver} from '../models/model-style';
 import {ThemeService} from '../themes/theme.service';
 import {MaxGraphAttributeService} from './max-graph-attribute.service';
@@ -230,6 +230,15 @@ export class MaxGraphDomainBridgeService implements GraphAdapterPort {
 
   getAllCells(): any[] {
     return this.maxgraphService?.getAllCells() || [];
+  }
+
+  containsCell(cell: any): boolean {
+    const graph = this.maxgraphAttributeService?.graph || this.maxgraphService?.graph;
+    return !!cell && !!graph?.getDataModel().contains(cell);
+  }
+
+  findObsoleteEntityValueCells(enumerationEntityEdge: any): any[] {
+    return enumerationEntityEdge?.source ? MaxGraphCharacteristicHelper.findObsoleteEntityValues(enumerationEntityEdge) : [];
   }
 
   notifyGraphModelChanged(): void {

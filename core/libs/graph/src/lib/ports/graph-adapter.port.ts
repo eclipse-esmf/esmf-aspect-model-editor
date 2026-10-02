@@ -40,5 +40,7 @@ export abstract class GraphAdapterPort {
   abstract getVisibleModelElements(): any[];
   abstract connectOperationProperty(operationCell: any, property: any, isInput: boolean): void;
   abstract getAllCells(): any[];
+  abstract containsCell(cell: any): boolean;
+  abstract findObsoleteEntityValueCells(enumerationEntityEdge: any): any[];
   abstract notifyGraphModelChanged(): void;
 }

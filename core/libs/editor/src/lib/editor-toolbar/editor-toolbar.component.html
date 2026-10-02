@@ -36,7 +36,7 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isTextView() || isModelEmpty() || selectedCells()?.length === 0"
+        [disabled]="isTextView() || isModelEmpty() || !hasSelection()"
         [matTooltip]="t('toolbar.delete')"
         (itemClick)="onDelete()"
         data-testid="tbDeleteButton"

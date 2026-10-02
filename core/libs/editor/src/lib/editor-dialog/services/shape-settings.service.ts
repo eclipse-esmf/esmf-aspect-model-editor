@@ -37,6 +37,7 @@ export class ShapeSettingsService implements ShapeSettingsPort {
   public readonly modelElement = this._modelElement.asReadonly();
 
   public readonly selectedCells$ = toObservable(this.maxgraphShapeSelectorService.selectedCells);
+  public readonly hasSelection$ = toObservable(this.maxgraphShapeSelectorService.hasSelection);
   public readonly hasCellsSubject$ = toObservable(computed(() => !this.maxgraphService.isModelEmpty()));
 
   setGraphListeners() {

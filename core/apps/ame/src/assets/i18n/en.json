@@ -49,7 +49,8 @@
   },
   "notificationService": {
     "cannotDeleteEdgeTitle": "Cannot remove connection",
-    "cannotDeleteEdgeMessage": "It is not possible to remove connections directly. Please remove or reconnect the elements accordingly.",
+    "cannotDeleteEdgeMessage": "Connections of elements from an external namespace cannot be removed.",
+    "cannotDeleteEdgeFilteredMessage": "Connections can only be removed while the model is not filtered.",
     "onlyTwoElementsConnection": "Please select only two elements to connect them",
     "referneceConnectionError": "Cannot connect reference",
     "recursiveElements": "Recursive elements",
@@ -443,6 +444,7 @@
       "selectAllReferences": "Select all references",
       "format": "Format",
       "delete": "Delete",
+      "deleteConnection": "Delete connection",
       "copyToClipboard": "Copy to Clipboard"
     },
     "shapeSetting": {

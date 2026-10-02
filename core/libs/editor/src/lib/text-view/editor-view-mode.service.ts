@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SearchStore, TabsStore} from '@ame/domain';
+import {SearchStore, TabsStore, UiShellStore} from '@ame/domain';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {ShapeSettingsStateService} from '../editor-dialog/services/shape-settings-state.service';
 
@@ -28,6 +28,7 @@ export class EditorViewModeService {
   private readonly tabsStore = inject(TabsStore);
   private readonly shapeSettingsState = inject(ShapeSettingsStateService);
   private readonly searchStore = inject(SearchStore);
+  private readonly uiShellStore = inject(UiShellStore);
 
   private readonly modes = signal<Record<string, EditorViewMode>>({});
   private readonly tabKey = computed(() => this.tabsStore.activeTabId() ?? '');
@@ -52,6 +53,8 @@ export class EditorViewModeService {
       this.shapeSettingsState.closeShapeSettings();
       this.shapeSettingsState.setSelectedShapeForUpdate(null);
       this.searchStore.closeElementsSearch();
+      // The text view uses the full width of the editor.
+      this.uiShellStore.closeSidebar();
     }
 
     const key = this.tabKey();

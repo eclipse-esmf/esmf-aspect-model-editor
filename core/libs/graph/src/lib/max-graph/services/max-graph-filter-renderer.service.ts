@@ -33,7 +33,7 @@ export class MaxGraphFilterRendererService implements GraphFilterRendererPort {
   private readonly editorService = inject(EditorValidationPort, {optional: true});
 
   getSelectedModelElement(): any {
-    const selectedCell = this.maxGraphService.graph.selectionModel.cells?.[0];
+    const selectedCell = this.maxGraphService.graph.selectionModel.cells?.find(cell => !cell.isEdge());
     return selectedCell ? MaxGraphHelper.getModelElement(selectedCell) : null;
   }
 

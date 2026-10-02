@@ -24,6 +24,7 @@ import {inject, Injectable} from '@angular/core';
 import {DefaultAspect, DefaultEnumeration, NamedElement} from '@esmf/aspect-model-loader';
 import {GraphAdapterPort} from '../ports/graph-adapter.port';
 import {CharacteristicModelService} from './characteristic-model.service';
+import {EdgeRemovalService} from './edge-removal.service';
 import {ModelRootService} from './model-root.service';
 
 @Injectable({providedIn: 'root'})
@@ -38,6 +39,7 @@ export class ElementModelService {
   private readonly confirmDialogService = inject(ConfirmDialogPort, {optional: true});
   private readonly modelElementNamingService = inject(ModelElementNamingService);
   private readonly notificationService = inject(NotificationsService);
+  private readonly edgeRemovalService = inject(EdgeRemovalService);
   private readonly translate = inject(LanguageTranslationService);
   private readonly loadedFilesService = inject(LoadedFilesService);
 
@@ -65,11 +67,7 @@ export class ElementModelService {
     }
 
     if (cell?.isEdge?.()) {
-      this.notificationService.warning({
-        title: this.translate.language.notificationService.cannotDeleteEdgeTitle,
-        message: this.translate.language.notificationService.cannotDeleteEdgeMessage,
-        timeout: 5000,
-      });
+      this.edgeRemovalService.removeEdge(cell, vertex => this.removeElementData(vertex));
       return;
     }
 

@@ -332,6 +332,7 @@ export class EditorService implements DraggablePort, EditorValidationPort {
   deleteSelectedElements() {
     const result: Cell[] = [];
     const selectedCells = this.maxgraphShapeSelectorService.getSelectedCells();
+    const selectedEdges = this.maxgraphShapeSelectorService.getSelectedEdges();
 
     result.push(...selectedCells);
 
@@ -344,7 +345,7 @@ export class EditorService implements DraggablePort, EditorValidationPort {
     });
 
     externElements.forEach(element => this.deletePrefixForExternalNamespaceReference(element));
-    this.deleteElements(result);
+    this.deleteElements([...result, ...selectedEdges]);
   }
 
   private deletePrefixForExternalNamespaceReference(cell: Cell) {
@@ -406,9 +407,10 @@ export class EditorService implements DraggablePort, EditorValidationPort {
         );
         this.elementModelService.deleteElement(cell);
       });
-    } else if (edgeCells.length > 0) {
-      this.elementModelService.deleteElement(edgeCells[0]);
     }
+
+    // Edges already removed together with a deleted element are skipped by the edge removal.
+    edgeCells.forEach(edge => this.elementModelService.deleteElement(edge));
   }
 
   zoomIn() {

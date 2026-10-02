@@ -14,6 +14,7 @@ import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {GraphAdapterPort} from '../ports/graph-adapter.port';
 import {CharacteristicModelService} from './characteristic-model.service';
+import {EdgeRemovalService} from './edge-removal.service';
 import {ElementModelService} from './element-model.service';
 import {ModelRootService} from './model-root.service';
 
@@ -91,9 +92,6 @@ describe('ElementModelService', () => {
               notificationService: {
                 modelEmptyMessage: 'Empty',
                 modelMinimumElementRequirement: 'Min 1',
-                cannotDeleteEdgeTitle: 'Cannot remove connection',
-                cannotDeleteEdgeMessage:
-                  'It is not possible to remove connections directly. Please remove or reconnect the elements accordingly.',
               },
               confirmDialog: {
                 deleteAnonymousElement: {
@@ -143,16 +141,16 @@ describe('ElementModelService', () => {
     expect(mockGraphAdapter.formatShapes).toHaveBeenCalledWith(true);
   });
 
-  it('should prevent edge delete and show warning notification instead', () => {
+  it('should delegate edge deletion to the EdgeRemovalService', () => {
+    const edgeRemovalService = TestBed.inject(EdgeRemovalService);
+    const removeEdgeSpy = vi.spyOn(edgeRemovalService, 'removeEdge').mockImplementation(() => undefined);
     const edge = {isEdge: () => true} as any;
 
     service.deleteElement(edge);
-    expect(mockNotificationService.warning).toHaveBeenCalledWith({
-      title: 'Cannot remove connection',
-      message: 'It is not possible to remove connections directly. Please remove or reconnect the elements accordingly.',
-      timeout: 5000,
-    });
-    expect(mockGraphAdapter.removeCells).not.toHaveBeenCalled();
+
+    expect(removeEdgeSpy).toHaveBeenCalledWith(edge, expect.any(Function));
+    expect(mockNotificationService.warning).not.toHaveBeenCalled();
+    expect(mockGraphAdapter.formatShapes).not.toHaveBeenCalled();
   });
 
   it('should prompt confirmation dialog when parent has anonymous children and delete all when user confirms', () => {

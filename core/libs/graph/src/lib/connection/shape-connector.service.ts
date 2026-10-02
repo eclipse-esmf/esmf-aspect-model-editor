@@ -127,7 +127,7 @@ export class ShapeConnectorService {
   }
 
   connectSelectedElements(cells?: Cell[]) {
-    const selectedCells = cells || [...this.maxgraphAttributeService.graph.selectionModel.cells];
+    const selectedCells = cells || this.maxgraphAttributeService.graph.selectionModel.cells.filter(cell => !cell.isEdge());
 
     if (selectedCells.length !== 2) {
       return this.notificationsService.error({title: this.translate.language.notificationService.onlyTwoElementsConnection});

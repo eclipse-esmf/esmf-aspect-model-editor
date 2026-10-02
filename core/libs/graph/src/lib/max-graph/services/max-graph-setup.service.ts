@@ -19,6 +19,8 @@ import {
   Cell,
   CellState,
   domUtils,
+  EdgeHandlerConfig,
+  EdgeStyleFunction,
   Graph,
   InternalEvent,
   LayoutManager,
@@ -32,6 +34,7 @@ import {
   registerDefaultPerimeters,
   registerDefaultShapes,
   SelectionHandler,
+  Shape,
   StackLayout,
   styleUtils,
   VertexHandlerConfig,
@@ -87,7 +90,9 @@ export class MaxGraphSetupService {
     this.graph.setCellsDisconnectable(false);
     this.graph.setHtmlLabels(true);
     this.graph.setTooltips(true);
-    this.graph.isCellSelectable = (cell: Cell) => !cell.isEdge() && this.graph.isCellsSelectable();
+    this.graph.setEdgeLabelsMovable(false);
+    this.graph.setDisconnectOnMove(false);
+    this.configureEdgeInteraction();
     this.graph.isCellDeletable = () => this.graph.isCellsDeletable();
     this.graph.sizeDidChange = () => this.sizeDidChange();
     this.graph.view.getBackgroundPageBounds = () => this.getBackgroundPageBounds();
@@ -203,6 +208,38 @@ export class MaxGraphSetupService {
   private initializeGraphConstants(): void {
     VertexHandlerConfig.selectionStrokeWidth = 2;
     VertexHandlerConfig.selectionDashed = false;
+    EdgeHandlerConfig.selectionStrokeWidth = 3;
+    EdgeHandlerConfig.selectionDashed = false;
+  }
+
+  /**
+   * Edges can be selected (and therefore deleted), but never moved, bent, reconnected or have their label dragged.
+   */
+  private configureEdgeInteraction(): void {
+    const isCellMovable = this.graph.isCellMovable.bind(this.graph);
+    this.graph.isCellMovable = (cell: Cell) => !cell?.isEdge() && isCellMovable(cell);
+
+    const createEdgeHandler = this.graph.createEdgeHandler.bind(this.graph);
+    this.graph.createEdgeHandler = (state: CellState, edgeStyle: EdgeStyleFunction | null) => {
+      const handler = createEdgeHandler(state, edgeStyle);
+      // The handler stays responsible for the selection highlight only: its terminal/bend/label handles are hidden
+      // (also when they get recreated on refresh) and it never starts a drag, reconnect or bend operation.
+      const hideHandle = (shape?: Shape | null) => {
+        if (shape?.node) {
+          shape.node.style.display = 'none';
+        }
+      };
+      handler.bends?.forEach(hideHandle);
+      handler.virtualBends?.forEach(hideHandle);
+      hideHandle(handler.labelShape);
+      const initBend = handler.initBend.bind(handler);
+      handler.initBend = (bend: Shape, dblClick?: (evt: MouseEvent) => void) => {
+        initBend(bend, dblClick);
+        hideHandle(bend);
+      };
+      handler.mouseDown = () => undefined;
+      return handler;
+    };
   }
 
   private initLayout(): void {
@@ -395,6 +432,11 @@ export class MaxGraphSetupService {
     if (cell && !cell.isEdge()) {
       menu.addSeparator();
       menu.addItem(this.translate.language.editorCanvas.graphSetup.delete, this.resolveAssetsIcon(AssetsPath.DeleteIcon), () => {
+        this.bindingsService.fireAction('deleteElement');
+      });
+    } else if (cell?.isEdge()) {
+      menu.addSeparator();
+      menu.addItem(this.translate.language.editorCanvas.graphSetup.deleteConnection, this.resolveAssetsIcon(AssetsPath.DeleteIcon), () => {
         this.bindingsService.fireAction('deleteElement');
       });
     } else if (!cell) {

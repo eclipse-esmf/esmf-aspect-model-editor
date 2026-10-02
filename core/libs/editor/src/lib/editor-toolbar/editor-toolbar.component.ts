@@ -50,6 +50,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
 
   protected isModelEmpty = this.maxgraphService.isModelEmpty;
   protected selectedCells = this.maxgraphShapeSelectorService.selectedCells;
+  protected hasSelection = this.maxgraphShapeSelectorService.hasSelection;
   protected isTextView = inject(EditorViewModeService).isTextView;
 
   private checkChangesInterval: NodeJS.Timeout;

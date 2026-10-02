@@ -100,6 +100,7 @@ describe('EditorService', () => {
         MockProvider(MaxGraphShapeOverlayService),
         MockProvider(MaxGraphShapeSelectorService, {
           getSelectedCells: vi.fn(() => []),
+          getSelectedEdges: vi.fn(() => []),
         }),
         MockProvider(MaxGraphAttributeService, {
           graph: {
@@ -187,30 +188,32 @@ describe('EditorService', () => {
     expect(modelApiService.validate).toHaveBeenCalled();
   });
 
-  it('deleteSelectedElements should delegate edge deletion to elementModelService when only edge is selected', () => {
+  it('deleteSelectedElements should delegate edge deletion to elementModelService when only edges are selected', () => {
     const elementModelService = TestBed.inject(ElementModelService);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const edge = {isEdge: () => true, isVertex: () => false} as any;
-    vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([edge]);
+    const otherEdge = {isEdge: () => true, isVertex: () => false} as any;
+    vi.spyOn(shapeSelectorService, 'getSelectedEdges').mockReturnValue([edge, otherEdge]);
 
     service.deleteSelectedElements();
 
     expect(elementModelService.deleteElement).toHaveBeenCalledWith(edge);
+    expect(elementModelService.deleteElement).toHaveBeenCalledWith(otherEdge);
   });
 
-  it('deleteSelectedElements should delete vertex cells only when both vertex and edge are selected', () => {
+  it('deleteSelectedElements should delete vertex cells before the selected edges', () => {
     const elementModelService = TestBed.inject(ElementModelService);
     const shapeSelectorService = TestBed.inject(MaxGraphShapeSelectorService);
     const maxgraphService = TestBed.inject(MaxGraphService);
     (maxgraphService as any).graph = {getOutgoingEdges: vi.fn(() => [])};
     const vertex = {isEdge: () => false, isVertex: () => true} as any;
     const edge = {isEdge: () => true, isVertex: () => false} as any;
-    vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([vertex, edge]);
+    vi.spyOn(shapeSelectorService, 'getSelectedCells').mockReturnValue([vertex]);
+    vi.spyOn(shapeSelectorService, 'getSelectedEdges').mockReturnValue([edge]);
 
     service.deleteSelectedElements();
 
-    expect(elementModelService.deleteElement).toHaveBeenCalledWith(vertex);
-    expect(elementModelService.deleteElement).not.toHaveBeenCalledWith(edge);
+    expect(vi.mocked(elementModelService.deleteElement).mock.calls.map(([cell]) => cell)).toEqual([vertex, edge]);
   });
 
   it('createElement should center element coordinates when the graph is empty', async () => {

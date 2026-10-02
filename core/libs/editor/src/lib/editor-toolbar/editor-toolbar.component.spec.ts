@@ -64,6 +64,7 @@ describe('EditorToolbarComponent', () => {
         }),
         MockProvider(MaxGraphShapeSelectorService, {
           selectedCells: signal([]),
+          hasSelection: signal(false),
           selectTree: vi.fn(),
         }),
         MockProvider(MatDialog),

@@ -54,7 +54,8 @@
   },
   "notificationService": {
     "cannotDeleteEdgeTitle": "无法删除连接",
-    "cannotDeleteEdgeMessage": "无法直接删除连接。请删除相应的元素或重新连接它们。",
+    "cannotDeleteEdgeMessage": "无法删除来自外部命名空间的元素的连接。",
+    "cannotDeleteEdgeFilteredMessage": "只有在模型未被筛选时才能删除连接。",
     "onlyTwoElementsConnection": "请只选择两个元素来连接它们",
     "referneceConnectionError": "无法连接引用",
     "recursiveElements": "递归的elements",
@@ -446,6 +447,7 @@
       "selectAllReferences": "选择所有的参考",
       "format": "格式化",
       "delete": "删除",
+      "deleteConnection": "删除连接",
       "copyToClipboard": "复制到剪切板"
     },
     "shapeSetting": {
