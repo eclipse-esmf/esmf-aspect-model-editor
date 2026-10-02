@@ -231,9 +231,13 @@ fn launcher_in(dir: &Path) -> Option<PathBuf> {
 #[cfg(target_os = "linux")]
 fn launcher_in(dir: &Path) -> Option<PathBuf> {
     // <name>/bin/<name>
-    let name = dir.file_name()?;
-    let executable = dir.join("bin").join(name);
-    executable.is_file().then_some(executable)
+    sorted_entries(dir)
+        .into_iter()
+        .filter(|image| image.is_dir())
+        .find_map(|image| {
+            let executable = image.join("bin").join(image.file_name()?);
+            executable.is_file().then_some(executable)
+        })
 }
 
 fn sorted_entries(dir: &Path) -> Vec<PathBuf> {
