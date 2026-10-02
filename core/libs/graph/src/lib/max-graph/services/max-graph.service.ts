@@ -321,9 +321,24 @@ export class MaxGraphService {
     return cell;
   }
 
-  /** Removes all elements of the current aspect  */
+  /**
+   * True while {@link deleteAllShapes} clears the graph. Removing the shapes then only resets the view
+   * (e.g. for re-rendering with another filter) and must not change the aspect model.
+   */
+  get isClearingGraph(): boolean {
+    return this.clearingGraph;
+  }
+
+  private clearingGraph = false;
+
+  /** Removes all shapes of the current aspect from the graph. The aspect model itself is not changed. */
   deleteAllShapes(): void {
-    this.updateGraph(() => this.graph.removeCells(this.graph.getChildCells(this.graph.getDefaultParent())));
+    this.clearingGraph = true;
+    try {
+      this.updateGraph(() => this.graph.removeCells(this.graph.getChildCells(this.graph.getDefaultParent())));
+    } finally {
+      this.clearingGraph = false;
+    }
     this.graphVersionSignal.update(v => v + 1);
   }
 

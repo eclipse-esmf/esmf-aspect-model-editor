@@ -14,6 +14,7 @@
 import {expect, test} from '@playwright/test';
 import {AppHelper} from '../../support/app-helper';
 import {SELECTOR_editorCancelButton, SELECTOR_editorSaveButton} from '../../support/constants';
+import {readFixture} from '../../support/drag-drop-utils';
 import {TauriHelper} from '../../support/tauri-helper';
 
 test.describe('Tauri Menu & IPC Integration', () => {
@@ -169,6 +170,32 @@ test.describe('Tauri Menu & IPC Integration', () => {
     // Zoom to actual (100% = scale 1.0)
     await tauri.emitSignal('ZOOM_TO_ACTUAL');
     await expect.poll(async () => await getScale(), {timeout: 10000}).toBe(1);
+  });
+
+  test('should keep the model when filtering by properties and back via FILTER_MODEL_BY', async ({page}) => {
+    await app.loadModel(readFixture('default-models/aspect-default.txt'));
+    await app.shapeExists('Characteristic1');
+    const modelState = () =>
+      page.evaluate(() => {
+        const graph = (window as any)['angular.maxgraphAttributeService'].graph;
+        const aspect = (window as any)['angular.LoadedFilesService'].currentLoadedFile.aspect;
+        return {
+          shapes: graph.getChildCells(graph.getDefaultParent(), true, false).length,
+          properties: aspect.properties.map((property: any) => `${property.name}:${property.characteristic?.name}`),
+        };
+      });
+    const initial = await modelState();
+    expect(initial.properties).toEqual(['property1:Characteristic1']);
+
+    await tauri.emitSignal('FILTER_MODEL_BY', 'properties');
+    await app.shapeExists('Characteristic1', false);
+    await expect(page.locator('.cdk-overlay-container mat-dialog-container')).toHaveCount(0);
+    expect((await modelState()).properties).toEqual(initial.properties);
+
+    await tauri.emitSignal('FILTER_MODEL_BY', 'default');
+    await app.shapeExists('Characteristic1');
+    await expect(page.locator('.cdk-overlay-container mat-dialog-container')).toHaveCount(0);
+    await expect.poll(modelState).toEqual(initial);
   });
 
   test('should format model and collapse/expand model via signals', async ({page}) => {

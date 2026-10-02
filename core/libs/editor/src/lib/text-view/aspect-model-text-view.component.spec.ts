@@ -18,7 +18,7 @@ import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {of, throwError} from 'rxjs';
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
 import {AspectModelTextViewComponent} from './aspect-model-text-view.component';
 import {AspectModelText, AspectModelTextService} from './aspect-model-text.service';
@@ -35,6 +35,13 @@ const MODEL = [
 ].join('\n');
 
 describe('AspectModelTextViewComponent', () => {
+  beforeAll(() => {
+    // jsdom has no layout for ranges; CodeMirror measures text in animation frames.
+    const emptyRect = () => new DOMRect();
+    Range.prototype.getClientRects ??= () => [] as unknown as DOMRectList;
+    Range.prototype.getBoundingClientRect ??= emptyRect;
+  });
+
   let fixture: ComponentFixture<AspectModelTextViewComponent>;
   let component: AspectModelTextViewComponent;
   let textService: {load: ReturnType<typeof vi.fn>};

@@ -138,7 +138,8 @@ export class EditorService implements DraggablePort, EditorValidationPort {
 
     // Enforce parent domain object will be updated if a cell e.g. unit will be deleted
     this.maxgraphAttributeService.graph.addListener(InternalEvent.CELLS_REMOVED, (_source: Graph, event: EventObject) => {
-      if (this.filterAttributes.isFiltering) {
+      // Clearing the graph for re-rendering (e.g. switching the filter) must keep the model untouched.
+      if (this.filterAttributes.isFiltering || this.maxgraphService.isClearingGraph) {
         return;
       }
 
