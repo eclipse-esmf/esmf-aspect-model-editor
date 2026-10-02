@@ -84,6 +84,13 @@
   overflow: hidden;
 }
 
+.canvas-area--text {
+  #graph,
+  #outline {
+    visibility: hidden;
+  }
+}
+
 #graph {
   flex: 1 1 auto;
   background: transparent;

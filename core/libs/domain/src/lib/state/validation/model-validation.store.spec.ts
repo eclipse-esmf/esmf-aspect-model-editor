@@ -57,6 +57,16 @@ describe('ModelValidationStore', () => {
     expect(store.notificationsCount()).toBe(0);
   });
 
+  it('should track violations of the last validation', () => {
+    expect(store.violations()).toEqual([]);
+
+    store.setViolations([{message: 'Missing name', focusNode: 'urn:samm:org.example:1.0.0#A', fix: []}]);
+    expect(store.violations()).toHaveLength(1);
+
+    store.setViolations(null);
+    expect(store.violations()).toEqual([]);
+  });
+
   it('should handle errors via rxMethod handleError and update requestStatus', () => {
     store.handleError({
       code: 500,

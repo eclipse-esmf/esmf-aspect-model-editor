@@ -69,7 +69,7 @@ The editor is then available at http://localhost:4200 and expects a running [bac
 #### Backend for the desktop app
 
 The desktop app bundles the backend as a [jpackage](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jpackage.html) app image.
-Tauri takes it from the platform-specific folder in the repository root:
+Release builds take it from the platform-specific folder in the repository root:
 
 | Platform | Folder             | Expected content (from the backend release)                           |
 |----------|--------------------|-----------------------------------------------------------------------|
@@ -77,9 +77,11 @@ Tauri takes it from the platform-specific folder in the repository root:
 | Linux    | `backend/linux/`   | `ame-backend-<version>-linux/bin/...` (extracted from `*-linux.tar.gz`) |
 | Windows  | `backend/windows/` | app image containing `ame-backend*.exe` (extracted from `*-win.zip`)  |
 
-The folder for your platform must exist, otherwise the Tauri build fails.
-In development mode (`pnpm run start:desktop`) the bundled backend is **not** started; the app expects a backend that you started yourself on port `9090`.
-Release builds start the bundled backend automatically.
+The folder is only needed for release builds (`pnpm run build:desktop`), which fail with a hint if it is missing.
+They add it as bundle resource via `core/src-tauri/tauri.bundle-backend.<os>.conf.json` (see `core/utils/tauri-build.mjs`) and start the bundled backend automatically.
+Use this script instead of `tauri build` directly, otherwise the backend is missing in the app.
+
+In development mode (`pnpm run start:desktop`) the folder is not required and the bundled backend is **not** started; the app expects a backend that you started yourself on port `9090`.
 
 #### Run As Desktop (Tauri)
 
@@ -91,8 +93,6 @@ cd core
 
 pnpm install
 pnpm run start:desktop
-# or
-pnpm run tauri:dev
 ```
 
 Make sure the backend is running on port `9090` before working with models (see above).
@@ -104,16 +104,10 @@ Desktop packages must be built on the target platform (no cross-compilation). Th
 ```bash
 cd core
 
-# Current platform
 pnpm run build:desktop
-
-# Or platform-specific targets
-pnpm run build:mac     # macOS
-pnpm run build:win     # Windows (x86_64)
-pnpm run build:linux   # Linux (x86_64)
 ```
 
-The bundles are written to `core/src-tauri/target/release/bundle/` (for `build:win`/`build:linux`, to `core/src-tauri/target/<target-triple>/release/bundle/`):
+The bundles for the current platform are written to `core/src-tauri/target/release/bundle/`:
 
 | Platform | Output                                                                           |
 |----------|----------------------------------------------------------------------------------|

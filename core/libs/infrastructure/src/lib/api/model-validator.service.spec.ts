@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GraphValidationErrorHighlighterPort, ViolationError} from '@ame/domain';
+import {GraphValidationErrorHighlighterPort, ModelValidationStore, ViolationError} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
@@ -120,6 +120,17 @@ describe('ModelValidatorService', () => {
 
       expect(notificationsService.info).not.toHaveBeenCalled();
       expect(notificationsService.warning).toHaveBeenCalled();
+    });
+
+    it('should store the violations so other views can show them', () => {
+      const validationStore = TestBed.inject(ModelValidationStore);
+      const violationErrors: ViolationError[] = [{message: 'Error', focusNode: 'urn:samm:node', fix: []}];
+
+      service.notifyCorrectableErrors(violationErrors);
+      expect(validationStore.violations()).toEqual(violationErrors);
+
+      service.notifyCorrectableErrors([]);
+      expect(validationStore.violations()).toEqual([]);
     });
   });
 });

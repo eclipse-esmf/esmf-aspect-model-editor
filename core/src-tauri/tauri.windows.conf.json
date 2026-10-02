@@ -2,9 +2,6 @@
   "mainBinaryName": "Aspect-Model-Editor",
   "bundle": {
     "targets": ["nsis"],
-    "resources": {
-      "../../backend/windows": "backend/windows"
-    },
     "windows": {
       "nsis": {
         "installMode": "currentUser",

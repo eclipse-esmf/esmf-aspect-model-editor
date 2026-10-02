@@ -12,6 +12,7 @@
  */
 
 import {ConfigurationService, GraphNavigatorPort, SearchStore, UiShellStore} from '@ame/domain';
+import {EditorViewModeService} from '@ame/editor';
 import {BackendStatusService, BindingsService, BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {take} from 'rxjs';
@@ -21,7 +22,7 @@ import {TauriTunnelService} from './tauri-tunnel.service';
 @Component({
   selector: 'ame-app-shell',
   host: {
-    '(window:keydown.control.f)': 'openSearchElements()',
+    '(window:keydown.control.f)': 'openSearchElements($event)',
     '(window:keydown.control.p)': 'openFilesElements()',
     '(window:keydown.escape)': 'closeSearchModals()',
     '(window:keydown.backspace)': 'onDeleteKey($event)',
@@ -46,6 +47,7 @@ export class AppShellInitializer implements OnInit {
   private graphNavigator = inject(GraphNavigatorPort);
   private startupService = inject(StartupService);
   private backendStatus = inject(BackendStatusService);
+  private viewMode = inject(EditorViewModeService);
 
   private readonly language = signal('en');
   public readonly title = 'Aspect Model Editor';
@@ -87,12 +89,20 @@ export class AppShellInitializer implements OnInit {
 
     if (!isEditable) {
       event.preventDefault();
-      this.bindingsService.fireAction('deleteElement');
+      // The graph (and its selection) is hidden in the text view.
+      if (!this.viewMode.isTextView()) {
+        this.bindingsService.fireAction('deleteElement');
+      }
     }
   }
 
-  openSearchElements(): void {
+  openSearchElements(event?: Event): void {
     if (!this.backendStatus.isReady()) return;
+    if (this.viewMode.isTextView()) {
+      event?.preventDefault();
+      this.viewMode.requestSearch();
+      return;
+    }
     if (this.graphNavigator.hasElements()) this.searchStore.toggleElementsSearch();
   }
 

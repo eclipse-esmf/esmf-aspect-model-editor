@@ -740,6 +740,28 @@
     "retry": "重试",
     "quit": "关闭应用程序"
   },
+  "textView": {
+    "toggleLabel": "编辑器视图",
+    "graph": "图形",
+    "aspectModel": "方面模型",
+    "graphTooltip": "显示图形化模型编辑器",
+    "textTooltip": "以 Turtle 文本显示方面模型",
+    "title": "方面模型 (Turtle)",
+    "readOnly": "只读",
+    "unformatted": "未格式化",
+    "unformattedTooltip": "后端格式化程序不可用，显示的是模型的原始序列化结果。",
+    "lines": "{{count}} 行",
+    "violations": "验证问题：{{count}}",
+    "nextViolation": "转到下一个验证问题",
+    "search": "搜索 (Ctrl+F)",
+    "refresh": "重新加载",
+    "copy": "复制到剪贴板",
+    "copied": "方面模型已复制到剪贴板",
+    "loading": "正在准备方面模型文本...",
+    "empty": "模型为空。请在图形视图中添加元素以查看其 Turtle 表示。",
+    "loadError": "无法创建方面模型的文本表示。",
+    "retry": "重试"
+  },
   "menu": {
     "file": {
       "label": "文件",

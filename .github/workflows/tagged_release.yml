@@ -87,7 +87,8 @@ jobs:
           git push origin v${RELEASE_VERSION}
 
       # The backend is released as jpackage app-image per OS. It is unpacked into backend/<os>/,
-      # which tauri.<os>.conf.json bundles as resource; the app locates the launcher at runtime.
+      # which `pnpm run build:desktop` (utils/tauri-build.mjs) adds as bundle resource via
+      # src-tauri/tauri.bundle-backend.<os>.conf.json; the app locates the launcher at runtime.
       - name: Download aspect model service into project (Mac)
         if: matrix.os == 'macos-15-intel'
         run: |

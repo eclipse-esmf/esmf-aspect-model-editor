@@ -24,6 +24,7 @@ import {first} from 'rxjs/operators';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
 import {ShapeSettingsService} from '../editor-dialog/services/shape-settings.service';
 import {EditorService} from '../editor.service';
+import {EditorViewModeService} from '../text-view/editor-view-mode.service';
 import {FileHandlingService} from './services';
 
 @Component({
@@ -49,6 +50,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
 
   protected isModelEmpty = this.maxgraphService.isModelEmpty;
   protected selectedCells = this.maxgraphShapeSelectorService.selectedCells;
+  protected isTextView = inject(EditorViewModeService).isTextView;
 
   private checkChangesInterval: NodeJS.Timeout;
 

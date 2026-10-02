@@ -147,6 +147,12 @@
   gap: 2px;
 }
 
+.tab-view-toggle {
+  height: 100%;
+  margin-left: 4px;
+  border-left: 1px solid var(--ame-border-color, #cfd0d1);
+}
+
 .tab-action-btn {
   width: 26px;
   height: 26px;

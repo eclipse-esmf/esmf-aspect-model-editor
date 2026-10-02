@@ -34,3 +34,4 @@ export * from './rename-model/rename-model.service';
 export * from './save-model-dialog/save-model-dialog.service';
 export * from './tabs';
 export * from './tauri/editor-tauri-bridge.service';
+export * from './text-view';

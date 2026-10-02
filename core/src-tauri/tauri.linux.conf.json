@@ -1,8 +1,5 @@
 {
   "bundle": {
-    "targets": ["appimage", "deb"],
-    "resources": {
-      "../../backend/linux": "backend/linux"
-    }
+    "targets": ["appimage", "deb"]
   }
 }

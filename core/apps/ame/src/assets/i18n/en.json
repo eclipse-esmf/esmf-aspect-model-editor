@@ -737,6 +737,28 @@
     "retry": "Retry",
     "quit": "Close application"
   },
+  "textView": {
+    "toggleLabel": "Editor view",
+    "graph": "Graph",
+    "aspectModel": "Aspect Model",
+    "graphTooltip": "Show the graphical model editor",
+    "textTooltip": "Show the aspect model as Turtle text",
+    "title": "Aspect Model (Turtle)",
+    "readOnly": "Read-only",
+    "unformatted": "Unformatted",
+    "unformattedTooltip": "The backend formatter is not available. The raw serialization of the model is shown.",
+    "lines": "{{count}} lines",
+    "violations": "Validation issues: {{count}}",
+    "nextViolation": "Go to the next validation issue",
+    "search": "Search (Ctrl+F)",
+    "refresh": "Reload",
+    "copy": "Copy to clipboard",
+    "copied": "Aspect model copied to clipboard",
+    "loading": "Preparing aspect model text...",
+    "empty": "The model is empty. Add elements in the graph view to see their Turtle representation.",
+    "loadError": "The textual representation of the aspect model could not be created.",
+    "retry": "Try again"
+  },
   "menu": {
     "file": {
       "label": "File",

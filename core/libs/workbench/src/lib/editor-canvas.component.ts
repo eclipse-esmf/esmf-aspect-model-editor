@@ -13,10 +13,12 @@
 
 import {ConfigurationService, GraphNavigatorPort, ModelSessionFacade, SearchStore} from '@ame/domain';
 import {
+  AspectModelTextViewComponent,
   EditorFormModel,
   EditorService,
   EditorTabBarComponent,
   EditorToolbarComponent,
+  EditorViewModeService,
   ShapeSettingsComponent,
   ShapeSettingsService,
   ShapeSettingsStateService,
@@ -25,7 +27,7 @@ import {ElementsSearchComponent, FilesSearchComponent} from '@ame/search';
 import {SidebarComponent} from '@ame/sidebar';
 import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
-import {AfterViewInit, Component, DestroyRef, ElementRef, inject, OnInit, signal, viewChild} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, untracked, viewChild} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {MatIconModule} from '@angular/material/icon';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -53,6 +55,7 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
     EditorTabBarComponent,
     SidebarComponent,
     ShapeSettingsComponent,
+    AspectModelTextViewComponent,
     TranslocoDirective,
   ],
 })
@@ -69,6 +72,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   private editorService = inject(EditorService);
   private configurationService = inject(ConfigurationService);
   private searchStore = inject(SearchStore);
+  protected readonly viewMode = inject(EditorViewModeService);
 
   public readonly sidebarWidth = signal(SIDEBAR_MIN_WIDTH);
   public readonly sidebarDragPosition = signal({...SIDEBAR_DEFAULT_DRAG_POSITION});
@@ -86,6 +90,16 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   public readonly isElementsSearchOpened = this.searchStore.elementsSearchOpened;
   public readonly isFilesSearchOpened = this.searchStore.filesSearchOpened;
   public readonly isModelEmpty = this.graphNavigator.isModelEmpty;
+  public readonly isTextView = this.viewMode.isTextView;
+
+  constructor() {
+    // Element settings are edited in the graph, so opening them leaves the text view.
+    effect(() => {
+      if (this.isShapeSettingsOpened() && untracked(this.isTextView)) {
+        untracked(() => this.viewMode.setMode('graph'));
+      }
+    });
+  }
 
   get selectedShapeForUpdate(): Cell | null {
     return this.shapeSettingsStateService.selectedShapeForUpdate();
@@ -101,7 +115,7 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
         takeUntilDestroyed(this.destroyRef),
         map(params => params?.get('urn')),
         filter(urn => !!urn),
-        tap(urn => (this.graphNavigator.navigateToElement(urn) ? this.shapeSettingsService.editSelectedCell() : this.closeShapeSettings())),
+        tap(urn => this.navigateToElement(urn)),
         switchMap(() =>
           this.router.navigate([], {
             relativeTo: this.activatedRoute,
@@ -111,6 +125,19 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
         ),
       )
       .subscribe();
+  }
+
+  private navigateToElement(urn: string): void {
+    if (this.isTextView()) {
+      this.viewMode.revealElement(urn);
+      return;
+    }
+
+    if (this.graphNavigator.navigateToElement(urn)) {
+      this.shapeSettingsService.editSelectedCell();
+    } else {
+      this.closeShapeSettings();
+    }
   }
 
   ngAfterViewInit(): void {

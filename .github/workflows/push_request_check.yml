@@ -75,3 +75,18 @@ jobs:
       - name: Build dev package
         run: pnpm run build
         working-directory: core
+
+      # The desktop shell must build without the bundled backend (it is only added for release builds).
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@02cb101ec7c40f2c49e1d9714d64511d8e1b74de # stable
+        with:
+          toolchain: stable
+
+      - name: Install Tauri build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Performing Tauri tests
+        run: cargo test --locked
+        working-directory: core/src-tauri

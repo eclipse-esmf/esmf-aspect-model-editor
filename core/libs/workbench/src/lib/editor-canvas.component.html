@@ -47,10 +47,14 @@
   <ame-files-search></ame-files-search>
 }
 
-<div class="canvas-area">
-  <div id="graph" #graph></div>
+<div class="canvas-area" [class.canvas-area--text]="isTextView()" [attr.data-view-mode]="viewMode.mode()" data-testid="canvas-area">
+  <div id="graph" #graph [attr.aria-hidden]="isTextView()"></div>
 
-  @if (isModelEmpty()) {
+  @if (isTextView()) {
+    <ame-aspect-model-text-view></ame-aspect-model-text-view>
+  }
+
+  @if (isModelEmpty() && !isTextView()) {
     <div class="empty-model" *transloco="let t">
       <span>
         {{ t('editorCanvas.dragElementLine1') }} <br />

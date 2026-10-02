@@ -17,13 +17,14 @@ import {MatIconButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
+import {EditorViewToggleComponent} from '../../text-view/editor-view-toggle.component';
 import {TabStateService} from '../tab-state.service';
 
 @Component({
   selector: 'ame-editor-tab-bar',
   templateUrl: './editor-tab-bar.component.html',
   styleUrls: ['./editor-tab-bar.component.scss'],
-  imports: [MatIconModule, MatIconButton, MatTooltipModule, TranslocoDirective],
+  imports: [MatIconModule, MatIconButton, MatTooltipModule, TranslocoDirective, EditorViewToggleComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditorTabBarComponent {

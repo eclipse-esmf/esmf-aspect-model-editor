@@ -15,6 +15,7 @@ import {computed} from '@angular/core';
 import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
 import {rxMethod} from '@ngrx/signals/rxjs-interop';
 import {pipe, tap} from 'rxjs';
+import {ViolationError} from '../../model-api/models/violation-error';
 import {setFulfilled, setPending, setRejected, withRequestStatus} from '../features/with-request-status';
 
 export interface WorkspaceValidationErrorModel {
@@ -28,6 +29,8 @@ export interface ModelValidationState {
   isValid: boolean;
   workspaceError: WorkspaceValidationErrorModel | null;
   notificationsCount: number;
+  /** Violations reported by the last validation of the current model. */
+  violations: ViolationError[];
 }
 
 const initialState: ModelValidationState = {
@@ -35,6 +38,7 @@ const initialState: ModelValidationState = {
   isValid: true,
   workspaceError: null,
   notificationsCount: 0,
+  violations: [],
 };
 
 export const ModelValidationStore = signalStore(
@@ -71,6 +75,9 @@ export const ModelValidationStore = signalStore(
     },
     incrementNotificationsCount() {
       patchState(store, {notificationsCount: store.notificationsCount() + 1});
+    },
+    setViolations(violations: ViolationError[]) {
+      patchState(store, {violations: violations ?? []});
     },
     clearNotifications() {
       patchState(store, {notificationsCount: 0});

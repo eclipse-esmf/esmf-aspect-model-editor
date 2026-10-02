@@ -26,7 +26,7 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty() || selectedCells()?.length !== 1"
+        [disabled]="isTextView() || isModelEmpty() || selectedCells()?.length !== 1"
         [matTooltip]="t('toolbar.editHighlightedCell')"
         (itemClick)="editSelectedCell()"
       >
@@ -36,7 +36,7 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty() || selectedCells()?.length === 0"
+        [disabled]="isTextView() || isModelEmpty() || selectedCells()?.length === 0"
         [matTooltip]="t('toolbar.delete')"
         (itemClick)="onDelete()"
         data-testid="tbDeleteButton"
@@ -47,7 +47,7 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty() || selectedCells()?.length !== 2"
+        [disabled]="isTextView() || isModelEmpty() || selectedCells()?.length !== 2"
         [matTooltip]="t('toolbar.connect')"
         (itemClick)="onConnect()"
         data-testid="tbConnectButton"
@@ -59,7 +59,7 @@
         <ame-bar-item
           [matTooltipShowDelay]="0"
           [matTooltipHideDelay]="0"
-          [disabled]="isModelEmpty()"
+          [disabled]="isTextView() || isModelEmpty()"
           [matTooltip]="t('toolbar.collapseAll')"
           (itemClick)="onToggleExpand()"
           data-testid="collapseExpandToggle"
@@ -70,7 +70,7 @@
         <ame-bar-item
           [matTooltipShowDelay]="0"
           [matTooltipHideDelay]="0"
-          [disabled]="isModelEmpty()"
+          [disabled]="isTextView() || isModelEmpty()"
           [matTooltip]="t('toolbar.expandAll')"
           (itemClick)="onToggleExpand()"
           data-testid="collapseExpandToggle"
@@ -82,7 +82,7 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty()"
+        [disabled]="isTextView() || isModelEmpty()"
         [matTooltip]="t('toolbar.format')"
         (itemClick)="onFormat()"
         data-testid="formatButton"
@@ -103,10 +103,10 @@
     </div>
 
     <div class="menu-items__group">
-      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomInProgress')" (itemClick)="zoomIn()">
+      <ame-bar-item [disabled]="isTextView() || isModelEmpty()" [matTooltip]="t('editorCanvas.zoomInProgress')" (itemClick)="zoomIn()">
         <mat-icon>zoom_in</mat-icon>
       </ame-bar-item>
-      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomOutProgress')" (itemClick)="zoomOut()">
+      <ame-bar-item [disabled]="isTextView() || isModelEmpty()" [matTooltip]="t('editorCanvas.zoomOutProgress')" (itemClick)="zoomOut()">
         <mat-icon>zoom_out</mat-icon>
       </ame-bar-item>
     </div>

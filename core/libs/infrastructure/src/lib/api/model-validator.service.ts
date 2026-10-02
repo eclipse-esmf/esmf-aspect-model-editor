@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GraphValidationErrorHighlighterPort, ViolationError} from '@ame/domain';
+import {GraphValidationErrorHighlighterPort, ModelValidationStore, ViolationError} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 
@@ -19,6 +19,7 @@ import {inject, Injectable} from '@angular/core';
 export class ModelValidatorService {
   private readonly shapeHighlighter = inject(GraphValidationErrorHighlighterPort, {optional: true});
   private readonly notificationsService = inject(NotificationsService);
+  private readonly validationStore = inject(ModelValidationStore);
 
   constructor() {
     this.notificationsService.clearNotifications();
@@ -29,6 +30,8 @@ export class ModelValidatorService {
    * In this category are included syntactic,processing and semantic errors.
    */
   notifyCorrectableErrors(violationErrors: Array<ViolationError>, validInfo = false) {
+    this.validationStore.setViolations(violationErrors ?? []);
+
     if (!violationErrors.length) {
       if (validInfo) {
         this.notificationsService.info({title: 'Validation completed successfully', message: 'The model is valid'});
