@@ -18,14 +18,28 @@ export interface TauriSentEvent {
   args: any[];
 }
 
+export interface MockBackendStatus {
+  state: 'starting' | 'ready' | 'failed';
+  port: string;
+  message: string | null;
+  revision: number;
+}
+
+export interface TauriMockOptions {
+  /** Initial backend status reported by the mocked shell. Defaults to ready. */
+  backendStatus?: MockBackendStatus;
+}
+
 export class TauriHelper {
   constructor(public page: Page) {}
 
   /**
    * Injects the Tauri mock API bridge into the page before navigation.
    */
-  async initTauriMock(): Promise<void> {
-    await this.page.addInitScript(() => {
+  async initTauriMock(options: TauriMockOptions = {}): Promise<void> {
+    const backendStatus: MockBackendStatus = options.backendStatus ?? {state: 'ready', port: '9090', message: null, revision: 0};
+
+    await this.page.addInitScript(initialBackendStatus => {
       const listeners = new Map<string, Set<Function>>();
       const sentEvents: Array<{channel: string; args: any[]}> = [];
 
@@ -33,6 +47,7 @@ export class TauriHelper {
         listeners,
         sentEvents,
         activeContextHref: null,
+        backendStatus: initialBackendStatus,
         trigger(channel: string, payload?: any) {
           const cbs = listeners.get(channel);
           if (cbs) {
@@ -80,6 +95,18 @@ export class TauriHelper {
         async getBackendPort() {
           return '8080';
         },
+        async getBackendStatus() {
+          return (window as any).__tauriMock.backendStatus;
+        },
+        async retryBackendStart() {
+          const mock = (window as any).__tauriMock;
+          sentEvents.push({channel: 'retryBackendStart', args: []});
+          mock.backendStatus = {...mock.backendStatus, state: 'starting', message: null, revision: mock.backendStatus.revision + 1};
+          return mock.backendStatus;
+        },
+        async quitApp() {
+          sentEvents.push({channel: 'quitApp', args: []});
+        },
         async openPrintWindow(filePath: string) {
           return {};
         },
@@ -100,7 +127,18 @@ export class TauriHelper {
           sentEvents.push({channel: 'copyToClipboard', args: [text]});
         },
       };
-    });
+    }, backendStatus);
+  }
+
+  /**
+   * Simulates a backend status change pushed by the Tauri shell.
+   */
+  async emitBackendStatus(status: MockBackendStatus): Promise<void> {
+    await this.page.evaluate(next => {
+      const mock = (window as any).__tauriMock;
+      mock.backendStatus = next;
+      mock.trigger('BACKEND_STATUS', next);
+    }, status);
   }
 
   /**

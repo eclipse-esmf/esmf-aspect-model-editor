@@ -729,6 +729,14 @@
     "errorMessage": "Something went wrong while opening the editor.",
     "openingEditor": "Opening editor..."
   },
+  "backendStatus": {
+    "startingTitle": "Starting backend...",
+    "startingDescription": "The Aspect Model Editor is starting its backend service. This may take a moment.",
+    "failedTitle": "The backend could not be started",
+    "failedDescription": "You can try to start the backend again or close the application.",
+    "retry": "Retry",
+    "quit": "Close application"
+  },
   "menu": {
     "file": {
       "label": "File",

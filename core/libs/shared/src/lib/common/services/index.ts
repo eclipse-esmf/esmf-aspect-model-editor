@@ -13,6 +13,7 @@
 
 export * from '../../contracts';
 export * from './alert.service';
+export * from './backend-status.service';
 export * from './bindings.service';
 export * from './browser.service';
 export * from './data-type.service';

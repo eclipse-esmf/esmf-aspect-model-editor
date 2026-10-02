@@ -13,7 +13,7 @@
 
 import {InjectionToken} from '@angular/core';
 import {TAURI_EVENTS} from './enums';
-import {TauriApi, TauriContextMenuPayload} from './model/tauri-api.model';
+import {BackendStatus, TauriApi, TauriContextMenuPayload} from './model/tauri-api.model';
 
 declare global {
   interface Window {
@@ -154,6 +154,21 @@ function createTauriBridge(): TauriApi {
     async getBackendPort(): Promise<string> {
       const {invoke} = await import('@tauri-apps/api/core');
       return await invoke<string>('get_backend_port');
+    },
+
+    async getBackendStatus(): Promise<BackendStatus> {
+      const {invoke} = await import('@tauri-apps/api/core');
+      return await invoke<BackendStatus>('get_backend_status');
+    },
+
+    async retryBackendStart(): Promise<BackendStatus> {
+      const {invoke} = await import('@tauri-apps/api/core');
+      return await invoke<BackendStatus>('retry_backend_start');
+    },
+
+    async quitApp(): Promise<void> {
+      const {invoke} = await import('@tauri-apps/api/core');
+      await invoke('quit_app');
     },
 
     async openPrintWindow(filePath: string): Promise<unknown> {

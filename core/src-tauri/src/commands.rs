@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-use crate::backend::BackendState;
+use crate::backend::{clean_up_backend, restart_backend, BackendState, BackendStatus};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -55,6 +55,25 @@ impl ContextMenuState {
 pub fn get_backend_port(backend_state: State<'_, BackendState>) -> Result<String, String> {
     let port = backend_state.port.lock().map_err(|e| e.to_string())?;
     Ok(port.clone())
+}
+
+#[tauri::command]
+pub fn get_backend_status(backend_state: State<'_, BackendState>) -> BackendStatus {
+    backend_state.status()
+}
+
+#[tauri::command]
+pub fn retry_backend_start(
+    app: AppHandle,
+    backend_state: State<'_, BackendState>,
+) -> BackendStatus {
+    restart_backend(&app, &backend_state)
+}
+
+#[tauri::command]
+pub fn quit_app(app: AppHandle, backend_state: State<'_, BackendState>) {
+    clean_up_backend(&backend_state);
+    app.exit(0);
 }
 
 #[tauri::command]

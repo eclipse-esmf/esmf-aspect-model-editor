@@ -12,6 +12,8 @@
  */
 
 export * from './app-shell-initializer.component';
+export * from './backend-gate.component';
+export * from './backend-status-overlay.component';
 export * from './editor-canvas.component';
 export * from './loading.component';
 export * from './provide-workbench';

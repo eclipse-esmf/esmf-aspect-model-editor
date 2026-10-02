@@ -12,7 +12,7 @@
  */
 
 import {ConfigurationService, GraphNavigatorPort, SearchStore, UiShellStore} from '@ame/domain';
-import {BindingsService, BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
+import {BackendStatusService, BindingsService, BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {take} from 'rxjs';
 import {StartupService} from './startup.service';
@@ -45,6 +45,7 @@ export class AppShellInitializer implements OnInit {
   private searchStore = inject(SearchStore);
   private graphNavigator = inject(GraphNavigatorPort);
   private startupService = inject(StartupService);
+  private backendStatus = inject(BackendStatusService);
 
   private readonly language = signal('en');
   public readonly title = 'Aspect Model Editor';
@@ -74,6 +75,10 @@ export class AppShellInitializer implements OnInit {
 
   onDeleteKey(event: Event): void {
     const target = event.target as HTMLElement;
+    if (!this.backendStatus.isReady()) {
+      event.preventDefault();
+      return;
+    }
     const isEditable =
       target instanceof HTMLInputElement ||
       target instanceof HTMLTextAreaElement ||
@@ -87,10 +92,12 @@ export class AppShellInitializer implements OnInit {
   }
 
   openSearchElements(): void {
+    if (!this.backendStatus.isReady()) return;
     if (this.graphNavigator.hasElements()) this.searchStore.toggleElementsSearch();
   }
 
   openFilesElements(): void {
+    if (!this.backendStatus.isReady()) return;
     this.searchStore.toggleFilesSearch();
   }
 

@@ -34,3 +34,6 @@ dirs = "5"
 [dev-dependencies]
 tauri = { version = "2.11.3", features = ["test", "tray-icon"] }
 
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-single-instance = "2"
+

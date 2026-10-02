@@ -11,14 +11,13 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {AppShellInitializer} from '@ame/workbench';
+import {AppShellInitializer, BackendGateComponent} from '@ame/workbench';
 import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'ame-root',
   templateUrl: './app.component.html',
-  imports: [RouterOutlet, AppShellInitializer],
+  imports: [AppShellInitializer, BackendGateComponent],
 })
 export class AppComponent {
   public readonly title = 'Aspect Model Editor';

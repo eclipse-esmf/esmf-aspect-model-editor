@@ -12,7 +12,7 @@
  */
 
 import {MigrationStatus, NamedRdfModel} from '@ame/domain';
-import {APP_CONFIG, AppConfig, BrowserService, IPC_RENDERER, isVersionOutdated} from '@ame/shared';
+import {APP_CONFIG, AppConfig, BackendStatusService, isVersionOutdated} from '@ame/shared';
 import {HttpClient} from '@angular/common/http';
 import {inject, Injectable, signal} from '@angular/core';
 import {RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
@@ -21,25 +21,20 @@ import {ModelApiService} from './model-api.service';
 
 @Injectable({providedIn: 'root'})
 export class MigratorApiService {
-  private readonly ipcRenderer = inject(IPC_RENDERER);
+  private readonly backendStatus = inject(BackendStatusService);
   private readonly config: AppConfig = inject(APP_CONFIG);
   private readonly http = inject(HttpClient);
-  private readonly browserService = inject(BrowserService);
   private readonly modelApiService = inject(ModelApiService);
 
-  private readonly defaultPort = this.config.defaultPort;
   private readonly api = this.config.api;
-  private serviceUrl = this.config.serviceUrl;
+  /** Resolved on every request because the desktop backend port changes after a restart. */
+  private get serviceUrl(): string {
+    return this.backendStatus.serviceUrl();
+  }
 
   private readonly _rdfModelsToMigrate = signal<RdfModel[]>([]);
   /** Rdf models that are outdated and need to be migrated to the current SAMM version. */
   readonly rdfModelsToMigrate = this._rdfModelsToMigrate.asReadonly();
-
-  constructor() {
-    if (this.browserService.isStartedAsTauriApp() && !window.location.search.includes('?e2e=true')) {
-      this.ipcRenderer.getBackendPort().then((port: string) => (this.serviceUrl = this.serviceUrl.replace(this.defaultPort, port)));
-    }
-  }
 
   getRdfModelsFromWorkspace(): Observable<NamedRdfModel[]> {
     return this.modelApiService

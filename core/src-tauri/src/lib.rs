@@ -21,7 +21,16 @@ use tauri::{Emitter, Manager, RunEvent, WindowEvent};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-  let app = tauri::Builder::default()
+  let builder = tauri::Builder::default();
+
+  // Must be registered first: a second launch (e.g. double-clicking the desktop icon again)
+  // exits immediately and focuses the running instance instead of starting another backend.
+  #[cfg(desktop)]
+  let builder = builder.plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+    focus_main_window(app);
+  }));
+
+  let app = builder
     .plugin(tauri_plugin_shell::init())
     .plugin(tauri_plugin_clipboard_manager::init())
     .plugin(tauri_plugin_dialog::init())
@@ -31,6 +40,10 @@ pub fn run() {
     .manage(ContextMenuState::new())
     .setup(setup_app)
     .on_menu_event(|app, event| {
+      // Native menu actions need the backend; ignore them until it is ready.
+      if !app.state::<BackendState>().is_ready() {
+        return;
+      }
       menu::handle_menu_click(app, event.id().as_ref());
     })
     .on_window_event(|window, event| {
@@ -41,6 +54,9 @@ pub fn run() {
     })
     .invoke_handler(tauri::generate_handler![
             get_backend_port,
+            get_backend_status,
+            retry_backend_start,
+            quit_app,
             open_external_link,
             open_in_vscode_or_default,
             copy_to_clipboard,
@@ -93,7 +109,25 @@ fn setup_menu(app: &mut tauri::App) {
     .expect("failed to set application menu");
 }
 
+fn focus_main_window(app: &tauri::AppHandle) {
+  let window = app
+    .get_webview_window("main")
+    .or_else(|| app.webview_windows().into_values().next());
+
+  if let Some(window) = window {
+    let _ = window.unminimize();
+    let _ = window.show();
+    let _ = window.set_focus();
+  }
+}
+
 fn handle_app_event(app_handle: &tauri::AppHandle, event: RunEvent) {
+  #[cfg(target_os = "macos")]
+  if let RunEvent::Reopen { .. } = event {
+    focus_main_window(app_handle);
+    return;
+  }
+
   if matches!(event, RunEvent::ExitRequested { .. } | RunEvent::Exit) {
     clean_up_backend(&app_handle.state::<BackendState>());
   }

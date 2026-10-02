@@ -26,10 +26,9 @@ import {
 import {
   APP_CONFIG,
   AppConfig,
-  BrowserService,
+  BackendStatusService,
   FileContentModel,
   HttpHeaderBuilder,
-  IPC_RENDERER,
   LanguageTranslationService,
   RdfNamingUtil,
 } from '@ame/shared';
@@ -41,22 +40,17 @@ import {ModelValidatorService} from './model-validator.service';
 
 @Injectable({providedIn: 'root'})
 export class ModelApiService implements ModelApiPort {
-  private readonly ipcRenderer = inject(IPC_RENDERER);
+  private readonly backendStatus = inject(BackendStatusService);
   private readonly config: AppConfig = inject(APP_CONFIG);
   private readonly http = inject(HttpClient);
-  private readonly browserService = inject(BrowserService);
   private readonly modelValidatorService = inject(ModelValidatorService);
   private readonly translate = inject(LanguageTranslationService);
 
-  private readonly defaultPort = this.config.defaultPort;
   private readonly api = this.config.api;
   private readonly requestTimeout = 60000;
-  private serviceUrl = this.config.serviceUrl;
-
-  constructor() {
-    if (this.browserService.isStartedAsTauriApp() && !window.location.search.includes('?e2e=true')) {
-      this.ipcRenderer.getBackendPort().then((port: string) => (this.serviceUrl = this.serviceUrl.replace(this.defaultPort, port)));
-    }
+  /** Resolved on every request because the desktop backend port changes after a restart. */
+  private get serviceUrl(): string {
+    return this.backendStatus.serviceUrl();
   }
 
   fetchAspectMetaModel(aspectModelUrn: string): Observable<{content: string; sourceLocation: string | null}> {

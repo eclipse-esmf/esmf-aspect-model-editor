@@ -732,6 +732,14 @@
     "errorMessage": "打开编辑器时出错。",
     "openingEditor": "正在打开编辑器..."
   },
+  "backendStatus": {
+    "startingTitle": "正在启动后端...",
+    "startingDescription": "Aspect Model Editor 正在启动其后端服务，这可能需要一点时间。",
+    "failedTitle": "无法启动后端",
+    "failedDescription": "您可以尝试重新启动后端或关闭应用程序。",
+    "retry": "重试",
+    "quit": "关闭应用程序"
+  },
   "menu": {
     "file": {
       "label": "文件",

@@ -15,11 +15,24 @@ export interface TauriContextMenuPayload {
   href: string | null;
 }
 
+export type BackendPhase = 'starting' | 'ready' | 'failed';
+
+export interface BackendStatus {
+  state: BackendPhase;
+  port: string;
+  message: string | null;
+  /** Increases with every change; used to drop out-of-order updates. */
+  revision: number;
+}
+
 export interface TauriApi {
   send(channel: string, ...args: unknown[]): void;
   on(channel: string, cb: (...args: any[]) => void): void;
   removeListener(listener: string, cb: (...args: any[]) => void): void;
   getBackendPort(): Promise<string>;
+  getBackendStatus(): Promise<BackendStatus>;
+  retryBackendStart(): Promise<BackendStatus>;
+  quitApp(): Promise<void>;
   openPrintWindow(filePath: string): Promise<unknown>;
   writePrintFile(content: string): Promise<string>;
   openExternalLink(link: string): Promise<void> | boolean;

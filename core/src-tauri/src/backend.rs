@@ -14,26 +14,135 @@
 use std::{
     fs,
     io::{BufRead, BufReader},
-    net::TcpListener,
+    net::{SocketAddr, TcpListener, TcpStream},
     path::{Path, PathBuf},
     process::{Child, Command, Stdio},
-    sync::Mutex,
+    sync::{
+        atomic::{AtomicU64, Ordering},
+        Mutex,
+    },
+    thread,
+    time::{Duration, Instant},
 };
 
-use tauri::{AppHandle, Manager};
+use serde::Serialize;
+use tauri::{AppHandle, Emitter, Manager};
+
+/// Event emitted to all windows whenever the backend status changes.
+pub const BACKEND_STATUS_EVENT: &str = "BACKEND_STATUS";
+
+const DEV_PORT: u16 = 9090;
+const PROBE_TIMEOUT: Duration = Duration::from_millis(500);
+const STARTUP_POLL_INTERVAL: Duration = Duration::from_millis(250);
+const RUNNING_POLL_INTERVAL: Duration = Duration::from_secs(1);
+
+#[cfg(debug_assertions)]
+const STARTUP_TIMEOUT: Duration = Duration::from_secs(30);
+#[cfg(not(debug_assertions))]
+const STARTUP_TIMEOUT: Duration = Duration::from_secs(120);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "lowercase")]
+pub enum BackendPhase {
+    Starting,
+    Ready,
+    Failed,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BackendStatus {
+    pub state: BackendPhase,
+    pub port: String,
+    pub message: Option<String>,
+    /// Monotonic counter so the frontend can discard out-of-order updates.
+    pub revision: u64,
+}
 
 pub struct BackendState {
     pub port: Mutex<String>,
     pub child_process: Mutex<Option<Child>>,
+    status: Mutex<BackendStatus>,
+    /// Incremented on every (re)start so monitors of a previous attempt stop reporting.
+    generation: AtomicU64,
 }
 
 impl BackendState {
     pub fn new() -> Self {
         Self {
-            port: Mutex::new("9090".to_string()),
+            port: Mutex::new(DEV_PORT.to_string()),
             child_process: Mutex::new(None),
+            status: Mutex::new(BackendStatus {
+                state: BackendPhase::Starting,
+                port: DEV_PORT.to_string(),
+                message: None,
+                revision: 0,
+            }),
+            generation: AtomicU64::new(0),
         }
     }
+
+    pub fn status(&self) -> BackendStatus {
+        self.status.lock().unwrap().clone()
+    }
+
+    pub fn is_ready(&self) -> bool {
+        self.status.lock().unwrap().state == BackendPhase::Ready
+    }
+
+    fn next_generation(&self) -> u64 {
+        self.generation.fetch_add(1, Ordering::SeqCst) + 1
+    }
+
+    fn is_current(&self, generation: u64) -> bool {
+        self.generation.load(Ordering::SeqCst) == generation
+    }
+
+    /// Updates the status if `generation` is still the active start attempt.
+    fn update_status(
+        &self,
+        generation: u64,
+        state: BackendPhase,
+        message: Option<String>,
+    ) -> Option<BackendStatus> {
+        let mut status = self.status.lock().unwrap();
+        if !self.is_current(generation) {
+            return None;
+        }
+        status.state = state;
+        status.message = message;
+        status.port = self.port.lock().unwrap().clone();
+        status.revision += 1;
+        Some(status.clone())
+    }
+
+    /// Returns a description of the exit status if the backend process has terminated.
+    fn take_exited_child(&self) -> Option<String> {
+        let mut guard = self.child_process.lock().unwrap();
+        let exit = guard.as_mut()?.try_wait().ok().flatten()?;
+        *guard = None;
+        Some(exit.to_string())
+    }
+}
+
+fn set_status(
+    app: &AppHandle,
+    state: &BackendState,
+    generation: u64,
+    phase: BackendPhase,
+    message: Option<String>,
+) {
+    if let Some(status) = state.update_status(generation, phase, message) {
+        println!("Backend status: {:?} (port {})", status.state, status.port);
+        if let Some(message) = &status.message {
+            eprintln!("Backend status message: {message}");
+        }
+        let _ = app.emit(BACKEND_STATUS_EVENT, status);
+    }
+}
+
+pub fn is_port_reachable(port: u16) -> bool {
+    TcpStream::connect_timeout(&SocketAddr::from(([127, 0, 0, 1], port)), PROBE_TIMEOUT).is_ok()
 }
 
 pub fn find_free_port() -> u16 {
@@ -135,76 +244,126 @@ fn sorted_entries(dir: &Path) -> Vec<PathBuf> {
     entries
 }
 
+/// Starts the backend (release) or attaches to the externally started one (debug)
+/// and reports progress via [`BACKEND_STATUS_EVENT`].
 pub fn start_backend(app: &AppHandle, state: &BackendState) {
-    if cfg!(debug_assertions) {
-        println!("Development mode: assuming backend running on port 9090");
-        *state.port.lock().unwrap() = "9090".to_string();
+    let generation = state.next_generation();
+    let dev_mode = cfg!(debug_assertions);
+    let port = if dev_mode { DEV_PORT } else { find_free_port() };
+    *state.port.lock().unwrap() = port.to_string();
+
+    set_status(app, state, generation, BackendPhase::Starting, None);
+
+    if dev_mode {
+        println!("Development mode: expecting backend on port {port}");
+    } else if let Err(message) = spawn_backend(app, state, port) {
+        set_status(app, state, generation, BackendPhase::Failed, Some(message));
         return;
     }
 
-    let port = find_free_port();
-    *state.port.lock().unwrap() = port.to_string();
+    let app_handle = app.clone();
+    thread::spawn(move || monitor_backend(app_handle, generation, port));
+}
 
-    let Some(binary_path) = get_backend_path(app) else {
-        eprintln!("Backend executable not found!");
-        return;
-    };
+/// Restarts the backend after a failure. Ignored while a start is in progress or the backend is ready.
+pub fn restart_backend(app: &AppHandle, state: &BackendState) -> BackendStatus {
+    if state.status().state != BackendPhase::Failed {
+        return state.status();
+    }
+    clean_up_backend(state);
+    start_backend(app, state);
+    state.status()
+}
+
+fn spawn_backend(app: &AppHandle, state: &BackendState, port: u16) -> Result<(), String> {
+    let binary_path =
+        get_backend_path(app).ok_or_else(|| "Backend executable not found.".to_string())?;
 
     println!("Starting backend from: {:?}", binary_path);
     println!("Backend port: {}", port);
 
-    match Command::new(&binary_path)
+    let mut child = Command::new(&binary_path)
         .arg(format!("-Dmicronaut.server.port={port}"))
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-    {
-        Ok(mut child) => {
-            println!("Backend started with PID {}", child.id());
+        .map_err(|error| format!("Failed to start backend process: {error}"))?;
 
-            if let Some(stdout) = child.stdout.take() {
-                let app_handle = app.clone();
+    println!("Backend started with PID {}", child.id());
 
-                std::thread::spawn(move || {
-                    let reader = BufReader::new(stdout);
-
-                    for line in reader.lines().flatten() {
-                        println!("[backend] {line}");
-
-                        if line.contains("Server Running") {
-                            println!("AME Server Running on port {port}");
-
-                            if let Some(splash) = app_handle.get_webview_window("splashscreen") {
-                                let _ = splash.close();
-                            }
-
-                            if let Some(main_window) = app_handle.get_webview_window("main") {
-                                let _ = main_window.show();
-                                let _ = main_window.set_focus();
-                            }
-                        }
-                    }
-                });
+    if let Some(stdout) = child.stdout.take() {
+        thread::spawn(move || {
+            for line in BufReader::new(stdout).lines().map_while(Result::ok) {
+                println!("[backend] {line}");
             }
+        });
+    }
 
-            if let Some(stderr) = child.stderr.take() {
-                std::thread::spawn(move || {
-                    let reader = BufReader::new(stderr);
-
-                    for line in reader.lines().flatten() {
-                        eprintln!("[backend err] {line}");
-                    }
-                });
+    if let Some(stderr) = child.stderr.take() {
+        thread::spawn(move || {
+            for line in BufReader::new(stderr).lines().map_while(Result::ok) {
+                eprintln!("[backend err] {line}");
             }
+        });
+    }
 
-            *state.child_process.lock().unwrap() = Some(child);
+    *state.child_process.lock().unwrap() = Some(child);
+    Ok(())
+}
+
+/// Polls the backend port until it accepts connections, then keeps watching the process
+/// so an unexpected crash is reported to the UI.
+fn monitor_backend(app: AppHandle, generation: u64, port: u16) {
+    let state = app.state::<BackendState>();
+    let deadline = Instant::now() + STARTUP_TIMEOUT;
+    let mut ready = false;
+
+    while state.is_current(generation) {
+        if let Some(exit) = state.take_exited_child() {
+            let message = if ready {
+                format!("The backend stopped unexpectedly ({exit}).")
+            } else {
+                format!("The backend exited during startup ({exit}).")
+            };
+            set_status(
+                &app,
+                &state,
+                generation,
+                BackendPhase::Failed,
+                Some(message),
+            );
+            return;
         }
 
-        Err(error) => {
-            eprintln!(
-                "Failed to spawn backend process {:?}: {}",
-                binary_path, error
+        if ready {
+            thread::sleep(RUNNING_POLL_INTERVAL);
+            continue;
+        }
+
+        if is_port_reachable(port) {
+            ready = true;
+            set_status(&app, &state, generation, BackendPhase::Ready, None);
+            if cfg!(debug_assertions) {
+                return;
+            }
+        } else if Instant::now() >= deadline {
+            let message = format!(
+                "The backend did not respond on port {port} within {} seconds.",
+                STARTUP_TIMEOUT.as_secs()
             );
+            set_status(
+                &app,
+                &state,
+                generation,
+                BackendPhase::Failed,
+                Some(message),
+            );
+            if state.is_current(generation) {
+                clean_up_backend(&state);
+            }
+            return;
+        } else {
+            thread::sleep(STARTUP_POLL_INTERVAL);
         }
     }
 }
@@ -212,7 +371,7 @@ pub fn start_backend(app: &AppHandle, state: &BackendState) {
 pub fn clean_up_backend(state: &BackendState) {
     let mut child_guard = state.child_process.lock().unwrap();
 
-    if let Some(child) = child_guard.take() {
+    if let Some(mut child) = child_guard.take() {
         let pid = child.id();
 
         println!("Cleaning up backend process PID {pid}");
@@ -228,6 +387,8 @@ pub fn clean_up_backend(state: &BackendState) {
         {
             let _ = child.kill();
         }
+
+        let _ = child.wait();
     }
 }
 
@@ -292,5 +453,85 @@ mod tests {
         let dir = temp_dir("empty");
         assert_eq!(find_backend_executable(&dir), None);
         assert_eq!(find_backend_executable(&dir.join("missing")), None);
+    }
+
+    #[test]
+    fn status_updates_increment_revision_and_carry_port() {
+        let state = BackendState::new();
+        let generation = state.next_generation();
+        *state.port.lock().unwrap() = "30001".to_string();
+
+        let starting = state
+            .update_status(generation, BackendPhase::Starting, None)
+            .unwrap();
+        let ready = state
+            .update_status(generation, BackendPhase::Ready, None)
+            .unwrap();
+
+        assert_eq!(starting.revision + 1, ready.revision);
+        assert_eq!(ready.port, "30001");
+        assert!(state.is_ready());
+    }
+
+    #[test]
+    fn stale_generation_cannot_change_status() {
+        let state = BackendState::new();
+        let old_generation = state.next_generation();
+        let new_generation = state.next_generation();
+
+        state
+            .update_status(new_generation, BackendPhase::Starting, None)
+            .unwrap();
+        let stale = state.update_status(
+            old_generation,
+            BackendPhase::Failed,
+            Some("stale".to_string()),
+        );
+
+        assert!(stale.is_none());
+        assert_eq!(state.status().state, BackendPhase::Starting);
+    }
+
+    #[test]
+    fn status_serializes_for_frontend() {
+        let status = BackendStatus {
+            state: BackendPhase::Failed,
+            port: "30001".to_string(),
+            message: Some("boom".to_string()),
+            revision: 3,
+        };
+        assert_eq!(
+            serde_json::to_value(status).unwrap(),
+            serde_json::json!({"state": "failed", "port": "30001", "message": "boom", "revision": 3})
+        );
+    }
+
+    #[test]
+    fn detects_reachable_and_closed_ports() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        assert!(is_port_reachable(port));
+        drop(listener);
+
+        // Port 1 (tcpmux) is reserved and not served on loopback.
+        assert!(!is_port_reachable(1));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn reports_exited_child_process() {
+        let state = BackendState::new();
+        let child = Command::new("true").spawn().unwrap();
+        *state.child_process.lock().unwrap() = Some(child);
+
+        let deadline = Instant::now() + Duration::from_secs(5);
+        let mut exit = None;
+        while exit.is_none() && Instant::now() < deadline {
+            exit = state.take_exited_child();
+            thread::sleep(Duration::from_millis(20));
+        }
+
+        assert!(exit.is_some());
+        assert!(state.child_process.lock().unwrap().is_none());
     }
 }
