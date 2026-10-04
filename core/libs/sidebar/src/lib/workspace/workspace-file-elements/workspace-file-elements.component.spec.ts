@@ -351,4 +351,35 @@ describe('WorkspaceFileElementsComponent', () => {
 
     expect(component.elementImported(mockProperty)).toBe(false);
   });
+
+  describe('resize gutter', () => {
+    afterEach(() => localStorage.removeItem('ame.sidebar.fileElements.width'));
+
+    it('renders the shared resize gutter on the end edge with the panel limits', () => {
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      fixture.detectChanges();
+      const gutter = fixture.nativeElement.querySelector('[data-testid="file-elements-resize-gutter"]') as HTMLElement;
+      expect(gutter).not.toBeNull();
+      expect(gutter.tagName.toLowerCase()).toBe('ame-resize-gutter');
+      expect(gutter.classList).toContain('resize-gutter--end');
+      expect(gutter.getAttribute('role')).toBe('separator');
+      expect(gutter.getAttribute('aria-valuemin')).toBe('250');
+      expect(gutter.getAttribute('aria-valuemax')).toBe('800');
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('350px');
+    });
+
+    it('restores the persisted width onto the panel', () => {
+      localStorage.setItem('ame.sidebar.fileElements.width', '480');
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('480px');
+    });
+
+    it('clamps a persisted width below the minimum', () => {
+      localStorage.setItem('ame.sidebar.fileElements.width', '10');
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('250px');
+    });
+  });
 });

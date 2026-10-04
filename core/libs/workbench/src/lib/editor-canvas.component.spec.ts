@@ -20,7 +20,7 @@ import {Cell} from '@maxgraph/core';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {EditorCanvasComponent} from './editor-canvas.component';
+import {EDIT_VIEW_MIN_WIDTH, EDIT_VIEW_WIDTH_STORAGE_KEY, EditorCanvasComponent} from './editor-canvas.component';
 
 describe('EditorCanvasComponent Signal Forms save contract', () => {
   let component: EditorCanvasComponent;
@@ -88,5 +88,11 @@ describe('EditorCanvasComponent Signal Forms save contract', () => {
     expect(elementModel.updateElement).not.toHaveBeenCalled();
     expect(state.closeShapeSettings).toHaveBeenCalled();
     expect(shapeSettings.unselectShapeForUpdate).toHaveBeenCalled();
+  });
+
+  it('starts the edit view with its minimum width and persists it under a dedicated key', () => {
+    expect(component.sidebarWidth()).toBe(EDIT_VIEW_MIN_WIDTH);
+    expect(EDIT_VIEW_MIN_WIDTH).toBe(480);
+    expect(EDIT_VIEW_WIDTH_STORAGE_KEY).toBe('ame.editView.width');
   });
 });

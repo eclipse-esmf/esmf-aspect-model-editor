@@ -115,7 +115,9 @@
     "showNavigation": "Show navigation!!!",
     "modelUnfiltered": "Model unfiltered",
     "modelFilteredByProperties": "Model filtered by Properties",
-    "prefixes": "Prefixes"
+    "prefixes": "Prefixes",
+    "propertyFilterActivate": "Property Filter: show only Properties and their structure",
+    "propertyFilterDeactivate": "Remove Property Filter: show the entire model"
   },
   "loadMenu": {
     "newWindow": "New window",
@@ -145,8 +147,8 @@
     "byProperties": "By properties"
   },
   "declareNameDialog": {
-    "title": "Declare name of Shared Model",
-    "infoContent": "You are about to remove the Aspect which will transform this Aspect Model into a Shared Model. Please choose a name for this Shared Model.",
+    "title": "Declare name of Element Library",
+    "infoContent": "You are about to remove the Aspect which will transform this Aspect Model into an Element Library (a model without an Aspect). Please choose a name for this Element Library.",
     "namePlaceholder": "Name *",
     "requiredError": "This field is required",
     "charactersError": "Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)",
@@ -576,7 +578,7 @@
   "confirmDialog": {
     "createAspect": {
       "title": "Create new Aspect",
-      "aspectCreationWarning": "You are about to create an Aspect which will transform this Shared Model into an Aspect Model.",
+      "aspectCreationWarning": "You are about to create an Aspect which will transform this Element Library into an Aspect Model.",
       "nameReplacementNotice": "The current name of the Model will be replaced by the name of the Aspect.",
       "closeButton": "Cancel",
       "okButton": "Create Aspect"
@@ -790,7 +792,8 @@
       "copyToClipboard": "Copy to Clipboard",
       "saveToWorkspace": "Save to Workspace",
       "exportModel": "Export Model",
-      "exportPackage": "Export Package"
+      "exportPackage": "Export Package",
+      "settings": "Settings..."
     },
     "view": {
       "label": "View",

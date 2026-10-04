@@ -1,26 +1,29 @@
 [[shared-models]]
-= Shared models
+= Element libraries (models without an Aspect)
 
-The concept of "shared models" has been introduced in the Aspect Model Editor
-to support you defining model parts, which can be reused in multiple other models.
+An "element library" is an Aspect Model file that does not contain an Aspect element.
+It lets you define model parts (for example Properties, Characteristics, Entities or Units),
+which can be reused in multiple other models.
 
-TIP: In case you want to extract a part of an Aspect Model graph into a "shared model" please make sure to delete the Aspect element from the model. Creating "shared models" proves advantageous, particularly when developing broadly defined elements for use in various Aspect Models.
+NOTE: Element libraries were previously called "shared models" in the Aspect Model Editor.
 
-After deleting the Aspect element, you can choose a new file name to describe the resulting "shared model".
+TIP: In case you want to extract a part of an Aspect Model graph into an element library, please make sure to delete the Aspect element from the model. Creating element libraries proves advantageous, particularly when developing broadly defined elements for use in various Aspect Models.
+
+After deleting the Aspect element, you can choose a new file name to describe the resulting element library.
 This file can then be saved in the workspace like any other ttl file.
 
-image:shared-model-file-name.png[Save changes in Edit dialog,width=40%]
+image:shared-model-file-name.png[Declare the name of the element library,width=40%]
 
 As a result, you create a valid ttl file, which just does not contain the "Aspect" element.
-From all other points of view the lifecycle of such a model is similar with the one of an Aspect Model.
+From all other points of view the lifecycle of such a model is similar to the one of an Aspect Model.
 
 image::shared-model-view.png[, 65%]
 
-Such a model can be referenced from multiple other shared models and Aspect Models.
-As soon as you define such a reference the "shared model" it treated like a dependency from the Aspect Model's perspective.
+Such a model can be referenced from multiple other element libraries and Aspect Models.
+As soon as you define such a reference, the element library is treated like a dependency from the Aspect Model's perspective.
 
-When using the "shared model", the process is the same as with references, see xref:namespace/use-references.adoc[Use references].
+When using an element library, the process is the same as with references, see xref:namespace/use-references.adoc[Use references].
 
 image::use-shared-models.png[, 65%]
 
-TIP: In case you need to convert a "shared model" into an Aspect Model, simply add an Aspect element as the first element in the graph.
+TIP: In case you need to convert an element library into an Aspect Model, simply add an Aspect element as the first element in the graph.

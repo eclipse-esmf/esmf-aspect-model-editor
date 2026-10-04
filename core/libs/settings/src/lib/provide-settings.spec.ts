@@ -36,6 +36,7 @@ describe('SettingsTauriBridge', () => {
       providers: [
         {provide: IPC_RENDERER, useValue: ipcMock},
         {provide: ConfigurationService, useValue: configurationService},
+        {provide: SettingsDialogService, useValue: {open: vi.fn()}},
       ],
     });
 
@@ -45,6 +46,26 @@ describe('SettingsTauriBridge', () => {
 
     expect(configurationService.toggleToolbar).toHaveBeenCalled();
     expect(configurationService.toggleEditorMap).toHaveBeenCalled();
+  });
+});
+
+describe('SettingsTauriBridge - open settings', () => {
+  it('opens the settings dialog when the menu item / shortcut (Cmd/Ctrl+,) is triggered', () => {
+    const ipcMock = createIpcMock();
+    const settingsDialog = {open: vi.fn()};
+    TestBed.configureTestingModule({
+      providers: [
+        {provide: IPC_RENDERER, useValue: ipcMock},
+        {provide: ConfigurationService, useValue: {toggleToolbar: vi.fn(), toggleEditorMap: vi.fn()}},
+        {provide: SettingsDialogService, useValue: settingsDialog},
+      ],
+    });
+
+    TestBed.inject(SettingsTauriBridge).register();
+    expect(ipcMock.on).toHaveBeenCalledWith(TAURI_EVENTS.SIGNAL.OPEN_SETTINGS, expect.any(Function));
+    ipcMock.handlers.get(TAURI_EVENTS.SIGNAL.OPEN_SETTINGS)!();
+
+    expect(settingsDialog.open).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -58,7 +79,27 @@ describe('SettingsDialogService', () => {
     expect(matDialog.open).toHaveBeenCalledWith(SettingDialogComponent, {
       panelClass: 'settings-dialog-container',
       width: '60%',
+      minWidth: 'min(720px, 95vw)',
       autoFocus: false,
     });
+  });
+
+  it('does not open a second settings dialog while one is already open', () => {
+    const openDialog = {componentInstance: Object.create(SettingDialogComponent.prototype)};
+    const matDialog = {open: vi.fn(), openDialogs: [openDialog]};
+    TestBed.configureTestingModule({providers: [{provide: MatDialog, useValue: matDialog}]});
+
+    TestBed.inject(SettingsDialogService).open();
+
+    expect(matDialog.open).not.toHaveBeenCalled();
+  });
+
+  it('opens the settings dialog while another dialog is open', () => {
+    const matDialog = {open: vi.fn(), openDialogs: [{componentInstance: {}}]};
+    TestBed.configureTestingModule({providers: [{provide: MatDialog, useValue: matDialog}]});
+
+    TestBed.inject(SettingsDialogService).open();
+
+    expect(matDialog.open).toHaveBeenCalledTimes(1);
   });
 });

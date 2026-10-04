@@ -118,7 +118,9 @@
     "showNavigation": "显示导航",
     "modelUnfiltered": "不过滤Model",
     "modelFilteredByProperties": "根据properties过滤Model",
-    "prefixes": "前缀"
+    "prefixes": "前缀",
+    "propertyFilterActivate": "属性过滤器：仅显示属性及其结构",
+    "propertyFilterDeactivate": "移除属性过滤器：显示整个模型"
   },
   "loadMenu": {
     "newWindow": "新窗口",
@@ -148,8 +150,8 @@
     "byProperties": "通过properties"
   },
   "declareNameDialog": {
-    "title": "声明共享Model的名称",
-    "infoContent": "您将要删除该Aspect, 这会将该Aspect Model转换为共享Model。请为此共享Model选择一个名称",
+    "title": "声明元素库的名称",
+    "infoContent": "您将要删除该Aspect, 这会将该Aspect Model转换为元素库（不含Aspect的模型）。请为此元素库选择一个名称",
     "namePlaceholder": "名称 *",
     "requiredError": "必填",
     "charactersError": "允许的字符：字母数字、空格、点 (.)、减号 (-) 和下划线 (_)",
@@ -579,7 +581,7 @@
   "confirmDialog": {
     "createAspect": {
       "title": "创建新的Aspect",
-      "aspectCreationWarning": "您将创建一个Aspect, 它将将此共享模型转换为Aspect Model。",
+      "aspectCreationWarning": "您将创建一个Aspect, 它将此元素库转换为Aspect Model。",
       "nameReplacementNotice": "Model的当前名称将替换为Aspect的名称",
       "closeButton": "取消",
       "okButton": "创建Aspect"
@@ -793,7 +795,8 @@
       "copyToClipboard": "粘贴到剪切板",
       "saveToWorkspace": "保存至Workspace",
       "exportModel": "导出Model",
-      "exportPackage": "导出Package"
+      "exportPackage": "导出Package",
+      "settings": "设置..."
     },
     "view": {
       "label": "视图",

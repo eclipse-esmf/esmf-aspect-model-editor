@@ -21,25 +21,61 @@ use tauri_plugin_dialog::DialogExt;
 // Menu Construction Helpers
 // ---------------------------------------------------------------------------
 
+/// Keyboard shortcuts (accelerators) of the application menu, keyed by menu item id.
+/// `CmdOrCtrl` resolves to Cmd on macOS and Ctrl on Windows/Linux.
+/// Keep this the single source of truth so conflicts can be checked in one place (see tests).
+/// Not used on purpose: Cmd/Ctrl+W/Q/M/H (window/app handling), Z/X/C/V/A (text editing),
+/// Delete/Backspace/Enter (would break typing in text fields).
+pub(crate) const MENU_SHORTCUTS: &[(&str, &str)] = &[
+    // File
+    ("NEW_EMPTY_MODEL", "CmdOrCtrl+N"),
+    ("LOAD_FILE", "CmdOrCtrl+O"),
+    ("NEW_WINDOW", "CmdOrCtrl+Shift+N"),
+    ("IMPORT_MODEL", "CmdOrCtrl+Shift+O"),
+    ("COPY_TO_CLIPBOARD", "CmdOrCtrl+Shift+C"),
+    ("SAVE_TO_WORKSPACE", "CmdOrCtrl+S"),
+    ("EXPORT_MODEL", "CmdOrCtrl+Shift+E"),
+    ("OPEN_SETTINGS", "CmdOrCtrl+,"),
+    // View
+    ("ZOOM_IN", "CmdOrCtrl+Plus"),
+    ("ZOOM_OUT", "CmdOrCtrl+-"),
+    ("ZOOM_TO_FIT", "CmdOrCtrl+9"),
+    ("ZOOM_TO_ACTUAL", "CmdOrCtrl+0"),
+    // Edit
+    ("OPEN_SELECTED_ELEMENT", "CmdOrCtrl+E"),
+    ("FORMAT_MODEL", "CmdOrCtrl+Shift+L"),
+    // Validate
+    ("VALIDATE_MODEL", "CmdOrCtrl+Shift+V"),
+    // Search
+    ("SEARCH_ELEMENTS", "CmdOrCtrl+F"),
+    ("SEARCH_FILES", "CmdOrCtrl+Shift+F"),
+];
+
+pub(crate) fn shortcut_for(id: &str) -> Option<&'static str> {
+    MENU_SHORTCUTS
+        .iter()
+        .find(|(item_id, _)| *item_id == id)
+        .map(|(_, accelerator)| *accelerator)
+}
+
 #[inline]
 fn item<R: Runtime>(
     app: &AppHandle<R>,
     id: &'static str,
     text: &str,
     enabled: bool,
-    shortcut: Option<&str>,
 ) -> Result<MenuItem<R>, tauri::Error> {
-    MenuItem::with_id(app, id, text, enabled, shortcut)
+    MenuItem::with_id(app, id, text, enabled, shortcut_for(id))
 }
 
 fn build_new_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let empty_model = item(app, "NEW_EMPTY_MODEL", "Empty Model", false, None)?;
-    let load_file = item(app, "LOAD_FILE", "Load File...", true, Some("CmdOrCtrl+O"))?;
-    let copy_paste = item(app, "LOAD_FROM_TEXT", "Copy Paste", true, None)?;
+    let empty_model = item(app, "NEW_EMPTY_MODEL", "Empty Model", false)?;
+    let load_file = item(app, "LOAD_FILE", "Load File...", true)?;
+    let copy_paste = item(app, "LOAD_FROM_TEXT", "Copy Paste", true)?;
     let sep = PredefinedMenuItem::separator(app)?;
-    let examples_header = item(app, "EXAMPLES_HEADER", "Examples", false, None)?;
-    let example_simple = item(app, "LOAD_DEFAULT_EXAMPLE", "SimpleAspect.ttl", true, None)?;
-    let example_movement = item(app, "LOAD_MOVEMENT_EXAMPLE", "Movement.ttl", true, None)?;
+    let examples_header = item(app, "EXAMPLES_HEADER", "Examples", false)?;
+    let example_simple = item(app, "LOAD_DEFAULT_EXAMPLE", "SimpleAspect.ttl", true)?;
+    let example_movement = item(app, "LOAD_MOVEMENT_EXAMPLE", "Movement.ttl", true)?;
 
     Submenu::with_id_and_items(
         app,
@@ -60,58 +96,73 @@ fn build_new_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri
 
 fn build_file_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
     let new_submenu = build_new_submenu(app)?;
-    let new_window = item(
-        app,
-        "NEW_WINDOW",
-        "New Window",
-        true,
-        Some("CmdOrCtrl+Shift+N"),
-    )?;
-    let import_model = item(app, "IMPORT_MODEL", "Import Model", true, None)?;
-    let import_package = item(app, "IMPORT_PACKAGE", "Import Package", true, None)?;
+    let new_window = item(app, "NEW_WINDOW", "New Window", true)?;
+    let import_model = item(app, "IMPORT_MODEL", "Import Model", true)?;
+    let import_package = item(app, "IMPORT_PACKAGE", "Import Package", true)?;
     let sep = PredefinedMenuItem::separator(app)?;
-    let copy_clipboard = item(
-        app,
-        "COPY_TO_CLIPBOARD",
-        "Copy to Clipboard",
-        false,
-        Some("CmdOrCtrl+Shift+C"),
-    )?;
-    let save_workspace = item(
-        app,
-        "SAVE_TO_WORKSPACE",
-        "Save to Workspace",
-        false,
-        Some("CmdOrCtrl+S"),
-    )?;
-    let export_model = item(app, "EXPORT_MODEL", "Export Model", false, None)?;
-    let export_package = item(app, "EXPORT_PACKAGE", "Export Package", true, None)?;
+    let copy_clipboard = item(app, "COPY_TO_CLIPBOARD", "Copy to Clipboard", false)?;
+    let save_workspace = item(app, "SAVE_TO_WORKSPACE", "Save to Workspace", false)?;
+    let export_model = item(app, "EXPORT_MODEL", "Export Model", false)?;
+    let export_package = item(app, "EXPORT_PACKAGE", "Export Package", true)?;
 
-    Submenu::with_id_and_items(
-        app,
-        "MENU_FILE",
-        "File",
-        true,
-        &[
-            &new_submenu,
-            &new_window,
-            &import_model,
-            &import_package,
-            &sep,
-            &copy_clipboard,
-            &save_workspace,
-            &export_model,
-            &export_package,
-        ],
-    )
+    // On macOS "Settings..." lives in the application menu (see build_macos_app_submenu).
+    #[cfg(not(target_os = "macos"))]
+    {
+        let settings_sep = PredefinedMenuItem::separator(app)?;
+        let settings = build_settings_item(app)?;
+        Submenu::with_id_and_items(
+            app,
+            "MENU_FILE",
+            "File",
+            true,
+            &[
+                &new_submenu,
+                &new_window,
+                &import_model,
+                &import_package,
+                &sep,
+                &copy_clipboard,
+                &save_workspace,
+                &export_model,
+                &export_package,
+                &settings_sep,
+                &settings,
+            ],
+        )
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        Submenu::with_id_and_items(
+            app,
+            "MENU_FILE",
+            "File",
+            true,
+            &[
+                &new_submenu,
+                &new_window,
+                &import_model,
+                &import_package,
+                &sep,
+                &copy_clipboard,
+                &save_workspace,
+                &export_model,
+                &export_package,
+            ],
+        )
+    }
+}
+
+fn build_settings_item<R: Runtime>(app: &AppHandle<R>) -> Result<MenuItem<R>, tauri::Error> {
+    item(app, "OPEN_SETTINGS", "Settings...", true)
 }
 
 fn build_view_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let toggle_toolbar = item(app, "SHOW_HIDE_TOOLBAR", "Toggle Toolbar", true, None)?;
-    let toggle_minimap = item(app, "SHOW_HIDE_MINIMAP", "Toggle Minimap", true, None)?;
+    let toggle_toolbar = item(app, "SHOW_HIDE_TOOLBAR", "Toggle Toolbar", true)?;
+    let toggle_minimap = item(app, "SHOW_HIDE_MINIMAP", "Toggle Minimap", true)?;
 
-    let filter_none = item(app, "FILTER_MODEL_BY_NONE", "None", true, None)?;
-    let filter_props = item(app, "FILTER_MODEL_BY_PROPERTIES", "Properties", true, None)?;
+    let filter_none = item(app, "FILTER_MODEL_BY_NONE", "None", true)?;
+    let filter_props = item(app, "FILTER_MODEL_BY_PROPERTIES", "Properties", true)?;
     let filter_submenu = Submenu::with_id_and_items(
         app,
         "MENU_FILTER_MODEL_BY",
@@ -121,22 +172,10 @@ fn build_view_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, taur
     )?;
 
     let sep = PredefinedMenuItem::separator(app)?;
-    let zoom_in = item(app, "ZOOM_IN", "Zoom in", false, Some("CmdOrCtrl+Plus"))?;
-    let zoom_out = item(app, "ZOOM_OUT", "Zoom out", false, Some("CmdOrCtrl+-"))?;
-    let zoom_fit = item(
-        app,
-        "ZOOM_TO_FIT",
-        "Zoom to Fit",
-        false,
-        Some("CmdOrCtrl+9"),
-    )?;
-    let zoom_actual = item(
-        app,
-        "ZOOM_TO_ACTUAL",
-        "Zoom to 100%",
-        false,
-        Some("CmdOrCtrl+0"),
-    )?;
+    let zoom_in = item(app, "ZOOM_IN", "Zoom in", false)?;
+    let zoom_out = item(app, "ZOOM_OUT", "Zoom out", false)?;
+    let zoom_fit = item(app, "ZOOM_TO_FIT", "Zoom to Fit", false)?;
+    let zoom_actual = item(app, "ZOOM_TO_ACTUAL", "Zoom to 100%", false)?;
 
     Submenu::with_id_and_items(
         app,
@@ -157,41 +196,16 @@ fn build_view_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, taur
 }
 
 fn build_edit_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let open_selected = item(
-        app,
-        "OPEN_SELECTED_ELEMENT",
-        "Open selected element",
-        false,
-        None,
-    )?;
+    let open_selected = item(app, "OPEN_SELECTED_ELEMENT", "Open selected element", false)?;
     let remove_selected = item(
         app,
         "REMOVE_SELECTED_ELEMENT",
         "Remove selected element",
         false,
-        None,
     )?;
-    let collapse_expand = item(
-        app,
-        "COLLAPSE_EXPAND_MODEL",
-        "Collapse/Expand Model",
-        false,
-        None,
-    )?;
-    let format_model = item(
-        app,
-        "FORMAT_MODEL",
-        "Format Model",
-        false,
-        Some("CmdOrCtrl+Shift+L"),
-    )?;
-    let connect_elements = item(
-        app,
-        "CONNECT_ELEMENTS",
-        "Connect selected elements",
-        false,
-        None,
-    )?;
+    let collapse_expand = item(app, "COLLAPSE_EXPAND_MODEL", "Collapse/Expand Model", false)?;
+    let format_model = item(app, "FORMAT_MODEL", "Format Model", false)?;
+    let connect_elements = item(app, "CONNECT_ELEMENTS", "Connect selected elements", false)?;
     let sep1 = PredefinedMenuItem::separator(app)?;
     let undo = PredefinedMenuItem::undo(app, None)?;
     let redo = PredefinedMenuItem::redo(app, None)?;
@@ -225,13 +239,7 @@ fn build_edit_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, taur
 }
 
 fn build_validate_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let validate_model = item(
-        app,
-        "VALIDATE_MODEL",
-        "Current Model",
-        false,
-        Some("CmdOrCtrl+Shift+V"),
-    )?;
+    let validate_model = item(app, "VALIDATE_MODEL", "Current Model", false)?;
     Submenu::with_id_and_items(app, "MENU_VALIDATE", "Validate", true, &[&validate_model])
 }
 
@@ -241,32 +249,23 @@ fn build_generate_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, 
         "GENERATE_HTML_DOCUMENTATION",
         "HTML Documentation",
         false,
-        None,
     )?;
     let gen_openapi = item(
         app,
         "GENERATE_OPEN_API_SPECIFICATION",
         "OpenAPI Specification",
         false,
-        None,
     )?;
     let gen_asyncapi = item(
         app,
         "GENERATE_ASYNC_API_SPECIFICATION",
         "AsyncAPI Specification",
         false,
-        None,
     )?;
-    let gen_aasx = item(app, "GENERATE_AASX_XML", "AASX / XML", false, None)?;
+    let gen_aasx = item(app, "GENERATE_AASX_XML", "AASX / XML", false)?;
     let sep = PredefinedMenuItem::separator(app)?;
-    let gen_json_sample = item(
-        app,
-        "GENERATE_JSON_PAYLOAD",
-        "Sample JSON Payload",
-        false,
-        None,
-    )?;
-    let gen_json_schema = item(app, "GENERATE_JSON_SCHEMA", "JSON Schema", false, None)?;
+    let gen_json_sample = item(app, "GENERATE_JSON_PAYLOAD", "Sample JSON Payload", false)?;
+    let gen_json_schema = item(app, "GENERATE_JSON_SCHEMA", "JSON Schema", false)?;
 
     Submenu::with_id_and_items(
         app,
@@ -286,20 +285,8 @@ fn build_generate_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, 
 }
 
 fn build_search_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, tauri::Error> {
-    let search_elements = item(
-        app,
-        "SEARCH_ELEMENTS",
-        "Elements",
-        false,
-        Some("CmdOrCtrl+F"),
-    )?;
-    let search_files = item(
-        app,
-        "SEARCH_FILES",
-        "Files",
-        true,
-        Some("CmdOrCtrl+Shift+F"),
-    )?;
+    let search_elements = item(app, "SEARCH_ELEMENTS", "Elements", false)?;
+    let search_files = item(app, "SEARCH_FILES", "Files", true)?;
     Submenu::with_id_and_items(
         app,
         "MENU_SEARCH",
@@ -332,6 +319,8 @@ fn build_macos_app_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>,
         true,
         &[
             &PredefinedMenuItem::about(app, None, None)?,
+            &PredefinedMenuItem::separator(app)?,
+            &build_settings_item(app)?,
             &PredefinedMenuItem::separator(app)?,
             &PredefinedMenuItem::services(app, None)?,
             &PredefinedMenuItem::separator(app)?,
@@ -623,6 +612,10 @@ pub fn translate_menu<R: Runtime>(app: &AppHandle<R>, translation: &serde_json::
             "EXPORT_PACKAGE",
             file.get("exportPackage").and_then(|v| v.as_str()),
         ));
+        mappings.push((
+            "OPEN_SETTINGS",
+            file.get("settings").and_then(|v| v.as_str()),
+        ));
     }
 
     // View
@@ -787,4 +780,119 @@ fn find_example_file<R: Runtime>(app: &AppHandle<R>, name: &str) -> Option<PathB
         .join(&relative_path);
 
     resource_path.is_file().then_some(resource_path)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashSet;
+
+    fn normalized(accelerator: &str) -> String {
+        let mut parts: Vec<String> = accelerator.split('+').map(|p| p.to_lowercase()).collect();
+        let key = parts.pop().unwrap_or_default();
+        parts.sort();
+        parts.push(key);
+        parts.join("+")
+    }
+
+    #[test]
+    fn shortcuts_are_unique_per_item_and_per_accelerator() {
+        let ids: HashSet<_> = MENU_SHORTCUTS.iter().map(|(id, _)| *id).collect();
+        assert_eq!(
+            ids.len(),
+            MENU_SHORTCUTS.len(),
+            "a menu item has more than one shortcut"
+        );
+
+        let accelerators: HashSet<_> = MENU_SHORTCUTS.iter().map(|(_, a)| normalized(a)).collect();
+        assert_eq!(
+            accelerators.len(),
+            MENU_SHORTCUTS.len(),
+            "two menu items share the same shortcut"
+        );
+    }
+
+    #[test]
+    fn shortcuts_use_the_cross_platform_modifier() {
+        for (id, accelerator) in MENU_SHORTCUTS {
+            assert!(
+                accelerator.starts_with("CmdOrCtrl+"),
+                "{id} must use CmdOrCtrl so it maps to Cmd on macOS and Ctrl on Windows/Linux"
+            );
+        }
+    }
+
+    #[test]
+    fn shortcuts_do_not_override_reserved_os_or_editing_keys() {
+        let reserved = [
+            "CmdOrCtrl+W",
+            "CmdOrCtrl+Q",
+            "CmdOrCtrl+M",
+            "CmdOrCtrl+H",
+            "CmdOrCtrl+Z",
+            "CmdOrCtrl+Shift+Z",
+            "CmdOrCtrl+Y",
+            "CmdOrCtrl+X",
+            "CmdOrCtrl+C",
+            "CmdOrCtrl+V",
+            "CmdOrCtrl+A",
+            "CmdOrCtrl+R",
+            "CmdOrCtrl+P",
+            "CmdOrCtrl+Ctrl+F",
+        ]
+        .map(normalized);
+        for (id, accelerator) in MENU_SHORTCUTS {
+            assert!(
+                !reserved.contains(&normalized(accelerator)),
+                "{id} uses the reserved shortcut {accelerator}"
+            );
+        }
+    }
+
+    #[test]
+    fn keeps_the_existing_shortcuts() {
+        let expected = [
+            ("LOAD_FILE", "CmdOrCtrl+O"),
+            ("NEW_WINDOW", "CmdOrCtrl+Shift+N"),
+            ("COPY_TO_CLIPBOARD", "CmdOrCtrl+Shift+C"),
+            ("SAVE_TO_WORKSPACE", "CmdOrCtrl+S"),
+            ("ZOOM_IN", "CmdOrCtrl+Plus"),
+            ("ZOOM_OUT", "CmdOrCtrl+-"),
+            ("ZOOM_TO_FIT", "CmdOrCtrl+9"),
+            ("ZOOM_TO_ACTUAL", "CmdOrCtrl+0"),
+            ("FORMAT_MODEL", "CmdOrCtrl+Shift+L"),
+            ("VALIDATE_MODEL", "CmdOrCtrl+Shift+V"),
+            ("SEARCH_ELEMENTS", "CmdOrCtrl+F"),
+            ("SEARCH_FILES", "CmdOrCtrl+Shift+F"),
+        ];
+        for (id, accelerator) in expected {
+            assert_eq!(shortcut_for(id), Some(accelerator), "{id}");
+        }
+    }
+
+    #[test]
+    fn provides_the_new_shortcuts() {
+        assert_eq!(shortcut_for("NEW_EMPTY_MODEL"), Some("CmdOrCtrl+N"));
+        assert_eq!(shortcut_for("IMPORT_MODEL"), Some("CmdOrCtrl+Shift+O"));
+        assert_eq!(shortcut_for("EXPORT_MODEL"), Some("CmdOrCtrl+Shift+E"));
+        assert_eq!(shortcut_for("OPEN_SETTINGS"), Some("CmdOrCtrl+,"));
+        assert_eq!(shortcut_for("OPEN_SELECTED_ELEMENT"), Some("CmdOrCtrl+E"));
+    }
+
+    #[test]
+    fn destructive_or_text_editing_actions_have_no_shortcut() {
+        for id in [
+            "REMOVE_SELECTED_ELEMENT",
+            "EXPORT_PACKAGE",
+            "IMPORT_PACKAGE",
+            "LOAD_FROM_TEXT",
+        ] {
+            assert_eq!(shortcut_for(id), None, "{id}");
+        }
+    }
+
+    #[test]
+    fn unknown_items_have_no_shortcut() {
+        assert_eq!(shortcut_for("DOES_NOT_EXIST"), None);
+    }
 }

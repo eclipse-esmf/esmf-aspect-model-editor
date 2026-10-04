@@ -276,6 +276,19 @@ describe('WorkspaceFileListComponent', () => {
     }
   });
 
+  it.each([undefined, ConfirmDialogEnum.cancel])('should not delete the file when the confirmation is dismissed (%s)', result => {
+    confirmDialogMock.open.mockReturnValue(of(result));
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    expect(file).toBeDefined();
+    component.prepare('org.eclipse.esmf:1.0.0', file as NonNullable<typeof file>);
+
+    component.deleteFile();
+
+    expect(confirmDialogMock.open).toHaveBeenCalled();
+    expect(modelApiMock.deleteAspectModel).not.toHaveBeenCalled();
+    expect(loadedFilesMock.removeFile).not.toHaveBeenCalled();
+  });
+
   it('should disable delete for current loaded file', () => {
     const currentFile = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'Current.ttl');
     expect(currentFile).toBeDefined();

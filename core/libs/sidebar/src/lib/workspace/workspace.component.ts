@@ -12,7 +12,7 @@
  */
 
 import {ModelCheckerPort, ModelValidationStore, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
-import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, NotificationsService} from '@ame/shared';
+import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, NotificationsService, ResizeGutterComponent} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -26,11 +26,14 @@ import {WorkspaceErrorComponent} from './workspace-error/workspace-error.compone
 import {WorkspaceFileElementsComponent} from './workspace-file-elements/workspace-file-elements.component';
 import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-list.component';
 
+export const WORKSPACE_DEFAULT_WIDTH = 450;
+
 @Component({
   selector: 'ame-workspace',
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.scss'],
   imports: [
+    ResizeGutterComponent,
     MatTooltipModule,
     MatMiniFabButton,
     MatIconModule,
@@ -42,6 +45,11 @@ import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-l
   ],
 })
 export class WorkspaceComponent {
+  protected readonly minWidth = 280;
+  protected readonly maxWidth = 900;
+  protected readonly storageKey = 'ame.sidebar.workspace.width';
+  public readonly width = signal<number | null>(WORKSPACE_DEFAULT_WIDTH);
+
   private destroyRef = inject(DestroyRef);
   private modelChecker = inject(ModelCheckerPort);
   private modelApiService = inject(WorkspaceFacade);

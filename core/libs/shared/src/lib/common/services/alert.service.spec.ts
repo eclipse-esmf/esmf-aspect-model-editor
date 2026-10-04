@@ -41,8 +41,8 @@ describe('AlertService', () => {
     service.open({data: {title: 'Test', content: 'Message'}});
 
     expect(matDialogMock.open).toHaveBeenCalledWith(AlertComponent, {
-      minWidth: '500px',
-      maxWidth: '800px',
+      minWidth: 'min(500px, 95vw)',
+      maxWidth: 'min(800px, 95vw)',
       disableClose: true,
       data: {
         title: 'Test',

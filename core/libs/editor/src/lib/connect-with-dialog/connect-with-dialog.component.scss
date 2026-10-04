@@ -14,7 +14,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  width: 550px;
+  width: min(550px, 90vw);
 }
 
 h2[mat-dialog-title] {
@@ -26,6 +26,7 @@ h2[mat-dialog-title] {
 .elements {
   margin-top: 1rem;
   height: 40vh;
+  min-height: 120px;
   overflow-y: auto;
 }
 

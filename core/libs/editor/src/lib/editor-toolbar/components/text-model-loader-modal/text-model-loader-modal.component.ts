@@ -33,11 +33,11 @@ export interface TextModelFormData {
       :host {
         display: block;
         max-width: 900px;
-        min-width: 700px;
+        min-width: min(700px, 90vw);
       }
 
       textarea {
-        min-height: 300px;
+        min-height: min(300px, 35vh);
         max-height: 500px;
       }
     `,

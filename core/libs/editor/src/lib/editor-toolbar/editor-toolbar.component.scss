@@ -54,3 +54,12 @@ mat-icon {
     }
   }
 }
+
+.toolbar-item--active {
+  background-color: var(--ame-surface-hover, #f3f3f3);
+  box-shadow: inset 0 -3px 0 var(--ame-primary);
+
+  mat-icon {
+    color: var(--ame-primary);
+  }
+}

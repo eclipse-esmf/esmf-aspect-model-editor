@@ -93,6 +93,19 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
+        [disabled]="isTextView() || isModelEmpty()"
+        [matTooltip]="isPropertyFilterActive() ? t('toolbar.propertyFilterDeactivate') : t('toolbar.propertyFilterActivate')"
+        [class.toolbar-item--active]="isPropertyFilterActive()"
+        [attr.aria-pressed]="isPropertyFilterActive()"
+        (itemClick)="togglePropertyFilter()"
+        data-testid="tbPropertyFilterButton"
+      >
+        <mat-icon class="material-icons">filter_list</mat-icon>
+      </ame-bar-item>
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
         [disabled]="isModelEmpty()"
         [matTooltip]="t('toolbar.validate')"
         (itemClick)="validateFile()"

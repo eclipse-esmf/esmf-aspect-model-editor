@@ -13,9 +13,9 @@
 :host {
   display: flex;
   flex-direction: column;
-  min-width: 350px;
-  min-height: 250px;
-  max-height: 500px;
+  min-width: min(350px, 90vw);
+  min-height: min(250px, 80vh);
+  max-height: min(500px, 100%);
 }
 
 ::ng-deep {

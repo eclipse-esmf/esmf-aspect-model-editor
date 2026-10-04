@@ -14,6 +14,7 @@
 import {inject, Injectable} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {AlertComponent} from '../components';
+import {viewportSafeWidth} from '../dialog-defaults';
 
 export interface AlertOptions {
   title: string;
@@ -33,8 +34,8 @@ export class AlertService {
   public open(options: MatDialogConfig<Partial<AlertOptions>> = {}) {
     const data = options?.data || {};
     return this.matDialog.open(AlertComponent, {
-      minWidth: '500px',
-      maxWidth: '800px',
+      minWidth: viewportSafeWidth(500),
+      maxWidth: viewportSafeWidth(800),
       disableClose: true,
       ...options,
       data: {

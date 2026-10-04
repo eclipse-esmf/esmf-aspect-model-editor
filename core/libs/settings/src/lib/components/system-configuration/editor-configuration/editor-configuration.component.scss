@@ -94,5 +94,5 @@
 }
 
 .setting-item__select {
-  min-width: 360px;
+  min-width: min(360px, 100%);
 }

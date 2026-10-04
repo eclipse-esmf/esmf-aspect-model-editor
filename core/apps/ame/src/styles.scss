@@ -243,6 +243,32 @@ mat-icon {
   }
 }
 
+// Responsive dialogs: the dialog never exceeds the viewport (see provideAmeDialogDefaults),
+// header and actions stay visible and only mat-dialog-content scrolls.
+.mat-mdc-dialog-surface > * {
+  min-height: 0;
+  max-height: 100%;
+}
+
+.mat-mdc-dialog-surface .mat-mdc-dialog-content {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.mat-mdc-dialog-surface .mat-mdc-dialog-actions {
+  flex-shrink: 0;
+}
+
+// Set while a panel is resized via ame-resize-gutter.
+body.ame-resizing {
+  cursor: ew-resize;
+  user-select: none;
+
+  * {
+    transition: none !important;
+  }
+}
+
 .dialog-header {
   display: inline-flex;
   position: relative;

@@ -24,7 +24,7 @@ mat-dialog-content {
   display: flex;
   flex-direction: column;
   height: 40vh;
-  min-height: 400px;
+  min-height: min(400px, 50vh);
 }
 
 mat-checkbox {

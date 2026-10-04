@@ -11,6 +11,14 @@
   ~
   ~ SPDX-License-Identifier: MPL-2.0
   -->
+  <ame-resize-gutter
+    [(width)]="width"
+    [minWidth]="minWidth"
+    [maxWidth]="maxWidth"
+    [storageKey]="storageKey"
+    edge="end"
+    data-testid="file-elements-resize-gutter"
+  ></ame-resize-gutter>
   @if (sidebarService.selection.selection(); as currentSelection) {
     <div class="header">
       <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">

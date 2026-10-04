@@ -14,7 +14,7 @@
 .dialog {
   display: flex;
   flex-direction: column;
-  min-width: 500px;
+  min-width: min(500px, 90vw);
 
   &__checkbox {
     margin: 12px 12px;

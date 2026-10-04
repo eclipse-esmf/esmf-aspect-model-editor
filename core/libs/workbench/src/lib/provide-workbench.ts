@@ -14,7 +14,7 @@
 import {provideEditor} from '@ame/editor';
 import {provideSearch} from '@ame/search';
 import {provideSettings} from '@ame/settings';
-import {APP_CONFIG, config, LanguageTranslationService, TauriTunnelPort} from '@ame/shared';
+import {APP_CONFIG, config, LanguageTranslationService, provideAmeDialogDefaults, TauriTunnelPort} from '@ame/shared';
 import {provideSidebar} from '@ame/sidebar';
 import {EnvironmentProviders, inject, makeEnvironmentProviders, provideAppInitializer} from '@angular/core';
 import {TauriTunnelService} from './tauri-tunnel.service';
@@ -24,6 +24,7 @@ export function provideWorkbench(): EnvironmentProviders {
   return makeEnvironmentProviders([
     {provide: APP_CONFIG, useValue: config},
     {provide: TauriTunnelPort, useExisting: TauriTunnelService},
+    provideAmeDialogDefaults(),
     provideAppInitializer(() => inject(LanguageTranslationService).preloadTranslation()),
     provideEditor(),
     provideSidebar(),

@@ -12,7 +12,7 @@
  */
 
 import {GraphNavigatorPort, ModelLoaderPort, ModelSessionFacade, NamespaceFile, WorkspaceFacade} from '@ame/domain';
-import {createDebouncedLoading, ElementIconComponent, ElementType, sammElements} from '@ame/shared';
+import {createDebouncedLoading, ElementIconComponent, ElementType, ResizeGutterComponent, sammElements} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal, untracked} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
@@ -46,6 +46,7 @@ import {SidebarStateService} from '../../sidebar-state.service';
   templateUrl: './workspace-file-elements.component.html',
   styleUrls: ['./workspace-file-elements.component.scss'],
   imports: [
+    ResizeGutterComponent,
     MatMiniFabButton,
     MatMenuTrigger,
     MatInput,
@@ -61,6 +62,11 @@ import {SidebarStateService} from '../../sidebar-state.service';
   ],
 })
 export class WorkspaceFileElementsComponent {
+  protected readonly minWidth = 250;
+  protected readonly maxWidth = 800;
+  protected readonly storageKey = 'ame.sidebar.fileElements.width';
+  public readonly width = signal<number | null>(350);
+
   private graphNavigator = inject(GraphNavigatorPort);
   private modelApiService = inject(WorkspaceFacade);
   private modelLoaderService = inject(ModelLoaderPort, {optional: true});

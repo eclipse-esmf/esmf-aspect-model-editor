@@ -15,7 +15,7 @@
   display: flex;
   position: relative;
   flex-direction: column;
-  min-width: 1080px;
+  min-width: min(1080px, 90vw);
 }
 
 .hidden {

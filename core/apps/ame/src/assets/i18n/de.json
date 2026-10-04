@@ -115,7 +115,9 @@
     "showNavigation": "Navigation einblenden",
     "modelUnfiltered": "Modell ungefiltert",
     "modelFilteredByProperties": "Modell nach Properties gefiltert",
-    "prefixes": "Prefixe"
+    "prefixes": "Prefixe",
+    "propertyFilterActivate": "Property Filter: nur Properties und ihre Struktur anzeigen",
+    "propertyFilterDeactivate": "Property Filter entfernen: gesamtes Modell anzeigen"
   },
   "loadMenu": {
     "newWindow": "Neues Fenster",
@@ -145,8 +147,8 @@
     "byProperties": "Nach Properties"
   },
   "declareNameDialog": {
-    "title": "Namen des Shared Models festlegen",
-    "infoContent": "Du entfernst den Aspect, wodurch dieses Aspect Model zu einem Shared Model wird. Bitte wähle einen Namen für dieses Shared Model.",
+    "title": "Namen der Elementbibliothek festlegen",
+    "infoContent": "Du entfernst den Aspect, wodurch dieses Aspect Model zu einer Elementbibliothek (Modell ohne Aspect) wird. Bitte wähle einen Namen für diese Elementbibliothek.",
     "namePlaceholder": "Name *",
     "requiredError": "Dieses Feld ist erforderlich",
     "charactersError": "Erlaubte Zeichen: alphanumerisch, Leerzeichen, Punkt (.), Minus (-) und Unterstrich (_)",
@@ -576,7 +578,7 @@
   "confirmDialog": {
     "createAspect": {
       "title": "Neuen Aspect erstellen",
-      "aspectCreationWarning": "Du erstellst einen Aspect, wodurch dieses Shared Model zu einem Aspect Model wird.",
+      "aspectCreationWarning": "Du erstellst einen Aspect, wodurch diese Elementbibliothek zu einem Aspect Model wird.",
       "nameReplacementNotice": "Der aktuelle Name des Modells wird durch den Namen des Aspects ersetzt.",
       "closeButton": "Abbrechen",
       "okButton": "Aspect erstellen"
@@ -790,7 +792,8 @@
       "copyToClipboard": "In die Zwischenablage kopieren",
       "saveToWorkspace": "Im Workspace speichern",
       "exportModel": "Modell exportieren",
-      "exportPackage": "Paket exportieren"
+      "exportPackage": "Paket exportieren",
+      "settings": "Einstellungen..."
     },
     "view": {
       "label": "Ansicht",

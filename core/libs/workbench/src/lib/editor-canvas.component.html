@@ -20,19 +20,14 @@
 <ame-sidebar class="sidebar"></ame-sidebar>
 
 @if (isShapeSettingsOpened(); as isOpened) {
-  <section class="info-section" [style.width.px]="sidebarWidth()" cdkDragLockAxis="x" cdkDrag>
-    <div
-      class="info-section__gutter"
-      [cdkDragFreeDragPosition]="sidebarDragPosition()"
-      (cdkDragEnded)="onDragEnded($event)"
+  <section class="info-section">
+    <ame-resize-gutter
+      [(width)]="sidebarWidth"
+      [minWidth]="editViewMinWidth"
+      [storageKey]="editViewWidthStorageKey"
+      edge="start"
       data-testid="info-section-drag"
-      cdkDrag
-      cdkDragHandle
-      cdkDragLockAxis="x"
-    >
-      <div class="info-section__indication-line"></div>
-      <mat-icon class="info-section__icon">more_vert</mat-icon>
-    </div>
+    ></ame-resize-gutter>
     <ame-shape-settings
       [modelElement]="modelElement"
       [isOpened]="isOpened"

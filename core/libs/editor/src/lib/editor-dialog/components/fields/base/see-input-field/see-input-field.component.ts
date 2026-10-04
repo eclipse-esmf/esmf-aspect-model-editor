@@ -111,9 +111,8 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
       }
 
       const seeValue = this.getCurrentValue();
-      const decodedValue = this.decodeUriComponent(seeValue);
       this.elements.set(
-        [...(decodedValue?.split(',') || [])].filter(Boolean).map(urn => ({
+        [...(seeValue?.split(',') || [])].filter(Boolean).map(urn => ({
           name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
           urn,
         })),
@@ -180,12 +179,12 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
     this.disabledState.set(
       this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
     );
+    // The see values are kept exactly as written in the model: decoding them would change the URI (e.g. %23 -> #).
     const currentValue = this.getCurrentValue();
-    const decodedValue = this.decodeUriComponent(currentValue);
-    this.seeModel.set(decodedValue || '');
+    this.seeModel.set(currentValue || '');
     this.unregisterField = this.signalForm().register(this.fieldName, this.seeField);
     this.elements.set(
-      [...(decodedValue?.split(',') || [])].filter(Boolean).map(urn => ({
+      [...(currentValue?.split(',') || [])].filter(Boolean).map(urn => ({
         name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
         urn,
       })),
@@ -201,9 +200,5 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
     if (this.metaModelElement) {
       this.metaModelElement.see = this.elements().map(({urn}) => urn);
     }
-  }
-
-  private decodeUriComponent(seeReference: string): string {
-    return seeReference ? decodeURIComponent(seeReference) : null;
   }
 }

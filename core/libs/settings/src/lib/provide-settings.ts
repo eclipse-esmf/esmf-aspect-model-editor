@@ -12,20 +12,22 @@
  */
 
 import {ConfigurationService, SettingsDialogPort} from '@ame/domain';
-import {IPC_RENDERER, ITauriIpcBridge, TAURI_EVENTS, TAURI_IPC_BRIDGES} from '@ame/shared';
+import {IPC_RENDERER, ITauriIpcBridge, TAURI_EVENTS, TAURI_IPC_BRIDGES, viewportSafeWidth} from '@ame/shared';
 import {EnvironmentProviders, Injectable, inject, makeEnvironmentProviders} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {SettingDialogComponent} from './components/settings-dialog/setting-dialog.component';
 
-/** Handles settings related Tauri menu events (toolbar/minimap visibility). */
+/** Handles settings related Tauri menu events (toolbar/minimap visibility, open settings). */
 @Injectable({providedIn: 'root'})
 export class SettingsTauriBridge implements ITauriIpcBridge {
   private ipcRenderer = inject(IPC_RENDERER);
   private configurationService = inject(ConfigurationService);
+  private settingsDialog = inject(SettingsDialogService);
 
   register(): void {
     this.ipcRenderer?.on(TAURI_EVENTS.SIGNAL.SHOW_HIDE_TOOLBAR, () => this.configurationService.toggleToolbar());
     this.ipcRenderer?.on(TAURI_EVENTS.SIGNAL.SHOW_HIDE_MINIMAP, () => this.configurationService.toggleEditorMap());
+    this.ipcRenderer?.on(TAURI_EVENTS.SIGNAL.OPEN_SETTINGS, () => this.settingsDialog.open());
   }
 }
 
@@ -35,7 +37,17 @@ export class SettingsDialogService implements SettingsDialogPort {
   private matDialog = inject(MatDialog);
 
   open(): void {
-    this.matDialog.open(SettingDialogComponent, {panelClass: 'settings-dialog-container', width: '60%', autoFocus: false});
+    // Repeated shortcut presses (Cmd/Ctrl+,) must not stack several settings dialogs.
+    if (this.matDialog.openDialogs?.some(dialog => dialog.componentInstance instanceof SettingDialogComponent)) {
+      return;
+    }
+
+    this.matDialog.open(SettingDialogComponent, {
+      panelClass: 'settings-dialog-container',
+      width: '60%',
+      minWidth: viewportSafeWidth(720),
+      autoFocus: false,
+    });
   }
 }
 

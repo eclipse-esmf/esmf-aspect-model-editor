@@ -54,7 +54,7 @@ export const SELECTOR_notificationsClearButton = '[data-testid="clear-notificati
 // Alert dialog
 export const SELECTOR_alertRightButton = '[data-testid="alert-right-btn"]';
 
-// Rename shared model Modal
+// Declare name of element library (model without an Aspect) modal
 export const FIELD_renameModelInput = '[data-testid="file-rename"]';
 export const BUTTON_renameModelConfirm = '[data-testid="file-rename-confirm"]';
 

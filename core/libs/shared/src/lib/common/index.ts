@@ -15,6 +15,7 @@ export * from '../contracts';
 export * from './components';
 export * from './config';
 export * from './constants';
+export * from './dialog-defaults';
 export * from './directives';
 export * from './enums';
 export * from './general-config';

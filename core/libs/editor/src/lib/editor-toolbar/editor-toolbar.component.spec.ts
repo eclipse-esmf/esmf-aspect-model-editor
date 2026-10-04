@@ -11,15 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService} from '@ame/domain';
+import {ConfigurationService, FilterAttributesService, FiltersService} from '@ame/domain';
 import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
-import {BindingsService, NotificationsService} from '@ame/shared';
+import {BindingsService, ModelFilter, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ShapeSettingsService} from '../editor-dialog';
 import {EditorService} from '../editor.service';
@@ -33,8 +33,15 @@ describe('EditorToolbarComponent', () => {
   let editorService: EditorService;
   let fileHandlingService: FileHandlingService;
   let shapeSettingsService: ShapeSettingsService;
+  let filtersService: FiltersService;
+  let activeFilter$: BehaviorSubject<ModelFilter>;
+  let isModelEmpty: ReturnType<typeof signal<boolean>>;
+
+  const filterButton = (): HTMLElement => fixture.nativeElement.querySelector('[data-testid="tbPropertyFilterButton"]');
 
   beforeEach(async () => {
+    activeFilter$ = new BehaviorSubject<ModelFilter>(ModelFilter.DEFAULT);
+    isModelEmpty = signal(false);
     await TestBed.configureTestingModule({
       imports: [
         EditorToolbarComponent,
@@ -73,8 +80,18 @@ describe('EditorToolbarComponent', () => {
           editSelectedCell: vi.fn(),
         }),
         MockProvider(MaxGraphService, {
-          isModelEmpty: signal(false),
+          isModelEmpty,
         }),
+        MockProvider(FiltersService, {renderByFilter: vi.fn()}),
+        {
+          provide: FilterAttributesService,
+          useValue: {
+            get activeFilter() {
+              return activeFilter$.value;
+            },
+            activeFilter$: activeFilter$.asObservable(),
+          },
+        },
         MockProvider(NotificationsService),
         MockProvider(PrefixManagementService, {openManagement: vi.fn()}),
       ],
@@ -83,6 +100,7 @@ describe('EditorToolbarComponent', () => {
     editorService = TestBed.inject(EditorService);
     fileHandlingService = TestBed.inject(FileHandlingService);
     shapeSettingsService = TestBed.inject(ShapeSettingsService);
+    filtersService = TestBed.inject(FiltersService);
     fixture = TestBed.createComponent(EditorToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -120,5 +138,38 @@ describe('EditorToolbarComponent', () => {
   it('should open the prefix management', () => {
     component.openPrefixManagement();
     expect(TestBed.inject(PrefixManagementService).openManagement).toHaveBeenCalled();
+  });
+
+  describe('property filter', () => {
+    it('should render the property filter button enabled when a model is loaded', () => {
+      expect(filterButton()).toBeTruthy();
+      expect(filterButton().classList).not.toContain('disabled');
+      expect(filterButton().getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('should activate the property filter when inactive', () => {
+      filterButton().click();
+      expect(filtersService.renderByFilter).toHaveBeenCalledWith(ModelFilter.PROPERTIES);
+    });
+
+    it('should deactivate the property filter when active', () => {
+      activeFilter$.next(ModelFilter.PROPERTIES);
+      fixture.detectChanges();
+
+      expect(filterButton().classList).toContain('toolbar-item--active');
+      expect(filterButton().getAttribute('aria-pressed')).toBe('true');
+
+      filterButton().click();
+      expect(filtersService.renderByFilter).toHaveBeenCalledWith(ModelFilter.DEFAULT);
+    });
+
+    it('should be disabled and not react when no model is loaded', () => {
+      isModelEmpty.set(true);
+      fixture.detectChanges();
+
+      expect(filterButton().classList).toContain('disabled');
+      filterButton().click();
+      expect(filtersService.renderByFilter).not.toHaveBeenCalled();
+    });
   });
 });

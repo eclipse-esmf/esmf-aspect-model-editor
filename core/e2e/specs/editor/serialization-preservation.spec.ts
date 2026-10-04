@@ -164,9 +164,10 @@ test.describe('Serialization - structure preservation', () => {
   });
 
   test('writes the attributes of an element in the canonical SAMM order', async ({page}) => {
+    // Force the raw serialization: a failing formatter must not depend on whether a local backend is running.
     await page.unroute(FORMAT_API_URL);
+    await page.route(`**${FORMAT_API_URL}`, route => route.abort());
     await openTextView(page);
-    // raw serialization (the default e2e formatter returns nothing)
     await expect(page.getByTestId('text-view-unformatted')).toBeVisible();
     const text = await getTextViewText(page);
     const aspect = text.slice(text.indexOf(':AspectDefault a samm:Aspect'));

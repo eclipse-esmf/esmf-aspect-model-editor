@@ -128,6 +128,74 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
     await expect(dialog).not.toBeVisible();
   });
 
+  for (const answer of ['cancel', 'ok'] as const) {
+    test(`answering the delete confirmation with ${answer} ${answer === 'ok' ? 'deletes' : 'keeps'} the file`, async ({page}) => {
+      const helper = new AppHelper(page);
+      await helper.startModelling(false);
+
+      const deleteRequests: string[] = [];
+      await page.route('**/ame/api/models**', route => {
+        if (route.request().method() === 'DELETE') {
+          deleteRequests.push(route.request().url());
+          return route.fulfill({status: 200, contentType: 'application/json', body: '{}'});
+        }
+        return route.fallback();
+      });
+
+      await page.locator(SELECTOR_workspaceBtn).click({force: true});
+      await page.getByRole('button', {name: 'Select file SampleModel.ttl'}).hover();
+      await page.locator(SELECTOR_openFileMenu).first().click();
+      await page.locator(SELECTOR_fileMenuDeleteButton).click();
+
+      const dialog = page.locator('mat-dialog-container');
+      await expect(dialog).toBeVisible();
+      await dialog.getByTestId(answer === 'ok' ? 'okBtn' : 'cancelBtn').click();
+      await expect(dialog).not.toBeVisible();
+
+      if (answer === 'ok') {
+        await expect.poll(() => deleteRequests.length).toBe(1);
+      } else {
+        await page.waitForTimeout(300);
+        expect(deleteRequests).toHaveLength(0);
+      }
+    });
+  }
+
+  for (const dismiss of ['Escape', 'backdrop'] as const) {
+    test(`dismissing the delete confirmation via ${dismiss} keeps the file`, async ({page}) => {
+      const helper = new AppHelper(page);
+      await helper.startModelling(false);
+
+      let deleteRequests = 0;
+      await page.route('**/ame/api/models', route => {
+        if (route.request().method() === 'DELETE') deleteRequests++;
+        return route.fallback();
+      });
+
+      await page.locator(SELECTOR_workspaceBtn).click({force: true});
+      const fileRow = page.getByRole('button', {name: 'Select file SampleModel.ttl'});
+      await fileRow.hover();
+      await page.locator(SELECTOR_openFileMenu).first().click();
+      await page.locator(SELECTOR_fileMenuDeleteButton).click();
+
+      const dialog = page.locator('mat-dialog-container');
+      await expect(dialog).toBeVisible();
+      if (dismiss === 'Escape') {
+        await page.keyboard.press('Escape');
+      } else {
+        await page
+          .locator('.cdk-overlay-backdrop')
+          .last()
+          .click({position: {x: 5, y: 5}, force: true});
+      }
+      await expect(dialog).not.toBeVisible();
+
+      await page.waitForTimeout(300);
+      expect(deleteRequests).toBe(0);
+      await expect(fileRow).toBeVisible();
+    });
+  }
+
   test('opens the file menu below its trigger even after the row loses hover', async ({page}) => {
     const helper = new AppHelper(page);
     await helper.startModelling(false);

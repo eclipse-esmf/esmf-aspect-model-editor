@@ -12,6 +12,7 @@
  */
 
 import {ConfirmDialogEnum, ConfirmDialogPort, DialogOptions} from '@ame/domain';
+import {viewportSafeWidth} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
@@ -34,8 +35,8 @@ export class ConfirmDialogService implements ConfirmDialogPort {
           actionButtonText: actionButtonText || undefined,
           okButtonText: okButtonText || 'Continue',
         },
-        maxWidth: 650,
-        minWidth: 550,
+        maxWidth: viewportSafeWidth(650),
+        minWidth: viewportSafeWidth(550),
       })
       .afterClosed()
       .pipe(first());

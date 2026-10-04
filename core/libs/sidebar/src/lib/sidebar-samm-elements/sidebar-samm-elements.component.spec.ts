@@ -16,7 +16,7 @@ import {APP_CONFIG, BrowserService, IPC_RENDERER, config} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TranslocoTestingModule} from '@jsverse/transloco';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {SidebarStateService} from '../sidebar-state.service';
 import {SidebarSAMMElementsComponent} from './sidebar-samm-elements.component';
 
@@ -148,5 +148,39 @@ describe('SidebarSAMMElementsComponent', () => {
 
     expect(elements.length).toBeGreaterThan(0);
     expect(fixture.nativeElement.querySelector('.element-description')).toBeNull();
+  });
+
+  describe('resize gutter', () => {
+    afterEach(() => localStorage.removeItem('ame.sidebar.sammElements.width'));
+
+    it('renders the shared resize gutter on the end edge with the panel limits', () => {
+      fixture.destroy();
+      fixture = TestBed.createComponent(SidebarSAMMElementsComponent);
+      fixture.detectChanges();
+      const gutter = fixture.nativeElement.querySelector('[data-testid="samm-elements-resize-gutter"]') as HTMLElement;
+      expect(gutter).not.toBeNull();
+      expect(gutter.tagName.toLowerCase()).toBe('ame-resize-gutter');
+      expect(gutter.classList).toContain('resize-gutter--end');
+      expect(gutter.getAttribute('role')).toBe('separator');
+      expect(gutter.getAttribute('aria-valuemin')).toBe('250');
+      expect(gutter.getAttribute('aria-valuemax')).toBe('700');
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('');
+    });
+
+    it('restores the persisted width onto the panel', () => {
+      localStorage.setItem('ame.sidebar.sammElements.width', '400');
+      fixture.destroy();
+      fixture = TestBed.createComponent(SidebarSAMMElementsComponent);
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('400px');
+    });
+
+    it('clamps a persisted width below the minimum', () => {
+      localStorage.setItem('ame.sidebar.sammElements.width', '10');
+      fixture.destroy();
+      fixture = TestBed.createComponent(SidebarSAMMElementsComponent);
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('250px');
+    });
   });
 });

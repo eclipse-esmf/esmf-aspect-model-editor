@@ -12,8 +12,16 @@
  */
 
 import {GraphNavigatorPort, ModelSessionFacade} from '@ame/domain';
-import {APP_CONFIG, ElementIconComponent, ElementType, ExternalLinkDirective, sammElements, sammSpecificationUrl} from '@ame/shared';
-import {Component, computed, inject} from '@angular/core';
+import {
+  APP_CONFIG,
+  ElementIconComponent,
+  ElementType,
+  ExternalLinkDirective,
+  ResizeGutterComponent,
+  sammElements,
+  sammSpecificationUrl,
+} from '@ame/shared';
+import {Component, computed, inject, signal} from '@angular/core';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -26,6 +34,7 @@ import {SidebarStateService} from '../sidebar-state.service';
   templateUrl: './sidebar-samm-elements.component.html',
   styleUrls: ['./sidebar-samm-elements.component.scss'],
   imports: [
+    ResizeGutterComponent,
     MatIconModule,
     DraggableElementComponent,
     MatMiniFabButton,
@@ -36,6 +45,12 @@ import {SidebarStateService} from '../sidebar-state.service';
   ],
 })
 export class SidebarSAMMElementsComponent {
+  protected readonly minWidth = 250;
+  protected readonly maxWidth = 700;
+  protected readonly storageKey = 'ame.sidebar.sammElements.width';
+  /** `null` keeps the natural width until the user resizes the panel. */
+  public readonly width = signal<number | null>(null);
+
   private graphNavigator = inject(GraphNavigatorPort);
   private loadedFiles = inject(ModelSessionFacade);
 

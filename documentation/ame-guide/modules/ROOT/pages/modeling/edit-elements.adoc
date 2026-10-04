@@ -39,7 +39,7 @@ image::edit-elements.png[Save changes in Edit dialog, width=50%, link=self]
 Element names can be changed but should be unique throughout the Aspect Model.
 
 The name of the Aspect also serves as the name of the Aspect Model.
-However, if the aspect name is removed, it is possible to assign a customized name for the aspect model, see xref:modeling/shared-models.adoc[Shared models].
+However, if the aspect name is removed, it is possible to assign a customized name for the aspect model, see xref:modeling/shared-models.adoc[Element libraries].
 
 NOTE: The attributes `preferredName` and `description` are non-unique to allow for supporting multiple languages.
 That means, these attributes can be defined multiple times for different languages but only once for a specific language.

@@ -104,6 +104,38 @@ describe('SeeInputFieldComponent', () => {
     expect(property.see).toEqual(['https://example.com/doc', 'https://example.com/second']);
   });
 
+  it.each(['https://example.com/doc%23section', 'https://example.com/a%2Cb', 'https://example.com/invalid%ZZ'])(
+    'should keep the encoded see value %s unchanged',
+    uri => {
+      property.see = [uri];
+      fixture.destroy();
+      signalForm = TestBed.runInInjectionContext(() => EditorSignalFormContext.create());
+      fixture = TestBed.createComponent(SeeInputFieldComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('signalForm', signalForm);
+      fixture.detectChanges();
+
+      expect(signalForm.value().see).toBe(uri);
+      expect(component.elements().map(element => element.urn)).toEqual([uri]);
+    },
+  );
+
+  it('should keep encoded see values of other entries when adding a new one', () => {
+    property.see = ['https://example.com/doc%23section'];
+    fixture.destroy();
+    signalForm = TestBed.runInInjectionContext(() => EditorSignalFormContext.create());
+    fixture = TestBed.createComponent(SeeInputFieldComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('signalForm', signalForm);
+    fixture.detectChanges();
+
+    component.searchField().value.set('https://example.com/second');
+    component.addElementToList();
+
+    expect(property.see).toEqual(['https://example.com/doc%23section', 'https://example.com/second']);
+    expect(signalForm.value().see).toBe('https://example.com/doc%23section,https://example.com/second');
+  });
+
   it('should unregister see field on destroy', () => {
     fixture.destroy();
     expect(signalForm.value()).not.toHaveProperty('see');

@@ -66,8 +66,8 @@ describe('ConfirmDialogService', () => {
         closeButtonText: 'No',
         actionButtonText: undefined,
       },
-      maxWidth: 650,
-      minWidth: 550,
+      maxWidth: 'min(650px, 95vw)',
+      minWidth: 'min(550px, 95vw)',
     });
     expect(result).toBe(ConfirmDialogEnum.ok);
   });

@@ -267,7 +267,7 @@ export class WorkspaceFileListComponent {
         title: this.translate.language.confirmDialog.deleteFile.title,
       })
       .subscribe(confirm => {
-        if (confirm !== ConfirmDialogEnum.cancel) {
+        if (confirm === ConfirmDialogEnum.ok) {
           this.sidebarService.namespacesState.removeFile(namespace, file.name);
           this.sidebarService.selection.reset();
           this.loadedFiles.removeFile(aspectModelFileName);

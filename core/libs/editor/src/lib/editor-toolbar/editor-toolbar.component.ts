@@ -11,11 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {FilterAttributesService, FiltersService} from '@ame/domain';
 import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
-import {BarItemComponent, BindingsService, NotificationsService} from '@ame/shared';
+import {BarItemComponent, BindingsService, ModelFilter, NotificationsService} from '@ame/shared';
 import {CommonModule} from '@angular/common';
-import {AfterViewInit, Component, DestroyRef, inject, OnDestroy} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {AfterViewInit, Component, computed, DestroyRef, inject, OnDestroy} from '@angular/core';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -45,6 +46,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
   private shapeSettingsService = inject(ShapeSettingsService);
   private maxgraphService = inject(MaxGraphService);
   private prefixManagementService = inject(PrefixManagementService);
+  private filtersService = inject(FiltersService);
+  private filterAttributesService = inject(FilterAttributesService);
 
   public notificationsService = inject(NotificationsService);
 
@@ -54,6 +57,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
   protected selectedCells = this.maxgraphShapeSelectorService.selectedCells;
   protected hasSelection = this.maxgraphShapeSelectorService.hasSelection;
   protected isTextView = inject(EditorViewModeService).isTextView;
+  protected readonly activeFilter = toSignal(this.filterAttributesService.activeFilter$, {
+    initialValue: this.filterAttributesService.activeFilter,
+  });
+  protected readonly isPropertyFilterActive = computed(() => this.activeFilter() === ModelFilter.PROPERTIES);
 
   private checkChangesInterval: NodeJS.Timeout;
 
@@ -80,6 +87,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
 
   openPrefixManagement() {
     this.prefixManagementService.openManagement();
+  }
+
+  togglePropertyFilter() {
+    this.filtersService.renderByFilter(this.isPropertyFilterActive() ? ModelFilter.DEFAULT : ModelFilter.PROPERTIES);
   }
 
   editSelectedCell() {

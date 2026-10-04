@@ -318,4 +318,30 @@ test.describe('Tauri Menu & IPC Integration', () => {
       )
       .toBe(true);
   });
+
+  test('should open the settings dialog via the OPEN_SETTINGS signal (File/App menu, Cmd/Ctrl+,)', async ({page}) => {
+    await app.startModelling();
+
+    await tauri.emitSignal('OPEN_SETTINGS');
+    const dialog = page.locator('ame-setting-dialog');
+    await expect(dialog).toBeVisible();
+
+    // Pressing the shortcut again must not stack a second settings dialog
+    await tauri.emitSignal('OPEN_SETTINGS');
+    await page.waitForTimeout(300);
+    await expect(dialog).toHaveCount(1);
+
+    await page.locator('[data-testid="settingsDialogCancelButton"]').click();
+    await expect(dialog).toHaveCount(0);
+
+    // and it can be opened again after closing
+    await tauri.emitSignal('OPEN_SETTINGS');
+    await expect(dialog).toBeVisible();
+    await page.locator('[data-testid="settingsDialogCancelButton"]').click();
+  });
+
+  test('should open the settings dialog via OPEN_SETTINGS even without a loaded model', async ({page}) => {
+    await tauri.emitSignal('OPEN_SETTINGS');
+    await expect(page.locator('ame-setting-dialog')).toBeVisible();
+  });
 });

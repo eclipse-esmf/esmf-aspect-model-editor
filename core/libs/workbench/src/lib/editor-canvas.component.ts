@@ -24,8 +24,8 @@ import {
   ShapeSettingsStateService,
 } from '@ame/editor';
 import {ElementsSearchComponent, FilesSearchComponent} from '@ame/search';
+import {ResizeGutterComponent} from '@ame/shared';
 import {SidebarComponent} from '@ame/sidebar';
-import {CdkDrag, CdkDragEnd, CdkDragHandle} from '@angular/cdk/drag-drop';
 import {CommonModule} from '@angular/common';
 import {AfterViewInit, Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, untracked, viewChild} from '@angular/core';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
@@ -37,8 +37,8 @@ import {Cell} from '@maxgraph/core';
 import {fromEvent} from 'rxjs';
 import {debounceTime, filter, map, switchMap, tap} from 'rxjs/operators';
 
-const SIDEBAR_MIN_WIDTH = 480;
-const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
+export const EDIT_VIEW_MIN_WIDTH = 480;
+export const EDIT_VIEW_WIDTH_STORAGE_KEY = 'ame.editView.width';
 
 @Component({
   selector: 'ame-editor-canvas',
@@ -46,8 +46,7 @@ const SIDEBAR_DEFAULT_DRAG_POSITION = {x: -SIDEBAR_MIN_WIDTH, y: 0};
   styleUrls: ['./editor-canvas.component.scss'],
   imports: [
     CommonModule,
-    CdkDrag,
-    CdkDragHandle,
+    ResizeGutterComponent,
     MatIconModule,
     ElementsSearchComponent,
     FilesSearchComponent,
@@ -74,8 +73,9 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
   private searchStore = inject(SearchStore);
   protected readonly viewMode = inject(EditorViewModeService);
 
-  public readonly sidebarWidth = signal(SIDEBAR_MIN_WIDTH);
-  public readonly sidebarDragPosition = signal({...SIDEBAR_DEFAULT_DRAG_POSITION});
+  public readonly sidebarWidth = signal<number | null>(EDIT_VIEW_MIN_WIDTH);
+  protected readonly editViewMinWidth = EDIT_VIEW_MIN_WIDTH;
+  protected readonly editViewWidthStorageKey = EDIT_VIEW_WIDTH_STORAGE_KEY;
 
   public readonly isMapVisible = toSignal(this.configurationService.settings$.pipe(map(settings => settings.showEditorMap)), {
     initialValue: this.configurationService.getSettings()?.showEditorMap ?? true,
@@ -155,21 +155,6 @@ export class EditorCanvasComponent implements AfterViewInit, OnInit {
 
   toggleToolbar() {
     this.configurationService.toggleToolbar();
-  }
-
-  onDragEnded(event: CdkDragEnd): void {
-    const newWidth = this.sidebarWidth() - event.distance.x;
-
-    if (newWidth < SIDEBAR_MIN_WIDTH) {
-      this.sidebarWidth.set(SIDEBAR_MIN_WIDTH);
-      this.sidebarDragPosition.set({...SIDEBAR_DEFAULT_DRAG_POSITION});
-    } else {
-      this.sidebarWidth.set(newWidth);
-      this.sidebarDragPosition.update(position => ({
-        x: position.x + event.distance.x,
-        y: position.y,
-      }));
-    }
   }
 
   closeShapeSettings() {

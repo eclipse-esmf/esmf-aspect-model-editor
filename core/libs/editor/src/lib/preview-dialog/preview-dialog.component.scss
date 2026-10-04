@@ -17,8 +17,8 @@ textarea {
 }
 
 :host {
-  min-width: 980px;
-  height: 50vh;
+  min-width: min(980px, 90vw);
+  height: min(50vh, 100%);
   display: flex;
   flex-direction: column;
 

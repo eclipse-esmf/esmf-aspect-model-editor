@@ -15,3 +15,4 @@ export * from './alert/alert.component';
 export * from './bar-item/bar-item.component';
 export * from './element/element.component';
 export * from './loading-screen/loading-screen.component';
+export * from './resize-gutter/resize-gutter.component';

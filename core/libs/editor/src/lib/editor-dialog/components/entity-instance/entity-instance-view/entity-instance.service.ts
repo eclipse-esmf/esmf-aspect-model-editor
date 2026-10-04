@@ -48,7 +48,7 @@ export class EntityInstanceService implements EntityInstancePort {
     ];
 
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
-      if (confirm !== ConfirmDialogEnum.cancel) {
+      if (confirm === ConfirmDialogEnum.ok) {
         for (const entityValue of entityValues) {
           entityValue.getAssertion(property.aspectModelUrn).forEach(value => entityValue.removeAssertion(property.aspectModelUrn, value));
         }
@@ -106,7 +106,7 @@ export class EntityInstanceService implements EntityInstancePort {
     ];
 
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
-      if (confirm !== ConfirmDialogEnum.cancel) {
+      if (confirm === ConfirmDialogEnum.ok) {
         for (const entityValue of entityValues) {
           this.currentCachedFile.removeElement(entityValue.aspectModelUrn);
         }
@@ -133,7 +133,7 @@ export class EntityInstanceService implements EntityInstancePort {
     ];
 
     this.confirmDialogService.open({title, phrases, closeButtonText: 'No', okButtonText: 'Yes'}).subscribe(confirm => {
-      if (confirm === ConfirmDialogEnum.cancel) {
+      if (confirm !== ConfirmDialogEnum.ok) {
         return;
       }
 

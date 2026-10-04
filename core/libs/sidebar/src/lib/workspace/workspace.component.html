@@ -12,6 +12,15 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
+  <ame-resize-gutter
+    [(width)]="width"
+    [minWidth]="minWidth"
+    [maxWidth]="maxWidth"
+    [storageKey]="storageKey"
+    edge="end"
+    data-testid="workspace-resize-gutter"
+  ></ame-resize-gutter>
+
   <div class="header">
     <div class="title">
       <h2>{{ t('sidebar.workspace.title') }}</h2>
