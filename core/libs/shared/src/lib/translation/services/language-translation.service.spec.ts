@@ -61,6 +61,7 @@ describe('LanguageTranslationService', () => {
     expect(service.supportedLanguages).toEqual([
       {code: 'en', language: 'ENGLISH'},
       {code: 'zh', language: 'CHINESE'},
+      {code: 'de', language: 'GERMAN'},
     ]);
   });
 
@@ -71,7 +72,7 @@ describe('LanguageTranslationService', () => {
   it('should register the supported languages and set the active language', () => {
     service.initTranslationService('en');
 
-    expect(setAvailableLangs).toHaveBeenCalledWith(['en', 'zh']);
+    expect(setAvailableLangs).toHaveBeenCalledWith(['en', 'zh', 'de']);
     expect(setActiveLang).toHaveBeenCalledWith('en');
   });
 
@@ -96,5 +97,15 @@ describe('LanguageTranslationService', () => {
 
     expect(result).toEqual({loadModal: {title: '加载模型'}});
     expect(service.language).toEqual({loadModal: {title: '加载模型'}});
+  });
+
+  it('should fetch the german translation file', () => {
+    let result: unknown;
+    service.getTranslation('de').subscribe(translation => (result = translation));
+
+    const req = httpMock.expectOne('./assets/i18n/de.json');
+    req.flush({loadModal: {title: 'Modell laden'}});
+
+    expect(result).toEqual({loadModal: {title: 'Modell laden'}});
   });
 });

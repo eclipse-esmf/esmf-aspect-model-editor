@@ -11,9 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ElementOrderStrategy} from '@ame/shared';
 import {Component, inject} from '@angular/core';
 import {FormField} from '@angular/forms/signals';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
@@ -25,10 +28,12 @@ export const editorConfigurationControlName = 'editorConfiguration';
   selector: 'ame-editor-configuration',
   templateUrl: './editor-configuration.component.html',
   styleUrls: ['./editor-configuration.component.scss'],
-  imports: [FormField, MatSlideToggle, MatTooltip, MatIconModule, TranslocoDirective],
+  imports: [FormField, MatSlideToggle, MatTooltip, MatIconModule, MatFormFieldModule, MatSelectModule, TranslocoDirective],
 })
 export class EditorConfigurationComponent {
   protected readonly formService = inject(SettingsFormService);
 
   readonly form = this.formService.settingsForm;
+
+  readonly elementOrderStrategies: ElementOrderStrategy[] = ['formatterDefault', 'keepOrderAfterParent', 'keepOrderAppend'];
 }

@@ -21,6 +21,7 @@ export * from './shared/model-element-cache.service';
 export * from './shared/rdf-loader';
 export * from './shared/rdf-model';
 export * from './shared/rdf-model-util';
+export * from './shared/serialization-metadata';
 export * from './shared/xsd-datatypes';
 export * from './visitor/default-aspect-model-visitor';
 export * from './visitor/default-namespace-visitor';

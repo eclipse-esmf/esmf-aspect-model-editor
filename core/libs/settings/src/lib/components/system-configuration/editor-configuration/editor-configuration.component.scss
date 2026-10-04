@@ -86,3 +86,13 @@
     }
   }
 }
+
+.setting-item__content--select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setting-item__select {
+  min-width: 360px;
+}

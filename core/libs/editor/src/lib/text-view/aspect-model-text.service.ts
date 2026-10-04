@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelService, RdfPort} from '@ame/domain';
+import {LoadedFilesService, ModelApiPort, ModelDocumentService, ModelService, RdfPort} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {catchError, map, Observable, of, switchMap, take, timeout} from 'rxjs';
 
@@ -30,7 +30,7 @@ export class AspectModelTextService {
   private readonly rdfService = inject(RdfPort);
   private readonly modelApiService = inject(ModelApiPort);
   private readonly loadedFilesService = inject(LoadedFilesService);
-  private readonly configurationService = inject(ConfigurationService);
+  private readonly modelDocumentService = inject(ModelDocumentService);
 
   load(): Observable<AspectModelText> {
     const rdfModel = this.loadedFilesService.currentLoadedFile?.rdfModel;
@@ -49,7 +49,9 @@ export class AspectModelTextService {
 
         return this.modelApiService.fetchFormatedAspectModel(serialized, rdfModel.getSourceLocation()).pipe(
           map(formatted =>
-            formatted?.trim() ? {content: this.withCopyright(formatted), formatted: true} : {content: serialized, formatted: false},
+            formatted?.trim()
+              ? {content: this.modelDocumentService.toDocument(formatted, rdfModel), formatted: true}
+              : {content: serialized, formatted: false},
           ),
           catchError(() => of({content: serialized, formatted: false})),
         );
@@ -59,11 +61,5 @@ export class AspectModelTextService {
 
   private hasStatements(serialized: string): boolean {
     return !!serialized && /\S/.test(serialized.replace(/@prefix[^\n]*\n/g, ''));
-  }
-
-  private withCopyright(content: string): string {
-    const copyright = (this.configurationService.getSettings()?.copyrightHeader ?? []).join('\n');
-    // Some formatter versions keep the header themselves; it must not appear twice.
-    return copyright && !content.trimStart().startsWith(copyright) ? `${copyright}\n${content}` : content;
   }
 }

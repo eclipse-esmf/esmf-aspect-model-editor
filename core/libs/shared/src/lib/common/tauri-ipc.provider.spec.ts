@@ -12,8 +12,13 @@
  */
 
 import {TestBed} from '@angular/core/testing';
-import {afterEach, describe, expect, it} from 'vitest';
+import {afterEach, describe, expect, it, vi} from 'vitest';
+import {TAURI_EVENTS} from './enums';
 import {IPC_RENDERER} from './tauri-ipc.provider';
+
+const {invoke} = vi.hoisted(() => ({invoke: vi.fn(() => Promise.resolve())}));
+vi.mock('@tauri-apps/api/core', () => ({invoke}));
+vi.mock('@tauri-apps/api/webviewWindow', () => ({getCurrentWebviewWindow: () => ({label: 'win-1'})}));
 
 describe('IPC_RENDERER Provider', () => {
   const originalTauriApi = (window as any).tauriAPI || (window as any).tauriApi;
@@ -58,6 +63,24 @@ describe('IPC_RENDERER Provider', () => {
     expect(typeof renderer?.openInVsCodeOrDefault).toBe('function');
     expect(typeof renderer?.showContextMenu).toBe('function');
     expect(typeof renderer?.copyToClipboard).toBe('function');
+
+    delete (window as any).__TAURI_INTERNALS__;
+  });
+
+  it('should forward session updates and the restore setting to the Tauri commands', async () => {
+    delete (window as any).tauriAPI;
+    delete (window as any).tauriApi;
+    (window as any).__TAURI_INTERNALS__ = {};
+    TestBed.resetTestingModule();
+    const renderer = TestBed.inject(IPC_RENDERER);
+    invoke.mockClear();
+
+    const models = [{namespace: 'ns', file: 'A.ttl', aspectModelUrn: 'urn:samm:ns#A'}];
+    renderer?.send(TAURI_EVENTS.REQUEST.UPDATE_SESSION, {models, activeIndex: 0});
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('update_session_models', {windowLabel: 'win-1', models, activeIndex: 0}));
+
+    renderer?.send(TAURI_EVENTS.REQUEST.SET_SESSION_RESTORE, false);
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('set_session_restore_enabled', {enabled: false}));
 
     delete (window as any).__TAURI_INTERNALS__;
   });

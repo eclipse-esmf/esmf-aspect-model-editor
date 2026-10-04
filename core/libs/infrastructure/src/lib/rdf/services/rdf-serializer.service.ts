@@ -10,10 +10,32 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
+import {ModelDocumentService} from '@ame/domain';
 import {LanguageTranslationService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {RdfModel, RdfModelUtil, Samm} from '@esmf/aspect-model-loader';
 import {DataFactory, Quad, Util, Writer} from 'n3';
+
+/**
+ * Tracks written statements by value. The n3 store creates new quad objects on every read,
+ * so an identity based set would let statements read twice be written twice.
+ */
+class ProcessedQuads extends Set<Quad> {
+  private readonly quadKeys = new Set<string>();
+
+  private static key(quad: Quad): string {
+    return `${quad.subject.id}\u0000${quad.predicate.id}\u0000${quad.object.id}\u0000${quad.graph.id}`;
+  }
+
+  override add(quad: Quad): this {
+    this.quadKeys?.add(ProcessedQuads.key(quad));
+    return this;
+  }
+
+  override has(quad: Quad): boolean {
+    return this.quadKeys.has(ProcessedQuads.key(quad));
+  }
+}
 
 @Injectable({providedIn: 'root'})
 export class RdfSerializerService {
@@ -25,7 +47,43 @@ export class RdfSerializerService {
     `${Samm.XSD_URI}#double`,
   ]);
 
+  /** Attribute order inside an element, aligned with the formatter of the ESMF SDK. */
+  private static readonly PREDICATE_ORDER = [
+    'extends',
+    'preferredName',
+    'description',
+    'see',
+    'characteristic',
+    'properties',
+    'operations',
+    'events',
+    'input',
+    'output',
+    'dataType',
+    'exampleValue',
+    'value',
+    'property',
+    'optional',
+    'baseCharacteristic',
+    'languageCode',
+    'localeCode',
+    'left',
+    'right',
+    'minValue',
+    'maxValue',
+    'lowerBoundDefinition',
+    'upperBoundDefinition',
+    'defaultValue',
+    'unit',
+    'deconstructionRule',
+    'elements',
+    'values',
+    'integer',
+    'scale',
+  ];
+
   private readonly translation = inject(LanguageTranslationService, {optional: true});
+  private readonly modelDocumentService = inject(ModelDocumentService, {optional: true});
 
   private readonly _namedNode = DataFactory.namedNode;
 
@@ -36,7 +94,17 @@ export class RdfSerializerService {
     const writer = this.initializeWriter(rdfModel);
     if (!writer) return '';
 
-    const processedQuads = new Set<Quad>();
+    const processedQuads = new ProcessedQuads();
+    // the elements are written in the order of the source file, remaining statements follow in store order
+    for (const subject of this.modelDocumentService?.resolveSubjectOrder(rdfModel) ?? []) {
+      const quads = rdfModel.store.getQuads(subject, null, null, null).sort((a, b) => this.comparePredicates(a, b, rdfModel));
+      for (const quad of quads) {
+        if (!this.shouldSkipQuad(quad, processedQuads)) {
+          this.processQuad(quad, rdfModel, writer, processedQuads);
+        }
+      }
+    }
+
     rdfModel.store.forEach(
       quad => {
         if (this.shouldSkipQuad(quad, processedQuads)) return;
@@ -93,6 +161,14 @@ export class RdfSerializerService {
     }
     if (rdfModel?.samm?.getAlias?.() && rdfModel?.samm?.getNamespace?.()) {
       usedPrefixes[rdfModel.samm.getAlias()] = rdfModel.samm.getNamespace();
+    }
+
+    // Prefixes declared in the source file or added by the user are kept even if no statement uses them (anymore).
+    const metadata = rdfModel?.serializationMetadata;
+    for (const [alias, uri] of Object.entries(rdfModel?.getPrefixes?.() ?? {})) {
+      if (alias !== '' && metadata?.isExplicitPrefix(alias)) {
+        usedPrefixes[alias] = uri;
+      }
     }
 
     const prefixEntries = Object.entries(allPrefixes).filter(([alias]) => alias !== '');
@@ -153,6 +229,23 @@ export class RdfSerializerService {
     }
 
     return false;
+  }
+
+  private comparePredicates(a: Quad, b: Quad, rdfModel: RdfModel): number {
+    return this.predicateRank(a, rdfModel) - this.predicateRank(b, rdfModel);
+  }
+
+  private predicateRank(quad: Quad, rdfModel: RdfModel): number {
+    const predicate = quad.predicate.value;
+    if (predicate === `${Samm.RDF_URI}#type`) {
+      return -1;
+    }
+    const isSammPredicate = [rdfModel.samm, rdfModel.sammC].some(vocabulary => {
+      const namespace = vocabulary?.getNamespace?.();
+      return !!namespace && predicate.startsWith(namespace);
+    });
+    const rank = isSammPredicate ? RdfSerializerService.PREDICATE_ORDER.indexOf(predicate.slice(predicate.indexOf('#') + 1)) : -1;
+    return rank < 0 ? RdfSerializerService.PREDICATE_ORDER.length : rank;
   }
 
   private shouldSkipQuad(quad: Quad, processedQuads: Set<Quad>): boolean {

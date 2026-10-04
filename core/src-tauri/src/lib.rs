@@ -14,10 +14,14 @@
 pub mod backend;
 pub mod commands;
 pub mod menu;
+pub mod session;
 
 use backend::{clean_up_backend, start_backend, BackendState};
 use commands::*;
+use session::{SessionState, SessionWindow, SESSION_FILE_NAME};
 use tauri::{Emitter, Manager, RunEvent, WindowEvent};
+
+const SESSION_FLUSH_INTERVAL: std::time::Duration = std::time::Duration::from_secs(1);
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -38,6 +42,7 @@ pub fn run() {
     .manage(BackendState::new())
     .manage(AppWindowState::new())
     .manage(ContextMenuState::new())
+    .manage(SessionState::new())
     .setup(setup_app)
     .on_menu_event(|app, event| {
       // Native menu actions need the backend; ignore them until it is ready.
@@ -46,11 +51,15 @@ pub fn run() {
       }
       menu::handle_menu_click(app, event.id().as_ref());
     })
-    .on_window_event(|window, event| {
-      if let WindowEvent::CloseRequested { api, .. } = event {
+    .on_window_event(|window, event| match event {
+      WindowEvent::CloseRequested { api, .. } => {
         api.prevent_close();
         let _ = window.emit("IS_FILE_SAVED", window.label());
       }
+      WindowEvent::Moved(_) | WindowEvent::Resized(_) => {
+        capture_window_geometry(window, &window.state::<SessionState>());
+      }
+      _ => {}
     })
     .invoke_handler(tauri::generate_handler![
             get_backend_port,
@@ -67,6 +76,8 @@ pub fn run() {
             get_window_data,
             is_first_window,
             close_window,
+            update_session_models,
+            set_session_restore_enabled,
             maximize_window,
             show_context_menu,
             set_window_title,
@@ -82,6 +93,7 @@ pub fn run() {
 fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
   init_logging(app);
   setup_menu(app);
+  restore_session(app);
 
   start_backend(
     app.handle(),
@@ -89,6 +101,57 @@ fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
   );
 
   Ok(())
+}
+
+/// Reopens the windows of the last session with their models and geometry.
+/// The frontend of each window checks whether the models still exist.
+fn restore_session(app: &tauri::App) {
+  let Ok(config_dir) = app.path().app_config_dir() else {
+    return;
+  };
+
+  let session_state = app.state::<SessionState>();
+  let windows = session_state.load(config_dir.join(SESSION_FILE_NAME)).restorable_windows();
+  let stamp = std::time::SystemTime::now()
+    .duration_since(std::time::UNIX_EPOCH)
+    .map(|d| d.as_millis())
+    .unwrap_or_default();
+
+  let restored: Vec<SessionWindow> = windows
+    .into_iter()
+    .enumerate()
+    .map(|(index, window)| SessionWindow {
+      label: if index == 0 { "main".to_string() } else { format!("win-{}-{}", stamp, index) },
+      ..window
+    })
+    .collect();
+  session_state.replace_windows(restored.clone());
+
+  let window_state = app.state::<AppWindowState>();
+  for window in &restored {
+    if let (Some(options), Ok(mut map)) = (window.startup_options(), window_state.windows_options.lock()) {
+      map.insert(window.label.clone(), options);
+    }
+
+    if window.geometry.is_some() {
+      session_state.mark_restored(&window.label);
+    }
+
+    if window.label == "main" {
+      if let (Some(main), Some(geometry)) = (app.get_webview_window("main"), window.geometry) {
+        apply_window_geometry(&main, &geometry);
+      }
+    } else if let Err(err) = build_editor_window(app.handle(), &window.label, window.geometry) {
+      log::warn!("Unable to restore window {}: {}", window.label, err);
+      session_state.remove_window(&window.label);
+    }
+  }
+
+  let handle = app.handle().clone();
+  std::thread::spawn(move || loop {
+    std::thread::sleep(SESSION_FLUSH_INTERVAL);
+    handle.state::<SessionState>().flush();
+  });
 }
 
 fn init_logging(app: &tauri::App) {
@@ -129,6 +192,7 @@ fn handle_app_event(app_handle: &tauri::AppHandle, event: RunEvent) {
   }
 
   if matches!(event, RunEvent::ExitRequested { .. } | RunEvent::Exit) {
+    app_handle.state::<SessionState>().flush();
     clean_up_backend(&app_handle.state::<BackendState>());
   }
 }

@@ -14,6 +14,7 @@
 import {Parser, Prefixes, Store} from 'n3';
 import {Observable, Subject} from 'rxjs';
 import {RdfModel} from './rdf-model';
+import {SerializationMetadata} from './serialization-metadata';
 
 export class RdfLoader {
   /**
@@ -25,6 +26,7 @@ export class RdfLoader {
     const store: Store = new Store();
     let rdfModel: RdfModel | null = null;
     const parsedRdf: string[] = [];
+    const orderedSubjects: string[] = [];
 
     payloads.forEach(payload => {
       new Parser().parse(payload.rdfAspectModel, (error, quad, prefixes: Prefixes<any>) => {
@@ -36,12 +38,17 @@ export class RdfLoader {
 
         if (quad) {
           store.addQuad(quad);
+          // the parser emits the statements in document order
+          if (quad.subject.termType === 'NamedNode') {
+            orderedSubjects.push(quad.subject.value);
+          }
         } else if (prefixes) {
           // content is parsed at that point. push rdf to parsed array
           if (!rdfModel) {
             rdfModel = new RdfModel(store);
             rdfModel.setPrefixes(prefixes as Record<string, string>);
             rdfModel.setSourceLocation(payload.sourceLocation);
+            rdfModel.serializationMetadata.headerComments = SerializationMetadata.extractHeaderComments(payload.rdfAspectModel);
           }
 
           for (const [key, value] of Object.entries(prefixes)) {
@@ -49,7 +56,12 @@ export class RdfLoader {
             if (key === '' && rdfModel.getPrefixes()[key]) continue;
             const prefixValue = typeof value === 'string' ? value : ((value as any)?.value ?? String(value));
             rdfModel.addPrefix(key, prefixValue);
+            if (rdfModel.getPrefixes()[key] === prefixValue) {
+              rdfModel.serializationMetadata.markPrefixExplicit(key);
+            }
           }
+          orderedSubjects.forEach(iri => rdfModel.serializationMetadata.recordSubject(iri));
+          orderedSubjects.length = 0;
           parsedRdf.push(payload.rdfAspectModel);
         }
 

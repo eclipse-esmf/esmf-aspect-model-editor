@@ -43,6 +43,7 @@ import {ConfirmDialogService} from './confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from './editor-dialog';
 import {EditorService} from './editor.service';
 import {ModelSaverService} from './model-saver.service';
+import {PrefixManagementService} from './prefixes/prefix-management.service';
 
 describe('EditorService', () => {
   let service: EditorService;
@@ -165,6 +166,7 @@ describe('EditorService', () => {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),
         MockProvider(ElementCreatorService),
+        MockProvider(PrefixManagementService, {ensurePrefixForReference: vi.fn(() => of(null))}),
         {provide: ModelElementNamingService, useValue: mockNamingService},
       ],
     });
@@ -303,5 +305,6 @@ describe('EditorService', () => {
 
     expect(nodeWithChildren.children).toHaveLength(0);
     expect(maxgraphService.setCoordinatesForNextCellRender).toHaveBeenCalledWith(100, 150);
+    expect(TestBed.inject(PrefixManagementService).ensurePrefixForReference).toHaveBeenCalledWith('urn:ext:1.0.0#extProp');
   });
 });

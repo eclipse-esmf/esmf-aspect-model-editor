@@ -11,15 +11,26 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GraphNavigatorPort, ModelValidationStore, TabsStore, ViolationError} from '@ame/domain';
+import {
+  ConfigurationService,
+  GraphNavigatorPort,
+  LoadedFilesService,
+  ModelDocumentService,
+  ModelValidationStore,
+  TabsStore,
+  ViolationError,
+} from '@ame/domain';
 import {MaxGraphHelper, MaxGraphShapeSelectorService} from '@ame/graph';
 import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TranslocoTestingModule} from '@jsverse/transloco';
-import {of, throwError} from 'rxjs';
+import {BehaviorSubject, of, Subject, throwError} from 'rxjs';
 import {afterEach, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
+import {ModelSavingTrackerService} from '../model-saving-tracker.service';
+import {PrefixManagementService} from '../prefixes/prefix-management.service';
+import {TabStateService} from '../tabs/tab-state.service';
 import {AspectModelTextViewComponent} from './aspect-model-text-view.component';
 import {AspectModelText, AspectModelTextService} from './aspect-model-text.service';
 import {EditorViewModeService, TextViewRevealRequest} from './editor-view-mode.service';
@@ -56,6 +67,11 @@ describe('AspectModelTextViewComponent', () => {
   };
   let fileHandling: {copyToClipboardSync: ReturnType<typeof vi.fn>};
   let notifications: {info: ReturnType<typeof vi.fn>};
+  let modelDocument: {sortAlphabetically: ReturnType<typeof vi.fn>};
+  let tabState: {setTabDirty: ReturnType<typeof vi.fn>; activeTabId: ReturnType<typeof signal<string>>};
+  let settings$: BehaviorSubject<any>;
+  const rdfModel = {};
+  let prefixManagement: {openManagement: ReturnType<typeof vi.fn>; prefixesChanged$: Subject<void>};
 
   const query = (testId: string): HTMLElement => fixture.nativeElement.querySelector(`[data-testid="${testId}"]`);
 
@@ -67,6 +83,8 @@ describe('AspectModelTextViewComponent', () => {
     await fixture.whenStable();
     // CodeMirror is loaded lazily.
     await vi.waitFor(() => expect(fixture.nativeElement.querySelector('.cm-editor')).toBeTruthy());
+    // the text is created debounced
+    await vi.waitFor(() => expect(component.state()).not.toBe('loading'));
     fixture.detectChanges();
   }
 
@@ -83,6 +101,10 @@ describe('AspectModelTextViewComponent', () => {
     };
     fileHandling = {copyToClipboardSync: vi.fn()};
     notifications = {info: vi.fn()};
+    modelDocument = {sortAlphabetically: vi.fn()};
+    prefixManagement = {openManagement: vi.fn(), prefixesChanged$: new Subject<void>()};
+    tabState = {setTabDirty: vi.fn(), activeTabId: signal('tab-1')};
+    settings$ = new BehaviorSubject({elementOrderStrategy: 'keepOrderAfterParent'});
 
     TestBed.configureTestingModule({
       imports: [AspectModelTextViewComponent, TranslocoTestingModule.forRoot({langs: {en: {}}})],
@@ -95,7 +117,13 @@ describe('AspectModelTextViewComponent', () => {
         {provide: TabsStore, useValue: {activeTabId: signal('tab-1')}},
         {provide: FileHandlingService, useValue: fileHandling},
         {provide: NotificationsService, useValue: notifications},
-        {provide: LanguageTranslationService, useValue: {language: {textView: {copied: 'Copied'}}}},
+        {provide: LanguageTranslationService, useValue: {language: {textView: {copied: 'Copied', sorted: 'Sorted'}}}},
+        {provide: ModelDocumentService, useValue: modelDocument},
+        {provide: LoadedFilesService, useValue: {currentLoadedFile: {rdfModel}}},
+        {provide: ModelSavingTrackerService, useValue: {isSaved$: of(false)}},
+        {provide: TabStateService, useValue: tabState},
+        {provide: PrefixManagementService, useValue: prefixManagement},
+        {provide: ConfigurationService, useValue: {settings$}},
       ],
     });
   });
@@ -140,7 +168,7 @@ describe('AspectModelTextViewComponent', () => {
     (query('text-view-error').querySelector('button') as HTMLButtonElement).click();
     fixture.detectChanges();
 
-    expect(component.state()).toBe('ready');
+    await vi.waitFor(() => expect(component.state()).toBe('ready'));
   });
 
   it('reloads the text when the graph changes', async () => {
@@ -149,9 +177,44 @@ describe('AspectModelTextViewComponent', () => {
 
     graphVersion.set(1);
     fixture.detectChanges();
+    graphVersion.set(2);
+    fixture.detectChanges();
     await fixture.whenStable();
 
+    // bursts of graph changes only create the text once
+    await vi.waitFor(() => expect(textService.load).toHaveBeenCalledTimes(2));
+    await new Promise(resolve => setTimeout(resolve, 300));
     expect(textService.load).toHaveBeenCalledTimes(2);
+  });
+
+  it('sorts the elements alphabetically and marks the tab as changed', async () => {
+    await render();
+
+    query('text-view-sort').click();
+
+    expect(modelDocument.sortAlphabetically).toHaveBeenCalledWith(rdfModel);
+    expect(tabState.setTabDirty).toHaveBeenCalledWith('tab-1', true);
+    expect(notifications.info).toHaveBeenCalledWith(expect.objectContaining({title: 'Sorted'}));
+    await vi.waitFor(() => expect(textService.load).toHaveBeenCalledTimes(2));
+  });
+
+  it('opens the prefix management and shows changed prefixes', async () => {
+    await render();
+
+    query('text-view-prefixes').click();
+    expect(prefixManagement.openManagement).toHaveBeenCalled();
+
+    prefixManagement.prefixesChanged$.next();
+    await vi.waitFor(() => expect(textService.load).toHaveBeenCalledTimes(2));
+  });
+
+  it('disables sorting when the formatter defines the element order', async () => {
+    settings$.next({elementOrderStrategy: 'formatterDefault'});
+    await render();
+
+    expect((query('text-view-sort') as HTMLButtonElement).disabled).toBe(true);
+    component.sortAlphabetically();
+    expect(modelDocument.sortAlphabetically).not.toHaveBeenCalled();
   });
 
   it('scrolls to the element selected in the graph', async () => {

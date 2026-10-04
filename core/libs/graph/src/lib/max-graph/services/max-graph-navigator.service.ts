@@ -12,18 +12,26 @@
  */
 
 import {GraphNavigatorPort} from '@ame/domain';
-import {mxCellSearchOption, SearchService} from '@ame/shared';
+import {FullTextSearchIndex, FullTextSearchResult, SearchField} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {Cell} from '@maxgraph/core';
 import {MaxGraphHelper} from '../helpers/max-graph-helper';
 import {MaxGraphService} from './max-graph.service';
+
+export function namedElementSearchFields(element: NamedElement): SearchField[] {
+  const fields: SearchField[] = [{key: 'name', value: element.name}];
+  element.getPreferredNames?.()?.forEach((value, lang) => fields.push({key: 'preferredName', value, lang}));
+  element.getDescriptions?.()?.forEach((value, lang) => fields.push({key: 'description', value, lang}));
+  if (element.aspectModelUrn) {
+    fields.push({key: 'urn', value: element.aspectModelUrn});
+  }
+  return fields;
+}
 
 /** maxGraph based implementation of the {@link GraphNavigatorPort} port. */
 @Injectable({providedIn: 'root'})
 export class MaxGraphNavigatorService extends GraphNavigatorPort {
   private readonly maxGraphService = inject(MaxGraphService);
-  private readonly searchService = inject(SearchService);
 
   readonly isModelEmpty = this.maxGraphService.isModelEmpty;
   readonly graphVersion = this.maxGraphService.graphVersion;
@@ -34,11 +42,13 @@ export class MaxGraphNavigatorService extends GraphNavigatorPort {
   }
 
   searchElements(query: string): NamedElement[] {
-    return (
-      this.searchService
-        .search<Cell>(query, this.maxGraphService.getAllCells(), mxCellSearchOption)
-        ?.map(cell => MaxGraphHelper.getModelElement(cell)) ?? []
-    );
+    return this.searchElementsWithDetails(query).map(result => result.item);
+  }
+
+  searchElementsWithDetails(query: string): FullTextSearchResult<NamedElement>[] {
+    // The index is cheap to build (a few ms for thousands of elements) and always reflects the latest names and descriptions.
+    const elements = [...new Set(this.getVisibleModelElements())];
+    return new FullTextSearchIndex(elements, namedElementSearchFields).search(query);
   }
 
   isElementRendered(element: NamedElement): boolean {

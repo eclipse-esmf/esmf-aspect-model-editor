@@ -35,13 +35,25 @@
     <mat-icon matSuffix>view_comfy_alt</mat-icon>
 
     <mat-autocomplete class="search-autocomplete" #auto="matAutocomplete">
+      @if (approximateResults(); as approximate) {
+        <mat-option class="list-info" disabled data-testid="searchApproximateResults">
+          {{ approximate === 'partial' ? t('searches.elements.partialMatches') : t('searches.elements.fuzzyMatches') }}
+        </mat-option>
+      }
       @for (item of transformedElements(); track item.element) {
         <mat-option class="list-option" (click)="openElement(item.element)">
           <div [class.has-external-element]="loadedFiles.isElementExtern(item.element) && !item.element.isPredefined">
             <ame-element
               [type]="item"
               [name]="item.element.name"
-              [description]="item.element.aspectModelUrn"
+              [description]="
+                item.hint
+                  ? t('searches.elements.fields.' + item.hint.key) +
+                    (item.hint.lang ? ' (' + item.hint.lang + ')' : '') +
+                    ': ' +
+                    item.hint.value
+                  : item.element.aspectModelUrn
+              "
               [disabledTooltipDescriptionLength]="100"
               [disabledTooltipNameLength]="60"
               size="medium"

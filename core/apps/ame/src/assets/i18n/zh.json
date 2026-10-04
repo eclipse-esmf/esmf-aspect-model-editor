@@ -117,7 +117,8 @@
     "hideNavigation": "隐藏导航",
     "showNavigation": "显示导航",
     "modelUnfiltered": "不过滤Model",
-    "modelFilteredByProperties": "根据properties过滤Model"
+    "modelFilteredByProperties": "根据properties过滤Model",
+    "prefixes": "前缀"
   },
   "loadMenu": {
     "newWindow": "新窗口",
@@ -405,7 +406,16 @@
       "darkModeTooltip": "切换编辑器和画布的暗黑模式主题。",
       "autoValidationTooltip": "完成一次验证后，经过等待时间后，将触发下一次自动验证。",
       "autoFormattingTooltip": "自动设置图表上元素的格式。",
-      "displayDisambiguationLabelTooltip": "显示需要消歧的关系标签，例如操作输入/输出、特征左/右以及设置了 notInPayload 的属性。"
+      "displayDisambiguationLabelTooltip": "显示需要消歧的关系标签，例如操作输入/输出、特征左/右以及设置了 notInPayload 的属性。",
+      "elementOrder": "保存时的元素顺序",
+      "elementOrderTooltip": "定义保存的 Turtle 文件中元素的顺序。保留文件原有顺序可使 Git 差异保持较小。元素内部的属性顺序始终遵循 SAMM 规范。",
+      "elementOrderOptions": {
+        "keepOrderAfterParent": "保留顺序，新元素插入到其父元素之后",
+        "keepOrderAppend": "保留顺序，新元素追加到末尾",
+        "formatterDefault": "ESMF SDK 格式化程序的顺序"
+      },
+      "restoreSession": "启动时恢复已打开的模型",
+      "restoreSessionTooltip": "重新打开上次会话中已保存的工作区模型，并恢复其窗口大小和位置（仅限桌面应用）。已关闭的模型不会被重新打开。"
     },
     "languages": {
       "aspectModel": "Aspect Model",
@@ -413,6 +423,7 @@
       "chooseLanguage": "选择语言",
       "english": "英语",
       "chinese": "中文",
+      "german": "德语",
       "addLanguage": "增加语言",
       "selectLanguage": "选择语言",
       "startType": "开始键入或者删除本行"
@@ -678,6 +689,16 @@
         "openInNewTab": "在新标签页打开",
         "openInNewWindow": "在新窗口打开"
       }
+    },
+    "elements": {
+      "partialMatches": "没有元素包含所有搜索词。显示最接近的结果。",
+      "fuzzyMatches": "没有完全匹配的结果。显示相似的元素。",
+      "fields": {
+        "name": "名称",
+        "preferredName": "首选名称",
+        "description": "描述",
+        "urn": "URN"
+      }
     }
   },
   "entityValue": {
@@ -748,7 +769,11 @@
     "loading": "正在准备方面模型文本...",
     "empty": "模型为空。请在图形视图中添加元素以查看其 Turtle 表示。",
     "loadError": "无法创建方面模型的文本表示。",
-    "retry": "重试"
+    "retry": "重试",
+    "sortAlphabetically": "按字母顺序排列元素",
+    "sortAlphabeticallyDisabled": "当元素顺序由格式化程序定义时不可用（设置 > 编辑器）",
+    "sorted": "元素已按字母顺序排列。保存模型以将新顺序写入文件。",
+    "prefixes": "管理前缀"
   },
   "menu": {
     "file": {
@@ -812,5 +837,47 @@
       "elements": "元素",
       "files": "文件"
     }
+  },
+  "prefixes": {
+    "prefix": "前缀",
+    "namespace": "命名空间",
+    "management": {
+      "title": "前缀",
+      "description": "前缀只是命名空间的简写。重命名前缀只会改变 IRI 在文件中的写法，IRI 本身保持不变。",
+      "status": "状态",
+      "used": "已使用",
+      "unused": "未使用",
+      "default": "（默认）",
+      "protected": "此前缀属于模型或 SAMM/RDF 词汇表，无法更改",
+      "rename": "重命名前缀",
+      "save": "保存",
+      "cancel": "取消",
+      "remove": "删除前缀",
+      "addTitle": "添加前缀",
+      "add": "添加",
+      "close": "关闭"
+    },
+    "reference": {
+      "title": "引用命名空间的前缀",
+      "description": "该元素来自一个在此 Aspect Model 中尚无前缀的命名空间。请选择文件中使用的前缀。",
+      "conflict": "被引用的文件使用前缀 \"{{ alias }}\"，但在此 Aspect Model 中它已表示 {{ namespace }}。请选择其他前缀。",
+      "example": "该元素将写为",
+      "automatic": "使用自动前缀",
+      "add": "添加前缀"
+    },
+    "errors": {
+      "invalidAlias": "前缀必须以字母开头，只能包含字母、数字、\"_\"、\"-\" 和 \".\"（不能在末尾）。不能使用保留前缀。",
+      "invalidNamespace": "请输入有效的命名空间 IRI，例如 https://example.org/battery#",
+      "aliasInUse": "该前缀已用于其他命名空间。",
+      "aliasInUseBy": "该前缀已用于 {{ namespace }}。",
+      "namespaceInUse": "该命名空间已有前缀。",
+      "unknownAlias": "该前缀不存在。",
+      "protectedAlias": "此前缀无法更改。",
+      "prefixInUse": "模型元素正在使用该前缀，无法删除。"
+    }
+  },
+  "session": {
+    "modelNotFound": "找不到所需的 Aspect Model {{name}}。",
+    "modelNotRestored": "无法恢复 Aspect Model {{name}}。"
   }
 }

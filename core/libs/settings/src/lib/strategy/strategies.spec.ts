@@ -11,9 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorValidationPort, GraphSettingsPort, ModelSaverPort, ModelSessionFacade, UiShellStore} from '@ame/domain';
+import {ConfigurationService, EditorValidationPort, GraphSettingsPort, ModelSaverPort, ModelSessionFacade, UiShellStore} from '@ame/domain';
 import {LanguageTranslationService, TauriTunnelPort, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
+import {RdfModel} from '@esmf/aspect-model-loader';
+import {Store} from 'n3';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {Settings, SettingsFormData} from '../model';
 import {
@@ -60,6 +62,8 @@ describe('Settings Update Strategies', () => {
         enableHierarchicalLayout: true,
         showConnectionLabels: true,
         darkMode: true,
+        elementOrderStrategy: 'keepOrderAppend',
+        restoreSession: false,
       },
       languageConfiguration: {
         userInterface: 'de',
@@ -142,6 +146,8 @@ describe('Settings Update Strategies', () => {
       expect(initialSettings.enableHierarchicalLayout).toBe(true);
       expect(initialSettings.showConnectionLabels).toBe(true);
       expect(initialSettings.darkMode).toBe(true);
+      expect(initialSettings.elementOrderStrategy).toBe('keepOrderAppend');
+      expect(initialSettings.restoreSession).toBe(false);
       expect(themeService.setDarkMode).toHaveBeenCalledWith(true);
       expect(maxGraphSettingsService.formatShapes).toHaveBeenCalledWith(true);
     });
@@ -215,12 +221,28 @@ describe('Settings Update Strategies', () => {
 
   describe('CopyrightHeaderUpdateStrategy', () => {
     let strategy: CopyrightHeaderUpdateStrategy;
+    let modelSession: {currentLoadedFile: {rdfModel: RdfModel} | null};
 
     beforeEach(() => {
+      modelSession = {currentLoadedFile: null};
       TestBed.configureTestingModule({
-        providers: [CopyrightHeaderUpdateStrategy],
+        providers: [
+          CopyrightHeaderUpdateStrategy,
+          {provide: ModelSessionFacade, useValue: modelSession},
+          {provide: ConfigurationService, useValue: {getSettings: () => initialSettings}},
+        ],
       });
       strategy = TestBed.inject(CopyrightHeaderUpdateStrategy);
+    });
+
+    it('should update the header of the current file', () => {
+      const rdfModel = new RdfModel(new Store(), '2.2.0');
+      rdfModel.serializationMetadata.headerComments = ['# Old'];
+      modelSession.currentLoadedFile = {rdfModel};
+
+      strategy.updateSettings(mockFormData, initialSettings);
+
+      expect(rdfModel.serializationMetadata.headerComments).toEqual(['# Line 1', '# Line 2', '']);
     });
 
     it('should split copyright lines and update settings', () => {

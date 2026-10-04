@@ -11,7 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelInstantiatorPort, NamespaceFile} from '@ame/domain';
+import {
+  ConfigurationService,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelDocumentService,
+  ModelInstantiatorPort,
+  NamespaceFile,
+} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {BrowserService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
@@ -78,6 +85,7 @@ describe('ModelLoaderService', () => {
           getSettings: vi.fn(() => ({copyrightHeader: []}) as any),
         }),
         MockProvider(TitleService, {updateTitle: vi.fn()}),
+        MockProvider(ModelDocumentService, {bindElements: vi.fn()}),
       ],
     });
 
@@ -120,5 +128,29 @@ describe('ModelLoaderService', () => {
 
     expect(caughtError).toBeDefined();
     expect(loadedFilesService.restoreFiles).toHaveBeenCalled();
+  });
+
+  it('loadSingleModel should bind the elements of the loaded file to their position and keep the global header settings', async () => {
+    const settings = {copyrightHeader: ['# global header']};
+    vi.mocked(TestBed.inject(ConfigurationService).getSettings).mockReturnValue(settings as any);
+    const modelDocumentService = TestBed.inject(ModelDocumentService);
+
+    const payload = {
+      rdfAspectModel: `# file header
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix : <urn:samm:com.example:1.0.0#> .
+:Aspect a samm:Aspect ;
+   samm:properties ( ) ;
+   samm:operations ( ) .`,
+      aspectModelUri: '',
+      namespaceFileName: 'com.example:1.0.0:Aspect.ttl',
+    };
+
+    await new Promise((resolve, reject) => service.loadSingleModel(payload).subscribe({next: resolve, error: reject}));
+
+    expect(modelDocumentService.bindElements).toHaveBeenCalled();
+    expect(vi.mocked(modelDocumentService.bindElements).mock.calls.every(([rdfModel]) => rdfModel instanceof RdfModel)).toBe(true);
+    // The header is kept per file; loading a model must not overwrite the configured header.
+    expect(settings.copyrightHeader).toEqual(['# global header']);
   });
 });

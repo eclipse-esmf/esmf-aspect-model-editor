@@ -21,7 +21,7 @@ const SERIALIZED = '@prefix : <urn:samm:org.example:1.0.0#> .\n:A a :B .\n';
 
 describe('AspectModelTextService', () => {
   let service: AspectModelTextService;
-  let rdfModel: {getSourceLocation: ReturnType<typeof vi.fn>};
+  let rdfModel: {getSourceLocation: ReturnType<typeof vi.fn>; serializationMetadata?: {headerComments: string[]}};
   let loadedFiles: {currentLoadedFile: any};
   let modelService: {synchronizeModelToRdf: ReturnType<typeof vi.fn>};
   let rdfService: {serializeModel: ReturnType<typeof vi.fn>};
@@ -55,7 +55,12 @@ describe('AspectModelTextService', () => {
     expect(modelService.synchronizeModelToRdf).toHaveBeenCalled();
     expect(rdfService.serializeModel).toHaveBeenCalledWith(rdfModel);
     expect(modelApi.fetchFormatedAspectModel).toHaveBeenCalledWith(SERIALIZED, 'file:///Movement.ttl');
-    expect(result).toEqual({content: '# Copyright\nformatted\n', formatted: true});
+    expect(result).toEqual({content: '# Copyright\n\nformatted\n', formatted: true});
+  });
+
+  it('uses the header of the loaded file instead of the configured default', async () => {
+    rdfModel.serializationMetadata = {headerComments: ['# File header']};
+    expect(await firstValueFrom(service.load())).toEqual({content: '# File header\nformatted\n', formatted: true});
   });
 
   it('omits an empty copyright header', async () => {

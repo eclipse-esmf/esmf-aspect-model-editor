@@ -267,4 +267,30 @@ describe('TabStateService', () => {
     expect(service.activeTab()?.file).toBe('Truck.ttl');
     expect(service.activeTabId()).toBe('com.examples:1.0.0:Truck.ttl');
   });
+
+  it('should mark the active tab as workspace model after the first save', () => {
+    const newModel = {
+      name: 'new-model.ttl',
+      namespace: 'org.eclipse.examples:1.0.0',
+      absoluteName: 'org.eclipse.examples:1.0.0:new-model.ttl',
+      aspect: null,
+    } as unknown as NamespaceFile;
+    service.onModelLoaded(newModel, false);
+
+    const saved = {
+      ...newModel,
+      rdfModel: {
+        store: {
+          getSubjects: () => [
+            {termType: 'BlankNode', value: 'n3-1'},
+            {termType: 'NamedNode', value: 'urn:samm:org.eclipse.examples:1.0.0#property'},
+          ],
+        },
+      },
+    } as unknown as NamespaceFile;
+    service.markActiveTabInWorkspace(saved);
+
+    expect(service.activeTab()?.fromWorkspace).toBe(true);
+    expect(service.activeTab()?.aspectModelUrn).toBe('urn:samm:org.eclipse.examples:1.0.0#property');
+  });
 });

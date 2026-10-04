@@ -23,6 +23,9 @@ export const mxCellSearchOption = {
   includeScore: true,
   keys: ['id'],
   threshold: 0.1,
+  // Without this, Fuse penalizes matches by their distance to the beginning of the name, so that e.g.
+  // "exhaustion" is not found in "capacityThresholdExhaustion".
+  ignoreLocation: true,
 };
 
 export const filesSearchOption = {

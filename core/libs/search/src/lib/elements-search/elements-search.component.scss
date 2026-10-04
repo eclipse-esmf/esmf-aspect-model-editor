@@ -98,6 +98,12 @@ $top: 100px;
   display: block !important;
 }
 
+.list-info {
+  font-size: 12px;
+  font-style: italic;
+  min-height: 32px;
+}
+
 .open-icon {
   margin-top: 10px;
   color: var(--ame-gray-600, #686868);

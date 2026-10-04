@@ -1,0 +1,880 @@
+{
+  "loadModal": {
+    "title": "Modell laden",
+    "content": "Füge dein Aspect Model in das Feld unten ein, um es zu laden.",
+    "fieldLabel": "Hier einfügen",
+    "loadModelButton": "Modell laden",
+    "cancel": "Abbrechen"
+  },
+  "saveModalDialog": {
+    "title": "Möchtest du die Änderungen speichern?",
+    "content": "Deine Änderungen gehen verloren, wenn du sie nicht speicherst.",
+    "continueButton": "Abbrechen",
+    "discardButton": "Nicht speichern",
+    "saveButton": "Speichern"
+  },
+  "sammMigration": {
+    "checkWorkspace": "Workspace wird geprüft...",
+    "migrateToSamm": "'Migration zu SAMM...'",
+    "awaitingStatus": "Bitte warten, bis alle Dateien ",
+    "checked": "geprüft sind",
+    "migrated": "migriert sind",
+    "migrateWorkspaceDialog": {
+      "migrateWorkspace": "Workspace wird migriert...",
+      "awaitingStatus": "Bitte warten, bis alle Dateien migriert sind"
+    },
+    "workspaceMigrationDialog": {
+      "title": "Workspace zu SAMM migrieren",
+      "fileVersionWarning": "Dein Workspace enthält mindestens eine Datei mit einer SAMM-Version unter",
+      "migrationNeeded": "und muss migriert werden.",
+      "migrateInstruction": "Klicke auf „Migrieren“, um die Migration zu starten.",
+      "versionAutoUpgrade": "Namespace-Versionen automatisch erhöhen.",
+      "upgradeEffect": "Wenn ausgewählt, erhalten alle migrierten Namespaces eine neue Major-Version, um das SAMM-Upgrade abzubilden. Existiert die neue Version bereits, wird eine Warnung angezeigt und es werden keine Änderungen vorgenommen. Der bisherige Inhalt wird als Backup gesichert.",
+      "cancel": "Abbrechen",
+      "migrate": "Migrieren"
+    },
+    "migrationDialog": {
+      "title": "Migration",
+      "successContent": "Die Migration wurde erfolgreich abgeschlossen.",
+      "errorContent": "Die Migration ist fehlgeschlagen. Bitte versuche es erneut oder wende dich an den Support.",
+      "warningContent": "Die Migration wurde mit Warnungen abgeschlossen. Bitte prüfe die Details unten.",
+      "migrationFailedTitle": "Migration fehlgeschlagen",
+      "migrationMessage": "Migrationsmeldung",
+      "close": "Schließen"
+    },
+    "sidebar": {
+      "message": "Es wurden Dateien mit einer älteren SAMM-Version gefunden.",
+      "button": "Migrieren"
+    }
+  },
+  "notificationService": {
+    "cannotDeleteEdgeTitle": "Verbindung kann nicht entfernt werden",
+    "cannotDeleteEdgeMessage": "Verbindungen von Elementen aus einem externen Namespace können nicht entfernt werden.",
+    "cannotDeleteEdgeFilteredMessage": "Verbindungen können nur entfernt werden, solange das Modell nicht gefiltert ist.",
+    "onlyTwoElementsConnection": "Bitte wähle genau zwei Elemente aus, um sie zu verbinden",
+    "referneceConnectionError": "Referenz kann nicht verbunden werden",
+    "recursiveElements": "Rekursive Elemente",
+    "circularConnectionMessage": "Die Elemente können wegen einer zirkulären Verbindung nicht verbunden werden",
+    "missingParentEntity": "Keine Entity als Parent vorhanden",
+    "abstractPropertyParentRequirement": "Eine der Properties/Abstract Properties muss eine Entity/Abstract Entity als Parent haben",
+    "illegalOperationMessage": "Unzulässige Operation",
+    "propertyExtensionConflict": "Eine Property, die bereits ein anderes Element erweitert, kann nicht erweitert werden",
+    "modelEmptyMessage": "Das Modell darf nicht leer sein",
+    "modelMinimumElementRequirement": "Für ein gültiges Modell muss mindestens ein Element existieren",
+    "namespaceExportFailure": "Fehler beim Namespace-Export",
+    "internalExportError": "Das Paket konnte wegen eines internen Fehlers nicht exportiert werden",
+    "summaryClipboardSuccess": "Zusammenfassung in die Zwischenablage kopiert",
+    "summaryClipboardFailure": "Fehler beim Kopieren der Zusammenfassung in die Zwischenablage",
+    "childForPredefinedElementError": "Ein vordefiniertes Element kann kein Child haben",
+    "loadingError": "Fehler beim Laden des Aspect Models. Das vorherige Aspect Model wird wiederhergestellt",
+    "copiedToClipboardMessage": "Das Aspect Model wurde in die Zwischenablage kopiert (als ttl-Code)",
+    "exportingTitleError": "Fehler beim Exportieren des Aspect Models",
+    "renamedFileTitle": "Modelldatei wurde umbenannt",
+    "renamedFileMessage": "Die Datei {{oldFile}} wurde in {{newFile}} umbenannt",
+    "packageImportedSuccess": "Paket wurde importiert",
+    "packageImportedError": "Etwas ist schiefgelaufen. Bitte lade die Namespaces erneut hoch",
+    "fileAddedSuccessTitle": "Datei erfolgreich hinzugefügt",
+    "fileAddedSuccessMessage": "Deine Datei wurde erfolgreich zum Workspace hinzugefügt.",
+    "fileAddedErrorTitle": "Fehler beim Hinzufügen der Datei",
+    "fileAddedErrorMessage": "Beim Hinzufügen der Datei zu deinem Workspace ist ein Problem aufgetreten. Bitte versuche es erneut. Besteht das Problem weiterhin, wende dich an unser Support-Team.",
+    "validationInProgress": "Validierung läuft",
+    "validationErrorTitle": "Validierung mit Fehlern abgeschlossen",
+    "validationErrorMessage": "Die Validierung konnte leider nicht abgeschlossen werden. Bitte versuche es erneut oder wende dich an den Support",
+    "aspectSavedSuccess": "Das Aspect Model wurde im lokalen Ordner gespeichert",
+    "aspectSavedError": "Fehler beim Speichern des Aspect Models",
+    "aspectSavedEmptyModel": "Ein leeres Modell kann nicht gespeichert werden.",
+    "aspectMissingTitle": "Aspect Model fehlt",
+    "aspectSavedDefaultModel": "Ein Modell mit dem Standardnamen \"new-model.ttl\" kann nicht gespeichert werden. Benenne es zuerst unter Einstellungen > Namespaces um.",
+    "aspectMissingContent": "Um mit der Modellierung zu beginnen, erstelle zuerst ein neues Modell oder lade ein vorhandenes. Danach kannst du neue Knotentypen hinzufügen",
+    "loadModelInfoTitle": "Modell laden, um fortzufahren",
+    "loadModelInfoMessage": "Um den Dateiinhalt anzuzeigen, lade bitte zuerst ein Modell.",
+    "fallbackToDefaultLanguageTitle": "Standardsprache wird verwendet.",
+    "fallbackToDefaultLanguageDescMessage": "Die angegebene Sprache für die Beschreibung von {{subject}} wurde in {{fileName}} nicht gefunden. Es werden die Standardspracheinstellungen verwendet.",
+    "fallbackToDefaultLanguagePrefMessage": "Die angegebene Sprache für den bevorzugten Namen von {{subject}} wurde in {{fileName}} nicht gefunden. Es werden die Standardspracheinstellungen verwendet."
+  },
+  "toolbar": {
+    "newLoad": "Neu/Laden",
+    "save": "Speichern",
+    "addFileToNamespace": "Datei zum Namespace hinzufügen",
+    "editHighlightedCell": "Markierte Zelle bearbeiten",
+    "delete": "Löschen",
+    "collapseAll": "Alle einklappen",
+    "expandAll": "Alle ausklappen",
+    "search": "Suchen",
+    "removeFilterMode": "Filtermodus entfernen, um alle Elemente zu finden",
+    "filterWait": "Bitte warten, bis das Filtern abgeschlossen ist",
+    "format": "Formatieren",
+    "connect": "Verbinden",
+    "validate": "Validieren",
+    "generatingPossible": "Die Generierung ist nur für Aspect Models möglich, nicht für Dateien ohne Aspect.",
+    "generateDocument": "Dokument generieren",
+    "generateSchema": "JSON/JSON Schema generieren",
+    "hideMap": "Karte ausblenden",
+    "showMap": "Karte einblenden",
+    "hideNavigation": "Navigation ausblenden",
+    "showNavigation": "Navigation einblenden",
+    "modelUnfiltered": "Modell ungefiltert",
+    "modelFilteredByProperties": "Modell nach Properties gefiltert",
+    "prefixes": "Prefixe"
+  },
+  "loadMenu": {
+    "newWindow": "Neues Fenster",
+    "createUploadAspectModel": "Aspect Model erstellen/hochladen",
+    "importPackage": "Paket importieren"
+  },
+  "saveMenu": {
+    "exportAspectModel": "Aspect Model exportieren",
+    "exportNamespace": "Namespace exportieren",
+    "copyToClipboard": "In die Zwischenablage kopieren",
+    "copiedToClipboard": "In die Zwischenablage kopiert",
+    "saveToWorkspace": "Im Workspace speichern"
+  },
+  "generateDocumentMenu": {
+    "generateHtmlDocument": "HTML-Dokumentation generieren",
+    "generateOpenapiSpecification": "OpenAPI-Spezifikation generieren",
+    "generateAasxXml": "AASX/XML generieren"
+  },
+  "downloadJsonMenu": {
+    "generateSampleJsonPayload": "Beispiel-JSON-Payload generieren",
+    "generateJsonSchema": "JSON Schema generieren"
+  },
+  "filterMenu": {
+    "displayEntireModel": "Zeigt das gesamte Modell an",
+    "none": "Keiner",
+    "filtersByProperties": "Filtert nach Properties",
+    "byProperties": "Nach Properties"
+  },
+  "declareNameDialog": {
+    "title": "Namen des Shared Models festlegen",
+    "infoContent": "Du entfernst den Aspect, wodurch dieses Aspect Model zu einem Shared Model wird. Bitte wähle einen Namen für dieses Shared Model.",
+    "namePlaceholder": "Name *",
+    "requiredError": "Dieses Feld ist erforderlich",
+    "charactersError": "Erlaubte Zeichen: alphanumerisch, Leerzeichen, Punkt (.), Minus (-) und Unterstrich (_)",
+    "existError": "Diese Datei existiert bereits in deinem Namespace",
+    "alreadyDefinedError": "Der Dateiname existiert bereits in deinem Namespace",
+    "removeAspect": "Aspect entfernen",
+    "cancel": "Abbrechen"
+  },
+  "selectLanguageToJsonSchemaDialog": {
+    "title": "Sprache für die Generierung des JSON Schemas auswählen",
+    "language": "Sprache",
+    "selectButton": "Auswählen"
+  },
+  "generateAasxDialog": {
+    "title": "AASX generieren",
+    "outputFileFormat": "Ausgabedateiformat",
+    "generating": "Wird generiert...",
+    "cancel": "Abbrechen",
+    "generate": "Generieren"
+  },
+  "loadModelDialog": {
+    "title": "Modellierung starten",
+    "infoContent": "Ein vorhandenes Aspect Model wird durch das neue ersetzt. Nicht gespeicherte Änderungen gehen verloren.",
+    "optionsMessage": "Für den Start der Modellierung hast du drei Möglichkeiten:",
+    "firstOption": "mit einem neuen Modell beginnen (siehe initialen Aspect-Model-Code im Textfeld unten)",
+    "secondOption": "eine vorhandene Aspect-Model-Datei (*.ttl) in das Textfeld unten einfügen",
+    "thirdOption": "eine Aspect-Model-Datei (*.ttl) über „Aus Datei laden“ unten laden.",
+    "modifyManuallyContent": "Als Experte kannst du die Aspect-Model-Datei auch manuell bearbeiten.",
+    "textFieldPlaceholder": "Füge dein Aspect Model hier ein oder lade es aus einer Datei.",
+    "button": {
+      "models": "Modelle",
+      "defaultAspectModel": "Standard-Aspect-Model",
+      "movementExample": "Movement-Beispiel",
+      "loadFromFile": "Aus Datei laden",
+      "startModeling": "Modellierung starten"
+    }
+  },
+  "exportNamespaceDialog": {
+    "title": "Namespace(s) als Paket exportieren",
+    "infoContent": "Wähle die Aspect-Model-Datei mit dem Aspect aus, den du als Paket exportieren möchtest. Alle Abhängigkeiten werden automatisch in die ZIP-Datei aufgenommen.",
+    "loadingNamespaces": "Namespaces werden geladen...",
+    "namespaces": "Namespaces",
+    "file": "Datei",
+    "namespace": "Namespace",
+    "version": "Version",
+    "cancel": "Abbrechen",
+    "next": "Exportieren"
+  },
+  "validationResultDialog": {
+    "title": "Validierungsergebnis",
+    "dismissButton": "Schließen",
+    "export": "Exportieren",
+    "clipButton": {
+      "copyClip": "In die Zwischenablage kopieren",
+      "tooltip": "Validierungsergebnis in die Zwischenablage kopieren"
+    }
+  },
+  "notificationDialog": {
+    "loading": "Aspect Model wird geladen",
+    "content": "Bitte warten. Beachte, dass dieser Vorgang nach 60 Sekunden automatisch abgebrochen wird",
+    "validating": "Validierung",
+    "saving": "Aspect Model wird gespeichert",
+    "generateJsonPayload": "JSON-Payload generieren",
+    "generateJsonSchema": "JSON Schema generieren",
+    "waitAction": "Bitte warten, bis die Aktion abgeschlossen ist!",
+    "noAspectTitle": "Lade oder erstelle ein Aspect Model, bevor du validierst"
+  },
+  "helpDialog": {
+    "startModeling": "Modellierung starten",
+    "infoContent": "Der Aspect Model Editor ist der visuelle Editor für Aspect Models auf Basis von SAMM und Teil des Eclipse Semantic Modeling Framework.",
+    "pleaseRefer": "Hilfe zur Verwendung des Aspect Model Editors findest du in der Dokumentation:",
+    "regardUsageEditor": "für Hilfe zur Verwendung des Aspect Model Editors.",
+    "regardDigitalTwinSystem": "für allgemeine Hilfe zum Digital Twin System und zum Semantic Aspect Meta Model als Teil des Digital Twin Systems.",
+    "version": "Version"
+  },
+  "notificationsTableDialog": {
+    "notifications": "Benachrichtigungen",
+    "help": "Hilfe",
+    "clearTable": "Tabelle leeren",
+    "date": "Datum",
+    "type": "Typ",
+    "message": "Meldung",
+    "options": "Optionen",
+    "noNotifications": "Keine Benachrichtigungen vorhanden.",
+    "go": "Gehe zu",
+    "clear": "Löschen",
+    "copy": "Kopieren",
+    "copied": "Kopiert!"
+  },
+  "workspaceSummary": {
+    "selectToValidate": "Wähle ein Aspect Model aus, um das Validierungsergebnis zu sehen.",
+    "validatedSuccessfully": "Diese Datei wurde erfolgreich validiert",
+    "filesNotImported": "Diese Dateien wurden nicht importiert:"
+  },
+  "generateHtmlDocDialog": {
+    "title": "HTML-Dokumentation generieren",
+    "generating": "Generieren",
+    "language": "Sprache",
+    "button": {
+      "cancel": "Abbrechen",
+      "openDoc": "Dokumentation öffnen",
+      "downloadDoc": "Dokumentation herunterladen"
+    }
+  },
+  "generateOpenapiSpecDialog": {
+    "title": "OpenAPI-Spezifikation generieren",
+    "generating": "Generieren",
+    "configuration": "Konfiguration",
+    "language": "Sprache",
+    "outputFileFormat": "Ausgabedateiformat",
+    "baseurl": "Basis-URL – die Basis-URL der Aspect API",
+    "pleaseAddValidUrl": "Bitte gib eine gültige URL ein",
+    "includeQueryApiTooltip": "Den Pfad des Query-Aspect-API-Endpunkts in die OpenAPI-Spezifikation aufnehmen.",
+    "includeQueryApi": "Query API einbeziehen",
+    "useSemanticVersion": "Semantische Version verwenden",
+    "useSemanticVersionTooltip": "Die vollständige semantische Version des Aspect Models als Version der Aspect API verwenden.",
+    "activateResourcePath": "Wenn aktiviert, wird der Ressourcenpfad in der OpenAPI-Spezifikation aktiviert.",
+    "activateResourcePathTooltip": "Ressourcenpfad aktivieren",
+    "resourcePath": "Ressourcenpfad – der Ressourcenpfad für die Endpunkte der Aspect API",
+    "resourcePathRequired": "Der Ressourcenpfad ist erforderlich",
+    "resourcePathPattern": "Das Muster stimmt nicht überein",
+    "resourcePathError": "Die OpenAPI-Spezifikation konnte nicht generiert werden",
+    "uploadFileTitle": "{{output}}-Datei hochladen",
+    "uploadFileDescription": "Informationen zu den Optionen findest du unter ",
+    "uploadDragAndDropText": "Dateien hierher ziehen oder auf das Symbol klicken, um sie hochzuladen",
+    "uploadedFileTitle": "Hochgeladene {{output}}-Datei",
+    "uploadFileAccordionTitle": "Properties",
+    "fileProperties": "Dateieigenschaften",
+    "includeApiExtensions": "API-Erweiterungen für zusätzliche CRUD-Operationen einbeziehen",
+    "uploadErrorTitle": "Falsches Dateiformat",
+    "uploadErrorMessage": "Bitte lade eine {{output}}-Datei hoch.",
+    "uploadFileRequired": "Eine {{output}}-Datei ist erforderlich – im Ressourcenpfad wurde eine Variable definiert.",
+    "pagingTypeOption": "Paging-Typ/-Option",
+    "noPaging": "Kein Paging",
+    "cursorBasedPaging": "Cursor-basiertes Paging",
+    "offsetBasedPaging": "Offset-basiertes Paging",
+    "timeBasedPaging": "Zeitbasiertes Paging",
+    "addOpenApiPut": "PUT einbeziehen",
+    "addOpenApiPutTooltip": "PUT in die OpenAPI-Spezifikation aufnehmen.",
+    "addOpenApiPatch": "PATCH einbeziehen",
+    "addOpenApiPatchTooltip": "PATCH in die OpenAPI-Spezifikation aufnehmen.",
+    "addOpenApiPost": "POST einbeziehen",
+    "addOpenApiPostTooltip": "POST in die OpenAPI-Spezifikation aufnehmen.",
+    "button": {
+      "cancel": "Abbrechen",
+      "generate": "Generieren"
+    }
+  },
+  "generateAsyncapiSpecDialog": {
+    "title": "AsyncAPI-Spezifikation generieren",
+    "generating": "Generieren",
+    "configuration": "Konfiguration",
+    "language": "Sprache",
+    "outputFileFormat": "Ausgabedateiformat",
+    "applicationId": "Application ID – setzt die Application ID, z. B. eine identifizierende URL",
+    "channelAddress": "Channel-Adresse – setzt die Channel-Adresse (bei MQTT z. B. den Namen des Topics)",
+    "channelAddressError": "Die Channel-Adresse entspricht nicht dem Muster",
+    "useSemanticVersion": "Semantische Version verwenden",
+    "useSemanticVersionTooltip": "Die vollständige semantische Version des Aspect Models als Version der Aspect API verwenden.",
+    "writeSeparateFiles": "Separate Dateien schreiben",
+    "writeSeparateFilesTooltip": "Jedes Schema in eine eigene Datei packen.",
+    "button": {
+      "cancel": "Abbrechen",
+      "generate": "Generieren"
+    }
+  },
+  "generateHandling": {
+    "failGenerateOpenapiSpec": "Die OpenAPI-Spezifikation konnte nicht generiert werden",
+    "invalidModel": "Ungültiges Aspect Model",
+    "failGenerateJsonSample": "Das JSON-Beispiel konnte nicht generiert werden",
+    "jsonPayloadPreview": "Vorschau des Beispiel-JSON-Payloads",
+    "failGenerateJsonSchema": "Das JSON Schema konnte nicht generiert werden",
+    "jsonSchemaPreview": "Vorschau des JSON Schemas",
+    "noAspectTitle": "Lade oder erstelle ein Aspect Model, bevor du Artefakte generierst"
+  },
+  "previewDialog": {
+    "cancel": "Abbrechen",
+    "resetContent": "Inhalt zurücksetzen",
+    "copyToClipboard": "In die Zwischenablage kopieren",
+    "downloadFile": "Datei herunterladen"
+  },
+  "sidebar": {
+    "loadingElements": "Elemente werden geladen...",
+    "elementAlreadyImported": "Element bereits importiert",
+    "dragToRightToAdd": "{{value}} – Nach rechts ziehen, um es hinzuzufügen",
+    "openWorkspace": "Workspace öffnen",
+    "theRootOfAvailableNamespaces": "Die Wurzel aller lokal verfügbaren Namespaces",
+    "workspaceTip": "Speichere dein aktuelles Modell im Workspace, um es in der Liste unten zu sehen.",
+    "sammElements": "SAMM-Elemente",
+    "sammElementsDocumentation": "SAMM-{{version}}-Dokumentation der Metamodell-Elemente öffnen",
+    "dragIntoView": "In die Ansicht ziehen",
+    "empty": {
+      "loadingNamespaces": "Namespaces werden geladen...",
+      "saveMessage": "Speichere dein aktuelles Modell im Workspace, um es in der Liste unten zu sehen.",
+      "callToAction": "Der Workspace enthält derzeit keine Dateien. Klicke auf die Schaltfläche unten, um Namespaces zu importieren!",
+      "importButton": "Paket importieren"
+    },
+    "workspaceError": {
+      "title": "Validierungsfehler im Workspace!",
+      "description": "Beim Laden der Modelle aus dem Workspace sind die folgenden Validierungsfehler aufgetreten. Die betroffenen ttl-Dateien müssen außerhalb des Editors entfernt oder korrigiert werden, damit der Workspace angezeigt und verwendet werden kann."
+    },
+    "actions": {
+      "searchElements": "Elemente suchen...",
+      "searchFile": "Datei suchen...",
+      "showAll": "Alle anzeigen",
+      "showLess": "Weniger anzeigen"
+    },
+    "workspace": {
+      "title": "Workspace",
+      "refreshing": "Workspace wird aktualisiert...",
+      "refresh": "Workspace aktualisieren",
+      "copyWorkspacePath": "Workspace-Pfad kopieren",
+      "copiedWorkspacePath": "Workspace-Pfad in die Zwischenablage kopiert"
+    },
+    "fileMenu": {
+      "open": "Öffnen",
+      "newWindow": "In neuem Fenster öffnen",
+      "openTab": "In neuem Tab öffnen",
+      "openCurrent": "Im aktuellen Tab öffnen",
+      "findElements": "Elemente finden",
+      "copyFilePath": "Dateipfad kopieren",
+      "copiedFilePath": "Dateipfad in die Zwischenablage kopiert",
+      "delete": "Löschen"
+    }
+  },
+  "settingsDialog": {
+    "title": "Einstellungen",
+    "cancel": "Abbrechen",
+    "apply": "Übernehmen",
+    "errorMessage": "Bitte behebe die Fehler, bevor du die Einstellungen speicherst",
+    "ok": "OK",
+    "node": {
+      "systemConfiguration": "Systemkonfiguration",
+      "modelConfiguration": "Modellkonfiguration"
+    },
+    "subNode": {
+      "automatedWorkflow": "Automatisierter Ablauf",
+      "editor": "Editor",
+      "copyright": "Header/Copyright",
+      "languages": "Sprachen",
+      "namespaces": "Namespaces"
+    },
+    "configuration": {
+      "autoSave": "Automatisch speichern",
+      "waitingPeriod": "Wartezeit in Sekunden",
+      "autoValidation": "Automatische Validierung",
+      "autoFormatting": "Automatische Formatierung",
+      "usingHierarchicalLayout": "'Hierarchisches' Layout verwenden",
+      "hierarchicalLayoutTooltip": "kann für manche Modelle besser geeignet sein, z. B. bei Rekursion",
+      "displayEntityValueEntity": "Beziehung 'Entity Value - Entity' anzeigen",
+      "displayPropertyAbstractProperty": "Beziehung 'Property - Abstract Property' anzeigen",
+      "displayDisambiguationLabel": "Beschriftungen zur Unterscheidung anzeigen",
+      "darkMode": "Dunkelmodus",
+      "darkModeTooltip": "Dunkles Design für den Editor und die Graph-Fläche ein- oder ausschalten.",
+      "autoValidationTooltip": "Nach Abschluss einer Validierung wird nach Ablauf der Wartezeit die nächste automatische Validierung gestartet.",
+      "autoFormattingTooltip": "Elemente im Graph automatisch formatieren.",
+      "displayDisambiguationLabelTooltip": "Zeigt Beschriftungen an Beziehungen an, die eine Unterscheidung benötigen, z. B. Input/Output einer Operation, left/right einer Either-Characteristic und Properties mit gesetztem notInPayload.",
+      "elementOrder": "Reihenfolge der Elemente beim Speichern",
+      "elementOrderTooltip": "Legt die Reihenfolge der Elemente in der gespeicherten Turtle-Datei fest. Wird die Reihenfolge der Datei beibehalten, bleiben Git-Diffs klein. Die Reihenfolge innerhalb eines Elements folgt immer der SAMM-Spezifikation.",
+      "elementOrderOptions": {
+        "keepOrderAfterParent": "Reihenfolge beibehalten, neue Elemente nach ihrem Parent einfügen",
+        "keepOrderAppend": "Reihenfolge beibehalten, neue Elemente am Ende anfügen",
+        "formatterDefault": "Reihenfolge des ESMF-SDK-Formatters"
+      },
+      "restoreSession": "Geöffnete Modelle beim Start wiederherstellen",
+      "restoreSessionTooltip": "Öffnet die gespeicherten Workspace-Modelle der letzten Sitzung mit ihrer Fenstergröße und -position erneut (nur Desktop-App). Geschlossene Modelle werden nicht wieder geöffnet."
+    },
+    "languages": {
+      "aspectModel": "Aspect Model",
+      "userInterface": "Benutzeroberfläche",
+      "chooseLanguage": "Sprache auswählen",
+      "english": "Englisch",
+      "chinese": "Chinesisch",
+      "german": "Deutsch",
+      "addLanguage": "Sprache hinzufügen",
+      "selectLanguage": "Sprache auswählen",
+      "startType": "Tippen, um eine Sprache auszuwählen"
+    },
+    "namespaces": {
+      "value": "Namespace",
+      "version": "Version",
+      "name": "Name",
+      "sammVersion": "SAMM-Version",
+      "predefinedNamespaces": "Vordefinierte Namespaces",
+      "aspectNamespaceTooltip": "Bitte beachte, dass nur das aktuelle Aspect Model in seiner aktuellen Version in einen anderen Namespace verschoben wird. Referenzen auf andere Aspect Models und/oder Versionen behalten den ursprünglichen Namespace.",
+      "errors": {
+        "requiredNamespace": "Der Namespace ist erforderlich",
+        "invalidNamespace": "Kein gültiger Namespace",
+        "requiredVersion": "Die Version ist erforderlich",
+        "invalidVersion": "Keine gültige Version"
+      }
+    }
+  },
+  "editorCanvas": {
+    "dragElementPrompt": "Ziehe ein Element hierher, um ein Modell zu erstellen",
+    "dragElementLine1": "Ziehe ein Element hierher,",
+    "dragElementLine2": "um ein Modell zu erstellen",
+    "fittingProgress": "Das gesamte Modell in die aktuelle Ansicht einpassen",
+    "reset": "Zoomstufe auf 100 % zurücksetzen",
+    "zoomInProgress": "Vergrößern",
+    "zoomOutProgress": "Verkleinern",
+    "graphSetup": {
+      "openIn": "Öffnen in",
+      "connect": "Verbinden",
+      "connectWith": "Verbinden mit...",
+      "selectAllReferences": "Alle Referenzen auswählen",
+      "format": "Formatieren",
+      "delete": "Löschen",
+      "deleteConnection": "Verbindung löschen",
+      "copyToClipboard": "In die Zwischenablage kopieren"
+    },
+    "shapeSetting": {
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "edit": "{{value}} bearbeiten",
+      "locateElement": "Element lokalisieren",
+      "anonymous": "Anonym (Inline Blank Node)",
+      "anonymousHint": "Als unbenannten Inline Blank Node innerhalb des Parent-Elements definieren",
+      "propertiesConfiguration": "Konfiguration der Properties",
+      "configure": "Konfigurieren",
+      "propertiesModal": {
+        "name": "Name",
+        "optional": "Optional",
+        "payloadName": "payloadName",
+        "notInPayload": "Nicht im Payload",
+        "inherited": "Geerbt",
+        "save": "Speichern",
+        "cancel": "Abbrechen"
+      },
+      "field": {
+        "name": {
+          "name": "Name",
+          "pleaseDefine": "Bitte gib einen Namen an",
+          "pleaseStartWithUpperCase": "Bitte beginne mit einem Großbuchstaben, gefolgt von Buchstaben/Ziffern.",
+          "pleaseStartWithALowerCase": "Bitte beginne mit einem Kleinbuchstaben, gefolgt von Buchstaben/Ziffern.",
+          "pleaseSelectDifferentName": "Bitte wähle einen anderen Namen, da dieser im selben Namespace bereits verwendet wird",
+          "pleaseSelectDifferentNameNamespace": "Bitte wähle einen anderen Namen, da dieser im selben Namespace bereits verwendet wird",
+          "noContainWhitespaces": "Der Name darf keine Leerzeichen enthalten",
+          "alreadyDefinedInSameNamespace": "Bitte wähle einen anderen Namen, da dieser im selben Namespace bereits verwendet wird"
+        },
+        "unit": {
+          "selectDifferentNameType": "Bitte wähle einen anderen Namen, da dieser zu einem anderen Typ gehört",
+          "selectDifferentNameNamespace": "Bitte wähle einen anderen Namen, da dieser im selben Namespace zu einem anderen Typ gehört",
+          "create": "Neue Unit erstellen",
+          "fieldRequired": "Dieses Feld ist erforderlich",
+          "searchQuantityKinds": "Quantity Kinds suchen..."
+        },
+        "operation": {
+          "pleaseDefineOutput": "Bitte gib einen Output an",
+          "noOutputDefined": "Kein Output definiert",
+          "addValueClickOption": "Wert hinzufügen, Option anklicken"
+        },
+        "characteristic": {
+          "removeDatatypeHint": "Entferne den Datentyp, um dieses Feld zu aktivieren.",
+          "createNew": "Neue Characteristic erstellen",
+          "upperCaseNotice": "Bitte gib den Namen der neuen Characteristic mit einem Großbuchstaben am Anfang an.",
+          "pleaseDefineLeft": "Bitte gib eine left-Characteristic an",
+          "pleaseDefineRight": "Bitte gib eine right-Characteristic an"
+        },
+        "entity": {
+          "pleaseDefineAbstractEntity": "Bitte gib eine Abstract Entity an",
+          "upperCaseNotice": "Bitte gib den Namen der neuen Entity mit einem Großbuchstaben am Anfang an."
+        },
+        "property": {
+          "createNew": "Neue Property erstellen",
+          "lowerCaseNotice": "Bitte gib den Namen der neuen Property mit einem Kleinbuchstaben am Anfang an.",
+          "exampleValueDisabledComplex": "exampleValue ist für komplexe Datentypen deaktiviert"
+        },
+        "constraints": {
+          "integerRequired": "Eine ganze Zahl ist erforderlich",
+          "positiveInteger": "Bitte gib eine positive ganze Zahl an",
+          "scaleRequired": "Scale ist erforderlich",
+          "positiveNumber": "Bitte gib eine positive Zahl an",
+          "nonNegativeInteger": "Bitte gib eine nicht negative ganze Zahl an",
+          "valueRequired": "Ein Wert ist erforderlich",
+          "languageCodeRequired": "Der Sprachcode ist erforderlich",
+          "localeCodeRequired": "Der Locale-Code ist erforderlich"
+        },
+        "values": {
+          "onlyNewEditableHint": "Nur neu erstellte Values und einfache Werte können bearbeitet werden!",
+          "placeholder": "Eingeben und auswählen"
+        },
+        "structuredValue": {
+          "ruleName": "Name der Zerlegungsregel",
+          "customRule": "Eigene Regel",
+          "elements": "Elemente",
+          "openElementsTable": "Elementtabelle öffnen",
+          "elementsTitle": "StructuredValue-Elemente",
+          "captureGroup": "Capture Group",
+          "property": "Property",
+          "ruleRequired": "Die Regeldefinition ist erforderlich",
+          "invalidRegex": "Bitte gib einen gültigen regulären Ausdruck an",
+          "assignProperties": "Bitte ordne deinen Elementen Properties zu",
+          "propertyRequired": "Bitte wähle eine Property aus oder erstelle eine"
+        },
+        "seeInput": {
+          "typeToSearch": "Tippen, um zu suchen, oder eine URN bzw. URL eingeben",
+          "invalidUri": "Ungültige URI"
+        },
+        "value": {
+          "pleaseDefine": "Bitte gib einen Wert an"
+        },
+        "language": {
+          "pleaseDefine": "Bitte gib eine Sprache an"
+        }
+      },
+      "ameElementListLabel": {
+        "incomingEdges": "Eingehende Kanten",
+        "outgoingEdges": "Ausgehende Kanten"
+      },
+      "ameElementListButton": {
+        "locateElement": "Element lokalisieren",
+        "openElement": "Element öffnen",
+        "openElementInNewWindow": "Element in neuem Fenster öffnen"
+      },
+      "notification": {
+        "editViewUnavailable": "Bearbeitungsansicht nicht verfügbar",
+        "editViewUnavailableMessage": "Das Element, das du bearbeiten möchtest, existiert nicht. Bitte prüfe, ob die Element-ID korrekt ist oder ob das Element entfernt wurde."
+      }
+    }
+  },
+  "footer": {
+    "unsavedChanges": "Es gibt derzeit nicht gespeicherte Änderungen",
+    "changesSaved": "Alle Änderungen wurden gespeichert",
+    "lastAutosaveInfo": "Letzte automatische Speicherung"
+  },
+  "confirmDialog": {
+    "createAspect": {
+      "title": "Neuen Aspect erstellen",
+      "aspectCreationWarning": "Du erstellst einen Aspect, wodurch dieses Shared Model zu einem Aspect Model wird.",
+      "nameReplacementNotice": "Der aktuelle Name des Modells wird durch den Namen des Aspects ersetzt.",
+      "closeButton": "Abbrechen",
+      "okButton": "Aspect erstellen"
+    },
+    "reloadConfirmation": {
+      "title": "Aktuelles Aspect Model wurde geändert",
+      "versionChangeNotice": "Eine andere Version von",
+      "workspaceLoadNotice": "wurde in einen Workspace geladen.",
+      "reloadWarning": "Beim Neuladen wird das aktuelle Aspect Model durch die Version aus dem Workspace ersetzt, alle nicht gespeicherten Änderungen gehen verloren. Neu laden?",
+      "closeButton": "Aktuelles behalten",
+      "okButton": "Neu laden"
+    },
+    "namespaceChange": {
+      "title": "Namespace des Modells aktualisieren",
+      "phrase1": "Der Namespace des Modells \"{{originalModelName}}\" wurde aktualisiert.",
+      "phrase2": "Alter Namespace: \"{{originalModelNamespace}}\"",
+      "phrase3": "Neuer Namespace: \"{{newNamespace}}\"",
+      "phrase4": "Diese Aktualisierung wird:",
+      "phrase5": "• \"{{originalModelName}}\" aus dem alten in den neuen Namespace verschieben.",
+      "phrase6": "• Alle Aspect Models, die mit \"{{originalModelName}}\" verknüpft sind, entsprechend aktualisieren.",
+      "phrase7": "Möchtest du diese Änderungen jetzt übernehmen?",
+      "okButton": "Speichern und Abhängigkeiten aktualisieren",
+      "actionButton": "Nur Änderungen speichern",
+      "cancelButton": "Abbrechen"
+    },
+    "saveBeforeLoad": {
+      "phrase1": "Du lädst gleich {{fileName}}.",
+      "phrase2": "Möchtest du das aktuelle Aspect Model zuerst im Workspace speichern?",
+      "title": "Aktuelles Aspect Model speichern",
+      "okButton": "Speichern",
+      "cancelButton": "Nicht speichern"
+    },
+    "deleteFile": {
+      "phrase1": "Möchtest du das Aspect Model \"{{fileName}}\" wirklich aus seinem Namespace löschen?",
+      "phrase2": "Diese Aktion kann nicht rückgängig gemacht werden.",
+      "title": "Aspect Model löschen"
+    },
+    "newWindowElement": {
+      "phrase1": "Du öffnest ein neues Fenster, in dem {{elementName}} hervorgehoben ist.",
+      "title": "Element in einem anderen Fenster öffnen?",
+      "cancelButton": "Abbrechen",
+      "okButton": "Speichern"
+    },
+    "deleteAnonymousElement": {
+      "title": "Element mit anonymen Children löschen",
+      "phrase1": "Das Element \"{{elementName}}\" enthält {{count}} anonyme (Inline-)Element(e). Beim Löschen dieses Elements werden auch diese anonymen Elemente gelöscht.",
+      "phrase2": "Möchtest du sie löschen, sie zuerst in benannte Elemente umwandeln oder abbrechen?",
+      "deleteWithAnonymousBtn": "Alle löschen",
+      "convertToNamedBtn": "In benannte Elemente umwandeln",
+      "cancelBtn": "Abbrechen"
+    }
+  },
+  "loadingScreenDialog": {
+    "modelGeneration": "Modell wird generiert",
+    "generalWaitMessage": "Bitte warten...",
+    "zoomInProgress": "Vergrößern...",
+    "zoomInWait": "Bitte warten, bis der Zoom abgeschlossen ist",
+    "zoomOutProgress": "Verkleinern...",
+    "fittingProgress": "Einpassen...",
+    "fittingWait": "Bitte warten, bis das Einpassen abgeschlossen ist",
+    "fitToViewProgress": "In Ansicht einpassen...",
+    "modelLoading": "Modell wird geladen",
+    "modelLoadingWait": "Bitte warten, bis das Modell geladen ist!",
+    "aspectModelLoading": "Aspect Model wird geladen",
+    "workspaceImport": "Dateien werden in den Workspace importiert",
+    "filterChange": "Filter wird geändert...",
+    "filterWait": "Bitte warten, bis das Filtern abgeschlossen ist",
+    "savingToWorkspaceTitle": "Aspect Model wird im Workspace gespeichert",
+    "savingToWorkspaceContent": "Bitte warten. Die Migration abhängiger Modelle kann eine Weile dauern.",
+    "folding": "Einklappen...",
+    "expanding": "Ausklappen...",
+    "actionWait": "Bitte warten, bis das Filtern abgeschlossen ist",
+    "formatting": "Formatieren...",
+    "waitFormat": "Bitte warten, bis das Formatieren abgeschlossen ist"
+  },
+  "tooltips": {
+    "workspace": "Workspace",
+    "elements": "Elemente",
+    "settings": "Einstellungen",
+    "notifications": "Benachrichtigungen",
+    "help": "Hilfe",
+    "darkMode": "Zum dunklen Modus wechseln",
+    "lightMode": "Zum hellen Modus wechseln",
+    "unfold": "Ausklappen",
+    "unfoldNamespaces": "Namespaces ausklappen",
+    "fold": "Einklappen",
+    "foldNamespaces": "Namespaces einklappen",
+    "outdatedFile": "Diese Datei basiert auf einer älteren SAMM-Version ({{sammVersion}})",
+    "erroredFile": "Diese Datei wurde mit Fehlern geladen",
+    "currentFile": "Diese Datei ist im aktuellen Fenster geöffnet",
+    "openNewModelTab": "Neuen Modell-Tab öffnen"
+  },
+  "searches": {
+    "elementsLabel": "Elemente suchen...",
+    "files": {
+      "label": "Dateien suchen...",
+      "notifications": {
+        "title": "Datei konnte nicht geladen werden",
+        "errorMessage": "Diese Datei enthält Fehler",
+        "alreadyLoadedFileMessage": "Diese Datei ist bereits geladen"
+      },
+      "openDialog": {
+        "title": "Datei {{fileName}} öffnen",
+        "content": "Du öffnest die Datei <b>{{fileName}}</b> aus dem Namespace <b>{{namespace}}</b>.<br />Bitte wähle, wo sie geöffnet werden soll",
+        "cancel": "Abbrechen",
+        "openInThisWindow": "In diesem Fenster öffnen",
+        "openInNewTab": "In neuem Tab öffnen",
+        "openInNewWindow": "In neuem Fenster öffnen"
+      }
+    },
+    "elements": {
+      "partialMatches": "Kein Element enthält alle Begriffe. Die ähnlichsten Treffer werden angezeigt.",
+      "fuzzyMatches": "Kein exakter Treffer. Ähnliche Elemente werden angezeigt.",
+      "fields": {
+        "name": "Name",
+        "preferredName": "Bevorzugter Name",
+        "description": "Beschreibung",
+        "urn": "URN"
+      }
+    }
+  },
+  "entityValue": {
+    "name": "Name",
+    "value": "Wert",
+    "entityValue": "Entity Value",
+    "entityValues": "Entity Values",
+    "create": "Erstellen",
+    "language": "Sprache",
+    "property": "Property",
+    "edit": {
+      "searchBar": "Komplexen Wert finden",
+      "addComplexValue": "Komplexen Wert hinzufügen"
+    },
+    "view": {
+      "deleteComplexValue": "Komplexen Wert {{name}} löschen",
+      "complexDataType": "Komplexer Datentyp",
+      "noData": "Keine Daten",
+      "noEntityValues": "Keine Entity Values",
+      "filteredOut": "Entity Values sind ausgefiltert."
+    }
+  },
+  "connectWithDialog": {
+    "connect": "Verbinden",
+    "with": "mit...",
+    "searchElements": "Elemente suchen",
+    "cancel": "Abbrechen",
+    "connectButton": "Verbinden"
+  },
+  "largeFileWarning": {
+    "title": "Das Aspect Model hat {{count}} Elemente",
+    "description": "Die empfohlene Größe von Aspect Models liegt bei bis zu ~ 100 Elementen (je nach Systemleistung auch mehr). Beachte beim Fortfahren, dass Aktionen wie Zoomen und Formatieren die Reaktionsfähigkeit der Anwendung beeinträchtigen können.",
+    "cancel": "Abbrechen",
+    "continue": "Fortfahren"
+  },
+  "openElementWindow": {
+    "openingModel": "Modell wird geöffnet"
+  },
+  "loading": {
+    "errorMessage": "Beim Öffnen des Editors ist ein Fehler aufgetreten.",
+    "openingEditor": "Editor wird geöffnet..."
+  },
+  "backendStatus": {
+    "startingTitle": "Backend wird gestartet...",
+    "startingDescription": "Der Aspect Model Editor startet seinen Backend-Dienst. Das kann einen Moment dauern.",
+    "failedTitle": "Das Backend konnte nicht gestartet werden",
+    "failedDescription": "Du kannst versuchen, das Backend erneut zu starten, oder die Anwendung schließen.",
+    "retry": "Erneut versuchen",
+    "quit": "Anwendung schließen"
+  },
+  "textView": {
+    "toggleLabel": "Editoransicht",
+    "graph": "Bearbeiten",
+    "aspectModel": "Aspect Model",
+    "graphTooltip": "Grafischen Modelleditor anzeigen",
+    "textTooltip": "Aspect Model als ttl-Text anzeigen",
+    "title": "Aspect Model",
+    "readOnly": "Schreibgeschützt",
+    "unformatted": "Unformatiert",
+    "unformattedTooltip": "Der Formatter des Backends ist nicht verfügbar. Die unformatierte Serialisierung des Modells wird angezeigt.",
+    "lines": "{{count}} Zeilen",
+    "violations": "Validierungsprobleme: {{count}}",
+    "nextViolation": "Zum nächsten Validierungsproblem",
+    "search": "Suchen (Strg+F)",
+    "refresh": "Neu laden",
+    "copy": "In die Zwischenablage kopieren",
+    "copied": "Aspect Model in die Zwischenablage kopiert",
+    "loading": "Text des Aspect Models wird vorbereitet...",
+    "empty": "Das Modell ist leer. Füge in der Graph-Ansicht Elemente hinzu, um ihre Turtle-Darstellung zu sehen.",
+    "loadError": "Die textuelle Darstellung des Aspect Models konnte nicht erstellt werden.",
+    "retry": "Erneut versuchen",
+    "sortAlphabetically": "Elemente alphabetisch sortieren",
+    "sortAlphabeticallyDisabled": "Nicht verfügbar, solange die Reihenfolge der Elemente vom Formatter bestimmt wird (Einstellungen > Editor)",
+    "sorted": "Elemente alphabetisch sortiert. Speichere das Modell, um die neue Reihenfolge in die Datei zu schreiben.",
+    "prefixes": "Prefixe verwalten"
+  },
+  "menu": {
+    "file": {
+      "label": "Datei",
+      "new": {
+        "label": "Neu...",
+        "submenu": {
+          "emptyModel": "Leeres Modell",
+          "loadFile": "Datei laden...",
+          "copyPaste": "Kopieren und Einfügen",
+          "examples": "Beispiele"
+        }
+      },
+      "newWindow": "Neues Fenster",
+      "importModel": "Modell importieren",
+      "importPackage": "Paket importieren",
+      "copyToClipboard": "In die Zwischenablage kopieren",
+      "saveToWorkspace": "Im Workspace speichern",
+      "exportModel": "Modell exportieren",
+      "exportPackage": "Paket exportieren"
+    },
+    "view": {
+      "label": "Ansicht",
+      "toggleToolbar": "Werkzeugleiste ein-/ausblenden",
+      "toggleMinimap": "Minimap ein-/ausblenden",
+      "filter": {
+        "label": "Modell filtern nach",
+        "submenu": {
+          "none": "Keiner",
+          "properties": "Properties"
+        }
+      },
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern",
+      "zoomToFit": "Einpassen",
+      "zoomTo100": "Auf 100 % zoomen"
+    },
+    "edit": {
+      "label": "Bearbeiten",
+      "openSelectedElement": "Ausgewähltes Element öffnen",
+      "removeSelectedElement": "Ausgewähltes Element entfernen",
+      "collapseExpandModel": "Modell ein-/ausklappen",
+      "formatModel": "Modell formatieren",
+      "connectSelectedElements": "Ausgewählte Elemente verbinden"
+    },
+    "validate": {
+      "label": "Validieren",
+      "currentModel": "Aktuelles Modell"
+    },
+    "generate": {
+      "label": "Generieren",
+      "htmlDocumentation": "HTML-Dokumentation",
+      "openApiSpecification": "OpenAPI-Spezifikation",
+      "asyncApiSpecification": "AsyncAPI-Spezifikation",
+      "aasxXml": "AASX / XML",
+      "sampleJsonPayload": "Beispiel-JSON-Payload",
+      "jsonSchema": "JSON Schema"
+    },
+    "search": {
+      "label": "Suchen",
+      "elements": "Elemente",
+      "files": "Dateien"
+    }
+  },
+  "prefixes": {
+    "prefix": "Prefix",
+    "namespace": "Namespace",
+    "management": {
+      "title": "Prefixe",
+      "description": "Ein Prefix ist nur eine Kurzschreibweise für einen Namespace. Das Umbenennen eines Prefix ändert nur, wie IRIs in der Datei geschrieben werden – die IRIs selbst bleiben gleich.",
+      "status": "Status",
+      "used": "Verwendet",
+      "unused": "Nicht verwendet",
+      "default": "(Standard)",
+      "protected": "Dieser Prefix gehört zum Modell oder zu den SAMM-/RDF-Vokabularen und kann nicht geändert werden",
+      "rename": "Prefix umbenennen",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "remove": "Prefix entfernen",
+      "addTitle": "Prefix hinzufügen",
+      "add": "Hinzufügen",
+      "close": "Schließen"
+    },
+    "reference": {
+      "title": "Prefix für referenzierten Namespace",
+      "description": "Das Element stammt aus einem Namespace, für den es in diesem Aspect Model noch keinen Prefix gibt. Wähle den Prefix, der in der Datei verwendet wird.",
+      "conflict": "Die referenzierte Datei verwendet den Prefix \"{{ alias }}\", der in diesem Aspect Model bereits für {{ namespace }} steht. Bitte wähle einen anderen Prefix.",
+      "example": "Das Element wird geschrieben als",
+      "automatic": "Automatischen Prefix verwenden",
+      "add": "Prefix hinzufügen"
+    },
+    "errors": {
+      "invalidAlias": "Ein Prefix muss mit einem Buchstaben beginnen und darf nur Buchstaben, Ziffern, \"_\", \"-\" und \".\" (nicht am Ende) enthalten. Reservierte Prefixe können nicht verwendet werden.",
+      "invalidNamespace": "Bitte gib eine gültige Namespace-IRI ein, z. B. https://example.org/battery#",
+      "aliasInUse": "Der Prefix wird bereits für einen anderen Namespace verwendet.",
+      "aliasInUseBy": "Der Prefix wird bereits für {{ namespace }} verwendet.",
+      "namespaceInUse": "Der Namespace hat bereits einen Prefix.",
+      "unknownAlias": "Der Prefix existiert nicht.",
+      "protectedAlias": "Dieser Prefix kann nicht geändert werden.",
+      "prefixInUse": "Der Prefix wird von Elementen des Modells verwendet und kann nicht entfernt werden."
+    }
+  },
+  "session": {
+    "modelNotFound": "Das benötigte Aspect Model {{name}} konnte nicht gefunden werden.",
+    "modelNotRestored": "Das Aspect Model {{name}} konnte nicht wiederhergestellt werden."
+  }
+}

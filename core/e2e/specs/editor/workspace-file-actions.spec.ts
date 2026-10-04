@@ -127,4 +127,32 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
     await dialog.locator('[data-testid="cancelBtn"]').click();
     await expect(dialog).not.toBeVisible();
   });
+
+  test('opens the file menu below its trigger even after the row loses hover', async ({page}) => {
+    const helper = new AppHelper(page);
+    await helper.startModelling(false);
+
+    await page.locator(SELECTOR_workspaceBtn).click({force: true});
+    await expect(page.locator('ame-workspace-file-list')).toBeVisible();
+
+    await page.getByRole('button', {name: 'Select file SampleModel.ttl'}).hover();
+    const fileMenuBtn = page.locator(SELECTOR_openFileMenu).first();
+    await expect(fileMenuBtn).toBeVisible({timeout: 10000});
+    await fileMenuBtn.click();
+
+    const menuPanel = page.locator('.mat-mdc-menu-panel').first();
+    await expect(menuPanel).toBeVisible();
+    // The menu backdrop takes over the hover; the trigger must stay visible as menu anchor.
+    await page.mouse.move(600, 500);
+    await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+    await expect(fileMenuBtn).toBeVisible();
+
+    const triggerBox = await fileMenuBtn.boundingBox();
+    const menuBox = await menuPanel.boundingBox();
+    if (!triggerBox || !menuBox) {
+      throw new Error('File menu trigger or panel has no bounding box');
+    }
+    expect(Math.abs(menuBox.y - (triggerBox.y + triggerBox.height))).toBeLessThan(12);
+    expect(menuBox.x + menuBox.width).toBeGreaterThan(triggerBox.x);
+  });
 });

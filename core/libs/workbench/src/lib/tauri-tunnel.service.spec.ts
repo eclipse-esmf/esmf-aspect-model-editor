@@ -123,4 +123,17 @@ describe('TauriTunnelService', () => {
 
     expect(receivedData).toEqual({id: 'win-1', options: {namespace: 'org.example'}});
   });
+
+  it('should forward session updates and the restore setting to the desktop shell', () => {
+    const listeners = new Map<string, (payload?: any) => void>();
+    tauriSignalsMock.addListener.mockImplementation((name: string, callback: (payload?: any) => void) => listeners.set(name, callback));
+    service.subscribeMessages();
+
+    const session = {models: [{namespace: 'ns', file: 'A.ttl', aspectModelUrn: 'urn:samm:ns#A'}], activeIndex: 0};
+    listeners.get('updateSession')?.(session);
+    listeners.get('setSessionRestoreEnabled')?.(false);
+
+    expect(ipcRendererMock.send).toHaveBeenCalledWith(TAURI_EVENTS.REQUEST.UPDATE_SESSION, session);
+    expect(ipcRendererMock.send).toHaveBeenCalledWith(TAURI_EVENTS.REQUEST.SET_SESSION_RESTORE, false);
+  });
 });

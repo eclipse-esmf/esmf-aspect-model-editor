@@ -12,13 +12,17 @@
  */
 
 use crate::backend::{clean_up_backend, restart_backend, BackendState, BackendStatus};
+use crate::session::{SessionModel, SessionState, WindowGeometry};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
 use tauri::menu::{ContextMenu, Menu, MenuItem};
-use tauri::{AppHandle, Emitter, Manager, State, WebviewUrl, WebviewWindowBuilder};
+use tauri::{
+    AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, Runtime, State, WebviewUrl,
+    WebviewWindow, WebviewWindowBuilder,
+};
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -203,6 +207,17 @@ pub fn create_window(
         }
     }
 
+    build_editor_window(&app, &win_id, None)?;
+
+    Ok(())
+}
+
+/// Creates an editor window. Restored windows get their saved geometry and are shown afterwards to avoid flicker.
+pub fn build_editor_window(
+    app: &AppHandle,
+    label: &str,
+    geometry: Option<WindowGeometry>,
+) -> Result<WebviewWindow, String> {
     let is_dev = cfg!(debug_assertions);
     let webview_url = if is_dev {
         WebviewUrl::External("http://localhost:4200".parse().unwrap())
@@ -210,11 +225,12 @@ pub fn create_window(
         WebviewUrl::App("index.html".into())
     };
 
-    let builder = WebviewWindowBuilder::new(&app, &win_id, webview_url)
+    let builder = WebviewWindowBuilder::new(app, label, webview_url)
         .title("Aspect Model Editor")
         .inner_size(1280.0, 800.0)
         .min_inner_size(800.0, 600.0)
-        .resizable(true);
+        .resizable(true)
+        .visible(geometry.is_none());
 
     #[cfg(not(target_os = "macos"))]
     let builder = if let Some(m) = app.menu() {
@@ -223,9 +239,81 @@ pub fn create_window(
         builder
     };
 
-    builder.build().map_err(|e| e.to_string())?;
+    let window = builder.build().map_err(|e| e.to_string())?;
+    if let Some(geometry) = geometry {
+        apply_window_geometry(&window, &geometry);
+        let _ = window.show();
+    }
+    Ok(window)
+}
 
-    Ok(())
+/// Restores size, position (only when visible on a connected monitor), maximized and fullscreen state.
+pub fn apply_window_geometry<R: Runtime>(window: &WebviewWindow<R>, geometry: &WindowGeometry) {
+    let monitors: Vec<crate::session::MonitorArea> = window
+        .available_monitors()
+        .unwrap_or_default()
+        .iter()
+        .map(|m| crate::session::MonitorArea {
+            x: m.position().x,
+            y: m.position().y,
+            width: m.size().width,
+            height: m.size().height,
+        })
+        .collect();
+
+    let _ = window.set_size(PhysicalSize::new(geometry.width, geometry.height));
+    if geometry.is_visible_on(&monitors) {
+        let _ = window.set_position(PhysicalPosition::new(geometry.x, geometry.y));
+    } else {
+        let _ = window.center();
+    }
+    if geometry.maximized {
+        let _ = window.maximize();
+    }
+    if geometry.fullscreen {
+        let _ = window.set_fullscreen(true);
+    }
+}
+
+/// Reads the current window state; the bounds are only taken from a normal (not maximized/fullscreen) window.
+pub fn capture_window_geometry<R: Runtime>(
+    window: &tauri::Window<R>,
+    session_state: &SessionState,
+) {
+    let label = window.label();
+    let maximized = window.is_maximized().unwrap_or(false);
+    let fullscreen = window.is_fullscreen().unwrap_or(false);
+    let minimized = window.is_minimized().unwrap_or(false);
+    if minimized {
+        return;
+    }
+
+    if (maximized || fullscreen) && session_state.geometry_of(label).is_some() {
+        session_state.set_window_mode(label, maximized, fullscreen);
+        return;
+    }
+
+    if let (Ok(position), Ok(size)) = (window.outer_position(), window.inner_size()) {
+        session_state.set_geometry(
+            label,
+            WindowGeometry {
+                x: position.x,
+                y: position.y,
+                width: size.width,
+                height: size.height,
+                maximized,
+                fullscreen,
+            },
+        );
+    }
+}
+
+/// Number of editor windows (print preview windows are ignored).
+fn editor_window_count(app: &AppHandle) -> usize {
+    app.webview_windows()
+        .keys()
+        .filter(|label| !label.starts_with("print-"))
+        .count()
 }
 
 #[tauri::command]
@@ -263,16 +351,61 @@ pub fn is_first_window(app: AppHandle) -> bool {
     app.webview_windows().len() <= 1
 }
 
+/// Normal close of a window: the window is forgotten, unless it is the last one. Closing the last window quits
+/// the application, so its models stay in the session and are reopened on the next start.
 #[tauri::command]
-pub fn close_window(app: AppHandle, window_label: String) -> Result<(), String> {
+pub fn close_window(
+    app: AppHandle,
+    window_state: State<'_, AppWindowState>,
+    session_state: State<'_, SessionState>,
+    window_label: String,
+) -> Result<(), String> {
     if let Some(win) = app.get_webview_window(&window_label) {
+        if editor_window_count(&app) > 1 {
+            session_state.remove_window(&window_label);
+        } else {
+            session_state.flush();
+        }
+        if let Ok(mut map) = window_state.windows_options.lock() {
+            map.remove(&window_label);
+        }
         win.destroy().map_err(|e| e.to_string())?;
     }
     Ok(())
 }
 
+/// Stores the saved workspace models which are open in a window (one entry per tab).
 #[tauri::command]
-pub fn maximize_window(app: AppHandle, window_label: String) -> Result<(), String> {
+pub fn update_session_models(
+    app: AppHandle,
+    session_state: State<'_, SessionState>,
+    window_label: String,
+    models: Vec<SessionModel>,
+    active_index: usize,
+) -> Result<(), String> {
+    session_state.set_models(&window_label, models, active_index);
+    if let Some(win) = app.get_webview_window(&window_label) {
+        capture_window_geometry(&win.as_ref().window(), &session_state);
+        session_state.flush();
+    }
+    Ok(())
+}
+
+#[tauri::command]
+pub fn set_session_restore_enabled(session_state: State<'_, SessionState>, enabled: bool) {
+    session_state.set_restore_on_startup(enabled);
+}
+
+#[tauri::command]
+pub fn maximize_window(
+    app: AppHandle,
+    session_state: State<'_, SessionState>,
+    window_label: String,
+) -> Result<(), String> {
+    // Restored windows keep their saved size and position.
+    if session_state.is_restored(&window_label) {
+        return Ok(());
+    }
     if let Some(win) = app.get_webview_window(&window_label) {
         win.maximize().map_err(|e| e.to_string())?;
     }

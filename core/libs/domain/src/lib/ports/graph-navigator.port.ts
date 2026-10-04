@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {FullTextSearchResult} from '@ame/shared';
 import {Signal} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {Observable} from 'rxjs';
@@ -30,6 +31,8 @@ export abstract class GraphNavigatorPort {
 
   abstract hasElements(): boolean;
   abstract searchElements(query: string): NamedElement[];
+  /** Full text search over name, preferredName and description (all languages) of the rendered elements. */
+  abstract searchElementsWithDetails(query: string): FullTextSearchResult<NamedElement>[];
   abstract isElementRendered(element: NamedElement): boolean;
   /** Model elements currently rendered as top-level vertices. */
   abstract getVisibleModelElements(): NamedElement[];

@@ -16,7 +16,12 @@ import {DataFactory, NamedNode, Prefixes, Quad, Store, Util} from 'n3';
 import {Samm, SammC, SammE, SammU} from '../vocabulary';
 import {KnownVersion, SammVersion} from './known-version';
 import {RdfModelUtil} from './rdf-model-util';
+import {SerializationMetadata} from './serialization-metadata';
 import {XsdDataTypes} from './xsd-datatypes';
+
+/** Reasons why a prefix can not be added, renamed or removed. */
+export type PrefixChangeError =
+  'invalidAlias' | 'invalidNamespace' | 'aliasInUse' | 'namespaceInUse' | 'unknownAlias' | 'protectedAlias' | 'prefixInUse';
 
 export class RdfModel {
   private prefixes: Prefixes<string> = {};
@@ -28,6 +33,7 @@ export class RdfModel {
   public readonly sammE: SammE;
   public readonly sammU: SammU;
   public xsdDataTypes: XsdDataTypes;
+  public readonly serializationMetadata = new SerializationMetadata();
 
   constructor(
     public store: Store,
@@ -93,49 +99,149 @@ export class RdfModel {
 
   public removePrefix(shortPrefixName: string): void {
     delete this.prefixes[shortPrefixName];
+    this.serializationMetadata.unmarkPrefixExplicit(shortPrefixName);
   }
 
   public getAspectModelUrn(): string {
     return this.getPrefixes()[RdfModelUtil.defaultAspectModelAlias];
   }
 
-  public addPrefix(alias: string, namespace: string): void {
-    if (alias === '' && !this.prefixes[alias]) {
+  /**
+   * Adds a prefix for a namespace and returns the alias which is used for it.
+   * A namespace which already has a prefix keeps it. Without alias, an `ext-` alias is derived from the namespace.
+   * If the alias is used for another namespace, a number is appended (e.g. `ex2`), the existing mapping is never changed.
+   */
+  public addPrefix(alias: string, namespace: string): string {
+    if (alias === '' && this.prefixes[alias] === undefined) {
       this.prefixes[alias] = namespace;
-      return;
+      return alias;
     }
 
-    const inPrefixes = Object.values(this.prefixes).some(value => value === namespace);
-    if ((alias === '' || alias === undefined) && !inPrefixes) {
-      const matched = namespace.match(/[a-zA-Z]+/gi);
-      if (matched.length) {
-        let newAlias = `ext-${matched[matched.length - 1]}`;
-        if (this.prefixes[newAlias]) {
-          let count = 2;
-          newAlias = `ext-${matched[matched.length - 1]}${count}`;
-          while (this.prefixes[newAlias]) {
-            count++;
-          }
-        }
-        this.prefixes[newAlias] = namespace;
-        return;
-      }
+    const existingAlias = this.getAliasByNamespace(namespace);
+    if (existingAlias !== undefined) {
+      return existingAlias;
     }
 
-    if (inPrefixes) {
-      return;
-    }
+    const baseAlias = alias ? alias : `ext-${RdfModel.namespaceWords(namespace).pop() ?? 'ns'}`;
+    const newAlias = this.findFreeAlias(baseAlias);
+    this.prefixes[newAlias] = namespace;
+    return newAlias;
+  }
 
-    if (this.prefixes[alias]) {
-      let count = 1;
-      while (this.prefixes[`${alias}${count}`]) {
-        count++;
-      }
-      this.prefixes[`${alias}${count}`] = namespace;
-      return;
+  /** Whether the alias can be used in a Turtle prefix declaration (PN_PREFIX). */
+  public static isValidPrefixAlias(alias: string): boolean {
+    return /^[A-Za-z]([\w.-]*[\w-])?$/.test(alias ?? '');
+  }
+
+  /** The default prefix of the model and the prefixes of the SAMM and RDF vocabularies can not be changed. */
+  public isProtectedPrefix(alias: string): boolean {
+    return (
+      alias === '' ||
+      ['xsd', 'rdf', 'rdfs', this.samm.getAlias(), this.sammC.getAlias(), this.sammE.getAlias(), this.sammU.getAlias()].includes(alias)
+    );
+  }
+
+  /** Whether any statement of the model uses an IRI of the namespace of the prefix. */
+  public isPrefixUsed(alias: string): boolean {
+    const namespace = this.prefixes[alias];
+    if (!namespace) {
+      return false;
     }
+    const usesNamespace = (term: any) =>
+      (term?.termType === 'NamedNode' && term.value.startsWith(namespace)) ||
+      (term?.termType === 'Literal' && Boolean(term.datatype?.value?.startsWith(namespace)));
+    return this.store.some(
+      quad => usesNamespace(quad.subject) || usesNamespace(quad.predicate) || usesNamespace(quad.object),
+      null,
+      null,
+      null,
+      null,
+    );
+  }
+
+  /**
+   * Defines a prefix chosen by the user. The prefix is written to the file even when it is not used.
+   * Returns an error code when the prefix can not be defined.
+   */
+  public definePrefix(alias: string, namespace: string): PrefixChangeError | null {
+    if (!RdfModel.isValidPrefixAlias(alias)) return 'invalidAlias';
+    if (!RdfModel.isValidNamespace(namespace)) return 'invalidNamespace';
+    if (this.prefixes[alias] !== undefined) return this.prefixes[alias] === namespace ? null : 'aliasInUse';
+    if (this.getAliasByNamespace(namespace) !== undefined) return 'namespaceInUse';
 
     this.prefixes[alias] = namespace;
+    this.serializationMetadata.markPrefixExplicit(alias);
+    return null;
+  }
+
+  /**
+   * Changes only the alias of a namespace. The IRIs of the model are not touched, so only the notation in the file changes
+   * (e.g. `ex:MyProperty` becomes `example:MyProperty`, both meaning `http://example.com#MyProperty`).
+   */
+  public renamePrefix(oldAlias: string, newAlias: string): PrefixChangeError | null {
+    if (this.prefixes[oldAlias] === undefined) return 'unknownAlias';
+    if (oldAlias === newAlias) return null;
+    if (this.isProtectedPrefix(oldAlias)) return 'protectedAlias';
+    if (!RdfModel.isValidPrefixAlias(newAlias)) return 'invalidAlias';
+    if (this.prefixes[newAlias] !== undefined) return 'aliasInUse';
+
+    // keep the position of the prefix in the declaration order
+    this.prefixes = Object.fromEntries(
+      Object.entries(this.prefixes).map(([alias, namespace]) => [alias === oldAlias ? newAlias : alias, namespace]),
+    ) as Prefixes<string>;
+    this.serializationMetadata.renameExplicitPrefix(oldAlias, newAlias);
+    this.serializationMetadata.markPrefixExplicit(newAlias);
+    return null;
+  }
+
+  /** Removes a prefix which is not used by any statement. */
+  public deletePrefix(alias: string): PrefixChangeError | null {
+    if (this.prefixes[alias] === undefined) return 'unknownAlias';
+    if (this.isProtectedPrefix(alias)) return 'protectedAlias';
+    if (this.isPrefixUsed(alias)) return 'prefixInUse';
+
+    this.removePrefix(alias);
+    return null;
+  }
+
+  /**
+   * Suggests an alias for a namespace: the preferred alias (e.g. the one of the referenced file) if it is free,
+   * otherwise a name derived from the namespace. A number is appended when the alias is already taken.
+   */
+  public suggestPrefixAlias(namespace: string, preferredAlias?: string): string {
+    const existingAlias = this.getAliasByNamespace(namespace);
+    if (existingAlias !== undefined) {
+      return existingAlias;
+    }
+
+    const candidates = [preferredAlias, RdfModel.namespaceWords(namespace).pop()].filter(
+      (candidate): candidate is string => !!candidate && RdfModel.isValidPrefixAlias(candidate) && !this.isProtectedPrefix(candidate),
+    );
+    const free = candidates.find(candidate => this.prefixes[candidate] === undefined);
+    return free ?? this.findFreeAlias(candidates[0] ?? 'ns');
+  }
+
+  private findFreeAlias(alias: string): string {
+    if (this.prefixes[alias] === undefined) {
+      return alias;
+    }
+    let count = 2;
+    while (this.prefixes[`${alias}${count}`] !== undefined) {
+      count++;
+    }
+    return `${alias}${count}`;
+  }
+
+  private static isValidNamespace(namespace: string): boolean {
+    return /^[A-Za-z][\w+.-]*:[^\s<>"{}|^`\\]*$/.test(namespace ?? '');
+  }
+
+  /** Meaningful words of a namespace, e.g. `urn:samm:org.example.battery:1.0.0#` -> [..., 'example', 'battery']. */
+  private static namespaceWords(namespace: string): string[] {
+    return (namespace ?? '')
+      .replace(/^[a-z][\w+.-]*:(\/\/)?/i, '')
+      .split(/[/#:.]+/)
+      .filter(part => /^[A-Za-z][\w-]*$/.test(part) && !/^(urn|samm|www|http|https|com|org|net|de|io|v\d+)$/i.test(part));
   }
 
   public setPrefixes(prefixes: Record<string, string>) {

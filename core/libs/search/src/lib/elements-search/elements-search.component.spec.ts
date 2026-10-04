@@ -58,6 +58,7 @@ describe('ElementsSearchComponent', () => {
           provide: GraphNavigatorPort,
           useValue: {
             searchElements: vi.fn(() => []),
+            searchElementsWithDetails: vi.fn(() => []),
             navigateToElement: vi.fn(),
           },
         },
@@ -117,7 +118,7 @@ describe('ElementsSearchComponent', () => {
       metaModelVersion: '2.0.0',
     });
 
-    component.elements.set([aspect, property]);
+    component.results.set([aspect, property].map(item => ({item, score: 1, matches: [], fuzzy: false, partial: false})));
 
     const transformed = component.transformedElements();
     expect(transformed.length).toBe(2);
@@ -127,20 +128,58 @@ describe('ElementsSearchComponent', () => {
     expect(transformed[1].type).toBe('abstract-property');
   });
 
-  it('should filter elements when search query changes', async () => {
+  it('should search with details after debouncing the query', async () => {
     const aspect = new DefaultAspect({
       name: 'TestAspect',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
       metaModelVersion: '2.0.0',
     });
-    vi.mocked(graphNavigator.searchElements).mockReturnValue([aspect]);
+    vi.mocked(graphNavigator.searchElementsWithDetails).mockReturnValue([
+      {item: aspect, score: 1, matches: [], fuzzy: false, partial: false},
+    ]);
 
-    await new Promise(resolve => setTimeout(resolve, 200));
+    component.searchQuery.set('Te');
+    TestBed.flushEffects();
     component.searchQuery.set('Test');
     TestBed.flushEffects();
+    await new Promise(resolve => setTimeout(resolve, 150));
 
-    expect(graphNavigator.searchElements).toHaveBeenCalledWith('Test');
+    expect(graphNavigator.searchElementsWithDetails).toHaveBeenCalledWith('Test');
+    expect(graphNavigator.searchElementsWithDetails).not.toHaveBeenCalledWith('Te');
     expect(component.elements()).toEqual([aspect]);
+  });
+
+  it('should show the matched preferred name or description as hint', () => {
+    const property = new DefaultProperty({
+      name: 'capacityThresholdExhaustion',
+      aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#capacityThresholdExhaustion',
+      metaModelVersion: '2.0.0',
+    });
+    const descriptionMatch = {key: 'description' as const, value: 'Threshold for exhaustion', lang: 'en', terms: ['exhaustion']};
+    component.results.set([
+      {
+        item: property,
+        score: 1,
+        matches: [{key: 'name', value: property.name, terms: ['exhaustion']}, descriptionMatch],
+        fuzzy: false,
+        partial: false,
+      },
+    ]);
+
+    expect(component.transformedElements()[0].hint).toEqual(descriptionMatch);
+  });
+
+  it('should flag approximate results', () => {
+    const aspect = new DefaultAspect({name: 'A', aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#A', metaModelVersion: '2.0.0'});
+    component.searchQuery.set('a b');
+    component.results.set([{item: aspect, score: 1, matches: [], fuzzy: false, partial: true}]);
+    expect(component.approximateResults()).toBe('partial');
+
+    component.results.set([{item: aspect, score: 1, matches: [], fuzzy: true, partial: false}]);
+    expect(component.approximateResults()).toBe('fuzzy');
+
+    component.results.set([{item: aspect, score: 1, matches: [], fuzzy: false, partial: false}]);
+    expect(component.approximateResults()).toBeNull();
   });
 
   it('should navigate to local element and edit model', () => {

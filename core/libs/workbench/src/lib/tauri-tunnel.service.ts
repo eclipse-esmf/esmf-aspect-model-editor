@@ -22,6 +22,7 @@ import {
   TauriSignals,
   TauriSignalsService,
   TauriTunnelPort,
+  WindowSession,
 } from '@ame/shared';
 import {Injectable, inject} from '@angular/core';
 import {BehaviorSubject, Observable, of} from 'rxjs';
@@ -38,7 +39,7 @@ export class TauriTunnelService implements TauriTunnelPort {
   private translate = inject(LanguageTranslationService);
   private bridges = inject(TAURI_IPC_BRIDGES, {optional: true}) ?? [];
 
-  public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string}>(null);
+  public startUpData$ = new BehaviorSubject<{isFirstWindow: boolean; model: string; session?: WindowSession; windowId?: string}>(null);
 
   sendTranslationsToTauri(language: string, customMenuItem?: any): void {
     this.translate.getTranslation(language).subscribe(translation => {
@@ -64,6 +65,10 @@ export class TauriTunnelService implements TauriTunnelPort {
     this.tauriSignalsService.addListener('requestMaximizeWindow', () => this.requestMaximizeWindow());
     this.tauriSignalsService.addListener('requestWindowData', () => this.requestWindowData());
     this.tauriSignalsService.addListener('requestRefreshWorkspaces', () => this.requestRefreshWorkspaces());
+    this.tauriSignalsService.addListener('updateSession', payload => this.ipcRenderer?.send(TAURI_EVENTS.REQUEST.UPDATE_SESSION, payload));
+    this.tauriSignalsService.addListener('setSessionRestoreEnabled', enabled =>
+      this.ipcRenderer?.send(TAURI_EVENTS.REQUEST.SET_SESSION_RESTORE, enabled),
+    );
   }
 
   private registerIpcEvents(): void {

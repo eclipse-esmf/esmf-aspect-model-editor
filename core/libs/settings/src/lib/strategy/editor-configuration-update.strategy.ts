@@ -28,6 +28,8 @@ export class EditorConfigurationUpdateStrategy implements SettingsUpdateStrategy
     settings.enableHierarchicalLayout = editorConfiguration.enableHierarchicalLayout;
     settings.showConnectionLabels = editorConfiguration.showConnectionLabels;
     settings.darkMode = editorConfiguration.darkMode;
+    settings.elementOrderStrategy = editorConfiguration.elementOrderStrategy ?? settings.elementOrderStrategy;
+    settings.restoreSession = editorConfiguration.restoreSession ?? settings.restoreSession;
 
     this.uiShellStore.setDarkMode(!!settings.darkMode);
     this.maxGraphSettingsService?.formatShapes(true);

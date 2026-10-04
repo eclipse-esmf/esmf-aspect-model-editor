@@ -12,7 +12,13 @@
  */
 
 import {GraphNavigatorPort, WorkspaceStore} from '@ame/domain';
-import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService} from '@ame/editor';
+import {
+  FileHandlingService,
+  ModelLoaderService,
+  ModelSavingTrackerService,
+  SessionRestoreService,
+  SessionTrackerService,
+} from '@ame/editor';
 import {LanguageTranslationService, LoadingScreenService, TauriSignalsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {NavigationEnd, Router} from '@angular/router';
@@ -37,6 +43,8 @@ describe('StartupService', () => {
   let fileHandlingService: {loadEmptyModel: ReturnType<typeof vi.fn>};
   let loadingScreenService: {open: ReturnType<typeof vi.fn>; close: ReturnType<typeof vi.fn>};
   let workspaceStore: {triggerRefresh: ReturnType<typeof vi.fn>};
+  let sessionRestoreService: {restore: ReturnType<typeof vi.fn>};
+  let sessionTrackerService: {start: ReturnType<typeof vi.fn>};
   let translate: {language: {loadingScreenDialog: {modelLoading: string; modelLoadingWait: string}}};
 
   beforeEach(() => {
@@ -53,6 +61,8 @@ describe('StartupService', () => {
     fileHandlingService = {loadEmptyModel: vi.fn(() => of(undefined))};
     loadingScreenService = {open: vi.fn(), close: vi.fn()};
     workspaceStore = {triggerRefresh: vi.fn()};
+    sessionRestoreService = {restore: vi.fn(() => of({loaded: [], missing: [], failed: []}))};
+    sessionTrackerService = {start: vi.fn()};
     translate = {language: {loadingScreenDialog: {modelLoading: 'Loading model', modelLoadingWait: 'Please wait'}}};
 
     TestBed.configureTestingModule({
@@ -68,6 +78,8 @@ describe('StartupService', () => {
         {provide: WorkspaceStore, useValue: workspaceStore},
         {provide: LanguageTranslationService, useValue: translate},
         {provide: Router, useValue: router},
+        {provide: SessionRestoreService, useValue: sessionRestoreService},
+        {provide: SessionTrackerService, useValue: sessionTrackerService},
       ],
     });
 
@@ -78,7 +90,7 @@ describe('StartupService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should load a model when startup data contains one and the graph is initialized', () => {
+  it('should load a model when startup data contains one and the graph is initialized', async () => {
     const next = vi.fn();
     service.listenForLoading().subscribe(next);
 
@@ -101,6 +113,25 @@ describe('StartupService', () => {
     expect(loadingScreenService.close).toHaveBeenCalled();
     expect(workspaceStore.triggerRefresh).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith([]);
+    await Promise.resolve();
+    expect(sessionTrackerService.start).toHaveBeenCalled();
+  });
+
+  it('should restore the session of a reopened window and start tracking afterwards', async () => {
+    const session = {models: [{namespace: 'ns', file: 'A.ttl', aspectModelUrn: 'urn:samm:ns#A'}], activeIndex: 0};
+    service.listenForLoading().subscribe();
+
+    events$.next(new NavigationEnd(1, '/editor', '/editor'));
+    startUpData$.next({isFirstWindow: true, model: null, session, windowId: 'main'});
+    expect(sessionTrackerService.start).not.toHaveBeenCalled();
+    graphInitialized$.next(true);
+
+    expect(sessionRestoreService.restore).toHaveBeenCalledWith(session, {windowId: 'main'});
+    expect(fileHandlingService.loadEmptyModel).not.toHaveBeenCalled();
+    expect(modelLoaderService.renderModel).not.toHaveBeenCalled();
+    expect(workspaceStore.triggerRefresh).toHaveBeenCalled();
+    await Promise.resolve();
+    expect(sessionTrackerService.start).toHaveBeenCalled();
   });
 
   it('should load an empty model when there is no model in the startup data', () => {

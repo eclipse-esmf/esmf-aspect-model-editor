@@ -12,16 +12,19 @@
  */
 
 import {GraphNavigatorPort, ModelOpenerPort, ModelSessionFacade, ShapeSettingsPort} from '@ame/domain';
-import {ElementIconComponent, ElementInfo, ElementType, sammElements} from '@ame/shared';
+import {ElementIconComponent, ElementInfo, ElementType, FullTextSearchResult, sammElements, SearchFieldMatch} from '@ame/shared';
 import {AfterViewInit, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
-import {toObservable} from '@angular/core/rxjs-interop';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
+import {debounceTime, distinctUntilChanged} from 'rxjs';
 import {SearchesStateService} from '../search-state.service';
+
+const SEARCH_DEBOUNCE_MS = 100;
 
 @Component({
   selector: 'ame-elements-search',
@@ -40,23 +43,35 @@ export class ElementsSearchComponent implements AfterViewInit {
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
 
   public readonly searchQuery = signal('');
-  public readonly elements = signal<NamedElement[]>([]);
+  public readonly results = signal<FullTextSearchResult<NamedElement>[]>([]);
+  public readonly elements = computed(() => this.results().map(result => result.item));
+
+  /** Set when no element contains all terms or only the typo tolerant search found something. */
+  public readonly approximateResults = computed<'partial' | 'fuzzy' | null>(() => {
+    const [first] = this.results();
+    if (!this.searchQuery().trim() || !first) {
+      return null;
+    }
+    return first.fuzzy ? 'fuzzy' : first.partial ? 'partial' : null;
+  });
 
   public readonly transformedElements = computed(() => {
-    return this.elements().map(element => {
+    return this.results().map(result => {
+      const element = result.item;
       const [type, elementData] = this.getElementType(element);
       return {
         element,
         symbol: elementData?.symbol,
         type,
+        hint: this.getMatchHint(result.matches),
       };
     });
   });
 
   constructor() {
-    toObservable(this.searchQuery).subscribe(value => {
-      this.elements.set(this.graphNavigator.searchElements(value));
-    });
+    toObservable(this.searchQuery)
+      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe(value => this.results.set(this.graphNavigator.searchElementsWithDetails(value)));
   }
 
   ngAfterViewInit() {
@@ -90,6 +105,11 @@ export class ElementsSearchComponent implements AfterViewInit {
 
   closeSearch() {
     this.searchesStateService.elementsSearch.close();
+  }
+
+  /** The field shown below the element name: the best match which is not the name itself, otherwise the URN. */
+  private getMatchHint(matches: SearchFieldMatch[]): SearchFieldMatch | null {
+    return matches.find(match => match.key === 'preferredName' || match.key === 'description') ?? null;
   }
 
   private getElementType(element: NamedElement): [ElementType, ElementInfo[ElementType]] {

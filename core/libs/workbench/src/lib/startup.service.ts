@@ -12,7 +12,13 @@
  */
 
 import {GraphNavigatorPort, WorkspaceStore} from '@ame/domain';
-import {FileHandlingService, ModelLoaderService, ModelSavingTrackerService} from '@ame/editor';
+import {
+  FileHandlingService,
+  ModelLoaderService,
+  ModelSavingTrackerService,
+  SessionRestoreService,
+  SessionTrackerService,
+} from '@ame/editor';
 import {LanguageTranslationService, LoadingScreenService, StartupPayload, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
@@ -32,20 +38,30 @@ export class StartupService {
   private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private router = inject(Router);
+  private sessionRestoreService = inject(SessionRestoreService);
+  private sessionTrackerService = inject(SessionTrackerService);
 
   listenForLoading() {
     return this.router.events.pipe(
       filter(ev => ev instanceof NavigationEnd && ev.url.includes('/editor')),
       switchMap(() => this.tauriTunnelService.startUpData$.asObservable()),
       sample(this.graphNavigator.graphInitialized$.pipe(filter(Boolean))),
-      switchMap(data =>
-        data?.model
+      switchMap(data => {
+        if (data?.session) {
+          return this.sessionRestoreService.restore(data.session, {windowId: data.windowId}).pipe(
+            tap(() => this.workspaceStore.triggerRefresh()),
+            switchMap(() => from(this.router.navigate([]))),
+          );
+        }
+        return data?.model
           ? this.loadModel(data.model).pipe(
               tap(() => this.workspaceStore.triggerRefresh()),
               switchMap(() => from(this.router.navigate([]))),
             )
-          : this.fileHandlingService.loadEmptyModel(),
-      ),
+          : this.fileHandlingService.loadEmptyModel();
+      }),
+      // Track the open models only after the startup models are in place, so a restore is never overwritten.
+      tap(() => this.sessionTrackerService.start()),
     );
   }
 

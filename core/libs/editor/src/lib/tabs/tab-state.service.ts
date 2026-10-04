@@ -211,6 +211,26 @@ export class TabStateService {
   }
 
   /**
+   * Marks the active tab as saved in the workspace (e.g. after the first save of a new model),
+   * so it can be reopened later, e.g. when the session is restored.
+   */
+  public markActiveTabInWorkspace(file: NamespaceFile): void {
+    const activeTab = this.activeTab();
+    if (!activeTab || !file) return;
+
+    const namespaceUrn = `urn:samm:${file.namespace}#`;
+    const anyElementUrn = file.rdfModel?.store
+      ?.getSubjects(null, null, null)
+      .find(subject => subject.termType === 'NamedNode' && subject.value.startsWith(namespaceUrn))?.value;
+
+    this.tabsStore.addOrUpdateTab({
+      ...activeTab,
+      fromWorkspace: true,
+      aspectModelUrn: activeTab.aspectModelUrn || file.aspect?.aspectModelUrn || anyElementUrn,
+    });
+  }
+
+  /**
    * Saves the current active tab's files snapshot and saved baseline before switching away.
    */
   public saveActiveTabSnapshot(): void {

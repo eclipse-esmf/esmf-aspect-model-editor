@@ -10,8 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {ConfigurationService, ModelSessionFacade, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
-import {GeneralConfig, LanguageTranslationService} from '@ame/shared';
+import {ConfigurationService, ModelHeaderService, ModelSessionFacade, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
+import {DEFAULT_ELEMENT_ORDER_STRATEGY, GeneralConfig, LanguageTranslationService} from '@ame/shared';
 import {inject, Injectable, signal} from '@angular/core';
 import {disabled, form, pattern, required, validate} from '@angular/forms/signals';
 import {RdfModel} from '@esmf/aspect-model-loader';
@@ -36,6 +36,8 @@ const createDefaultSettingsModel = (): SettingsFormData => ({
     enableHierarchicalLayout: true,
     showConnectionLabels: true,
     darkMode: false,
+    elementOrderStrategy: DEFAULT_ELEMENT_ORDER_STRATEGY,
+    restoreSession: true,
   },
   languageConfiguration: {
     userInterface: 'en',
@@ -63,6 +65,7 @@ export class SettingsFormService {
   private readonly namespaceConfigStrategy = inject(NamespaceConfigurationUpdateStrategy);
   private readonly copyrightHeaderUpdateStrategy = inject(CopyrightHeaderUpdateStrategy);
   private readonly loadedFilesService = inject(ModelSessionFacade);
+  private readonly modelHeaderService = inject(ModelHeaderService);
 
   private get currentLoadedFile(): NamespaceFile | undefined {
     return this.loadedFilesService.currentLoadedFile;
@@ -165,6 +168,8 @@ export class SettingsFormService {
         enableHierarchicalLayout: settings.enableHierarchicalLayout,
         showConnectionLabels: settings.showConnectionLabels,
         darkMode: settings.darkMode ?? false,
+        elementOrderStrategy: settings.elementOrderStrategy ?? DEFAULT_ELEMENT_ORDER_STRATEGY,
+        restoreSession: settings.restoreSession !== false,
       },
       languageConfiguration: {
         userInterface: this.translate.translateService.getActiveLang(),
@@ -177,7 +182,9 @@ export class SettingsFormService {
         sammVersion: GeneralConfig?.sammVersion || '2.3.0',
       },
       copyrightHeaderConfiguration: {
-        copyright: (settings.copyrightHeader || []).join('\n'),
+        copyright: this.currentLoadedFile
+          ? this.modelHeaderService.getHeaderText(this.currentLoadedFile.rdfModel)
+          : (settings.copyrightHeader || []).join('\n'),
       },
     });
   }

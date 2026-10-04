@@ -30,6 +30,30 @@ export interface ExternalReferenceOptions {
   y?: number;
   version?: string;
   modelVersion?: string;
+  prefixDialog?: ReferencePrefixDialogAction;
+  /** The model into which the element is dropped (default: AspectDefault). */
+  baseModel?: string;
+}
+
+/**
+ * What to do with the namespace prefix dialog which is opened when an element of a namespace without prefix is dropped:
+ * confirm the suggested prefix, use the automatic prefix (ext-<namespace>, default) or leave the dialog open (to test it).
+ */
+export type ReferencePrefixDialogAction = 'confirm' | 'skip' | 'keep-open';
+
+export const SELECTOR_referencePrefixDialog = 'ame-namespace-prefix-dialog';
+
+export async function handleReferencePrefixDialog(page: Page, action: ReferencePrefixDialogAction = 'skip'): Promise<void> {
+  if (action === 'keep-open') return;
+  const dialog = page.locator(SELECTOR_referencePrefixDialog);
+  // the dialog only opens for namespaces which have no prefix yet
+  const opened = await dialog
+    .waitFor({state: 'visible', timeout: 1500})
+    .then(() => true)
+    .catch(() => false);
+  if (!opened) return;
+  await dialog.getByTestId(action === 'confirm' ? 'reference-prefix-confirm' : 'reference-prefix-skip').click();
+  await expect(dialog).toBeHidden();
 }
 
 export function readFixture(relativePath: string): string {
@@ -122,7 +146,13 @@ export async function setupExternalReference(
   });
 }
 
-export async function dragElementToGraph(page: Page, selector: string, x: number, y: number): Promise<void> {
+export async function dragElementToGraph(
+  page: Page,
+  selector: string,
+  x: number,
+  y: number,
+  prefixDialog: ReferencePrefixDialogAction = 'skip',
+): Promise<void> {
   const sourceElement = page.locator(selector).first();
   await expect(sourceElement).toBeVisible();
 
@@ -143,6 +173,7 @@ export async function dragElementToGraph(page: Page, selector: string, x: number
     {sel: selector, posX: x, posY: y},
   );
   await page.waitForTimeout(300);
+  await handleReferencePrefixDialog(page, prefixDialog);
 }
 
 export async function dragExternalElementFromWorkspace(
@@ -154,11 +185,12 @@ export async function dragExternalElementFromWorkspace(
     x?: number;
     y?: number;
     hasChildren?: boolean;
+    prefixDialog?: ReferencePrefixDialogAction;
+    baseModel?: string;
   },
 ): Promise<void> {
   const page = helper.page;
-  const defaultRdf = readFixture('default-models/aspect-default.txt');
-  await helper.loadModel(defaultRdf);
+  await helper.loadModel(options.baseModel ?? readFixture('default-models/aspect-default.txt'));
 
   await page.locator(SELECTOR_workspaceBtn).click();
   await expect(page.locator('ame-workspace-file-list')).toBeVisible({timeout: 15000});
@@ -173,7 +205,7 @@ export async function dragExternalElementFromWorkspace(
 
   const selector = options.hasChildren ? `:nth-child(1) > ${options.elementSelector}` : options.elementSelector;
 
-  await dragElementToGraph(page, selector, options.x ?? 100, options.y ?? 300);
+  await dragElementToGraph(page, selector, options.x ?? 100, options.y ?? 300, options.prefixDialog);
 }
 
 export async function setupAndDragExternalReference(helper: AppHelper, options: ExternalReferenceOptions): Promise<void> {

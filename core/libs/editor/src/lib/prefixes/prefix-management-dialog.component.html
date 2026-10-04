@@ -1,0 +1,136 @@
+<ng-container *transloco="let t">
+  <!--
+    ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+    ~
+    ~ See the AUTHORS file(s) distributed with this work for
+    ~ additional information regarding authorship.
+    ~
+    ~ This Source Code Form is subject to the terms of the Mozilla Public
+    ~ License, v. 2.0. If a copy of the MPL was not distributed with this
+    ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+    ~
+    ~ SPDX-License-Identifier: MPL-2.0
+    -->
+
+  <h2 mat-dialog-title>{{ t('prefixes.management.title') }}</h2>
+
+  <mat-dialog-content class="prefix-dialog">
+    <p class="prefix-dialog__hint">
+      <mat-icon>info</mat-icon>
+      {{ t('prefixes.management.description') }}
+    </p>
+
+    <table class="prefix-table" data-testid="prefix-table">
+      <thead>
+        <tr>
+          <th>{{ t('prefixes.prefix') }}</th>
+          <th>{{ t('prefixes.namespace') }}</th>
+          <th>{{ t('prefixes.management.status') }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.alias) {
+          <tr [attr.data-testid]="'prefix-row-' + (row.alias || 'default')">
+            <td class="prefix-table__alias">
+              @if (editingAlias() === row.alias) {
+                <mat-form-field class="prefix-table__edit" subscriptSizing="dynamic">
+                  <input
+                    [value]="editValue()"
+                    (input)="onInput('edit', $event)"
+                    (keyup.enter)="saveRename()"
+                    (keydown.escape)="$event.stopPropagation(); cancelRename()"
+                    matInput
+                    data-testid="prefix-rename-input"
+                  />
+                </mat-form-field>
+                @if (editError(); as error) {
+                  <span class="prefix-table__error" data-testid="prefix-rename-error">{{ t('prefixes.errors.' + error) }}</span>
+                }
+              } @else {
+                <code>{{ row.alias === '' ? t('prefixes.management.default') : row.alias + ':' }}</code>
+              }
+            </td>
+            <td class="prefix-table__namespace">
+              <code>{{ row.namespace }}</code>
+            </td>
+            <td>
+              <span class="prefix-table__status" [class.prefix-table__status--unused]="!row.used">
+                {{ row.used ? t('prefixes.management.used') : t('prefixes.management.unused') }}
+              </span>
+              @if (rowError()?.alias === row.alias) {
+                <span class="prefix-table__error" data-testid="prefix-row-error">{{ t('prefixes.errors.' + rowError()?.error) }}</span>
+              }
+            </td>
+            <td class="prefix-table__actions">
+              @if (row.protected) {
+                <mat-icon class="prefix-table__lock" [matTooltip]="t('prefixes.management.protected')">lock</mat-icon>
+              } @else if (editingAlias() === row.alias) {
+                <button
+                  [matTooltip]="t('prefixes.management.save')"
+                  (click)="saveRename()"
+                  mat-icon-button
+                  data-testid="prefix-rename-save"
+                >
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button [matTooltip]="t('prefixes.management.cancel')" (click)="cancelRename()" mat-icon-button>
+                  <mat-icon>close</mat-icon>
+                </button>
+              } @else {
+                <button
+                  [matTooltip]="t('prefixes.management.rename')"
+                  (click)="startRename(row)"
+                  mat-icon-button
+                  data-testid="prefix-rename"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  [matTooltip]="row.used ? t('prefixes.errors.prefixInUse') : t('prefixes.management.remove')"
+                  [disabled]="row.used"
+                  (click)="remove(row)"
+                  mat-icon-button
+                  data-testid="prefix-remove"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <h3 class="prefix-dialog__subtitle">{{ t('prefixes.management.addTitle') }}</h3>
+    <div class="prefix-dialog__add">
+      <mat-form-field class="prefix-dialog__add-alias" subscriptSizing="dynamic">
+        <mat-label>{{ t('prefixes.prefix') }}</mat-label>
+        <input [value]="newAlias()" (input)="onInput('alias', $event)" matInput data-testid="prefix-add-alias" />
+      </mat-form-field>
+      <mat-form-field class="prefix-dialog__add-namespace" subscriptSizing="dynamic">
+        <mat-label>{{ t('prefixes.namespace') }}</mat-label>
+        <input
+          [value]="newNamespace()"
+          (input)="onInput('namespace', $event)"
+          (keyup.enter)="add()"
+          matInput
+          placeholder="https://example.org/battery#"
+          data-testid="prefix-add-namespace"
+        />
+      </mat-form-field>
+      <button [disabled]="!newAlias().trim() || !newNamespace().trim()" (click)="add()" mat-flat-button data-testid="prefix-add">
+        {{ t('prefixes.management.add') }}
+      </button>
+    </div>
+    @if (addError(); as error) {
+      <p class="prefix-table__error" data-testid="prefix-add-error">{{ t('prefixes.errors.' + error) }}</p>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button (click)="close()" mat-flat-button color="primary" data-testid="prefix-management-close">
+      {{ t('prefixes.management.close') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

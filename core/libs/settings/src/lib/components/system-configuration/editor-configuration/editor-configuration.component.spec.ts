@@ -76,4 +76,15 @@ describe('EditorConfigurationComponent', () => {
     expect(component).toBeTruthy();
     expect(component.form.editorConfiguration).toBeDefined();
   });
+
+  it('should offer the element order strategies with the default selected', () => {
+    expect(component.elementOrderStrategies).toEqual(['formatterDefault', 'keepOrderAfterParent', 'keepOrderAppend']);
+    expect(component.form.editorConfiguration.elementOrderStrategy().value()).toBe('formatterDefault');
+    expect(fixture.nativeElement.querySelector('[data-testid="elementOrderSelect"]')).toBeTruthy();
+  });
+
+  it('should offer the session restore toggle, enabled by default', () => {
+    expect(component.form.editorConfiguration.restoreSession().value()).toBe(true);
+    expect(fixture.nativeElement.querySelector('[data-testid="restoreSessionToggle"]')).toBeTruthy();
+  });
 });

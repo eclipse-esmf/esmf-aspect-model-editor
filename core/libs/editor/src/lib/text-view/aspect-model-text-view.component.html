@@ -52,6 +52,24 @@
     >
       <mat-icon>search</mat-icon>
     </button>
+    <button
+      [matTooltip]="canSortElements() ? t('textView.sortAlphabetically') : t('textView.sortAlphabeticallyDisabled')"
+      [disabled]="state() !== 'ready' || !canSortElements()"
+      (click)="sortAlphabetically()"
+      mat-icon-button
+      data-testid="text-view-sort"
+    >
+      <mat-icon>sort_by_alpha</mat-icon>
+    </button>
+    <button
+      [matTooltip]="t('textView.prefixes')"
+      [disabled]="state() === 'loading'"
+      (click)="openPrefixManagement()"
+      mat-icon-button
+      data-testid="text-view-prefixes"
+    >
+      <mat-icon>alternate_email</mat-icon>
+    </button>
     <button [matTooltip]="t('textView.refresh')" [disabled]="loading()" (click)="reload()" mat-icon-button data-testid="text-view-refresh">
       <mat-icon>refresh</mat-icon>
     </button>

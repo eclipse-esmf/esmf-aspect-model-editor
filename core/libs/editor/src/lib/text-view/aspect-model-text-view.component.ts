@@ -11,24 +11,37 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {GraphNavigatorPort, ModelValidationStore, TabsStore} from '@ame/domain';
+import {
+  ConfigurationService,
+  GraphNavigatorPort,
+  LoadedFilesService,
+  ModelDocumentService,
+  ModelValidationStore,
+  TabsStore,
+} from '@ame/domain';
 import {MaxGraphHelper, MaxGraphShapeSelectorService} from '@ame/graph';
 import {createDebouncedLoading, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {afterNextRender, Component, computed, DestroyRef, effect, ElementRef, inject, signal, untracked, viewChild} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {catchError, map, of, Subject, switchMap, tap} from 'rxjs';
+import {catchError, debounceTime, map, of, Subject, switchMap, take, tap} from 'rxjs';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
+import {ModelSavingTrackerService} from '../model-saving-tracker.service';
+import {PrefixManagementService} from '../prefixes/prefix-management.service';
+import {TabStateService} from '../tabs/tab-state.service';
 import {AspectModelText, AspectModelTextService} from './aspect-model-text.service';
 import {EditorViewModeService} from './editor-view-mode.service';
 import type {TurtleEditor} from './turtle-editor';
 import {findElementLine, ViolationLine} from './turtle-text.utils';
 
 export type TextViewState = 'loading' | 'ready' | 'empty' | 'error';
+
+/** Graph changes often come in bursts (e.g. moving several elements); the text is created once they are done. */
+const RELOAD_DEBOUNCE_MS = 250;
 
 @Component({
   selector: 'ame-aspect-model-text-view',
@@ -49,6 +62,12 @@ export class AspectModelTextViewComponent {
   private readonly fileHandlingService = inject(FileHandlingService);
   private readonly notificationsService = inject(NotificationsService);
   private readonly translate = inject(LanguageTranslationService);
+  private readonly modelDocumentService = inject(ModelDocumentService);
+  private readonly loadedFilesService = inject(LoadedFilesService);
+  private readonly modelSavingTracker = inject(ModelSavingTrackerService);
+  private readonly tabStateService = inject(TabStateService);
+  private readonly prefixManagementService = inject(PrefixManagementService);
+  private readonly settings = toSignal(inject(ConfigurationService).settings$);
 
   private readonly reload$ = new Subject<void>();
   private editor: TurtleEditor | null = null;
@@ -61,6 +80,7 @@ export class AspectModelTextViewComponent {
   public readonly content = signal('');
   public readonly formatted = signal(true);
   public readonly targetLine = signal<number | null>(null);
+  public readonly canSortElements = computed(() => this.settings()?.elementOrderStrategy !== 'formatterDefault');
   public readonly lineCount = computed(() => (this.content() ? this.content().split('\n').length : 0));
 
   public readonly violationLines = computed<ViolationLine[]>(() => {
@@ -80,6 +100,7 @@ export class AspectModelTextViewComponent {
 
     this.reload$
       .pipe(
+        debounceTime(RELOAD_DEBOUNCE_MS),
         tap(() => this.loading.show()),
         switchMap(() =>
           this.textService.load().pipe(
@@ -98,6 +119,8 @@ export class AspectModelTextViewComponent {
         }
         this.applyText(result.text);
       });
+
+    this.prefixManagementService.prefixesChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.reload());
 
     effect(() => {
       this.tabsStore.activeTabId();
@@ -143,6 +166,24 @@ export class AspectModelTextViewComponent {
       this.state.set('loading');
     }
     this.reload$.next();
+  }
+
+  /** Sorts the elements of the file alphabetically; the order is written with the next save. */
+  sortAlphabetically(): void {
+    const rdfModel = this.loadedFilesService.currentLoadedFile?.rdfModel;
+    if (!rdfModel || !this.canSortElements()) {
+      return;
+    }
+    this.modelDocumentService.sortAlphabetically(rdfModel);
+    this.modelSavingTracker.isSaved$.pipe(take(1)).subscribe(isSaved => {
+      this.tabStateService.setTabDirty(this.tabStateService.activeTabId(), !isSaved);
+    });
+    this.notificationsService.info({title: this.translate.language?.textView?.sorted, timeout: 5000});
+    this.reload();
+  }
+
+  openPrefixManagement(): void {
+    this.prefixManagementService.openManagement();
   }
 
   copy(): void {

@@ -12,13 +12,13 @@
  */
 
 import {
-  ConfigurationService,
   FileHandlingPort,
   getNamespaceModels,
   LoadedFilePayload,
   LoadedFilesService,
   ModelApiPort,
   ModelData,
+  ModelDocumentService,
   ModelService,
   NamespaceFile,
   RdfModelUtil,
@@ -103,7 +103,7 @@ export class FileHandlingService implements FileHandlingPort {
   private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private tauriSignalsService = inject(TauriSignalsService);
-  private configurationService = inject(ConfigurationService);
+  private modelDocumentService = inject(ModelDocumentService);
   private modelSaveTracker = inject(ModelSavingTrackerService);
   private fileUploadService = inject(FileUploadService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
@@ -301,9 +301,7 @@ export class FileHandlingService implements FileHandlingPort {
       map(() => this.rdfService.serializeModel(rdfModel)),
       switchMap(serializedModel => this.modelApiService.fetchFormatedAspectModel(serializedModel, rdfModel.getSourceLocation())),
       switchMap(formattedModel => {
-        const header = this.configurationService.getSettings().copyrightHeader.join('\n');
-        const fullText = header + '\n\n' + formattedModel;
-        return of(fullText);
+        return of(this.modelDocumentService.toDocument(formattedModel, rdfModel));
       }),
       catchError(httpError => {
         this.notificationsService.error({title: 'Copying error', message: httpError?.error?.error?.message});
@@ -375,8 +373,10 @@ export class FileHandlingService implements FileHandlingPort {
         const rdfModelTtl = this.rdfService.serializeModel(rdfModel);
         return this.modelApiService.fetchFormatedAspectModel(rdfModelTtl, rdfModel.getSourceLocation()).pipe(
           tap(formattedModel => {
-            const header = this.configurationService.getSettings().copyrightHeader.join('\n');
-            saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
+            saveAs(
+              new Blob([this.modelDocumentService.toDocument(formattedModel, rdfModel)], {type: 'text/turtle;charset=utf-8'}),
+              fileName,
+            );
           }),
         );
       }),
@@ -720,6 +720,7 @@ export class FileHandlingService implements FileHandlingPort {
 
     this.currentLoadedFile?.resetOriginalUrn();
     this.currentLoadedFile?.setExistsInWorkspace();
+    this.tabStateService.markActiveTabInWorkspace(this.currentLoadedFile);
 
     this.tauriSignalsService.call('updateWindowInfo', {
       namespace: this.currentLoadedFile?.namespace || '',

@@ -153,4 +153,38 @@ describe('LoadingComponent', () => {
     expect(result).toBe('<ttl content>');
     expect(modelApiService.fetchAspectMetaModel).toHaveBeenCalledWith('urn:samm:example#Aspect');
   });
+
+  it('should hand a restored session to the editor without fetching the model', () => {
+    const session = {models: [{namespace: 'ns', file: 'A.ttl', aspectModelUrn: 'urn:samm:ns#A'}], activeIndex: 0};
+    tauriSignalsService.call.mockImplementation((action: string) => {
+      if (action === 'isFirstWindow') return of(false);
+      if (action === 'requestWindowData') return of({id: 'win-1', options: {namespace: 'ns', file: 'A.ttl', session}});
+      return of(undefined);
+    });
+
+    createComponent();
+    fixture.detectChanges();
+
+    expect(modelApiService.fetchAspectMetaModel).not.toHaveBeenCalled();
+    expect(tauriTunnelService.startUpData$.value).toEqual({isFirstWindow: false, model: null, session, windowId: 'win-1'});
+    expect(router.navigate).toHaveBeenCalled();
+  });
+
+  it('should start with an empty model when the session is empty or no model urn is given', () => {
+    createComponent();
+    for (const options of [{session: {models: [], activeIndex: 0}}, {namespace: 'ns', file: 'A.ttl'}]) {
+      modelApiService.fetchAspectMetaModel.mockClear();
+      tauriSignalsService.call.mockImplementation((action: string) => {
+        if (action === 'isFirstWindow') return of(true);
+        if (action === 'requestWindowData') return of({id: 'main', options});
+        return of(undefined);
+      });
+
+      let result: string | null = 'not set';
+      component.loadModelText().subscribe(value => (result = value));
+
+      expect(result).toBeNull();
+      expect(modelApiService.fetchAspectMetaModel).not.toHaveBeenCalled();
+    }
+  });
 });

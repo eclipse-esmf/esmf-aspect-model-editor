@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ElementOrderStrategy} from '@ame/shared';
 import {Langcode} from './langcode';
 
 export interface AutomatedWorkflowFormData {
@@ -25,6 +26,8 @@ export interface EditorConfigurationFormData {
   enableHierarchicalLayout: boolean;
   showConnectionLabels: boolean;
   darkMode: boolean;
+  elementOrderStrategy: ElementOrderStrategy;
+  restoreSession: boolean;
 }
 
 export interface AspectModelLanguageEntry {

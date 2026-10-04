@@ -71,6 +71,16 @@ function createTauriBridge(): TauriApi {
             case TAURI_EVENTS.REQUEST.UPDATE_DATA:
               invoke('update_window_data', {windowLabel: winLabel, options: payload});
               break;
+            case TAURI_EVENTS.REQUEST.UPDATE_SESSION:
+              invoke('update_session_models', {
+                windowLabel: winLabel,
+                models: (payload as any)?.models ?? [],
+                activeIndex: (payload as any)?.activeIndex ?? 0,
+              });
+              break;
+            case TAURI_EVENTS.REQUEST.SET_SESSION_RESTORE:
+              invoke('set_session_restore_enabled', {enabled: payload !== false});
+              break;
             case TAURI_EVENTS.REQUEST.MAXIMIZE_WINDOW:
               invoke('maximize_window', {windowLabel: winLabel});
               break;

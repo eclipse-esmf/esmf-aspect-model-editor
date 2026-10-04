@@ -52,7 +52,7 @@ import {
   useUpdater,
   ValidateStatus,
 } from '@ame/shared';
-import {DestroyRef, inject, Injectable, signal} from '@angular/core';
+import {DestroyRef, inject, Injectable, Injector, signal} from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
 import {DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {Cell, EventObject, FitPlugin, gestureUtils, Graph, GraphDataModel, InternalEvent} from '@maxgraph/core';
@@ -63,6 +63,7 @@ import type {EditorFormModel} from './editor-dialog/forms/editor-signal-form-con
 import {ShapeSettingsStateService} from './editor-dialog/services/shape-settings-state.service';
 import {ModelSaverService} from './model-saver.service';
 import {ConfirmDialogEnum} from './models/confirm-dialog.enum';
+import {PrefixManagementService} from './prefixes/prefix-management.service';
 
 @Injectable({providedIn: 'root'})
 export class EditorService implements DraggablePort, EditorValidationPort {
@@ -92,6 +93,7 @@ export class EditorService implements DraggablePort, EditorValidationPort {
   private modelElementNamingService = inject(ModelElementNamingService);
   private themeService = inject(ThemeService);
   private destroyRef = inject(DestroyRef);
+  private injector = inject(Injector);
 
   private validateModelSubscription$: Subscription;
   public readonly isAllShapesExpanded = signal<boolean>(true);
@@ -282,6 +284,8 @@ export class EditorService implements DraggablePort, EditorValidationPort {
             this.maxgraphService.navigateToCell(cell, true);
           }
         }
+        // the referenced namespace needs a prefix in the current file (resolved lazily: the service depends on the editor service)
+        this.injector.get(PrefixManagementService).ensurePrefixForReference(aspectModelUrn).subscribe();
       } else {
         this.notificationsService.warning({
           title: 'Element is already used',
@@ -373,7 +377,8 @@ export class EditorService implements DraggablePort, EditorValidationPort {
       const prefixesArray = this.convertArraysToArray(Object.entries(prefixes));
 
       const externalPrefixToBeDeleted = prefixesArray.filter(el => el.value === `${urnToBeChecked}#`);
-      if (externalPrefixToBeDeleted && externalPrefixToBeDeleted.length > 0) {
+      // prefixes declared in the file or chosen by the user are kept
+      if (externalPrefixToBeDeleted?.length > 0 && !rdfModel.serializationMetadata.isExplicitPrefix(externalPrefixToBeDeleted[0].name)) {
         rdfModel.removePrefix(externalPrefixToBeDeleted[0].name);
       }
     }

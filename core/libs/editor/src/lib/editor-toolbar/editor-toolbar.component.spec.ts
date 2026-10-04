@@ -23,6 +23,7 @@ import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ShapeSettingsService} from '../editor-dialog';
 import {EditorService} from '../editor.service';
+import {PrefixManagementService} from '../prefixes/prefix-management.service';
 import {EditorToolbarComponent} from './editor-toolbar.component';
 import {FileHandlingService} from './services';
 
@@ -75,6 +76,7 @@ describe('EditorToolbarComponent', () => {
           isModelEmpty: signal(false),
         }),
         MockProvider(NotificationsService),
+        MockProvider(PrefixManagementService, {openManagement: vi.fn()}),
       ],
     }).compileComponents();
 
@@ -113,5 +115,10 @@ describe('EditorToolbarComponent', () => {
   it('validateFile should call fileHandlingService.onValidateFile', () => {
     component.validateFile();
     expect(fileHandlingService.onValidateFile).toHaveBeenCalled();
+  });
+
+  it('should open the prefix management', () => {
+    component.openPrefixManagement();
+    expect(TestBed.inject(PrefixManagementService).openManagement).toHaveBeenCalled();
   });
 });

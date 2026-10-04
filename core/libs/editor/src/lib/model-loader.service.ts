@@ -12,11 +12,11 @@
  */
 
 import {
-  ConfigurationService,
   FileEntry,
   FileInformation,
   LoadedFilesService,
   ModelApiPort,
+  ModelDocumentService,
   ModelInstantiatorPort,
   ModelLoaderPort,
   NamespaceFile,
@@ -52,22 +52,17 @@ export class ModelLoaderService implements ModelLoaderPort {
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);
   private tauriSignalsService = inject(TauriSignalsService);
-  private configurationService = inject(ConfigurationService);
   private titleService = inject(TitleService);
+  private modelDocumentService = inject(ModelDocumentService);
 
   private readonly tabStateService = inject(TabStateService);
 
   private tmpLoadedFiles: TmpLoadedFiles;
 
-  private get settings() {
-    return this.configurationService.getSettings();
-  }
-
   /**
    * Loads a model with its dependencies and renders it
    */
   renderModel(payload: LoadModelPayload) {
-    this.settings.copyrightHeader = RdfModelUtil.extractCommentsFromRdfContent(payload.rdfAspectModel);
     this.tmpLoadedFiles = {
       files: {...this.loadedFilesService.files},
       currentLoadedFile: this.loadedFilesService.currentLoadedFile,
@@ -156,6 +151,8 @@ export class ModelLoaderService implements ModelLoaderPort {
             );
             // filtering and registering the elements by their location in files
             this.moveElementsToTheirCacheFile(rdfModels, mergedFile, payload);
+            // remember which element stands at which position before the user can rename elements
+            Object.values(rdfModels).forEach(rdfModel => this.modelDocumentService.bindElements(rdfModel));
 
             return of(
               render

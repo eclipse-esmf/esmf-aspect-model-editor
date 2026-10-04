@@ -11,12 +11,27 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+/** A saved workspace model which is open in a window (one per tab). */
+export interface SessionModelInfo {
+  namespace: string;
+  file: string;
+  aspectModelUrn: string;
+}
+
+/** The models of one window as stored in the session and handed back to a restored window. */
+export interface WindowSession {
+  models: SessionModelInfo[];
+  activeIndex: number;
+}
+
 export interface StartupPayload {
   namespace: string;
   file: string;
   editElement?: string;
   fromWorkspace?: boolean;
   aspectModelUrn?: string;
+  /** Set when the window is reopened from the last session. */
+  session?: WindowSession;
 }
 
 export interface StartupData {

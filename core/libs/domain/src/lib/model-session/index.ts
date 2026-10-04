@@ -13,5 +13,7 @@
 
 export * from './cache-utils';
 export * from './loaded-files.service';
+export * from './model-header.service';
 export * from './model.service';
 export * from './rdf-model-util';
+export * from './serialization';

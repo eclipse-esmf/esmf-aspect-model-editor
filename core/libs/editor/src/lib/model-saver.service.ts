@@ -16,6 +16,7 @@ import {
   getNamespaceModels,
   LoadedFilesService,
   ModelApiPort,
+  ModelDocumentService,
   ModelSaverPort,
   ModelService,
   NamespaceFile,
@@ -43,6 +44,7 @@ export class ModelSaverService implements ModelSaverPort {
   private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private configurationService = inject(ConfigurationService);
+  private modelDocumentService = inject(ModelDocumentService);
 
   private readonly tabStateService = inject(TabStateService);
 
@@ -140,8 +142,7 @@ export class ModelSaverService implements ModelSaverPort {
           }));
         }
 
-        const copyright = this.settings.copyrightHeader.join('\n');
-        const contentWithCopyright = `${copyright}\n${content}`;
+        const contentWithCopyright = this.modelDocumentService.toDocument(content, currentModel);
 
         const originalAspectModelUrn = this.currentFile?.originalAspectModelUrn;
         const newAspectModelUrn = this.currentFile?.getAnyAspectModelUrn();

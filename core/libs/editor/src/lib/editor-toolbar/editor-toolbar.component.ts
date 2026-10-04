@@ -24,6 +24,7 @@ import {first} from 'rxjs/operators';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
 import {ShapeSettingsService} from '../editor-dialog/services/shape-settings.service';
 import {EditorService} from '../editor.service';
+import {PrefixManagementService} from '../prefixes/prefix-management.service';
 import {EditorViewModeService} from '../text-view/editor-view-mode.service';
 import {FileHandlingService} from './services';
 
@@ -43,6 +44,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
   private matDialog = inject(MatDialog);
   private shapeSettingsService = inject(ShapeSettingsService);
   private maxgraphService = inject(MaxGraphService);
+  private prefixManagementService = inject(PrefixManagementService);
 
   public notificationsService = inject(NotificationsService);
 
@@ -74,6 +76,10 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
         (document.activeElement as HTMLButtonElement).blur();
       }
     });
+  }
+
+  openPrefixManagement() {
+    this.prefixManagementService.openManagement();
   }
 
   editSelectedCell() {

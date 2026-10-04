@@ -11,10 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ModelDocumentService} from '@ame/domain';
 import {LanguageTranslationService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
-import {DataFactory, Store} from 'n3';
+import {DataFactory, Parser, Store} from 'n3';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {RdfSerializerService} from './rdf-serializer.service';
 
@@ -366,5 +367,123 @@ describe('RdfSerializerService', () => {
     expect(serialized).not.toContain('_:b_list1');
     expect(serialized).not.toContain('first');
     expect(serialized).not.toContain('rest');
+  });
+
+  describe('prefix preservation', () => {
+    const property = DataFactory.namedNode('urn:samm:org.eclipse.esmf:test:1.0.0#prop');
+    const sammDescription = DataFactory.namedNode('urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#description');
+
+    function createModel(): RdfModel {
+      const store = new Store();
+      store.addQuad(property, sammDescription, DataFactory.literal('A property', 'en'));
+      const rdfModel = new RdfModel(store, '2.2.0', 'urn:samm:org.eclipse.esmf:test:1.0.0');
+      rdfModel.addPrefix('ex', 'http://example.com#');
+      return rdfModel;
+    }
+
+    it('should drop unused prefixes which were not declared explicitly', () => {
+      const serialized = service.serializeModel(createModel());
+      expect(serialized).not.toContain('@prefix ex:');
+    });
+
+    it('should keep explicit prefixes even when no statement uses them', () => {
+      const rdfModel = createModel();
+      rdfModel.serializationMetadata.markPrefixExplicit('ex');
+
+      expect(service.serializeModel(rdfModel)).toContain('@prefix ex: <http://example.com#>.');
+    });
+
+    it('should not keep an explicit prefix which was removed from the model', () => {
+      const rdfModel = createModel();
+      rdfModel.serializationMetadata.markPrefixExplicit('ex');
+      rdfModel.removePrefix('ex');
+
+      expect(service.serializeModel(rdfModel)).not.toContain('@prefix ex:');
+    });
+  });
+
+  describe('element order', () => {
+    const NS = 'urn:samm:org.eclipse.esmf:test:1.0.0#';
+    const SAMM = 'urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#';
+    const node = (name: string) => DataFactory.namedNode(`${NS}${name}`);
+    const samm = (name: string) => DataFactory.namedNode(`${SAMM}${name}`);
+    const rdfType = DataFactory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+
+    it('should write the subjects in the resolved order and the attributes in SAMM order', () => {
+      const order = [`${NS}b`, `${NS}a`];
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          RdfSerializerService,
+          {provide: LanguageTranslationService, useValue: translationService},
+          {provide: ModelDocumentService, useValue: {resolveSubjectOrder: () => order}},
+        ],
+      });
+      const orderedService = TestBed.inject(RdfSerializerService);
+
+      const store = new Store();
+      store.addQuad(node('a'), samm('description'), DataFactory.literal('A', 'en'));
+      store.addQuad(node('a'), rdfType, samm('Property'));
+      store.addQuad(node('b'), samm('see'), DataFactory.namedNode('http://example.com/b'));
+      store.addQuad(node('b'), samm('description'), DataFactory.literal('B', 'en'));
+      store.addQuad(node('b'), samm('preferredName'), DataFactory.literal('B', 'en'));
+      store.addQuad(node('b'), rdfType, samm('Property'));
+      const rdfModel = new RdfModel(store, '2.2.0', 'urn:samm:org.eclipse.esmf:test:1.0.0');
+
+      const serialized = orderedService.serializeModel(rdfModel);
+
+      expect(serialized.indexOf(':b')).toBeLessThan(serialized.indexOf(':a'));
+      const b = serialized.slice(serialized.indexOf(':b'), serialized.indexOf(':a'));
+      const positions = ['a samm:Property', 'samm:preferredName', 'samm:description', 'samm:see'].map(text => b.indexOf(text));
+      expect(positions.every(position => position >= 0)).toBe(true);
+      expect([...positions].sort((x, y) => x - y)).toEqual(positions);
+    });
+
+    it('should write every statement and list exactly once', () => {
+      const ttl = `@prefix samm: <${SAMM}> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <${NS}> .
+
+:SimpleAspect a samm:Aspect ;
+   samm:properties ( :property1 [ samm:property :property2 ; samm:optional true ] ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+:property1 a samm:Property ;
+   samm:characteristic :Characteristic1 .
+
+:property2 a samm:Property ;
+   samm:characteristic :Characteristic1 .
+
+:Characteristic1 a samm:Characteristic ;
+   samm:dataType xsd:string .
+`;
+      const order = ['SimpleAspect', 'property1', 'property2', 'Characteristic1'].map(name => `${NS}${name}`);
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          RdfSerializerService,
+          {provide: LanguageTranslationService, useValue: translationService},
+          {provide: ModelDocumentService, useValue: {resolveSubjectOrder: () => order}},
+        ],
+      });
+      const orderedService = TestBed.inject(RdfSerializerService);
+      const store = new Store(new Parser().parse(ttl));
+      const rdfModel = new RdfModel(store, '2.2.0', 'urn:samm:org.eclipse.esmf:test:1.0.0');
+
+      const serialized = orderedService.serializeModel(rdfModel);
+      const count = (text: string) => serialized.split(text).length - 1;
+
+      expect(count('samm:properties')).toBe(1);
+      expect(count('samm:operations')).toBe(1);
+      expect(count('samm:events')).toBe(1);
+      expect(count('samm:dataType')).toBe(1);
+      expect(count(':property1')).toBe(2);
+      expect(count('samm:property :property2')).toBe(1);
+      expect(serialized).not.toContain('rdf:first');
+
+      const reparsed = new Store(new Parser().parse(serialized));
+      expect(reparsed.size).toBe(store.size);
+    });
   });
 });

@@ -12,11 +12,13 @@
  */
 
 import {Observable} from 'rxjs';
-import {StartupData, StartupPayload} from './startup-options';
+import {StartupData, StartupPayload, WindowSession} from './startup-options';
 
 export interface TauriPayloadOnly {
   updateWindowInfo: StartupPayload;
   openWindow: StartupPayload;
+  updateSession: WindowSession;
+  setSessionRestoreEnabled: boolean;
 }
 
 export interface TauriReturnDataOnly {

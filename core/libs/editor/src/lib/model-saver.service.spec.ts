@@ -15,6 +15,7 @@ import {
   ConfigurationService,
   LoadedFilesService,
   ModelApiPort,
+  ModelDocumentService,
   ModelService,
   NamespaceFile,
   RdfPort,
@@ -61,6 +62,9 @@ describe('ModelSaverService', () => {
         }),
         MockProvider(ModelService, {
           synchronizeModelToRdf: vi.fn(() => of(undefined)),
+        }),
+        MockProvider(ModelDocumentService, {
+          toDocument: vi.fn((formatted: string) => `# file header\n\n${formatted}`),
         }),
         MockProvider(ModelSavingTrackerService, {
           updateSavedModel: vi.fn(),
@@ -125,5 +129,15 @@ describe('ModelSaverService', () => {
     expect(modelApiService.saveAspectModel).toHaveBeenCalled();
     expect(modelSavingTracker.updateSavedModel).toHaveBeenCalled();
     expect(notificationsService.info).toHaveBeenCalled();
+  });
+
+  it('saveModel should save the formatted model as document with the header and order of the loaded file', async () => {
+    const modelDocumentService = TestBed.inject(ModelDocumentService);
+    const loadedFilesService = TestBed.inject(LoadedFilesService);
+
+    await new Promise(resolve => service.saveModel().subscribe(resolve));
+
+    expect(modelDocumentService.toDocument).toHaveBeenCalledWith('formatted content', loadedFilesService.currentLoadedFile?.rdfModel);
+    expect(vi.mocked(modelApiService.saveAspectModel).mock.calls[0][0]).toBe('# file header\n\nformatted content');
   });
 });

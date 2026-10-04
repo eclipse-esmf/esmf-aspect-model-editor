@@ -114,7 +114,8 @@
     "hideNavigation": "Hide navigation!!!",
     "showNavigation": "Show navigation!!!",
     "modelUnfiltered": "Model unfiltered",
-    "modelFilteredByProperties": "Model filtered by Properties"
+    "modelFilteredByProperties": "Model filtered by Properties",
+    "prefixes": "Prefixes"
   },
   "loadMenu": {
     "newWindow": "New window",
@@ -402,7 +403,16 @@
       "darkModeTooltip": "Toggle dark mode theme for the editor and graph canvas.",
       "autoValidationTooltip": "After completing a validation, after passing the waiting period the next auto-validation will be triggered.",
       "autoFormattingTooltip": "Auto format elements on the graph.",
-      "displayDisambiguationLabelTooltip": "Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set."
+      "displayDisambiguationLabelTooltip": "Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set.",
+      "elementOrder": "Element order when saving",
+      "elementOrderTooltip": "Defines the order of the elements in the saved Turtle file. Keeping the order of the file keeps Git diffs small. The order inside an element always follows the SAMM specification.",
+      "elementOrderOptions": {
+        "keepOrderAfterParent": "Keep order, insert new elements after their parent",
+        "keepOrderAppend": "Keep order, append new elements at the end",
+        "formatterDefault": "Order of the ESMF SDK formatter"
+      },
+      "restoreSession": "Restore open models on start",
+      "restoreSessionTooltip": "Reopens the saved workspace models of the last session with their window size and position (desktop app only). Models which were closed are not reopened."
     },
     "languages": {
       "aspectModel": "Aspect Model",
@@ -410,6 +420,7 @@
       "chooseLanguage": "Choose language",
       "english": "English",
       "chinese": "Chinese",
+      "german": "German",
       "addLanguage": "Add Language",
       "selectLanguage": "Select language",
       "startType": "Start typing to select language"
@@ -675,6 +686,16 @@
         "openInNewTab": "Open in new tab",
         "openInNewWindow": "Open in new window"
       }
+    },
+    "elements": {
+      "partialMatches": "No element contains all terms. Showing the closest matches.",
+      "fuzzyMatches": "No exact match. Showing similar elements.",
+      "fields": {
+        "name": "Name",
+        "preferredName": "Preferred name",
+        "description": "Description",
+        "urn": "URN"
+      }
     }
   },
   "entityValue": {
@@ -745,7 +766,11 @@
     "loading": "Preparing aspect model text...",
     "empty": "The model is empty. Add elements in the graph view to see their Turtle representation.",
     "loadError": "The textual representation of the aspect model could not be created.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "sortAlphabetically": "Sort elements alphabetically",
+    "sortAlphabeticallyDisabled": "Not available while the element order is defined by the formatter (Settings > Editor)",
+    "sorted": "Elements sorted alphabetically. Save the model to write the new order to the file.",
+    "prefixes": "Manage prefixes"
   },
   "menu": {
     "file": {
@@ -809,5 +834,47 @@
       "elements": "Elements",
       "files": "Files"
     }
+  },
+  "prefixes": {
+    "prefix": "Prefix",
+    "namespace": "Namespace",
+    "management": {
+      "title": "Prefixes",
+      "description": "A prefix is only a short notation for a namespace. Renaming a prefix changes how IRIs are written in the file, the IRIs themselves stay the same.",
+      "status": "Status",
+      "used": "Used",
+      "unused": "Not used",
+      "default": "(default)",
+      "protected": "This prefix belongs to the model or to the SAMM/RDF vocabularies and can not be changed",
+      "rename": "Rename prefix",
+      "save": "Save",
+      "cancel": "Cancel",
+      "remove": "Remove prefix",
+      "addTitle": "Add prefix",
+      "add": "Add",
+      "close": "Close"
+    },
+    "reference": {
+      "title": "Prefix for referenced namespace",
+      "description": "The element comes from a namespace which has no prefix in this Aspect Model yet. Choose the prefix which is used in the file.",
+      "conflict": "The referenced file uses the prefix \"{{ alias }}\", but in this Aspect Model it already stands for {{ namespace }}. Please choose another prefix.",
+      "example": "The element is written as",
+      "automatic": "Use automatic prefix",
+      "add": "Add prefix"
+    },
+    "errors": {
+      "invalidAlias": "A prefix must start with a letter and may only contain letters, digits, \"_\", \"-\" and \".\" (not at the end). Reserved prefixes can not be used.",
+      "invalidNamespace": "Please enter a valid namespace IRI, e.g. https://example.org/battery#",
+      "aliasInUse": "The prefix is already used for another namespace.",
+      "aliasInUseBy": "The prefix is already used for {{ namespace }}.",
+      "namespaceInUse": "The namespace already has a prefix.",
+      "unknownAlias": "The prefix does not exist.",
+      "protectedAlias": "This prefix can not be changed.",
+      "prefixInUse": "The prefix is used by elements of the model and can not be removed."
+    }
+  },
+  "session": {
+    "modelNotFound": "The required Aspect Model {{name}} could not be found.",
+    "modelNotRestored": "The Aspect Model {{name}} could not be restored."
   }
 }

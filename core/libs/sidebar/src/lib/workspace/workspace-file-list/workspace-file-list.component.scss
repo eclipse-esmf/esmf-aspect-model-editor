@@ -152,6 +152,12 @@
       z-index: 10;
       position: relative;
 
+      // The open menu's backdrop removes the row hover. The trigger must stay rendered, otherwise
+      // the menu loses its anchor and jumps to the top left corner on the next repositioning.
+      &[aria-expanded='true'] {
+        display: inline-flex;
+      }
+
       &:focus {
         outline: 2px solid #007bc0;
         outline-offset: 2px;

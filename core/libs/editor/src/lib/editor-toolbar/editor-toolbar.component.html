@@ -100,6 +100,17 @@
       >
         <mat-icon class="material-icons">task</mat-icon>
       </ame-bar-item>
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isModelEmpty()"
+        [matTooltip]="t('toolbar.prefixes')"
+        (itemClick)="openPrefixManagement()"
+        data-testid="tbPrefixesButton"
+      >
+        <mat-icon class="material-icons">alternate_email</mat-icon>
+      </ame-bar-item>
     </div>
 
     <div class="menu-items__group">

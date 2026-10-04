@@ -1,0 +1,131 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+.prefix-dialog {
+  code {
+    font-family: monospace;
+    word-break: break-all;
+  }
+
+  &__namespace {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  &__label {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  &__field {
+    width: 100%;
+  }
+
+  &__hint,
+  &__warning {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+
+    mat-icon {
+      flex-shrink: 0;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__warning mat-icon {
+    color: var(--mat-sys-error, #b3261e);
+  }
+
+  &__subtitle {
+    margin: 24px 0 8px;
+    font-size: 14px;
+  }
+
+  &__add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__add-alias {
+    width: 140px;
+  }
+
+  &__add-namespace {
+    flex: 1;
+  }
+}
+
+.prefix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    font-weight: 500;
+    opacity: 0.7;
+    padding: 4px 8px;
+  }
+
+  td {
+    padding: 2px 8px;
+    border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+    vertical-align: middle;
+  }
+
+  &__alias {
+    white-space: nowrap;
+  }
+
+  &__edit {
+    width: 140px;
+  }
+
+  &__namespace {
+    width: 100%;
+  }
+
+  &__status {
+    white-space: nowrap;
+
+    &--unused {
+      opacity: 0.6;
+    }
+  }
+
+  &__error {
+    display: block;
+    color: var(--mat-sys-error, #b3261e);
+    font-size: 12px;
+  }
+
+  &__actions {
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  &__lock {
+    opacity: 0.5;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin: 0 12px;
+  }
+}

@@ -26,6 +26,7 @@ export class LanguageTranslationService {
   private readonly _supportedLanguages = [
     {code: 'en', language: 'ENGLISH'},
     {code: 'zh', language: 'CHINESE'},
+    {code: 'de', language: 'GERMAN'},
   ];
 
   public language: Translation;

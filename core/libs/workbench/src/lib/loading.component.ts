@@ -12,7 +12,7 @@
  */
 
 import {WorkspaceFacade} from '@ame/domain';
-import {NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
+import {NotificationsService, TauriSignals, TauriSignalsService, WindowSession} from '@ame/shared';
 import {NgOptimizedImage} from '@angular/common';
 import {Component, DestroyRef, OnInit, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -42,7 +42,7 @@ export class LoadingComponent implements OnInit {
   ngOnInit(): void {
     this.tauriSignalsService.call('requestMaximizeWindow');
 
-    forkJoin([this.tauriSignalsService.call('isFirstWindow'), this.loadModelText()])
+    forkJoin([this.tauriSignalsService.call('isFirstWindow'), this.loadStartupData()])
       .pipe(
         take(1),
         catchError(error => {
@@ -61,8 +61,8 @@ export class LoadingComponent implements OnInit {
           return;
         }
 
-        const [isFirstWindow, model] = result;
-        this.tauriTunnelService.startUpData$.next({isFirstWindow, model});
+        const [isFirstWindow, {model, session, windowId}] = result;
+        this.tauriTunnelService.startUpData$.next(session ? {isFirstWindow, model, session, windowId} : {isFirstWindow, model});
 
         const queryParams = Object.fromEntries(new URLSearchParams(window.location.search));
         this.router.navigate(['/editor'], {queryParams});
@@ -70,13 +70,26 @@ export class LoadingComponent implements OnInit {
   }
 
   loadModelText(): Observable<string | null> {
+    return this.loadStartupData().pipe(map(data => data.model));
+  }
+
+  /**
+   * Fetches the model of this window. Windows reopened from the last session are restored by the editor,
+   * which also handles models that no longer exist.
+   */
+  loadStartupData(): Observable<{model: string | null; session?: WindowSession; windowId?: string}> {
     return this.tauriSignalsService.call('requestWindowData').pipe(
       switchMap(data => {
-        if (!data?.options) {
-          return of(null);
+        if (data?.options?.session?.models?.length) {
+          return of({model: null, session: data.options.session, windowId: data.id});
         }
 
-        return this.modelApiService.fetchAspectMetaModel(data.options.aspectModelUrn).pipe(map(model => model.content));
+        // An empty session or a window without a model starts with an empty model.
+        if (!data?.options?.aspectModelUrn) {
+          return of({model: null});
+        }
+
+        return this.modelApiService.fetchAspectMetaModel(data.options.aspectModelUrn).pipe(map(model => ({model: model.content})));
       }),
     );
   }
