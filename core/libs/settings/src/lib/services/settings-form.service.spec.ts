@@ -22,7 +22,7 @@ import {
 import {LanguageTranslationService, TauriTunnelPort, TitleService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {SettingsFormService} from './settings-form.service';
+import {createDefaultSettingsModel, SettingsFormService} from './settings-form.service';
 
 describe('SettingsFormService', () => {
   let service: SettingsFormService;
@@ -201,5 +201,104 @@ describe('SettingsFormService', () => {
       },
     }));
     expect(service.settingsForm.copyrightHeaderConfiguration.copyright().invalid()).toBe(true);
+  });
+  describe('dirty state', () => {
+    beforeEach(() => service.initializeForm());
+
+    it('should be pristine right after initialization', () => {
+      expect(service.isDirty()).toBe(false);
+    });
+
+    it('should become dirty after a change and pristine again when the change is reverted', () => {
+      service.settingsModel.update(m => ({...m, editorConfiguration: {...m.editorConfiguration, darkMode: true}}));
+      expect(service.isDirty()).toBe(true);
+
+      service.settingsModel.update(m => ({...m, editorConfiguration: {...m.editorConfiguration, darkMode: false}}));
+      expect(service.isDirty()).toBe(false);
+    });
+
+    it('should take the current values as new baseline on markPristine()', () => {
+      service.settingsModel.update(m => ({...m, copyrightHeaderConfiguration: {copyright: '# 2026'}}));
+      service.markPristine();
+      expect(service.isDirty()).toBe(false);
+    });
+
+    it('should be pristine again after initializeForm()', () => {
+      service.settingsModel.update(m => ({...m, copyrightHeaderConfiguration: {copyright: '# changed'}}));
+      service.initializeForm();
+      expect(service.isDirty()).toBe(false);
+    });
+  });
+
+  describe('resetSection', () => {
+    it('should restore the defaults of the automated workflow only', () => {
+      service.settingsModel.update(m => ({
+        ...m,
+        automatedWorkflow: {...m.automatedWorkflow, autoSaveEnabled: false, saveTimerSeconds: 300, autoFormatEnabled: false},
+        editorConfiguration: {...m.editorConfiguration, darkMode: true},
+      }));
+
+      service.resetSection('automatedWorkflow');
+
+      expect(service.settingsModel().automatedWorkflow).toEqual(createDefaultSettingsModel().automatedWorkflow);
+      expect(service.settingsModel().editorConfiguration.darkMode).toBe(true);
+    });
+
+    it('should restore the defaults of the editor configuration', () => {
+      service.settingsModel.update(m => ({
+        ...m,
+        editorConfiguration: {...m.editorConfiguration, darkMode: true, showConnectionLabels: false},
+      }));
+
+      service.resetSection('editorConfiguration');
+
+      expect(service.settingsModel().editorConfiguration).toEqual(createDefaultSettingsModel().editorConfiguration);
+    });
+
+    it('should not share object references with the defaults', () => {
+      service.resetSection('automatedWorkflow');
+      expect(service.settingsModel().automatedWorkflow).not.toBe(createDefaultSettingsModel().automatedWorkflow);
+    });
+  });
+
+  describe('namespace validation depending on a loaded model', () => {
+    it('should validate and enable the namespace with a loaded model', () => {
+      service.initializeForm();
+      expect(service.hasLoadedModel()).toBe(true);
+      expect(service.settingsForm.namespaceConfiguration.aspectUri().disabled()).toBe(false);
+
+      service.settingsModel.update(m => ({...m, namespaceConfiguration: {...m.namespaceConfiguration, aspectUri: ''}}));
+      expect(service.settingsForm.namespaceConfiguration.aspectUri().invalid()).toBe(true);
+      expect(service.settingsForm().invalid()).toBe(true);
+    });
+
+    it('should keep the aspect name read-only for models with an aspect', () => {
+      service.initializeForm();
+      expect(service.settingsForm.namespaceConfiguration.aspectName().disabled()).toBe(true);
+
+      loadedFilesService.currentLoadedFile!.aspect = null;
+      service.initializeForm();
+      expect(service.settingsForm.namespaceConfiguration.aspectName().disabled()).toBe(false);
+    });
+
+    it('should neither validate nor enable the empty namespace without a model', () => {
+      loadedFilesService.currentLoadedFile = null;
+      service.initializeForm();
+
+      expect(service.hasLoadedModel()).toBe(false);
+      expect(service.settingsForm.namespaceConfiguration.aspectUri().disabled()).toBe(true);
+      expect(service.settingsForm.namespaceConfiguration.aspectVersion().disabled()).toBe(true);
+      expect(service.settingsForm.namespaceConfiguration.aspectName().disabled()).toBe(true);
+      expect(service.settingsForm.namespaceConfiguration.aspectUri().invalid()).toBe(false);
+      expect(service.settingsForm().invalid()).toBe(false);
+    });
+
+    it('should still validate the other sections without a model', () => {
+      loadedFilesService.currentLoadedFile = null;
+      service.initializeForm();
+      service.settingsModel.update(m => ({...m, copyrightHeaderConfiguration: {copyright: 'missing hash'}}));
+
+      expect(service.settingsForm().invalid()).toBe(true);
+    });
   });
 });

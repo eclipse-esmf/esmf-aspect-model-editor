@@ -13,12 +13,10 @@
   -->
 
   <div>
-    <h3>
-      Model Namespace
-      <mat-icon [matTooltipShowDelay]="0" [matTooltipHideDelay]="100" [matTooltip]="t('settingsDialog.namespaces.aspectNamespaceTooltip')"
-        >info
-      </mat-icon>
-    </h3>
+    <p class="namespace-hint">
+      <mat-icon>info</mat-icon>
+      <span>{{ t('settingsDialog.namespaces.aspectNamespaceTooltip') }}</span>
+    </p>
 
     <div class="namespace-fields">
       <mat-form-field class="namespace-setting-field">

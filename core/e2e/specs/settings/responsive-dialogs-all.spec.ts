@@ -42,7 +42,7 @@ async function expectDialogFits(page: Page, minActionButtons = 1): Promise<Locat
   await expect(dialog).toBeVisible();
   await expect.poll(() => isInsideViewport(page, dialog), {message: 'dialog inside viewport'}).toBe(true);
 
-  const buttons = dialog.locator('mat-dialog-actions button, .dialog-actions button, [mat-dialog-close]');
+  const buttons = dialog.locator('mat-dialog-actions button, .dialog-actions button, [mat-dialog-close], ame-dialog-close-button button');
   await expect.poll(() => buttons.count(), {message: 'action buttons rendered'}).toBeGreaterThanOrEqual(minActionButtons);
 
   const count = await buttons.count();

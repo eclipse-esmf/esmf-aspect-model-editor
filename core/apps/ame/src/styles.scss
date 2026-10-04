@@ -282,6 +282,11 @@ body.ame-resizing {
   z-index: 2 !important;
 }
 
+// Keep dialog titles clear of the (x) button in the top right corner.
+.mat-mdc-dialog-surface:has(.close-button) .mat-mdc-dialog-title {
+  padding-right: 56px;
+}
+
 .dialog-actions {
   margin-top: 20px;
   text-align: right;

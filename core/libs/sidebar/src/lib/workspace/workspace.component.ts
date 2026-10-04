@@ -12,7 +12,13 @@
  */
 
 import {ModelCheckerPort, ModelValidationStore, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
-import {createDebouncedLoading, IPC_RENDERER, LanguageTranslationService, NotificationsService, ResizeGutterComponent} from '@ame/shared';
+import {
+  ClipboardService,
+  createDebouncedLoading,
+  LanguageTranslationService,
+  NotificationsService,
+  ResizeGutterComponent,
+} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -53,7 +59,7 @@ export class WorkspaceComponent {
   private destroyRef = inject(DestroyRef);
   private modelChecker = inject(ModelCheckerPort);
   private modelApiService = inject(WorkspaceFacade);
-  private ipcRenderer = inject(IPC_RENDERER);
+  private clipboard = inject(ClipboardService);
   private notificationsService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);
 
@@ -132,29 +138,11 @@ export class WorkspaceComponent {
           const pathToCopy = response?.storagePath || response?.path;
           if (!pathToCopy) return;
 
-          if (this.ipcRenderer?.copyToClipboard) {
-            this.ipcRenderer.copyToClipboard(pathToCopy);
-          } else if (navigator.clipboard?.writeText && document.hasFocus()) {
-            navigator.clipboard.writeText(pathToCopy).catch(() => this.fallbackCopy(pathToCopy));
-          } else {
-            this.fallbackCopy(pathToCopy);
-          }
+          this.clipboard.copy(pathToCopy);
 
           const title = this.translate.translateService.translate('sidebar.workspace.copiedWorkspacePath');
           this.notificationsService.success({title, message: pathToCopy});
         },
       });
-  }
-
-  private fallbackCopy(text: string) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
   }
 }

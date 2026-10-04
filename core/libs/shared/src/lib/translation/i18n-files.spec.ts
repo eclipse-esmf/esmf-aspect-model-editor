@@ -37,7 +37,44 @@ const NEW_KEYS = [
   'declareNameDialog.title',
   'declareNameDialog.infoContent',
   'confirmDialog.createAspect.aspectCreationWarning',
+  // dialog (x) button, see chip copy, element list header
+  'dialog.close',
+  'editorCanvas.shapeSetting.field.seeInput.copy',
+  'editorCanvas.shapeSetting.field.seeInput.remove',
+  'editorCanvas.shapeSetting.field.seeInput.copied',
+  'sidebar.elementList.title',
+  'sidebar.elementList.close',
+  // settings dialog UX
+  'settingsDialog.search.placeholder',
+  'settingsDialog.search.clear',
+  'settingsDialog.search.noResults',
+  'settingsDialog.scope.application',
+  'settingsDialog.scope.applicationHint',
+  'settingsDialog.scope.model',
+  'settingsDialog.scope.noModel',
+  'settingsDialog.scope.modelHint',
+  'settingsDialog.description.automatedWorkflow',
+  'settingsDialog.description.editor',
+  'settingsDialog.description.languages',
+  'settingsDialog.description.namespaces',
+  'settingsDialog.description.copyright',
+  'settingsDialog.resetSection',
+  'settingsDialog.requiresModel',
+  'settingsDialog.sectionHasErrors',
+  'settingsDialog.errorsIn',
+  'settingsDialog.noChanges',
+  'settingsDialog.unsavedChanges.badge',
+  'settingsDialog.unsavedChanges.title',
+  'settingsDialog.unsavedChanges.content',
+  'settingsDialog.unsavedChanges.keepEditing',
+  'settingsDialog.unsavedChanges.discard',
 ];
+
+/** Keys whose translation must keep a Transloco parameter. */
+const PARAMETERIZED_KEYS: Record<string, string> = {
+  'settingsDialog.scope.model': '{{file}}',
+  'settingsDialog.errorsIn': '{{section}}',
+};
 
 describe('i18n files', () => {
   for (const language of LANGUAGES) {
@@ -48,6 +85,10 @@ describe('i18n files', () => {
         const value = lookup(json, key);
         expect(typeof value).toBe('string');
         expect((value as string).trim().length).toBeGreaterThan(0);
+      });
+
+      it.each(Object.entries(PARAMETERIZED_KEYS))('keeps the parameter of %s', (key, parameter) => {
+        expect(lookup(json, key)).toContain(parameter);
       });
 
       it('no longer uses the former "Shared Model" wording', () => {

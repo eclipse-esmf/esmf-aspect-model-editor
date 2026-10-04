@@ -34,6 +34,7 @@ import {ModelLoaderService} from '../../model-loader.service';
 import {ModelOpenerService} from '../../model-opener/model-opener.service';
 import {ModelSaverService} from '../../model-saver.service';
 import {ModelSavingTrackerService} from '../../model-saving-tracker.service';
+import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
 import {TabStateService} from '../../tabs/tab-state.service';
 import {FileHandlingService} from './file-handling.service';
 import {FileUploadService} from './file-upload.service';
@@ -180,5 +181,134 @@ describe('FileHandlingService', () => {
   it('copyToClipboardSync should use ipcRenderer when available', () => {
     service.copyToClipboardSync('test text');
     expect(copyToClipboardMock).toHaveBeenCalledWith('test text');
+  });
+
+  describe('saveAspectModelToWorkspace', () => {
+    let confirmDialogService: ConfirmDialogService;
+    let modelSaverService: ModelSaverService;
+    let savingTracker: ModelSavingTrackerService;
+    let handleRdfModel: ReturnType<typeof vi.spyOn>;
+    let migrateAffectedModels: ReturnType<typeof vi.spyOn>;
+    const savedModel = new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#');
+
+    function mockState(isNamespaceChanged: boolean): void {
+      vi.spyOn(service as any, 'getModelLoaderState').mockReturnValue(
+        of({
+          originalModelName: 'org.old:1.0.0:Model.ttl',
+          newModelName: 'org.new:1.0.0:Model.ttl',
+          oldFileName: 'Model.ttl',
+          newFileName: 'Model.ttl',
+          loadedFromWorkspace: true,
+          isNameChanged: false,
+          isNamespaceChanged,
+        }),
+      );
+    }
+
+    function save(): Promise<unknown> {
+      return new Promise((resolve, reject) => service.saveAspectModelToWorkspace().subscribe({next: resolve, error: reject}));
+    }
+
+    beforeEach(() => {
+      const translation = TestBed.inject(LanguageTranslationService);
+      Object.assign(translation.language as any, {
+        confirmDialog: {
+          namespaceChange: {
+            phrase4: '',
+            phrase7: '',
+            title: 'Namespace changed',
+            okButton: 'Ok',
+            actionButton: 'Keep',
+            cancelButton: 'Cancel',
+          },
+        },
+        loadingScreenDialog: {
+          ...(translation.language as any).loadingScreenDialog,
+          savingToWorkspaceTitle: 'Saving',
+          savingToWorkspaceContent: 'Wait',
+        },
+      });
+
+      confirmDialogService = TestBed.inject(ConfirmDialogService);
+      confirmDialogService.open = vi.fn() as any;
+      modelSaverService = TestBed.inject(ModelSaverService);
+      savingTracker = TestBed.inject(ModelSavingTrackerService);
+      modelSaverService.saveModel = vi.fn(() => of(savedModel)) as any;
+      handleRdfModel = vi.spyOn(service as any, 'handleRdfModel').mockImplementation(() => undefined);
+      migrateAffectedModels = vi.spyOn(service as any, 'migrateAffectedModels').mockReturnValue(of(null));
+    });
+
+    it('should save directly without a namespace change', async () => {
+      mockState(false);
+
+      await save();
+
+      expect(confirmDialogService.open).not.toHaveBeenCalled();
+      expect(modelSaverService.saveModel).toHaveBeenCalledTimes(1);
+      expect(savingTracker.updateSavedModel).toHaveBeenCalledTimes(1);
+      expect(handleRdfModel).toHaveBeenCalledWith(savedModel, expect.anything());
+      expect(loadingScreenService.close).toHaveBeenCalled();
+    });
+
+    it('should migrate and save when the namespace change is confirmed with OK', async () => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(ConfirmDialogEnum.ok)) as any;
+
+      await save();
+
+      expect(loadingScreenService.open).toHaveBeenCalledTimes(1);
+      expect(migrateAffectedModels).toHaveBeenCalledWith('org.old:1.0.0:Model.ttl', 'org.new:1.0.0:Model.ttl');
+      expect(modelSaverService.saveModel).toHaveBeenCalledTimes(1);
+      expect(savingTracker.updateSavedModel).toHaveBeenCalledTimes(1);
+    });
+
+    it('should save without migration on the "keep" action', async () => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(ConfirmDialogEnum.action)) as any;
+
+      await save();
+
+      expect(loadingScreenService.open).toHaveBeenCalledTimes(1);
+      expect(migrateAffectedModels).not.toHaveBeenCalled();
+      expect(modelSaverService.saveModel).toHaveBeenCalledTimes(1);
+    });
+
+    it.each([
+      ['Cancel', ConfirmDialogEnum.cancel],
+      ['(x) / Escape', undefined],
+      ['an unknown result', 'something-else'],
+    ])('should neither save nor mark the model as saved on %s', async (_label, result) => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(result)) as any;
+
+      await save();
+
+      expect(loadingScreenService.open).not.toHaveBeenCalled();
+      expect(migrateAffectedModels).not.toHaveBeenCalled();
+      expect(modelSaverService.saveModel).not.toHaveBeenCalled();
+      expect(savingTracker.updateSavedModel).not.toHaveBeenCalled();
+      expect(handleRdfModel).toHaveBeenCalledWith(null, expect.anything());
+    });
+
+    it('should keep the unsaved state when saving returns no model', async () => {
+      mockState(false);
+      modelSaverService.saveModel = vi.fn(() => of(null)) as any;
+
+      await save();
+
+      expect(savingTracker.updateSavedModel).not.toHaveBeenCalled();
+      expect(loadingScreenService.close).toHaveBeenCalled();
+    });
+
+    it('should close the loading screen also when saving fails', async () => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(ConfirmDialogEnum.action)) as any;
+      modelSaverService.saveModel = vi.fn(() => throwError(() => new Error('disk full'))) as any;
+
+      await expect(save()).rejects.toThrow('disk full');
+
+      expect(savingTracker.updateSavedModel).not.toHaveBeenCalled();
+      expect(loadingScreenService.close).toHaveBeenCalled();
+    });
   });
 });

@@ -19,7 +19,7 @@ import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loa
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AASXGenerationModalComponent} from './aasx-generation-modal.component';
 
@@ -64,7 +64,33 @@ describe('AASXGenerationModalComponent', () => {
     modelApiService = TestBed.inject(ModelApiPort);
     fixture = TestBed.createComponent(AASXGenerationModalComponent);
     component = fixture.componentInstance;
+    (dialogRef as unknown as {componentInstance: unknown}).componentInstance = component;
     fixture.detectChanges();
+  });
+
+  function closeButton(): HTMLButtonElement {
+    return fixture.nativeElement.querySelector('[data-testid="dialog-close-button"]');
+  }
+
+  it('should close via the shared (x) button / Escape when idle', () => {
+    closeButton().click();
+    expect(dialogRef.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not close via (x) / Escape while the file is generated', () => {
+    const pending = new Subject<string>();
+    (modelApiService.generateAASX as ReturnType<typeof vi.fn>).mockReturnValue(pending);
+
+    component.generate();
+    fixture.detectChanges();
+
+    expect(closeButton().disabled).toBe(true);
+    component.requestClose();
+    expect(dialogRef.close).not.toHaveBeenCalled();
+
+    pending.next('content');
+    pending.complete();
+    expect(dialogRef.close).toHaveBeenCalledTimes(1);
   });
 
   it('should create with aasx selected by default', () => {

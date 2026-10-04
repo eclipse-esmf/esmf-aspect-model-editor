@@ -12,6 +12,7 @@
  */
 
 import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
+import {ClipboardService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
@@ -57,6 +58,10 @@ interface SeeElement {
   ],
 })
 export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
+  private readonly clipboard = inject(ClipboardService);
+  private readonly notifications = inject(NotificationsService);
+  private readonly translation = inject(LanguageTranslationService);
+
   public readonly seeInput = viewChild<ElementRef>('see');
   public readonly chipList = viewChild('chipList', {read: MatChipGrid});
 
@@ -148,6 +153,17 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
       (this.metaModelElement as HasExtends)?.extends_?.see?.join(',') ||
       ''
     );
+  }
+
+  /** Copies the URI of a see entry exactly as it is stored (no decoding). */
+  copyElement(element: SeeElement, event?: Event): void {
+    event?.stopPropagation();
+    this.clipboard.copy(element.urn);
+    this.notifications.success({
+      title: this.translation.translateService.translate('editorCanvas.shapeSetting.field.seeInput.copied'),
+      message: element.urn,
+      timeout: 3000,
+    });
   }
 
   removeElement(element: SeeElement) {

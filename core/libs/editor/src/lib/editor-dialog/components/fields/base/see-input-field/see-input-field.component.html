@@ -29,7 +29,23 @@
           matTooltipClass="mat-tooltip--long"
         >
           <span class="chip-content">{{ element.name || element.urn }}</span>
-          <button data-testid="see-remove-chip" type="button" matChipRemove>
+          <button
+            class="see-copy-chip"
+            [attr.aria-label]="t('editorCanvas.shapeSetting.field.seeInput.copy')"
+            [matTooltip]="t('editorCanvas.shapeSetting.field.seeInput.copy')"
+            (click)="copyElement(element, $event)"
+            (keydown.enter)="$event.stopPropagation()"
+            data-testid="see-copy-chip"
+            type="button"
+          >
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <button
+            [attr.aria-label]="t('editorCanvas.shapeSetting.field.seeInput.remove')"
+            data-testid="see-remove-chip"
+            type="button"
+            matChipRemove
+          >
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip-row>

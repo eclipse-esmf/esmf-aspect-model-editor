@@ -54,6 +54,8 @@
           <button
             class="file"
             [class.selected]="selection.isSelected(namespace.key, file.name)"
+            [class.selected--linked]="selection.isSelected(namespace.key, file.name) && sidebarService.fileElements.opened()"
+            [attr.data-testid]="'workspace-file-' + file.name"
             [class.outdated]="file.outdated"
             [class.errored]="file.errored"
             [matTooltip]="getFileTooltip(namespace.key, file)"

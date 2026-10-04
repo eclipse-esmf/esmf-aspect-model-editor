@@ -27,13 +27,14 @@ export class NamespaceConfigurationUpdateStrategy implements SettingsUpdateStrat
     if (!namespaceConfiguration) return;
 
     const currentFile = this.loadedFilesService.currentLoadedFile;
-    if (currentFile) {
-      this.loadedFilesService.updateAbsoluteName(
-        currentFile.absoluteName,
-        `${namespaceConfiguration.aspectUri}:${namespaceConfiguration.aspectVersion}:${namespaceConfiguration.aspectName}.ttl`,
-      );
-      this.titleService.updateTitle(currentFile.absoluteName);
-    }
+    // The namespace belongs to the loaded model; without a model there is nothing to change.
+    if (!currentFile) return;
+
+    this.loadedFilesService.updateAbsoluteName(
+      currentFile.absoluteName,
+      `${namespaceConfiguration.aspectUri}:${namespaceConfiguration.aspectVersion}:${namespaceConfiguration.aspectName}.ttl`,
+    );
+    this.titleService.updateTitle(currentFile.absoluteName);
 
     settings.namespace = namespaceConfiguration.aspectUri;
     settings.version = namespaceConfiguration.aspectVersion;

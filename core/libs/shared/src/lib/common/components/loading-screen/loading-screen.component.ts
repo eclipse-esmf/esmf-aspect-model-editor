@@ -17,16 +17,22 @@ import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {LoadingScreenOptions} from '../../services/loading-screen.service';
+import {DialogCloseButtonComponent} from '../dialog-close-button/dialog-close-button.component';
 
 @Component({
   selector: 'ame-loading-screen',
   templateUrl: './loading-screen.component.html',
   styleUrls: ['./loading-screen.component.scss'],
-  imports: [MatProgressBarModule, MatDialogModule, TranslocoDirective, MatButtonModule],
+  imports: [DialogCloseButtonComponent, MatProgressBarModule, MatDialogModule, TranslocoDirective, MatButtonModule],
 })
 export class LoadingScreenComponent {
   private dialog = inject(MatDialogRef<LoadingScreenComponent>);
   public data = inject(MAT_DIALOG_DATA) as LoadingScreenOptions;
+
+  /** A running process can only be stopped by its own close button (if offered). */
+  requestClose(): void {
+    if (this.data.hasCloseButton) this.close();
+  }
 
   close() {
     if (typeof this.data.closeButtonAction === 'function') {

@@ -58,6 +58,27 @@ async function expectHandleInsidePanel(panel: Locator, gutter: Locator, edge: 's
     .toEqual({insideHorizontally: true, onEdge: true, centred: true});
 }
 
+/** Offset between the centre of the grip icon and the centre of its handle (x, y) in px. */
+async function iconOffset(gutter: Locator): Promise<{dx: number; dy: number}> {
+  return gutter.evaluate(element => {
+    const handle = element.querySelector('.resize-gutter__handle').getBoundingClientRect();
+    const icon = element.querySelector('.resize-gutter__icon').getBoundingClientRect();
+    return {
+      dx: Math.abs(icon.left + icon.width / 2 - (handle.left + handle.width / 2)),
+      dy: Math.abs(icon.top + icon.height / 2 - (handle.top + handle.height / 2)),
+    };
+  });
+}
+
+async function expectIconCentred(gutter: Locator): Promise<void> {
+  await expect.poll(async () => (await iconOffset(gutter)).dx, {message: 'icon horizontally centred'}).toBeLessThanOrEqual(1);
+  await expect.poll(async () => (await iconOffset(gutter)).dy, {message: 'icon vertically centred'}).toBeLessThanOrEqual(1);
+}
+
+async function backgroundOf(locator: Locator): Promise<string> {
+  return locator.evaluate(element => getComputedStyle(element).backgroundColor);
+}
+
 async function mockWorkspace(page: Page): Promise<void> {
   await setUpDefaultRoutes(page);
   await page.route(`**${NAMESPACES_URL}`, route =>
@@ -73,6 +94,13 @@ async function mockWorkspace(page: Page): Promise<void> {
                 name: 'SampleModel.ttl',
                 model: 'SampleModel.ttl',
                 aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#SampleModel',
+                version: SAMM_VERSION_ACTUAL,
+                existing: true,
+              },
+              {
+                name: 'OtherModel.ttl',
+                model: 'OtherModel.ttl',
+                aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#OtherModel',
                 version: SAMM_VERSION_ACTUAL,
                 existing: true,
               },
@@ -92,6 +120,13 @@ async function mockWorkspace(page: Page): Promise<void> {
           aspectModel: readFixture('default-models/aspect-default.txt'),
           absoluteName: 'org.eclipse.examples.aspect:1.0.0:SampleModel.ttl',
           fileName: 'SampleModel.ttl',
+          modelVersion: SAMM_VERSION_ACTUAL,
+        },
+        {
+          aspectModelUrn: 'urn:samm:org.eclipse.examples.aspect:1.0.0#OtherModel',
+          aspectModel: readFixture('default-models/aspect-default.txt'),
+          absoluteName: 'org.eclipse.examples.aspect:1.0.0:OtherModel.ttl',
+          fileName: 'OtherModel.ttl',
           modelVersion: SAMM_VERSION_ACTUAL,
         },
       ]),
@@ -197,6 +232,106 @@ test.describe('Resizable panels', () => {
       expect(await page.evaluate(() => localStorage.getItem('ame.sidebar.fileElements.width'))).toBe('470');
     });
 
+    test('grip icon is centred in its handle and stays centred after resizing', async ({page}) => {
+      const gutter = page.getByTestId('workspace-resize-gutter');
+      await expectIconCentred(gutter);
+      await dragBy(page, gutter, 80);
+      await expectIconCentred(gutter);
+
+      await page.getByRole('button', {name: 'Select file SampleModel.ttl'}).click();
+      await expectIconCentred(page.getByTestId('file-elements-resize-gutter'));
+    });
+
+    test('grip icon is not clipped by its handle', async ({page}) => {
+      const clipped = await page.getByTestId('workspace-resize-gutter').evaluate(element => {
+        const handle = element.querySelector('.resize-gutter__handle').getBoundingClientRect();
+        const icon = element.querySelector('.resize-gutter__icon').getBoundingClientRect();
+        return icon.height > handle.height + 0.5 || icon.width <= 0;
+      });
+      expect(clipped).toBe(false);
+    });
+
+    test.describe('workspace and element list side by side', () => {
+      test.beforeEach(async ({page}) => {
+        await page.getByRole('button', {name: 'Select file SampleModel.ttl'}).click();
+        await expect(page.locator('ame-workspace-file-elements')).toBeVisible();
+      });
+
+      test('the element list has its own tinted background and an accent edge', async ({page}) => {
+        const elements = page.locator('ame-workspace-file-elements');
+        const workspace = page.locator('ame-workspace');
+
+        expect(await backgroundOf(elements)).not.toBe(await backgroundOf(workspace));
+        await expect(elements).toHaveCSS('border-left-style', 'solid');
+        await expect(elements).toHaveCSS('border-left-width', '4px');
+      });
+
+      test('the element list header names the panel, the file and the namespace', async ({page}) => {
+        const header = page.getByTestId('file-elements-header');
+        await expect(header).toContainText(/element list|elementliste/i);
+        await expect(header.locator('h2')).toHaveText('SampleModel.ttl');
+        await expect(page.getByTestId('file-elements-namespace')).toHaveText('org.eclipse.examples.aspect:1.0.0');
+      });
+
+      test('the selected workspace file is visually linked to the element list', async ({page}) => {
+        const row = page.getByTestId('workspace-file-SampleModel.ttl');
+        await expect(row).toHaveClass(/selected--linked/);
+        await expect(row).toHaveCSS('font-weight', '500');
+        // The former arrow next to the selected file is gone; the highlight alone marks the link.
+        const arrow = await row.evaluate(element => getComputedStyle(element, '::after').content);
+        expect(['none', 'normal', '']).toContain(arrow);
+
+        const [rowBox, workspaceBox] = await Promise.all([row.boundingBox(), page.locator('ame-workspace').boundingBox()]);
+        expect(rowBox.x + rowBox.width).toBeLessThanOrEqual(workspaceBox.x + workspaceBox.width + 1);
+      });
+
+      test('the file menu (three dots) is always visible: subtle by default, fully on hover and on the selected row', async ({page}) => {
+        await page.mouse.move(900, 500);
+        const selectedMenu = page.getByTestId('workspace-file-SampleModel.ttl').locator('[data-testid="openFileMenu"]');
+        await expect(selectedMenu).toBeVisible();
+        await expect.poll(async () => Number(await selectedMenu.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
+
+        const otherRow = page.getByTestId('workspace-file-OtherModel.ttl');
+        const otherMenu = otherRow.locator('[data-testid="openFileMenu"]');
+        await expect(otherMenu).toBeVisible();
+        await expect.poll(async () => Number(await otherMenu.evaluate(el => getComputedStyle(el).opacity))).toBeLessThan(0.6);
+        await expect.poll(async () => Number(await otherMenu.evaluate(el => getComputedStyle(el).opacity))).toBeGreaterThan(0.2);
+
+        await otherRow.hover();
+        await expect.poll(async () => Number(await otherMenu.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
+      });
+
+      test('the file menu can be opened with the keyboard without hovering', async ({page}) => {
+        await page.mouse.move(900, 500);
+        const otherMenu = page.getByTestId('workspace-file-OtherModel.ttl').locator('[data-testid="openFileMenu"]');
+        await otherMenu.focus();
+        await expect.poll(async () => Number(await otherMenu.evaluate(el => getComputedStyle(el).opacity))).toBe(1);
+        await page.keyboard.press('Enter');
+        await expect(page.locator('.mat-mdc-menu-panel')).toBeVisible();
+        await page.keyboard.press('Escape');
+      });
+
+      test('closing the element list removes the link and the panel', async ({page}) => {
+        await page.getByTestId('file-elements-close').click();
+
+        await expect(page.locator('ame-workspace-file-elements')).toHaveCount(0);
+        await expect(page.getByTestId('workspace-file-SampleModel.ttl')).not.toHaveClass(/selected--linked/);
+      });
+
+      test('the element list close button explains itself', async ({page}) => {
+        const close = page.getByTestId('file-elements-close');
+        await expect(close).toHaveAttribute('aria-label', /close|schließen/i);
+      });
+
+      test('the distinction also works in dark mode', async ({page}) => {
+        await page.getByTestId('darkModeBtn').click();
+        await expect.poll(() => page.evaluate(() => document.documentElement.classList.contains('dark-theme'))).toBe(true);
+        const elements = page.locator('ame-workspace-file-elements');
+        expect(await backgroundOf(elements)).not.toBe(await backgroundOf(page.locator('ame-workspace')));
+        await expect(elements).toHaveCSS('border-left-width', '4px');
+      });
+    });
+
     test('panel widths never exceed the window on small screens', async ({page}) => {
       await page.setViewportSize({width: 800, height: 600});
       const panel = page.locator('ame-workspace');
@@ -219,6 +354,7 @@ test.describe('Resizable panels', () => {
     await expectHandleInsidePanel(panel, gutter, 'end');
     const initial = await width(panel);
 
+    await expectIconCentred(gutter);
     await dragBy(page, gutter, 120);
     await expectWidth(panel, initial + 120);
 

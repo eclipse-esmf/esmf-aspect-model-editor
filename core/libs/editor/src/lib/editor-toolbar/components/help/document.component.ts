@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {APP_CONFIG, AppConfig, ExternalLinkDirective} from '@ame/shared';
+import {APP_CONFIG, AppConfig, DialogCloseButtonComponent, ExternalLinkDirective} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -22,7 +22,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
   selector: 'ame-document',
   templateUrl: './document.component.html',
   styleUrls: ['./document.component.scss'],
-  imports: [MatButtonModule, MatIconModule, MatDialogModule, TranslocoDirective, ExternalLinkDirective],
+  imports: [DialogCloseButtonComponent, MatButtonModule, MatIconModule, MatDialogModule, TranslocoDirective, ExternalLinkDirective],
 })
 export class DocumentComponent {
   public config = inject(APP_CONFIG) as AppConfig;

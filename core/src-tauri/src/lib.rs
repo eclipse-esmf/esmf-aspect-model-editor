@@ -51,15 +51,22 @@ pub fn run() {
       }
       menu::handle_menu_click(app, event.id().as_ref());
     })
-    .on_window_event(|window, event| match event {
-      WindowEvent::CloseRequested { api, .. } => {
-        api.prevent_close();
-        let _ = window.emit("IS_FILE_SAVED", window.label());
+    .on_window_event(|window, event| {
+      // Documentation/print windows show a plain HTML file without the AME frontend: nobody could answer
+      // the unsaved-changes check, so they close normally and are not part of the session.
+      if is_print_window(window.label()) {
+        return;
       }
-      WindowEvent::Moved(_) | WindowEvent::Resized(_) => {
-        capture_window_geometry(window, &window.state::<SessionState>());
+      match event {
+        WindowEvent::CloseRequested { api, .. } => {
+          api.prevent_close();
+          let _ = window.emit("IS_FILE_SAVED", window.label());
+        }
+        WindowEvent::Moved(_) | WindowEvent::Resized(_) => {
+          capture_window_geometry(window, &window.state::<SessionState>());
+        }
+        _ => {}
       }
-      _ => {}
     })
     .invoke_handler(tauri::generate_handler![
             get_backend_port,
@@ -175,7 +182,13 @@ fn setup_menu(app: &mut tauri::App) {
 fn focus_main_window(app: &tauri::AppHandle) {
   let window = app
     .get_webview_window("main")
-    .or_else(|| app.webview_windows().into_values().next());
+    .or_else(|| {
+      app
+        .webview_windows()
+        .into_iter()
+        .find(|(label, _)| !is_print_window(label))
+        .map(|(_, window)| window)
+    });
 
   if let Some(window) = window {
     let _ = window.unminimize();

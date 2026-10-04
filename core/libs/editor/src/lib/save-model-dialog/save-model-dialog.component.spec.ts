@@ -60,4 +60,14 @@ describe('SaveModelDialogComponent', () => {
     expect(modelSaverService.saveModel).toHaveBeenCalled();
     expect(dialogRef.close).toHaveBeenCalledWith(true);
   });
+  it('requestClose should close without destroying the window', () => {
+    component.requestClose();
+    expect(dialogRef.close).toHaveBeenCalledWith(false);
+  });
+
+  it('requestClose should be ignored while saving', () => {
+    component.disabledButton.set(true);
+    component.requestClose();
+    expect(dialogRef.close).not.toHaveBeenCalled();
+  });
 });

@@ -12,11 +12,11 @@
  */
 
 import {LoadedFilesService} from '@ame/domain';
-import {config} from '@ame/shared';
+import {config, DialogCloseButtonComponent} from '@ame/shared';
 import {NgClass} from '@angular/common';
 import {Component, computed, inject, signal, viewChild} from '@angular/core';
 import {form, FormField, required, validate} from '@angular/forms/signals';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButton} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -42,9 +42,9 @@ export interface NewEntityInstanceDialogResult {
   templateUrl: './entity-instance-modal.component.html',
   styleUrls: ['./entity-instance-modal.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogTitle,
     MatIconModule,
-    MatIconButton,
     MatFormFieldModule,
     MatDialogContent,
     MatLabel,

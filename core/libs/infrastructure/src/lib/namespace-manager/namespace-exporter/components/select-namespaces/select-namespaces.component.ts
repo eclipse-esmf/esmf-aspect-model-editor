@@ -12,7 +12,7 @@
  */
 
 import {ModelCheckerPort} from '@ame/domain';
-import {LanguageTranslationService, NotificationsService} from '@ame/shared';
+import {DialogCloseButtonComponent, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
@@ -31,6 +31,7 @@ import {ModelApiService} from '../../../../api';
   templateUrl: './select-namespaces.component.html',
   styleUrls: ['select-namespaces.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogModule,
     MatCheckboxModule,
     KeyValuePipe,

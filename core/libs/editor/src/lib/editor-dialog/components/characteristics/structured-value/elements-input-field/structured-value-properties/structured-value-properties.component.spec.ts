@@ -104,4 +104,8 @@ describe('StructuredValuePropertiesComponent', () => {
 
     expect(dialogRefMock.close).toHaveBeenCalledWith({'[0-5] -> ([a-z]+)': property});
   });
+  it('should close without saving via (x) or Escape (requestClose)', () => {
+    component.requestClose();
+    expect(dialogRefMock.close).toHaveBeenCalledWith(null);
+  });
 });

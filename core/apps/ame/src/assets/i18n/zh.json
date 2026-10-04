@@ -160,11 +160,6 @@
     "removeAspect": "移除Aspect",
     "cancel": "取消"
   },
-  "selectLanguageToJsonSchemaDialog": {
-    "title": "选择一种语言来生成JSON Schema",
-    "language": "语言",
-    "selectButton": "选择"
-  },
   "generateAasxDialog": {
     "title": "生成AASX",
     "outputFileFormat": "产出文件格式",
@@ -331,7 +326,10 @@
     "cancel": "取消",
     "resetContent": "重置内容",
     "copyToClipboard": "复制到剪切板",
-    "downloadFile": "下载文件"
+    "downloadFile": "下载文件",
+    "language": "语言",
+    "languageHint": "JSON Schema 中描述（description）的语言",
+    "copied": "已复制到剪贴板"
   },
   "sidebar": {
     "loadingElements": "正在加载元素...",
@@ -375,6 +373,10 @@
       "copyFilePath": "复制文件路径",
       "copiedFilePath": "文件路径已复制到剪贴板",
       "delete": "删除"
+    },
+    "elementList": {
+      "title": "元素列表",
+      "close": "关闭元素列表"
     }
   },
   "settingsDialog": {
@@ -443,6 +445,37 @@
         "requiredVersion": "版本是必填项",
         "invalidVersion": "无效的版本"
       }
+    },
+    "search": {
+      "placeholder": "搜索设置",
+      "clear": "清除搜索",
+      "noResults": "没有匹配的设置"
+    },
+    "scope": {
+      "application": "适用于所有模型",
+      "applicationHint": "应用范围，保存在本机",
+      "model": "模型：{{file}}",
+      "noModel": "未加载模型",
+      "modelHint": "适用于已打开的模型，并作为新模型的默认值"
+    },
+    "description": {
+      "automatedWorkflow": "编辑时自动保存、验证和格式化。",
+      "editor": "图形的外观以及模型写入 Turtle 文件的方式。",
+      "languages": "用户界面语言以及模型中首选名称和描述的语言。",
+      "namespaces": "已打开模型的命名空间和版本。",
+      "copyright": "写在 Turtle 文件顶部的注释头。每行必须以 # 开头。"
+    },
+    "resetSection": "恢复默认值",
+    "requiresModel": "加载 Aspect Model 后才能更改这些设置。",
+    "sectionHasErrors": "此部分包含错误",
+    "errorsIn": "修复“{{section}}”中的错误",
+    "noChanges": "没有需要应用的更改",
+    "unsavedChanges": {
+      "badge": "未保存的更改",
+      "title": "放弃更改？",
+      "content": "设置中包含尚未应用的更改。",
+      "keepEditing": "继续编辑",
+      "discard": "放弃"
     }
   },
   "editorCanvas": {
@@ -549,7 +582,10 @@
         },
         "seeInput": {
           "typeToSearch": "输入搜索或写入 URN 或 URL",
-          "invalidUri": "无效的 URI"
+          "invalidUri": "无效的 URI",
+          "copy": "复制 URI",
+          "remove": "移除",
+          "copied": "URI 已复制到剪贴板"
         },
         "value": {
           "pleaseDefine": "请定义一个值"
@@ -882,5 +918,8 @@
   "session": {
     "modelNotFound": "找不到所需的 Aspect Model {{name}}。",
     "modelNotRestored": "无法恢复 Aspect Model {{name}}。"
+  },
+  "dialog": {
+    "close": "关闭 (Esc)"
   }
 }

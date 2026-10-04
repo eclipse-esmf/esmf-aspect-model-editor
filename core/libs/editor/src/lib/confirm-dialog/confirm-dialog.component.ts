@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -21,13 +22,18 @@ import {DialogOptions} from './confirm-dialog.service';
 @Component({
   templateUrl: './confirm-dialog.component.html',
   styles: ['.dialog-title { font-size: 24px !important; }'],
-  imports: [MatDialogModule, MatIconModule, MatButtonModule],
+  imports: [MatDialogModule, MatIconModule, MatButtonModule, DialogCloseButtonComponent],
 })
 export class ConfirmDialogComponent {
   private dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);
   public data: DialogOptions = inject(MAT_DIALOG_DATA);
 
   public readonly confirmDialogEnum = ConfirmDialogEnum;
+
+  /** (x) and Escape mean "cancel". */
+  requestClose(): void {
+    this.closeAndGiveResult(ConfirmDialogEnum.cancel);
+  }
 
   closeAndGiveResult(result: ConfirmDialogEnum) {
     this.dialogRef.close(result);

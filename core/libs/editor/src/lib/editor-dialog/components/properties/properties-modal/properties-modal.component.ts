@@ -12,10 +12,11 @@
  */
 
 import {CacheUtils, LoadedFilesService} from '@ame/domain';
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {NgClass} from '@angular/common';
 import {AfterViewInit, Component, inject, OnInit, signal, viewChild} from '@angular/core';
 import {form} from '@angular/forms/signals';
-import {MatButton, MatIconButton} from '@angular/material/button';
+import {MatButton} from '@angular/material/button';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -72,8 +73,8 @@ export type PropertiesFormModel = Record<string, PropertyItemForm>;
   templateUrl: './properties-modal.component.html',
   styleUrls: ['./properties-modal.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatIconModule,
-    MatIconButton,
     MatDialogTitle,
     MatDialogContent,
     MatTable,

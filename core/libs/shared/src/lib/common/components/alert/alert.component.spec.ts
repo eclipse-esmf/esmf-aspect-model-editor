@@ -100,4 +100,22 @@ describe('AlertComponent', () => {
     component.ok(mouseEvent);
     expect(dialogRefMock.close).toHaveBeenCalledTimes(2);
   });
+  it('requestClose() should behave like the left button when there is one', () => {
+    component.requestClose();
+    expect(alertData.leftButtonAction).toHaveBeenCalled();
+    expect(alertData.rightButtonAction).not.toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('requestClose() should only close an alert without left button', () => {
+    alertData.hasLeftButton = false;
+    component.requestClose();
+    expect(alertData.leftButtonAction).not.toHaveBeenCalled();
+    expect(alertData.rightButtonAction).not.toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('should render the (x) button', () => {
+    expect(fixture.nativeElement.querySelector('ame-dialog-close-button')).toBeTruthy();
+  });
 });

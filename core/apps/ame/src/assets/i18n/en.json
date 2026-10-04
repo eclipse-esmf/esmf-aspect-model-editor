@@ -157,11 +157,6 @@
     "removeAspect": "Remove Aspect",
     "cancel": "Cancel"
   },
-  "selectLanguageToJsonSchemaDialog": {
-    "title": "Select a language to generate JSON Schema",
-    "language": "Language",
-    "selectButton": "Select"
-  },
   "generateAasxDialog": {
     "title": "Generate AASX",
     "outputFileFormat": "Output file format",
@@ -328,7 +323,10 @@
     "cancel": "Cancel",
     "resetContent": "Reset content",
     "copyToClipboard": "Copy to Clipboard",
-    "downloadFile": "Download file"
+    "downloadFile": "Download file",
+    "language": "Language",
+    "languageHint": "Language of the descriptions in the JSON Schema",
+    "copied": "Copied to clipboard"
   },
   "sidebar": {
     "loadingElements": "Loading elements...",
@@ -372,6 +370,10 @@
       "copyFilePath": "Copy file path",
       "copiedFilePath": "File path copied to clipboard",
       "delete": "Delete"
+    },
+    "elementList": {
+      "title": "Element list",
+      "close": "Close element list"
     }
   },
   "settingsDialog": {
@@ -440,6 +442,37 @@
         "requiredVersion": "Version is required",
         "invalidVersion": "Not a valid version"
       }
+    },
+    "search": {
+      "placeholder": "Search settings",
+      "clear": "Clear search",
+      "noResults": "No matching settings"
+    },
+    "scope": {
+      "application": "Applies to all models",
+      "applicationHint": "Application wide, stored on this computer",
+      "model": "Model: {{file}}",
+      "noModel": "No model loaded",
+      "modelHint": "For the opened model and as default for new models"
+    },
+    "description": {
+      "automatedWorkflow": "Automatic saving, validation and formatting while you edit.",
+      "editor": "Appearance of the graph and how models are written to Turtle files.",
+      "languages": "Language of the user interface and the languages of preferred names and descriptions in the model.",
+      "namespaces": "Namespace and version of the opened model.",
+      "copyright": "Comment header written at the top of the Turtle file. Every line must start with #."
+    },
+    "resetSection": "Reset to defaults",
+    "requiresModel": "Load an Aspect Model to change these settings.",
+    "sectionHasErrors": "This section contains errors",
+    "errorsIn": "Fix errors in \"{{section}}\"",
+    "noChanges": "No changes to apply",
+    "unsavedChanges": {
+      "badge": "Unsaved changes",
+      "title": "Discard changes?",
+      "content": "The settings contain changes that have not been applied yet.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard"
     }
   },
   "editorCanvas": {
@@ -546,7 +579,10 @@
         },
         "seeInput": {
           "typeToSearch": "Type to search or write an URN or URL",
-          "invalidUri": "Invalid URI"
+          "invalidUri": "Invalid URI",
+          "copy": "Copy URI",
+          "remove": "Remove",
+          "copied": "URI copied to clipboard"
         },
         "value": {
           "pleaseDefine": "Please define a value"
@@ -879,5 +915,8 @@
   "session": {
     "modelNotFound": "The required Aspect Model {{name}} could not be found.",
     "modelNotRestored": "The Aspect Model {{name}} could not be restored."
+  },
+  "dialog": {
+    "close": "Close (Esc)"
   }
 }

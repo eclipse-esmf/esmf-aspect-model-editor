@@ -247,4 +247,19 @@ describe('PrefixManagementDialogComponent', () => {
     component.close();
     expect(dialogRef.close).toHaveBeenCalledWith(false);
   });
+  it('should report changes when closed via (x) or Escape (requestClose)', () => {
+    rdfModel.definePrefix('unused', 'http://unused.com#');
+    const {component, dialogRef} = setup(PrefixManagementDialogComponent, {rdfModel});
+
+    component.remove(rowOf(component.rows(), 'unused'));
+    component.requestClose();
+
+    expect(dialogRef.close).toHaveBeenCalledWith(true);
+  });
+
+  it('should close without changes via requestClose', () => {
+    const {component, dialogRef} = setup(PrefixManagementDialogComponent, {rdfModel});
+    component.requestClose();
+    expect(dialogRef.close).toHaveBeenCalledWith(false);
+  });
 });

@@ -91,4 +91,8 @@ describe('RenameModelComponent', () => {
     component.closeAndGiveResult(false);
     expect(dialogRef.close).toHaveBeenCalledWith(false);
   });
+  it('requestClose should close like cancel', () => {
+    component.requestClose();
+    expect(dialogRef.close).toHaveBeenCalledWith(false);
+  });
 });

@@ -11,7 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {MigrationStatus, WorkspaceFacade} from '@ame/domain';
-import {APP_CONFIG, AppConfig, createDebouncedLoading, LanguageTranslationService, NotificationsService} from '@ame/shared';
+import {
+  APP_CONFIG,
+  AppConfig,
+  createDebouncedLoading,
+  DialogCloseButtonComponent,
+  LanguageTranslationService,
+  NotificationsService,
+} from '@ame/shared';
 import {Component, inject, signal, viewChild} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatCheckbox, MatCheckboxChange} from '@angular/material/checkbox';
@@ -28,6 +35,7 @@ import {finalize, switchMap, tap} from 'rxjs';
   templateUrl: './migration-dialog.component.html',
   styleUrls: ['./migration-dialog.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogTitle,
     MatDialogContent,
     MatCheckbox,
@@ -77,6 +85,11 @@ export class MigrationDialogComponent {
             message: err,
           }),
       });
+  }
+
+  /** The migration must not be interrupted by (x) or Escape. */
+  requestClose(): void {
+    if (!this.loading()) this.closeDialog();
   }
 
   closeDialog() {

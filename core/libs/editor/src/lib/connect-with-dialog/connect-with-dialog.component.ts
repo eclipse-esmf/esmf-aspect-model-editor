@@ -12,6 +12,7 @@
  */
 
 import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {CommonModule} from '@angular/common';
 import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
@@ -33,7 +34,16 @@ interface Element {
   selector: 'ame-connect-with-dialog',
   templateUrl: './connect-with-dialog.component.html',
   styleUrls: ['./connect-with-dialog.component.scss'],
-  imports: [MatFormFieldModule, MatTooltipModule, CommonModule, MatButtonModule, MatDialogModule, MatInputModule, TranslocoDirective],
+  imports: [
+    DialogCloseButtonComponent,
+    MatFormFieldModule,
+    MatTooltipModule,
+    CommonModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatInputModule,
+    TranslocoDirective,
+  ],
   providers: [ModelElementParserPipe],
 })
 export class ConnectWithDialogComponent {

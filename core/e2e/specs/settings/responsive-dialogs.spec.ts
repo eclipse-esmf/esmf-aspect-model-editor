@@ -80,8 +80,8 @@ test.describe('Responsive dialogs', () => {
 
     const box = await page.locator('mat-dialog-container').boundingBox();
     expect(box.width).toBeGreaterThanOrEqual(720);
-    expect(Math.round(box.height)).toBeGreaterThanOrEqual(590);
-    expect(Math.round(box.height)).toBeLessThanOrEqual(610);
+    expect(Math.round(box.height)).toBeGreaterThanOrEqual(630);
+    expect(Math.round(box.height)).toBeLessThanOrEqual(650);
 
     await page.locator(SettingsDialogSelectors.settingsDialogCancelButton).click();
   });

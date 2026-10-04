@@ -13,7 +13,7 @@
 
 import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
-import {SearchService} from '@ame/shared';
+import {ClipboardService, LanguageTranslationService, NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
@@ -31,8 +31,12 @@ describe('SeeInputFieldComponent', () => {
   let fixture: ComponentFixture<SeeInputFieldComponent>;
   let signalForm: EditorSignalFormContext;
   let property: DefaultProperty;
+  let clipboard: {copy: ReturnType<typeof vi.fn>};
+  let notifications: {success: ReturnType<typeof vi.fn>};
 
   beforeEach(() => {
+    clipboard = {copy: vi.fn()};
+    notifications = {success: vi.fn()};
     property = new DefaultProperty({
       aspectModelUrn: 'urn:test:1.0.0#testProp',
       name: 'testProp',
@@ -63,6 +67,9 @@ describe('SeeInputFieldComponent', () => {
           getAllCells: vi.fn(() => []),
         }),
         MockProvider(SearchService),
+        {provide: ClipboardService, useValue: clipboard},
+        {provide: NotificationsService, useValue: notifications},
+        {provide: LanguageTranslationService, useValue: {translateService: {translate: (key: string) => key}}},
       ],
     });
 
@@ -139,5 +146,78 @@ describe('SeeInputFieldComponent', () => {
   it('should unregister see field on destroy', () => {
     fixture.destroy();
     expect(signalForm.value()).not.toHaveProperty('see');
+  });
+
+  describe('copy see value', () => {
+    function recreateWith(see: string[]): void {
+      property.see = see;
+      fixture.destroy();
+      signalForm = TestBed.runInInjectionContext(() => EditorSignalFormContext.create());
+      fixture = TestBed.createComponent(SeeInputFieldComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('signalForm', signalForm);
+      fixture.detectChanges();
+    }
+
+    function copyButtons(): HTMLButtonElement[] {
+      return Array.from(fixture.nativeElement.querySelectorAll('[data-testid="see-copy-chip"]'));
+    }
+
+    it('should render a copy button next to the remove button of every chip', () => {
+      recreateWith(['https://example.com/a', 'https://example.com/b']);
+
+      const chips = Array.from(fixture.nativeElement.querySelectorAll('mat-chip-row')) as HTMLElement[];
+      expect(chips.length).toBe(2);
+      chips.forEach(chip => {
+        const buttons = Array.from(chip.querySelectorAll('button')).map(button => button.getAttribute('data-testid'));
+        expect(buttons).toEqual(['see-copy-chip', 'see-remove-chip']);
+      });
+      expect(copyButtons()[0].getAttribute('aria-label')).toBe('editorCanvas.shapeSetting.field.seeInput.copy');
+    });
+
+    it('should copy the exact (encoded) URI and notify the user', () => {
+      recreateWith(['https://example.com/doc%23section']);
+
+      copyButtons()[0].click();
+
+      expect(clipboard.copy).toHaveBeenCalledWith('https://example.com/doc%23section');
+      expect(notifications.success).toHaveBeenCalledWith({
+        title: 'editorCanvas.shapeSetting.field.seeInput.copied',
+        message: 'https://example.com/doc%23section',
+        timeout: 3000,
+      });
+    });
+
+    it('should copy the value of the clicked chip only', () => {
+      recreateWith(['https://example.com/a', 'https://example.com/b']);
+
+      copyButtons()[1].click();
+
+      expect(clipboard.copy).toHaveBeenCalledTimes(1);
+      expect(clipboard.copy).toHaveBeenCalledWith('https://example.com/b');
+    });
+
+    it('should not remove the chip or change the value when copying', () => {
+      copyButtons()[0].click();
+
+      expect(component.elements().length).toBe(1);
+      expect(property.see).toEqual(['https://example.com/doc']);
+      expect(signalForm.value().see).toBe('https://example.com/doc');
+    });
+
+    it('should stop the click from reaching the chip', () => {
+      const event = new MouseEvent('click', {bubbles: true});
+      const stop = vi.spyOn(event, 'stopPropagation');
+      component.copyElement(component.elements()[0], event);
+      expect(stop).toHaveBeenCalled();
+    });
+
+    it('should still remove a chip with the remove button', () => {
+      (fixture.nativeElement.querySelector('[data-testid="see-remove-chip"]') as HTMLButtonElement).click();
+      fixture.detectChanges();
+
+      expect(component.elements().length).toBe(0);
+      expect(clipboard.copy).not.toHaveBeenCalled();
+    });
   });
 });

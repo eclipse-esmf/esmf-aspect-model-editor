@@ -13,9 +13,7 @@
   -->
 
   <h2 mat-dialog-title>{{ t('declareNameDialog.title') }}</h2>
-  <button class="close-button" (click)="closeAndGiveResult(false)" mat-icon-button tabindex="-1">
-    <mat-icon>close</mat-icon>
-  </button>
+  <ame-dialog-close-button />
 
   @if (loading()) {
     <div class="loading">

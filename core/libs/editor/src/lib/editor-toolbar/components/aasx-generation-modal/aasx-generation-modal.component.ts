@@ -12,6 +12,7 @@
  */
 
 import {LoadedFilesService, ModelApiPort, RdfPort} from '@ame/domain';
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {form, FormField} from '@angular/forms/signals';
@@ -19,7 +20,6 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatOptionModule} from '@angular/material/core';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
 import {TranslocoDirective} from '@jsverse/transloco';
@@ -30,6 +30,7 @@ import {finalize, first, tap} from 'rxjs';
   templateUrl: 'aasx-generation-modal.component.html',
   styleUrls: ['aasx-generation-modal.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
@@ -37,7 +38,6 @@ import {finalize, first, tap} from 'rxjs';
     FormField,
     MatSelectModule,
     MatOptionModule,
-    MatIcon,
     TranslocoDirective,
   ],
 })
@@ -51,6 +51,11 @@ export class AASXGenerationModalComponent {
   formatModel = signal<{format: string}>({format: 'aasx'});
   formatForm = form(this.formatModel);
   isGenerating = signal(false);
+
+  /** (x) and Escape: like the Cancel button, not available while the file is generated. */
+  requestClose(): void {
+    if (!this.isGenerating()) this.dialogRef.close();
+  }
 
   generate() {
     this.isGenerating.set(true);

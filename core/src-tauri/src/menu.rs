@@ -22,30 +22,57 @@ use tauri_plugin_dialog::DialogExt;
 // ---------------------------------------------------------------------------
 
 /// Keyboard shortcuts (accelerators) of the application menu, keyed by menu item id.
-/// `CmdOrCtrl` resolves to Cmd on macOS and Ctrl on Windows/Linux.
+/// Every actionable menu item has one. `CmdOrCtrl` resolves to Cmd on macOS and Ctrl on Windows/Linux.
 /// Keep this the single source of truth so conflicts can be checked in one place (see tests).
-/// Not used on purpose: Cmd/Ctrl+W/Q/M/H (window/app handling), Z/X/C/V/A (text editing),
-/// Delete/Backspace/Enter (would break typing in text fields).
+///
+/// Scheme: letters follow the action (N = new, O = open, E = export, ...), `Shift` marks the
+/// "bigger" variant of an action, digits are used for examples (1-2), generators (3-8) and zoom (9-0).
+///
+/// Not used on purpose:
+/// - Cmd/Ctrl+W/Q/M/H (window/app handling), Z/Y/X/C/V/A (text editing), R/P (reload/print),
+/// - Cmd/Ctrl+Shift+3/4/5 (macOS screenshots), Cmd/Ctrl+Shift+I (developer tools),
+/// - Cmd/Ctrl+Backspace (deletes words/lines in text fields), plain Delete/Backspace/Enter,
+/// - Cmd/Ctrl+Alt combinations: on Windows Ctrl+Alt is AltGr, which types characters like @, { or \.
 pub(crate) const MENU_SHORTCUTS: &[(&str, &str)] = &[
-    // File
+    // File > New...
     ("NEW_EMPTY_MODEL", "CmdOrCtrl+N"),
     ("LOAD_FILE", "CmdOrCtrl+O"),
+    ("LOAD_FROM_TEXT", "CmdOrCtrl+Shift+T"),
+    ("LOAD_DEFAULT_EXAMPLE", "CmdOrCtrl+1"),
+    ("LOAD_MOVEMENT_EXAMPLE", "CmdOrCtrl+2"),
+    // File
     ("NEW_WINDOW", "CmdOrCtrl+Shift+N"),
     ("IMPORT_MODEL", "CmdOrCtrl+Shift+O"),
+    ("IMPORT_PACKAGE", "CmdOrCtrl+Shift+P"),
     ("COPY_TO_CLIPBOARD", "CmdOrCtrl+Shift+C"),
     ("SAVE_TO_WORKSPACE", "CmdOrCtrl+S"),
     ("EXPORT_MODEL", "CmdOrCtrl+Shift+E"),
+    ("EXPORT_PACKAGE", "CmdOrCtrl+Shift+X"),
     ("OPEN_SETTINGS", "CmdOrCtrl+,"),
     // View
+    ("SHOW_HIDE_TOOLBAR", "CmdOrCtrl+Shift+B"),
+    ("SHOW_HIDE_MINIMAP", "CmdOrCtrl+Shift+M"),
+    ("FILTER_MODEL_BY_NONE", "CmdOrCtrl+Shift+A"),
+    ("FILTER_MODEL_BY_PROPERTIES", "CmdOrCtrl+Shift+R"),
     ("ZOOM_IN", "CmdOrCtrl+Plus"),
     ("ZOOM_OUT", "CmdOrCtrl+-"),
     ("ZOOM_TO_FIT", "CmdOrCtrl+9"),
     ("ZOOM_TO_ACTUAL", "CmdOrCtrl+0"),
     // Edit
     ("OPEN_SELECTED_ELEMENT", "CmdOrCtrl+E"),
+    ("REMOVE_SELECTED_ELEMENT", "CmdOrCtrl+Shift+Backspace"),
+    ("COLLAPSE_EXPAND_MODEL", "CmdOrCtrl+Shift+D"),
     ("FORMAT_MODEL", "CmdOrCtrl+Shift+L"),
+    ("CONNECT_ELEMENTS", "CmdOrCtrl+K"),
     // Validate
     ("VALIDATE_MODEL", "CmdOrCtrl+Shift+V"),
+    // Generate
+    ("GENERATE_HTML_DOCUMENTATION", "CmdOrCtrl+3"),
+    ("GENERATE_OPEN_API_SPECIFICATION", "CmdOrCtrl+4"),
+    ("GENERATE_ASYNC_API_SPECIFICATION", "CmdOrCtrl+5"),
+    ("GENERATE_AASX_XML", "CmdOrCtrl+6"),
+    ("GENERATE_JSON_PAYLOAD", "CmdOrCtrl+7"),
+    ("GENERATE_JSON_SCHEMA", "CmdOrCtrl+8"),
     // Search
     ("SEARCH_ELEMENTS", "CmdOrCtrl+F"),
     ("SEARCH_FILES", "CmdOrCtrl+Shift+F"),
@@ -839,12 +866,52 @@ mod tests {
             "CmdOrCtrl+R",
             "CmdOrCtrl+P",
             "CmdOrCtrl+Ctrl+F",
+            "CmdOrCtrl+Shift+3",
+            "CmdOrCtrl+Shift+4",
+            "CmdOrCtrl+Shift+5",
+            "CmdOrCtrl+Shift+I",
+            "CmdOrCtrl+Shift+Q",
+            "CmdOrCtrl+Backspace",
         ]
         .map(normalized);
         for (id, accelerator) in MENU_SHORTCUTS {
             assert!(
                 !reserved.contains(&normalized(accelerator)),
                 "{id} uses the reserved shortcut {accelerator}"
+            );
+        }
+    }
+
+    #[test]
+    fn shortcuts_avoid_altgr_combinations() {
+        for (id, accelerator) in MENU_SHORTCUTS {
+            assert!(
+                !accelerator
+                    .to_lowercase()
+                    .split('+')
+                    .any(|part| part == "alt" || part == "option"),
+                "{id}: Ctrl+Alt is AltGr on Windows and would swallow typed characters"
+            );
+        }
+    }
+
+    #[test]
+    fn shortcuts_are_valid_accelerators() {
+        let modifiers = ["CmdOrCtrl", "Shift"];
+        for (id, accelerator) in MENU_SHORTCUTS {
+            let mut parts: Vec<&str> = accelerator.split('+').collect();
+            let key = parts.pop().unwrap();
+            assert!(
+                parts.iter().all(|part| modifiers.contains(part)),
+                "{id}: unknown modifier in {accelerator}"
+            );
+            let single_char = key.len() == 1
+                && key
+                    .chars()
+                    .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit() || c == ',' || c == '-');
+            assert!(
+                single_char || ["Plus", "Backspace"].contains(&key),
+                "{id}: unsupported key {key}"
             );
         }
     }
@@ -871,24 +938,92 @@ mod tests {
     }
 
     #[test]
-    fn provides_the_new_shortcuts() {
-        assert_eq!(shortcut_for("NEW_EMPTY_MODEL"), Some("CmdOrCtrl+N"));
-        assert_eq!(shortcut_for("IMPORT_MODEL"), Some("CmdOrCtrl+Shift+O"));
-        assert_eq!(shortcut_for("EXPORT_MODEL"), Some("CmdOrCtrl+Shift+E"));
-        assert_eq!(shortcut_for("OPEN_SETTINGS"), Some("CmdOrCtrl+,"));
-        assert_eq!(shortcut_for("OPEN_SELECTED_ELEMENT"), Some("CmdOrCtrl+E"));
+    fn every_actionable_menu_item_has_a_shortcut() {
+        let items = [
+            "NEW_EMPTY_MODEL",
+            "LOAD_FILE",
+            "LOAD_FROM_TEXT",
+            "LOAD_DEFAULT_EXAMPLE",
+            "LOAD_MOVEMENT_EXAMPLE",
+            "NEW_WINDOW",
+            "IMPORT_MODEL",
+            "IMPORT_PACKAGE",
+            "COPY_TO_CLIPBOARD",
+            "SAVE_TO_WORKSPACE",
+            "EXPORT_MODEL",
+            "EXPORT_PACKAGE",
+            "OPEN_SETTINGS",
+            "SHOW_HIDE_TOOLBAR",
+            "SHOW_HIDE_MINIMAP",
+            "FILTER_MODEL_BY_NONE",
+            "FILTER_MODEL_BY_PROPERTIES",
+            "ZOOM_IN",
+            "ZOOM_OUT",
+            "ZOOM_TO_FIT",
+            "ZOOM_TO_ACTUAL",
+            "OPEN_SELECTED_ELEMENT",
+            "REMOVE_SELECTED_ELEMENT",
+            "COLLAPSE_EXPAND_MODEL",
+            "FORMAT_MODEL",
+            "CONNECT_ELEMENTS",
+            "VALIDATE_MODEL",
+            "GENERATE_HTML_DOCUMENTATION",
+            "GENERATE_OPEN_API_SPECIFICATION",
+            "GENERATE_ASYNC_API_SPECIFICATION",
+            "GENERATE_AASX_XML",
+            "GENERATE_JSON_PAYLOAD",
+            "GENERATE_JSON_SCHEMA",
+            "SEARCH_ELEMENTS",
+            "SEARCH_FILES",
+        ];
+        for id in items {
+            assert!(shortcut_for(id).is_some(), "{id} has no shortcut");
+        }
+        assert_eq!(
+            items.len(),
+            MENU_SHORTCUTS.len(),
+            "a shortcut belongs to an unknown menu item"
+        );
+    }
+
+    /// Guards against new menu items without a shortcut: every `item(app, "ID", ...)` call is checked.
+    #[test]
+    fn every_item_built_in_this_file_has_a_shortcut() {
+        let source = include_str!("menu.rs");
+        let mut ids = Vec::new();
+        for chunk in source.split("item(").skip(1) {
+            let rest = chunk.trim_start();
+            let Some(rest) = rest.strip_prefix("app,") else {
+                continue;
+            };
+            let rest = rest.trim_start();
+            if let Some(rest) = rest.strip_prefix('"') {
+                if let Some(end) = rest.find('"') {
+                    ids.push(&rest[..end]);
+                }
+            }
+        }
+        assert!(ids.len() > 30, "menu items were not found in the source");
+        // "ID" is the placeholder of this test's own doc comment.
+        for id in ids
+            .into_iter()
+            .filter(|id| !["EXAMPLES_HEADER", "ID"].contains(id))
+        {
+            assert!(shortcut_for(id).is_some(), "{id} has no shortcut");
+        }
     }
 
     #[test]
-    fn destructive_or_text_editing_actions_have_no_shortcut() {
-        for id in [
-            "REMOVE_SELECTED_ELEMENT",
-            "EXPORT_PACKAGE",
-            "IMPORT_PACKAGE",
-            "LOAD_FROM_TEXT",
-        ] {
-            assert_eq!(shortcut_for(id), None, "{id}");
-        }
+    fn non_action_items_have_no_shortcut() {
+        assert_eq!(shortcut_for("EXAMPLES_HEADER"), None);
+    }
+
+    #[test]
+    fn removing_an_element_needs_a_modifier_that_text_fields_do_not_use() {
+        assert_eq!(
+            shortcut_for("REMOVE_SELECTED_ELEMENT"),
+            Some("CmdOrCtrl+Shift+Backspace")
+        );
     }
 
     #[test]

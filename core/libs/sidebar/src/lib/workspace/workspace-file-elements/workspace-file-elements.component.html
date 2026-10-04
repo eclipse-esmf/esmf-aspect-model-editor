@@ -20,12 +20,27 @@
     data-testid="file-elements-resize-gutter"
   ></ame-resize-gutter>
   @if (sidebarService.selection.selection(); as currentSelection) {
-    <div class="header">
-      <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">
-        {{ currentSelection?.file }}
-      </h2>
+    <div class="header" data-testid="file-elements-header">
+      <div class="header__text">
+        <span class="header__overline">
+          <mat-icon>list_alt</mat-icon>
+          {{ t('sidebar.elementList.title') }}
+        </span>
+        <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">
+          {{ currentSelection?.file }}
+        </h2>
+        <span class="header__namespace" [matTooltip]="currentSelection?.namespace" data-testid="file-elements-namespace">
+          {{ currentSelection?.namespace }}
+        </span>
+      </div>
 
-      <button (click)="sidebarService.fileElements.close()" mat-mini-fab>
+      <button
+        [matTooltip]="t('sidebar.elementList.close')"
+        [attr.aria-label]="t('sidebar.elementList.close')"
+        (click)="sidebarService.fileElements.close()"
+        mat-mini-fab
+        data-testid="file-elements-close"
+      >
         <mat-icon>close</mat-icon>
       </button>
     </div>

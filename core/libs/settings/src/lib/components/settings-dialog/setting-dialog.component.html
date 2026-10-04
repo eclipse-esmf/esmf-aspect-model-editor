@@ -12,87 +12,199 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
-  <div class="settings__header">
-    <h2 mat-dialog-title>{{ t('settingsDialog.title') }}</h2>
-    <button
-      class="settings__close-button"
-      [mat-dialog-close]="true"
-      (click)="onClose()"
-      mat-icon-button
-      tabindex="-1"
-      data-testid="settingsModalCloseButton"
-    >
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
+  <ame-dialog-close-button testId="settingsModalCloseButton" />
+
+  <h2 class="settings__title" mat-dialog-title>
+    {{ t('settingsDialog.title') }}
+    @if (isDirty) {
+      <span class="settings__dirty" data-testid="settings-dirty-indicator">{{ t('settingsDialog.unsavedChanges.badge') }}</span>
+    }
+  </h2>
 
   <mat-dialog-content class="settings__dialog-content">
     <div class="settings__split-layout">
-      <mat-tree class="settings__tree" [dataSource]="dataSource" [treeControl]="treeControl">
-        <mat-tree-node
-          class="settings__tree-node"
-          *matTreeNodeDef="let node"
-          [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type, 'settings__node-name--error': isNodeInvalid(node)}"
-          (click)="onNodeSelected(node.type)"
-          matTreeNodePaddingIndent="15"
-        >
-          <li class="settings__node settings__node-without-icon">
-            <span class="settings__node-name settings__node-name--aligned">{{ t(node.name) }}</span>
-          </li>
-        </mat-tree-node>
-
-        <mat-tree-node
-          class="settings__tree-node"
-          *matTreeNodeDef="let node; when: hasChild"
-          [ngClass]="{'settings__tree-node--selected': selectedNodeType === node.type}"
-          (click)="onNodeSelected(node.type)"
-        >
-          <li class="settings__node">
-            <button class="settings__toggle-button" mat-icon-button matTreeNodeToggle>
-              <mat-icon class="settings__icon">
-                {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
-              </mat-icon>
+      <nav class="settings__nav" [attr.aria-label]="t('settingsDialog.title')">
+        <mat-form-field class="settings__search" appearance="outline" subscriptSizing="dynamic">
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            #searchInput
+            [placeholder]="t('settingsDialog.search.placeholder')"
+            [attr.aria-label]="t('settingsDialog.search.placeholder')"
+            [value]="searchTerm()"
+            (input)="onSearch(searchInput.value)"
+            matInput
+            type="search"
+            data-testid="settings-search"
+          />
+          @if (searchTerm()) {
+            <button
+              [attr.aria-label]="t('settingsDialog.search.clear')"
+              (click)="clearSearch()"
+              matSuffix
+              mat-icon-button
+              type="button"
+              data-testid="settings-search-clear"
+            >
+              <mat-icon>close</mat-icon>
             </button>
-            <span class="settings__node-name">{{ t(node.name) }}</span>
-          </li>
-        </mat-tree-node>
-      </mat-tree>
+          }
+        </mat-form-field>
 
-      <div class="settings__divider"></div>
+        <div class="settings__tree" [attr.aria-label]="t('settingsDialog.title')" (keydown)="onTreeKeydown($event)" role="tree">
+          @for (group of visibleGroups(); track group.id) {
+            <div
+              class="settings__group"
+              [attr.aria-labelledby]="'settings-group-' + group.id"
+              [attr.data-testid]="'settings-group-' + group.id"
+              role="group"
+            >
+              <div class="settings__group-title" [id]="'settings-group-' + group.id">
+                <mat-icon>{{ group.icon }}</mat-icon>
+                <span>{{ t(group.name) }}</span>
+                @if (isGroupInvalid(group)) {
+                  <mat-icon class="settings__error-icon">error</mat-icon>
+                }
+              </div>
+              <p class="settings__group-hint">{{ t(group.hint) }}</p>
 
-      <div class="settings__content">
-        @if (selectedNodeType === NodeNames.AUTOMATED_WORKFLOW || selectedNodeType === NodeNames.CONFIGURATION) {
-          <ame-automated-workflow-config></ame-automated-workflow-config>
+              @for (section of group.sections; track section.id) {
+                <div
+                  class="settings__tree-node"
+                  #treeItem
+                  [class.settings__tree-node--selected]="selectedSectionId() === section.id"
+                  [class.settings__node-name--error]="isSectionInvalid(section.id)"
+                  [attr.aria-selected]="selectedSectionId() === section.id"
+                  [attr.tabindex]="selectedSectionId() === section.id ? 0 : -1"
+                  [attr.data-section-id]="section.id"
+                  [attr.data-testid]="'settings-node-' + section.id"
+                  (click)="selectSection(section.id)"
+                  (keydown.enter)="selectSection(section.id)"
+                  (keydown.space)="$event.preventDefault(); selectSection(section.id)"
+                  role="treeitem"
+                >
+                  <span class="settings__node">{{ t(section.name) }}</span>
+                  @if (isSectionInvalid(section.id)) {
+                    <mat-icon
+                      class="settings__error-icon"
+                      [matTooltip]="t('settingsDialog.sectionHasErrors')"
+                      [attr.aria-label]="t('settingsDialog.sectionHasErrors')"
+                      data-testid="settings-node-error"
+                      >error</mat-icon
+                    >
+                  } @else if (section.requiresModel && !hasLoadedModel) {
+                    <mat-icon
+                      class="settings__lock-icon"
+                      [matTooltip]="t('settingsDialog.requiresModel')"
+                      data-testid="settings-node-requires-model"
+                      >lock</mat-icon
+                    >
+                  }
+                </div>
+              }
+            </div>
+          } @empty {
+            <p class="settings__no-results" data-testid="settings-no-results">{{ t('settingsDialog.search.noResults') }}</p>
+          }
+        </div>
+      </nav>
+
+      <section class="settings__content" aria-labelledby="settings-section-title" data-testid="settings-content">
+        @let section = selectedSection();
+        <header class="settings__section-header" data-testid="settings-section-header">
+          <div class="settings__section-heading">
+            <h3 class="settings__section-title" id="settings-section-title">{{ t(section.name) }}</h3>
+            @if (section.id === 'automatedWorkflow' || section.id === 'editorConfiguration') {
+              <span class="settings__scope" data-testid="settings-scope">
+                <mat-icon>public</mat-icon>{{ t('settingsDialog.scope.application') }}
+              </span>
+            } @else if (hasLoadedModel) {
+              <span
+                class="settings__scope settings__scope--model"
+                [matTooltip]="currentLoadedFile?.absoluteName"
+                data-testid="settings-scope"
+              >
+                <mat-icon>description</mat-icon>{{ t('settingsDialog.scope.model', {file: currentFileName}) }}
+              </span>
+            } @else {
+              <span class="settings__scope settings__scope--model" data-testid="settings-scope">
+                <mat-icon>description</mat-icon>{{ t('settingsDialog.scope.noModel') }}
+              </span>
+            }
+          </div>
+          <p class="settings__section-description" data-testid="settings-section-description">{{ t(section.description) }}</p>
+          @if (section.resettable) {
+            <button class="settings__reset" (click)="resetSelectedSection()" mat-button type="button" data-testid="settings-reset-section">
+              <mat-icon>restart_alt</mat-icon>
+              {{ t('settingsDialog.resetSection') }}
+            </button>
+          }
+        </header>
+
+        @if (section.requiresModel && !hasLoadedModel) {
+          <div class="settings__info" role="note" data-testid="settings-requires-model-hint">
+            <mat-icon>info</mat-icon>
+            <span>{{ t('settingsDialog.requiresModel') }}</span>
+          </div>
         }
-        @if (selectedNodeType === NodeNames.EDITOR) {
-          <ame-editor-configuration></ame-editor-configuration>
+
+        @switch (section.id) {
+          @case ('automatedWorkflow') {
+            <ame-automated-workflow-config></ame-automated-workflow-config>
+          }
+          @case ('editorConfiguration') {
+            <ame-editor-configuration></ame-editor-configuration>
+          }
+          @case ('languageConfiguration') {
+            <ame-language-settings></ame-language-settings>
+          }
+          @case ('namespaceConfiguration') {
+            <ame-namespace></ame-namespace>
+          }
+          @case ('copyrightHeaderConfiguration') {
+            <ame-copyright></ame-copyright>
+          }
         }
-        @if (selectedNodeType === NodeNames.LANGUAGES) {
-          <ame-language-settings></ame-language-settings>
-        }
-        @if (selectedNodeType === NodeNames.NAMESPACES) {
-          <ame-namespace></ame-namespace>
-        }
-        @if (selectedNodeType === NodeNames.COPYRIGHT) {
-          <ame-copyright></ame-copyright>
-        }
-      </div>
+      </section>
     </div>
   </mat-dialog-content>
 
-  <mat-dialog-actions class="dialog-actions" align="end">
-    <div>
-      <button (click)="onCancel()" mat-raised-button data-testid="settingsDialogCancelButton">
-        {{ t('settingsDialog.cancel') }}
+  <mat-dialog-actions class="dialog-actions settings__actions">
+    @if (firstInvalidSection; as invalidSection) {
+      <button
+        class="settings__error-summary"
+        (click)="selectSection(invalidSection.id, true)"
+        mat-button
+        type="button"
+        data-testid="settings-error-summary"
+      >
+        <mat-icon>error</mat-icon>
+        {{ t('settingsDialog.errorsIn', {section: t(invalidSection.name)}) }}
       </button>
-    </div>
-    <div matTooltip="{{ settingsForm().invalid() ? t('settingsDialog.errorMessage') : '' }}">
-      <button [disabled]="settingsForm().invalid()" (click)="applySettings()" mat-raised-button data-testid="settingsDialogApplyButton">
+    }
+    <span class="settings__actions-spacer"></span>
+    <button (click)="onCancel()" mat-raised-button type="button" data-testid="settingsDialogCancelButton">
+      {{ t('settingsDialog.cancel') }}
+    </button>
+    <div [matTooltip]="settingsForm().invalid() ? t('settingsDialog.errorMessage') : !isDirty ? t('settingsDialog.noChanges') : ''">
+      <button
+        [disabled]="settingsForm().invalid() || !isDirty"
+        (click)="applySettings()"
+        mat-raised-button
+        type="button"
+        data-testid="settingsDialogApplyButton"
+      >
         {{ t('settingsDialog.apply') }}
       </button>
     </div>
-    <div matTooltip="{{ settingsForm().invalid() ? t('settingsDialog.errorMessage') : '' }}">
-      <button [disabled]="settingsForm().invalid()" (click)="onOk()" mat-raised-button color="primary" data-testid="settingsDialogOkButton">
+    <div [matTooltip]="settingsForm().invalid() ? t('settingsDialog.errorMessage') : ''">
+      <button
+        [disabled]="settingsForm().invalid()"
+        (click)="onOk()"
+        mat-raised-button
+        color="primary"
+        type="button"
+        data-testid="settingsDialogOkButton"
+      >
         {{ t('settingsDialog.ok') }}
       </button>
     </div>

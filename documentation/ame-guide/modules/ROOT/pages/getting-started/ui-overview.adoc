@@ -365,22 +365,45 @@ When you close the last tab, a new empty model is opened.
 [[keyboard-shortcuts]]
 == 7. Keyboard shortcuts
 
-On macOS use *Cmd*, on Windows and Linux use *Ctrl*.
+On macOS use *Cmd*, on Windows and Linux use *Ctrl*. Shortcuts of menu entries that are currently disabled (e.g. without a loaded model) have no effect.
 
 [cols="40%,60%"]
 |===
 | Shortcut | Action
 
+| `Cmd/Ctrl+N` | File > New... > Empty Model
 | `Cmd/Ctrl+O` | File > New... > Load File...
+| `Cmd/Ctrl+Shift+T` | File > New... > Copy Paste
+| `Cmd/Ctrl+1` | File > New... > SimpleAspect.ttl
+| `Cmd/Ctrl+2` | File > New... > Movement.ttl
 | `Cmd/Ctrl+Shift+N` | File > New Window
+| `Cmd/Ctrl+Shift+O` | File > Import Model
+| `Cmd/Ctrl+Shift+P` | File > Import Package
 | `Cmd/Ctrl+Shift+C` | File > Copy to Clipboard
 | `Cmd/Ctrl+S` | File > Save to Workspace
+| `Cmd/Ctrl+Shift+E` | File > Export Model
+| `Cmd/Ctrl+Shift+X` | File > Export Package
+| `Cmd/Ctrl+,` | Settings (macOS: application menu, Windows/Linux: File menu)
+| `Cmd/Ctrl+Shift+B` | View > Toggle Toolbar
+| `Cmd/Ctrl+Shift+M` | View > Toggle Minimap
+| `Cmd/Ctrl+Shift+A` | View > Filter Model by > None
+| `Cmd/Ctrl+Shift+R` | View > Filter Model by > Properties
 | `Cmd/Ctrl+Plus` | View > Zoom in
 | `Cmd/Ctrl+-` | View > Zoom out
 | `Cmd/Ctrl+9` | View > Zoom to Fit
 | `Cmd/Ctrl+0` | View > Zoom to 100%
+| `Cmd/Ctrl+E` | Edit > Open selected element
+| `Cmd/Ctrl+Shift+Backspace` | Edit > Remove selected element
+| `Cmd/Ctrl+Shift+D` | Edit > Collapse/Expand Model
 | `Cmd/Ctrl+Shift+L` | Edit > Format Model
+| `Cmd/Ctrl+K` | Edit > Connect selected elements
 | `Cmd/Ctrl+Shift+V` | Validate > Current Model
+| `Cmd/Ctrl+3` | Generate > HTML Documentation
+| `Cmd/Ctrl+4` | Generate > OpenAPI Specification
+| `Cmd/Ctrl+5` | Generate > AsyncAPI Specification
+| `Cmd/Ctrl+6` | Generate > AASX / XML
+| `Cmd/Ctrl+7` | Generate > Sample JSON Payload
+| `Cmd/Ctrl+8` | Generate > JSON Schema
 | `Cmd/Ctrl+F` | Search > Elements
 | `Cmd/Ctrl+Shift+F` | Search > Files
 | `Delete` | Delete the selected element(s) in the graph area canvas

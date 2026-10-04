@@ -15,18 +15,28 @@ import {Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {AlertOptions} from '../../services/alert.service';
+import {DialogCloseButtonComponent} from '../dialog-close-button/dialog-close-button.component';
 
 @Component({
   selector: 'ame-alert',
   templateUrl: './alert.component.html',
   styleUrls: ['./alert.component.scss'],
-  imports: [MatDialogModule, MatButtonModule],
+  imports: [MatDialogModule, MatButtonModule, DialogCloseButtonComponent],
 })
 export class AlertComponent {
   private dialogRef = inject(MatDialogRef<AlertComponent>);
   public data = inject(MAT_DIALOG_DATA) as AlertOptions;
 
-  close(event: MouseEvent) {
+  /** (x) and Escape behave like the left (cancel) button. */
+  requestClose(): void {
+    if (this.data.hasLeftButton) {
+      this.close();
+    } else {
+      this.dialogRef.close();
+    }
+  }
+
+  close(event?: MouseEvent) {
     if (this.data.leftButtonAction && typeof this.data.leftButtonAction === 'function') {
       this.data.leftButtonAction(event);
     }

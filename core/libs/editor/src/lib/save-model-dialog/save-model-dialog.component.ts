@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -20,13 +21,18 @@ import {ModelSaverService} from '../model-saver.service';
 @Component({
   templateUrl: 'save-model-dialog.component.html',
   styleUrls: ['save-model-dialog.component.scss'],
-  imports: [MatDialogModule, TranslocoDirective, MatButtonModule],
+  imports: [DialogCloseButtonComponent, MatDialogModule, TranslocoDirective, MatButtonModule],
 })
 export class SaveModelDialogComponent {
   private modelSaverService = inject(ModelSaverService);
   private matDialogRef: MatDialogRef<SaveModelDialogComponent> = inject(MatDialogRef);
 
   public disabledButton = signal(false);
+
+  /** (x) and Escape mean "continue editing"; not possible while the model is being saved. */
+  requestClose(): void {
+    if (!this.disabledButton()) this.close(false);
+  }
 
   close(destroyWindow: boolean) {
     this.matDialogRef.close(destroyWindow);

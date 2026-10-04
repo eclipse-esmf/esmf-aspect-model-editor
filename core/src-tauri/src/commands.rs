@@ -128,10 +128,18 @@ pub fn write_print_file(content: String) -> Result<String, String> {
     Ok(print_file_path.to_string_lossy().to_string())
 }
 
+/// Label prefix of the documentation/print preview windows.
+pub const PRINT_WINDOW_PREFIX: &str = "print-";
+
+/// Print preview windows only show generated HTML; they are no editor windows.
+pub fn is_print_window(label: &str) -> bool {
+    label.starts_with(PRINT_WINDOW_PREFIX)
+}
+
 #[tauri::command]
 pub fn open_print_window(app: AppHandle, file_path: String) -> Result<(), String> {
     let print_label = format!(
-        "print-{}",
+        "{PRINT_WINDOW_PREFIX}{}",
         std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
@@ -312,7 +320,7 @@ pub fn capture_window_geometry<R: Runtime>(
 fn editor_window_count(app: &AppHandle) -> usize {
     app.webview_windows()
         .keys()
-        .filter(|label| !label.starts_with("print-"))
+        .filter(|label| !is_print_window(label))
         .count()
 }
 
@@ -498,6 +506,15 @@ pub fn translate_menu_items(app: AppHandle, payload: serde_json::Value) -> Resul
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn print_windows_are_recognised_by_their_label() {
+        assert!(is_print_window("print-1712345678901"));
+        assert!(is_print_window(&format!("{PRINT_WINDOW_PREFIX}42")));
+        assert!(!is_print_window("main"));
+        assert!(!is_print_window("window-1712345678901"));
+        assert!(!is_print_window("blueprint-1"));
+    }
 
     #[test]
     fn test_open_in_vscode_or_default_handles_missing_file_path() {

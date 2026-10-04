@@ -16,6 +16,7 @@ export * from './alert.service';
 export * from './backend-status.service';
 export * from './bindings.service';
 export * from './browser.service';
+export * from './clipboard.service';
 export * from './data-type.service';
 export * from './file-upload.service';
 export * from './loading-screen.service';

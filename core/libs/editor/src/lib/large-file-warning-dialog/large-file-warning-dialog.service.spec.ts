@@ -58,4 +58,12 @@ describe('LargeFileWarningService', () => {
       data: {elementsCount: 120},
     });
   });
+
+  it('should treat a dialog closed without a result as cancel', async () => {
+    vi.spyOn(dialog, 'open').mockReturnValue({afterClosed: () => of(undefined)} as unknown as MatDialogRef<LargeFileWarningComponent>);
+
+    const result = await new Promise(resolve => service.openDialog(120).subscribe(resolve));
+
+    expect(result).toBe('cancel');
+  });
 });

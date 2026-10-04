@@ -12,7 +12,7 @@
  */
 
 import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
-import {LanguageTranslationService, NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
+import {ClipboardService, LanguageTranslationService, NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -53,6 +53,7 @@ export class WorkspaceFileListComponent {
   private readonly translate = inject(LanguageTranslationService);
   private readonly loadedFiles = inject(ModelSessionFacade);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly clipboard = inject(ClipboardService);
 
   public readonly sidebarService = inject(SidebarStateService);
   public readonly workspaceStore = inject(WorkspaceStore);
@@ -320,26 +321,10 @@ export class WorkspaceFileListComponent {
   }
 
   private copyToClipboard(text: string) {
-    if (navigator.clipboard?.writeText && document.hasFocus()) {
-      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
-    } else {
-      this.fallbackCopy(text);
-    }
+    this.clipboard.copy(text);
 
     const title = this.translate.translateService.translate('sidebar.fileMenu.copiedFilePath') || 'File path copied to clipboard';
     this.notificationService.success({title, message: text});
-  }
-
-  private fallbackCopy(text: string) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
   }
 
   public prepare(namespace: string, file: FileStatus) {

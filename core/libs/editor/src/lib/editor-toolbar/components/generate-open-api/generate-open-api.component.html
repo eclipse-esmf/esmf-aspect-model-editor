@@ -14,9 +14,7 @@
 
   <form (submit)="$event.preventDefault(); openApiForm().valid() && generateOpenApiSpec()" novalidate>
     <h2 mat-dialog-title>{{ t('generateOpenapiSpecDialog.title') }}</h2>
-    <button class="close-button" type="button" mat-icon-button tabindex="-1" mat-dialog-close>
-      <mat-icon>close</mat-icon>
-    </button>
+    <ame-dialog-close-button />
 
     <mat-dialog-content>
       @if (!isGenerating()) {

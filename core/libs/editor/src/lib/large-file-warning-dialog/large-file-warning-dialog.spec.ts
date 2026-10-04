@@ -49,6 +49,7 @@ describe('LargeFileWarningComponent', () => {
     loadedFilesService = TestBed.inject(LoadedFilesService);
     fixture = TestBed.createComponent(LargeFileWarningComponent);
     component = fixture.componentInstance;
+    (dialogRef as {componentInstance: unknown}).componentInstance = component;
     fixture.detectChanges();
   });
 
@@ -66,6 +67,20 @@ describe('LargeFileWarningComponent', () => {
     const resetSpy = vi.spyOn(loadedFilesService.currentLoadedFile.cachedFile, 'reset');
     component.close('cancel');
     expect(resetSpy).toHaveBeenCalled();
+    expect(dialogRef.close).toHaveBeenCalledWith('cancel');
+  });
+
+  it('requestClose (Escape / X) should behave like cancel', () => {
+    const resetSpy = vi.spyOn(loadedFilesService.currentLoadedFile.cachedFile, 'reset');
+    component.requestClose();
+    expect(resetSpy).toHaveBeenCalled();
+    expect(dialogRef.close).toHaveBeenCalledWith('cancel');
+  });
+
+  it('should render the (x) button', () => {
+    const button = fixture.nativeElement.querySelector('[data-testid="dialog-close-button"]') as HTMLButtonElement;
+    expect(button).toBeTruthy();
+    button.click();
     expect(dialogRef.close).toHaveBeenCalledWith('cancel');
   });
 });

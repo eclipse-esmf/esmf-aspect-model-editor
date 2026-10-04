@@ -29,7 +29,6 @@ import {
   MatRowDef,
   MatTable,
 } from '@angular/material/table';
-import {MatTooltip} from '@angular/material/tooltip';
 import {Samm} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {SettingsFormService} from '../../../services';
@@ -41,7 +40,6 @@ import {SettingsFormService} from '../../../services';
   imports: [
     FormField,
     MatIconModule,
-    MatTooltip,
     MatFormFieldModule,
     MatLabel,
     MatInput,

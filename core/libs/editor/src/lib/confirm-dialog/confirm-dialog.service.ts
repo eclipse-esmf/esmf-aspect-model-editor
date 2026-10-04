@@ -16,7 +16,7 @@ import {viewportSafeWidth} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
-import {first} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 
 export {DialogOptions};
@@ -39,6 +39,10 @@ export class ConfirmDialogService implements ConfirmDialogPort {
         minWidth: viewportSafeWidth(550),
       })
       .afterClosed()
-      .pipe(first());
+      .pipe(
+        first(),
+        // A dialog dismissed without a decision (e.g. closed programmatically) is always a cancel.
+        map(result => result ?? ConfirmDialogEnum.cancel),
+      );
   }
 }

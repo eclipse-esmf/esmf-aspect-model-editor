@@ -12,9 +12,7 @@
   -->
 
 <h3 mat-dialog-title>{{ data.title }}</h3>
-<button class="close-button" (click)="closeAndGiveResult(confirmDialogEnum.cancel)" mat-icon-button tabindex="-1">
-  <mat-icon>close</mat-icon>
-</button>
+<ame-dialog-close-button />
 
 <mat-dialog-content>
   @for (text of data.phrases; track text) {

@@ -157,11 +157,6 @@
     "removeAspect": "Aspect entfernen",
     "cancel": "Abbrechen"
   },
-  "selectLanguageToJsonSchemaDialog": {
-    "title": "Sprache für die Generierung des JSON Schemas auswählen",
-    "language": "Sprache",
-    "selectButton": "Auswählen"
-  },
   "generateAasxDialog": {
     "title": "AASX generieren",
     "outputFileFormat": "Ausgabedateiformat",
@@ -328,7 +323,10 @@
     "cancel": "Abbrechen",
     "resetContent": "Inhalt zurücksetzen",
     "copyToClipboard": "In die Zwischenablage kopieren",
-    "downloadFile": "Datei herunterladen"
+    "downloadFile": "Datei herunterladen",
+    "language": "Sprache",
+    "languageHint": "Sprache der Beschreibungen (description) im JSON Schema",
+    "copied": "In die Zwischenablage kopiert"
   },
   "sidebar": {
     "loadingElements": "Elemente werden geladen...",
@@ -372,6 +370,10 @@
       "copyFilePath": "Dateipfad kopieren",
       "copiedFilePath": "Dateipfad in die Zwischenablage kopiert",
       "delete": "Löschen"
+    },
+    "elementList": {
+      "title": "Elementliste",
+      "close": "Elementliste schließen"
     }
   },
   "settingsDialog": {
@@ -440,6 +442,37 @@
         "requiredVersion": "Die Version ist erforderlich",
         "invalidVersion": "Keine gültige Version"
       }
+    },
+    "search": {
+      "placeholder": "Einstellungen durchsuchen",
+      "clear": "Suche löschen",
+      "noResults": "Keine passenden Einstellungen"
+    },
+    "scope": {
+      "application": "Gilt für alle Modelle",
+      "applicationHint": "Anwendungsweit, auf diesem Rechner gespeichert",
+      "model": "Modell: {{file}}",
+      "noModel": "Kein Modell geladen",
+      "modelHint": "Für das geöffnete Modell und als Vorgabe für neue Modelle"
+    },
+    "description": {
+      "automatedWorkflow": "Automatisches Speichern, Validieren und Formatieren während der Bearbeitung.",
+      "editor": "Darstellung des Graphen und wie Modelle in Turtle-Dateien geschrieben werden.",
+      "languages": "Sprache der Benutzeroberfläche und die Sprachen für Namen und Beschreibungen im Modell.",
+      "namespaces": "Namespace und Version des geöffneten Modells.",
+      "copyright": "Kommentar-Kopf am Anfang der Turtle-Datei. Jede Zeile muss mit # beginnen."
+    },
+    "resetSection": "Auf Standard zurücksetzen",
+    "requiresModel": "Laden Sie ein Aspect Model, um diese Einstellungen zu ändern.",
+    "sectionHasErrors": "Dieser Bereich enthält Fehler",
+    "errorsIn": "Fehler in „{{section}}“ beheben",
+    "noChanges": "Keine Änderungen zum Übernehmen",
+    "unsavedChanges": {
+      "badge": "Ungespeicherte Änderungen",
+      "title": "Änderungen verwerfen?",
+      "content": "Die Einstellungen enthalten Änderungen, die noch nicht übernommen wurden.",
+      "keepEditing": "Weiter bearbeiten",
+      "discard": "Verwerfen"
     }
   },
   "editorCanvas": {
@@ -546,7 +579,10 @@
         },
         "seeInput": {
           "typeToSearch": "Tippen, um zu suchen, oder eine URN bzw. URL eingeben",
-          "invalidUri": "Ungültige URI"
+          "invalidUri": "Ungültige URI",
+          "copy": "URI kopieren",
+          "remove": "Entfernen",
+          "copied": "URI in die Zwischenablage kopiert"
         },
         "value": {
           "pleaseDefine": "Bitte gib einen Wert an"
@@ -879,5 +915,8 @@
   "session": {
     "modelNotFound": "Das benötigte Aspect Model {{name}} konnte nicht gefunden werden.",
     "modelNotRestored": "Das Aspect Model {{name}} konnte nicht wiederhergestellt werden."
+  },
+  "dialog": {
+    "close": "Schließen (Esc)"
   }
 }

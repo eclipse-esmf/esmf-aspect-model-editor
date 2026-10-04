@@ -12,6 +12,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
 
+  <ame-dialog-close-button [disabled]="loading()" />
   <h2 mat-dialog-title>{{ t('sammMigration.workspaceMigrationDialog.title') }} {{ config.currentSammVersion }}</h2>
 
   <mat-dialog-content class="migration">

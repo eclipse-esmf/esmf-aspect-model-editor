@@ -90,9 +90,17 @@
   }
 
   &__icon {
+    // The icon is wider than the handle: without flex: none the flexbox shrinks the icon box to the
+    // handle width while the glyph keeps its size, which renders the glyph off-centre.
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 18px;
     height: 18px;
+    margin: 0;
     font-size: 18px;
-    line-height: 18px;
+    line-height: 1;
+    overflow: visible;
   }
 }

@@ -133,4 +133,22 @@ describe('MigrationDialogComponent', () => {
   it('should return current step index', () => {
     expect(component.currentStep()).toBe(0);
   });
+  it('requestClose should close the dialog when no migration is running', () => {
+    component.requestClose();
+    expect(dialogRefMock.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('requestClose should be ignored while the migration is running', () => {
+    vi.useFakeTimers();
+    try {
+      component.loading.set(true);
+      vi.advanceTimersByTime(1000);
+      expect(component.loading()).toBe(true);
+
+      component.requestClose();
+      expect(dialogRefMock.close).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

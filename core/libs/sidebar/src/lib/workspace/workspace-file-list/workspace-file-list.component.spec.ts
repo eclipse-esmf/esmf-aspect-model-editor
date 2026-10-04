@@ -12,7 +12,7 @@
  */
 
 import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade} from '@ame/domain';
-import {LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
+import {ClipboardService, LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -318,6 +318,17 @@ describe('WorkspaceFileListComponent', () => {
     }
   });
 
+  it('should copy the file path through the ClipboardService (Tauri clipboard in the desktop app)', () => {
+    const clipboard = TestBed.inject(ClipboardService);
+    const copy = vi.spyOn(clipboard, 'copy').mockImplementation(() => undefined);
+
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl')!;
+    component.prepare('org.eclipse.esmf:1.0.0', file);
+    component.copyFilePath();
+
+    expect(copy).toHaveBeenCalledWith('/workspace/org.eclipse.esmf/1.0.0/File1.ttl');
+  });
+
   it('should identify current file correctly', () => {
     expect(component.isCurrentFile('org.eclipse.esmf:1.0.0', 'Current.ttl')).toBe(true);
     expect(component.isCurrentFile('org.eclipse.esmf:1.0.0', 'File1.ttl')).toBe(false);
@@ -376,5 +387,47 @@ describe('WorkspaceFileListComponent', () => {
       component.promptOpenFile('org.eclipse.esmf:1.0.0', currentFile);
       expect(modelOpenerMock.promptAndOpen).not.toHaveBeenCalled();
     }
+  });
+  describe('link to the element list', () => {
+    function row(name: string): HTMLElement {
+      return fixture.nativeElement.querySelector(`[data-testid="workspace-file-${name}"]`);
+    }
+
+    function selectFile1(): void {
+      row('File1.ttl').click();
+      fixture.detectChanges();
+    }
+
+    it('should not mark any file as linked without selection', () => {
+      sidebarService.fileElements.open();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelectorAll('.selected--linked').length).toBe(0);
+    });
+
+    it('should mark the selected file as linked while its element list is open', () => {
+      selectFile1();
+      sidebarService.fileElements.open();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+
+      expect(row('File1.ttl').classList).toContain('selected--linked');
+      expect(row('Current.ttl').classList).not.toContain('selected--linked');
+    });
+
+    it('should remove the link when the element list is closed', () => {
+      selectFile1();
+      sidebarService.fileElements.open();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+
+      sidebarService.fileElements.close();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+
+      expect(row('File1.ttl').classList).not.toContain('selected--linked');
+      expect(row('File1.ttl').classList).not.toContain('selected');
+    });
   });
 });

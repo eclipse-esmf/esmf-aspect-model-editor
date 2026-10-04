@@ -14,7 +14,7 @@
 import {Component} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {afterEach, beforeEach, describe, expect, it} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {AME_DIALOG_MAX_HEIGHT, AME_DIALOG_MAX_WIDTH, provideAmeDialogDefaults, viewportSafeWidth} from './dialog-defaults';
 
 @Component({template: '<p>dialog</p>'})
@@ -33,6 +33,7 @@ describe('provideAmeDialogDefaults', () => {
 
     expect(options.maxWidth).toBe(AME_DIALOG_MAX_WIDTH);
     expect(options.maxHeight).toBe(AME_DIALOG_MAX_HEIGHT);
+    expect(options.disableClose).toBe(true);
     expect(options.hasBackdrop).toBe(materialDefaults.hasBackdrop);
     expect(options.role).toBe(materialDefaults.role);
     expect(options.autoFocus).toBe(materialDefaults.autoFocus);
@@ -44,6 +45,25 @@ describe('provideAmeDialogDefaults', () => {
 
     expect(config.maxWidth).toBe(AME_DIALOG_MAX_WIDTH);
     expect(config.maxHeight).toBe(AME_DIALOG_MAX_HEIGHT);
+  });
+
+  it('does not close dialogs on a backdrop click', () => {
+    const ref = TestBed.inject(MatDialog).open(DummyDialogComponent);
+    const close = vi.spyOn(ref, 'close');
+
+    (document.querySelector('.cdk-overlay-backdrop') as HTMLElement).click();
+
+    expect(ref.disableClose).toBe(true);
+    expect(close).not.toHaveBeenCalled();
+  });
+
+  it('still closes dialogs on Escape', () => {
+    const ref = TestBed.inject(MatDialog).open(DummyDialogComponent);
+    const close = vi.spyOn(ref, 'close');
+
+    document.querySelector('.cdk-overlay-pane')!.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+
+    expect(close).toHaveBeenCalledTimes(1);
   });
 
   it('lets a dialog override the limits explicitly', () => {

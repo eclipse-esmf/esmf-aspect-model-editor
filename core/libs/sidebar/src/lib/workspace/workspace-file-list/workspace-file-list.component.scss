@@ -107,15 +107,29 @@
 
     &:hover {
       background-color: var(--ame-surface-hover, #e1e1e1);
+    }
 
+    // The menu button is always there (discoverable, reachable with the keyboard and on touch screens)
+    // but stays subtle until the row is hovered, selected or focused.
+    &:hover,
+    &.selected,
+    &:focus-visible,
+    &:focus-within {
       > button {
-        display: inline-flex;
+        opacity: 1;
       }
     }
 
     &.selected {
       background-color: var(--ame-surface-selected, #e1e1e1);
       cursor: default;
+    }
+
+    // The element list next to the workspace shows the elements of this file.
+    &.selected--linked {
+      background-color: color-mix(in srgb, var(--ame-primary, #7599c8) 18%, var(--ame-surface-card, #f3f3f3));
+      box-shadow: inset 4px 0 0 var(--ame-primary, #7599c8);
+      font-weight: 500;
     }
 
     &.outdated {
@@ -142,9 +156,12 @@
       }
     }
 
-    // Innerer Button
+    // Menu button (three dots)
     > button {
-      display: none;
+      display: inline-flex;
+      flex: 0 0 auto;
+      opacity: 0.4;
+      transition: opacity 120ms ease-in-out;
       background: none;
       border: none;
       cursor: pointer;
@@ -152,10 +169,8 @@
       z-index: 10;
       position: relative;
 
-      // The open menu's backdrop removes the row hover. The trigger must stay rendered, otherwise
-      // the menu loses its anchor and jumps to the top left corner on the next repositioning.
       &[aria-expanded='true'] {
-        display: inline-flex;
+        opacity: 1;
       }
 
       &:focus {

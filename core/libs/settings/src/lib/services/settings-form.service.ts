@@ -12,8 +12,8 @@
  */
 import {ConfigurationService, ModelHeaderService, ModelSessionFacade, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
 import {DEFAULT_ELEMENT_ORDER_STRATEGY, GeneralConfig, LanguageTranslationService} from '@ame/shared';
-import {inject, Injectable, signal} from '@angular/core';
-import {disabled, form, pattern, required, validate} from '@angular/forms/signals';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {applyWhen, disabled, form, pattern, required, validate} from '@angular/forms/signals';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import * as locale from 'locale-codes';
 import {AspectModelLanguageEntry, NamespaceConfiguration, SettingsFormData} from '../model';
@@ -24,7 +24,7 @@ import {LanguageConfigurationUpdateStrategy} from '../strategy/language-configur
 import {NamespaceConfigurationUpdateStrategy} from '../strategy/namespace-configuration-update.strategy';
 import {SettingsUpdateStrategy} from '../strategy/settings-update.strategy';
 
-const createDefaultSettingsModel = (): SettingsFormData => ({
+export const createDefaultSettingsModel = (): SettingsFormData => ({
   automatedWorkflow: {
     autoSaveEnabled: true,
     saveTimerSeconds: 60,
@@ -84,6 +84,17 @@ export class SettingsFormService {
 
   readonly settingsModel = signal<SettingsFormData>(createDefaultSettingsModel());
 
+  /** Whether a model is loaded; model specific settings (namespace) are only editable and validated then. */
+  readonly hasLoadedModel = signal(false);
+
+  /** The aspect name is derived from the aspect and therefore read-only when the model has one. */
+  private readonly hasAspect = signal(false);
+
+  private readonly pristineSnapshot = signal(JSON.stringify(this.settingsModel()));
+
+  /** True as soon as the form differs from the last loaded or applied settings. */
+  readonly isDirty = computed(() => JSON.stringify(this.settingsModel()) !== this.pristineSnapshot());
+
   readonly settingsForm = form(this.settingsModel, schemaPath => {
     // Automated workflow
     disabled(schemaPath.automatedWorkflow.saveTimerSeconds, {
@@ -108,15 +119,23 @@ export class SettingsFormService {
       return null;
     });
 
-    // Namespace configuration
-    required(schemaPath.namespaceConfiguration.aspectUri);
-    pattern(schemaPath.namespaceConfiguration.aspectUri, /^[A-Za-z0-9]+([.-][A-Za-z0-9_]+)*$/);
+    // Namespace configuration: belongs to the loaded model, without a model it must not block saving.
+    applyWhen(
+      schemaPath.namespaceConfiguration,
+      () => this.hasLoadedModel(),
+      namespacePath => {
+        required(namespacePath.aspectUri);
+        pattern(namespacePath.aspectUri, /^[A-Za-z0-9]+([.-][A-Za-z0-9_]+)*$/);
 
-    required(schemaPath.namespaceConfiguration.aspectVersion);
-    pattern(schemaPath.namespaceConfiguration.aspectVersion, /^\d+\.\d+\.\d+(-[A-Za-z0-9]+)?$/);
+        required(namespacePath.aspectVersion);
+        pattern(namespacePath.aspectVersion, /^\d+\.\d+\.\d+(-[A-Za-z0-9]+)?$/);
+      },
+    );
+    disabled(schemaPath.namespaceConfiguration.aspectUri, {when: () => !this.hasLoadedModel()});
+    disabled(schemaPath.namespaceConfiguration.aspectVersion, {when: () => !this.hasLoadedModel()});
 
     disabled(schemaPath.namespaceConfiguration.aspectName, {
-      when: () => !!this.currentLoadedFile?.aspect,
+      when: () => !this.hasLoadedModel() || this.hasAspect(),
     });
     disabled(schemaPath.namespaceConfiguration.sammVersion, {
       when: () => true,
@@ -133,9 +152,23 @@ export class SettingsFormService {
   });
 
   public initializeForm(): void {
+    this.hasLoadedModel.set(!!this.currentLoadedFile);
+    this.hasAspect.set(!!this.currentLoadedFile?.aspect);
     this.initializeNamespaceAndVersion();
     this.createForm();
     this.populateLanguages();
+    this.markPristine();
+  }
+
+  /** Takes the current form values as the new "unchanged" state, e.g. after loading or applying settings. */
+  markPristine(): void {
+    this.pristineSnapshot.set(JSON.stringify(this.settingsModel()));
+  }
+
+  /** Restores the default values of an application wide settings section. */
+  resetSection(section: 'automatedWorkflow' | 'editorConfiguration'): void {
+    const defaults = createDefaultSettingsModel();
+    this.settingsModel.update(model => ({...model, [section]: {...defaults[section]}}));
   }
 
   private initializeNamespaceAndVersion(): void {

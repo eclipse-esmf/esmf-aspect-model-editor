@@ -11,17 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 import {GraphSettingsPort, ModelSessionFacade, SammLanguageSettingsService} from '@ame/domain';
-import {AlertService, LoadingScreenService, TitleService} from '@ame/shared';
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {NgClass} from '@angular/common';
-import {Component, inject} from '@angular/core';
+import {AlertService, DialogCloseButtonComponent, DialogCloseRequestHandler, LoadingScreenService, TitleService} from '@ame/shared';
+import {Component, computed, ElementRef, inject, signal, viewChildren} from '@angular/core';
 import {MatButton, MatIconButton} from '@angular/material/button';
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MatFormField, MatPrefix, MatSuffix} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
+import {MatInput} from '@angular/material/input';
 import {MatTooltip} from '@angular/material/tooltip';
-import {MatTree, MatTreeFlatDataSource, MatTreeFlattener, MatTreeNode, MatTreeNodeDef, MatTreeNodeToggle} from '@angular/material/tree';
 import {RdfModel} from '@esmf/aspect-model-loader';
-import {TranslocoDirective} from '@jsverse/transloco';
+import {TranslocoDirective, TranslocoService} from '@jsverse/transloco';
 import * as locale from 'locale-codes';
 import {NamespaceConfiguration} from '../../model';
 import {SettingsFormService} from '../../services';
@@ -31,87 +30,120 @@ import {AutomatedWorkflowComponent} from '../system-configuration/automated-work
 import {EditorConfigurationComponent} from '../system-configuration/editor-configuration/editor-configuration.component';
 import {HeaderCopyrightComponent} from '../system-configuration/header-copyright/header-copyright.component';
 
-enum NodeNames {
-  CONFIGURATION = 'System Configuration',
-  MODEL_CONFIGURATION = 'Model Configuration',
-  AUTOMATED_WORKFLOW = 'Automated Workflow',
-  EDITOR = 'Editor',
-  COPYRIGHT = 'Header/Copyright',
-  LANGUAGES = 'Languages',
-  NAMESPACES = 'Namespaces',
-}
+export type SettingsSectionId =
+  'automatedWorkflow' | 'editorConfiguration' | 'languageConfiguration' | 'namespaceConfiguration' | 'copyrightHeaderConfiguration';
 
-interface ConfigurationNode {
-  id: string;
+export interface SettingsSection {
+  id: SettingsSectionId;
+  /** i18n key of the section title. */
   name: string;
-  type: NodeNames;
-  children?: ConfigurationNode[];
+  /** i18n key of the short description shown in the section header. */
+  description: string;
+  /** i18n keys of the labels inside the section; used by the settings search. */
+  keywords: string[];
+  /** Only meaningful with a loaded model. */
+  requiresModel?: boolean;
+  /** Offers "Reset to defaults". */
+  resettable?: boolean;
 }
 
-interface ConfigurationFlatNode {
-  id: string;
-  expandable: boolean;
+export interface SettingsGroup {
+  id: 'systemConfiguration' | 'modelConfiguration';
   name: string;
-  type: string;
-  level: number;
+  hint: string;
+  icon: string;
+  sections: SettingsSection[];
 }
 
-const TREE_DATA: ConfigurationNode[] = [
+export const SETTINGS_GROUPS: SettingsGroup[] = [
   {
-    name: 'settingsDialog.node.systemConfiguration',
-    type: NodeNames.CONFIGURATION,
     id: 'systemConfiguration',
-    children: [
+    name: 'settingsDialog.node.systemConfiguration',
+    hint: 'settingsDialog.scope.applicationHint',
+    icon: 'tune',
+    sections: [
       {
-        name: 'settingsDialog.subNode.automatedWorkflow',
-        type: NodeNames.AUTOMATED_WORKFLOW,
         id: 'automatedWorkflow',
+        name: 'settingsDialog.subNode.automatedWorkflow',
+        description: 'settingsDialog.description.automatedWorkflow',
+        keywords: [
+          'settingsDialog.configuration.autoSave',
+          'settingsDialog.configuration.waitingPeriod',
+          'settingsDialog.configuration.autoValidation',
+          'settingsDialog.configuration.autoFormatting',
+        ],
+        resettable: true,
       },
       {
-        name: 'settingsDialog.subNode.editor',
-        type: NodeNames.EDITOR,
         id: 'editorConfiguration',
+        name: 'settingsDialog.subNode.editor',
+        description: 'settingsDialog.description.editor',
+        keywords: [
+          'settingsDialog.configuration.usingHierarchicalLayout',
+          'settingsDialog.configuration.displayDisambiguationLabel',
+          'settingsDialog.configuration.darkMode',
+          'settingsDialog.configuration.elementOrder',
+          'settingsDialog.configuration.restoreSession',
+        ],
+        resettable: true,
       },
     ],
   },
   {
-    name: 'settingsDialog.node.modelConfiguration',
-    type: NodeNames.MODEL_CONFIGURATION,
     id: 'modelConfiguration',
-    children: [
+    name: 'settingsDialog.node.modelConfiguration',
+    hint: 'settingsDialog.scope.modelHint',
+    icon: 'description',
+    sections: [
       {
-        name: 'settingsDialog.subNode.languages',
-        type: NodeNames.LANGUAGES,
         id: 'languageConfiguration',
+        name: 'settingsDialog.subNode.languages',
+        description: 'settingsDialog.description.languages',
+        keywords: [
+          'settingsDialog.languages.userInterface',
+          'settingsDialog.languages.aspectModel',
+          'settingsDialog.languages.addLanguage',
+        ],
       },
       {
-        name: 'settingsDialog.subNode.namespaces',
-        type: NodeNames.NAMESPACES,
         id: 'namespaceConfiguration',
+        name: 'settingsDialog.subNode.namespaces',
+        description: 'settingsDialog.description.namespaces',
+        keywords: [
+          'settingsDialog.namespaces.value',
+          'settingsDialog.namespaces.version',
+          'settingsDialog.namespaces.name',
+          'settingsDialog.namespaces.sammVersion',
+        ],
+        requiresModel: true,
       },
       {
-        name: 'settingsDialog.subNode.copyright',
-        type: NodeNames.COPYRIGHT,
         id: 'copyrightHeaderConfiguration',
+        name: 'settingsDialog.subNode.copyright',
+        description: 'settingsDialog.description.copyright',
+        keywords: [],
       },
     ],
   },
 ];
+
+const ALL_SECTIONS = SETTINGS_GROUPS.flatMap(group => group.sections);
+export const SETTINGS_LAST_SECTION_KEY = 'ame.settings.lastSection';
 
 @Component({
   selector: 'ame-setting-dialog',
   templateUrl: './setting-dialog.component.html',
   styleUrls: ['./setting-dialog.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogTitle,
-    MatDialogClose,
     MatIconButton,
     MatIconModule,
     MatDialogContent,
-    MatTree,
-    MatTreeNode,
-    MatTreeNodeDef,
-    NgClass,
+    MatFormField,
+    MatInput,
+    MatPrefix,
+    MatSuffix,
     AutomatedWorkflowComponent,
     EditorConfigurationComponent,
     LanguageSettingsComponent,
@@ -120,11 +152,10 @@ const TREE_DATA: ConfigurationNode[] = [
     MatDialogActions,
     MatButton,
     MatTooltip,
-    MatTreeNodeToggle,
     TranslocoDirective,
   ],
 })
-export class SettingDialogComponent {
+export class SettingDialogComponent implements DialogCloseRequestHandler {
   private readonly settingDialogComponentMatDialogRef = inject(MatDialogRef<SettingDialogComponent>);
   private readonly formService = inject(SettingsFormService);
   private readonly alertService = inject(AlertService);
@@ -133,34 +164,30 @@ export class SettingDialogComponent {
   private readonly loadingScreen = inject(LoadingScreenService);
   private readonly titleService = inject(TitleService);
   private readonly loadedFilesService = inject(ModelSessionFacade);
+  private readonly transloco = inject(TranslocoService);
 
-  public readonly NodeNames = NodeNames;
+  private readonly treeItems = viewChildren<ElementRef<HTMLElement>>('treeItem');
 
-  private readonly _transformer = (node: ConfigurationNode, level: number): ConfigurationFlatNode => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      type: node.type,
-      id: node.id,
-      level: level,
-    };
-  };
+  readonly groups = SETTINGS_GROUPS;
+  readonly selectedSectionId = signal<SettingsSectionId>(this.restoreLastSection());
+  readonly selectedSection = computed(() => ALL_SECTIONS.find(section => section.id === this.selectedSectionId()) ?? ALL_SECTIONS[0]);
+  readonly searchTerm = signal('');
 
-  readonly treeControl = new FlatTreeControl<ConfigurationFlatNode>(
-    node => node.level,
-    node => node.expandable,
-  );
+  /** Groups and sections matching the search term (title, description or labels inside the section). */
+  readonly visibleGroups = computed(() => {
+    const term = this.searchTerm().trim().toLowerCase();
+    if (!term) return this.groups;
 
-  readonly treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => node.children,
-  );
+    return this.groups
+      .map(group => {
+        const groupMatches = this.translate(group.name).toLowerCase().includes(term);
+        const sections = groupMatches ? group.sections : group.sections.filter(section => this.sectionMatches(section, term));
+        return {...group, sections};
+      })
+      .filter(group => group.sections.length > 0);
+  });
 
-  readonly dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
-  selectedNodeType: string | null = NodeNames.AUTOMATED_WORKFLOW;
+  readonly visibleSections = computed(() => this.visibleGroups().flatMap(group => group.sections));
 
   get settingsForm() {
     return this.formService.settingsForm;
@@ -170,26 +197,108 @@ export class SettingDialogComponent {
     return this.loadedFilesService.currentLoadedFile;
   }
 
+  get isDirty(): boolean {
+    return this.formService.isDirty();
+  }
+
+  get hasLoadedModel(): boolean {
+    return this.formService.hasLoadedModel();
+  }
+
+  get currentFileName(): string {
+    return this.currentLoadedFile?.name || this.currentLoadedFile?.absoluteName?.split(':').pop() || '';
+  }
+
+  /** The first section with validation errors, used for the error summary next to the buttons. */
+  get firstInvalidSection(): SettingsSection | undefined {
+    return ALL_SECTIONS.find(section => this.isSectionInvalid(section.id));
+  }
+
   constructor() {
     this.initializeComponent();
   }
 
   initializeComponent(): void {
-    this.dataSource.data = TREE_DATA;
-    this.treeControl.expandAll();
     this.formService.initializeForm();
     this.formService.clearLanguagesToRemove();
   }
 
-  hasChild = (_: number, node: ConfigurationFlatNode): boolean => node.expandable;
+  selectSection(id: SettingsSectionId, focus = false): void {
+    this.selectedSectionId.set(id);
+    try {
+      localStorage.setItem(SETTINGS_LAST_SECTION_KEY, id);
+    } catch {
+      // Storage may be unavailable (e.g. private mode); remembering the section is optional.
+    }
 
-  onNodeSelected(type: string): void {
-    const typeMappings: Record<string, string> = {
-      [NodeNames.CONFIGURATION]: NodeNames.AUTOMATED_WORKFLOW,
-      [NodeNames.MODEL_CONFIGURATION]: NodeNames.LANGUAGES,
-    };
+    if (focus) {
+      queueMicrotask(() =>
+        this.treeItems()
+          .find(item => item.nativeElement.dataset['sectionId'] === id)
+          ?.nativeElement.focus(),
+      );
+    }
+  }
 
-    this.selectedNodeType = typeMappings[type] || type;
+  /** Arrow keys, Home and End move through the visible sections (WAI-ARIA tree pattern). */
+  onTreeKeydown(event: KeyboardEvent): void {
+    const sections = this.visibleSections();
+    if (!sections.length) return;
+
+    const index = Math.max(
+      sections.findIndex(section => section.id === this.selectedSectionId()),
+      0,
+    );
+    const target = {
+      ArrowDown: sections[Math.min(index + 1, sections.length - 1)],
+      ArrowUp: sections[Math.max(index - 1, 0)],
+      Home: sections[0],
+      End: sections[sections.length - 1],
+    }[event.key];
+
+    if (target) {
+      event.preventDefault();
+      this.selectSection(target.id, true);
+    }
+  }
+
+  onSearch(term: string): void {
+    this.searchTerm.set(term);
+    const sections = this.visibleSections();
+    if (sections.length && !sections.some(section => section.id === this.selectedSectionId())) {
+      this.selectSection(sections[0].id);
+    }
+  }
+
+  clearSearch(): void {
+    this.searchTerm.set('');
+  }
+
+  resetSelectedSection(): void {
+    const id = this.selectedSectionId();
+    if (id === 'automatedWorkflow' || id === 'editorConfiguration') {
+      this.formService.resetSection(id);
+    }
+  }
+
+  /** (x) and Escape: ask before unsaved changes get lost. */
+  requestClose(): void {
+    if (!this.isDirty) {
+      this.onClose();
+      return;
+    }
+
+    this.alertService.open({
+      data: {
+        title: this.translate('settingsDialog.unsavedChanges.title'),
+        content: this.translate('settingsDialog.unsavedChanges.content'),
+        leftButtonText: this.translate('settingsDialog.unsavedChanges.keepEditing'),
+        rightButtonText: this.translate('settingsDialog.unsavedChanges.discard'),
+        rightButtonAction: () => this.onClose(),
+        hasLeftButton: true,
+        hasRightButton: true,
+      },
+    });
   }
 
   onClose(): void {
@@ -200,6 +309,7 @@ export class SettingDialogComponent {
     this.applySettings(() => this.onClose());
   }
 
+  /** The Cancel button is an explicit decision to discard the changes. */
   onCancel(): void {
     this.onClose();
   }
@@ -208,6 +318,7 @@ export class SettingDialogComponent {
     this.formService.updateSettings();
     this.handleLanguageRemoval(onConfirmed);
     this.handleNamespaceChange();
+    this.formService.markPristine();
   }
 
   handleLanguageRemoval(onConfirmed?: () => void): void {
@@ -319,28 +430,28 @@ export class SettingDialogComponent {
     }
   }
 
-  isNodeInvalid(node: ConfigurationFlatNode): boolean {
-    switch (node.id) {
-      case 'automatedWorkflow':
-        return this.settingsForm.automatedWorkflow().invalid();
-      case 'editorConfiguration':
-        return this.settingsForm.editorConfiguration().invalid();
-      case 'languageConfiguration':
-        return this.settingsForm.languageConfiguration().invalid();
-      case 'namespaceConfiguration':
-        return this.settingsForm.namespaceConfiguration().invalid();
-      case 'copyrightHeaderConfiguration':
-        return this.settingsForm.copyrightHeaderConfiguration().invalid();
-      case 'systemConfiguration':
-        return this.settingsForm.automatedWorkflow().invalid() || this.settingsForm.editorConfiguration().invalid();
-      case 'modelConfiguration':
-        return (
-          this.settingsForm.languageConfiguration().invalid() ||
-          this.settingsForm.namespaceConfiguration().invalid() ||
-          this.settingsForm.copyrightHeaderConfiguration().invalid()
-        );
-      default:
-        return false;
+  isSectionInvalid(id: SettingsSectionId): boolean {
+    return this.settingsForm[id]().invalid();
+  }
+
+  isGroupInvalid(group: SettingsGroup): boolean {
+    return group.sections.some(section => this.isSectionInvalid(section.id));
+  }
+
+  private sectionMatches(section: SettingsSection, term: string): boolean {
+    return [section.name, section.description, ...section.keywords].some(key => this.translate(key).toLowerCase().includes(term));
+  }
+
+  private translate(key: string): string {
+    return this.transloco.translate(key);
+  }
+
+  private restoreLastSection(): SettingsSectionId {
+    try {
+      const stored = localStorage.getItem(SETTINGS_LAST_SECTION_KEY);
+      return ALL_SECTIONS.find(section => section.id === stored)?.id ?? ALL_SECTIONS[0].id;
+    } catch {
+      return ALL_SECTIONS[0].id;
     }
   }
 }

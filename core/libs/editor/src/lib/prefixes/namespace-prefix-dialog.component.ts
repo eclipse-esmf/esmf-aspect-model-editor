@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, computed, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -35,7 +36,15 @@ export interface NamespacePrefixDialogData {
   selector: 'ame-namespace-prefix-dialog',
   templateUrl: './namespace-prefix-dialog.component.html',
   styleUrls: ['./prefix-dialogs.scss'],
-  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, TranslocoDirective],
+  imports: [
+    DialogCloseButtonComponent,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    TranslocoDirective,
+  ],
 })
 export class NamespacePrefixDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<NamespacePrefixDialogComponent, string>);

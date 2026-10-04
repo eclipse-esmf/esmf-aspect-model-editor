@@ -11,8 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Provider} from '@angular/core';
+import {EnvironmentProviders, inject, makeEnvironmentProviders, provideEnvironmentInitializer} from '@angular/core';
 import {MAT_DIALOG_DEFAULT_OPTIONS, MatDialogConfig} from '@angular/material/dialog';
+import {DialogEscapeHandler} from './dialog-close';
 
 /**
  * Viewport limits applied to every dialog unless a dialog explicitly overrides them.
@@ -31,9 +32,18 @@ export function viewportSafeWidth(px: number): string {
   return `min(${px}px, ${AME_DIALOG_MAX_WIDTH})`;
 }
 
-export function provideAmeDialogDefaults(): Provider {
-  return {
-    provide: MAT_DIALOG_DEFAULT_OPTIONS,
-    useValue: {...new MatDialogConfig(), maxWidth: AME_DIALOG_MAX_WIDTH, maxHeight: AME_DIALOG_MAX_HEIGHT},
-  };
+/**
+ * Dialog defaults of the application:
+ * - dialogs never exceed the viewport,
+ * - clicking outside a dialog does not close it (`disableClose`); a dialog is closed via its buttons,
+ *   its (x) button or the Escape key (see {@link DialogEscapeHandler}).
+ */
+export function provideAmeDialogDefaults(): EnvironmentProviders {
+  return makeEnvironmentProviders([
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {...new MatDialogConfig(), maxWidth: AME_DIALOG_MAX_WIDTH, maxHeight: AME_DIALOG_MAX_HEIGHT, disableClose: true},
+    },
+    provideEnvironmentInitializer(() => inject(DialogEscapeHandler).init()),
+  ]);
 }

@@ -14,9 +14,7 @@
 
   <h3 mat-dialog-title>{{ title() }}</h3>
 
-  <button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
-    <mat-icon>close</mat-icon>
-  </button>
+  <ame-dialog-close-button />
 
   <form (submit)="$event.preventDefault(); onSave()">
     <mat-dialog-content>

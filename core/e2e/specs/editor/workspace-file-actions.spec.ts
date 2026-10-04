@@ -161,7 +161,7 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
     });
   }
 
-  for (const dismiss of ['Escape', 'backdrop'] as const) {
+  for (const dismiss of ['Escape', 'close button'] as const) {
     test(`dismissing the delete confirmation via ${dismiss} keeps the file`, async ({page}) => {
       const helper = new AppHelper(page);
       await helper.startModelling(false);
@@ -183,10 +183,7 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
       if (dismiss === 'Escape') {
         await page.keyboard.press('Escape');
       } else {
-        await page
-          .locator('.cdk-overlay-backdrop')
-          .last()
-          .click({position: {x: 5, y: 5}, force: true});
+        await dialog.getByTestId('dialog-close-button').click();
       }
       await expect(dialog).not.toBeVisible();
 
@@ -195,6 +192,37 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
       await expect(fileRow).toBeVisible();
     });
   }
+
+  test('a click outside the delete confirmation neither closes it nor deletes the file', async ({page}) => {
+    const helper = new AppHelper(page);
+    await helper.startModelling(false);
+
+    let deleteRequests = 0;
+    await page.route('**/ame/api/models', route => {
+      if (route.request().method() === 'DELETE') deleteRequests++;
+      return route.fallback();
+    });
+
+    await page.locator(SELECTOR_workspaceBtn).click({force: true});
+    await page.getByRole('button', {name: 'Select file SampleModel.ttl'}).hover();
+    await page.locator(SELECTOR_openFileMenu).first().click();
+    await page.locator(SELECTOR_fileMenuDeleteButton).click();
+
+    const dialog = page.locator('mat-dialog-container');
+    await expect(dialog).toBeVisible();
+    await page
+      .locator('.cdk-overlay-backdrop')
+      .last()
+      .click({position: {x: 5, y: 5}, force: true});
+
+    await page.waitForTimeout(300);
+    await expect(dialog).toBeVisible();
+    expect(deleteRequests).toBe(0);
+
+    await page.keyboard.press('Escape');
+    await expect(dialog).not.toBeVisible();
+    expect(deleteRequests).toBe(0);
+  });
 
   test('opens the file menu below its trigger even after the row loses hover', async ({page}) => {
     const helper = new AppHelper(page);

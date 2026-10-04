@@ -186,7 +186,7 @@ describe('Settings Update Strategies', () => {
   describe('NamespaceConfigurationUpdateStrategy', () => {
     let strategy: NamespaceConfigurationUpdateStrategy;
     let loadedFilesService: {
-      currentLoadedFile: {absoluteName: string};
+      currentLoadedFile: {absoluteName: string} | null;
       updateAbsoluteName: ReturnType<typeof vi.fn>;
     };
     let titleService: {updateTitle: ReturnType<typeof vi.fn>};
@@ -216,6 +216,23 @@ describe('Settings Update Strategies', () => {
       expect(initialSettings.version).toBe('2.0.0');
       expect(loadedFilesService.updateAbsoluteName).toHaveBeenCalledWith('old-file.ttl', 'org.eclipse.esmf:2.0.0:TestAspect.ttl');
       expect(titleService.updateTitle).toHaveBeenCalledWith('old-file.ttl');
+    });
+
+    it('should leave namespace and version untouched without a loaded model', () => {
+      loadedFilesService.currentLoadedFile = null;
+      const settings = {...initialSettings, namespace: 'keep.me', version: '9.9.9'} as typeof initialSettings;
+
+      strategy.updateSettings(mockFormData, settings);
+
+      expect(settings.namespace).toBe('keep.me');
+      expect(settings.version).toBe('9.9.9');
+      expect(loadedFilesService.updateAbsoluteName).not.toHaveBeenCalled();
+      expect(titleService.updateTitle).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing without namespace configuration', () => {
+      strategy.updateSettings({} as typeof mockFormData, initialSettings);
+      expect(loadedFilesService.updateAbsoluteName).not.toHaveBeenCalled();
     });
   });
 

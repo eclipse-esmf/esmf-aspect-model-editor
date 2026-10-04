@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService, OpenApi, OpenApiModel, SammLanguageSettingsService} from '@ame/domain';
-import {LanguageTranslationService, NotificationsService} from '@ame/shared';
+import {DialogCloseButtonComponent, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {CommonModule} from '@angular/common';
 import {Component, DestroyRef, effect, ElementRef, inject, OnInit, signal, untracked, viewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -46,6 +46,7 @@ export type {OpenApi, OpenApiModel};
   templateUrl: './generate-open-api.component.html',
   styleUrls: ['./generate-open-api.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     CommonModule,
     FormField,
     MatDialogModule,

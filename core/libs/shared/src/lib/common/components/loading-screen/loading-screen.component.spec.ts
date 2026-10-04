@@ -83,4 +83,16 @@ describe('LoadingScreenComponent', () => {
     component.close();
     expect(dialogRefMock.close).toHaveBeenCalled();
   });
+  it('requestClose() should close a closable loading screen like the close button', () => {
+    component.requestClose();
+    expect(loadingData.closeButtonAction).toHaveBeenCalled();
+    expect(dialogRefMock.close).toHaveBeenCalled();
+  });
+
+  it('requestClose() should ignore Escape for loading screens without close button', () => {
+    loadingData.hasCloseButton = false;
+    component.requestClose();
+    expect(loadingData.closeButtonAction).not.toHaveBeenCalled();
+    expect(dialogRefMock.close).not.toHaveBeenCalled();
+  });
 });

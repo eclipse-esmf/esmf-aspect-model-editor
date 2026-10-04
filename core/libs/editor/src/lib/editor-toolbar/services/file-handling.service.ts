@@ -29,11 +29,11 @@ import {
 } from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {
+  ClipboardService,
   decodeText,
   FileTypes,
   FileUploadService,
   GeneralConfig,
-  IPC_RENDERER,
   LanguageTranslationService,
   LoadingScreenOptions,
   LoadingScreenService,
@@ -112,7 +112,7 @@ export class FileHandlingService implements FileHandlingPort {
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
-  private ipcRenderer = inject(IPC_RENDERER, {optional: true});
+  private clipboard = inject(ClipboardService);
   private rdfNodeService = inject(RdfNodePort);
 
   private readonly tabStateService = inject(TabStateService);
@@ -319,32 +319,7 @@ export class FileHandlingService implements FileHandlingPort {
   }
 
   copyToClipboardSync(text: string) {
-    if (!text) return;
-
-    if (this.ipcRenderer?.copyToClipboard) {
-      this.ipcRenderer.copyToClipboard(text);
-      return;
-    }
-
-    window.focus();
-
-    if (navigator.clipboard && document.hasFocus()) {
-      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
-    } else {
-      this.fallbackCopy(text);
-    }
-  }
-
-  fallbackCopy(text: string) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
+    this.clipboard.copy(text);
   }
 
   onExportAsAspectModelFile() {
@@ -403,12 +378,16 @@ export class FileHandlingService implements FileHandlingPort {
       switchMap(() => this.getModelLoaderState()),
       tap(state => (modelState = state)),
       switchMap(() => this.handleNamespaceChange(modelState)),
-      switchMap(confirm => (confirm !== ConfirmDialogEnum.cancel ? this.modelSaverService.saveModel() : of(null))),
-      tap(rdfModel => this.handleRdfModel(rdfModel, modelState)),
-      finalize(() => {
-        this.modelSaveTracker.updateSavedModel();
-        this.loadingScreenService.close();
+      // Save only on an explicit decision (OK or "keep namespace"); cancel, (x) and Escape keep the model unsaved.
+      switchMap(confirm =>
+        confirm === ConfirmDialogEnum.ok || confirm === ConfirmDialogEnum.action ? this.modelSaverService.saveModel() : of(null),
+      ),
+      tap(rdfModel => {
+        // A cancelled save must keep the "unsaved changes" state of the model.
+        if (rdfModel) this.modelSaveTracker.updateSavedModel();
+        this.handleRdfModel(rdfModel, modelState);
       }),
+      finalize(() => this.loadingScreenService.close()),
     );
   }
 
@@ -652,7 +631,9 @@ export class FileHandlingService implements FileHandlingPort {
     };
 
     return this.confirmDialogService.open(confirmationDialogConfig).pipe(
-      tap(() => this.loadingScreenService.open(loadingDialogConfig)),
+      tap(confirm => {
+        if (confirm === ConfirmDialogEnum.ok || confirm === ConfirmDialogEnum.action) this.loadingScreenService.open(loadingDialogConfig);
+      }),
       switchMap(confirm => {
         if (confirm === ConfirmDialogEnum.ok) {
           return this.migrateAffectedModels(modelState.originalModelName, modelState.newModelName).pipe(map(() => confirm));

@@ -382,4 +382,45 @@ describe('WorkspaceFileElementsComponent', () => {
       expect((fixture.nativeElement as HTMLElement).style.width).toBe('250px');
     });
   });
+  describe('header', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const file = new FileStatus('Cached.ttl');
+      file.aspectModelUrn = 'urn:samm:org.eclipse.esmf:1.0.0#Cached';
+      sidebarService.selection.select('org.eclipse.esmf:1.0.0', file);
+      sidebarService.fileElements.open();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+    });
+
+    function byTestId(testId: string): HTMLElement {
+      return fixture.nativeElement.querySelector(`[data-testid="${testId}"]`);
+    }
+
+    it('should name the panel, the selected file and its namespace', () => {
+      const header = byTestId('file-elements-header');
+      expect(header.querySelector('.header__overline')?.textContent).toContain('sidebar.elementList.title');
+      expect(header.querySelector('h2')?.textContent?.trim()).toBe('Cached.ttl');
+      expect(byTestId('file-elements-namespace').textContent?.trim()).toBe('org.eclipse.esmf:1.0.0');
+    });
+
+    it('should close the element list with the labelled close button', () => {
+      const close = byTestId('file-elements-close');
+      expect(close.getAttribute('aria-label')).toBe('sidebar.elementList.close');
+
+      close.click();
+
+      expect(sidebarService.fileElements.isOpened()).toBe(false);
+    });
+
+    it('should not render a header without selection', () => {
+      sidebarService.selection.reset();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+      expect(byTestId('file-elements-header')).toBeNull();
+    });
+  });
 });

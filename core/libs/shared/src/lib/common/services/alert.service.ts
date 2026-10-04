@@ -23,7 +23,7 @@ export interface AlertOptions {
   rightButtonText: string;
   hasLeftButton: boolean;
   hasRightButton: boolean;
-  leftButtonAction: (arg0: MouseEvent) => void;
+  leftButtonAction?: (event?: MouseEvent) => void;
   rightButtonAction: (arg0: MouseEvent) => void;
 }
 

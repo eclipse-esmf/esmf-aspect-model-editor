@@ -45,6 +45,7 @@ describe('ConfirmDialogComponent', () => {
 
     fixture = TestBed.createComponent(ConfirmDialogComponent);
     component = fixture.componentInstance;
+    (dialogRef as {componentInstance: unknown}).componentInstance = component;
     fixture.detectChanges();
   });
 
@@ -59,5 +60,20 @@ describe('ConfirmDialogComponent', () => {
 
     component.closeAndGiveResult(ConfirmDialogEnum.cancel);
     expect(dialogRef.close).toHaveBeenCalledWith(ConfirmDialogEnum.cancel);
+  });
+
+  it('requestClose (Escape) should close with cancel', () => {
+    component.requestClose();
+    expect(dialogRef.close).toHaveBeenCalledWith(ConfirmDialogEnum.cancel);
+  });
+
+  it('should render a single (x) button that cancels', () => {
+    const buttons = fixture.nativeElement.querySelectorAll('[data-testid="dialog-close-button"]');
+    expect(buttons.length).toBe(1);
+
+    (buttons[0] as HTMLButtonElement).click();
+
+    expect(dialogRef.close).toHaveBeenCalledWith(ConfirmDialogEnum.cancel);
+    expect(dialogRef.close).not.toHaveBeenCalledWith(ConfirmDialogEnum.ok);
   });
 });

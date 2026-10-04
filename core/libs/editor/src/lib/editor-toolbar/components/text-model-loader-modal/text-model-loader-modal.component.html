@@ -12,9 +12,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
   <h2 mat-dialog-title>{{ t('loadModal.title') }}</h2>
-  <button class="close-button" data-testid="close-notifications" mat-icon-button tabindex="-1" mat-dialog-close>
-    <mat-icon>close</mat-icon>
-  </button>
+  <ame-dialog-close-button testId="close-notifications" />
 
   <mat-dialog-content>
     <p>{{ t('loadModal.content') }}</p>

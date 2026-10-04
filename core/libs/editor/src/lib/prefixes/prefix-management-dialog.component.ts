@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -37,14 +38,23 @@ export interface PrefixRow {
   selector: 'ame-prefix-management-dialog',
   templateUrl: './prefix-management-dialog.component.html',
   styleUrls: ['./prefix-dialogs.scss'],
-  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, MatTooltipModule, TranslocoDirective],
+  imports: [
+    DialogCloseButtonComponent,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatTooltipModule,
+    TranslocoDirective,
+  ],
 })
 export class PrefixManagementDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<PrefixManagementDialogComponent, boolean>);
   private readonly rdfModel = inject<PrefixManagementDialogData>(MAT_DIALOG_DATA).rdfModel;
   private changed = false;
 
-  /** True when prefixes were changed, also if the dialog is closed with escape or a click on the backdrop. */
+  /** True when prefixes were changed, also if the dialog is closed with (x) or Escape. */
   get hasChanges(): boolean {
     return this.changed;
   }
@@ -122,6 +132,11 @@ export class PrefixManagementDialogComponent {
       (target === 'alias' ? this.newAlias : this.newNamespace).set(value);
       this.addError.set(null);
     }
+  }
+
+  /** (x) and Escape keep the information whether prefixes were changed. */
+  requestClose(): void {
+    this.close();
   }
 
   close(): void {

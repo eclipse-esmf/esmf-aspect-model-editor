@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
@@ -26,7 +27,7 @@ export type OpenFileDialogResult = 'open-in' | 'open-tab' | 'open-out';
 @Component({
   selector: 'ame-open-file-dialog',
   templateUrl: './open-file-dialog.component.html',
-  imports: [MatDialogModule, MatButtonModule, TranslocoDirective],
+  imports: [DialogCloseButtonComponent, MatDialogModule, MatButtonModule, TranslocoDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `

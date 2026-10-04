@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {createDebouncedLoading} from '@ame/shared';
+import {createDebouncedLoading, DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {form, FormField, pattern, required, validate} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -34,6 +34,7 @@ export interface RenameModelFormData {
   templateUrl: './rename-model.component.html',
   styleUrls: ['./rename-model.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatIconModule,
     MatDialogModule,
     TranslocoDirective,
@@ -97,6 +98,10 @@ export class RenameModelComponent {
       },
       {} as Record<string, boolean>,
     );
+  }
+
+  requestClose(): void {
+    this.closeAndGiveResult(false);
   }
 
   closeAndGiveResult(result: boolean) {

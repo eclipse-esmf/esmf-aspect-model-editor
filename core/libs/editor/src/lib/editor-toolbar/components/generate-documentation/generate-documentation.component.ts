@@ -22,13 +22,12 @@ import {catchError, finalize, first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
 import {LoadedFilesService, ModelApiPort, SammLanguageSettingsService} from '@ame/domain';
-import {BrowserService, IPC_RENDERER} from '@ame/shared';
+import {BrowserService, DialogCloseButtonComponent, IPC_RENDERER} from '@ame/shared';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatOptionModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
 
@@ -41,6 +40,7 @@ export interface GenerateDocumentationData {
   templateUrl: './generate-documentation.component.html',
   styleUrls: ['./generate-documentation.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogModule,
     TranslocoDirective,
     MatFormFieldModule,
@@ -49,7 +49,6 @@ export interface GenerateDocumentationData {
     MatProgressSpinnerModule,
     FormField,
     MatButtonModule,
-    MatIcon,
   ],
 })
 export class GenerateDocumentationComponent {

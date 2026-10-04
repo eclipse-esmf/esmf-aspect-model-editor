@@ -14,7 +14,7 @@
 :host {
   display: flex;
   flex-direction: column;
-  padding: 0 0 0 20px;
+  padding: 0 4px 0 0;
 }
 
 .namespace-fields {
@@ -34,12 +34,19 @@
   }
 }
 
-h3 {
+.namespace-hint {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-size: 13px;
+  opacity: 0.8;
 
-  > * {
-    margin-left: 5px;
+  mat-icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
   }
 }
 

@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IPC_RENDERER, NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
+import {ClipboardService, DialogCloseButtonComponent, NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
 import {CommonModule} from '@angular/common';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
@@ -28,6 +28,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     CommonModule,
     MatIconModule,
     TranslocoDirective,
@@ -41,7 +42,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
 export class NotificationsComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<NotificationsComponent>);
   private activatedRoute = inject(ActivatedRoute);
-  private ipcRenderer = inject(IPC_RENDERER, {optional: true});
+  private clipboard = inject(ClipboardService);
 
   public notificationsService = inject(NotificationsService);
   public router = inject(Router);
@@ -80,13 +81,7 @@ export class NotificationsComponent implements OnInit {
     event?.stopPropagation();
     if (!text) return;
 
-    if (this.ipcRenderer?.copyToClipboard) {
-      this.ipcRenderer.copyToClipboard(text);
-    } else if (navigator.clipboard?.writeText && document.hasFocus()) {
-      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
-    } else {
-      this.fallbackCopy(text);
-    }
+    this.clipboard.copy(text);
 
     if (element) {
       this.copiedElement.set(element);
@@ -96,18 +91,6 @@ export class NotificationsComponent implements OnInit {
         }
       }, 2000);
     }
-  }
-
-  private fallbackCopy(text: string) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
   }
 
   clearNotification(notification: NotificationModel) {

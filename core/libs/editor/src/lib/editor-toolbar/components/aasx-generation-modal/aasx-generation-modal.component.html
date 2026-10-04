@@ -12,9 +12,7 @@
   ~ SPDX-License-Identifier: MPL-2.0
   -->
   <h2 mat-dialog-title>{{ t('generateAasxDialog.title') }}</h2>
-  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
-    <mat-icon>close</mat-icon>
-  </button>
+  <ame-dialog-close-button [disabled]="isGenerating()" />
 
   <mat-dialog-content>
     @if (!isGenerating()) {
