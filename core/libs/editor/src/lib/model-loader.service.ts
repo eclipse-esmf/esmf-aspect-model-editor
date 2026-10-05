@@ -245,8 +245,8 @@ export class ModelLoaderService implements ModelLoaderPort {
           fileEntries.push({aspectModelUrn: dependency});
         }
 
-        // elements missing in the workspace are shown as placeholders instead of failing the whole loading
-        return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries, true) : of([]);
+        // elements missing in the workspace are left out and shown as placeholders instead of failing the whole loading
+        return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries) : of([]);
       }),
       switchMap((fileInformations: Array<FileInformation>) => {
         const filteredFiles = fileInformations.filter((file, index, arr) => {

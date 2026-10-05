@@ -171,18 +171,17 @@ describe('ModelApiService', () => {
       let result: unknown;
       service.fetchAllAspectMetaModel(fileEntries).subscribe(value => (result = value));
 
-      const req = httpMock.expectOne(`${modelsUrl}/batch`);
+      const req = httpMock.expectOne(r => r.url === `${modelsUrl}/batch`);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(fileEntries);
       req.flush([{aspectModelUrn: 'urn:samm:x#Y', aspectModel: '<ttl>'}]);
 
       expect(result).toEqual([{aspectModelUrn: 'urn:samm:x#Y', aspectModel: '<ttl>'}]);
-      expect(req.request.params.has('ignoreMissing')).toBe(false);
     });
 
-    it('should ask the backend to leave out missing elements on demand', () => {
+    it('should always ask the backend to leave out missing elements, so that one broken file does not fail the request', () => {
       const fileEntries: FileEntry[] = [{aspectModelUrn: 'urn:samm:x#Y'}];
-      service.fetchAllAspectMetaModel(fileEntries, true).subscribe();
+      service.fetchAllAspectMetaModel(fileEntries).subscribe();
 
       const req = httpMock.expectOne(r => r.url === `${modelsUrl}/batch`);
       expect(req.request.params.get('ignoreMissing')).toBe('true');
@@ -500,6 +499,35 @@ describe('ModelApiService', () => {
 
       expect(result.map(file => file.name)).toEqual(['Model1', 'Model2']);
       expect(result.map(file => file.aspectMetaModel)).toEqual(['content-1', 'content-2']);
+    });
+
+    it('should still list all files when one workspace file references missing elements (rename, migration)', () => {
+      let result: FileContentModel[];
+      service.fetchAllNamespaceFilesContent().subscribe(value => (result = value));
+
+      httpMock
+        .expectOne(req => req.url === `${modelsUrl}/namespaces`)
+        .flush({
+          'my.namespace:1.0.0': [
+            {
+              version: '1.0.0',
+              models: [
+                {name: 'Broken', existing: true, version: '1.0.0', aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Broken'},
+                {name: 'Fine', existing: true, version: '1.0.0', aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Fine'},
+              ],
+            },
+          ],
+        });
+
+      const batchReq = httpMock.expectOne(req => req.url === `${modelsUrl}/batch`);
+      // without ignoreMissing the backend fails the whole batch because of the broken file
+      expect(batchReq.request.params.get('ignoreMissing')).toBe('true');
+      batchReq.flush([
+        {aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Broken', aspectModel: 'broken', fileName: 'Broken', modelVersion: '1.0.0'},
+        {aspectModelUrn: 'urn:samm:my.namespace:1.0.0#Fine', aspectModel: 'fine', fileName: 'Fine', modelVersion: '1.0.0'},
+      ]);
+
+      expect(result.map(file => file.name)).toEqual(['Broken', 'Fine']);
     });
 
     it('should resolve to an empty array when loading the namespace structure fails', () => {

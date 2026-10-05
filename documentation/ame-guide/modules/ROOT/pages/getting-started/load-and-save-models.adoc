@@ -45,4 +45,8 @@ To save a model, proceed as follows:
 Unsaved changes are indicated by a dot in the tab of the model.
 When you close a tab with unsaved changes, you are asked whether you want to save the model first.
 
+When saving, the header comment of the file and, depending on the settings, the order of the elements are kept. See xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
+
+NOTE: A model whose referenced elements are missing in the workspace can be opened, but not saved. See xref:namespace/missing-references.adoc[Aspect Models with missing references].
+
 TIP: For saving a new version of a model without overriding the existing one, see xref:modeling/model-versions.adoc[Model versions].

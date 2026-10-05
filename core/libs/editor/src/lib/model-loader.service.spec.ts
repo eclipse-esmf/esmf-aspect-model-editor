@@ -244,7 +244,8 @@ describe('ModelLoaderService unresolved references', () => {
     [predefined, samm].forEach(e => cache.addElement(e.aspectModelUrn, e));
 
     expect(move()).toEqual([]);
-    expect(loadedFiles.unresolvedElements).toEqual([]);
+    expect(loadedFiles.isElementUnresolved(predefined)).toBe(false);
+    expect(loadedFiles.isElementUnresolved(samm)).toBe(false);
   });
 
   it('should warn once with all missing direct references', () => {

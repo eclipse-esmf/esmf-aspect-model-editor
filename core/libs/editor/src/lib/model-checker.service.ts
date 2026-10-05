@@ -64,8 +64,8 @@ export class ModelCheckerService implements ModelCheckerPort {
           });
       }
 
-      // Files with unresolved references stay openable; their missing elements are shown as placeholders.
-      return this.modelApiService.fetchAllAspectMetaModel(unloadedFileEntries, true).pipe(
+      // Files with unresolved references are returned as well and stay openable; missing elements become placeholders.
+      return this.modelApiService.fetchAllAspectMetaModel(unloadedFileEntries).pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(fileInformation => this.parseFileModels(fileInformation)),
         map(results => results.map(result => this.createFileStatus(result, namespacesStructure, signal))),

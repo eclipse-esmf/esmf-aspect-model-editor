@@ -1,0 +1,100 @@
+:page-partial:
+
+[[missing-references]]
+= Aspect Models with missing references
+
+An Aspect Model can use elements of other Aspect Models (see xref:namespace/use-references.adoc[Use references]).
+If such a referenced element is not defined in any file of the workspace, the reference is *missing*.
+This happens, for example, if
+
+* the referenced file was deleted, renamed or moved,
+* the referenced namespace was not imported into the workspace yet, or
+* the model was written by hand (e.g. in VS Code) and refers to an element that does not exist.
+
+The Aspect Model Editor still opens such Aspect Models, so that you can see and repair them.
+
+[[missing-references-what-is-loaded]]
+== What the Aspect Model Editor loads
+
+When a model is opened, only the elements it references *directly* are loaded from the workspace, together with the files these elements depend on.
+The complete, recursive check of all references is done by the validation in the backend.
+
+The referenced elements are shown as external elements; they are not copied into the opened model.
+
+[[missing-references-open]]
+== Open an Aspect Model with missing references
+
+You can open the model from every entry point: from the Workspace sidebar, with *Load File...*, with *Copy Paste* or when the desktop application restores the last session.
+
+* A warning *Referenced elements not found* lists the missing elements that the opened model references directly:
++
+----
+The following referenced elements are not defined in the workspace: <URNs>. They are shown as placeholders.
+Add the missing files to the workspace or remove the references to save the model.
+----
+* Each missing element is shown as a *placeholder* in the graph: a shape with a red, dashed border and a special icon.
+The reference stays as it is; the placeholder is never written into the opened file.
+* A placeholder cannot be edited. A double-click shows *Element not found* instead of opening another window.
+* Missing elements deeper in the reference chain (used by files the opened model references) are not drawn, because referenced elements are shown without their own references. They do not trigger the warning.
+* Other errors, e.g. syntax errors, still prevent the model from being opened.
+
+[[missing-references-workspace]]
+== Missing references in the Workspace sidebar
+
+A file that references a namespace which is not in the workspace is marked with an orange *warning* icon instead of the red error marker.
+The tooltip names the missing namespaces:
+
+----
+References elements of missing namespaces: <namespaces>. They are shown as placeholders.
+----
+
+The file can be opened as usual.
+
+NOTE: The check in the Workspace sidebar is done per namespace. A missing element of a namespace that exists in the workspace (for example in the namespace of the file itself) is not marked in the sidebar. It is still shown as placeholder after opening the model.
+
+[[missing-references-save]]
+== Save an Aspect Model with missing references
+
+An Aspect Model with missing references *cannot be saved* to the workspace, because the result would not be a valid Aspect Model.
+When you save, the error *Referenced elements not found* lists the missing elements:
+
+----
+The model could not be saved. The following referenced elements are not defined in the workspace: <URNs>.
+Add the missing files to the workspace or remove the references.
+----
+
+This list comes from the complete check of the backend. It can therefore also contain missing elements of referenced files, which you cannot remove in the opened model; repair them in the referenced file or add the missing file.
+
+TIP: If *Auto-save* is enabled in the xref:getting-started/settings.adoc[settings], the error is shown again with every auto save until the references are repaired.
+
+[[missing-references-repair]]
+== Repair missing references
+
+Choose one of the following options:
+
+* Add the missing file to the workspace, e.g. by xref:namespace/import-package.adoc[importing a package] or by copying the file into the xref:namespace/workspace.adoc[workspace directory]. Then refresh the workspace and open the model again.
+* Remove the reference in the opened model: delete the connection to the placeholder or replace it with an existing element, and save the model.
+* Fix the reference in the TTL file with a text editor, e.g. if a namespace or element was renamed.
+
+[[missing-references-summary]]
+== Summary
+
+[cols="35%,65%"]
+|===
+| Situation | Behavior
+
+| Model references a missing element
+| Model opens, warning lists the directly missing elements, placeholders in the graph
+
+| File in the Workspace sidebar references a missing namespace
+| Orange warning icon with tooltip, file can be opened
+
+| Double-click on a placeholder
+| Message *Element not found*, nothing is opened
+
+| Saving a model with missing references
+| Not possible, error lists all missing elements
+
+| Syntax or other validation errors
+| Model is not opened, the error is shown
+|===

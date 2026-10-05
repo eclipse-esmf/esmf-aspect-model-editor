@@ -42,6 +42,10 @@ Changing this setting immediately redraws the connections of the open model.
 * *Dark mode*: switches the editor and the graph canvas to a dark color theme.
 You can also toggle the theme directly with the sun/moon icon in the left sidebar.
 
+* *Element order when saving*: defines the order of the elements in the saved Turtle file (*Order of the ESMF SDK formatter*, *Keep order, insert new elements after their parent* or *Keep order, append new elements at the end*). See xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
+
+* *Restore open models on start* (desktop app only): reopens the workspace models of the last session with their window size and position. See xref:getting-started/session-restore.adoc[Restore the last session].
+
 [[model-configuration]]
 == Model Configuration
 
@@ -85,6 +89,8 @@ image::settings-namespaces.png[Languages menu in Settings dialog,width=60%]
 In the Settings dialog, select the menu *Header/Copyright*.
 
 Edit or add a header to be used with the Aspect Model.
+Every line must start with `#`.
+The header is written at the top of new models; models loaded from a file keep the header of that file, see xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
 
 image::settings-copyright-header.png[Copyright/Header menu in Settings dialog,width=55%]
 

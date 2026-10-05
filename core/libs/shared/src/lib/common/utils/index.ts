@@ -18,4 +18,5 @@ export * from './file.utils';
 export * from './full-text-search';
 export * from './rdf-naming.utils';
 export * from './samm-specification.utils';
+export * from './unresolved-references.utils';
 export * from './version.utils';

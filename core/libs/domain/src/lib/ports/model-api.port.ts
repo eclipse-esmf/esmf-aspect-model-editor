@@ -20,10 +20,10 @@ export abstract class ModelApiPort {
   abstract checkElementExists(aspectModelUrn: string, fileName: string): Observable<boolean>;
   abstract fetchAspectMetaModel(aspectModelUrn: string): Observable<{content: string; sourceLocation: string | null}>;
   /**
-   * @param ignoreMissing leaves out elements that are not defined in the workspace instead of failing, and returns
-   * files whose own references cannot be resolved unresolved
+   * Loads the files defining the requested elements. Elements that no workspace file defines are left out, and files
+   * whose own references cannot be resolved are returned as they are, so that one broken file does not fail the request.
    */
-  abstract fetchAllAspectMetaModel(fileEntries: Array<FileEntry>, ignoreMissing?: boolean): Observable<Array<FileInformation>>;
+  abstract fetchAllAspectMetaModel(fileEntries: Array<FileEntry>): Observable<Array<FileInformation>>;
   abstract fetchFormatedAspectModel(rdfContent: string, sourceLocation?: string): Observable<string>;
   abstract saveAspectModel(rdfContent: string, aspectModelUrn: string, absoluteModelName?: string): Observable<string>;
   abstract deleteAspectModel(aspectModelUrn: string): Observable<string>;

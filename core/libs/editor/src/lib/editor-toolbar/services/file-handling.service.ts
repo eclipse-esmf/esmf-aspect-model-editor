@@ -42,6 +42,7 @@ import {
   SaveValidateErrorsCodes,
   TauriSignalsService,
   TitleService,
+  unresolvedElementsOf,
 } from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -165,7 +166,7 @@ export class FileHandlingService implements FileHandlingPort {
 
     return this.modelApiService.validate(modelContent).pipe(
       // Models which are only missing referenced elements are opened anyway; the elements are shown as placeholders.
-      catchError(httpError => (httpError?.error?.error?.unresolvedElements?.length ? of([]) : throwError(() => httpError))),
+      catchError(httpError => (unresolvedElementsOf(httpError).length ? of([]) : throwError(() => httpError))),
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
         return found

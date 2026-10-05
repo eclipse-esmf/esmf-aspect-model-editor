@@ -23,7 +23,7 @@ import {
   RdfPort,
   WorkspaceStore,
 } from '@ame/domain';
-import {LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
+import {LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes, unresolvedElementsOf} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
@@ -72,7 +72,7 @@ export class ModelSaverService implements ModelSaverPort {
       }),
       catchError(error => {
         console.error('Error on saving aspect model', error);
-        const unresolvedElements: string[] = error?.error?.unresolvedElements ?? [];
+        const unresolvedElements = unresolvedElementsOf(error);
         this.notificationsService.error(
           unresolvedElements.length
             ? {

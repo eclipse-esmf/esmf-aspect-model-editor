@@ -82,7 +82,7 @@ describe('ModelCheckerService', () => {
     it('should request the files without failing on unresolved references', async () => {
       await detect(modelReferencing());
 
-      expect(modelApiService.fetchAllAspectMetaModel).toHaveBeenCalledWith(expect.any(Array), true);
+      expect(modelApiService.fetchAllAspectMetaModel).toHaveBeenCalledWith(expect.any(Array));
     });
 
     it('should keep files with missing namespaces openable and list the missing namespaces', async () => {

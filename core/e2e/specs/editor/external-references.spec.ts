@@ -46,10 +46,16 @@ const files = (entries: Record<string, string>): WorkspaceFile[] =>
 
 /**
  * Mocks /models/batch like the backend: every requested URN is answered with the file that defines it.
- * Without `ignoreMissing=true` a missing element fails the whole request with 422, with it the element is skipped.
+ * Without `ignoreMissing=true` the whole request fails with 422 if an element is missing or if a returned file references
+ * a namespace that is not in the workspace; with it, missing elements are skipped and such files are returned as they are.
  */
 async function routeBatch(page: Page, workspace: WorkspaceFile[], ignoreMissingFlags: string[] = []): Promise<string[]> {
   const requested: string[] = [];
+  const known = new Set(workspace.map(f => f.namespace));
+  const referencesMissingNamespace = (content: string) =>
+    [...content.matchAll(/<urn:samm:([\w.]+):\d/g)].some(
+      ([, namespace]) => !namespace.startsWith('org.eclipse.esmf.samm') && !known.has(namespace),
+    );
   await page.route(`**${API_BASE_URL}/models/batch**`, async route => {
     const ignoreMissing = new URL(route.request().url()).searchParams.get('ignoreMissing');
     ignoreMissingFlags.push(ignoreMissing);
@@ -60,7 +66,7 @@ async function routeBatch(page: Page, workspace: WorkspaceFile[], ignoreMissingF
       const namespace = aspectModelUrn.replace('urn:samm:', '').split(':')[0];
       const localName = aspectModelUrn.split('#')[1];
       const file = workspace.find(f => f.namespace === namespace && f.content.includes(`:${localName} a `));
-      if (file) {
+      if (file && (ignoreMissing === 'true' || !referencesMissingNamespace(file.content))) {
         result.push({
           aspectModelUrn,
           aspectModel: file.content,
@@ -101,7 +107,10 @@ const inspect = (page: Page) =>
       const element = cell.getMetaModelElement?.()?.element;
       return {urn: element?.aspectModelUrn as string, extern: element ? (loadedFiles.isElementExtern(element) as boolean) : false};
     });
-    const unresolved: string[] = loadedFiles.unresolvedElements.map((el: any) => el.aspectModelUrn).sort();
+    const unresolved: string[] = loadedFiles.filesAsList
+      .filter((f: any) => f.unresolved)
+      .flatMap((f: any) => f.cachedFile.getKeys())
+      .sort();
     return {currentKeys, elements, cells, unresolved};
   });
 

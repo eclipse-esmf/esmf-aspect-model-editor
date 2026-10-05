@@ -93,3 +93,8 @@ as it will not be able to load this Aspect Model.
 In such a case you will need some expert who can fix it with a text editor.
 
 image::workspace-warning.png[Workspace warning, 85%, link=self]
+
+=== Aspect Model is marked with an orange warning icon
+The Aspect Model references elements of a namespace that is not in the workspace.
+Unlike the red error marker, the model can be opened: the missing elements are shown as placeholders.
+See xref:namespace/missing-references.adoc[Aspect Models with missing references].

@@ -85,8 +85,8 @@ export class ModelApiService implements ModelApiPort {
       );
   }
 
-  fetchAllAspectMetaModel(fileEntries: Array<FileEntry>, ignoreMissing = false): Observable<Array<FileInformation>> {
-    const params = ignoreMissing ? {ignoreMissing: true} : undefined;
+  fetchAllAspectMetaModel(fileEntries: Array<FileEntry>): Observable<Array<FileInformation>> {
+    const params = {ignoreMissing: true};
     return this.http.post<Array<FileInformation>>(`${this.serviceUrl}${this.api.models}/batch`, fileEntries, {params}).pipe(
       timeout(this.requestTimeout),
       catchError(res => throwError(() => res)),

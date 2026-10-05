@@ -113,7 +113,7 @@ export class WorkspaceDeletionService {
   public blockReasonText(kind: 'file' | 'namespace' | 'clear', reason: DeletionBlockReason | null): string {
     if (!reason) return '';
     const key = reason === 'busy' ? 'busy' : `${kind}${reason.charAt(0).toUpperCase()}${reason.slice(1)}`;
-    return this.translate.translateService.translate(`sidebar.deletion.reason.${key}`);
+    return this.t(`sidebar.deletion.reason.${key}`);
   }
 
   /** Checks the references of a file, asks for confirmation and deletes it. Emits whether it was deleted. */
@@ -125,7 +125,7 @@ export class WorkspaceDeletionService {
           ? of(ConfirmDialogEnum.cancel)
           : this.confirmDialog.open({
               phrases: [
-                this.translate.translateService.translate('confirmDialog.deleteFile.phrase1', {fileName: file.name}),
+                this.t('confirmDialog.deleteFile.phrase1', {fileName: file.name}),
                 this.translate.language.confirmDialog.deleteFile.phrase2,
               ],
               title: this.translate.language.confirmDialog.deleteFile.title,
@@ -137,11 +137,7 @@ export class WorkspaceDeletionService {
           : this.run(this.workspaceApi.deleteAspectModel(file.aspectModelUrn), 'file', file.name).pipe(
               map(deleted => {
                 if (deleted) {
-                  this.loadedFiles.removeFile(`${namespaceKey}:${file.name}`);
-                  if (this.sidebarService.selection.isSelected(namespaceKey, file.name)) {
-                    this.sidebarService.selection.reset();
-                  }
-                  this.refreshWorkspace();
+                  this.forgetDeletedFiles({[namespaceKey]: [file]}, this.sidebarService.selection.isSelected(namespaceKey, file.name));
                 }
                 return deleted;
               }),
@@ -154,7 +150,7 @@ export class WorkspaceDeletionService {
   public deleteNamespace(namespaceKey: string): Observable<boolean> {
     const {namespace, version} = splitNamespaceKey(namespaceKey);
     const files = this.sidebarService.namespacesState.namespaces()[namespaceKey] ?? [];
-    const t = (key: string, params?: Record<string, unknown>) => this.translate.translateService.translate(key, params);
+    const t = this.t.bind(this);
 
     return this.check(this.workspaceApi.getReferences(namespace, version), 'namespace', namespaceKey).pipe(
       switchMap(deletable =>
@@ -177,12 +173,8 @@ export class WorkspaceDeletionService {
           : this.run(this.workspaceApi.deleteNamespace(namespace, version), 'namespace', namespaceKey).pipe(
               map(deleted => {
                 if (deleted) {
-                  files.forEach(file => this.loadedFiles.removeFile(`${namespaceKey}:${file.name}`));
-                  if (this.sidebarService.selection.namespace === namespaceKey) {
-                    this.sidebarService.selection.reset();
-                  }
                   this.notifications.success({title: t('sidebar.deletion.namespace.success', {name: namespaceKey})});
-                  this.refreshWorkspace();
+                  this.forgetDeletedFiles({[namespaceKey]: files}, this.sidebarService.selection.namespace === namespaceKey);
                 }
                 return deleted;
               }),
@@ -193,7 +185,7 @@ export class WorkspaceDeletionService {
 
   /** Asks for a typed confirmation and deletes all Aspect Models of the workspace. Emits whether it was cleared. */
   public clearWorkspace(): Observable<boolean> {
-    const t = (key: string, params?: Record<string, unknown>) => this.translate.translateService.translate(key, params);
+    const t = this.t.bind(this);
 
     return this.matDialog
       .open<ClearWorkspaceDialogComponent, ClearWorkspaceDialogData, ClearWorkspaceDialogResult>(ClearWorkspaceDialogComponent, {
@@ -207,18 +199,13 @@ export class WorkspaceDeletionService {
           this.busy.set(true);
           return this.workspaceApi.clearWorkspace(result.backup).pipe(
             map(cleared => {
-              const files = this.sidebarService.namespacesState.namespaces();
-              Object.entries(files).forEach(([namespaceKey, namespaceFiles]) =>
-                namespaceFiles.forEach(file => this.loadedFiles.removeFile(`${namespaceKey}:${file.name}`)),
-              );
-              this.sidebarService.selection.reset();
               this.notifications.success({
                 title: t('sidebar.deletion.clear.success'),
                 message: cleared.backupCreated
                   ? t('sidebar.deletion.clear.successBackup', {count: cleared.deletedFiles})
                   : t('sidebar.deletion.clear.successMessage', {count: cleared.deletedFiles}),
               });
-              this.refreshWorkspace();
+              this.forgetDeletedFiles(this.sidebarService.namespacesState.namespaces(), true);
               return true;
             }),
             catchError(error => {
@@ -238,8 +225,8 @@ export class WorkspaceDeletionService {
       switchMap(report => (report.deletable ? of(true) : this.showReferences(kind, name, report))),
       catchError(error => {
         this.notifications.error({
-          title: this.translate.translateService.translate('sidebar.deletion.failed'),
-          message: this.translate.translateService.translate('sidebar.deletion.checkFailed') + this.errorDetails(error),
+          title: this.t('sidebar.deletion.failed'),
+          message: this.t('sidebar.deletion.checkFailed') + this.errorDetails(error),
         });
         return of(false);
       }),
@@ -281,7 +268,7 @@ export class WorkspaceDeletionService {
 
   private notifyFailure(error: unknown): void {
     this.notifications.error({
-      title: this.translate.translateService.translate('sidebar.deletion.failed'),
+      title: this.t('sidebar.deletion.failed'),
       message: this.errorDetails(error).trim(),
     });
   }
@@ -289,6 +276,21 @@ export class WorkspaceDeletionService {
   private errorDetails(error: unknown): string {
     const message = (error as HttpErrorResponse)?.error?.error?.message ?? (error as Error)?.message;
     return message ? ` ${message}` : '';
+  }
+
+  private t(key: string, params?: Record<string, unknown>): string {
+    return this.translate.translateService.translate(key, params);
+  }
+
+  /** Forgets the loaded content of deleted files, resets the selection if it was deleted and reloads the workspace. */
+  private forgetDeletedFiles(filesByNamespace: Record<string, FileStatus[]>, selectionDeleted: boolean): void {
+    Object.entries(filesByNamespace).forEach(([namespaceKey, files]) =>
+      files.forEach(file => this.loadedFiles.removeFile(`${namespaceKey}:${file.name}`)),
+    );
+    if (selectionDeleted) {
+      this.sidebarService.selection.reset();
+    }
+    this.refreshWorkspace();
   }
 
   private refreshWorkspace(): void {

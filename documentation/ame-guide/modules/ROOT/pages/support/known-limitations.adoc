@@ -41,6 +41,18 @@ This section lists features that can be achieved within the Aspect Model Editor,
 | Usability
 | Aspect Repository and Entity Repository
 | This version of the Aspect Model Editor supports only file-based operations. Users also want to share Aspects and Entities for reuse.
+
+| References
+| Saving models with missing references
+| An Aspect Model whose referenced elements are missing in the workspace can be opened, but not saved. See xref:namespace/missing-references.adoc[Aspect Models with missing references].
+
+| References
+| Missing elements of existing namespaces in the Workspace sidebar
+| The Workspace sidebar only marks files that reference a missing *namespace*. A missing element of a namespace that exists in the workspace is only detected when the model is opened.
+
+| Workspace
+| Open models in other windows (browser)
+| Only the desktop application knows which models are open in other windows. In the browser, deleting files and namespaces and clearing the workspace only consider the tabs of the current window.
 |===
 
 [[current-known-limitations-macos]]
