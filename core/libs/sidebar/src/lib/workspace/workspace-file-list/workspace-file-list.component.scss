@@ -169,6 +169,10 @@
       }
     }
 
+    &.unresolved .content mat-icon {
+      color: var(--ame-warning, #ff9800);
+    }
+
     &.errored {
       color: var(--ame-error, #f44336);
 

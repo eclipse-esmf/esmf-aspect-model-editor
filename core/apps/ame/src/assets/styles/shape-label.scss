@@ -48,6 +48,11 @@
   background-image: url('../config/editor/img/read_more.svg');
 }
 
+.unresolved-shape {
+  @extend %shape-icon;
+  background-image: url('../config/editor/img/unresolved-reference.svg');
+}
+
 .cell-label {
   display: flex;
   flex-direction: column;

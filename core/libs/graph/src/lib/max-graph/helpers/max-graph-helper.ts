@@ -620,6 +620,15 @@ export class MaxGraphHelper {
     const infoLock = document.createElement('div');
     infoLock.title = '';
 
+    if (baseProperties.unresolved) {
+      const warning = document.createElement('div');
+      warning.classList.add('unresolved-shape');
+      warning.dataset.testid = 'unresolvedShapeIcon';
+      warning.title = `Referenced element not found in the workspace\nNamespace: ${baseProperties.namespace}\n`;
+      iconsBar.appendChild(warning);
+      return iconsBar;
+    }
+
     if (baseProperties.external && !baseProperties.predefined) {
       infoLock.title += `Namespace: ${baseProperties.namespace} \nVersion: ${baseProperties.version} \nFile: ${baseProperties.fileName}\n`;
       infoLock.classList.add('info-shape');

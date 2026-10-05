@@ -64,7 +64,8 @@ export class ModelCheckerService implements ModelCheckerPort {
           });
       }
 
-      return this.modelApiService.fetchAllAspectMetaModel(unloadedFileEntries).pipe(
+      // Files with unresolved references stay openable; their missing elements are shown as placeholders.
+      return this.modelApiService.fetchAllAspectMetaModel(unloadedFileEntries, true).pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(fileInformation => this.parseFileModels(fileInformation)),
         map(results => results.map(result => this.createFileStatus(result, namespacesStructure, signal))),
@@ -129,7 +130,7 @@ export class ModelCheckerService implements ModelCheckerPort {
     status.sammVersion = sammVersion;
     status.outdated = isVersionOutdated(sammVersion, config.currentSammVersion);
     status.loaded = currentFile?.absoluteName === absoluteName;
-    status.errored = status.sammVersion === 'unknown' || missingDependencies.length > 0;
+    status.errored = status.sammVersion === 'unknown';
     status.aspectModelUrn = aspectModelUrn;
 
     signal?.next(absoluteName);

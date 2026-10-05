@@ -12,8 +12,9 @@
  */
 
 import {NamedNode, Quad, Util} from 'n3';
-import {Characteristic} from '../../aspect-meta-model';
+import {Characteristic, DefaultCharacteristic} from '../../aspect-meta-model';
 import {BaseInitProps} from '../../shared/base-init-props';
+import {basePropertiesFactory} from '../meta-model-element-instantiator';
 import {characteristicFactory} from './characteristic-instantiator';
 import {codeCharacteristicFactory} from './code-characteristic-instantiator';
 import {collectionCharacteristicFactory} from './collection-characteristic-instantiator';
@@ -153,7 +154,7 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
     }
 
     if (!elementDefinitionQuad) {
-      return null;
+      return createUnresolvedCharacteristic(quad);
     }
 
     for (const processor of processors) {
@@ -163,6 +164,25 @@ export function allCharacteristicsFactory(initProps: BaseInitProps) {
     }
 
     return null;
+  }
+
+  /**
+   * A characteristic which is referenced but not defined in any loaded file (e.g. its file is missing in the workspace)
+   * keeps its URN so that the reference is not lost.
+   */
+  function createUnresolvedCharacteristic(quad: Quad): Characteristic {
+    if (!Util.isNamedNode(quad.object) || rdfModel.store.countQuads(quad.object, null, null, null) > 0) {
+      return null;
+    }
+
+    const {cache} = initProps;
+    const cached = cache.get<Characteristic>(quad.object.value);
+    if (cached) {
+      return cached;
+    }
+
+    const characteristic = new DefaultCharacteristic({...basePropertiesFactory(initProps)(quad.object as NamedNode), dataType: null});
+    return cache.resolveInstance(characteristic);
   }
 
   return {

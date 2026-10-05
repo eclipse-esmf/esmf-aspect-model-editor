@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {LoadedFilesService} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {Graph} from '@maxgraph/core';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -75,5 +76,54 @@ describe('ThemeService', () => {
 
     expect(defaultEdgeStyle.strokeColor).toBe(darkColors.border);
     expect(mockGraph.setCellStyles).toHaveBeenCalledWith('strokeColor', darkColors.border, [edgeCell]);
+  });
+  describe('applyElementState', () => {
+    let loadedFiles: LoadedFilesService;
+    const element = (anonymous = false) => ({aspectModelUrn: 'urn:samm:com.example:1.0.0#element', isAnonymous: () => anonymous}) as any;
+
+    beforeEach(() => {
+      loadedFiles = TestBed.inject(LoadedFilesService);
+      vi.spyOn(loadedFiles, 'isElementExtern').mockReturnValue(false);
+      vi.spyOn(loadedFiles, 'isElementUnresolved').mockReturnValue(false);
+    });
+
+    it('should keep the style of a regular element', () => {
+      expect(service.applyElementState({strokeColor: '#000'}, element())).toEqual({strokeColor: '#000'});
+    });
+
+    it('should make external elements lighter', () => {
+      vi.mocked(loadedFiles.isElementExtern).mockReturnValue(true);
+
+      expect(service.applyElementState({}, element()).fillOpacity).toBe(80);
+    });
+
+    it('should mark unresolved references with a dashed border in the error color', () => {
+      vi.mocked(loadedFiles.isElementExtern).mockReturnValue(true);
+      vi.mocked(loadedFiles.isElementUnresolved).mockReturnValue(true);
+
+      expect(service.applyElementState({strokeColor: '#000'}, element())).toEqual({
+        strokeColor: lightColors.error,
+        dashed: true,
+        dashPattern: '8 4',
+        fillOpacity: 80,
+      });
+    });
+
+    it('should mark anonymous elements with a dashed border', () => {
+      expect(service.applyElementState({}, element(true))).toEqual({dashed: true, dashPattern: '4 4'});
+    });
+
+    it('should keep the unresolved marking when the theme changes', () => {
+      vi.mocked(loadedFiles.isElementUnresolved).mockReturnValue(true);
+      vertexCell.getMetaModelElement = () => ({element: element()});
+      vertexCell.value = {};
+
+      service.setGraph(mockGraph as unknown as Graph);
+      service.applyTheme('dark');
+
+      expect(mockGraph.setCellStyle).toHaveBeenLastCalledWith(expect.objectContaining({strokeColor: darkColors.error, dashed: true}), [
+        vertexCell,
+      ]);
+    });
   });
 });

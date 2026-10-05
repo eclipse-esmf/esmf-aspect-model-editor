@@ -42,14 +42,7 @@ export abstract class BaseRenderService {
     cell.setAttribute('name', modelElement.name);
 
     const styleName = (cell.style?.baseStyleNames?.[0] as string) || (modelElement ? ModelStyleResolver.resolve(modelElement) : '');
-    const style = this.themeService.generateThemeStyle(styleName);
-    if (this.loadedFilesService.isElementExtern(modelElement)) {
-      style.fillOpacity = 80;
-    }
-    if (modelElement?.isAnonymous?.()) {
-      style.dashed = true;
-      style.dashPattern = '4 4';
-    }
+    const style = this.themeService.applyElementState(this.themeService.generateThemeStyle(styleName), modelElement);
     this.graph.setCellStyle(style, [cell]);
 
     const node = MaxGraphHelper.getElementNode(cell);

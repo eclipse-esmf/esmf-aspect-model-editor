@@ -18,6 +18,7 @@ import {Cell, Geometry} from '@maxgraph/core';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {MaxGraphHelper} from '../../helpers';
 import {ThemeService} from '../../themes';
+import {lightColors} from '../../themes/light-theme';
 import {MaxGraphAttributeService} from '../max-graph-attribute.service';
 import {MaxGraphService} from '../max-graph.service';
 import {BaseRenderService} from './base-render-service';
@@ -56,11 +57,15 @@ describe('BaseRenderService', () => {
         },
       },
       isElementExtern: vi.fn().mockReturnValue(false),
+      isElementUnresolved: vi.fn().mockReturnValue(false),
     };
 
     mockThemeService = {
+      currentColors: lightColors,
       generateThemeStyle: vi.fn().mockReturnValue({baseStyleNames: ['characteristic']}),
     };
+    mockThemeService.applyElementState = (style: any, element: any) =>
+      ThemeService.prototype.applyElementState.call({...mockThemeService, loadedFiles: mockLoadedFilesService}, style, element);
 
     TestBed.configureTestingModule({
       providers: [
@@ -124,6 +129,27 @@ describe('BaseRenderService', () => {
       expect.not.objectContaining({
         dashed: true,
       }),
+      [cell],
+    );
+  });
+  it('should mark an unresolved reference with a dashed border in the error color', () => {
+    mockLoadedFilesService.isElementExtern.mockReturnValue(true);
+    mockLoadedFilesService.isElementUnresolved.mockReturnValue(true);
+    const missingChar = new DefaultCharacteristic({
+      name: 'MissingChar',
+      aspectModelUrn: 'urn:samm:com.missing:1.0.0#MissingChar',
+      metaModelVersion: '2.2.0',
+    });
+
+    const cell = new Cell();
+    cell.geometry = new Geometry(0, 0, 100, 100);
+    cell['configuration'] = {};
+    MaxGraphHelper.setElementNode(cell, {element: missingChar, shape: {maxgraphStyle: {}}} as any);
+
+    service.update({cell});
+
+    expect(mockGraph.setCellStyle).toHaveBeenCalledWith(
+      expect.objectContaining({strokeColor: lightColors.error, dashed: true, dashPattern: '8 4', fillOpacity: 80}),
       [cell],
     );
   });

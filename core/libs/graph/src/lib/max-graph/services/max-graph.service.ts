@@ -200,16 +200,10 @@ export class MaxGraphService {
     const geometry = this.maxgraphGeometryProviderService.createGeometry(node, posX, posY);
 
     this.nextCellCoordinates = null;
-    const cellStyle = this.themeService.generateThemeStyle(node.shape?.maxgraphStyle?.baseStyleNames[0] || '');
-
-    if (this.loadedFiles.isElementExtern(node.element)) {
-      cellStyle.fillOpacity = 80;
-    }
-
-    if (node.element?.isAnonymous?.()) {
-      cellStyle.dashed = true;
-      cellStyle.dashPattern = '4 4';
-    }
+    const cellStyle = this.themeService.applyElementState(
+      this.themeService.generateThemeStyle(node.shape?.maxgraphStyle?.baseStyleNames[0] || ''),
+      node.element,
+    );
 
     node.shape.maxgraphStyle = cellStyle;
     const modelShape = this.maxgraphShapeOverlayService.createShape(node, geometry, configuration?.shapeAttributes || []);

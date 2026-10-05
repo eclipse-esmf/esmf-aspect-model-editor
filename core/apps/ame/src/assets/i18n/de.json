@@ -90,7 +90,12 @@
     "loadModelInfoMessage": "Um den Dateiinhalt anzuzeigen, lade bitte zuerst ein Modell.",
     "fallbackToDefaultLanguageTitle": "Standardsprache wird verwendet.",
     "fallbackToDefaultLanguageDescMessage": "Die angegebene Sprache für die Beschreibung von {{subject}} wurde in {{fileName}} nicht gefunden. Es werden die Standardspracheinstellungen verwendet.",
-    "fallbackToDefaultLanguagePrefMessage": "Die angegebene Sprache für den bevorzugten Namen von {{subject}} wurde in {{fileName}} nicht gefunden. Es werden die Standardspracheinstellungen verwendet."
+    "fallbackToDefaultLanguagePrefMessage": "Die angegebene Sprache für den bevorzugten Namen von {{subject}} wurde in {{fileName}} nicht gefunden. Es werden die Standardspracheinstellungen verwendet.",
+    "unresolvedReferencesTitle": "Referenzierte Elemente nicht gefunden",
+    "unresolvedReferencesMessage": "Die folgenden referenzierten Elemente sind im Workspace nicht definiert: {{elements}}. Sie werden als Platzhalter angezeigt. Ergänzen Sie die fehlenden Dateien im Workspace oder entfernen Sie die Referenzen, um das Modell zu speichern.",
+    "unresolvedReferencesSaveMessage": "Das Modell konnte nicht gespeichert werden. Die folgenden referenzierten Elemente sind im Workspace nicht definiert: {{elements}}. Ergänzen Sie die fehlenden Dateien im Workspace oder entfernen Sie die Referenzen.",
+    "unresolvedElementTitle": "Element nicht gefunden",
+    "unresolvedElementMessage": "Das referenzierte Element {{element}} ist im Workspace nicht definiert und kann nicht geöffnet werden."
   },
   "toolbar": {
     "newLoad": "Neu/Laden",
@@ -752,6 +757,7 @@
     "foldNamespaces": "Namespaces einklappen",
     "outdatedFile": "Diese Datei basiert auf einer älteren SAMM-Version ({{sammVersion}})",
     "erroredFile": "Diese Datei wurde mit Fehlern geladen",
+    "fileWithMissingReferences": "Referenziert Elemente aus fehlenden Namespaces: {{namespaces}}. Sie werden als Platzhalter angezeigt.",
     "currentFile": "Diese Datei ist im aktuellen Fenster geöffnet",
     "openNewModelTab": "Neuen Modell-Tab öffnen"
   },

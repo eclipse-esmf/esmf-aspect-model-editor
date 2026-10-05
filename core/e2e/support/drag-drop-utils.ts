@@ -14,7 +14,7 @@
 import {Page, expect} from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
-import {API_BASE_URL, MODELS_API_URL, NAMESPACES_URL, SAMM_VERSION_ACTUAL} from './api-mocks';
+import {API_BASE_URL, MODELS_API_ROUTE, NAMESPACES_URL, SAMM_VERSION_ACTUAL} from './api-mocks';
 import {AppHelper} from './app-helper';
 import {SELECTOR_openNamespacesButton, SELECTOR_searchElementsInp, SELECTOR_workspaceBtn} from './constants';
 
@@ -118,7 +118,7 @@ export async function setupExternalReference(
     });
   });
 
-  await page.route(`${API_BASE_URL}/models/batch`, async route => {
+  await page.route(`${API_BASE_URL}/models/batch*`, async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -134,7 +134,7 @@ export async function setupExternalReference(
     });
   });
 
-  await page.route(MODELS_API_URL, async route => {
+  await page.route(MODELS_API_ROUTE, async route => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',

@@ -32,7 +32,7 @@ test.describe('Test load external reference with different namespace', () => {
     });
 
     const fixtureModel = readFixture('external-reference/different-namespace/with-childrens/external-property-reference.ttl');
-    await page.route(MODELS_BATCH_API_URL, async route => {
+    await page.route(`${MODELS_BATCH_API_URL}*`, async route => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',

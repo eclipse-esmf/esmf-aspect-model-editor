@@ -15,7 +15,7 @@ import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, DefaultEntity, DefaultProperty, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {beforeEach, describe, expect, it} from 'vitest';
-import {LoadedFilePayload, LoadedFilesService, NamespaceFile} from './loaded-files.service';
+import {LoadedFilePayload, LoadedFilesService, NamespaceFile, UNRESOLVED_REFERENCES_FILE} from './loaded-files.service';
 
 describe('LoadedFilesService & NamespaceFile', () => {
   let service: LoadedFilesService;
@@ -269,6 +269,63 @@ describe('LoadedFilesService & NamespaceFile', () => {
       expect(updated).toBeDefined();
       expect(updated?.name).toBe('MainV2.ttl');
       expect(updated?.namespace).toBe('org.eclipse.esmf.samm:test:2.0.0');
+    });
+  });
+  describe('unresolved references', () => {
+    const createProperty = (urn: string) => new DefaultProperty({aspectModelUrn: urn, name: urn.split('#')[1], metaModelVersion: '2.0.0'});
+
+    beforeEach(() => {
+      service.addFile({rdfModel, cachedFile, aspect, absoluteName: 'org.eclipse.esmf.samm:test:1.0.0:Main.ttl', rendered: true});
+    });
+
+    it('should move missing elements into one placeholder file per namespace', () => {
+      const missingA = createProperty('urn:samm:org.eclipse.esmf.samm:missing:1.0.0#propA');
+      const missingB = createProperty('urn:samm:org.eclipse.esmf.samm:missing:1.0.0#propB');
+      const missingOther = createProperty('urn:samm:org.eclipse.esmf.samm:other:2.0.0#propC');
+      [missingA, missingB, missingOther].forEach(element => cachedFile.addElement(element.aspectModelUrn, element));
+
+      service.registerUnresolvedElements([missingA, missingB, missingOther], cachedFile);
+
+      const placeholder = service.files[`org.eclipse.esmf.samm:missing:1.0.0:${UNRESOLVED_REFERENCES_FILE}`];
+      expect(placeholder.unresolved).toBe(true);
+      expect(placeholder.cachedFile.get(missingA.aspectModelUrn)).toBe(missingA);
+      expect(placeholder.cachedFile.get(missingB.aspectModelUrn)).toBe(missingB);
+      expect(
+        service.files[`org.eclipse.esmf.samm:other:2.0.0:${UNRESOLVED_REFERENCES_FILE}`].cachedFile.get(missingOther.aspectModelUrn),
+      ).toBe(missingOther);
+      expect(placeholder.rdfModel.store.size).toBe(0);
+      expect(cachedFile.get(missingA.aspectModelUrn)).toBeFalsy();
+      expect(service.unresolvedElements).toEqual(expect.arrayContaining([missingA, missingB, missingOther]));
+    });
+
+    it('should treat placeholders as unresolved external elements which are not part of the current file', () => {
+      const missing = createProperty('urn:samm:org.eclipse.esmf.samm:test:1.0.0#sameNamespaceMissing');
+      cachedFile.addElement(missing.aspectModelUrn, missing);
+
+      service.registerUnresolvedElements([missing], cachedFile);
+
+      expect(service.isElementUnresolved(missing)).toBe(true);
+      expect(service.isElementExtern(missing)).toBe(true);
+      expect(service.isElementInCurrentFile(missing)).toBe(false);
+      expect(service.currentLoadedFile.absoluteName).toBe('org.eclipse.esmf.samm:test:1.0.0:Main.ttl');
+    });
+
+    it('should not mark regular or external elements as unresolved', () => {
+      const extCache = new ModelElementCache();
+      const extProp = createProperty('urn:samm:org.eclipse.esmf.samm:ext:1.0.0#extProp');
+      extCache.addElement(extProp.aspectModelUrn, extProp);
+      service.addFile({
+        rdfModel: createDummyRdfModel('urn:samm:org.eclipse.esmf.samm:ext:1.0.0'),
+        cachedFile: extCache,
+        aspect: null,
+        absoluteName: 'org.eclipse.esmf.samm:ext:1.0.0:Shared.ttl',
+        rendered: false,
+      });
+
+      expect(service.isElementUnresolved(aspect)).toBe(false);
+      expect(service.isElementUnresolved(extProp)).toBe(false);
+      expect(service.isElementUnresolved(null)).toBe(false);
+      expect(service.unresolvedElements).toEqual([]);
     });
   });
 });

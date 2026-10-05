@@ -82,7 +82,7 @@ async function mockWorkspace(page: Page): Promise<void> {
       }),
     }),
   );
-  await page.route(`**${API_BASE_URL}/models/batch`, route =>
+  await page.route(`**${API_BASE_URL}/models/batch*`, route =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',

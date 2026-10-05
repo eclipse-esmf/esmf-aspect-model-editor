@@ -101,6 +101,8 @@ export interface ModelBaseProperties {
   namespace: string;
   fileName: string;
   external: boolean;
+  /** Referenced but not defined in any loaded file, e.g. because its file is missing in the workspace. */
+  unresolved?: boolean;
   predefined: boolean;
   sameNamespace: boolean;
   sameVersionedNamespace: boolean;

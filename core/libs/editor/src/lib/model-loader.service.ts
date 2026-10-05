@@ -22,12 +22,20 @@ import {
   NamespaceFile,
   RdfModelUtil,
 } from '@ame/domain';
-import {BrowserService, config, isVersionOutdated, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
+import {
+  BrowserService,
+  config,
+  isVersionOutdated,
+  LanguageTranslationService,
+  NotificationsService,
+  TauriSignalsService,
+  TitleService,
+} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
-import {catchError, concatMap, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {catchError, combineLatest, concatMap, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
 import {ModelRendererService} from './model-renderer.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
@@ -54,6 +62,7 @@ export class ModelLoaderService implements ModelLoaderPort {
   private tauriSignalsService = inject(TauriSignalsService);
   private titleService = inject(TitleService);
   private modelDocumentService = inject(ModelDocumentService);
+  private translate = inject(LanguageTranslationService);
 
   private readonly tabStateService = inject(TabStateService);
 
@@ -156,6 +165,9 @@ export class ModelLoaderService implements ModelLoaderPort {
             );
             // filtering and registering the elements by their location in files
             this.moveElementsToTheirCacheFile(rdfModels, mergedFile, payload);
+            // referenced elements without definition must neither be edited nor written into the current file
+            const missingReferences = this.moveUnresolvedElements(rdfModels, rdfModels[currentFileKey], loadedFile.cachedElements);
+            if (render) this.notifyMissingReferences(missingReferences);
             // remember which element stands at which position before the user can rename elements
             Object.values(rdfModels).forEach(rdfModel => this.modelDocumentService.bindElements(rdfModel));
 
@@ -233,7 +245,8 @@ export class ModelLoaderService implements ModelLoaderPort {
           fileEntries.push({aspectModelUrn: dependency});
         }
 
-        return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries) : of([]);
+        // elements missing in the workspace are shown as placeholders instead of failing the whole loading
+        return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries, true) : of([]);
       }),
       switchMap((fileInformations: Array<FileInformation>) => {
         const filteredFiles = fileInformations.filter((file, index, arr) => {
@@ -358,6 +371,49 @@ export class ModelLoaderService implements ModelLoaderPort {
     //   const fileName = RdfModelUtil.getFileNameFromRdf(payload.namespaceFileName);
     //   this.notificationsService.warning({title: `Aspect Model ${fileName} (v${version}) has newer element versions`, message});
     // }
+  }
+
+  /**
+   * Moves the elements which are referenced but not defined in any loaded file (e.g. their file is missing in the
+   * workspace) to placeholder files.
+   *
+   * @returns the URNs of the missing elements the current file references directly
+   */
+  private moveUnresolvedElements(rdfModels: Record<string, RdfModel>, currentRdfModel: RdfModel, cache: ModelElementCache): string[] {
+    const isDefined = (node: NamedNode) => Object.values(rdfModels).some(rdfModel => rdfModel.store.countQuads(node, null, null, null) > 0);
+
+    const unresolved = cache
+      .getKeys()
+      .map(urn => cache.get<NamedElement>(urn))
+      .filter(
+        element =>
+          element?.aspectModelUrn?.startsWith('urn:samm:') &&
+          !element.isPredefined &&
+          !element.isAnonymous?.() &&
+          !element.aspectModelUrn.startsWith('urn:samm:org.eclipse.esmf.samm:') &&
+          !isDefined(new NamedNode(element.aspectModelUrn)),
+      );
+
+    if (!unresolved.length) return [];
+
+    this.loadedFilesService.registerUnresolvedElements(unresolved, cache);
+    return unresolved
+      .map(element => element.aspectModelUrn)
+      .filter(urn => currentRdfModel.store.countQuads(null, null, new NamedNode(urn), null) > 0)
+      .sort();
+  }
+
+  private notifyMissingReferences(urns: string[]) {
+    if (!urns.length) return;
+
+    // selectTranslate waits for the translation file, which may not be loaded yet when a model is opened on start
+    const translateService = this.translate.translateService;
+    combineLatest([
+      translateService.selectTranslate('notificationService.unresolvedReferencesTitle'),
+      translateService.selectTranslate('notificationService.unresolvedReferencesMessage', {elements: urns.join(', ')}),
+    ])
+      .pipe(first())
+      .subscribe(([title, message]) => this.notificationsService.warning({title, message, timeout: 10000}));
   }
 
   private migrateAspectModel(oldSammVersion: string, rdfAspectModel: string): Observable<string> {

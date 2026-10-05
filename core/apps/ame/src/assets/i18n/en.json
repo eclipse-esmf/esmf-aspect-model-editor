@@ -90,7 +90,12 @@
     "loadModelInfoMessage": "To view the file contents, please load a model first.",
     "fallbackToDefaultLanguageTitle": "Fallback to Default Language.",
     "fallbackToDefaultLanguageDescMessage": "The specified language for {{subject}}'s description was not found in {{fileName}}. Proceeding with the default language settings.",
-    "fallbackToDefaultLanguagePrefMessage": "The specified language for {{subject}}'s preferred name was not found in {{fileName}}. Proceeding with the default language settings."
+    "fallbackToDefaultLanguagePrefMessage": "The specified language for {{subject}}'s preferred name was not found in {{fileName}}. Proceeding with the default language settings.",
+    "unresolvedReferencesTitle": "Referenced elements not found",
+    "unresolvedReferencesMessage": "The following referenced elements are not defined in the workspace: {{elements}}. They are shown as placeholders. Add the missing files to the workspace or remove the references to save the model.",
+    "unresolvedReferencesSaveMessage": "The model could not be saved. The following referenced elements are not defined in the workspace: {{elements}}. Add the missing files to the workspace or remove the references.",
+    "unresolvedElementTitle": "Element not found",
+    "unresolvedElementMessage": "The referenced element {{element}} is not defined in the workspace and cannot be opened."
   },
   "toolbar": {
     "newLoad": "New/Load",
@@ -752,6 +757,7 @@
     "foldNamespaces": "Fold namespaces",
     "outdatedFile": "This file is based on an older SAMM version ({{sammVersion}})",
     "erroredFile": "This file has loaded with errors",
+    "fileWithMissingReferences": "References elements of missing namespaces: {{namespaces}}. They are shown as placeholders.",
     "currentFile": "This file is currently opened in the current window",
     "openNewModelTab": "Open new model tab"
   },

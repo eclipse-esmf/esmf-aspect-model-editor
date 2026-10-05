@@ -145,6 +145,37 @@ describe('FileHandlingService', () => {
     expect(loadingScreenService.close).toHaveBeenCalled();
   });
 
+  it('loadModel should render models which only miss referenced elements', async () => {
+    const conflict = {status: 409, error: {error: {message: 'missing', unresolvedElements: ['urn:samm:gone:1.0.0#missing']}}};
+    vi.mocked(modelApiService.validate).mockReturnValue(throwError(() => conflict));
+
+    await new Promise(resolve => service.loadModel('turtle with missing references').subscribe(resolve));
+
+    expect(modelLoaderService.renderModel).toHaveBeenCalledWith(
+      expect.objectContaining({rdfAspectModel: 'turtle with missing references'}),
+    );
+    expect(notificationsService.error).not.toHaveBeenCalled();
+  });
+
+  it('loadModel should still reject models with other validation errors', async () => {
+    const conflict = {status: 409, error: {error: {message: 'Syntax error'}}};
+    vi.mocked(modelApiService.validate).mockReturnValue(throwError(() => conflict));
+
+    await new Promise(resolve => service.loadModel('broken turtle').subscribe({error: resolve}));
+
+    expect(modelLoaderService.renderModel).not.toHaveBeenCalled();
+    expect(notificationsService.error).toHaveBeenCalledWith(expect.objectContaining({message: 'Syntax error'}));
+  });
+
+  it('loadModel should reject models with an empty list of unresolved elements', async () => {
+    const conflict = {status: 409, error: {error: {message: 'Invalid', unresolvedElements: []}}};
+    vi.mocked(modelApiService.validate).mockReturnValue(throwError(() => conflict));
+
+    await new Promise(resolve => service.loadModel('broken turtle').subscribe({error: resolve}));
+
+    expect(modelLoaderService.renderModel).not.toHaveBeenCalled();
+  });
+
   it('loadEmptyModel should reset loaded files and initialize empty model', async () => {
     await new Promise(resolve => service.loadEmptyModel().subscribe(resolve));
 

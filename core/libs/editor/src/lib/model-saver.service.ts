@@ -72,10 +72,20 @@ export class ModelSaverService implements ModelSaverPort {
       }),
       catchError(error => {
         console.error('Error on saving aspect model', error);
-        this.notificationsService.error({
-          title: this.translate.language.notificationService.aspectSavedError,
-          message: error?.error?.message,
-        });
+        const unresolvedElements: string[] = error?.error?.unresolvedElements ?? [];
+        this.notificationsService.error(
+          unresolvedElements.length
+            ? {
+                title: this.translate.translateService.translate('notificationService.unresolvedReferencesTitle'),
+                message: this.translate.translateService.translate('notificationService.unresolvedReferencesSaveMessage', {
+                  elements: unresolvedElements.join(', '),
+                }),
+              }
+            : {
+                title: this.translate.language.notificationService.aspectSavedError,
+                message: error?.error?.message,
+              },
+        );
         return of(null);
       }),
     );

@@ -480,6 +480,57 @@ describe('WorkspaceFileListComponent', () => {
     expect(component.getFileTooltip('other.namespace:1.0.0', normalFile)).toBe('Normal.ttl');
   });
 
+  describe('files with missing references', () => {
+    let fileWithMissingReferences: FileStatus;
+
+    beforeEach(() => {
+      fileWithMissingReferences = new FileStatus('Consumer.ttl');
+      fileWithMissingReferences.aspectModelUrn = 'urn:samm:org.eclipse.esmf:1.0.0#Consumer';
+      fileWithMissingReferences.missingDependencies = ['org.gone:1.0.0', 'org.lost:2.0.0'];
+      sidebarService.namespacesState.setFile('org.eclipse.esmf:1.0.0', fileWithMissingReferences);
+      TestBed.flushEffects();
+      fixture.detectChanges();
+    });
+
+    it('should be selectable and openable', () => {
+      expect(component.hasMissingReferences(fileWithMissingReferences)).toBe(true);
+      component.prepare('org.eclipse.esmf:1.0.0', fileWithMissingReferences);
+      expect(component.isOpenable()).toBe(true);
+
+      component.selectFile('org.eclipse.esmf:1.0.0', fileWithMissingReferences);
+      expect(sidebarService.selection.selection()).toEqual({
+        namespace: 'org.eclipse.esmf:1.0.0',
+        file: 'Consumer.ttl',
+        aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#Consumer',
+      });
+
+      component.promptOpenFile('org.eclipse.esmf:1.0.0', fileWithMissingReferences);
+      expect(modelOpenerMock.promptAndOpen).toHaveBeenCalled();
+    });
+
+    it('should show a warning icon and list the missing namespaces in the tooltip', () => {
+      const element: HTMLElement = fixture.nativeElement.querySelector('[data-testid="workspace-file-Consumer.ttl"]');
+      expect(element.classList).toContain('unresolved');
+      expect(element.classList).not.toContain('errored');
+      expect(element.querySelector('.content mat-icon')?.textContent?.trim()).toBe('warning');
+
+      const translate = vi.spyOn(TestBed.inject(LanguageTranslationService).translateService, 'translate');
+      expect(component.getFileTooltip('org.eclipse.esmf:1.0.0', fileWithMissingReferences)).toContain('Consumer.ttl');
+      expect(translate).toHaveBeenCalledWith('tooltips.fileWithMissingReferences', {namespaces: 'org.gone:1.0.0, org.lost:2.0.0'});
+    });
+
+    it('should keep files with errors blocked even if they also miss references', () => {
+      fileWithMissingReferences.errored = true;
+
+      expect(component.hasMissingReferences(fileWithMissingReferences)).toBe(false);
+      component.prepare('org.eclipse.esmf:1.0.0', fileWithMissingReferences);
+      expect(component.isOpenable()).toBe(false);
+      expect(component.getFileTooltip('org.eclipse.esmf:1.0.0', fileWithMissingReferences)).not.toContain(
+        'tooltips.fileWithMissingReferences',
+      );
+    });
+  });
+
   it('should prompt open dialog via ModelOpenerService on promptOpenFile', () => {
     const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
     expect(file).toBeDefined();

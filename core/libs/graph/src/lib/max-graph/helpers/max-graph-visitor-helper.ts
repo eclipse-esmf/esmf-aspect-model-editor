@@ -512,6 +512,7 @@ export class MaxGraphVisitorHelper {
         sammVersion: metaModelVersion,
         namespace: elementNamespace,
         external: loadedFile?.isElementExtern(modelElement),
+        unresolved: loadedFile?.isElementUnresolved(modelElement),
         predefined: !!(modelElement as DefaultCharacteristic)?.isPredefined,
         sameNamespace: elementNamespace === currentNamespace,
         sameVersionedNamespace: aspectVersionedNamespace === elementVersionedNamespace,

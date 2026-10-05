@@ -98,7 +98,7 @@ describe('ModelApiService', () => {
       let result: {content: string; sourceLocation: string | null};
       service.fetchAspectMetaModel('urn:samm:x#Y').subscribe(value => (result = value));
 
-      const req = httpMock.expectOne(modelsUrl);
+      const req = httpMock.expectOne(`${modelsUrl}?ignoreMissing=true`);
       req.flush({content: 'ttl', sourceLocation: null});
 
       expect(ipcRenderer.getBackendPort).not.toHaveBeenCalled();
@@ -114,7 +114,7 @@ describe('ModelApiService', () => {
 
       service.fetchAspectMetaModel('urn:samm:x#Y').subscribe();
 
-      const req = httpMock.expectOne('http://localhost:4000/ame/api/models');
+      const req = httpMock.expectOne('http://localhost:4000/ame/api/models?ignoreMissing=true');
       req.flush({content: 'ttl', sourceLocation: null});
     });
   });
@@ -126,10 +126,11 @@ describe('ModelApiService', () => {
       let result: {content: string; sourceLocation: string | null};
       service.fetchAspectMetaModel('urn:samm:x#Y').subscribe(value => (result = value));
 
-      const req = httpMock.expectOne(modelsUrl);
+      const req = httpMock.expectOne(`${modelsUrl}?ignoreMissing=true`);
       expect(req.request.method).toBe('GET');
       expect(req.request.headers.get('aspect-model-urn')).toBe('urn:samm:x#Y');
       expect(req.request.headers.get('Content-Type')).toBe('text/turtle');
+      expect(req.request.params.get('ignoreMissing')).toBe('true');
 
       req.flush({content: '<ttl content>', sourceLocation: 'file:///model.ttl'});
 
@@ -140,7 +141,7 @@ describe('ModelApiService', () => {
       let error: any;
       service.fetchAspectMetaModel('urn:samm:x#Y').subscribe({error: err => (error = err)});
 
-      const req = httpMock.expectOne(modelsUrl);
+      const req = httpMock.expectOne(`${modelsUrl}?ignoreMissing=true`);
       req.flush('failure', {status: 500, statusText: 'Server Error'});
 
       expect(error.status).toBe(500);
@@ -176,6 +177,17 @@ describe('ModelApiService', () => {
       req.flush([{aspectModelUrn: 'urn:samm:x#Y', aspectModel: '<ttl>'}]);
 
       expect(result).toEqual([{aspectModelUrn: 'urn:samm:x#Y', aspectModel: '<ttl>'}]);
+      expect(req.request.params.has('ignoreMissing')).toBe(false);
+    });
+
+    it('should ask the backend to leave out missing elements on demand', () => {
+      const fileEntries: FileEntry[] = [{aspectModelUrn: 'urn:samm:x#Y'}];
+      service.fetchAllAspectMetaModel(fileEntries, true).subscribe();
+
+      const req = httpMock.expectOne(r => r.url === `${modelsUrl}/batch`);
+      expect(req.request.params.get('ignoreMissing')).toBe('true');
+      expect(req.request.urlWithParams).toBe(`${modelsUrl}/batch?ignoreMissing=true`);
+      req.flush([]);
     });
   });
 
@@ -215,6 +227,26 @@ describe('ModelApiService', () => {
       req.flush('saved');
 
       expect(result).toBe('saved');
+    });
+
+    it('should unwrap the json error of the text response, e.g. the unresolved elements', () => {
+      let error: any;
+      service.saveAspectModel('<ttl content>', 'urn:samm:x#Y', 'my.namespace:1.0.0:MyModel.ttl').subscribe({error: err => (error = err)});
+
+      const body = {error: {code: 409, message: 'Element missing', unresolvedElements: ['urn:samm:gone:1.0.0#x']}};
+      httpMock.expectOne(modelsUrl).flush(JSON.stringify(body), {status: 409, statusText: 'Conflict'});
+
+      expect(error.status).toBe(409);
+      expect(error.error).toEqual(body.error);
+    });
+
+    it('should keep plain text errors', () => {
+      let error: any;
+      service.saveAspectModel('<ttl content>', 'urn:samm:x#Y', 'my.namespace:1.0.0:MyModel.ttl').subscribe({error: err => (error = err)});
+
+      httpMock.expectOne(modelsUrl).flush('Gateway down', {status: 502, statusText: 'Bad Gateway'});
+
+      expect(error.error).toBe('Gateway down');
     });
   });
 

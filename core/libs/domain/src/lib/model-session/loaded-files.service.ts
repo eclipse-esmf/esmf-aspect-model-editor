@@ -12,8 +12,12 @@
  */
 
 import {computed, Injectable, signal} from '@angular/core';
-import {Aspect, CacheStrategy, DefaultAspect, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
+import {Aspect, CacheStrategy, DefaultAspect, ModelElementCache, NamedElement, RdfModel} from '@esmf/aspect-model-loader';
 import {environment} from 'environments/environment';
+import {Store} from 'n3';
+
+/** Name of the placeholder files holding referenced elements that are not defined in any loaded file. */
+export const UNRESOLVED_REFERENCES_FILE = 'unresolved-references';
 
 export interface LoadedFilePayload {
   rdfModel: RdfModel;
@@ -42,6 +46,8 @@ export class NamespaceFile {
   rendered = false;
   sharedRdfModel?: RdfModel;
   fromWorkspace = false;
+  /** Holds referenced elements that are not defined in any loaded file. Such a file does not exist. */
+  unresolved = false;
   /** Used in the rendering process. DO NOT USE TO GET THE WORKSPACE STRUCTURE */
   namespaceFiles: Record<string, string> = {};
 
@@ -155,6 +161,44 @@ export class LoadedFilesService {
     if (!this.currentLoadedFile.cachedFile) return false;
 
     return Boolean(this.currentLoadedFile.cachedFile.get(element.aspectModelUrn));
+  }
+
+  /**
+   * Whether the element is referenced but not defined in any loaded file, e.g. because its file is missing in the workspace.
+   */
+  isElementUnresolved(element: NamedElement): boolean {
+    if (!element?.aspectModelUrn) return false;
+    return this.filesAsList.some(file => file.unresolved && file.cachedFile?.get(element.aspectModelUrn));
+  }
+
+  /** All elements that are referenced but not defined in any loaded file. */
+  get unresolvedElements(): NamedElement[] {
+    return this.filesAsList
+      .filter(file => file.unresolved)
+      .flatMap(file => file.cachedFile.getKeys().map(key => file.cachedFile.get<NamedElement>(key)))
+      .filter(Boolean);
+  }
+
+  /**
+   * Moves referenced elements without definition into one placeholder file per namespace. This way they are external
+   * elements: they are shown, but neither edited nor written into the current file.
+   */
+  registerUnresolvedElements(elements: NamedElement[], from: CacheStrategy) {
+    for (const element of elements) {
+      const [namespaceUrn] = element.aspectModelUrn.split('#');
+      const absoluteName = `${namespaceUrn.replace('urn:samm:', '')}:${UNRESOLVED_REFERENCES_FILE}`;
+      const file =
+        this.files[absoluteName] ||
+        this.addFile({
+          rdfModel: new RdfModel(new Store(), element.metaModelVersion, namespaceUrn),
+          cachedFile: new ModelElementCache(),
+          aspect: null,
+          absoluteName,
+        });
+      file.unresolved = true;
+      file.cachedFile.resolveInstance(element);
+      from.removeElement(element.aspectModelUrn);
+    }
   }
 
   isElementExtern(element: NamedElement): boolean {

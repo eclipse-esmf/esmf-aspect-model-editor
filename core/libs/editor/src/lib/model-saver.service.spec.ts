@@ -27,7 +27,7 @@ import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
-import {of, Subject} from 'rxjs';
+import {Subject, of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ModelSaverService} from './model-saver.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
@@ -81,6 +81,7 @@ describe('ModelSaverService', () => {
               aspectSavedEmptyModel: 'Empty',
             },
           } as any,
+          translateService: {translate: vi.fn((key: string, params?: any) => (params ? `${key} ${JSON.stringify(params)}` : key))} as any,
         }),
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(
@@ -129,6 +130,32 @@ describe('ModelSaverService', () => {
     expect(modelApiService.saveAspectModel).toHaveBeenCalled();
     expect(modelSavingTracker.updateSavedModel).toHaveBeenCalled();
     expect(notificationsService.info).toHaveBeenCalled();
+  });
+
+  it('saveModel should name the missing elements if the model references undefined elements', async () => {
+    const elements = ['urn:samm:org.gone:1.0.0#missingProp', 'urn:samm:org.gone:1.0.0#MissingChar'];
+    vi.mocked(modelApiService.fetchFormatedAspectModel).mockReturnValue(
+      throwError(() => ({
+        status: 409,
+        error: {code: 409, message: "Element '...' does not exist in a file.", unresolvedElements: elements},
+      })),
+    );
+
+    await new Promise(resolve => service.saveModel().subscribe(resolve));
+
+    expect(notificationsService.error).toHaveBeenCalledWith({
+      title: 'notificationService.unresolvedReferencesTitle',
+      message: `notificationService.unresolvedReferencesSaveMessage ${JSON.stringify({elements: elements.join(', ')})}`,
+    });
+    expect(modelApiService.saveAspectModel).not.toHaveBeenCalled();
+  });
+
+  it('saveModel should show the backend message for other errors', async () => {
+    vi.mocked(modelApiService.saveAspectModel).mockReturnValue(throwError(() => ({status: 409, error: {message: 'Syntax error'}})));
+
+    await new Promise(resolve => service.saveModel().subscribe(resolve));
+
+    expect(notificationsService.error).toHaveBeenCalledWith({title: 'Error', message: 'Syntax error'});
   });
 
   it('saveModel should save the formatted model as document with the header and order of the loaded file', async () => {

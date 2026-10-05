@@ -50,7 +50,7 @@ test.describe('Workspace - File Actions (Rename, Delete)', () => {
       });
     });
 
-    await page.route(`**${API_BASE_URL}/models/batch`, async route => {
+    await page.route(`**${API_BASE_URL}/models/batch*`, async route => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',

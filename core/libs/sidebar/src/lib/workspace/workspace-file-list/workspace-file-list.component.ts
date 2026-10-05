@@ -360,6 +360,17 @@ export class WorkspaceFileListComponent {
       const tooltip = this.translate.language.tooltips?.erroredFile || 'File has errors';
       return `${file.name} (${tooltip})`;
     }
+    if (this.hasMissingReferences(file)) {
+      const tooltip = this.translate.translateService.translate('tooltips.fileWithMissingReferences', {
+        namespaces: file.missingDependencies.join(', '),
+      });
+      return `${file.name} (${tooltip})`;
+    }
     return file.name;
+  }
+
+  /** Files referencing namespaces which are not in the workspace can be opened; the missing elements are shown as placeholders. */
+  hasMissingReferences(file: FileStatus): boolean {
+    return !file.errored && !!file.missingDependencies?.length;
   }
 }

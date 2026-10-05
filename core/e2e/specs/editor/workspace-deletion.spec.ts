@@ -48,7 +48,7 @@ class BackendMock {
   async install(files: Files): Promise<void> {
     await setUpDefaultRoutes(this.page);
     await this.page.route(`**${NAMESPACES_URL}`, route => route.fulfill({json: namespacesOf(files)}));
-    await this.page.route(`**${API_BASE_URL}/models/batch`, route => route.fulfill({json: batchOf(files)}));
+    await this.page.route(`**${API_BASE_URL}/models/batch*`, route => route.fulfill({json: batchOf(files)}));
     await this.page.route(REFERENCES_API_URL, route => {
       this.referenceChecks.push(new URL(route.request().url()));
       return route.fulfill({json: this.references});

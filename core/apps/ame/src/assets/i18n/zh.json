@@ -93,7 +93,12 @@
     "loadModelInfoMessage": "查看文件内容，请先加载一个模型。",
     "fallbackToDefaultLanguageTitle": "回退到默认语言。",
     "fallbackToDefaultLanguageDescMessage": "在{{fileName}}中找不到在{{subject}}描述的指定语言，继续使用默认语言设置。",
-    "fallbackToDefaultLanguagePrefMessage": "在{{fileName}}中找不到在{{subject}}首选名称的指定语言，继续使用默认语言设置。"
+    "fallbackToDefaultLanguagePrefMessage": "在{{fileName}}中找不到在{{subject}}首选名称的指定语言，继续使用默认语言设置。",
+    "unresolvedReferencesTitle": "未找到引用的元素",
+    "unresolvedReferencesMessage": "以下引用的元素未在工作区中定义：{{elements}}。它们显示为占位符。请将缺失的文件添加到工作区或删除这些引用，以便保存模型。",
+    "unresolvedReferencesSaveMessage": "无法保存模型。以下引用的元素未在工作区中定义：{{elements}}。请将缺失的文件添加到工作区或删除这些引用。",
+    "unresolvedElementTitle": "未找到元素",
+    "unresolvedElementMessage": "引用的元素 {{element}} 未在工作区中定义，无法打开。"
   },
   "toolbar": {
     "newLoad": "创建/加载",
@@ -755,6 +760,7 @@
     "foldNamespaces": "折叠namespaces",
     "outdatedFile": "此文件基于较旧的SAMM版本({{sammVersion}})",
     "erroredFile": "这个文件加载出错",
+    "fileWithMissingReferences": "引用了缺失命名空间中的元素：{{namespaces}}。这些元素显示为占位符。",
     "currentFile": "该文件在当前窗口中打开",
     "openNewModelTab": "打开新模型标签页"
   },

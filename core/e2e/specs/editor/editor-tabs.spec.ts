@@ -12,6 +12,7 @@
  */
 
 import {expect, Page, test} from '@playwright/test';
+import {MODELS_API_ROUTE} from '../../support/api-mocks';
 import {AppHelper} from '../../support/app-helper';
 
 const SAMPLE_TURTLE_MODEL_1 = `@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
@@ -92,7 +93,7 @@ async function routeWorkspaceWithOtherModel(page: Page): Promise<void> {
     });
   });
 
-  await page.route('**/models', async route => {
+  await page.route(MODELS_API_ROUTE, async route => {
     if (route.request().method() === 'GET') {
       await route.fulfill({
         status: 200,
@@ -118,14 +119,15 @@ async function openOtherModelOpenSubMenu(page: Page): Promise<void> {
     await refreshed;
   }
 
-  // Unfold namespaces
-  const toggleFold = page.locator('[data-testid="workspaceToggleFold"]');
-  if (await toggleFold.isVisible()) {
-    await toggleFold.click();
+  // Namespaces start unfolded; the toggle is only needed if they were folded, otherwise it would hide the file.
+  const fileItem = page.locator('.file', {hasText: 'OtherModel.ttl'});
+  const namespace = page.locator('[data-testid^="workspace-namespace-"] button.namespace').first();
+  await expect(namespace).toBeVisible({timeout: 10000});
+  if ((await namespace.getAttribute('aria-expanded')) === 'false') {
+    await namespace.click();
   }
 
   // Click more_horiz or right click on file
-  const fileItem = page.locator('.file', {hasText: 'OtherModel.ttl'});
   await expect(fileItem).toHaveCount(1, {timeout: 10000});
   await expect(fileItem).toBeVisible();
 

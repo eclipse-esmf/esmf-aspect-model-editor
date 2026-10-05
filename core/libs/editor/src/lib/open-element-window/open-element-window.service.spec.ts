@@ -12,6 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {DefaultEntity} from '@esmf/aspect-model-loader';
 import {MockProvider} from 'ng-mocks';
@@ -31,6 +32,11 @@ describe('OpenReferencedElementService', () => {
         MockProvider(LoadedFilesService, {
           getFileFromElement: vi.fn(() => 'test.ttl'),
           getNamespaceFileFromElement: vi.fn(() => ({name: 'test.ttl', namespace: 'org.eclipse.examples:1.0.0'}) as any),
+          isElementUnresolved: vi.fn(() => false),
+        }),
+        MockProvider(NotificationsService, {warning: vi.fn()}),
+        MockProvider(LanguageTranslationService, {
+          translateService: {translate: vi.fn((key: string, params?: object) => `${key}${params ? JSON.stringify(params) : ''}`)} as any,
         }),
         MockProvider(ModelOpenerService, {
           promptAndOpen: vi.fn(() => of(true)),
@@ -61,6 +67,24 @@ describe('OpenReferencedElementService', () => {
       namespace: 'org.eclipse.examples:1.0.0',
       aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#MyEntity',
       editElementUrn: 'urn:samm:org.eclipse.examples:1.0.0#MyEntity',
+    });
+  });
+
+  it('should not open an unresolved element but tell the user that it is missing in the workspace', () => {
+    const loadedFiles = TestBed.inject(LoadedFilesService);
+    vi.mocked(loadedFiles.isElementUnresolved).mockReturnValue(true);
+    const element = new DefaultEntity({
+      aspectModelUrn: 'urn:samm:org.eclipse.missing:1.0.0#MissingEntity',
+      name: 'MissingEntity',
+      metaModelVersion: '2.2.0',
+    });
+
+    service.openReferencedElement(element);
+
+    expect(modelOpenerService.promptAndOpen).not.toHaveBeenCalled();
+    expect(TestBed.inject(NotificationsService).warning).toHaveBeenCalledWith({
+      title: 'notificationService.unresolvedElementTitle',
+      message: 'notificationService.unresolvedElementMessage{"element":"urn:samm:org.eclipse.missing:1.0.0#MissingEntity"}',
     });
   });
 });

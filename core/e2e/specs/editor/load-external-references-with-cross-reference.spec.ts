@@ -47,7 +47,7 @@ test.describe('Test load external reference with cross references', () => {
     const diffNsProp = readFixture('external-reference/cross-references/different-namespace/external-property-reference.txt');
     const diffNsOp = readFixture('external-reference/cross-references/different-namespace/external-operation-reference.txt');
 
-    await page.route(MODELS_BATCH_API_URL, async route => {
+    await page.route(`${MODELS_BATCH_API_URL}*`, async route => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',

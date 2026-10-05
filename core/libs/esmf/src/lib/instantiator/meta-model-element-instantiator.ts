@@ -22,11 +22,20 @@ export const basePropertiesFactory = (initProps: BaseInitProps) => {
     return localeCode ? {lang: localeCode, value: quad.object.value} : {lang: 'en', value: quad.object.value};
   }
 
-  function getAspectModelUrn(typeQuad: Quad, quads: Array<Quad>): {aspectModelUrn: string; hasSyntheticName: boolean} {
+  function getAspectModelUrn(
+    subject: Quad_Subject,
+    typeQuad: Quad,
+    quads: Array<Quad>,
+  ): {aspectModelUrn: string; hasSyntheticName: boolean} {
     const rdfModel = initProps.rdfModel;
     const {samm} = rdfModel;
     if (typeQuad && !Util.isBlankNode(typeQuad.subject)) {
       return {aspectModelUrn: `${typeQuad.subject.value}`, hasSyntheticName: false};
+    }
+
+    // A referenced element without definition (e.g. its file is missing in the workspace) keeps its URN
+    if (!quads?.length && Util.isNamedNode(subject) && subject.value.includes('#')) {
+      return {aspectModelUrn: subject.value, hasSyntheticName: false};
     }
 
     if (!(quads && quads.length > 0)) {
@@ -74,7 +83,7 @@ export const basePropertiesFactory = (initProps: BaseInitProps) => {
       }
     }
 
-    const {aspectModelUrn, hasSyntheticName} = getAspectModelUrn(typeQuad, baseProperties);
+    const {aspectModelUrn, hasSyntheticName} = getAspectModelUrn(subject, typeQuad, baseProperties);
     const metaModelVersion = rdfModel.samm.version;
     const name = aspectModelUrn.split('#')?.[1];
 

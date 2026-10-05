@@ -12,6 +12,7 @@
  */
 
 import {LoadedFilesService} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {NamedElement} from '@esmf/aspect-model-loader';
 import {ModelOpenerService} from '../model-opener/model-opener.service';
@@ -20,9 +21,21 @@ import {ModelOpenerService} from '../model-opener/model-opener.service';
 export class OpenReferencedElementService {
   private readonly loadedFiles = inject(LoadedFilesService);
   private readonly modelOpener = inject(ModelOpenerService);
+  private readonly notifications = inject(NotificationsService);
+  private readonly translate = inject(LanguageTranslationService);
 
   openReferencedElement(element: NamedElement) {
     if (!element) {
+      return;
+    }
+
+    if (this.loadedFiles.isElementUnresolved(element)) {
+      this.notifications.warning({
+        title: this.translate.translateService.translate('notificationService.unresolvedElementTitle'),
+        message: this.translate.translateService.translate('notificationService.unresolvedElementMessage', {
+          element: element.aspectModelUrn,
+        }),
+      });
       return;
     }
 

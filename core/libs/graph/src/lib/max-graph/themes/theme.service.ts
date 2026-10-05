@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {Injectable} from '@angular/core';
+import {LoadedFilesService} from '@ame/domain';
+import {inject, Injectable} from '@angular/core';
+import {NamedElement} from '@esmf/aspect-model-loader';
 import {Cell, CellStyle, Graph} from '@maxgraph/core';
 import {MaxGraphHelper} from '../helpers';
 import {ModelStyleResolver, ThemeColors} from '../models';
@@ -20,6 +22,7 @@ import {lightColors} from './light-theme';
 
 @Injectable({providedIn: 'root'})
 export class ThemeService {
+  private readonly loadedFiles = inject(LoadedFilesService);
   private root: HTMLElement = document.documentElement;
   private graph: Graph;
 
@@ -89,12 +92,7 @@ export class ThemeService {
         } else if (cell.isVertex()) {
           const modelElement = MaxGraphHelper.getModelElement(cell);
           const styleName = (cell.style?.baseStyleNames?.[0] as string) || (modelElement ? ModelStyleResolver.resolve(modelElement) : '');
-          const style = this.generateThemeStyle(styleName);
-          if (modelElement?.isAnonymous?.()) {
-            style.dashed = true;
-            style.dashPattern = '4 4';
-          }
-          this.graph.setCellStyle(style, [cell]);
+          this.graph.setCellStyle(this.applyElementState(this.generateThemeStyle(styleName), modelElement), [cell]);
         }
       });
     });
@@ -114,6 +112,29 @@ export class ThemeService {
       strokeWidth: 2,
       ...(this.theme[styleName] || {}),
     } as CellStyle;
+  }
+
+  /**
+   * Marks elements of other files (lighter), referenced elements that are not defined in any loaded file
+   * (dashed border in the error color) and anonymous elements (dashed border).
+   */
+  applyElementState(style: CellStyle, element: NamedElement): CellStyle {
+    if (!element) return style;
+
+    if (this.loadedFiles.isElementExtern(element)) {
+      style.fillOpacity = 80;
+    }
+
+    if (this.loadedFiles.isElementUnresolved(element)) {
+      style.strokeColor = this.currentColors.error;
+      style.dashed = true;
+      style.dashPattern = '8 4';
+    } else if (element.isAnonymous?.()) {
+      style.dashed = true;
+      style.dashPattern = '4 4';
+    }
+
+    return style;
   }
 
   setCssVars(theme: string) {

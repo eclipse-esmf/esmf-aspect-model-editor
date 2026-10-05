@@ -60,9 +60,11 @@ export class ModelApiService implements ModelApiPort {
     return this.backendStatus.serviceUrl();
   }
 
+  /** Files with unresolved references are returned as they are, so that their missing elements can be shown as placeholders. */
   fetchAspectMetaModel(aspectModelUrn: string): Observable<{content: string; sourceLocation: string | null}> {
     return this.http
       .get<{content: string; sourceLocation: string | null}>(`${this.serviceUrl}${this.api.models}`, {
+        params: {ignoreMissing: true},
         headers: new HttpHeaderBuilder().withContentTypeRdfTurtle().withAspectModelUrn(aspectModelUrn).build(),
       })
       .pipe(
@@ -83,8 +85,9 @@ export class ModelApiService implements ModelApiPort {
       );
   }
 
-  fetchAllAspectMetaModel(fileEntries: Array<FileEntry>): Observable<Array<FileInformation>> {
-    return this.http.post<Array<FileInformation>>(`${this.serviceUrl}${this.api.models}/batch`, fileEntries).pipe(
+  fetchAllAspectMetaModel(fileEntries: Array<FileEntry>, ignoreMissing = false): Observable<Array<FileInformation>> {
+    const params = ignoreMissing ? {ignoreMissing: true} : undefined;
+    return this.http.post<Array<FileInformation>>(`${this.serviceUrl}${this.api.models}/batch`, fileEntries, {params}).pipe(
       timeout(this.requestTimeout),
       catchError(res => throwError(() => res)),
     );
@@ -112,7 +115,17 @@ export class ModelApiService implements ModelApiPort {
       })
       .pipe(
         timeout(this.requestTimeout),
-        catchError(res => throwError(() => res)),
+        catchError(res => {
+          // The text response is not parsed by Angular; unwrap it like the format response, e.g. to read `unresolvedElements`.
+          if (typeof res?.error === 'string') {
+            try {
+              res.error = JSON.parse(res.error)?.error ?? res.error;
+            } catch {
+              // keep the plain text
+            }
+          }
+          return throwError(() => res);
+        }),
       );
   }
 

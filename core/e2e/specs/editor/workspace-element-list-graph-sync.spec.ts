@@ -55,7 +55,7 @@ test.describe('Workspace element list dynamic update on graph element removal', 
       });
     });
 
-    await page.route(`**${API_BASE_URL}/models/batch`, async route => {
+    await page.route(`**${API_BASE_URL}/models/batch*`, async route => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',

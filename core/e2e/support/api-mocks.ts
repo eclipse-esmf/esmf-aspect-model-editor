@@ -15,6 +15,8 @@ import {Page, Route} from '@playwright/test';
 
 export const API_BASE_URL = 'http://localhost:9090/ame/api';
 export const MODELS_API_URL = `${API_BASE_URL}/models`;
+/** Matches `/models` with and without query (models are requested with `?ignoreMissing=true`). */
+export const MODELS_API_ROUTE = (url: URL): boolean => url.href.split('?')[0] === MODELS_API_URL;
 export const NAMESPACES_URL = `${API_BASE_URL}/models/namespaces*`;
 export const VALIDATE_API_URL = `${API_BASE_URL}/models/validate`;
 export const FORMAT_API_URL = `${API_BASE_URL}/models/format`;
@@ -37,7 +39,7 @@ export async function setUpDefaultRoutes(page: Page): Promise<void> {
     await route.fulfill({status: 200, contentType: 'text/plain', body: ''});
   });
 
-  await page.route(MODELS_API_URL, async (route: Route) => {
+  await page.route(MODELS_API_ROUTE, async (route: Route) => {
     if (route.request().method() === 'GET') {
       await route.fulfill({status: 200, contentType: 'application/json', body: JSON.stringify({content: '', sourceLocation: null})});
     } else {
@@ -45,7 +47,7 @@ export async function setUpDefaultRoutes(page: Page): Promise<void> {
     }
   });
 
-  await page.route(MODELS_BATCH_API_URL, async (route: Route) => {
+  await page.route(`${MODELS_BATCH_API_URL}*`, async (route: Route) => {
     await route.fulfill({status: 200, contentType: 'application/json', body: '[]'});
   });
 

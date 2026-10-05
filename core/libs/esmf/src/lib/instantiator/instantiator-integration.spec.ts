@@ -14,6 +14,7 @@
 import {firstValueFrom} from 'rxjs';
 import {describe, expect, it} from 'vitest';
 import {
+  DefaultCharacteristic,
   DefaultEither,
   DefaultEntity,
   DefaultEnumeration,
@@ -239,5 +240,55 @@ describe('AspectModelLoader instantiator integration', () => {
     expect(eitherChar.left.parents).toContain(eitherChar);
     expect(eitherChar.right).toBeDefined();
     expect(eitherChar.right.parents).toContain(eitherChar);
+  });
+  describe('references that are not defined in the loaded files', () => {
+    const missingReferencesTtl = `
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.0.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.0.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:org.eclipse.esmf.samm:test:2.0.0#> .
+@prefix ext: <urn:samm:org.eclipse.esmf.samm:missing:1.0.0#> .
+
+:BrokenAspect a samm:Aspect ;
+   samm:properties ( ext:missingProperty :sameNamespaceMissing :localProperty ) .
+
+:localProperty a samm:Property ;
+   samm:characteristic ext:MissingCharacteristic .
+`;
+
+    it('should keep the URN of a property whose definition is missing instead of inventing a local name', async () => {
+      const result = await firstValueFrom(new AspectModelLoader().loadSelfContainedModel(missingReferencesTtl));
+
+      const urns = result.aspect.properties.map(p => p.aspectModelUrn);
+      expect(urns).toContain('urn:samm:org.eclipse.esmf.samm:missing:1.0.0#missingProperty');
+      expect(urns).toContain('urn:samm:org.eclipse.esmf.samm:test:2.0.0#sameNamespaceMissing');
+      expect(urns.every(urn => !/#property\d|#[a-z]+_[0-9a-f]{6,}/i.test(urn))).toBe(true);
+    });
+
+    it('should keep a characteristic whose definition is missing so that the reference is not lost', async () => {
+      const result = await firstValueFrom(new AspectModelLoader().loadSelfContainedModel(missingReferencesTtl));
+
+      const localProperty = result.aspect.properties.find(p => p.name === 'localProperty');
+      expect(localProperty.characteristic).toBeInstanceOf(DefaultCharacteristic);
+      expect(localProperty.characteristic.aspectModelUrn).toBe('urn:samm:org.eclipse.esmf.samm:missing:1.0.0#MissingCharacteristic');
+      expect(localProperty.characteristic.dataType).toBeFalsy();
+    });
+
+    it('should return the same placeholder instance for repeated references to the same missing characteristic', async () => {
+      const ttl = missingReferencesTtl
+        .replace(
+          ':localProperty a samm:Property ;',
+          `:secondProperty a samm:Property ;
+   samm:characteristic ext:MissingCharacteristic .
+
+:localProperty a samm:Property ;`,
+        )
+        .replace(':localProperty ) .', ':localProperty :secondProperty ) .');
+      const result = await firstValueFrom(new AspectModelLoader().loadSelfContainedModel(ttl));
+
+      const first = result.aspect.properties.find(p => p.name === 'localProperty').characteristic;
+      const second = result.aspect.properties.find(p => p.name === 'secondProperty').characteristic;
+      expect(first).toBe(second);
+    });
   });
 });

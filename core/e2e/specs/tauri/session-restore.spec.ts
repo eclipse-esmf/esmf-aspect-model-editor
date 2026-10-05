@@ -12,7 +12,7 @@
  */
 
 import {Page, Route, expect, test} from '@playwright/test';
-import {MODELS_API_URL, setUpDefaultRoutes} from '../../support/api-mocks';
+import {MODELS_API_ROUTE, setUpDefaultRoutes} from '../../support/api-mocks';
 import {AppHelper} from '../../support/app-helper';
 import {SettingsDialogSelectors} from '../../support/constants';
 import {TauriHelper} from '../../support/tauri-helper';
@@ -74,7 +74,7 @@ async function startWindow(
 
   const all = [MODEL_A, MODEL_B, MODEL_C];
   const requestedUrns: string[] = [];
-  await page.route(MODELS_API_URL, async (route: Route) => {
+  await page.route(MODELS_API_ROUTE, async (route: Route) => {
     if (route.request().method() !== 'GET') {
       await route.fulfill({status: 200, contentType: 'text/plain', body: 'ok'});
       return;

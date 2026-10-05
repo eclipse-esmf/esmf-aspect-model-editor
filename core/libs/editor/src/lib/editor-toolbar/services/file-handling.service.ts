@@ -164,6 +164,8 @@ export class FileHandlingService implements FileHandlingPort {
     this.loadingScreenService.open(loadingScreenOptions);
 
     return this.modelApiService.validate(modelContent).pipe(
+      // Models which are only missing referenced elements are opened anyway; the elements are shown as placeholders.
+      catchError(httpError => (httpError?.error?.error?.unresolvedElements?.length ? of([]) : throwError(() => httpError))),
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
         return found
@@ -495,7 +497,10 @@ export class FileHandlingService implements FileHandlingPort {
         if (uploadOptions.showNotifications) {
           this.notificationsService.error({
             title: this.translate.language.notificationService.fileAddedErrorTitle,
-            message: httpError?.error?.error?.message || this.translate.language.notificationService.fileAddedErrorMessage,
+            message:
+              httpError?.error?.error?.message ||
+              httpError?.error?.message ||
+              this.translate.language.notificationService.fileAddedErrorMessage,
           });
         }
         return throwError(() => 'Adding file to workspace failed');

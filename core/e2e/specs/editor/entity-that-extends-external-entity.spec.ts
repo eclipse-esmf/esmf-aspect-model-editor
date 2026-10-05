@@ -32,7 +32,7 @@ test.describe('Test loading aspect with extended external Entity', () => {
     });
 
     const fixtureModel = readFixture('external-reference/same-namespace/model-with-entity.ttl');
-    await page.route(MODELS_BATCH_API_URL, async route => {
+    await page.route(`${MODELS_BATCH_API_URL}*`, async route => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
