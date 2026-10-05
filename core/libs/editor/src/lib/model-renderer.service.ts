@@ -72,6 +72,22 @@ export class ModelRendererService {
     }
   }
 
+  /**
+   * Renders the current model again without the large-model dialog, the loading screen and the automatic layout,
+   * e.g. after undo/redo, where the previous positions of the shapes are applied afterwards.
+   */
+  renderAgain(): Observable<boolean> {
+    this.maxgraphService.deleteAllShapes();
+    const maxgraphRenderer = new MaxGraphRenderer(
+      this.maxgraphService,
+      this.maxgraphShapeOverlayService,
+      this.sammLanguageSettingsService,
+      this.rdfModel,
+    );
+    const elements = this.cachedFile.getKeys().map(key => this.cachedFile.get<NamedElement>(key));
+    return this.graphUpdateWorkflow(maxgraphRenderer, elements).pipe(first());
+  }
+
   private prepareGraphUpdate(maxgraphRenderer: MaxGraphRenderer, elements: NamedElement[], editElementUrn?: string) {
     return this.largeFileWarningService.openDialog(elements.length).pipe(
       takeUntilDestroyed(this.destroyRef),

@@ -138,4 +138,51 @@ describe('SerializationMetadata', () => {
       expect(metadata.getSubjectOrder()).toEqual(['urn:x#c2', 'urn:x#a2']);
     });
   });
+  describe('exportState / importState', () => {
+    it('should restore header, explicit prefixes and subject order', () => {
+      const source = new SerializationMetadata();
+      source.headerComments = ['# Header', ''];
+      source.markPrefixExplicit('ext');
+      source.recordSubject('urn:x#b');
+      source.recordSubject('urn:x#a');
+      const state = source.exportState();
+
+      const target = new SerializationMetadata();
+      target.markPrefixExplicit('other');
+      target.recordSubject('urn:x#a');
+      target.importState(state);
+
+      expect(target.headerComments).toEqual(['# Header', '']);
+      expect(target.isExplicitPrefix('ext')).toBe(true);
+      expect(target.isExplicitPrefix('other')).toBe(false);
+      expect(target.getSubjectOrder()).toEqual(['urn:x#b', 'urn:x#a']);
+    });
+
+    it('should not share arrays with the exported state', () => {
+      const source = new SerializationMetadata();
+      source.headerComments = ['# Header'];
+      const state = source.exportState();
+      state.headerComments?.push('# changed');
+
+      expect(source.headerComments).toEqual(['# Header']);
+    });
+
+    it('should export the current IRI of renamed elements', () => {
+      const element = {aspectModelUrn: 'urn:x#a'};
+      const metadata = new SerializationMetadata();
+      metadata.recordSubject('urn:x#a');
+      metadata.bindElements(() => element);
+      element.aspectModelUrn = 'urn:x#renamed';
+
+      expect(metadata.exportState().subjectOrder).toEqual(['urn:x#renamed']);
+    });
+
+    it('should keep a model without header (null) as null', () => {
+      const target = new SerializationMetadata();
+      target.headerComments = ['# old'];
+      target.importState(new SerializationMetadata().exportState());
+
+      expect(target.headerComments).toBeNull();
+    });
+  });
 });

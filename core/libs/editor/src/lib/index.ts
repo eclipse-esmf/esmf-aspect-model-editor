@@ -19,6 +19,7 @@ export * from './editor-toolbar/enum/visible-step';
 export * from './editor.service';
 export * from './editor.types';
 export * from './helpers/form-field.helper';
+export * from './history';
 export * from './large-file-warning-dialog/large-file-warning-dialog.service';
 export * from './model-checker.service';
 export * from './model-loader.service';

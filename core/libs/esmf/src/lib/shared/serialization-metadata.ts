@@ -21,6 +21,13 @@ interface SubjectOrderEntry {
   element?: SubjectReference;
 }
 
+/** Plain copy of the serialization metadata, e.g. to restore it for an earlier version of the model (undo). */
+export interface SerializationMetadataState {
+  headerComments: string[] | null;
+  explicitPrefixes: string[];
+  subjectOrder: string[];
+}
+
 /**
  * Information about the textual form of an Aspect Model file which is not part of the RDF semantics
  * but is needed to write the file back as close as possible to its original form.
@@ -129,6 +136,23 @@ export class SerializationMetadata {
     });
     this.recordedSubjects.clear();
     this.subjectOrder.forEach(entry => this.recordedSubjects.add(entry.iri));
+  }
+
+  exportState(): SerializationMetadataState {
+    return {
+      headerComments: this.headerComments ? [...this.headerComments] : null,
+      explicitPrefixes: [...this.explicitPrefixes],
+      subjectOrder: this.getSubjectOrder(),
+    };
+  }
+
+  /** Replaces the metadata with an exported state. Element references are bound again with `bindElements`. */
+  importState(state: SerializationMetadataState): void {
+    this.headerComments = state.headerComments ? [...state.headerComments] : null;
+    this.explicitPrefixes.clear();
+    state.explicitPrefixes.forEach(alias => this.explicitPrefixes.add(alias));
+    this.subjectOrder = [];
+    this.setSubjectOrder(state.subjectOrder);
   }
 
   /** Links the ordered subjects to their model elements so that renames keep the position of an element. */

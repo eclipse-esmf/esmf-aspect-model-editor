@@ -19,6 +19,7 @@ import {RdfModel} from '@esmf/aspect-model-loader';
 import {DataFactory, Store} from 'n3';
 import {firstValueFrom, of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ModelHistoryService} from '../history/model-history.service';
 import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {TabStateService} from '../tabs/tab-state.service';
 import {namespaceOf, PrefixManagementService} from './prefix-management.service';
@@ -33,6 +34,7 @@ describe('PrefixManagementService', () => {
   let matDialog: {open: ReturnType<typeof vi.fn>};
   let dialogInstance: {hasChanges: boolean} | null;
   let modelService: {synchronizeModelToRdf: ReturnType<typeof vi.fn>};
+  let history: {reset: ReturnType<typeof vi.fn>};
   let tabState: {setTabDirty: ReturnType<typeof vi.fn>; activeTabId: ReturnType<typeof signal<string>>};
 
   beforeEach(() => {
@@ -49,6 +51,7 @@ describe('PrefixManagementService', () => {
     matDialog = {open: vi.fn(() => ({afterClosed: () => of(dialogResult), componentInstance: dialogInstance}))};
     modelService = {synchronizeModelToRdf: vi.fn(() => of(undefined))};
     tabState = {setTabDirty: vi.fn(), activeTabId: signal('tab-1')};
+    history = {reset: vi.fn()};
 
     TestBed.configureTestingModule({
       providers: [
@@ -57,6 +60,7 @@ describe('PrefixManagementService', () => {
         {provide: ModelSavingTrackerService, useValue: {isSaved$: of(false)}},
         {provide: TabStateService, useValue: tabState},
         {provide: ModelService, useValue: modelService},
+        {provide: ModelHistoryService, useValue: history},
       ],
     });
     service = TestBed.inject(PrefixManagementService);
@@ -117,6 +121,20 @@ describe('PrefixManagementService', () => {
 
     expect(matDialog.open.mock.calls[0][1].data).toEqual({rdfModel});
     expect(changed).toHaveBeenCalled();
+    // undo would revert the prefixes together with an earlier version of the model
+    expect(history.reset).toHaveBeenCalled();
+  });
+
+  it('should keep the undo history when the prefix management is closed without changes', () => {
+    dialogResult = false;
+    service.openManagement();
+    expect(history.reset).not.toHaveBeenCalled();
+  });
+
+  it('should keep the undo history when a prefix is added for a reference', async () => {
+    dialogResult = 'bat';
+    await firstValueFrom(service.ensurePrefixForReference(`${BATTERY}Cell`));
+    expect(history.reset).not.toHaveBeenCalled();
   });
 
   it('should synchronize the graph before the usage of the prefixes is shown', () => {

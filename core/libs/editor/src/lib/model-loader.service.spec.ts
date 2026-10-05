@@ -18,6 +18,7 @@ import {
   ModelDocumentService,
   ModelInstantiatorPort,
   NamespaceFile,
+  RdfPort,
 } from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {BrowserService, LanguageTranslationService, NotificationsService, TauriSignalsService, TitleService} from '@ame/shared';
@@ -27,6 +28,7 @@ import {DataFactory, Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of, Subject, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ModelHistoryService} from './history/model-history.service';
 import {ModelLoaderService} from './model-loader.service';
 import {ModelRendererService} from './model-renderer.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
@@ -61,6 +63,8 @@ const createProviders = (loadedFilesProvider: any) => [
     getSettings: vi.fn(() => ({copyrightHeader: []}) as any),
   }),
   MockProvider(TitleService, {updateTitle: vi.fn()}),
+  MockProvider(ModelHistoryService, {flush: vi.fn(), suspend: vi.fn(), resume: vi.fn(), reset: vi.fn()}),
+  MockProvider(RdfPort, {serializeModel: vi.fn(() => '')}),
   MockProvider(ModelDocumentService, {bindElements: vi.fn()}),
   MockProvider(LanguageTranslationService, {
     translateService: {
@@ -137,6 +141,73 @@ describe('ModelLoaderService', () => {
 
     expect(caughtError).toBeDefined();
     expect(loadedFilesService.restoreFiles).toHaveBeenCalled();
+    // the history is suspended while loading and resumed exactly once, also when loading fails
+    const history = TestBed.inject(ModelHistoryService);
+    expect(history.flush).toHaveBeenCalled();
+    expect(history.suspend).toHaveBeenCalledTimes(1);
+    expect(history.resume).toHaveBeenCalledTimes(1);
+    expect(history.reset).not.toHaveBeenCalled();
+  });
+
+  describe('restoreModel (undo/redo)', () => {
+    const ASPECT = `# file header
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix : <urn:samm:com.example:1.0.0#> .
+:Aspect a samm:Aspect ;
+   samm:properties ( ) ;
+   samm:operations ( ) .`;
+
+    const prepareCurrentFile = () => {
+      const previous = loadedFilesService.currentLoadedFile as NamespaceFile;
+      previous.name = 'Aspect.ttl';
+      previous.namespace = 'com.example:1.0.0';
+      previous.originalName = 'OnDisk.ttl';
+      previous.originalNamespace = 'com.example:1.0.0';
+      previous.originalAspectModelUrn = 'urn:samm:com.example:1.0.0#Aspect';
+      const dependency = {absoluteName: 'com.other:1.0.0:Other.ttl', rdfModel: {store: {}}} as unknown as NamespaceFile;
+      const placeholder = {absoluteName: 'com.missing:1.0.0:x.ttl', unresolved: true, rdfModel: {store: {}}} as unknown as NamespaceFile;
+      (loadedFilesService as any).filesAsList = [previous, dependency, placeholder];
+      (loadedFilesService as any).getSnapshot = vi.fn(() => ({snapshot: true}));
+      return {previous, dependency};
+    };
+
+    it('fails without a loaded model', async () => {
+      (loadedFilesService as any).currentLoadedFile = null;
+      await expect(
+        new Promise((resolve, reject) => service.restoreModel(ASPECT, {} as any).subscribe({next: resolve, error: reject})),
+      ).rejects.toBeDefined();
+      expect(loadedFilesService.removeAll).not.toHaveBeenCalled();
+    });
+
+    it('loads the earlier version with the loaded files and without the backend', async () => {
+      const {dependency} = prepareCurrentFile();
+      const modelApi = TestBed.inject(ModelApiPort);
+      const rdfPort = TestBed.inject(RdfPort);
+
+      const file = await new Promise<NamespaceFile>((resolve, reject) =>
+        service.restoreModel(ASPECT, undefined as any).subscribe({next: resolve, error: reject}),
+      );
+
+      expect(loadedFilesService.removeAll).toHaveBeenCalled();
+      expect(modelApi.loadNamespacesStructure).not.toHaveBeenCalled();
+      // placeholders of missing references are created again from the model, they are no dependency
+      expect(vi.mocked(rdfPort.serializeModel).mock.calls.map(([model]) => model)).toEqual([dependency.rdfModel]);
+      // the file on disk is still the one of the previous version
+      expect(file.originalName).toBe('OnDisk.ttl');
+      expect(file.originalAspectModelUrn).toBe('urn:samm:com.example:1.0.0#Aspect');
+    });
+
+    it('restores the loaded files when the earlier version cannot be loaded', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
+      prepareCurrentFile();
+
+      await expect(
+        new Promise((resolve, reject) =>
+          service.restoreModel('this is no turtle', undefined as any).subscribe({next: resolve, error: reject}),
+        ),
+      ).rejects.toBeDefined();
+      expect(loadedFilesService.restoreFiles).toHaveBeenCalledWith({snapshot: true});
+    });
   });
 
   it('loadSingleModel should bind the elements of the loaded file to their position and keep the global header settings', async () => {

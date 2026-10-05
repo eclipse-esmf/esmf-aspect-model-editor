@@ -21,6 +21,7 @@ import {
   ModelLoaderPort,
   NamespaceFile,
   RdfModelUtil,
+  RdfPort,
 } from '@ame/domain';
 import {
   BrowserService,
@@ -33,9 +34,18 @@ import {
 } from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
+import {
+  DefaultAspect,
+  loadAspectModel,
+  ModelElementCache,
+  NamedElement,
+  RdfLoader,
+  RdfModel,
+  SerializationMetadataState,
+} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
-import {catchError, combineLatest, concatMap, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {catchError, combineLatest, concatMap, finalize, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {ModelHistoryService} from './history/model-history.service';
 import {ModelRendererService} from './model-renderer.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
@@ -65,6 +75,8 @@ export class ModelLoaderService implements ModelLoaderPort {
   private translate = inject(LanguageTranslationService);
 
   private readonly tabStateService = inject(TabStateService);
+  private readonly modelHistory = inject(ModelHistoryService);
+  private readonly rdfService = inject(RdfPort);
 
   private tmpLoadedFiles: TmpLoadedFiles;
 
@@ -72,6 +84,14 @@ export class ModelLoaderService implements ModelLoaderPort {
    * Loads a model with its dependencies and renders it
    */
   renderModel(payload: LoadModelPayload) {
+    // the replaced model must not end up in the undo history of the tab
+    this.modelHistory.flush();
+    this.modelHistory.suspend();
+    let suspended = true;
+    const resumeHistory = () => {
+      if (suspended) this.modelHistory.resume();
+      suspended = false;
+    };
     this.tmpLoadedFiles = {
       files: {...this.loadedFilesService.files},
       currentLoadedFile: this.loadedFilesService.currentLoadedFile,
@@ -103,8 +123,52 @@ export class ModelLoaderService implements ModelLoaderPort {
           payload.editElementUrn,
           payload.replaceTabId,
         );
+        this.modelHistory.reset();
+        resumeHistory();
       }),
       tap(() => (this.loadedFilesService.currentLoadedFile.namespaceFiles = {})),
+      // the rendering does not complete, so the history is resumed above; this covers errors and cancelled loading
+      finalize(resumeHistory),
+    );
+  }
+
+  /**
+   * Replaces the current model by an earlier version of it (undo/redo). The referenced files stay as they are loaded,
+   * so neither the backend nor a migration is involved. The model is not rendered.
+   */
+  restoreModel(rdfAspectModel: string, serializationState: SerializationMetadataState): Observable<NamespaceFile> {
+    const previous = this.loadedFilesService.currentLoadedFile;
+    if (!previous?.rdfModel) {
+      return throwError(() => ({code: LoadingCodeErrors.LOADING_ASPECT_MODEL, error: 'No model loaded'}));
+    }
+
+    const dependencies = Object.fromEntries(
+      this.loadedFilesService.filesAsList
+        .filter(file => file !== previous && !file.unresolved && file.rdfModel?.store)
+        .map(file => [file.absoluteName, this.rdfService.serializeModel(file.rdfModel)]),
+    );
+    const payload: LoadModelPayload = {
+      rdfAspectModel,
+      aspectModelUri: previous.rdfModel.getSourceLocation(),
+      namespaceFileName: previous.absoluteName,
+      fromWorkspace: previous.fromWorkspace,
+      aspectModelUrn: previous.originalAspectModelUrn,
+    };
+
+    const snapshot = this.loadedFilesService.getSnapshot();
+    this.loadedFilesService.removeAll();
+
+    return this.instantiateModel(dependencies, payload, {render: true, serializationState}).pipe(
+      tap(file => {
+        // the file on disk is still the one of the previous version
+        file.originalName = previous.originalName;
+        file.originalNamespace = previous.originalNamespace;
+        file.originalAspectModelUrn = previous.originalAspectModelUrn;
+      }),
+      catchError(error => {
+        this.loadedFilesService.restoreFiles(snapshot);
+        return throwError(() => error);
+      }),
     );
   }
 
@@ -114,8 +178,6 @@ export class ModelLoaderService implements ModelLoaderPort {
    * @param absoluteFileName
    */
   loadSingleModel(payload: LoadModelPayload, render = false) {
-    const currentFileKey = payload.namespaceFileName || 'current';
-
     const migrate$ = this.parseRdfModel([{rdfAspectModel: payload.rdfAspectModel, sourceLocation: payload.aspectModelUri}]).pipe(
       takeUntilDestroyed(this.destroyRef),
       switchMap((rdfModel: RdfModel) =>
@@ -133,9 +195,32 @@ export class ModelLoaderService implements ModelLoaderPort {
         return this.modelApiService.loadNamespacesStructure();
       }),
       switchMap(() => this.getNamespaceDependencies(payload.rdfAspectModel, payload.aspectModelUri, {}, 0)),
-      // loading in sequence all RdfModels for the current file and dependencies
-      switchMap(files => this.loadRdfModelFromFiles(files, payload)),
+      switchMap(files => this.instantiateModel(files, payload, {render, notifyMissingReferences: render})),
+      catchError(error => {
+        if (this.tmpLoadedFiles?.files) {
+          this.loadedFilesService.restoreFiles(this.tmpLoadedFiles.files);
+        }
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  /**
+   * Instantiates the model with its already fetched dependencies and registers all files.
+   */
+  private instantiateModel(
+    dependencies: Record<string, string>,
+    payload: LoadModelPayload,
+    options: {render?: boolean; notifyMissingReferences?: boolean; serializationState?: SerializationMetadataState},
+  ): Observable<NamespaceFile> {
+    const currentFileKey = payload.namespaceFileName || 'current';
+
+    // loading in sequence all RdfModels for the current file and dependencies
+    return this.loadRdfModelFromFiles(dependencies, payload).pipe(
       map(({files, rdfModels}) => {
+        if (options.serializationState) {
+          rdfModels[currentFileKey].serializationMetadata.importState(options.serializationState);
+        }
         const remainingFiles = Object.fromEntries(Object.entries(files).filter(([key]) => key !== payload.namespaceFileName));
         return {files: remainingFiles, rdfModels};
       }),
@@ -155,7 +240,7 @@ export class ModelLoaderService implements ModelLoaderPort {
 
             const mergedFile = {...loadedFile, rdfModel: rdfModels[currentFileKey]};
             // registering all loaded files
-            const currentFile = this.registerFiles(rdfModels, mergedFile, payload, render);
+            const currentFile = this.registerFiles(rdfModels, mergedFile, payload, options.render);
             currentFile.namespaceFiles = files;
             // loading all isolated elements
             this.instantiatorService.instantiateRemainingElements(
@@ -167,12 +252,12 @@ export class ModelLoaderService implements ModelLoaderPort {
             this.moveElementsToTheirCacheFile(rdfModels, mergedFile, payload);
             // referenced elements without definition must neither be edited nor written into the current file
             const missingReferences = this.moveUnresolvedElements(rdfModels, rdfModels[currentFileKey], loadedFile.cachedElements);
-            if (render) this.notifyMissingReferences(missingReferences);
+            if (options.notifyMissingReferences) this.notifyMissingReferences(missingReferences);
             // remember which element stands at which position before the user can rename elements
             Object.values(rdfModels).forEach(rdfModel => this.modelDocumentService.bindElements(rdfModel));
 
             return of(
-              render
+              options.render
                 ? this.loadedFilesService.currentLoadedFile
                 : this.loadedFilesService.getFile(currentFile?.absoluteName || payload.namespaceFileName),
             );
@@ -183,12 +268,6 @@ export class ModelLoaderService implements ModelLoaderPort {
           }),
         ),
       ),
-      catchError(error => {
-        if (this.tmpLoadedFiles?.files) {
-          this.loadedFilesService.restoreFiles(this.tmpLoadedFiles.files);
-        }
-        return throwError(() => error);
-      }),
     );
   }
 

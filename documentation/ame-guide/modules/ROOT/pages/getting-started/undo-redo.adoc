@@ -1,0 +1,61 @@
+:page-partial:
+
+[[undo-redo]]
+= Undo and redo
+
+You can undo and redo changes of the Aspect Model in the graph.
+
+[[undo-redo-use]]
+== How to undo and redo
+
+[cols="30%,35%,35%"]
+|===
+| Action | macOS | Windows / Linux
+
+| Undo
+| kbd:[Cmd+Z]
+| kbd:[Ctrl+Z]
+
+| Redo
+| kbd:[Cmd+Shift+Z]
+| kbd:[Ctrl+Shift+Z] or kbd:[Ctrl+Y]
+|===
+
+You can also use the *Undo* and *Redo* buttons, the first two buttons of the toolbar above the graph.
+A button is disabled when there is nothing to undo or redo.
+
+[[undo-redo-what]]
+== What can be undone
+
+Every change of the model is one step:
+
+* adding an element (e.g., with the plus icon of a shape),
+* deleting an element or a connection,
+* connecting elements,
+* changes saved in the Edit dialog, e.g., a new name, description or value.
+
+Undo brings back the model as it was before the step, including all connections.
+Deleted elements come back with their connections, attributes and their position in the TTL file (header comment, order of the statements and prefixes stay as they were).
+
+The following is *not* a step of its own:
+
+* *Moving shapes:* moving a shape cannot be undone.
+However, when you undo a later change, the shapes keep the positions they had before this change.
+* *Changes in text fields:* while you type in the Edit dialog or in another text field, kbd:[Cmd+Z] / kbd:[Ctrl+Z] undoes the typing in that field, not the graph.
+The change only becomes a step when you save the Edit dialog.
+* *Changes made very quickly after each other* (within a quarter of a second) are recorded as one step.
+
+[[undo-redo-limits]]
+== Scope and limits
+
+* *25 steps:* you can undo at most the last 25 steps. Older steps are discarded.
+* *Per tab:* every tab has its own history. Switching tabs keeps the history of each tab; closing a tab discards it.
+* *Saving:* the history is kept after saving, so you can still undo changes made before saving. Undo and redo mark the model as modified when it differs from the saved file.
+* *New history:* loading or reloading a model starts a new, empty history.
+Changing prefixes in the prefix management also starts a new history, because undo would otherwise revert the prefixes together with the model.
+* *Redo:* a new change removes the steps that could be redone.
+* *Edit dialog:* undo and redo close an open Edit dialog.
+* *Text view:* undo and redo are not available in the text view. There, the shortcuts only apply to the text.
+* *File name:* undo changes the content of the model, not the file. If the file name changed together with a step (e.g., because the Aspect was deleted), the file name stays as it is.
+* *Missing references:* placeholders of missing referenced elements stay placeholders. Undo does not load referenced files again.
+* *Edit menu:* the *Undo* and *Redo* entries of the Edit menu in the desktop app apply to text fields only. Use the shortcuts or the toolbar buttons for the graph.

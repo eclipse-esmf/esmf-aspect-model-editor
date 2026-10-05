@@ -18,6 +18,7 @@ import {DestroyRef, effect, inject, Injectable, Injector, untracked} from '@angu
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {debounceTime, filter, first, map, Observable, of, switchMap, tap} from 'rxjs';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
+import {ModelHistoryService} from '../history/model-history.service';
 import {ModelRendererService} from '../model-renderer.service';
 import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';
@@ -49,6 +50,11 @@ export class TabStateService {
     return this.injector.get(FileHandlingService);
   }
 
+  // TabState -> ModelHistory -> TabState
+  private get modelHistory(): ModelHistoryService {
+    return this.injector.get(ModelHistoryService);
+  }
+
   public readonly tabs = this.tabsStore.entities;
   public readonly activeTabId = this.tabsStore.activeTabId;
 
@@ -78,6 +84,7 @@ export class TabStateService {
         const file = parts.pop() || '';
         const namespace = parts.join(':');
         this.tabsStore.renameTab(activeId, {...activeTab, id: absoluteName, file, namespace});
+        this.modelHistory.renameTab(activeId, absoluteName);
       });
     });
   }
@@ -207,6 +214,7 @@ export class TabStateService {
       if (tab.id === activeId || tab.file.includes('new-model')) {
         if (tab.id !== newId) {
           this.tabsStore.removeTab(tab.id);
+          if (tab.id === activeId) this.modelHistory.renameTab(tab.id, newId);
         }
         this.tabsStore.addOrUpdateTab({
           ...tab,
@@ -246,6 +254,9 @@ export class TabStateService {
   public saveActiveTabSnapshot(): void {
     const activeId = this.activeTabId();
     if (!activeId) return;
+
+    // changes of the last moments belong to the history of the tab which is left
+    this.modelHistory.flush();
 
     const snapshot = this.loadedFilesService.getSnapshot();
     const baseline = this.modelSavingTracker.getSavedModel();
@@ -346,6 +357,7 @@ export class TabStateService {
         const remainingTabs = currentTabs.filter(t => t.id !== tabId);
 
         this.loadedFilesService.removeFile(tabId);
+        this.modelHistory.clear(tabId);
         if (isActive) {
           // Prevent the store from auto-selecting a neighbour, so switchToTab performs a full restore
           this.tabsStore.setActiveTabId(null);

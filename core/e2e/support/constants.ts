@@ -12,6 +12,8 @@
  */
 
 // Editor toolbar
+export const SELECTOR_tbUndoButton = '[data-testid="tbUndoButton"]';
+export const SELECTOR_tbRedoButton = '[data-testid="tbRedoButton"]';
 export const SELECTOR_tbDeleteButton = '[data-testid="tbDeleteButton"]';
 export const SELECTOR_tbConnectButton = '[data-testid="tbConnectButton"]';
 export const SELECTOR_tbCollapseToggle = '[data-testid="collapseExpandToggle"]';

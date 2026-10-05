@@ -35,8 +35,12 @@ This section lists features that can be achieved within the Aspect Model Editor,
 | Category | Title | Explanation
 
 | Usability
-| Copy & paste, undo & redo
-| Copy & paste and undo & redo of graph elements are not supported. The *Undo*, *Redo*, *Cut*, *Copy* and *Paste* commands of the Edit menu only apply to text input fields.
+| Copy & paste
+| Copy & paste of graph elements is not supported. The *Cut*, *Copy* and *Paste* commands of the Edit menu only apply to text input fields.
+
+| Usability
+| Undo & redo
+| Undo & redo of the graph is limited to the last 25 changes per tab; moving shapes is not undone. See xref:getting-started/undo-redo.adoc#undo-redo-limits[Undo and redo].
 
 | Usability
 | Aspect Repository and Entity Repository

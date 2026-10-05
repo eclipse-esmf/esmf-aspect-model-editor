@@ -26,6 +26,30 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
+        [disabled]="isTextView() || !canUndo()"
+        [matTooltip]="t('toolbar.undo')"
+        (itemClick)="onUndo()"
+        data-testid="tbUndoButton"
+      >
+        <mat-icon class="material-icons">undo</mat-icon>
+      </ame-bar-item>
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isTextView() || !canRedo()"
+        [matTooltip]="t('toolbar.redo')"
+        (itemClick)="onRedo()"
+        data-testid="tbRedoButton"
+      >
+        <mat-icon class="material-icons">redo</mat-icon>
+      </ame-bar-item>
+    </div>
+
+    <div class="menu-items__group separator">
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
         [disabled]="isTextView() || isModelEmpty() || selectedCells()?.length !== 1"
         [matTooltip]="t('toolbar.editHighlightedCell')"
         (itemClick)="editSelectedCell()"

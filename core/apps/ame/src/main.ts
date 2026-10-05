@@ -22,6 +22,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {AppComponent} from './app/app.component';
 import {provideAme} from './app/app.config';
 import {APP_ROUTES} from './app/app.routes';
+import {TOAST_CONFIG} from './app/toast.config';
 
 (window as any)['global'] = window;
 
@@ -39,7 +40,7 @@ const bootstrap = () =>
       provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
       provideHttpClient(withXhr(), withInterceptorsFromDi()),
       provideAnimationsAsync(),
-      importProvidersFrom(ToastrModule.forRoot()),
+      importProvidersFrom(ToastrModule.forRoot(TOAST_CONFIG)),
       provideTransloco({
         config: {
           availableLangs: ['en', 'zh'],

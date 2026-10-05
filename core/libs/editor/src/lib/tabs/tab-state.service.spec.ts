@@ -20,6 +20,7 @@ import {MockProvider} from 'ng-mocks';
 import {of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
+import {ModelHistoryService} from '../history/model-history.service';
 import {ModelRendererService} from '../model-renderer.service';
 import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';
@@ -68,6 +69,7 @@ describe('TabStateService', () => {
         MockProvider(BrowserService, {
           isStartedAsTauriApp: vi.fn(() => false),
         }),
+        MockProvider(ModelHistoryService, {flush: vi.fn(), clear: vi.fn(), renameTab: vi.fn()}),
       ],
     });
 
@@ -176,6 +178,8 @@ describe('TabStateService', () => {
     expect(service.activeTabId()).toBe('org.eclipse.examples:1.0.0:Model1.ttl');
     expect(loadedFilesService.setFiles).toHaveBeenCalled();
     expect(modelRenderer.renderModel).toHaveBeenCalled();
+    // changes of the last moments belong to the history of the tab which is left
+    expect(TestBed.inject(ModelHistoryService).flush).toHaveBeenCalled();
   });
 
   it('should find existing tab by file and namespace', () => {
@@ -212,6 +216,7 @@ describe('TabStateService', () => {
 
     expect(service.tabs().length).toBe(1);
     expect(service.activeTabId()).toBe('org.eclipse.examples:1.0.0:Model1.ttl');
+    expect(TestBed.inject(ModelHistoryService).clear).toHaveBeenCalledWith('org.eclipse.examples:1.0.0:Model2.ttl');
   });
 
   it('should call loadEmptyModel when the last tab is closed', () => {
@@ -315,6 +320,11 @@ describe('TabStateService', () => {
 
     expect(service.activeTab()?.file).toBe('Truck.ttl');
     expect(service.activeTabId()).toBe('com.examples:1.0.0:Truck.ttl');
+    // the history stays with the tab, e.g. after the first save of a new model
+    expect(TestBed.inject(ModelHistoryService).renameTab).toHaveBeenCalledWith(
+      'com.examples:1.0.0:new-model.ttl',
+      'com.examples:1.0.0:Truck.ttl',
+    );
   });
 
   it('should mark the active tab as workspace model after the first save', () => {

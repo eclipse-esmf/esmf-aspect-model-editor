@@ -12,7 +12,7 @@
  */
 
 import {ConfigurationService, GraphNavigatorPort, SearchStore, UiShellStore} from '@ame/domain';
-import {EditorViewModeService} from '@ame/editor';
+import {EditorViewModeService, ModelHistoryService} from '@ame/editor';
 import {BackendStatusService, BindingsService, BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {take} from 'rxjs';
@@ -27,6 +27,7 @@ import {TauriTunnelService} from './tauri-tunnel.service';
     '(window:keydown.escape)': 'closeSearchModals()',
     '(window:keydown.backspace)': 'onDeleteKey($event)',
     '(window:keydown.delete)': 'onDeleteKey($event)',
+    '(window:keydown)': 'onHistoryKey($event)',
     '(window:keydown.f5)': '$event.preventDefault()',
     '(window:keydown.control.r)': '$event.preventDefault()',
     '(window:keydown.meta.r)': '$event.preventDefault()',
@@ -48,6 +49,7 @@ export class AppShellInitializer implements OnInit {
   private startupService = inject(StartupService);
   private backendStatus = inject(BackendStatusService);
   private viewMode = inject(EditorViewModeService);
+  private modelHistory = inject(ModelHistoryService);
 
   private readonly language = signal('en');
   public readonly title = 'Aspect Model Editor';
@@ -94,6 +96,12 @@ export class AppShellInitializer implements OnInit {
         this.bindingsService.fireAction('deleteElement');
       }
     }
+  }
+
+  /** Cmd/Ctrl+Z and Cmd/Ctrl+Shift+Z undo and redo the changes in the graph (not in the text view). */
+  onHistoryKey(event: KeyboardEvent): void {
+    if (!this.backendStatus.isReady() || this.viewMode.isTextView()) return;
+    this.modelHistory.handleKeydown(event);
   }
 
   openSearchElements(event?: Event): void {

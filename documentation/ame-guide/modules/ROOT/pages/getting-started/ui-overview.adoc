@@ -150,7 +150,8 @@ image:menu-bar/menu-edit.png[, width=30%, align="center"]
 |===
 
 In addition, the Edit menu contains the standard text editing commands (*Undo*, *Redo*, *Cut*, *Copy*, *Paste*, *Select All*).
-These only apply to text input fields (e.g., in the Edit dialog), not to elements of the graph.
+These only apply to text input fields (e.g., in the Edit dialog).
+To undo and redo changes of the graph, use the *Undo* and *Redo* buttons of the toolbar or the keyboard shortcuts, see xref:getting-started/undo-redo.adoc[Undo and redo].
 
 {nbsp}
 [[menu-valiadate]]

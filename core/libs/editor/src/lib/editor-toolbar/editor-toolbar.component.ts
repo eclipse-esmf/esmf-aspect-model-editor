@@ -25,6 +25,7 @@ import {first} from 'rxjs/operators';
 import {ConnectWithDialogComponent} from '../connect-with-dialog/connect-with-dialog.component';
 import {ShapeSettingsService} from '../editor-dialog/services/shape-settings.service';
 import {EditorService} from '../editor.service';
+import {ModelHistoryService} from '../history/model-history.service';
 import {PrefixManagementService} from '../prefixes/prefix-management.service';
 import {EditorViewModeService} from '../text-view/editor-view-mode.service';
 import {FileHandlingService} from './services';
@@ -48,6 +49,7 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
   private prefixManagementService = inject(PrefixManagementService);
   private filtersService = inject(FiltersService);
   private filterAttributesService = inject(FilterAttributesService);
+  private modelHistory = inject(ModelHistoryService);
 
   public notificationsService = inject(NotificationsService);
 
@@ -57,6 +59,8 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
   protected selectedCells = this.maxgraphShapeSelectorService.selectedCells;
   protected hasSelection = this.maxgraphShapeSelectorService.hasSelection;
   protected isTextView = inject(EditorViewModeService).isTextView;
+  protected canUndo = this.modelHistory.canUndo;
+  protected canRedo = this.modelHistory.canRedo;
   protected readonly activeFilter = toSignal(this.filterAttributesService.activeFilter$, {
     initialValue: this.filterAttributesService.activeFilter,
   });
@@ -99,6 +103,14 @@ export class EditorToolbarComponent implements AfterViewInit, OnDestroy {
 
   validateFile() {
     this.fileHandlingService.onValidateFile();
+  }
+
+  onUndo() {
+    this.modelHistory.undo();
+  }
+
+  onRedo() {
+    this.modelHistory.redo();
   }
 
   onDelete() {

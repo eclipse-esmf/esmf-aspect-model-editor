@@ -12,8 +12,9 @@
  */
 
 import {ConfigurationService, GraphNavigatorPort, SearchStore, UiShellStore} from '@ame/domain';
+import {EditorViewModeService, ModelHistoryService} from '@ame/editor';
 import {BrowserService, IPC_RENDERER, LanguageTranslationService, TitleService} from '@ame/shared';
-import {provideZonelessChangeDetection} from '@angular/core';
+import {provideZonelessChangeDetection, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideRouter} from '@angular/router';
 import {BehaviorSubject, of} from 'rxjs';
@@ -49,6 +50,8 @@ describe('AppShellInitializer', () => {
   };
   let graphNavigator: {hasElements: ReturnType<typeof vi.fn>};
   let startupService: {listenForLoading: ReturnType<typeof vi.fn>};
+  let modelHistory: {handleKeydown: ReturnType<typeof vi.fn>};
+  let isTextView: ReturnType<typeof signal<boolean>>;
 
   beforeEach(() => {
     localStorage.clear();
@@ -76,6 +79,8 @@ describe('AppShellInitializer', () => {
     };
     graphNavigator = {hasElements: vi.fn(() => false)};
     startupService = {listenForLoading: vi.fn(() => of(true))};
+    modelHistory = {handleKeydown: vi.fn()};
+    isTextView = signal(false);
 
     TestBed.configureTestingModule({
       imports: [AppShellInitializer],
@@ -92,6 +97,8 @@ describe('AppShellInitializer', () => {
         {provide: SearchStore, useValue: searchStore},
         {provide: GraphNavigatorPort, useValue: graphNavigator},
         {provide: StartupService, useValue: startupService},
+        {provide: ModelHistoryService, useValue: modelHistory},
+        {provide: EditorViewModeService, useValue: {isTextView: isTextView}},
       ],
     });
 
@@ -159,6 +166,28 @@ describe('AppShellInitializer', () => {
       fixture.detectChanges();
 
       expect(startupService.listenForLoading).toHaveBeenCalled();
+    });
+  });
+
+  describe('undo/redo shortcuts', () => {
+    const keydown = () => new KeyboardEvent('keydown', {key: 'z', ctrlKey: true, metaKey: true});
+
+    it('forwards key presses to the history of the graph', () => {
+      const event = keydown();
+      component.onHistoryKey(event);
+      expect(modelHistory.handleKeydown).toHaveBeenCalledWith(event);
+    });
+
+    it('leaves key presses in the text view to the text editor', () => {
+      isTextView.set(true);
+      component.onHistoryKey(keydown());
+      expect(modelHistory.handleKeydown).not.toHaveBeenCalled();
+    });
+
+    it('listens to key presses of the window', () => {
+      const event = keydown();
+      window.dispatchEvent(event);
+      expect(modelHistory.handleKeydown).toHaveBeenCalledWith(event);
     });
   });
 

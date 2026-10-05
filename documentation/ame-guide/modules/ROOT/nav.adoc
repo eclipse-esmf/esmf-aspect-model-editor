@@ -8,6 +8,7 @@
 ** xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files]
 ** xref:getting-started/session-restore.adoc[Restore the last session]
 ** xref:getting-started/edit-models.adoc[]
+** xref:getting-started/undo-redo.adoc[Undo and redo]
 ** xref:getting-started/navigate-models.adoc[]
 ** xref:getting-started/text-view.adoc[Aspect Model text view]
 ** xref:getting-started/validation-and-notifications.adoc[]

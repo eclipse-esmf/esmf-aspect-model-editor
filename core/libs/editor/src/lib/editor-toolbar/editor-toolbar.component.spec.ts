@@ -23,6 +23,7 @@ import {BehaviorSubject, of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ShapeSettingsService} from '../editor-dialog';
 import {EditorService} from '../editor.service';
+import {ModelHistoryService} from '../history/model-history.service';
 import {PrefixManagementService} from '../prefixes/prefix-management.service';
 import {EditorToolbarComponent} from './editor-toolbar.component';
 import {FileHandlingService} from './services';
@@ -36,12 +37,16 @@ describe('EditorToolbarComponent', () => {
   let filtersService: FiltersService;
   let activeFilter$: BehaviorSubject<ModelFilter>;
   let isModelEmpty: ReturnType<typeof signal<boolean>>;
+  let canUndo: ReturnType<typeof signal<boolean>>;
+  let canRedo: ReturnType<typeof signal<boolean>>;
 
   const filterButton = (): HTMLElement => fixture.nativeElement.querySelector('[data-testid="tbPropertyFilterButton"]');
 
   beforeEach(async () => {
     activeFilter$ = new BehaviorSubject<ModelFilter>(ModelFilter.DEFAULT);
     isModelEmpty = signal(false);
+    canUndo = signal(false);
+    canRedo = signal(false);
     await TestBed.configureTestingModule({
       imports: [
         EditorToolbarComponent,
@@ -94,6 +99,7 @@ describe('EditorToolbarComponent', () => {
         },
         MockProvider(NotificationsService),
         MockProvider(PrefixManagementService, {openManagement: vi.fn()}),
+        MockProvider(ModelHistoryService, {canUndo, canRedo, undo: vi.fn(), redo: vi.fn()}),
       ],
     }).compileComponents();
 
@@ -133,6 +139,39 @@ describe('EditorToolbarComponent', () => {
   it('validateFile should call fileHandlingService.onValidateFile', () => {
     component.validateFile();
     expect(fileHandlingService.onValidateFile).toHaveBeenCalled();
+  });
+
+  describe('undo/redo', () => {
+    const button = (testId: string): HTMLElement => fixture.nativeElement.querySelector(`[data-testid="${testId}"]`);
+    const history = () => TestBed.inject(ModelHistoryService);
+
+    it('disables both buttons without steps', () => {
+      expect(button('tbUndoButton').classList).toContain('disabled');
+      expect(button('tbRedoButton').classList).toContain('disabled');
+      button('tbUndoButton').click();
+      expect(history().undo).not.toHaveBeenCalled();
+    });
+
+    it('undoes and redoes with the buttons', () => {
+      canUndo.set(true);
+      canRedo.set(true);
+      fixture.detectChanges();
+
+      button('tbUndoButton').click();
+      expect(history().undo).toHaveBeenCalled();
+      button('tbRedoButton').click();
+      expect(history().redo).toHaveBeenCalled();
+    });
+
+    it('disables both buttons in the text view', () => {
+      canUndo.set(true);
+      canRedo.set(true);
+      (component as unknown as {isTextView: ReturnType<typeof signal<boolean>>}).isTextView = signal(true);
+      fixture.detectChanges();
+
+      expect(button('tbUndoButton').classList).toContain('disabled');
+      expect(button('tbRedoButton').classList).toContain('disabled');
+    });
   });
 
   it('should open the prefix management', () => {
