@@ -27,6 +27,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {catchError, debounceTime, EMPTY, finalize, map, Subject, switchMap, tap} from 'rxjs';
 import {SidebarStateService} from '../sidebar-state.service';
+import {WorkspaceDeletionService} from './workspace-deletion/workspace-deletion.service';
 import {WorkspaceEmptyComponent} from './workspace-empty/workspace-empty.component';
 import {WorkspaceErrorComponent} from './workspace-error/workspace-error.component';
 import {WorkspaceFileElementsComponent} from './workspace-file-elements/workspace-file-elements.component';
@@ -64,6 +65,7 @@ export class WorkspaceComponent {
   private translate = inject(LanguageTranslationService);
 
   public sidebarService = inject(SidebarStateService);
+  public deletion = inject(WorkspaceDeletionService);
   public validationStore = inject(ModelValidationStore);
   public workspaceStore = inject(WorkspaceStore);
 
@@ -127,6 +129,22 @@ export class WorkspaceComponent {
   refreshWorkspace() {
     this.sidebarService.namespacesState.clear();
     this.sidebarService.workspace.refresh();
+  }
+
+  isClearWorkspaceDisabled(): boolean {
+    return this.loading() || this.deletion.clearBlockReason() !== null;
+  }
+
+  clearWorkspaceTooltip(): string {
+    return (
+      this.deletion.blockReasonText('clear', this.deletion.clearBlockReason()) ||
+      this.translate.translateService.translate('sidebar.workspace.clear')
+    );
+  }
+
+  clearWorkspace() {
+    if (this.isClearWorkspaceDisabled()) return;
+    this.deletion.clearWorkspace().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   copyWorkspacePath() {

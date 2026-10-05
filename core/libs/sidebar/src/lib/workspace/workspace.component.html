@@ -47,6 +47,19 @@
       >
         <mat-icon>refresh</mat-icon>
       </button>
+
+      <span class="clear-wrapper" [matTooltip]="clearWorkspaceTooltip()">
+        <button
+          class="clear"
+          [disabled]="isClearWorkspaceDisabled()"
+          [attr.aria-label]="t('sidebar.workspace.clear')"
+          (click)="clearWorkspace()"
+          mat-mini-fab
+          data-testid="workspaceClearButton"
+        >
+          <mat-icon>delete_sweep</mat-icon>
+        </button>
+      </span>
     </div>
 
     <button (click)="sidebarService.workspace.close()" mat-mini-fab data-testid="sidebar-close">

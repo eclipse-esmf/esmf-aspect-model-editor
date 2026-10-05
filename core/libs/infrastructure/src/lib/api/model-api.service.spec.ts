@@ -326,6 +326,74 @@ describe('ModelApiService', () => {
 
       expect(error.status).toBe(500);
     });
+
+    it('should not retry a client error such as 409 (still referenced)', () => {
+      let error: any;
+      service.deleteAspectModel('urn:samm:x#Y').subscribe({error: err => (error = err)});
+
+      const report = {
+        deletable: false,
+        references: [],
+        unreadableFiles: [{namespace: 'a', version: '1.0.0', fileName: 'B.ttl', message: 'x'}],
+      };
+      httpMock.expectOne(modelsUrl).flush(report, {status: 409, statusText: 'Conflict'});
+      httpMock.verify();
+
+      expect(error.status).toBe(409);
+      expect(error.error).toEqual(report);
+    });
+  });
+
+  describe('workspace deletion', () => {
+    beforeEach(() => configureTestBed());
+
+    it('should check the references of a namespace version', () => {
+      let result: any;
+      service.getReferences('org.a', '1.0.0').subscribe(value => (result = value));
+
+      const req = httpMock.expectOne(r => r.url === `${modelsUrl}/references`);
+      expect(req.request.method).toBe('GET');
+      expect(req.request.params.get('namespace')).toBe('org.a');
+      expect(req.request.params.get('version')).toBe('1.0.0');
+      expect(req.request.params.has('fileName')).toBe(false);
+      req.flush({deletable: true, references: [], unreadableFiles: []});
+
+      expect(result.deletable).toBe(true);
+    });
+
+    it('should check the references of a single file', () => {
+      service.getReferences('org.a', '1.0.0', 'A.ttl').subscribe();
+
+      const req = httpMock.expectOne(r => r.url === `${modelsUrl}/references`);
+      expect(req.request.params.get('fileName')).toBe('A.ttl');
+      req.flush({deletable: true, references: [], unreadableFiles: []});
+    });
+
+    it('should delete a namespace version without retrying', () => {
+      let error: any;
+      service.deleteNamespace('org.a', '1.0.0').subscribe({error: err => (error = err)});
+
+      const req = httpMock.expectOne(r => r.url === `${modelsUrl}/namespace`);
+      expect(req.request.method).toBe('DELETE');
+      expect(req.request.params.get('namespace')).toBe('org.a');
+      expect(req.request.params.get('version')).toBe('1.0.0');
+      req.flush({deletable: false, references: [], unreadableFiles: []}, {status: 409, statusText: 'Conflict'});
+      httpMock.verify();
+
+      expect(error.status).toBe(409);
+    });
+
+    it('should clear the workspace with or without backup', () => {
+      let result: any;
+      service.clearWorkspace(false).subscribe(value => (result = value));
+
+      const req = httpMock.expectOne(r => r.url === `${modelsUrl}/workspace`);
+      expect(req.request.method).toBe('DELETE');
+      expect(req.request.params.get('backup')).toBe('false');
+      req.flush({deletedFiles: 4, backupCreated: false});
+
+      expect(result).toEqual({deletedFiles: 4, backupCreated: false});
+    });
   });
 
   describe('loadNamespacesStructure', () => {

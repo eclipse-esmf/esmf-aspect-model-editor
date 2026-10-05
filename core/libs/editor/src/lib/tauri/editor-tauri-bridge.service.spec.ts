@@ -17,7 +17,7 @@ import {IPC_RENDERER, LanguageTranslationService, TAURI_EVENTS} from '@ame/share
 import {TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {BehaviorSubject, of} from 'rxjs';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {ShapeSettingsService} from '../editor-dialog/services/shape-settings.service';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
 import {GenerateHandlingService} from '../editor-toolbar/services/generate-handling.service';
@@ -114,5 +114,70 @@ describe('EditorTauriBridge', () => {
       TAURI_EVENTS.SIGNAL.UPDATE_MENU_ITEM,
       expect.objectContaining({ids: ['REMOVE_SELECTED_ELEMENT'], payload: expect.objectContaining({enabled: true})}),
     );
+  });
+  describe('zoom in with the "+" key', () => {
+    const pressPlus = (init: KeyboardEventInit = {ctrlKey: true}) => {
+      const event = new KeyboardEvent('keydown', {key: '+', cancelable: true, ...init});
+      document.dispatchEvent(event);
+      return event;
+    };
+
+    beforeEach(() => vi.useFakeTimers({toFake: ['Date']}));
+    afterEach(() => vi.useRealTimers());
+
+    it('zooms in on Ctrl + "+" when a model is shown and prevents the browser zoom', () => {
+      shapeSettingsService.hasCellsSubject$.next(true);
+
+      const event = pressPlus();
+
+      expect(editorService.zoomIn).toHaveBeenCalledTimes(1);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('does nothing without a model, like the disabled menu item', () => {
+      const event = pressPlus();
+
+      expect(editorService.zoomIn).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it.each([
+      ['without modifier', {}],
+      ['with Alt (AltGr on Windows)', {ctrlKey: true, altKey: true}],
+      ['with the other platform modifier', {metaKey: true}],
+    ])('ignores "+" %s', (_label, init) => {
+      shapeSettingsService.hasCellsSubject$.next(true);
+
+      pressPlus(init);
+
+      expect(editorService.zoomIn).not.toHaveBeenCalled();
+    });
+
+    it('ignores other keys', () => {
+      shapeSettingsService.hasCellsSubject$.next(true);
+
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: '=', ctrlKey: true}));
+
+      expect(editorService.zoomIn).not.toHaveBeenCalled();
+    });
+
+    it('zooms only once when the menu accelerator and the key handler react to the same key press', () => {
+      shapeSettingsService.hasCellsSubject$.next(true);
+
+      pressPlus();
+      ipcMock.handlers.get(TAURI_EVENTS.SIGNAL.ZOOM_IN)!();
+
+      expect(editorService.zoomIn).toHaveBeenCalledTimes(1);
+    });
+
+    it('zooms again on the next key press', () => {
+      shapeSettingsService.hasCellsSubject$.next(true);
+
+      pressPlus();
+      vi.setSystemTime(Date.now() + 300);
+      pressPlus();
+
+      expect(editorService.zoomIn).toHaveBeenCalledTimes(2);
+    });
   });
 });

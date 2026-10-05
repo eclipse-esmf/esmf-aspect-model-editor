@@ -15,7 +15,7 @@ import {ModelOpenerPort, OpenModelOptions, PromptUploadOptions} from '@ame/domai
 import {TauriSignals, TauriSignalsService} from '@ame/shared';
 import {inject, Injectable, Injector} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {filter, first, map, Observable, of, switchMap, tap} from 'rxjs';
+import {filter, first, map, Observable, of, switchMap} from 'rxjs';
 import {FileHandlingService} from '../editor-toolbar/services/file-handling.service';
 import {ModelSavingTrackerService} from '../model-saving-tracker.service';
 import {SaveModelDialogService} from '../save-model-dialog/save-model-dialog.service';
@@ -100,8 +100,13 @@ export class ModelOpenerService implements ModelOpenerPort {
         switchMap(result => {
           if (result === 'open-in') {
             return this.checkUnsavedChanges().pipe(
-              switchMap(() => this.fileHandlingService.loadModel(options.modelContent)),
-              map(() => true),
+              switchMap(confirmed =>
+                confirmed
+                  ? this.fileHandlingService
+                      .loadModel(options.modelContent, this.tabStateService.activeTabId() ?? undefined)
+                      .pipe(map(() => true))
+                  : of(false),
+              ),
             );
           }
           if (result === 'open-tab') {
@@ -118,17 +123,26 @@ export class ModelOpenerService implements ModelOpenerPort {
   }
 
   /**
-   * Opens the model in the current window / active tab after ensuring unsaved changes are saved/handled.
+   * Opens the model in the active tab, replacing the model shown there, after unsaved changes are saved or discarded.
+   * If the model is already open in another tab, that tab is shown instead of opening it twice.
    */
   public openInCurrentWindow(options: OpenModelOptions): Observable<boolean> {
+    const existingTab = this.tabStateService.findTab(options.namespace, options.file);
+    if (existingTab) {
+      return this.tabStateService.switchToTab(existingTab.id, options.editElementUrn || options.aspectModelUrn);
+    }
+
     return this.checkUnsavedChanges().pipe(
-      tap(() => {
+      map(confirmed => {
+        if (!confirmed) return false;
+
         this.fileHandlingService.loadNamespaceFile(
           `${options.namespace}:${options.file}`,
           options.aspectModelUrn || options.editElementUrn,
+          this.tabStateService.activeTabId() ?? undefined,
         );
+        return true;
       }),
-      map(() => true),
     );
   }
 
@@ -156,11 +170,12 @@ export class ModelOpenerService implements ModelOpenerPort {
 
   /**
    * Checks for unsaved changes before performing destructive actions.
+   * Emits true when there are no unsaved changes or the user saved/discarded them, false when the user keeps editing.
    */
   public checkUnsavedChanges(): Observable<boolean> {
     return this.modelSavingTracker.isSaved$.pipe(
       first(),
-      switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialog.openDialog())),
+      switchMap(isSaved => (isSaved ? of(true) : this.saveModelDialog.openDialog().pipe(map(result => result === true)))),
     );
   }
 }

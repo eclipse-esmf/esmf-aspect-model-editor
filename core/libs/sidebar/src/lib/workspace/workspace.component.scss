@@ -53,6 +53,15 @@ $first-column-width: 450px;
     display: flex;
   }
 
+  // A disabled button does not receive pointer events, so its tooltip sits on a wrapper.
+  .clear-wrapper {
+    display: inline-flex;
+  }
+
+  .clear:not([disabled]):hover mat-icon {
+    color: var(--ame-error, #e83f22);
+  }
+
   h2 {
     margin: 0;
     font-size: 22px;

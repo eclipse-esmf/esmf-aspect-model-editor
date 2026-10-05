@@ -88,7 +88,12 @@ export class ModelLoaderService implements ModelLoaderPort {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
           this.titleService.updateTitle(this.loadedFilesService.currentLoadedFile?.absoluteName);
         }
-        this.tabStateService.onModelLoaded(this.loadedFilesService.currentLoadedFile, payload.fromWorkspace, payload.editElementUrn);
+        this.tabStateService.onModelLoaded(
+          this.loadedFilesService.currentLoadedFile,
+          payload.fromWorkspace,
+          payload.editElementUrn,
+          payload.replaceTabId,
+        );
       }),
       tap(() => (this.loadedFilesService.currentLoadedFile.namespaceFiles = {})),
     );

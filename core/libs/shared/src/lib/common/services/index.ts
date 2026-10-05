@@ -21,6 +21,7 @@ export * from './data-type.service';
 export * from './file-upload.service';
 export * from './loading-screen.service';
 export * from './notifications.service';
+export * from './other-windows-models.service';
 export * from './search.service';
 export * from './tauri-signals.service';
 export * from './title.service';

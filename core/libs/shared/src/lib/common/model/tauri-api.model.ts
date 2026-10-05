@@ -11,6 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {OpenModelsSnapshot} from './startup-options';
+
 export interface TauriContextMenuPayload {
   href: string | null;
 }
@@ -39,4 +41,6 @@ export interface TauriApi {
   showContextMenu(payload: TauriContextMenuPayload): void;
   openInVsCodeOrDefault(vscodeUrl: string, filePath: string): Promise<void>;
   copyToClipboard(text: string): void;
+  /** The workspace models open in each window. Optional: older shells do not report them. */
+  getOpenModels?(): Promise<OpenModelsSnapshot>;
 }

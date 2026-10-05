@@ -11,8 +11,15 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelCheckerPort, WorkspaceFacade} from '@ame/domain';
-import {BrowserService, IPC_RENDERER, LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
+import {ConfirmDialogPort, ModelCheckerPort, TabsStore, WorkspaceFacade} from '@ame/domain';
+import {
+  BrowserService,
+  IPC_RENDERER,
+  LanguageTranslationService,
+  NotificationsService,
+  OtherWindowsModelsService,
+  TauriSignalsService,
+} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -68,6 +75,7 @@ describe('WorkspaceComponent', () => {
         SidebarStateService,
         {provide: ModelCheckerPort, useValue: modelCheckerMock},
         {provide: WorkspaceFacade, useValue: modelApiServiceMock},
+        {provide: ConfirmDialogPort, useValue: {open: vi.fn()}},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
         {
@@ -170,6 +178,7 @@ describe('WorkspaceComponent', () => {
         SidebarStateService,
         {provide: ModelCheckerPort, useValue: modelCheckerMock},
         {provide: WorkspaceFacade, useValue: modelApiServiceMock},
+        {provide: ConfirmDialogPort, useValue: {open: vi.fn()}},
         {provide: TauriSignalsService, useValue: {call: vi.fn()}},
         {provide: NotificationsService, useValue: notificationsServiceMock},
         {
@@ -220,6 +229,78 @@ describe('WorkspaceComponent', () => {
     expect(notificationsServiceMock.success).toHaveBeenCalledWith({
       title: 'sidebar.workspace.copiedWorkspacePath',
       message: '/workspace',
+    });
+  });
+
+  describe('clear workspace', () => {
+    const createWithFile = () => {
+      sidebarService.namespacesState.setFile('org.example:1.0.0', new FileStatus('A.ttl'));
+      fixture = TestBed.createComponent(WorkspaceComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    };
+
+    afterEach(() => TestBed.inject(TabsStore).clearTabs());
+
+    it('is disabled for an empty workspace', () => {
+      fixture = TestBed.createComponent(WorkspaceComponent);
+      component = fixture.componentInstance;
+
+      expect(component.isClearWorkspaceDisabled()).toBe(true);
+      expect(component.clearWorkspaceTooltip()).toBe('sidebar.deletion.reason.clearEmpty');
+    });
+
+    it('is enabled when the workspace has files and none of them is open', () => {
+      createWithFile();
+
+      expect(component.isClearWorkspaceDisabled()).toBe(false);
+      expect(component.clearWorkspaceTooltip()).toBe('sidebar.workspace.clear');
+    });
+
+    it('is disabled while a workspace model is open in a tab', () => {
+      createWithFile();
+      TestBed.inject(TabsStore).addOrUpdateTab({id: 'org.example:1.0.0:A.ttl', file: 'A.ttl', namespace: 'org.example:1.0.0'});
+
+      expect(component.isClearWorkspaceDisabled()).toBe(true);
+      expect(component.clearWorkspaceTooltip()).toBe('sidebar.deletion.reason.clearOpenHere');
+    });
+
+    it('is disabled while a workspace model is open in another window', () => {
+      createWithFile();
+      vi.spyOn(TestBed.inject(OtherWindowsModelsService), 'hasOpenModels').mockReturnValue(true);
+
+      expect(component.isClearWorkspaceDisabled()).toBe(true);
+      expect(component.clearWorkspaceTooltip()).toBe('sidebar.deletion.reason.clearOpenElsewhere');
+    });
+
+    it('ignores open tabs that are not workspace files', () => {
+      createWithFile();
+      TestBed.inject(TabsStore).addOrUpdateTab({
+        id: 'org.example:1.0.0:new-model.ttl',
+        file: 'new-model.ttl',
+        namespace: 'org.example:1.0.0',
+      });
+
+      expect(component.isClearWorkspaceDisabled()).toBe(false);
+    });
+
+    it('opens the clear dialog through the deletion service', () => {
+      createWithFile();
+      const clear = vi.spyOn(component.deletion, 'clearWorkspace').mockReturnValue(of(true));
+
+      (fixture.nativeElement.querySelector('[data-testid="workspaceClearButton"]') as HTMLButtonElement).click();
+
+      expect(clear).toHaveBeenCalled();
+    });
+
+    it('does nothing when disabled', () => {
+      fixture = TestBed.createComponent(WorkspaceComponent);
+      component = fixture.componentInstance;
+      const clear = vi.spyOn(component.deletion, 'clearWorkspace');
+
+      component.clearWorkspace();
+
+      expect(clear).not.toHaveBeenCalled();
     });
   });
 

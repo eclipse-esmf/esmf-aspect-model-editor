@@ -100,6 +100,55 @@ describe('TabStateService', () => {
     expect(titleService.updateTitle).toHaveBeenCalledWith('org.eclipse.examples:1.0.0:AspectDefault.ttl');
   });
 
+  describe('replacing the model of a tab (open in current tab)', () => {
+    const file = (name: string) =>
+      ({
+        name,
+        namespace: 'org.eclipse.examples:1.0.0',
+        absoluteName: `org.eclipse.examples:1.0.0:${name}`,
+        aspect: {aspectModelUrn: `urn:samm:org.eclipse.examples:1.0.0#${name.replace('.ttl', '')}`},
+      }) as unknown as NamespaceFile;
+    const ids = () => service.tabs().map(tab => tab.id);
+
+    it('shows the new model in place of the replaced tab and keeps the tab order', () => {
+      service.onModelLoaded(file('A.ttl'), true);
+      service.onModelLoaded(file('B.ttl'), true);
+      service.onModelLoaded(file('C.ttl'), true);
+
+      service.onModelLoaded(file('D.ttl'), true, undefined, 'org.eclipse.examples:1.0.0:B.ttl');
+
+      expect(ids()).toEqual(['org.eclipse.examples:1.0.0:A.ttl', 'org.eclipse.examples:1.0.0:D.ttl', 'org.eclipse.examples:1.0.0:C.ttl']);
+      expect(service.activeTabId()).toBe('org.eclipse.examples:1.0.0:D.ttl');
+      expect(service.activeTab()?.aspectModelUrn).toBe('urn:samm:org.eclipse.examples:1.0.0#D');
+    });
+
+    it('removes the replaced tab when the model is already open in another tab', () => {
+      service.onModelLoaded(file('A.ttl'), true);
+      service.onModelLoaded(file('B.ttl'), true);
+
+      service.onModelLoaded(file('A.ttl'), true, undefined, 'org.eclipse.examples:1.0.0:B.ttl');
+
+      expect(ids()).toEqual(['org.eclipse.examples:1.0.0:A.ttl']);
+      expect(service.activeTabId()).toBe('org.eclipse.examples:1.0.0:A.ttl');
+    });
+
+    it('adds a tab as before when the tab to replace does not exist anymore', () => {
+      service.onModelLoaded(file('A.ttl'), true);
+
+      service.onModelLoaded(file('B.ttl'), true, undefined, 'org.eclipse.examples:1.0.0:Gone.ttl');
+
+      expect(ids()).toEqual(['org.eclipse.examples:1.0.0:A.ttl', 'org.eclipse.examples:1.0.0:B.ttl']);
+    });
+
+    it('reloading the model of the replaced tab itself keeps the single tab', () => {
+      service.onModelLoaded(file('A.ttl'), true);
+
+      service.onModelLoaded(file('A.ttl'), true, undefined, 'org.eclipse.examples:1.0.0:A.ttl');
+
+      expect(ids()).toEqual(['org.eclipse.examples:1.0.0:A.ttl']);
+    });
+  });
+
   it('should switch tabs and restore files snapshot and render model', () => {
     const mockFile1 = {
       name: 'Model1.ttl',

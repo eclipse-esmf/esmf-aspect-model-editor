@@ -359,7 +359,8 @@
       "refreshing": "Refreshing workspace...",
       "refresh": "Refresh workspace",
       "copyWorkspacePath": "Copy workspace path",
-      "copiedWorkspacePath": "Workspace path copied to clipboard"
+      "copiedWorkspacePath": "Workspace path copied to clipboard",
+      "clear": "Clear workspace"
     },
     "fileMenu": {
       "open": "Open",
@@ -369,11 +370,58 @@
       "findElements": "Find elements",
       "copyFilePath": "Copy file path",
       "copiedFilePath": "File path copied to clipboard",
-      "delete": "Delete"
+      "delete": "Delete",
+      "deleteNamespace": "Delete namespace version",
+      "namespaceMenu": "Open menu for namespace {{namespace}}"
     },
     "elementList": {
       "title": "Element list",
       "close": "Close element list"
+    },
+    "deletion": {
+      "checking": "Checking references...",
+      "blocked": {
+        "fileTitle": "Aspect Model cannot be deleted",
+        "namespaceTitle": "Namespace cannot be deleted",
+        "fileMessage": "\"{{name}}\" cannot be deleted because it is still referenced by:",
+        "namespaceMessage": "Namespace \"{{name}}\" cannot be deleted because it is still referenced by:",
+        "hint": "Remove these references first, then try again.",
+        "unreadableTitle": "The following files could not be checked. Fix or remove them first:",
+        "elements": "Referenced elements",
+        "close": "Close"
+      },
+      "namespace": {
+        "title": "Delete namespace version",
+        "phrase1": "Are you sure you want to delete the namespace version \"{{name}}\"?",
+        "phrase2": "This namespace version contains {{count}} Aspect Model file(s). All of them will be deleted.",
+        "phrase3": "This action cannot be undone.",
+        "ok": "Delete namespace",
+        "success": "Namespace \"{{name}}\" deleted"
+      },
+      "clear": {
+        "title": "Clear workspace",
+        "warning": "All {{count}} Aspect Model file(s) of all namespaces will be deleted from the workspace.",
+        "undo": "This action cannot be undone without a backup.",
+        "backup": "Create a backup (ZIP in the workspace folder) first",
+        "confirmLabel": "Type {{word}} to confirm",
+        "cancel": "Cancel",
+        "ok": "Clear workspace",
+        "success": "Workspace cleared",
+        "successMessage": "{{count}} file(s) deleted.",
+        "successBackup": "{{count}} file(s) deleted. A backup was created in the workspace folder."
+      },
+      "failed": "Deletion failed",
+      "checkFailed": "References could not be checked. Nothing was deleted.",
+      "reason": {
+        "busy": "Please wait until the current check or deletion is finished",
+        "fileOpenHere": "This Aspect Model is open in a tab of this window. Close the tab to delete it",
+        "fileOpenElsewhere": "This Aspect Model is open in another window. Close it there to delete it",
+        "namespaceOpenHere": "Close all models of this namespace version in this window before deleting it",
+        "namespaceOpenElsewhere": "A model of this namespace version is open in another window. Close it there before deleting the namespace version",
+        "clearEmpty": "The workspace is empty",
+        "clearOpenHere": "Close all workspace models in this window before clearing the workspace",
+        "clearOpenElsewhere": "Workspace models are open in another window. Close them there before clearing the workspace"
+      }
     }
   },
   "settingsDialog": {

@@ -11,8 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade} from '@ame/domain';
-import {ClipboardService, LanguageTranslationService, NotificationsService, TauriSignalsService} from '@ame/shared';
+import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, TabsStore, WorkspaceFacade} from '@ame/domain';
+import {
+  ClipboardService,
+  LanguageTranslationService,
+  NotificationsService,
+  OtherWindowsModelsService,
+  TauriSignalsService,
+} from '@ame/shared';
 import {provideZonelessChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -29,7 +35,12 @@ describe('WorkspaceFileListComponent', () => {
   let tauriSignalsMock: {call: ReturnType<typeof vi.fn>};
   let notificationMock: {info: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn>; success: ReturnType<typeof vi.fn>};
   let confirmDialogMock: {open: ReturnType<typeof vi.fn>};
-  let modelApiMock: {deleteAspectModel: ReturnType<typeof vi.fn>; getStoragePath: ReturnType<typeof vi.fn>};
+  let modelApiMock: {
+    deleteAspectModel: ReturnType<typeof vi.fn>;
+    getStoragePath: ReturnType<typeof vi.fn>;
+    getReferences: ReturnType<typeof vi.fn>;
+    deleteNamespace: ReturnType<typeof vi.fn>;
+  };
   let loadedFilesMock: {currentLoadedFile: any; removeFile: ReturnType<typeof vi.fn>};
   let modelOpenerMock: {
     promptAndOpen: ReturnType<typeof vi.fn>;
@@ -47,6 +58,8 @@ describe('WorkspaceFileListComponent', () => {
     modelApiMock = {
       deleteAspectModel: vi.fn(() => of(undefined)),
       getStoragePath: vi.fn(() => of({storagePath: '/workspace'})),
+      getReferences: vi.fn(() => of({deletable: true, references: [], unreadableFiles: []})),
+      deleteNamespace: vi.fn(() => of({deletable: true, references: [], unreadableFiles: []})),
     };
     loadedFilesMock = {
       currentLoadedFile: {namespace: 'org.eclipse.esmf:1.0.0', name: 'Current.ttl'},
@@ -287,6 +300,107 @@ describe('WorkspaceFileListComponent', () => {
     expect(confirmDialogMock.open).toHaveBeenCalled();
     expect(modelApiMock.deleteAspectModel).not.toHaveBeenCalled();
     expect(loadedFilesMock.removeFile).not.toHaveBeenCalled();
+  });
+
+  it('should check the references of the file before asking for confirmation', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    component.prepare('org.eclipse.esmf:1.0.0', file as NonNullable<typeof file>);
+
+    component.deleteFile();
+
+    expect(modelApiMock.getReferences).toHaveBeenCalledWith('org.eclipse.esmf', '1.0.0', 'File1.ttl');
+    expect(modelApiMock.getReferences.mock.invocationCallOrder[0]).toBeLessThan(confirmDialogMock.open.mock.invocationCallOrder[0]);
+  });
+
+  it('should disable delete for a file that is open in another tab of this window', () => {
+    TestBed.inject(TabsStore).addOrUpdateTab({
+      id: 'org.eclipse.esmf:1.0.0:File1.ttl',
+      file: 'File1.ttl',
+      namespace: 'org.eclipse.esmf:1.0.0',
+    });
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    component.prepare('org.eclipse.esmf:1.0.0', file as NonNullable<typeof file>);
+
+    expect(component.isDeleteDisabled()).toBe(true);
+    expect(component.deleteTooltip()).toBe('sidebar.deletion.reason.fileOpenHere');
+    component.deleteFile();
+    expect(modelApiMock.getReferences).not.toHaveBeenCalled();
+  });
+
+  it('should disable delete for a file that is open in another window', () => {
+    vi.spyOn(TestBed.inject(OtherWindowsModelsService), 'isFileOpen').mockReturnValue(true);
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    component.prepare('org.eclipse.esmf:1.0.0', file as NonNullable<typeof file>);
+
+    expect(component.isDeleteDisabled()).toBe(true);
+    expect(component.deleteTooltip()).toBe('sidebar.deletion.reason.fileOpenElsewhere');
+  });
+
+  it('should show no delete tooltip when the file can be deleted', () => {
+    const file = sidebarService.namespacesState.getFile('org.eclipse.esmf:1.0.0', 'File1.ttl');
+    component.prepare('org.eclipse.esmf:1.0.0', file as NonNullable<typeof file>);
+
+    expect(component.deleteTooltip()).toBe('');
+  });
+
+  describe('namespace menu', () => {
+    afterEach(() => TestBed.inject(TabsStore).clearTabs());
+
+    it('renders a menu button for every namespace', () => {
+      const buttons = fixture.nativeElement.querySelectorAll('[data-testid="openNamespaceMenu"]');
+      expect(buttons).toHaveLength(1);
+      expect(fixture.nativeElement.querySelector('[data-testid="workspace-namespace-org.eclipse.esmf:1.0.0"]')).toBeTruthy();
+    });
+
+    it('does not toggle the namespace fold when the menu button is clicked', () => {
+      const button: HTMLButtonElement = fixture.nativeElement.querySelector('[data-testid="openNamespaceMenu"]');
+      button.click();
+
+      expect(component.namespaceMenuSelection()).toBe('org.eclipse.esmf:1.0.0');
+      expect(component.folded()['org.eclipse.esmf:1.0.0']).toBe(false);
+    });
+
+    it('checks and deletes the namespace version', () => {
+      component.prepareNamespaceMenu('org.eclipse.esmf:1.0.0');
+      TestBed.inject(TabsStore).clearTabs();
+      loadedFilesMock.currentLoadedFile = null;
+
+      expect(component.isNamespaceDeleteDisabled()).toBe(false);
+      component.deleteNamespace();
+
+      expect(modelApiMock.getReferences).toHaveBeenCalledWith('org.eclipse.esmf', '1.0.0');
+      expect(confirmDialogMock.open).toHaveBeenCalled();
+      expect(modelApiMock.deleteNamespace).toHaveBeenCalledWith('org.eclipse.esmf', '1.0.0');
+      expect(tauriSignalsMock.call).toHaveBeenCalledWith('requestRefreshWorkspaces');
+    });
+
+    it('is disabled while a model of the namespace is open in a tab', () => {
+      TestBed.inject(TabsStore).addOrUpdateTab({
+        id: 'org.eclipse.esmf:1.0.0:Current.ttl',
+        file: 'Current.ttl',
+        namespace: 'org.eclipse.esmf:1.0.0',
+      });
+      component.prepareNamespaceMenu('org.eclipse.esmf:1.0.0');
+
+      expect(component.isNamespaceDeleteDisabled()).toBe(true);
+      expect(component.namespaceDeleteTooltip()).toBe('sidebar.deletion.reason.namespaceOpenHere');
+      component.deleteNamespace();
+      expect(modelApiMock.getReferences).not.toHaveBeenCalled();
+    });
+
+    it('is disabled while a model of the namespace is open in another window', () => {
+      TestBed.inject(TabsStore).clearTabs();
+      loadedFilesMock.currentLoadedFile = null;
+      vi.spyOn(TestBed.inject(OtherWindowsModelsService), 'isNamespaceOpen').mockReturnValue(true);
+      component.prepareNamespaceMenu('org.eclipse.esmf:1.0.0');
+
+      expect(component.isNamespaceDeleteDisabled()).toBe(true);
+      expect(component.namespaceDeleteTooltip()).toBe('sidebar.deletion.reason.namespaceOpenElsewhere');
+    });
+
+    it('is disabled without a selected namespace', () => {
+      expect(component.isNamespaceDeleteDisabled()).toBe(true);
+    });
   });
 
   it('should disable delete for current loaded file', () => {

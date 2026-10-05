@@ -24,6 +24,8 @@ import {TabStateService} from '../tabs/tab-state.service';
 import {ModelOpenerService} from './model-opener.service';
 import {OpenFileDialogComponent} from './open-file-dialog/open-file-dialog.component';
 
+const ACTIVE_TAB_ID = 'org.eclipse.examples:1.0.0:Current.ttl';
+
 describe('ModelOpenerService', () => {
   let service: ModelOpenerService;
   let dialog: MatDialog;
@@ -62,6 +64,7 @@ describe('ModelOpenerService', () => {
           switchToTab: vi.fn(() => of(true)),
           saveActiveTabSnapshot: vi.fn(),
           isActiveTabCleanEmpty: vi.fn(() => false),
+          activeTabId: vi.fn(() => ACTIVE_TAB_ID) as any,
         }),
       ],
     });
@@ -122,6 +125,7 @@ describe('ModelOpenerService', () => {
       expect(fileHandling.loadNamespaceFile).toHaveBeenCalledWith(
         'org.eclipse.examples:1.0.0:TestModel.ttl',
         'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+        ACTIVE_TAB_ID,
       );
     });
 
@@ -201,6 +205,7 @@ describe('ModelOpenerService', () => {
       expect(fileHandling.loadNamespaceFile).toHaveBeenCalledWith(
         'org.eclipse.examples:1.0.0:TestModel.ttl',
         'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+        ACTIVE_TAB_ID,
       );
     });
   });
@@ -226,6 +231,102 @@ describe('ModelOpenerService', () => {
       expect(tabStateService.saveActiveTabSnapshot).toHaveBeenCalled();
       expect(fileHandling.loadModel).toHaveBeenCalledWith('sample content');
     });
+
+    it('replaces the model of the active tab when user chooses open-in for uploaded file', () => {
+      vi.spyOn(dialog, 'open').mockReturnValue({afterClosed: () => of('open-in')} as any);
+      vi.spyOn(fileHandling, 'loadModel').mockReturnValue(of(true));
+      const result = vi.fn();
+
+      service
+        .promptForUpload({fileName: 'Uploaded.ttl', namespace: 'org.eclipse.examples:1.0.0', modelContent: 'content'})
+        .subscribe(result);
+
+      expect(fileHandling.loadModel).toHaveBeenCalledWith('content', ACTIVE_TAB_ID);
+      expect(result).toHaveBeenCalledWith(true);
+    });
+
+    it('does not load the uploaded file when the user keeps editing the unsaved model', () => {
+      Object.defineProperty(modelSavingTracker, 'isSaved$', {value: of(false)});
+      vi.spyOn(saveModelDialog, 'openDialog').mockReturnValue(of(false));
+      vi.spyOn(dialog, 'open').mockReturnValue({afterClosed: () => of('open-in')} as any);
+      vi.spyOn(fileHandling, 'loadModel').mockReturnValue(of(true));
+      const result = vi.fn();
+
+      service
+        .promptForUpload({fileName: 'Uploaded.ttl', namespace: 'org.eclipse.examples:1.0.0', modelContent: 'content'})
+        .subscribe(result);
+
+      expect(fileHandling.loadModel).not.toHaveBeenCalled();
+      expect(result).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('openInCurrentWindow', () => {
+    const options = {
+      file: 'TestModel.ttl',
+      namespace: 'org.eclipse.examples:1.0.0',
+      aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+    };
+
+    it('loads the model into the active tab instead of opening a new tab', () => {
+      const result = vi.fn();
+
+      service.openInCurrentWindow(options).subscribe(result);
+
+      expect(fileHandling.loadNamespaceFile).toHaveBeenCalledWith(
+        'org.eclipse.examples:1.0.0:TestModel.ttl',
+        'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+        ACTIVE_TAB_ID,
+      );
+      expect(tabStateService.saveActiveTabSnapshot).not.toHaveBeenCalled();
+      expect(result).toHaveBeenCalledWith(true);
+    });
+
+    it('shows the tab of a model that is already open instead of opening it twice', () => {
+      vi.spyOn(tabStateService, 'findTab').mockReturnValue({
+        id: 'org.eclipse.examples:1.0.0:TestModel.ttl',
+        file: 'TestModel.ttl',
+        namespace: 'org.eclipse.examples:1.0.0',
+      });
+
+      service.openInCurrentWindow(options).subscribe();
+
+      expect(tabStateService.switchToTab).toHaveBeenCalledWith(
+        'org.eclipse.examples:1.0.0:TestModel.ttl',
+        'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+      );
+      expect(fileHandling.loadNamespaceFile).not.toHaveBeenCalled();
+    });
+
+    it('replaces the unsaved model after the changes were discarded or saved', () => {
+      Object.defineProperty(modelSavingTracker, 'isSaved$', {value: of(false)});
+      vi.spyOn(saveModelDialog, 'openDialog').mockReturnValue(of(true));
+
+      service.openInCurrentWindow(options).subscribe();
+
+      expect(saveModelDialog.openDialog).toHaveBeenCalled();
+      expect(fileHandling.loadNamespaceFile).toHaveBeenCalledWith(
+        'org.eclipse.examples:1.0.0:TestModel.ttl',
+        'urn:samm:org.eclipse.examples:1.0.0#TestAspect',
+        ACTIVE_TAB_ID,
+      );
+    });
+
+    for (const [label, answer] of [
+      ['continue editing', false],
+      ['closing the dialog (Escape / x)', undefined],
+    ] as const) {
+      it(`keeps the unsaved model after ${label}`, () => {
+        Object.defineProperty(modelSavingTracker, 'isSaved$', {value: of(false)});
+        vi.spyOn(saveModelDialog, 'openDialog').mockReturnValue(of(answer));
+        const result = vi.fn();
+
+        service.openInCurrentWindow(options).subscribe(result);
+
+        expect(fileHandling.loadNamespaceFile).not.toHaveBeenCalled();
+        expect(result).toHaveBeenCalledWith(false);
+      });
+    }
   });
 
   describe('openInNewWindow', () => {

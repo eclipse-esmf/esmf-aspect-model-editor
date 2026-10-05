@@ -54,7 +54,10 @@ pub(crate) const MENU_SHORTCUTS: &[(&str, &str)] = &[
     ("SHOW_HIDE_MINIMAP", "CmdOrCtrl+Shift+M"),
     ("FILTER_MODEL_BY_NONE", "CmdOrCtrl+Shift+A"),
     ("FILTER_MODEL_BY_PROPERTIES", "CmdOrCtrl+Shift+R"),
-    ("ZOOM_IN", "CmdOrCtrl+Plus"),
+    // `=` is the key code muda understands ("Plus" is silently dropped by Tauri). On Windows it is the
+    // "+" key of every layout; on macOS/Linux layouts with a separate "+" key (e.g. German) the
+    // editor additionally handles Cmd/Ctrl + "+" itself (see EditorTauriBridge).
+    ("ZOOM_IN", "CmdOrCtrl+="),
     ("ZOOM_OUT", "CmdOrCtrl+-"),
     ("ZOOM_TO_FIT", "CmdOrCtrl+9"),
     ("ZOOM_TO_ACTUAL", "CmdOrCtrl+0"),
@@ -897,21 +900,21 @@ mod tests {
 
     #[test]
     fn shortcuts_are_valid_accelerators() {
-        let modifiers = ["CmdOrCtrl", "Shift"];
+        // Tauri parses accelerators with `.parse().ok()` and silently drops invalid ones,
+        // so parse them with the same parser here.
         for (id, accelerator) in MENU_SHORTCUTS {
+            assert!(
+                accelerator
+                    .parse::<muda::accelerator::Accelerator>()
+                    .is_ok(),
+                "{id}: {accelerator} is not a valid accelerator"
+            );
+            let modifiers = ["CmdOrCtrl", "Shift"];
             let mut parts: Vec<&str> = accelerator.split('+').collect();
-            let key = parts.pop().unwrap();
+            parts.pop();
             assert!(
                 parts.iter().all(|part| modifiers.contains(part)),
                 "{id}: unknown modifier in {accelerator}"
-            );
-            let single_char = key.len() == 1
-                && key
-                    .chars()
-                    .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit() || c == ',' || c == '-');
-            assert!(
-                single_char || ["Plus", "Backspace"].contains(&key),
-                "{id}: unsupported key {key}"
             );
         }
     }
@@ -923,7 +926,7 @@ mod tests {
             ("NEW_WINDOW", "CmdOrCtrl+Shift+N"),
             ("COPY_TO_CLIPBOARD", "CmdOrCtrl+Shift+C"),
             ("SAVE_TO_WORKSPACE", "CmdOrCtrl+S"),
-            ("ZOOM_IN", "CmdOrCtrl+Plus"),
+            ("ZOOM_IN", "CmdOrCtrl+="),
             ("ZOOM_OUT", "CmdOrCtrl+-"),
             ("ZOOM_TO_FIT", "CmdOrCtrl+9"),
             ("ZOOM_TO_ACTUAL", "CmdOrCtrl+0"),

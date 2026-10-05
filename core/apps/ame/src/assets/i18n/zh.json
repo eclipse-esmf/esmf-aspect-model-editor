@@ -362,7 +362,8 @@
       "refreshing": "刷新workspace...",
       "refresh": "刷新workspace",
       "copyWorkspacePath": "复制工作区路径",
-      "copiedWorkspacePath": "工作区路径已复制到剪贴板"
+      "copiedWorkspacePath": "工作区路径已复制到剪贴板",
+      "clear": "清空工作区"
     },
     "fileMenu": {
       "open": "打开",
@@ -372,11 +373,58 @@
       "findElements": "寻找元素",
       "copyFilePath": "复制文件路径",
       "copiedFilePath": "文件路径已复制到剪贴板",
-      "delete": "删除"
+      "delete": "删除",
+      "deleteNamespace": "删除命名空间版本",
+      "namespaceMenu": "打开命名空间 {{namespace}} 的菜单"
     },
     "elementList": {
       "title": "元素列表",
       "close": "关闭元素列表"
+    },
+    "deletion": {
+      "checking": "正在检查引用...",
+      "blocked": {
+        "fileTitle": "无法删除Aspect Model",
+        "namespaceTitle": "无法删除命名空间",
+        "fileMessage": "无法删除 \"{{name}}\"，因为它仍被以下文件引用：",
+        "namespaceMessage": "无法删除命名空间 \"{{name}}\"，因为它仍被以下文件引用：",
+        "hint": "请先删除这些引用，然后重试。",
+        "unreadableTitle": "以下文件无法检查。请先修复或删除它们：",
+        "elements": "被引用的元素",
+        "close": "关闭"
+      },
+      "namespace": {
+        "title": "删除命名空间版本",
+        "phrase1": "您确定要删除命名空间版本 \"{{name}}\" 吗？",
+        "phrase2": "此命名空间版本包含 {{count}} 个Aspect Model文件，全部将被删除。",
+        "phrase3": "此操作不能撤消。",
+        "ok": "删除命名空间",
+        "success": "命名空间 \"{{name}}\" 已删除"
+      },
+      "clear": {
+        "title": "清空工作区",
+        "warning": "所有命名空间的全部 {{count}} 个Aspect Model文件将从工作区中删除。",
+        "undo": "如果没有备份，此操作无法撤消。",
+        "backup": "先创建备份（工作区文件夹中的ZIP）",
+        "confirmLabel": "输入 {{word}} 以确认",
+        "cancel": "取消",
+        "ok": "清空工作区",
+        "success": "工作区已清空",
+        "successMessage": "已删除 {{count}} 个文件。",
+        "successBackup": "已删除 {{count}} 个文件。已在工作区文件夹中创建备份。"
+      },
+      "failed": "删除失败",
+      "checkFailed": "无法检查引用。未删除任何内容。",
+      "reason": {
+        "busy": "请等待当前的检查或删除完成",
+        "fileOpenHere": "此 Aspect Model 已在此窗口的标签页中打开。请关闭该标签页后再删除",
+        "fileOpenElsewhere": "此 Aspect Model 已在另一个窗口中打开。请先在该窗口中关闭它，然后再删除",
+        "namespaceOpenHere": "删除前，请先关闭此窗口中该命名空间版本的所有模型",
+        "namespaceOpenElsewhere": "该命名空间版本的模型已在另一个窗口中打开。删除前，请先在该窗口中关闭它",
+        "clearEmpty": "工作区为空",
+        "clearOpenHere": "清空工作区前，请先关闭此窗口中所有工作区模型",
+        "clearOpenElsewhere": "另一个窗口中打开了工作区模型。清空工作区前，请先在该窗口中关闭它们"
+      }
     }
   },
   "settingsDialog": {

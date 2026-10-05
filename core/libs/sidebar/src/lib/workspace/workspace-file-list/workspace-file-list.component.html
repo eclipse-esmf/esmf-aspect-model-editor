@@ -33,21 +33,34 @@
   <div class="namespaces">
     @for (namespace of sortNamespaces(namespaces | keyvalue); track namespace.key) {
       @if (searched()[namespace.key]?.length) {
-        <button
-          class="namespace"
-          [matTooltip]="namespace.key"
-          [attr.aria-expanded]="!folded()[namespace.key]"
-          (click)="toggleNamespaceFold(namespace.key)"
-          (keyup.enter)="toggleNamespaceFold(namespace.key)"
-          (keyup.space)="toggleNamespaceFold(namespace.key)"
-          type="button"
-          aria-label="Toggle namespace"
-        >
-          <mat-icon [matTooltip]="folded()[namespace.key] ? t('tooltips.unfold') : t('tooltips.fold')">
-            {{ folded()[namespace.key] ? 'folder' : 'folder_open' }}
-          </mat-icon>
-          <span>{{ namespace.key }}</span>
-        </button>
+        <div class="namespace-row" [attr.data-testid]="'workspace-namespace-' + namespace.key">
+          <button
+            class="namespace"
+            [matTooltip]="namespace.key"
+            [attr.aria-expanded]="!folded()[namespace.key]"
+            (click)="toggleNamespaceFold(namespace.key)"
+            (keyup.enter)="toggleNamespaceFold(namespace.key)"
+            (keyup.space)="toggleNamespaceFold(namespace.key)"
+            type="button"
+            aria-label="Toggle namespace"
+          >
+            <mat-icon [matTooltip]="folded()[namespace.key] ? t('tooltips.unfold') : t('tooltips.fold')">
+              {{ folded()[namespace.key] ? 'folder' : 'folder_open' }}
+            </mat-icon>
+            <span>{{ namespace.key }}</span>
+          </button>
+          <button
+            class="namespace-menu"
+            [matMenuTriggerFor]="namespaceMenu"
+            [attr.aria-label]="t('sidebar.fileMenu.namespaceMenu', {namespace: namespace.key})"
+            [attr.title]="t('sidebar.fileMenu.namespaceMenu', {namespace: namespace.key})"
+            (click)="prepareNamespaceMenu(namespace.key); $event.stopPropagation()"
+            mat-mini-fab
+            data-testid="openNamespaceMenu"
+          >
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+        </div>
       }
       @if (!folded()[namespace.key] || searchString()) {
         @for (file of searched()[namespace.key]; track file.name) {
@@ -118,10 +131,28 @@
         <mat-icon>content_copy</mat-icon>
       </button>
 
-      <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-testid="fileMenuDeleteButton">
-        <mat-icon>delete</mat-icon>
-        <span>{{ t('sidebar.fileMenu.delete') }}</span>
-      </button>
+      <span class="menu-item-wrapper" [matTooltip]="deleteTooltip()" matTooltipPosition="right" data-testid="fileMenuDeleteTooltip">
+        <button [disabled]="isDeleteDisabled()" (click)="deleteFile()" mat-menu-item data-testid="fileMenuDeleteButton">
+          <mat-icon>delete</mat-icon>
+          <span>{{ t('sidebar.fileMenu.delete') }}</span>
+        </button>
+      </span>
+    }
+  </mat-menu>
+
+  <mat-menu #namespaceMenu="matMenu">
+    @if (namespaceMenuSelection()) {
+      <span
+        class="menu-item-wrapper"
+        [matTooltip]="namespaceDeleteTooltip()"
+        matTooltipPosition="right"
+        data-testid="namespaceMenuDeleteTooltip"
+      >
+        <button [disabled]="isNamespaceDeleteDisabled()" (click)="deleteNamespace()" mat-menu-item data-testid="namespaceMenuDeleteButton">
+          <mat-icon>delete_forever</mat-icon>
+          <span>{{ t('sidebar.fileMenu.deleteNamespace') }}</span>
+        </button>
+      </span>
     }
   </mat-menu>
 

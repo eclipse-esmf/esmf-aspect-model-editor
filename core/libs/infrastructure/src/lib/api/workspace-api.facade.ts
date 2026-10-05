@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MigrationStatus, StoragePathResponse, WorkspaceFacade} from '@ame/domain';
+import {ClearWorkspaceResult, MigrationStatus, ReferenceReport, StoragePathResponse, WorkspaceFacade} from '@ame/domain';
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {NamespacesManagerService} from '../namespace-manager/shared/services/namespaces-manager.service';
@@ -35,6 +35,18 @@ export class WorkspaceApiFacade implements WorkspaceFacade {
 
   deleteAspectModel(aspectModelUrn: string): Observable<string> {
     return this.modelApi.deleteAspectModel(aspectModelUrn);
+  }
+
+  getReferences(namespace: string, version: string, fileName?: string): Observable<ReferenceReport> {
+    return this.modelApi.getReferences(namespace, version, fileName);
+  }
+
+  deleteNamespace(namespace: string, version: string): Observable<ReferenceReport> {
+    return this.modelApi.deleteNamespace(namespace, version);
+  }
+
+  clearWorkspace(backup: boolean): Observable<ClearWorkspaceResult> {
+    return this.modelApi.clearWorkspace(backup);
   }
 
   hasFilesToMigrate(): Observable<boolean> {

@@ -32,6 +32,13 @@ export interface TauriMockOptions {
   windowData?: {id: string; options: any} | null;
   /** Answer of an IS_FIRST_WINDOW request. Defaults to true. */
   isFirstWindow?: boolean;
+  /** Workspace models open per window, answered by getOpenModels. This window is labelled 'main'. Defaults to none. */
+  openModels?: MockOpenWindowModels[];
+}
+
+export interface MockOpenWindowModels {
+  label: string;
+  models: {namespace: string; file: string; aspectModelUrn?: string}[];
 }
 
 export class TauriHelper {
@@ -42,7 +49,7 @@ export class TauriHelper {
    */
   async initTauriMock(options: TauriMockOptions = {}): Promise<void> {
     const backendStatus: MockBackendStatus = options.backendStatus ?? {state: 'ready', port: '9090', message: null, revision: 0};
-    const responses = {windowData: options.windowData, isFirstWindow: options.isFirstWindow ?? true};
+    const responses = {windowData: options.windowData, isFirstWindow: options.isFirstWindow ?? true, openModels: options.openModels ?? []};
 
     await this.page.addInitScript(
       ({initialBackendStatus, initialResponses}) => {
@@ -106,6 +113,9 @@ export class TauriHelper {
           removeListener(channel: string, cb: Function) {
             listeners.get(channel)?.delete(cb);
           },
+          async getOpenModels() {
+            return {windowLabel: 'main', windows: (window as any).__tauriMock.responses.openModels};
+          },
           async getBackendPort() {
             return '8080';
           },
@@ -155,6 +165,17 @@ export class TauriHelper {
       mock.backendStatus = next;
       mock.trigger('BACKEND_STATUS', next);
     }, status);
+  }
+
+  /**
+   * Simulates the shell pushing the workspace models open per window (OPEN_MODELS event). This window is labelled 'main'.
+   */
+  async emitOpenModels(windows: MockOpenWindowModels[]): Promise<void> {
+    await this.page.evaluate(next => {
+      const mock = (window as any).__tauriMock;
+      mock.responses.openModels = next;
+      mock.trigger('OPEN_MODELS', next);
+    }, windows);
   }
 
   /**

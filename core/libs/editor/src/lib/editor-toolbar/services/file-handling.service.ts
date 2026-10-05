@@ -150,7 +150,10 @@ export class FileHandlingService implements FileHandlingPort {
       .subscribe();
   }
 
-  loadModel(modelContent: string): Observable<any> {
+  /**
+   * Loads a model from its content. With `replaceTabId` the model replaces the one shown in that tab.
+   */
+  loadModel(modelContent: string, replaceTabId?: string): Observable<any> {
     if (!modelContent) return of(null);
 
     const loadingScreenOptions: LoadingScreenOptions = {
@@ -165,7 +168,7 @@ export class FileHandlingService implements FileHandlingPort {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
         return found
           ? throwError(() => found.message)
-          : this.modelLoaderService.renderModel({aspectModelUri: '', rdfAspectModel: modelContent});
+          : this.modelLoaderService.renderModel({aspectModelUri: '', rdfAspectModel: modelContent, replaceTabId});
       }),
       catchError(httpError => {
         this.notificationsService.error({
@@ -186,7 +189,10 @@ export class FileHandlingService implements FileHandlingPort {
     );
   }
 
-  loadNamespaceFile(absoluteFileName: string, aspectModelUrn: string) {
+  /**
+   * Loads a workspace file. With `replaceTabId` the model replaces the one shown in that tab.
+   */
+  loadNamespaceFile(absoluteFileName: string, aspectModelUrn: string, replaceTabId?: string) {
     this.modelApiService
       .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
@@ -206,6 +212,7 @@ export class FileHandlingService implements FileHandlingPort {
             aspectModelUrn,
             namespaceFileName: absoluteFileName,
             fromWorkspace: true,
+            replaceTabId,
           }),
         ),
         first(),

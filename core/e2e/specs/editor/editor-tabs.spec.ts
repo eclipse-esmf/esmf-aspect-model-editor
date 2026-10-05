@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {expect, test} from '@playwright/test';
+import {expect, Page, test} from '@playwright/test';
 import {AppHelper} from '../../support/app-helper';
 
 const SAMPLE_TURTLE_MODEL_1 = `@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
@@ -53,6 +53,92 @@ const SAMPLE_TURTLE_MODEL_2 = `@prefix samm: <urn:samm:org.eclipse.esmf.samm:met
    samm:name "TextTwo" ;
    samm:dataType xsd:string .
 `;
+
+/** Serves a workspace with OtherModel.ttl (SAMPLE_TURTLE_MODEL_2). */
+async function routeWorkspaceWithOtherModel(page: Page): Promise<void> {
+  await page.route('**/models/namespaces*', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        'org.eclipse.examples': [
+          {
+            version: '1.0.0',
+            models: [
+              {
+                name: 'OtherModel.ttl',
+                aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#OtherModel',
+                version: '2.2.0',
+              },
+            ],
+          },
+        ],
+      }),
+    });
+  });
+
+  await page.route('**/models/batch*', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        {
+          aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#OtherModel',
+          fileName: 'OtherModel.ttl',
+          aspectModel: SAMPLE_TURTLE_MODEL_2,
+          sourceLocation: '',
+        },
+      ]),
+    });
+  });
+
+  await page.route('**/models', async route => {
+    if (route.request().method() === 'GET') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({content: SAMPLE_TURTLE_MODEL_2, sourceLocation: ''}),
+      });
+    } else {
+      await route.fulfill({status: 200, contentType: 'text/plain', body: 'ok'});
+    }
+  });
+}
+
+/** Opens the workspace sidebar and hovers "Open" in the menu of OtherModel.ttl. */
+async function openOtherModelOpenSubMenu(page: Page): Promise<void> {
+  // Open workspace sidebar
+  await page.locator('[data-testid="workspaceBtn"]').click();
+  await expect(page.locator('ame-workspace')).toBeVisible();
+
+  const refreshBtn = page.locator('[data-testid="workspaceRefreshButton"]');
+  if (await refreshBtn.isVisible()) {
+    const refreshed = page.waitForResponse(response => response.url().includes('/models/namespaces'));
+    await refreshBtn.click();
+    await refreshed;
+  }
+
+  // Unfold namespaces
+  const toggleFold = page.locator('[data-testid="workspaceToggleFold"]');
+  if (await toggleFold.isVisible()) {
+    await toggleFold.click();
+  }
+
+  // Click more_horiz or right click on file
+  const fileItem = page.locator('.file', {hasText: 'OtherModel.ttl'});
+  await expect(fileItem).toHaveCount(1, {timeout: 10000});
+  await expect(fileItem).toBeVisible();
+
+  // Hover on file to reveal menu button, or right click
+  await fileItem.hover();
+  const menuBtn = fileItem.locator('[data-testid="openFileMenu"]');
+  await menuBtn.click();
+
+  // Hover or click "Open" sub-menu trigger to expand sub-menu
+  const openSubMenuBtn = page.locator('[data-testid="fileMenuOpenSubMenuButton"]');
+  await expect(openSubMenuBtn).toBeVisible();
+  await openSubMenuBtn.hover();
+}
 
 test.describe('Editor Multi-Tab Management', () => {
   let app: AppHelper;
@@ -228,87 +314,9 @@ test.describe('Editor Multi-Tab Management', () => {
   });
 
   test('should support open-in-new-tab from workspace file menu', async ({page}) => {
-    await page.route('**/models/namespaces*', async route => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          'org.eclipse.examples': [
-            {
-              version: '1.0.0',
-              models: [
-                {
-                  name: 'OtherModel.ttl',
-                  aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#OtherModel',
-                  version: '2.2.0',
-                },
-              ],
-            },
-          ],
-        }),
-      });
-    });
-
-    await page.route('**/models/batch*', async route => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            aspectModelUrn: 'urn:samm:org.eclipse.examples:1.0.0#OtherModel',
-            fileName: 'OtherModel.ttl',
-            aspectModel: SAMPLE_TURTLE_MODEL_2,
-            sourceLocation: '',
-          },
-        ]),
-      });
-    });
-
-    await page.route('**/models', async route => {
-      if (route.request().method() === 'GET') {
-        await route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({content: SAMPLE_TURTLE_MODEL_2, sourceLocation: ''}),
-        });
-      } else {
-        await route.fulfill({status: 200, contentType: 'text/plain', body: 'ok'});
-      }
-    });
-
+    await routeWorkspaceWithOtherModel(page);
     await app.loadModel(SAMPLE_TURTLE_MODEL_1);
-
-    // Open workspace sidebar
-    await page.locator('[data-testid="workspaceBtn"]').click();
-    await expect(page.locator('ame-workspace')).toBeVisible();
-
-    const refreshBtn = page.locator('[data-testid="workspaceRefreshButton"]');
-    if (await refreshBtn.isVisible()) {
-      const refreshed = page.waitForResponse(response => response.url().includes('/models/namespaces'));
-      await refreshBtn.click();
-      await refreshed;
-    }
-
-    // Unfold namespaces
-    const toggleFold = page.locator('[data-testid="workspaceToggleFold"]');
-    if (await toggleFold.isVisible()) {
-      await toggleFold.click();
-    }
-
-    // Click more_horiz or right click on file
-    const fileItem = page.locator('.file', {hasText: 'OtherModel.ttl'});
-    await expect(fileItem).toHaveCount(1, {timeout: 10000});
-    await expect(fileItem).toBeVisible();
-
-    // Hover on file to reveal menu button, or right click
-    await fileItem.hover();
-    const menuBtn = fileItem.locator('[data-testid="openFileMenu"]');
-    await menuBtn.click();
-
-    // Hover or click "Open" sub-menu trigger to expand sub-menu
-    const openSubMenuBtn = page.locator('[data-testid="fileMenuOpenSubMenuButton"]');
-    await expect(openSubMenuBtn).toBeVisible();
-    await openSubMenuBtn.hover();
+    await openOtherModelOpenSubMenu(page);
 
     const openInNewTabOption = page.locator('[data-testid="fileMenuLoadAspectModelNewTabButton"]');
     await expect(openInNewTabOption).toBeVisible();
@@ -317,6 +325,97 @@ test.describe('Editor Multi-Tab Management', () => {
     const tabs = page.locator('[data-testid="editor-tab"]');
     await expect(tabs).toHaveCount(2, {timeout: 10000});
     await expect(tabs.nth(1)).toHaveClass(/active/);
+  });
+
+  test.describe('open in current tab from the workspace file menu', () => {
+    const tabs = (page: Page) => page.locator('[data-testid="editor-tab"]');
+    const openInCurrentTab = async (page: Page) => {
+      await openOtherModelOpenSubMenu(page);
+      await page.locator('[data-testid="fileMenuLoadAspectModelCurrentButton"]').click();
+    };
+    const markDirty = (page: Page) =>
+      page.evaluate(() => {
+        const tabState = (window as any)['angular.TabStateService'];
+        tabState.setTabDirty(tabState.activeTabId(), true);
+        tabState.modelSavingTracker?.setSavedModel('different-baseline');
+      });
+
+    test.beforeEach(async ({page}) => {
+      await routeWorkspaceWithOtherModel(page);
+      await app.loadModel(SAMPLE_TURTLE_MODEL_1);
+      await expect(tabs(page)).toHaveCount(1);
+    });
+
+    test('replaces the model of the active tab instead of adding a tab', async ({page}) => {
+      const title = await tabs(page).first().innerText();
+
+      await openInCurrentTab(page);
+
+      await expect(tabs(page).first()).toContainText('OtherModel', {timeout: 10000});
+      await expect(tabs(page)).toHaveCount(1);
+      await expect(tabs(page).first()).toHaveClass(/active/);
+      expect(await tabs(page).first().innerText()).not.toBe(title);
+    });
+
+    test('keeps the other tabs and their order', async ({page}) => {
+      await page.locator('[data-testid="editor-tab-add"]').click();
+      await app.loadModel(
+        SAMPLE_TURTLE_MODEL_1.replace(/ModelOne/g, 'ModelThree').replace('org.eclipse.examples:1.0.0', 'org.eclipse.three:1.0.0'),
+      );
+      await expect(tabs(page)).toHaveCount(2);
+      await tabs(page).first().click();
+      await expect(tabs(page).first()).toHaveClass(/active/);
+      const secondTitle = await tabs(page).nth(1).innerText();
+
+      await openInCurrentTab(page);
+
+      await expect(tabs(page).first()).toContainText('OtherModel', {timeout: 10000});
+      await expect(tabs(page)).toHaveCount(2);
+      expect(await tabs(page).nth(1).innerText()).toBe(secondTitle);
+    });
+
+    test('"Cancel" in the save dialog keeps the unsaved model', async ({page}) => {
+      const title = await tabs(page).first().innerText();
+      await markDirty(page);
+
+      await openInCurrentTab(page);
+      await expect(page.getByRole('heading', {name: /save changes/i})).toBeVisible();
+      await page
+        .locator('mat-dialog-actions button')
+        .filter({hasText: /^\s*cancel\s*$/i})
+        .click();
+
+      await expect(page.getByRole('heading', {name: /save changes/i})).toBeHidden();
+      await page.waitForTimeout(500);
+      await expect(tabs(page)).toHaveCount(1);
+      expect(await tabs(page).first().innerText()).toBe(title);
+    });
+
+    test('Escape in the save dialog keeps the unsaved model', async ({page}) => {
+      const title = await tabs(page).first().innerText();
+      await markDirty(page);
+
+      await openInCurrentTab(page);
+      await expect(page.getByRole('heading', {name: /save changes/i})).toBeVisible();
+      await page.keyboard.press('Escape');
+
+      await expect(page.getByRole('heading', {name: /save changes/i})).toBeHidden();
+      await page.waitForTimeout(500);
+      expect(await tabs(page).first().innerText()).toBe(title);
+    });
+
+    test('"Don\'t Save" replaces the unsaved model', async ({page}) => {
+      await markDirty(page);
+
+      await openInCurrentTab(page);
+      await page
+        .locator('mat-dialog-actions button')
+        .filter({hasText: /don.t save/i})
+        .click();
+
+      await expect(tabs(page).first()).toContainText('OtherModel', {timeout: 10000});
+      await expect(tabs(page)).toHaveCount(1);
+    });
   });
 
   test('should show save confirmation dialog when closing dirty tab and keep tab open on Cancel', async ({page}) => {

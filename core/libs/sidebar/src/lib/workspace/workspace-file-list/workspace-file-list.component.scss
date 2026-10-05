@@ -58,17 +58,42 @@
   overflow-x: hidden;
   padding-bottom: 1rem;
 
-  .namespace {
+  .namespace-row {
     display: flex;
     align-items: center;
     margin-top: 16px;
+    padding-right: 4px;
+
+    // Same subtle three dots as the file rows.
+    .namespace-menu {
+      display: inline-flex;
+      flex: 0 0 auto;
+      opacity: 0.4;
+      transition: opacity 120ms ease-in-out;
+
+      &[aria-expanded='true'],
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
+
+    &:hover .namespace-menu,
+    &:focus-within .namespace-menu {
+      opacity: 1;
+    }
+  }
+
+  .namespace {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: center;
     padding-left: 16px;
     padding-right: 16px;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
-    width: 100%;
     text-align: left;
     font: inherit;
     color: inherit;
@@ -203,4 +228,9 @@
       }
     }
   }
+}
+
+// A disabled menu item does not receive pointer events, so its tooltip sits on a wrapper.
+.menu-item-wrapper {
+  display: block;
 }

@@ -33,6 +33,8 @@ dirs = "5"
 
 [dev-dependencies]
 tauri = { version = "2.11.3", features = ["test", "tray-icon"] }
+# Same version as used by tauri; only used to validate the menu accelerators in tests.
+muda = { version = "0.19", default-features = false }
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-single-instance = "2"

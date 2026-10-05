@@ -359,7 +359,8 @@
       "refreshing": "Workspace wird aktualisiert...",
       "refresh": "Workspace aktualisieren",
       "copyWorkspacePath": "Workspace-Pfad kopieren",
-      "copiedWorkspacePath": "Workspace-Pfad in die Zwischenablage kopiert"
+      "copiedWorkspacePath": "Workspace-Pfad in die Zwischenablage kopiert",
+      "clear": "Workspace leeren"
     },
     "fileMenu": {
       "open": "Öffnen",
@@ -369,11 +370,58 @@
       "findElements": "Elemente finden",
       "copyFilePath": "Dateipfad kopieren",
       "copiedFilePath": "Dateipfad in die Zwischenablage kopiert",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "deleteNamespace": "Namespace-Version löschen",
+      "namespaceMenu": "Menü für Namespace {{namespace}} öffnen"
     },
     "elementList": {
       "title": "Elementliste",
       "close": "Elementliste schließen"
+    },
+    "deletion": {
+      "checking": "Referenzen werden geprüft...",
+      "blocked": {
+        "fileTitle": "Aspect Model kann nicht gelöscht werden",
+        "namespaceTitle": "Namespace kann nicht gelöscht werden",
+        "fileMessage": "\"{{name}}\" kann nicht gelöscht werden, weil es noch referenziert wird von:",
+        "namespaceMessage": "Namespace \"{{name}}\" kann nicht gelöscht werden, weil er noch referenziert wird von:",
+        "hint": "Entferne zuerst diese Referenzen und versuche es dann erneut.",
+        "unreadableTitle": "Folgende Dateien konnten nicht geprüft werden. Korrigiere oder entferne sie zuerst:",
+        "elements": "Referenzierte Elemente",
+        "close": "Schließen"
+      },
+      "namespace": {
+        "title": "Namespace-Version löschen",
+        "phrase1": "Möchtest du die Namespace-Version \"{{name}}\" wirklich löschen?",
+        "phrase2": "Diese Namespace-Version enthält {{count}} Aspect-Model-Datei(en). Alle werden gelöscht.",
+        "phrase3": "Diese Aktion kann nicht rückgängig gemacht werden.",
+        "ok": "Namespace löschen",
+        "success": "Namespace \"{{name}}\" gelöscht"
+      },
+      "clear": {
+        "title": "Workspace leeren",
+        "warning": "Alle {{count}} Aspect-Model-Datei(en) aller Namespaces werden aus dem Workspace gelöscht.",
+        "undo": "Ohne Backup kann diese Aktion nicht rückgängig gemacht werden.",
+        "backup": "Vorher ein Backup erstellen (ZIP im Workspace-Ordner)",
+        "confirmLabel": "Zur Bestätigung {{word}} eingeben",
+        "cancel": "Abbrechen",
+        "ok": "Workspace leeren",
+        "success": "Workspace geleert",
+        "successMessage": "{{count}} Datei(en) gelöscht.",
+        "successBackup": "{{count}} Datei(en) gelöscht. Im Workspace-Ordner wurde ein Backup erstellt."
+      },
+      "failed": "Löschen fehlgeschlagen",
+      "checkFailed": "Die Referenzen konnten nicht geprüft werden. Es wurde nichts gelöscht.",
+      "reason": {
+        "busy": "Bitte warte, bis die laufende Prüfung bzw. Löschung abgeschlossen ist",
+        "fileOpenHere": "Dieses Aspect Model ist in einem Tab dieses Fensters geöffnet. Schließe den Tab, um es zu löschen",
+        "fileOpenElsewhere": "Dieses Aspect Model ist in einem anderen Fenster geöffnet. Schließe es dort, um es zu löschen",
+        "namespaceOpenHere": "Schließe alle Modelle dieser Namespace-Version in diesem Fenster, bevor du sie löschst",
+        "namespaceOpenElsewhere": "Ein Modell dieser Namespace-Version ist in einem anderen Fenster geöffnet. Schließe es dort, bevor du die Namespace-Version löschst",
+        "clearEmpty": "Der Workspace ist leer",
+        "clearOpenHere": "Schließe alle Workspace-Modelle in diesem Fenster, bevor du den Workspace leerst",
+        "clearOpenElsewhere": "In einem anderen Fenster sind Workspace-Modelle geöffnet. Schließe sie dort, bevor du den Workspace leerst"
+      }
     }
   },
   "settingsDialog": {

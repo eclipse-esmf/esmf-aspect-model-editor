@@ -18,6 +18,18 @@ export interface SessionModelInfo {
   aspectModelUrn: string;
 }
 
+/** The workspace models which are open in a window, as reported by the desktop shell for all windows. */
+export interface OpenWindowModels {
+  label: string;
+  models: SessionModelInfo[];
+}
+
+/** The open models of all windows together with the label of the window which asked. */
+export interface OpenModelsSnapshot {
+  windowLabel: string;
+  windows: OpenWindowModels[];
+}
+
 /** The models of one window as stored in the session and handed back to a restored window. */
 export interface WindowSession {
   models: SessionModelInfo[];

@@ -14,7 +14,7 @@
 import {FiltersService, LoadedFilesService, NamespacesTransferPort} from '@ame/domain';
 import {MaxGraphService, ShapeConnectorService} from '@ame/graph';
 import {IPC_RENDERER, ITauriIpcBridge, LanguageTranslationService, ModelFilter, TAURI_EVENTS} from '@ame/shared';
-import {DestroyRef, Injectable, inject} from '@angular/core';
+import {DOCUMENT, DestroyRef, Injectable, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
@@ -49,6 +49,9 @@ const HAS_CELLS_MENU_IDS = [
   'SEARCH_ELEMENTS',
 ];
 
+/** A zoom triggered by both the menu accelerator and the key handler within this time counts once. */
+const ZOOM_IN_DEDUPE_MS = 200;
+
 /** Handles all editor related Tauri menu/IPC events. */
 @Injectable({providedIn: 'root'})
 export class EditorTauriBridge implements ITauriIpcBridge {
@@ -67,11 +70,16 @@ export class EditorTauriBridge implements ITauriIpcBridge {
   private shapeConnectorService = inject(ShapeConnectorService);
   private matDialog = inject(MatDialog);
   private translate = inject(LanguageTranslationService);
+  private document = inject(DOCUMENT);
+
+  private hasCells = false;
+  private lastZoomInAt = 0;
 
   register(): void {
     if (!this.ipcRenderer) return;
     this.setSelectedCellsCountListener();
     this.setHasCellsListener();
+    this.setZoomInKeyListener();
     this.onHighlightElement();
     this.onWindowClose();
     this.onAppMenuInteraction();
@@ -102,9 +110,34 @@ export class EditorTauriBridge implements ITauriIpcBridge {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         distinctUntilChanged(),
+        tap(hasCells => (this.hasCells = hasCells)),
         tap(hasCells => this.sendMenuUpdate(HAS_CELLS_MENU_IDS, hasCells)),
       )
       .subscribe();
+  }
+
+  /**
+   * The menu accelerator for "Zoom in" is Cmd/Ctrl+=. On macOS and Linux it does not match a separate "+" key
+   * (e.g. German layout, numpad), so Cmd/Ctrl + "+" is handled here. Like the menu item it only works with a model.
+   */
+  private setZoomInKeyListener(): void {
+    const isMac = /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent);
+    const listener = (event: KeyboardEvent) => {
+      const modifier = isMac ? event.metaKey && !event.ctrlKey : event.ctrlKey && !event.metaKey;
+      if (!modifier || event.altKey || event.key !== '+' || !this.hasCells) return;
+      event.preventDefault();
+      this.zoomIn();
+    };
+    this.document.addEventListener('keydown', listener);
+    this.destroyRef.onDestroy(() => this.document.removeEventListener('keydown', listener));
+  }
+
+  /** Zooms in once even if the menu accelerator and the key handler both react to the same key press. */
+  private zoomIn(): void {
+    const now = Date.now();
+    if (now - this.lastZoomInAt < ZOOM_IN_DEDUPE_MS) return;
+    this.lastZoomInAt = now;
+    this.editorService.zoomIn();
   }
 
   private getTranslation$(): Observable<any> {
@@ -166,7 +199,7 @@ export class EditorTauriBridge implements ITauriIpcBridge {
     ipc.on(TAURI_EVENTS.SIGNAL.EXPORT_MODEL, () => this.fileHandlingService.onExportAsAspectModelFile());
     ipc.on(TAURI_EVENTS.SIGNAL.EXPORT_NAMESPACES, () => this.namespacesManagerService.onExportNamespaces());
     ipc.on(TAURI_EVENTS.SIGNAL.FILTER_MODEL_BY, (rule: ModelFilter) => this.filtersService.renderByFilter(rule));
-    ipc.on(TAURI_EVENTS.SIGNAL.ZOOM_IN, () => this.editorService.zoomIn());
+    ipc.on(TAURI_EVENTS.SIGNAL.ZOOM_IN, () => this.zoomIn());
     ipc.on(TAURI_EVENTS.SIGNAL.ZOOM_OUT, () => this.editorService.zoomOut());
     ipc.on(TAURI_EVENTS.SIGNAL.ZOOM_TO_FIT, () => this.editorService.fit());
     ipc.on(TAURI_EVENTS.SIGNAL.ZOOM_TO_ACTUAL, () => this.editorService.actualSize());

@@ -20,6 +20,7 @@ export const VALIDATE_API_URL = `${API_BASE_URL}/models/validate`;
 export const FORMAT_API_URL = `${API_BASE_URL}/models/format`;
 export const CHECK_ELEMENT_API_URL = `${API_BASE_URL}/models/check-element*`;
 export const MODELS_BATCH_API_URL = `${API_BASE_URL}/models/batch`;
+export const REFERENCES_API_URL = `${API_BASE_URL}/models/references*`;
 
 export const SAMM_VERSION_ACTUAL = '2.2.0';
 
@@ -50,5 +51,14 @@ export async function setUpDefaultRoutes(page: Page): Promise<void> {
 
   await page.route(NAMESPACES_URL, async (route: Route) => {
     await route.fulfill({status: 200, contentType: 'application/json', body: '{}'});
+  });
+
+  // Nothing in the mocked workspace uses another file, so everything may be deleted.
+  await page.route(REFERENCES_API_URL, async (route: Route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({deletable: true, references: [], unreadableFiles: []}),
+    });
   });
 }

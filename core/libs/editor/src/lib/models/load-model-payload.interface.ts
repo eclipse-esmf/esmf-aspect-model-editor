@@ -19,4 +19,6 @@ export interface LoadModelPayload {
   fromWorkspace?: boolean;
   editElementUrn?: string;
   aspectModelUrn?: string;
+  /** Id of the tab that shows the loaded model instead of its previous one ("Open in current tab"). */
+  replaceTabId?: string;
 }

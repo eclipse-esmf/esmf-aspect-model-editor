@@ -388,7 +388,7 @@ On macOS use *Cmd*, on Windows and Linux use *Ctrl*. Shortcuts of menu entries t
 | `Cmd/Ctrl+Shift+M` | View > Toggle Minimap
 | `Cmd/Ctrl+Shift+A` | View > Filter Model by > None
 | `Cmd/Ctrl+Shift+R` | View > Filter Model by > Properties
-| `Cmd/Ctrl+Plus` | View > Zoom in
+| `Cmd/Ctrl++` or `Cmd/Ctrl+=` | View > Zoom in
 | `Cmd/Ctrl+-` | View > Zoom out
 | `Cmd/Ctrl+9` | View > Zoom to Fit
 | `Cmd/Ctrl+0` | View > Zoom to 100%

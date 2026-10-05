@@ -115,8 +115,9 @@ export class TabStateService {
 
   /**
    * Called when a model is rendered/loaded into the editor.
+   * With `replaceTabId` the loaded model takes the place of that tab ("Open in current tab") instead of adding a new tab.
    */
-  public onModelLoaded(file: NamespaceFile, fromWorkspace = false, editElementUrn?: string): void {
+  public onModelLoaded(file: NamespaceFile, fromWorkspace = false, editElementUrn?: string, replaceTabId?: string): void {
     if (!file) return;
 
     let absoluteName = file.absoluteName || `${file.namespace}:${file.name}`;
@@ -161,7 +162,16 @@ export class TabStateService {
       !currentTabs[replaceIndex].aspectModelUrn &&
       !file.name.includes('new-model');
 
-    if (isCleanEmptyToReplace) {
+    const tabToReplace = replaceTabId && replaceTabId !== absoluteName ? currentTabs.find(t => t.id === replaceTabId) : undefined;
+
+    if (tabToReplace) {
+      if (existingIndex >= 0) {
+        this.tabsStore.removeTab(tabToReplace.id);
+        this.tabsStore.addOrUpdateTab({...currentTabs[existingIndex], ...tabData});
+      } else {
+        this.tabsStore.renameTab(tabToReplace.id, tabData);
+      }
+    } else if (isCleanEmptyToReplace) {
       const oldTabId = currentTabs[replaceIndex].id;
       if (oldTabId !== absoluteName) {
         this.tabsStore.removeTab(oldTabId);

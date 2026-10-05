@@ -12,7 +12,7 @@
  */
 
 use crate::backend::{clean_up_backend, restart_backend, BackendState, BackendStatus};
-use crate::session::{SessionModel, SessionState, WindowGeometry};
+use crate::session::{OpenWindowModels, SessionModel, SessionState, WindowGeometry};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
@@ -359,6 +359,19 @@ pub fn is_first_window(app: AppHandle) -> bool {
     app.webview_windows().len() <= 1
 }
 
+/// Sent to all windows whenever the workspace models of a window change or a window is closed.
+pub const OPEN_MODELS_EVENT: &str = "OPEN_MODELS";
+
+fn emit_open_models<R: Runtime>(app: &AppHandle<R>, session_state: &SessionState) {
+    let _ = app.emit(OPEN_MODELS_EVENT, session_state.open_models());
+}
+
+/// The workspace models which are open in each window, e.g. to prevent deleting a model shown in another window.
+#[tauri::command]
+pub fn get_open_models(session_state: State<'_, SessionState>) -> Vec<OpenWindowModels> {
+    session_state.open_models()
+}
+
 /// Normal close of a window: the window is forgotten, unless it is the last one. Closing the last window quits
 /// the application, so its models stay in the session and are reopened on the next start.
 #[tauri::command]
@@ -371,6 +384,7 @@ pub fn close_window(
     if let Some(win) = app.get_webview_window(&window_label) {
         if editor_window_count(&app) > 1 {
             session_state.remove_window(&window_label);
+            emit_open_models(&app, &session_state);
         } else {
             session_state.flush();
         }
@@ -392,6 +406,7 @@ pub fn update_session_models(
     active_index: usize,
 ) -> Result<(), String> {
     session_state.set_models(&window_label, models, active_index);
+    emit_open_models(&app, &session_state);
     if let Some(win) = app.get_webview_window(&window_label) {
         capture_window_geometry(&win.as_ref().window(), &session_state);
         session_state.flush();

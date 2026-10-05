@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ConfirmDialogEnum, ConfirmDialogPort, ModelOpenerPort, ModelSessionFacade, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
-import {ClipboardService, LanguageTranslationService, NotificationsService, TauriSignals, TauriSignalsService} from '@ame/shared';
+import {ModelOpenerPort, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
+import {ClipboardService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -24,6 +24,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {FileStatus, SidebarStateService} from '../../sidebar-state.service';
+import {WorkspaceDeletionService} from '../workspace-deletion/workspace-deletion.service';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
 @Component({
@@ -45,20 +46,19 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
   ],
 })
 export class WorkspaceFileListComponent {
-  private readonly tauriSignalsService: TauriSignals = inject(TauriSignalsService);
   private readonly notificationService = inject(NotificationsService);
-  private readonly confirmDialogService = inject(ConfirmDialogPort, {optional: true});
   private readonly modelApiService = inject(WorkspaceFacade);
   private readonly modelOpener = inject(ModelOpenerPort, {optional: true});
   private readonly translate = inject(LanguageTranslationService);
-  private readonly loadedFiles = inject(ModelSessionFacade);
   private readonly destroyRef = inject(DestroyRef);
   private readonly clipboard = inject(ClipboardService);
 
   public readonly sidebarService = inject(SidebarStateService);
   public readonly workspaceStore = inject(WorkspaceStore);
+  public readonly deletion = inject(WorkspaceDeletionService);
 
   public readonly menuSelection = signal<{namespace: string; file: FileStatus} | null>(null);
+  public readonly namespaceMenuSelection = signal<string | null>(null);
   public readonly foldedStatus = signal(false);
   public readonly searched = signal<Record<string, FileStatus[]>>({});
   public readonly folded = signal<Record<string, boolean>>({});
@@ -217,10 +217,35 @@ export class WorkspaceFileListComponent {
 
   public isDeleteDisabled() {
     const selection = this.menuSelection();
-    if (!selection) return true;
+    return !selection || this.deletion.fileBlockReason(selection.namespace, selection.file.name) !== null;
+  }
 
-    const {namespace, file} = selection;
-    return this.sidebarService.isCurrentFile(namespace, file.name);
+  /** Explains why the selected file cannot be deleted. */
+  public deleteTooltip(): string {
+    const selection = this.menuSelection();
+    return selection ? this.deletion.blockReasonText('file', this.deletion.fileBlockReason(selection.namespace, selection.file.name)) : '';
+  }
+
+  public isNamespaceDeleteDisabled() {
+    const namespace = this.namespaceMenuSelection();
+    return !namespace || this.deletion.namespaceBlockReason(namespace) !== null;
+  }
+
+  /** Explains why the selected namespace version cannot be deleted. */
+  public namespaceDeleteTooltip(): string {
+    const namespace = this.namespaceMenuSelection();
+    return namespace ? this.deletion.blockReasonText('namespace', this.deletion.namespaceBlockReason(namespace)) : '';
+  }
+
+  public prepareNamespaceMenu(namespace: string) {
+    this.namespaceMenuSelection.set(namespace);
+  }
+
+  public deleteNamespace() {
+    const namespace = this.namespaceMenuSelection();
+    if (!namespace || this.isNamespaceDeleteDisabled()) return;
+
+    this.deletion.deleteNamespace(namespace).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   public promptOpenFile(namespace: string, file: FileStatus) {
@@ -254,31 +279,9 @@ export class WorkspaceFileListComponent {
 
   public deleteFile() {
     const selection = this.menuSelection();
-    if (!selection) return;
+    if (!selection || this.isDeleteDisabled()) return;
 
-    const {namespace, file} = selection;
-    const aspectModelFileName = `${namespace}:${file.name}`;
-
-    this.confirmDialogService
-      .open({
-        phrases: [
-          this.translate.translateService.translate('confirmDialog.deleteFile.phrase1', {fileName: file.name}),
-          this.translate.language.confirmDialog.deleteFile.phrase2,
-        ],
-        title: this.translate.language.confirmDialog.deleteFile.title,
-      })
-      .subscribe(confirm => {
-        if (confirm === ConfirmDialogEnum.ok) {
-          this.sidebarService.namespacesState.removeFile(namespace, file.name);
-          this.sidebarService.selection.reset();
-          this.loadedFiles.removeFile(aspectModelFileName);
-          this.modelApiService.deleteAspectModel(selection.file.aspectModelUrn).subscribe(() => {
-            this.sidebarService.namespacesState.clear();
-            this.sidebarService.workspace.refresh();
-            this.tauriSignalsService.call('requestRefreshWorkspaces');
-          });
-        }
-      });
+    this.deletion.deleteFile(selection.namespace, selection.file).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   public copyNamespace() {

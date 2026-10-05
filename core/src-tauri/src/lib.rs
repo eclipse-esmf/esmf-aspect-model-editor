@@ -84,6 +84,7 @@ pub fn run() {
             is_first_window,
             close_window,
             update_session_models,
+            get_open_models,
             set_session_restore_enabled,
             maximize_window,
             show_context_menu,

@@ -70,6 +70,7 @@ version = "0.1.0"
 dependencies = [
  "dirs 5.0.1",
  "log",
+ "muda",
  "open",
  "serde",
  "serde_json",

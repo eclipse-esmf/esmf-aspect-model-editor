@@ -13,6 +13,7 @@
 
 import {InjectionToken} from '@angular/core';
 import {TAURI_EVENTS} from './enums';
+import {OpenModelsSnapshot, OpenWindowModels} from './model/startup-options';
 import {BackendStatus, TauriApi, TauriContextMenuPayload} from './model/tauri-api.model';
 
 declare global {
@@ -199,6 +200,15 @@ function createTauriBridge(): TauriApi {
     async openInVsCodeOrDefault(vscodeUrl: string, filePath: string): Promise<void> {
       const {invoke} = await import('@tauri-apps/api/core');
       await invoke('open_in_vscode_or_default', {vscodeUrl, filePath});
+    },
+
+    async getOpenModels(): Promise<OpenModelsSnapshot> {
+      const [{invoke}, {getCurrentWebviewWindow}] = await Promise.all([
+        import('@tauri-apps/api/core'),
+        import('@tauri-apps/api/webviewWindow'),
+      ]);
+      const windows = await invoke<OpenWindowModels[]>('get_open_models');
+      return {windowLabel: getCurrentWebviewWindow().label, windows};
     },
 
     showContextMenu(payload: TauriContextMenuPayload): void {

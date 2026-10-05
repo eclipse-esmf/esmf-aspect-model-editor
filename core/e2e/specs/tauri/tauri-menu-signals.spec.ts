@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {expect, test} from '@playwright/test';
+import {expect, Page, test} from '@playwright/test';
 import {AppHelper} from '../../support/app-helper';
 import {SELECTOR_editorCancelButton, SELECTOR_editorSaveButton} from '../../support/constants';
 import {readFixture} from '../../support/drag-drop-utils';
@@ -170,6 +170,53 @@ test.describe('Tauri Menu & IPC Integration', () => {
     // Zoom to actual (100% = scale 1.0)
     await tauri.emitSignal('ZOOM_TO_ACTUAL');
     await expect.poll(async () => await getScale(), {timeout: 10000}).toBe(1);
+  });
+
+  test.describe('zoom in with the "+" key (e.g. German keyboard, numpad)', () => {
+    const getScale = (page: Page) =>
+      page.evaluate(() => (window as any)['angular.maxgraphAttributeService']?.graph?.getView()?.getScale() || 1);
+
+    const pressCmdOrCtrlPlus = async (page: Page) => {
+      await page.keyboard.down('ControlOrMeta');
+      await page.keyboard.press('+');
+      await page.keyboard.up('ControlOrMeta');
+    };
+
+    test('Cmd/Ctrl + "+" zooms in exactly one step', async ({page}) => {
+      await app.startModelling();
+      const initialScale = await getScale(page);
+
+      await pressCmdOrCtrlPlus(page);
+      await expect.poll(() => getScale(page), {timeout: 10000}).toBeGreaterThan(initialScale);
+      const afterKey = await getScale(page);
+
+      // The menu accelerator may fire for the same key press as well; that must not zoom a second time.
+      await tauri.emitSignal('ZOOM_IN');
+      await page.waitForTimeout(500);
+      expect(await getScale(page)).toBe(afterKey);
+    });
+
+    test('a later key press zooms again', async ({page}) => {
+      await app.startModelling();
+
+      await pressCmdOrCtrlPlus(page);
+      await expect.poll(() => getScale(page), {timeout: 10000}).toBeGreaterThan(1);
+      const first = await getScale(page);
+      await page.waitForTimeout(300);
+
+      await pressCmdOrCtrlPlus(page);
+      await expect.poll(() => getScale(page), {timeout: 10000}).toBeGreaterThan(first);
+    });
+
+    test('"+" without Cmd/Ctrl does not zoom', async ({page}) => {
+      await app.startModelling();
+      const initialScale = await getScale(page);
+
+      await page.keyboard.press('+');
+      await page.waitForTimeout(500);
+
+      expect(await getScale(page)).toBe(initialScale);
+    });
   });
 
   test('should keep the model when filtering by properties and back via FILTER_MODEL_BY', async ({page}) => {

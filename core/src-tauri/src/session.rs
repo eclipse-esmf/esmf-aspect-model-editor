@@ -110,6 +110,14 @@ impl SessionWindow {
     }
 }
 
+/// The workspace models which are open in one window. Sent to all windows, so a window knows what the others show.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OpenWindowModels {
+    pub label: String,
+    pub models: Vec<SessionModel>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionData {
@@ -208,6 +216,18 @@ impl SessionData {
         before != self.windows.len()
     }
 
+    /// The workspace models of all windows which show at least one, independent of the restore setting.
+    pub fn open_models(&self) -> Vec<OpenWindowModels> {
+        self.windows
+            .iter()
+            .filter(|w| !w.models.is_empty())
+            .map(|w| OpenWindowModels {
+                label: w.label.clone(),
+                models: w.models.clone(),
+            })
+            .collect()
+    }
+
     /// Windows that should be reopened: only windows with at least one saved model.
     pub fn restorable_windows(&self) -> Vec<SessionWindow> {
         if !self.restore_on_startup {
@@ -304,6 +324,10 @@ impl SessionState {
 
     pub fn remove_window(&self, label: &str) {
         self.update(|data| data.remove_window(label));
+    }
+
+    pub fn open_models(&self) -> Vec<OpenWindowModels> {
+        self.data.lock().unwrap().open_models()
     }
 
     pub fn set_restore_on_startup(&self, enabled: bool) {
@@ -413,6 +437,52 @@ mod tests {
 
         assert!(data.set_models("main", vec![model("A")], 5));
         assert_eq!(data.windows[0].active_index, 0);
+    }
+
+    #[test]
+    fn open_models_lists_every_window_with_models_even_without_restore() {
+        let mut data = SessionData::default();
+        data.restore_on_startup = false;
+        data.set_models("main", vec![model("A")], 0);
+        data.set_models("win-1", vec![], 0);
+        data.set_models("win-2", vec![model("B"), model("C")], 1);
+
+        let open = data.open_models();
+
+        assert_eq!(
+            open,
+            vec![
+                OpenWindowModels {
+                    label: "main".to_string(),
+                    models: vec![model("A")]
+                },
+                OpenWindowModels {
+                    label: "win-2".to_string(),
+                    models: vec![model("B"), model("C")]
+                },
+            ]
+        );
+        assert!(data.restorable_windows().is_empty());
+
+        data.remove_window("win-2");
+        assert_eq!(data.open_models().len(), 1);
+    }
+
+    #[test]
+    fn open_models_are_serialized_in_camel_case() {
+        let json = serde_json::to_value(OpenWindowModels {
+            label: "main".to_string(),
+            models: vec![model("A")],
+        })
+        .unwrap();
+
+        assert_eq!(json["label"], "main");
+        assert_eq!(json["models"][0]["namespace"], "org.example:1.0.0");
+        assert_eq!(json["models"][0]["file"], "A.ttl");
+        assert_eq!(
+            json["models"][0]["aspectModelUrn"],
+            "urn:samm:org.example:1.0.0#A"
+        );
     }
 
     #[test]

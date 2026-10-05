@@ -13,12 +13,14 @@
 
 import {
   AsyncApi,
+  ClearWorkspaceResult,
   FileEntry,
   FileInformation,
   ModelApiPort,
   ModelData,
   OpenApi,
   RdfModelUtil,
+  ReferenceReport,
   StoragePathResponse,
   ViolationError,
   WorkspaceStructure,
@@ -37,6 +39,11 @@ import {Injectable, inject} from '@angular/core';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map, retry, switchMap, tap, timeout} from 'rxjs/operators';
 import {ModelValidatorService} from './model-validator.service';
+
+function isClientError(error: unknown): boolean {
+  const status = (error as {status?: number})?.status;
+  return typeof status === 'number' && status >= 400 && status < 500;
+}
 
 @Injectable({providedIn: 'root'})
 export class ModelApiService implements ModelApiPort {
@@ -154,8 +161,26 @@ export class ModelApiService implements ModelApiPort {
       .pipe(
         timeout(this.requestTimeout),
         catchError(res => throwError(() => res)),
-        retry(3),
+        // A client error (e.g. 409: still referenced) will not change on retry.
+        retry({count: 3, delay: error => (isClientError(error) ? throwError(() => error) : of(true))}),
       );
+  }
+
+  getReferences(namespace: string, version: string, fileName?: string): Observable<ReferenceReport> {
+    const params: Record<string, string> = fileName ? {namespace, version, fileName} : {namespace, version};
+    return this.http.get<ReferenceReport>(`${this.serviceUrl}${this.api.models}/references`, {params}).pipe(timeout(this.requestTimeout));
+  }
+
+  deleteNamespace(namespace: string, version: string): Observable<ReferenceReport> {
+    return this.http
+      .delete<ReferenceReport>(`${this.serviceUrl}${this.api.models}/namespace`, {params: {namespace, version}})
+      .pipe(timeout(this.requestTimeout));
+  }
+
+  clearWorkspace(backup: boolean): Observable<ClearWorkspaceResult> {
+    return this.http
+      .delete<ClearWorkspaceResult>(`${this.serviceUrl}${this.api.models}/workspace`, {params: {backup: String(backup)}})
+      .pipe(timeout(this.requestTimeout));
   }
 
   loadNamespacesStructure(onlyAspectModel?: boolean): Observable<WorkspaceStructure> {
