@@ -15,58 +15,34 @@
 
 import {defaultKeymap} from '@codemirror/commands';
 import {foldGutter, foldKeymap} from '@codemirror/language';
+import {Diagnostic, lintGutter, lintKeymap, setDiagnostics} from '@codemirror/lint';
 import {highlightSelectionMatches, openSearchPanel, search, searchKeymap} from '@codemirror/search';
-import {Compartment, EditorState, RangeSet} from '@codemirror/state';
-import {
-  Decoration,
-  drawSelection,
-  EditorView,
-  gutter,
-  GutterMarker,
-  highlightActiveLine,
-  highlightActiveLineGutter,
-  keymap,
-  lineNumbers,
-} from '@codemirror/view';
+import {Compartment, EditorState} from '@codemirror/state';
+import {Decoration, drawSelection, EditorView, highlightActiveLine, highlightActiveLineGutter, keymap, lineNumbers} from '@codemirror/view';
 import {turtle, turtleEditorTheme} from './turtle-language';
-import {ViolationLine} from './turtle-text.utils';
+import {TextProblem} from './turtle-text.utils';
 
 export interface TurtleEditor {
   /** Replaces the whole document while keeping the scroll position. */
   setContent(content: string): void;
   goToLine(lineNumber: number): void;
-  setDecorations(violationLines: ViolationLine[], targetLine: number | null): void;
+  /** Underlines the problems; they are shown in a tooltip on hover and marked in the gutter. */
+  setProblems(problems: TextProblem[]): void;
+  setTargetLine(targetLine: number | null): void;
   openSearch(): void;
   destroy(): void;
 }
 
-class ViolationMarker extends GutterMarker {
-  constructor(private readonly message: string) {
-    super();
-  }
-
-  override eq(other: GutterMarker): boolean {
-    return other instanceof ViolationMarker && other.message === this.message;
-  }
-
-  override toDOM(): Node {
-    const marker = document.createElement('span');
-    marker.className = 'cm-ame-violation-marker';
-    marker.textContent = '●';
-    marker.title = this.message;
-    return marker;
-  }
-}
-
 /** Creates a read-only Turtle editor inside the given element. */
 export function createTurtleEditor(parent: HTMLElement, content: string): TurtleEditor {
-  const decorations = new Compartment();
+  const targetLineDecoration = new Compartment();
   const view = new EditorView({
     parent,
     state: EditorState.create({
       doc: content,
       extensions: [
         lineNumbers(),
+        lintGutter(),
         foldGutter(),
         highlightActiveLineGutter(),
         highlightActiveLine(),
@@ -75,10 +51,10 @@ export function createTurtleEditor(parent: HTMLElement, content: string): Turtle
         search({top: true}),
         EditorState.readOnly.of(true),
         EditorView.contentAttributes.of({'aria-label': 'Aspect Model (Turtle)', 'data-testid': 'text-view-content'}),
-        keymap.of([...searchKeymap, ...foldKeymap, ...defaultKeymap]),
+        keymap.of([...searchKeymap, ...foldKeymap, ...lintKeymap, ...defaultKeymap]),
         turtle(),
         turtleEditorTheme,
-        decorations.of([]),
+        targetLineDecoration.of([]),
       ],
     }),
   });
@@ -101,24 +77,19 @@ export function createTurtleEditor(parent: HTMLElement, content: string): Turtle
       });
     },
 
-    setDecorations(violationLines: ViolationLine[], targetLine: number | null): void {
+    setProblems(problems: TextProblem[]): void {
+      const length = view.state.doc.length;
+      const diagnostics: Diagnostic[] = problems
+        .filter(({to}) => to <= length)
+        .map(({from, to, message, kind}) => ({from, to, message, severity: 'error', markClass: `cm-ame-problem-${kind}`}));
+      view.dispatch(setDiagnostics(view.state, diagnostics));
+    },
+
+    setTargetLine(targetLine: number | null): void {
       const doc = view.state.doc;
-      const visibleViolations = violationLines.filter(({line}) => line <= doc.lines);
-      const lineDecorations = visibleViolations.map(({line, messages}) =>
-        Decoration.line({class: 'cm-ame-violation-line', attributes: {title: messages.join('\n')}}).range(doc.line(line).from),
-      );
-      const markers = visibleViolations.map(({line, messages}) => new ViolationMarker(messages.join('\n')).range(doc.line(line).from));
-
-      if (targetLine && targetLine <= doc.lines) {
-        lineDecorations.push(Decoration.line({class: 'cm-ame-target-line'}).range(doc.line(targetLine).from));
-      }
-
-      view.dispatch({
-        effects: decorations.reconfigure([
-          EditorView.decorations.of(Decoration.set(lineDecorations, true)),
-          gutter({class: 'cm-ame-violation-gutter', markers: () => RangeSet.of(markers, true)}),
-        ]),
-      });
+      const decorations =
+        targetLine && targetLine <= doc.lines ? [Decoration.line({class: 'cm-ame-target-line'}).range(doc.line(targetLine).from)] : [];
+      view.dispatch({effects: targetLineDecoration.reconfigure(EditorView.decorations.of(Decoration.set(decorations)))});
     },
 
     openSearch(): void {

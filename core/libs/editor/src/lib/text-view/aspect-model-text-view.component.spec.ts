@@ -71,6 +71,8 @@ describe('AspectModelTextViewComponent', () => {
   let tabState: {setTabDirty: ReturnType<typeof vi.fn>; activeTabId: ReturnType<typeof signal<string>>};
   let settings$: BehaviorSubject<any>;
   const rdfModel = {};
+  let unresolvedUrns: string[];
+  const translateText = (key: string, params?: Record<string, string>) => `${key}${params ? ' ' + JSON.stringify(params) : ''}`;
   let prefixManagement: {openManagement: ReturnType<typeof vi.fn>; prefixesChanged$: Subject<void>};
 
   const query = (testId: string): HTMLElement => fixture.nativeElement.querySelector(`[data-testid="${testId}"]`);
@@ -105,6 +107,7 @@ describe('AspectModelTextViewComponent', () => {
     prefixManagement = {openManagement: vi.fn(), prefixesChanged$: new Subject<void>()};
     tabState = {setTabDirty: vi.fn(), activeTabId: signal('tab-1')};
     settings$ = new BehaviorSubject({elementOrderStrategy: 'keepOrderAfterParent'});
+    unresolvedUrns = [];
 
     TestBed.configureTestingModule({
       imports: [AspectModelTextViewComponent, TranslocoTestingModule.forRoot({langs: {en: {}}})],
@@ -117,9 +120,12 @@ describe('AspectModelTextViewComponent', () => {
         {provide: TabsStore, useValue: {activeTabId: signal('tab-1')}},
         {provide: FileHandlingService, useValue: fileHandling},
         {provide: NotificationsService, useValue: notifications},
-        {provide: LanguageTranslationService, useValue: {language: {textView: {copied: 'Copied', sorted: 'Sorted'}}}},
+        {
+          provide: LanguageTranslationService,
+          useValue: {language: {textView: {copied: 'Copied', sorted: 'Sorted'}}, translateService: {translate: translateText}},
+        },
         {provide: ModelDocumentService, useValue: modelDocument},
-        {provide: LoadedFilesService, useValue: {currentLoadedFile: {rdfModel}}},
+        {provide: LoadedFilesService, useValue: {currentLoadedFile: {rdfModel}, unresolvedElementUrns: () => unresolvedUrns}},
         {provide: ModelSavingTrackerService, useValue: {isSaved$: of(false)}},
         {provide: TabStateService, useValue: tabState},
         {provide: PrefixManagementService, useValue: prefixManagement},
@@ -238,20 +244,94 @@ describe('AspectModelTextViewComponent', () => {
     expect(viewMode.clearRevealRequest).toHaveBeenCalledWith(1);
   });
 
-  it('marks lines with validation errors and jumps between them', async () => {
-    violations.set([
-      {message: 'Speed has no characteristic', focusNode: `${NS}speed`, fix: []},
-      {message: 'Unknown element', focusNode: `${NS}Unknown`, fix: []},
-    ]);
-    await render();
+  describe('problems', () => {
+    const marks = (): HTMLElement[] => [...fixture.nativeElement.querySelectorAll('.cm-lintRange-error')];
 
-    expect(component.violationLines()).toEqual([{line: 6, messages: ['Speed has no characteristic']}]);
-    const violationLine = fixture.nativeElement.querySelector('.cm-ame-violation-line') as HTMLElement;
-    expect(violationLine.textContent).toContain(':speed');
-    expect(violationLine.getAttribute('title')).toBe('Speed has no characteristic');
+    it('underlines validation issues at the element and jumps to them', async () => {
+      violations.set([
+        {message: 'Speed has no characteristic', focusNode: `${NS}speed`, fix: []},
+        {message: 'Unknown element', focusNode: `${NS}Unknown`, fix: []},
+      ]);
+      await render();
 
-    query('text-view-violations').click();
-    expect(component.targetLine()).toBe(6);
+      const definition = MODEL.indexOf(':speed a');
+      expect(component.problems()).toEqual([
+        {from: definition, to: definition + ':speed'.length, kind: 'violation', message: 'Speed has no characteristic'},
+      ]);
+      await vi.waitFor(() => expect(marks().map(mark => mark.textContent)).toEqual([':speed']));
+      expect(fixture.nativeElement.querySelector('.cm-gutter-lint .cm-lint-marker-error')).toBeTruthy();
+      expect(query('text-view-problems').textContent).toContain('textView.problems');
+
+      query('text-view-problems').click();
+      expect(component.targetLine()).toBe(6);
+    });
+
+    it('underlines every reference to an element missing in the workspace', async () => {
+      unresolvedUrns = [`${NS}speed`];
+      await render();
+
+      const message = translateText('textView.unresolvedReference', {urn: `${NS}speed`});
+      expect(component.problems().map(({kind, message}) => ({kind, message}))).toEqual([
+        {kind: 'unresolved', message},
+        {kind: 'unresolved', message},
+      ]);
+      await vi.waitFor(() => expect(marks().length).toBe(2));
+      expect(marks().every(mark => mark.textContent === ':speed')).toBe(true);
+      expect(component.problemCount()).toBe(2);
+    });
+
+    it('counts validation issues and missing references together and visits every line once', async () => {
+      violations.set([{message: 'Movement is invalid', focusNode: `${NS}Movement`, fix: []}]);
+      unresolvedUrns = [`${NS}speed`];
+      await render();
+
+      expect(component.problems().map(({kind}) => kind)).toEqual(['violation', 'unresolved', 'unresolved']);
+      expect(component.problemCount()).toBe(3);
+
+      const visited = [1, 2, 3, 4].map(() => {
+        component.goToNextProblem();
+        return component.targetLine();
+      });
+      expect(visited).toEqual([3, 4, 6, 3]);
+    });
+
+    it('lists missing elements that are not written in the text in the tooltip', async () => {
+      unresolvedUrns = ['urn:samm:org.other:1.0.0#indirect'];
+      await render();
+
+      expect(component.problems()).toEqual([]);
+      expect(component.indirectUnresolvedUrns()).toEqual(['urn:samm:org.other:1.0.0#indirect']);
+      expect(component.problemCount()).toBe(1);
+      expect(component.problemsTooltip()).toBe(
+        translateText('textView.indirectUnresolved', {elements: 'urn:samm:org.other:1.0.0#indirect'}),
+      );
+      expect(marks().length).toBe(0);
+
+      // nothing to jump to in the text
+      query('text-view-problems').click();
+      expect(component.targetLine()).toBeNull();
+    });
+
+    it('hides the counter without problems', async () => {
+      await render();
+
+      expect(component.problemCount()).toBe(0);
+      expect(query('text-view-problems')).toBeNull();
+      expect(marks().length).toBe(0);
+    });
+
+    it('reads the missing elements again when the text is reloaded', async () => {
+      unresolvedUrns = [`${NS}speed`];
+      await render();
+      expect(component.problemCount()).toBe(2);
+
+      unresolvedUrns = [];
+      component.reload();
+      await vi.waitFor(() => expect(textService.load).toHaveBeenCalledTimes(2));
+      await vi.waitFor(() => expect(component.problemCount()).toBe(0));
+      fixture.detectChanges();
+      await vi.waitFor(() => expect(marks().length).toBe(0));
+    });
   });
 
   it('copies the text to the clipboard', async () => {

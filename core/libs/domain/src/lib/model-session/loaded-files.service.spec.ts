@@ -296,6 +296,7 @@ describe('LoadedFilesService & NamespaceFile', () => {
       expect(placeholder.rdfModel.store.size).toBe(0);
       expect(cachedFile.get(missingA.aspectModelUrn)).toBeFalsy();
       [missingA, missingB, missingOther].forEach(element => expect(service.isElementUnresolved(element)).toBe(true));
+      expect(service.unresolvedElementUrns()).toEqual([missingA.aspectModelUrn, missingB.aspectModelUrn, missingOther.aspectModelUrn]);
     });
 
     it('should treat placeholders as unresolved external elements which are not part of the current file', () => {
@@ -326,6 +327,7 @@ describe('LoadedFilesService & NamespaceFile', () => {
       expect(service.isElementUnresolved(extProp)).toBe(false);
       expect(service.isElementUnresolved(null)).toBe(false);
       expect(service.filesAsList.some(file => file.unresolved)).toBe(false);
+      expect(service.unresolvedElementUrns()).toEqual([]);
     });
   });
 });

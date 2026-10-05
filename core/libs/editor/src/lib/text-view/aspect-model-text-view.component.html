@@ -26,16 +26,16 @@
 
     <span class="text-view-header__spacer"></span>
 
-    @if (violationLines().length) {
+    @if (problemCount()) {
       <button
-        class="text-view-header__violations"
-        [matTooltip]="t('textView.nextViolation')"
-        (click)="goToNextViolation()"
+        class="text-view-header__problems"
+        [matTooltip]="problemsTooltip()"
+        (click)="goToNextProblem()"
         mat-button
-        data-testid="text-view-violations"
+        data-testid="text-view-problems"
       >
         <mat-icon>error_outline</mat-icon>
-        {{ t('textView.violations', {count: violationLines().length}) }}
+        {{ t('textView.problems', {count: problemCount()}) }}
       </button>
     }
 

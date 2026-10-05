@@ -124,26 +124,56 @@ test.describe('Editor - Graph / Aspect Model text view', () => {
     await expect(page.locator('.cm-ame-target-line')).toContainText(':property1 a samm:Property');
   });
 
-  test('marks lines with validation errors', async ({page}) => {
+  test('underlines validation errors at the element and shows them on hover', async ({page}) => {
     await routeFormat(page, FORMATTED_MODEL);
     await page.route(VALIDATE_API_URL, async (route: Route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          violationErrors: [{message: 'Property1 is broken', focusNode: `${NS}property1`, fix: [], errorCode: 'ERR_TEST'}],
+          violationErrors: [
+            {message: 'Property1 is broken', focusNode: `${NS}property1`, fix: [], errorCode: 'ERR_TEST'},
+            {message: 'Characteristic1 is broken', focusNode: `${NS}Characteristic1`, fix: [], errorCode: 'ERR_TEST'},
+          ],
         }),
       });
     });
     await page.locator(SELECTOR_tbValidateButton).click();
     await openTextView(page);
 
-    await expect(page.getByTestId('text-view-violations')).toBeVisible();
-    const violationLine = page.locator('.cm-ame-violation-line');
-    await expect(violationLine).toHaveCount(1);
-    await expect(violationLine).toContainText(':property1 a samm:Property');
-    await expect(violationLine).toHaveAttribute('title', 'Property1 is broken');
-    await expect(page.locator('.cm-ame-violation-marker')).toHaveCount(1);
+    await expect(page.getByTestId('text-view-problems')).toContainText('2');
+    const marks = page.locator('.cm-lintRange-error');
+    await expect(marks).toHaveCount(2);
+    // the element is underlined, not the whole line
+    await expect(marks.first()).toHaveText(':property1');
+    await expect(marks.last()).toHaveText(':Characteristic1');
+    await expect(page.locator('.cm-gutter-lint .cm-lint-marker-error')).toHaveCount(2);
+
+    await marks.first().hover();
+    await expect(page.locator('.cm-tooltip-lint')).toContainText('Property1 is broken');
+
+    // F8 selects the next problem in the text
+    await textContent(page).click();
+    await page.keyboard.press('F8');
+    await expect.poll(() => page.evaluate(() => window.getSelection()?.toString())).toMatch(/^(:property1|:Characteristic1)$/);
+
+    await page.getByTestId('text-view-problems').click();
+    await expect(page.locator('.cm-ame-target-line')).toContainText(':property1 a samm:Property');
+    await page.getByTestId('text-view-problems').click();
+    await expect(page.locator('.cm-ame-target-line')).toContainText(':Characteristic1 a samm:Characteristic');
+  });
+
+  test('hides the problem counter for a valid model', async ({page}) => {
+    await routeFormat(page, FORMATTED_MODEL);
+    await page.route(VALIDATE_API_URL, route =>
+      route.fulfill({status: 200, contentType: 'application/json', body: JSON.stringify({violationErrors: []})}),
+    );
+    await page.locator(SELECTOR_tbValidateButton).click();
+    await openTextView(page);
+
+    await expect(textContent(page)).toContainText(':property1 a samm:Property');
+    await expect(page.getByTestId('text-view-problems')).toHaveCount(0);
+    await expect(page.locator('.cm-lintRange-error')).toHaveCount(0);
   });
 
   test('shows a loading indicator while the model is formatted', async ({page}) => {

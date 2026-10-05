@@ -25,6 +25,11 @@ export class ModelValidatorService {
     this.notificationsService.clearNotifications();
   }
 
+  /** Forgets the violations of the last validation, e.g. because the model could not be validated this time. */
+  clearViolations() {
+    this.validationStore.setViolations([]);
+  }
+
   /*
    * Informs user about the errors that are correctable.
    * In this category are included syntactic,processing and semantic errors.

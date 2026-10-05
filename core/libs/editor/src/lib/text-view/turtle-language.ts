@@ -295,11 +295,13 @@ export const turtleEditorTheme = EditorView.theme({
   '.cm-panels.cm-panels-top': {borderBottom: '1px solid var(--ame-gray-10)'},
   '.cm-panel input, .cm-panel button': {color: 'inherit'},
   '.cm-ame-target-line': {backgroundColor: 'var(--ame-tv-target-line)'},
-  '.cm-ame-violation-line': {
-    backgroundColor: 'var(--ame-tv-violation-line)',
-    boxShadow: 'inset 3px 0 0 var(--ame-error)',
+  '.cm-lintRange-error': {backgroundColor: 'var(--ame-tv-problem)'},
+  '.cm-tooltip.cm-tooltip-lint': {
+    backgroundColor: 'var(--ame-surface-card)',
+    color: 'var(--ame-font)',
+    border: '1px solid var(--ame-gray-10)',
   },
-  '.cm-ame-violation-marker': {color: 'var(--ame-error)', cursor: 'help', paddingLeft: '4px'},
+  '.cm-diagnostic-error': {borderLeftColor: 'var(--ame-error)', whiteSpace: 'pre-wrap', maxWidth: '640px'},
 });
 
 /** Language support for Turtle documents: tokenizer, highlighting and statement folding. */

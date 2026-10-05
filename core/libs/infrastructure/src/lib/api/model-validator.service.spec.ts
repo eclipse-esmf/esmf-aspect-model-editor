@@ -133,4 +133,17 @@ describe('ModelValidatorService', () => {
       expect(validationStore.violations()).toEqual([]);
     });
   });
+
+  it('should clear the stored violations without notifications', () => {
+    service = TestBed.inject(ModelValidatorService);
+    const validationStore = TestBed.inject(ModelValidationStore);
+    validationStore.setViolations([{message: 'Error', focusNode: 'urn:samm:node', fix: []}]);
+    vi.clearAllMocks();
+
+    service.clearViolations();
+
+    expect(validationStore.violations()).toEqual([]);
+    expect(notificationsService.warning).not.toHaveBeenCalled();
+    expect(notificationsService.info).not.toHaveBeenCalled();
+  });
 });

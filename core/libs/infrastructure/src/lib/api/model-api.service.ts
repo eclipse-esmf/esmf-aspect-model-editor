@@ -139,7 +139,11 @@ export class ModelApiService implements ModelApiPort {
         timeout(this.requestTimeout),
         map((data: any) => data.violationErrors),
         tap(errors => this.modelValidatorService.notifyCorrectableErrors(errors, validInfo)),
-        catchError(res => throwError(() => res)),
+        catchError(res => {
+          // e.g. missing references: the violations of an earlier validation are outdated
+          this.modelValidatorService.clearViolations();
+          return throwError(() => res);
+        }),
       );
   }
 

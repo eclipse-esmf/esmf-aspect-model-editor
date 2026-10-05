@@ -48,6 +48,7 @@ describe('ModelApiService', () => {
   let browserService: {isStartedAsTauriApp: ReturnType<typeof vi.fn>};
   let modelValidatorService: {
     notifyCorrectableErrors: ReturnType<typeof vi.fn>;
+    clearViolations: ReturnType<typeof vi.fn>;
   };
   let translate: {language: {notificationService: {aspectSavedDefaultModel: string}}};
   let ipcRenderer: {getBackendPort: ReturnType<typeof vi.fn>};
@@ -74,6 +75,7 @@ describe('ModelApiService', () => {
     browserService = {isStartedAsTauriApp: vi.fn(() => false)};
     modelValidatorService = {
       notifyCorrectableErrors: vi.fn(),
+      clearViolations: vi.fn(),
     };
     translate = {language: {notificationService: {aspectSavedDefaultModel: 'You cannot save into the default model.'}}};
     ipcRenderer = {getBackendPort: vi.fn(() => Promise.resolve('4000'))};
@@ -286,6 +288,27 @@ describe('ModelApiService', () => {
       );
 
       expect(error).toBeTruthy();
+      expect(modelValidatorService.clearViolations).toHaveBeenCalled();
+    });
+
+    it('should forget outdated violations when the model cannot be validated because of missing references', () => {
+      let error: any;
+      service.validate('<ttl content>').subscribe({error: err => (error = err)});
+
+      httpMock
+        .expectOne(`${modelsUrl}/validate`)
+        .flush({error: {code: 409, unresolvedElements: [{urn: 'urn:samm:org.ext:1.0.0#missing'}]}}, {status: 409, statusText: 'Conflict'});
+
+      expect(error.status).toBe(409);
+      expect(modelValidatorService.clearViolations).toHaveBeenCalledTimes(1);
+      expect(modelValidatorService.notifyCorrectableErrors).not.toHaveBeenCalled();
+    });
+
+    it('should keep the violations of a successful validation', () => {
+      service.validate('<ttl content>').subscribe();
+      httpMock.expectOne(`${modelsUrl}/validate`).flush({violationErrors: [{message: 'x', focusNode: 'urn:a', fix: []}]});
+
+      expect(modelValidatorService.clearViolations).not.toHaveBeenCalled();
     });
   });
 

@@ -36,7 +36,7 @@ import {TabStateService} from '../tabs/tab-state.service';
 import {AspectModelText, AspectModelTextService} from './aspect-model-text.service';
 import {EditorViewModeService} from './editor-view-mode.service';
 import type {TurtleEditor} from './turtle-editor';
-import {findElementLine, ViolationLine} from './turtle-text.utils';
+import {findElementLine, findElementOccurrences, findElementRange, lineAt, TextProblem} from './turtle-text.utils';
 
 export type TextViewState = 'loading' | 'ready' | 'empty' | 'error';
 
@@ -73,7 +73,7 @@ export class AspectModelTextViewComponent {
   private editor: TurtleEditor | null = null;
   private destroyed = false;
   private revealSelectionOnLoad = true;
-  private violationCursor = -1;
+  private problemCursor = -1;
 
   protected readonly loading = createDebouncedLoading();
   public readonly state = signal<TextViewState>('loading');
@@ -83,16 +83,43 @@ export class AspectModelTextViewComponent {
   public readonly canSortElements = computed(() => this.settings()?.elementOrderStrategy !== 'formatterDefault');
   public readonly lineCount = computed(() => (this.content() ? this.content().split('\n').length : 0));
 
-  public readonly violationLines = computed<ViolationLine[]>(() => {
+  /** Referenced elements that are missing in the workspace; read from the loaded files whenever the text is created. */
+  public readonly unresolvedUrns = signal<string[]>([]);
+
+  /** Validation issues and missing references, located in the text. */
+  public readonly problems = computed<TextProblem[]>(() => {
     const text = this.content();
-    const byLine = new Map<number, string[]>();
+    if (!text) {
+      return [];
+    }
+
+    const problems: TextProblem[] = [];
     for (const violation of this.validationStore.violations()) {
-      const line = text ? findElementLine(text, violation.focusNode) : null;
-      if (line) {
-        byLine.set(line, [...(byLine.get(line) ?? []), violation.message]);
+      const range = findElementRange(text, violation.focusNode);
+      if (range) {
+        problems.push({...range, kind: 'violation', message: violation.message});
       }
     }
-    return [...byLine.entries()].sort(([a], [b]) => a - b).map(([line, messages]) => ({line, messages}));
+    for (const urn of this.unresolvedUrns()) {
+      const message = this.translateText('textView.unresolvedReference', {urn});
+      problems.push(...findElementOccurrences(text, urn).map(range => ({...range, kind: 'unresolved' as const, message})));
+    }
+    return problems.sort((a, b) => a.from - b.from);
+  });
+
+  /** Missing elements that are not written in this text, e.g. because only a referenced file uses them. */
+  public readonly indirectUnresolvedUrns = computed(() => {
+    const text = this.content();
+    return this.unresolvedUrns().filter(urn => !findElementOccurrences(text, urn).length);
+  });
+
+  public readonly problemCount = computed(() => this.problems().length + this.indirectUnresolvedUrns().length);
+
+  public readonly problemsTooltip = computed(() => {
+    const next = this.problems().length ? this.translateText('textView.nextProblem') : '';
+    const indirect = this.indirectUnresolvedUrns();
+    const missing = indirect.length ? this.translateText('textView.indirectUnresolved', {elements: indirect.join(', ')}) : '';
+    return [next, missing].filter(Boolean).join(' ');
   });
 
   constructor() {
@@ -129,9 +156,13 @@ export class AspectModelTextViewComponent {
     });
 
     effect(() => {
-      const violationLines = this.violationLines();
+      const problems = this.problems();
+      untracked(() => this.editor?.setProblems(problems));
+    });
+
+    effect(() => {
       const targetLine = this.targetLine();
-      untracked(() => this.updateDecorations(violationLines, targetLine));
+      untracked(() => this.editor?.setTargetLine(targetLine));
     });
 
     effect(() => {
@@ -198,13 +229,15 @@ export class AspectModelTextViewComponent {
     this.editor?.openSearch();
   }
 
-  goToNextViolation(): void {
-    const violations = this.violationLines();
-    if (!violations.length) {
+  /** Jumps to the next problem in the text; several problems on one line are visited once. */
+  goToNextProblem(): void {
+    const text = this.content();
+    const lines = [...new Set(this.problems().map(({from}) => lineAt(text, from)))];
+    if (!lines.length) {
       return;
     }
-    this.violationCursor = (this.violationCursor + 1) % violations.length;
-    this.goToLine(violations[this.violationCursor].line);
+    this.problemCursor = (this.problemCursor + 1) % lines.length;
+    this.goToLine(lines[this.problemCursor]);
   }
 
   revealElement(urn: string): boolean {
@@ -225,7 +258,8 @@ export class AspectModelTextViewComponent {
     this.formatted.set(formatted);
     this.content.set(content);
     this.state.set(content ? 'ready' : 'empty');
-    this.violationCursor = -1;
+    this.unresolvedUrns.set(this.loadedFilesService.unresolvedElementUrns());
+    this.problemCursor = -1;
 
     this.editor?.setContent(content);
 
@@ -262,14 +296,15 @@ export class AspectModelTextViewComponent {
       return;
     }
     this.editor = createTurtleEditor(this.host().nativeElement, this.content());
-    this.editor.setDecorations(this.violationLines(), this.targetLine());
+    this.editor.setProblems(this.problems());
+    this.editor.setTargetLine(this.targetLine());
     const targetLine = this.targetLine();
     if (targetLine) {
       this.editor.goToLine(targetLine);
     }
   }
 
-  private updateDecorations(violationLines: ViolationLine[], targetLine: number | null): void {
-    this.editor?.setDecorations(violationLines, targetLine);
+  private translateText(key: string, params?: Record<string, string>): string {
+    return this.translate.translateService.translate(key, params);
   }
 }

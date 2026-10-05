@@ -171,6 +171,14 @@ export class LoadedFilesService {
     return this.filesAsList.some(file => file.unresolved && file.cachedFile?.get(element.aspectModelUrn));
   }
 
+  /** URNs of all referenced elements that are not defined in any loaded file. */
+  unresolvedElementUrns(): string[] {
+    return this.filesAsList
+      .filter(file => file.unresolved)
+      .flatMap(file => file.cachedFile?.getKeys() ?? [])
+      .sort();
+  }
+
   /**
    * Moves referenced elements without definition into one placeholder file per namespace. This way they are external
    * elements: they are shown, but neither edited nor written into the current file.

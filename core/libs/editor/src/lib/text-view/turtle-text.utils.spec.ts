@@ -12,7 +12,15 @@
  */
 
 import {describe, expect, it} from 'vitest';
-import {findElementLine, parseTurtlePrefixes, turtleNamesFor} from './turtle-text.utils';
+import {
+  findElementLine,
+  findElementOccurrences,
+  findElementRange,
+  lineAt,
+  maskTurtleText,
+  parseTurtlePrefixes,
+  turtleNamesFor,
+} from './turtle-text.utils';
 
 const NS = 'urn:samm:org.eclipse.examples:1.0.0#';
 
@@ -75,5 +83,85 @@ describe('turtle-text.utils', () => {
   it('returns null for empty input', () => {
     expect(findElementLine('', `${NS}speed`)).toBeNull();
     expect(findElementLine(MODEL, '')).toBeNull();
+  });
+
+  describe('findElementOccurrences', () => {
+    const text = (...lines: string[]) => [`@prefix : <${NS}> .`, '@prefix ext: <urn:samm:org.ext:1.0.0#> .', ...lines].join('\n');
+    const found = (content: string, urn: string) => findElementOccurrences(content, urn).map(({from, to}) => content.slice(from, to));
+
+    it('finds prefixed, default prefixed and full IRI spellings', () => {
+      const content = text(':A :p ext:B ;', '   :q <urn:samm:org.ext:1.0.0#B> .');
+      expect(found(content, 'urn:samm:org.ext:1.0.0#B')).toEqual(['ext:B', '<urn:samm:org.ext:1.0.0#B>']);
+      expect(found(content, `${NS}A`)).toEqual([':A']);
+    });
+
+    it('finds every reference in lists and before punctuation', () => {
+      const content = text(':A :p ( ext:B ext:C ) ;', '   :q ext:B, ext:B ;', '   :r ext:B .', ':D :p [ :x ext:B ] .');
+      const occurrences = findElementOccurrences(content, 'urn:samm:org.ext:1.0.0#B');
+      expect(occurrences.length).toBe(5);
+      expect(occurrences.map(({from}) => from)).toEqual([...occurrences.map(({from}) => from)].sort((a, b) => a - b));
+      expect(occurrences.every(({from, to}) => content.slice(from, to) === 'ext:B')).toBe(true);
+    });
+
+    it('ignores comments, string literals and names that only share a prefix', () => {
+      const content = text(
+        '# ext:B is missing',
+        ':A :p ext:BB ;',
+        '   :q "ext:B" ;',
+        "   :r 'ext:B' ;",
+        '   :s """multi',
+        'ext:B',
+        'line""" ;',
+        '   :t ext:B . # ext:B',
+      );
+      expect(found(content, 'urn:samm:org.ext:1.0.0#B')).toEqual(['ext:B']);
+      expect(lineAt(content, findElementOccurrences(content, 'urn:samm:org.ext:1.0.0#B')[0].from)).toBe(10);
+    });
+
+    it('keeps IRIs containing # and escaped quotes intact', () => {
+      const content = text(':A :p "say \\"ext:B\\"" ;', '   :q <urn:samm:org.ext:1.0.0#B> .');
+      expect(found(content, 'urn:samm:org.ext:1.0.0#B')).toEqual(['<urn:samm:org.ext:1.0.0#B>']);
+    });
+
+    it('returns nothing for unknown elements or empty input', () => {
+      expect(findElementOccurrences(text(':A :p :q .'), `${NS}missing`)).toEqual([]);
+      expect(findElementOccurrences('', `${NS}A`)).toEqual([]);
+      expect(findElementOccurrences(text(':A :p :q .'), '')).toEqual([]);
+    });
+  });
+
+  describe('findElementRange', () => {
+    it('prefers the definition over earlier references', () => {
+      const range = findElementRange(MODEL, `${NS}speed`);
+      expect(MODEL.slice(range.from, range.to)).toBe(':speed');
+      expect(lineAt(MODEL, range.from)).toBe(findElementLine(MODEL, `${NS}speed`));
+      expect(MODEL[range.from - 1]).toBe('\n');
+    });
+
+    it('falls back to the first reference', () => {
+      const content = `@prefix : <${NS}> .\n:A :p :B .`;
+      expect(findElementRange(content, `${NS}B`)).toEqual({from: content.lastIndexOf(':B'), to: content.lastIndexOf(':B') + 2});
+    });
+  });
+
+  describe('maskTurtleText', () => {
+    it('blanks comments and strings but keeps offsets and line breaks', () => {
+      const content = '# c\n:A :p "x" , \'y\' ; # d\n:q """a\nb""" .';
+      const masked = maskTurtleText(content);
+      expect(masked.length).toBe(content.length);
+      expect(masked.split('\n').length).toBe(content.split('\n').length);
+      expect(masked).not.toMatch(/[#"'xyabcd]/);
+      expect(masked).toContain(':A :p');
+    });
+
+    it('stops unterminated single line strings at the line end', () => {
+      expect(maskTurtleText(':A :p "open\n:B :q :C .').split('\n')[1]).toBe(':B :q :C .');
+    });
+  });
+
+  it('computes 1-based line numbers of offsets', () => {
+    expect(lineAt('a\nb\nc', 0)).toBe(1);
+    expect(lineAt('a\nb\nc', 2)).toBe(2);
+    expect(lineAt('a\nb\nc', 4)).toBe(3);
   });
 });

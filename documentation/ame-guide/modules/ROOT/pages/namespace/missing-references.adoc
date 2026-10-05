@@ -38,6 +38,12 @@ The reference stays as it is; the placeholder is never written into the opened f
 * Missing elements deeper in the reference chain (used by files the opened model references) are not drawn, because referenced elements are shown without their own references. They do not trigger the warning.
 * Other errors, e.g. syntax errors, still prevent the model from being opened.
 
+[[missing-references-text-view]]
+== Missing references in the text view
+
+In the xref:getting-started/text-view.adoc#text-view-problems[text view], every reference to a missing element is underlined in red and counted in the problem counter.
+Missing elements of referenced files are listed in the tooltip of the counter.
+
 [[missing-references-workspace]]
 == Missing references in the Workspace sidebar
 
@@ -88,6 +94,9 @@ Choose one of the following options:
 
 | File in the Workspace sidebar references a missing namespace
 | Orange warning icon with tooltip, file can be opened
+
+| Text view
+| References to missing elements are underlined in red, the counter includes missing elements of referenced files
 
 | Double-click on a placeholder
 | Message *Element not found*, nothing is opened

@@ -25,13 +25,38 @@ The text is created the same way as when the model is saved: the current state o
 The element order and the header comment are applied as described in xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
 
 * The text has line numbers, syntax highlighting and folding.
-* The header shows the number of lines and the number of validation issues of the last validation.
-  Lines with validation issues are marked in the gutter.
-  Click the issue counter to jump to the next issue.
+* The header shows the number of lines and the number of problems, see <<text-view-problems>>.
 * If the backend formatter is not available, the raw serialization of the model is shown and marked as *Unformatted*.
 * If one graph element is selected when you open the text view, the text scrolls to the statement of this element.
 
 NOTE: The text view is *read-only*. To change the model, switch back to *Edit*. The text is updated automatically when you switch to another tab, change the model or change the prefixes. *Reload* creates it again on demand.
+
+[[text-view-problems]]
+== Problems in the text
+
+Problems are underlined in red and marked with an error icon in the gutter.
+Hover over the underlined text or the gutter icon to see the message.
+
+[cols="30%,70%"]
+|===
+| Problem | Where it is marked
+
+| Validation issue of the last validation
+| The element the issue belongs to, where it is defined. If it is not defined in the file, its first reference.
+
+| Referenced element that is missing in the workspace (shown as placeholder in the graph)
+| Every reference to the element. The message is _Referenced element not found in the workspace: <URN>_.
+|===
+
+Comments and string literals are not marked, even if they contain the name of an element.
+
+The header shows one counter for all problems, e.g. *Problems: 3*.
+
+* Click the counter or press `F8` in the text to jump to the next problem.
+* Missing elements that are only used by referenced files are not written in the text and therefore not underlined.
+  They are included in the counter and listed in its tooltip, e.g. _Missing elements used by referenced files: <URNs>_.
+* The marks disappear when the problem is solved: run the validation again, or add the missing file to the workspace and open the model again.
+  If a validation fails because of missing references, the issues of the previous validation are removed, because they are outdated.
 
 [[text-view-actions]]
 == Actions in the text view

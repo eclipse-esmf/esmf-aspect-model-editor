@@ -31,7 +31,7 @@
   --ame-tv-search-outline: rgba(201, 160, 0, 0.6);
   --ame-tv-search-selected: rgba(255, 152, 0, 0.5);
   --ame-tv-target-line: rgba(33, 150, 243, 0.14);
-  --ame-tv-violation-line: rgba(220, 38, 38, 0.08);
+  --ame-tv-problem: rgba(220, 38, 38, 0.08);
 
   display: flex;
   flex-direction: column;
@@ -62,7 +62,7 @@
   --ame-tv-search-outline: rgba(229, 192, 123, 0.6);
   --ame-tv-search-selected: rgba(209, 154, 102, 0.55);
   --ame-tv-target-line: rgba(97, 175, 239, 0.16);
-  --ame-tv-violation-line: rgba(248, 113, 113, 0.12);
+  --ame-tv-problem: rgba(248, 113, 113, 0.12);
 }
 
 .text-view-header {
@@ -110,7 +110,7 @@
     flex: 1 1 auto;
   }
 
-  &__violations {
+  &__problems {
     --mat-button-text-label-text-color: var(--ame-error);
     --mat-button-text-icon-color: var(--ame-error);
     color: var(--ame-error);

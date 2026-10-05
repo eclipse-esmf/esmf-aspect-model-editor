@@ -8,7 +8,7 @@ import {
   VALIDATE_API_URL,
 } from '../../support/api-mocks';
 import {AppHelper} from '../../support/app-helper';
-import {SELECTOR_workspaceBtn} from '../../support/constants';
+import {SELECTOR_tbValidateButton, SELECTOR_workspaceBtn} from '../../support/constants';
 
 /**
  * Regression tests for elements referenced from other Aspect Model files.
@@ -451,5 +451,106 @@ test.describe('Opening models with missing references', () => {
       expect(currentKeys).toEqual(['urn:samm:org.a:1.0.0#AspectA']);
       expect(unresolved).toEqual([PROP_B]);
     });
+  });
+});
+
+test.describe('Missing references in the text view', () => {
+  const PROP_B = 'urn:samm:org.b:1.0.0#propB';
+  const MISSING_CHARACTERISTIC_ASPECT =
+    head('org.a', '@prefix b: <urn:samm:org.b:1.0.0#> .\n') +
+    ':AspectA a samm:Aspect ; samm:properties ( :localProp ) ; samm:operations ( ) ; samm:events ( ) .\n' +
+    ':localProp a samm:Property ; samm:characteristic b:CharX .\n';
+
+  const marks = (page: Page) => page.locator('.cm-lintRange-error');
+  const counter = (page: Page) => page.getByTestId('text-view-problems');
+
+  // toasts about the loaded model may cover the toggle
+  const toggleView = (page: Page, view: 'graph' | 'text') =>
+    page.getByTestId(`editor-view-${view}`).locator('button').dispatchEvent('click');
+
+  async function openTextView(page: Page) {
+    await toggleView(page, 'text');
+    await page.mouse.move(5, 5);
+    await expect(page.getByTestId('text-view-content')).toContainText('samm:Aspect');
+  }
+
+  test('a missing direct reference is underlined and explained on hover', async ({page}) => {
+    await load(page, []);
+    await openTextView(page);
+
+    await expect(marks(page)).toHaveCount(1);
+    await expect(marks(page)).toHaveText('b:propB');
+    await expect(page.locator('.cm-gutter-lint .cm-lint-marker-error')).toHaveCount(1);
+    await expect(counter(page)).toHaveText(/Problems: 1/);
+
+    await marks(page).hover();
+    await expect(page.locator('.cm-tooltip-lint')).toContainText(`Referenced element not found in the workspace: ${PROP_B}`);
+  });
+
+  test('the counter jumps to the missing reference', async ({page}) => {
+    await load(page, []);
+    await openTextView(page);
+
+    await counter(page).click();
+    await expect(page.locator('.cm-ame-target-line')).toContainText('b:propB');
+  });
+
+  test('missing elements of referenced files are only listed in the counter tooltip', async ({page}) => {
+    await load(page, files({'org.b': FILE_B}));
+    await openTextView(page);
+
+    await expect(counter(page)).toHaveText(/Problems: 1/);
+    await expect(marks(page)).toHaveCount(0);
+
+    await counter(page).hover();
+    await expect(page.locator('.mat-mdc-tooltip-show')).toContainText(
+      'Missing elements used by referenced files: urn:samm:org.c:1.0.0#CharC',
+    );
+  });
+
+  test('validation issues and missing references share one counter', async ({page}) => {
+    await load(page, [], MISSING_CHARACTERISTIC_ASPECT);
+    let missingReferenceResponse = false;
+    await page.route(VALIDATE_API_URL, route =>
+      missingReferenceResponse
+        ? route.fulfill({
+            status: 409,
+            json: {error: {code: 409, message: 'Element does not exist', unresolvedElements: ['urn:samm:org.b:1.0.0#CharX']}},
+          })
+        : route.fulfill({
+            json: {violationErrors: [{message: 'localProp is broken', focusNode: 'urn:samm:org.a:1.0.0#localProp', fix: []}]},
+          }),
+    );
+    await page.locator(SELECTOR_tbValidateButton).click();
+    await openTextView(page);
+
+    await expect(counter(page)).toHaveText(/Problems: 2/);
+    await expect(marks(page)).toHaveText([':localProp', 'b:CharX']);
+
+    // a validation that fails because of missing references must not leave outdated issues behind
+    missingReferenceResponse = true;
+    await toggleView(page, 'graph');
+    await page.locator(SELECTOR_tbValidateButton).click();
+    await openTextView(page);
+
+    await expect(counter(page)).toHaveText(/Problems: 1/);
+    await expect(marks(page)).toHaveText(['b:CharX']);
+  });
+
+  test('the marks disappear once the missing file is in the workspace', async ({page}) => {
+    const workspace: WorkspaceFile[] = [];
+    const {app} = await load(page, workspace);
+    await openTextView(page);
+    await expect(marks(page)).toHaveCount(1);
+
+    workspace.push(...files({'org.b': FILE_B, 'org.c': FILE_C_FLAT}));
+    await toggleView(page, 'graph');
+    await app.loadModel(ASPECT_A);
+    expect((await inspect(page)).unresolved).toEqual([]);
+    await openTextView(page);
+
+    await expect(page.getByTestId('text-view-content')).toContainText('b:propB');
+    await expect(marks(page)).toHaveCount(0);
+    await expect(counter(page)).toHaveCount(0);
   });
 });
