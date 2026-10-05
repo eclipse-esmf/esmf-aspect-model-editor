@@ -65,7 +65,13 @@ image::search-app.png[width=45% !important]
 
 To install the Aspect Model Editor, proceed as follows:
 
-. Download the disk image `aspect-model-editor-v<VERSION>-mac.dmg` from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^,opts=nofollow] releases.
+. Download the disk image for your Mac from the https://github.com/eclipse-esmf/esmf-aspect-model-editor/releases[Aspect Model Editor^,opts=nofollow] releases:
+* `aspect-model-editor-v<VERSION>-mac-arm64.dmg` for Macs with Apple silicon (M1 or later),
+* `aspect-model-editor-v<VERSION>-mac-x64.dmg` for Macs with Intel processor.
++
+To find out which processor your Mac has, open the Apple menu → *About This Mac* and check the entry *Chip* (Apple silicon) or *Processor* (Intel).
++
+The releases also contain the app without disk image (`aspect-model-editor-v<VERSION>-mac-<arm64|x64>.app.zip`). Unpack it and move *Aspect Model Editor* into the *Applications* folder; the following two steps are then not needed.
 . Double-click the downloaded `.dmg` file to open it.
 . Drag and drop *Aspect Model Editor* into the *Applications* folder shown in the window.
 . Eject the disk image.

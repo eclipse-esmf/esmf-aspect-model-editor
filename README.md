@@ -10,6 +10,7 @@
   - [Backend for the desktop app](#backend-for-the-desktop-app)
   - [Run As Desktop (Tauri)](#run-as-desktop-tauri)
   - [Build Desktop App](#build-desktop-app)
+  - [Release](#release)
   - [Running E2E (Playwright) Tests](#running-e2e-playwright-tests)
 - [Documentation](#documentation)
 - [License](#license)
@@ -73,7 +74,7 @@ Release builds take it from the platform-specific folder in the repository root:
 
 | Platform | Folder             | Expected content (from the backend release)                           |
 |----------|--------------------|-----------------------------------------------------------------------|
-| macOS    | `backend/macos/`   | `ame-backend-<version>-mac.app` (extracted from `*-mac.zip`)          |
+| macOS    | `backend/macos/`   | `ame-backend-<version>-mac-<arch>.app` (extracted from `*-mac-arm64.zip` on Apple silicon or `*-mac-x64.zip` on Intel) |
 | Linux    | `backend/linux/`   | `ame-backend-<version>-linux/bin/...` (extracted from `*-linux.tar.gz`) |
 | Windows  | `backend/windows/` | app image containing `ame-backend*.exe` (extracted from `*-win.zip`)  |
 
@@ -115,8 +116,28 @@ The bundles for the current platform are written to `core/src-tauri/target/relea
 | Linux    | `appimage/*.AppImage` and `deb/*.deb`                                            |
 | Windows  | `nsis/*-setup.exe` (per-user NSIS installer)                                     |
 
+The backend app image contains its own Java runtime and therefore matches the processor architecture: use the `mac-arm64` backend for Apple silicon builds and the `mac-x64` backend for Intel builds.
+
 Unsigned macOS builds may be blocked by Gatekeeper. Remove the quarantine flag with
 `xattr -rd com.apple.quarantine "/Applications/Aspect Model Editor.app"`.
+
+#### Release
+
+The workflow `.github/workflows/tagged_release.yml` (manually started with the release version) creates the release.
+The backend release with the same version must exist before (repository `esmf-aspect-model-editor-backend` of the same owner, so a fork uses the backend release of the fork).
+
+1. `prepare` sets the documentation version, creates the branch `<major>.<minor>.x`, the tag `v<version>` and a draft release. Release candidates (e.g. `2.3.0-rc1`) become a pre-release.
+2. `build` builds the app on every platform with the matching backend and uploads it to the draft release:
+
+   | Runner           | Release assets                                                                                     |
+   |------------------|----------------------------------------------------------------------------------------------------|
+   | `ubuntu-latest`  | `aspect-model-editor-v<version>-linux-glibc-v<glibc>.AppImage`, `aspect-model-editor-v<version>-linux-amd64.deb` |
+   | `macos-15-intel` | `aspect-model-editor-v<version>-mac-x64.dmg`, `aspect-model-editor-v<version>-mac-x64.app.zip`     |
+   | `macos-latest`   | `aspect-model-editor-v<version>-mac-arm64.dmg`, `aspect-model-editor-v<version>-mac-arm64.app.zip` |
+   | `windows-latest` | `aspect-model-editor-v<version>-win.exe` (workflow artifact only, signed and uploaded by Jenkins)  |
+
+3. `publish` publishes the release and triggers the Jenkins job which signs the Windows installer.
+   The Jenkins job is only triggered in the repository `eclipse-esmf`, so the workflow can be tested in a fork.
 
 #### Running E2E (Playwright) Tests
 
