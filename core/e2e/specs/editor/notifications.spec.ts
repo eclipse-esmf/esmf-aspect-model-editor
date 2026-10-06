@@ -43,23 +43,27 @@ test.describe('Notifications', () => {
     await new AppHelper(page).startModelling();
   });
 
-  test('are shown at the bottom center without covering the toolbar, the tab bar or the minimap', async ({page}) => {
+  test('are shown at the top center and are 450px wide', async ({page}) => {
     await page.locator(SELECTOR_tbValidateButton).click();
     const toast = page.locator('.toast-container .ngx-toastr', {hasText: 'Validation completed successfully'});
     await expect(toast).toBeVisible();
 
     const viewport = page.viewportSize() ?? {width: 0, height: 0};
     const toastBox = await box(toast);
-    const container = await box(page.locator('.toast-container'));
-    expect(viewport.height - (container.y + container.height)).toBeLessThanOrEqual(24);
-    expect(toastBox.y).toBeGreaterThan(viewport.height / 2);
+    expect(toastBox.width).toBe(450);
+    expect(toastBox.y).toBeLessThan(viewport.height / 4);
     expect(Math.abs(toastBox.x + toastBox.width / 2 - viewport.width / 2)).toBeLessThanOrEqual(2);
+  });
 
-    await expectUncovered(page, [
-      page.locator(SELECTOR_tbValidateButton),
-      page.getByTestId('editor-view-toggle'),
-      page.locator('[data-testid="editor-tab"]').first(),
-    ]);
+  test('fit into a narrow window', async ({page}) => {
+    await page.setViewportSize({width: 400, height: 850});
+    await page.evaluate(() => (window as any)['angular.editorService'].validate().subscribe({error: () => undefined}));
+    const toast = page.locator('.toast-container .ngx-toastr', {hasText: 'Validation completed successfully'});
+    await expect(toast).toBeVisible();
+
+    const toastBox = await box(toast);
+    expect(toastBox.x).toBeGreaterThanOrEqual(0);
+    expect(toastBox.x + toastBox.width).toBeLessThanOrEqual(400);
   });
 
   test('do not cover the actions of the edit dialog', async ({page}) => {

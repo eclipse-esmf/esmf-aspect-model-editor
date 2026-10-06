@@ -21,7 +21,7 @@ import {TOAST_CONFIG} from './toast.config';
 describe('TOAST_CONFIG', () => {
   afterEach(() => document.querySelectorAll('.toast-container').forEach(container => container.remove()));
 
-  it('shows toasts at the bottom center', () => {
+  it('shows toasts at the top center', () => {
     TestBed.configureTestingModule({providers: [provideNoopAnimations(), importProvidersFrom(ToastrModule.forRoot(TOAST_CONFIG))]});
     const toastr = TestBed.inject(ToastrService);
 

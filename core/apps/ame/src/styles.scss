@@ -300,8 +300,10 @@ body.ame-resizing {
   top: 16px !important;
 }
 
-.toast-container .ngx-toastr {
-  width: 350px;
+// toastr.css sets 300px for the centered positions with a more specific selector
+.toast-container.toast-top-center .ngx-toastr {
+  width: 450px;
+  max-width: calc(100vw - 32px);
 }
 
 .toast-container .ngx-toastr .toast-title {

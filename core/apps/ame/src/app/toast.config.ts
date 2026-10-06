@@ -14,7 +14,7 @@
 import {GlobalConfig} from 'ngx-toastr';
 
 /**
- * Toasts are shown at the bottom center of the window. There they cover neither the toolbar, the tab bar with the view
- * toggle and the minimap at the top nor the Save/Cancel buttons of the edit dialog docked on the right.
+ * Toasts are shown at the top center of the window (450px wide, see styles.scss).
+ * There they do not cover the Save/Cancel buttons of the edit dialog docked on the right.
  */
 export const TOAST_CONFIG: Partial<GlobalConfig> = {positionClass: 'toast-top-center'};
