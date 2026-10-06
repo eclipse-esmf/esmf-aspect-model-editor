@@ -20,7 +20,7 @@
 // Usage: node utils/tauri-build.mjs [any tauri build argument, e.g. --target x86_64-pc-windows-msvc]
 
 import {spawnSync} from 'node:child_process';
-import {chmodSync, existsSync, lstatSync, readdirSync} from 'node:fs';
+import {chmodSync, cpSync, existsSync, lstatSync, readdirSync, realpathSync, rmSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -111,6 +111,35 @@ function linuxBuildEnv() {
 }
 
 const env = os === 'linux' ? linuxBuildEnv() : process.env;
+
+/**
+ * Tauri copies the backend into the app bundle and resolves symbolic links (e.g. the license files of the JDK)
+ * on the way, which breaks the code signature of the backend. macOS then reports the downloaded app as "damaged".
+ * Replace the links by real files and sign the backend again (ad-hoc, no certificate needed).
+ */
+function prepareMacBackend(dir) {
+  for (const entry of readdirSync(dir, {withFileTypes: true})) {
+    const path = join(dir, entry.name);
+    if (entry.isSymbolicLink()) {
+      const target = realpathSync(path);
+      rmSync(path);
+      cpSync(target, path, {recursive: true, dereference: true});
+    } else if (entry.isDirectory()) {
+      prepareMacBackend(path);
+    }
+  }
+}
+
+if (os === 'macos') {
+  prepareMacBackend(backendDir);
+  for (const app of readdirSync(backendDir).filter(name => name.endsWith('.app'))) {
+    const signing = spawnSync('codesign', ['--force', '--deep', '--sign', '-', join(backendDir, app)], {stdio: 'inherit'});
+    if (signing.status !== 0) {
+      console.error(`Unable to sign the backend ${app}.`);
+      process.exit(1);
+    }
+  }
+}
 
 const tauriCli = createRequire(import.meta.url).resolve('@tauri-apps/cli/tauri.js');
 const result = spawnSync(process.execPath, [tauriCli, 'build', '--config', backendConfig, ...args], {cwd: coreDir, stdio: 'inherit', env});
