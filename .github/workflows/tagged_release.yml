@@ -146,16 +146,9 @@ jobs:
               tar -xzf backend-download/*-linux.tar.gz -C backend/linux
               ls -la backend/linux/*/bin ;;
             mac-*)
-              download "*-$PLATFORM.zip"
+              download "*-$PLATFORM.tar.gz"
               mkdir -p backend/macos
-              # ditto keeps symlinks, permissions and extended attributes of the .app bundle
-              ditto -x -k backend-download/*-"$PLATFORM".zip backend-download/extracted
-              if [ -d backend-download/extracted/Contents ]; then
-                # archive created without --keepParent: wrap the bundle content into a .app folder again
-                mv backend-download/extracted "backend/macos/ame-backend-$RELEASE_VERSION-$PLATFORM.app"
-              else
-                mv backend-download/extracted/*.app backend/macos/
-              fi
+              tar -xzf backend-download/*-"$PLATFORM".tar.gz -C backend/macos
               ls -la backend/macos/*.app/Contents/MacOS ;;
           esac
           rm -rf backend-download
@@ -213,8 +206,11 @@ jobs:
           esac
           ls -la release-artifacts
 
-      - name: Upload workflow artifact
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+      # Only Windows: the Jenkins job downloads this artifact to sign the installer.
+      # Linux and macOS are uploaded to the release directly.
+      - name: Upload Windows installer as workflow artifact
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
         with:
           name: aspect-model-editor-v${{ needs.prepare.outputs.version }}-${{ matrix.platform }}
           path: release-artifacts/*

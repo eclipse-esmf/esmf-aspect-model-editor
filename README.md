@@ -74,7 +74,7 @@ Release builds take it from the platform-specific folder in the repository root:
 
 | Platform | Folder             | Expected content (from the backend release)                           |
 |----------|--------------------|-----------------------------------------------------------------------|
-| macOS    | `backend/macos/`   | `ame-backend-<version>-mac-<arch>.app` (extracted from `*-mac-arm64.zip` on Apple silicon or `*-mac-x64.zip` on Intel) |
+| macOS    | `backend/macos/`   | `ame-backend-<version>-mac-<arch>.app` (extracted from `*-mac-arm64.tar.gz` on Apple silicon or `*-mac-x64.tar.gz` on Intel) |
 | Linux    | `backend/linux/`   | `ame-backend-<version>-linux/bin/...` (extracted from `*-linux.tar.gz`) |
 | Windows  | `backend/windows/` | app image containing `ame-backend*.exe` (extracted from `*-win.zip`)  |
 
