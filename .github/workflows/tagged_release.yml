@@ -236,11 +236,6 @@ jobs:
       - name: Publish release
         run: gh release edit "v$RELEASE_VERSION" --repo "$GITHUB_REPOSITORY" --draft=false
 
-      - name: Checkout project
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 #v6.0.1
-        with:
-          persist-credentials: false
-
       # Only in the original repository, so that test runs in a fork do not trigger the Eclipse Jenkins.
       # The Jenkins job reads parameters.txt from the branch pre_release_configuration, signs the Windows
       # installer and uploads it to the release.
@@ -254,20 +249,21 @@ jobs:
             exit 1
           fi
 
-          echo "artifact_url_win=https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id_win/zip" > parameters.txt
-          echo "version=$RELEASE_VERSION" >> parameters.txt
+          parameters="artifact_url_win=https://api.github.com/repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id_win/zip
+          version=$RELEASE_VERSION"
+          branch=pre_release_configuration
 
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          # the branch of a previous release is replaced
-          if git ls-remote --exit-code --heads origin pre_release_configuration > /dev/null; then
-            git push origin --delete pre_release_configuration
+          # The branch and parameters.txt are created via the GitHub API, which needs no checkout and git push.
+          # The branch of a previous release is replaced.
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$branch" --silent 2> /dev/null; then
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$branch"
           fi
-          git checkout -b pre_release_configuration
-          git add parameters.txt
-          git commit -m "Add parameters.txt with artifact_url_win and the version"
-          git push origin pre_release_configuration
+          release_sha=$(gh api "repos/$GITHUB_REPOSITORY/commits/v$RELEASE_VERSION" --jq '.sha')
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/heads/$branch" -f sha="$release_sha" --silent
+          gh api -X PUT "repos/$GITHUB_REPOSITORY/contents/parameters.txt" --silent \
+            -f branch="$branch" \
+            -f message="Add parameters.txt with artifact_url_win and the version" \
+            -f content="$(printf '%s\n' "$parameters" | base64 -w 0)"
 
       - name: Trigger Jenkins job for signing the Windows installer
         if: github.repository_owner == 'eclipse-esmf'
