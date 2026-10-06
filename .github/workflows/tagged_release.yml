@@ -179,9 +179,13 @@ jobs:
           pnpm version "$RELEASE_VERSION" --no-git-checks --no-git-tag-version
           node -e "const fs=require('fs'); const p='src-tauri/tauri.conf.json'; const c=JSON.parse(fs.readFileSync(p,'utf8')); c.version=process.env.RELEASE_VERSION; fs.writeFileSync(p, JSON.stringify(c, null, 2));"
 
+      # --verbose shows the output of the bundlers (e.g. linuxdeploy), which Tauri hides otherwise.
+      # NO_STRIP is also set by utils/tauri-build.mjs on Linux; set here so it is visible in the log.
       - name: Build desktop app
         working-directory: core
-        run: pnpm run build:tauri
+        env:
+          NO_STRIP: ${{ runner.os == 'Linux' && 'true' || '' }}
+        run: pnpm run build:tauri --verbose
 
       # Tauri creates the installers itself (see bundle > targets in src-tauri/tauri.<os>.conf.json):
       # Linux: .AppImage and .deb, macOS: .app and .dmg, Windows: NSIS setup .exe
