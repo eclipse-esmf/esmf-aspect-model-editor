@@ -29,6 +29,7 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {Subject, of, throwError} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {ModelHistoryService} from './history/model-history.service';
 import {ModelSaverService} from './model-saver.service';
 import {ModelSavingTrackerService} from './model-saving-tracker.service';
 
@@ -48,6 +49,8 @@ describe('ModelSaverService', () => {
     TestBed.configureTestingModule({
       providers: [
         ModelSaverService,
+        // TabStateService records the history of the tabs
+        MockProvider(ModelHistoryService),
         MockProvider(MaxGraphService, {graphModelChanged$: new Subject<void>()}),
         MockProvider(ModelApiPort, {
           fetchFormatedAspectModel: vi.fn(() => of('formatted content')),

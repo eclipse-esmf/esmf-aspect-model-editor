@@ -12,7 +12,7 @@
  */
 
 import {LoadedFilesService, ModelService} from '@ame/domain';
-import {inject, Injectable, Injector} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {PrefixChangeError, RdfModel} from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
@@ -40,7 +40,7 @@ export class PrefixManagementService {
   private readonly modelSavingTracker = inject(ModelSavingTrackerService);
   private readonly tabStateService = inject(TabStateService);
   private readonly modelService = inject(ModelService);
-  private readonly injector = inject(Injector);
+  private readonly modelHistory = inject(ModelHistoryService);
 
   /** Emits when the prefixes of the current model were changed by the user. */
   readonly prefixesChanged$ = new Subject<void>();
@@ -70,7 +70,7 @@ export class PrefixManagementService {
           if (!changed && !dialog?.hasChanges) return;
           this.notifyChanged();
           // undo restores whole model versions, which would silently revert the prefixes as well
-          this.injector.get(ModelHistoryService).reset();
+          this.modelHistory.reset();
         });
       });
   }

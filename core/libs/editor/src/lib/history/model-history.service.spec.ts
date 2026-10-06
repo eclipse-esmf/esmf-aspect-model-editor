@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService, RdfPort} from '@ame/domain';
+import {GraphViewState, HISTORY_LIMIT, LoadedFilesService, ModelHistoryStore, ModelService, RdfPort, TabsStore} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, NotificationsService} from '@ame/shared';
-import {signal} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {GeometryChange, InternalEvent} from '@maxgraph/core';
 import {BehaviorSubject, of, Subject, throwError} from 'rxjs';
@@ -22,9 +21,8 @@ import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {ShapeSettingsStateService} from '../editor-dialog/services/shape-settings-state.service';
 import {ModelLoaderService} from '../model-loader.service';
 import {ModelRendererService} from '../model-renderer.service';
-import {TabStateService} from '../tabs/tab-state.service';
-import {GraphViewState, GraphViewStateService} from './graph-view-state.service';
-import {HISTORY_COMMIT_DELAY_MS, HISTORY_LIMIT, ModelHistoryService} from './model-history.service';
+import {GraphViewStateService} from './graph-view-state.service';
+import {HISTORY_COMMIT_DELAY_MS, ModelHistoryService} from './model-history.service';
 
 const view = (x: number): GraphViewState => ({collapsed: false, shapes: {a: [{x, y: 0}]}, edges: {}, selection: [], scroll: {x: 0, y: 0}});
 
@@ -33,8 +31,9 @@ describe('ModelHistoryService', () => {
   let content: string;
   let position: number;
   let graphListener: (sender: unknown, event: {getProperty: (name: string) => unknown}) => void;
-  let activeTabId: ReturnType<typeof signal<string>>;
-  let tabs: ReturnType<typeof signal<{id: string}[]>>;
+  let tabsStore: InstanceType<typeof TabsStore>;
+  let store: InstanceType<typeof ModelHistoryStore>;
+  const activate = (tabId: string) => tabsStore.setActiveTabId(tabId);
   let loader: {restoreModel: ReturnType<typeof vi.fn>};
   let renderer: {renderAgain: ReturnType<typeof vi.fn>};
   let viewState: {capture: ReturnType<typeof vi.fn>; apply: ReturnType<typeof vi.fn>};
@@ -57,8 +56,6 @@ describe('ModelHistoryService', () => {
   beforeEach(() => {
     content = 'v0';
     position = 0;
-    activeTabId = signal('tab-1');
-    tabs = signal([{id: 'tab-1'}, {id: 'tab-2'}]);
     loader = {
       restoreModel: vi.fn((rdf: string) => {
         content = rdf;
@@ -81,7 +78,6 @@ describe('ModelHistoryService', () => {
     TestBed.configureTestingModule({
       providers: [
         ModelHistoryService,
-        {provide: TabStateService, useValue: {activeTabId, tabs}},
         {
           provide: LoadedFilesService,
           useValue: {currentLoadedFile: {rdfModel: {serializationMetadata: {exportState: () => ({order: content})}}}},
@@ -98,6 +94,13 @@ describe('ModelHistoryService', () => {
       ],
     });
 
+    tabsStore = TestBed.inject(TabsStore);
+    store = TestBed.inject(ModelHistoryStore);
+    tabsStore.setTabs([
+      {id: 'tab-1', file: 'a.ttl', namespace: 'ns'},
+      {id: 'tab-2', file: 'b.ttl', namespace: 'ns'},
+    ]);
+    activate('tab-1');
     service = TestBed.inject(ModelHistoryService);
     service.reset();
   });
@@ -236,11 +239,11 @@ describe('ModelHistoryService', () => {
     change('v1');
     service.flush();
 
-    activeTabId.set('tab-2');
+    activate('tab-2');
     service.reset('tab-2');
     expect(service.canUndo()).toBe(false);
 
-    activeTabId.set('tab-1');
+    activate('tab-1');
     expect(service.canUndo()).toBe(true);
   });
 
@@ -250,13 +253,15 @@ describe('ModelHistoryService', () => {
     service.reset();
     expect(service.canUndo()).toBe(false);
 
-    activeTabId.set('tab-2');
+    activate('tab-2');
+    service.reset();
     change('v2');
     service.flush();
-    tabs.set([{id: 'tab-1'}]);
+    expect(Object.keys(store.histories()).sort()).toEqual(['tab-1', 'tab-2']);
+
+    tabsStore.removeTab('tab-2');
     service.reset('tab-1');
-    activeTabId.set('tab-2');
-    expect(service.canUndo()).toBe(false);
+    expect(Object.keys(store.histories())).toEqual(['tab-1']);
   });
 
   it('removes the history of a closed tab', () => {
@@ -264,6 +269,7 @@ describe('ModelHistoryService', () => {
     service.flush();
     service.clear('tab-1');
     expect(service.canUndo()).toBe(false);
+    expect(store.histories()['tab-1']).toBeUndefined();
   });
 
   it('keeps the history when the tab gets another id', () => {
@@ -271,7 +277,9 @@ describe('ModelHistoryService', () => {
     service.flush();
 
     service.renameTab('tab-1', 'workspace:file.ttl');
-    activeTabId.set('workspace:file.ttl');
+    tabsStore.addOrUpdateTab({id: 'workspace:file.ttl', file: 'file.ttl', namespace: 'workspace'});
+    activate('workspace:file.ttl');
+    expect(store.histories()['tab-1']).toBeUndefined();
     expect(service.canUndo()).toBe(true);
   });
 
@@ -339,6 +347,76 @@ describe('ModelHistoryService', () => {
     service.undo();
     service.redo();
     expect(loader.restoreModel).not.toHaveBeenCalled();
+  });
+
+  it('keeps the state in the ModelHistoryStore', () => {
+    change('v1');
+    expect(store.pendingChange()).toBe(true);
+    service.flush();
+    expect(store.pendingChange()).toBe(false);
+    expect(store.undoCount()).toBe(1);
+    expect(store.activeHistory().current?.rdf).toBe('v1');
+  });
+
+  it('undoes the steps of the active tab only', () => {
+    change('a1');
+    service.flush();
+    activate('tab-2');
+    content = 'b0';
+    service.reset();
+    change('b1');
+    service.flush();
+
+    service.undo();
+    expect(restoredContent()).toBe('b0');
+    expect(store.histories()['tab-1'].undo.map(step => step.rdf)).toEqual(['v0']);
+  });
+
+  it('ignores undo and redo while an earlier version is restored', () => {
+    renderer.renderAgain.mockReturnValue(new Subject<boolean>());
+    change('v1');
+    service.flush();
+    change('v2');
+    service.flush();
+
+    service.undo();
+    service.undo();
+    service.redo();
+    expect(loader.restoreModel).toHaveBeenCalledTimes(1);
+  });
+
+  it('undoes several steps one after another and redoes them again', () => {
+    for (const version of ['v1', 'v2', 'v3']) {
+      change(version);
+      service.flush();
+    }
+    const undone = [1, 2, 3].map(() => (service.undo(), restoredContent()));
+    expect(undone).toEqual(['v2', 'v1', 'v0']);
+    const redone = [1, 2, 3].map(() => (service.redo(), restoredContent()));
+    expect(redone).toEqual(['v1', 'v2', 'v3']);
+  });
+
+  it('does not record anything without a loaded model', () => {
+    (TestBed.inject(LoadedFilesService) as {currentLoadedFile: unknown}).currentLoadedFile = null;
+    change('v1');
+    service.flush();
+    expect(store.undoCount()).toBe(0);
+  });
+
+  it('does not record anything when the model cannot be synchronized', () => {
+    vi.mocked(TestBed.inject(ModelService).synchronizeModelToRdf).mockReturnValue(throwError(() => new Error('broken')));
+    change('v1');
+    service.flush();
+    expect(store.undoCount()).toBe(0);
+  });
+
+  it('does not record anything without an active tab', () => {
+    tabsStore.setActiveTabId(null);
+    change('v1');
+    service.flush();
+    service.reset();
+    expect(Object.keys(store.histories())).toEqual(['tab-1']);
+    expect(store.histories()['tab-1'].undo).toEqual([]);
   });
 
   describe('keyboard', () => {

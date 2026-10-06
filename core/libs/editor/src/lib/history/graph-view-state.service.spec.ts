@@ -11,11 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {GraphViewState} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService} from '@ame/graph';
 import {TestBed} from '@angular/core/testing';
 import {Geometry, Point} from '@maxgraph/core';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {GraphViewState, GraphViewStateService} from './graph-view-state.service';
+import {GraphViewStateService} from './graph-view-state.service';
 
 interface FakeCell {
   urn?: string;

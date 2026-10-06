@@ -36,6 +36,7 @@ export class TabStateService {
   private readonly saveModelDialog = inject(SaveModelDialogService);
 
   private readonly maxGraphService = inject(MaxGraphService);
+  private readonly modelHistory = inject(ModelHistoryService);
 
   private readonly injector = inject(Injector);
 
@@ -48,11 +49,6 @@ export class TabStateService {
 
   private get fileHandlingService(): FileHandlingService {
     return this.injector.get(FileHandlingService);
-  }
-
-  // TabState -> ModelHistory -> TabState
-  private get modelHistory(): ModelHistoryService {
-    return this.injector.get(ModelHistoryService);
   }
 
   public readonly tabs = this.tabsStore.entities;

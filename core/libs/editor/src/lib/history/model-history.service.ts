@@ -11,12 +11,11 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, ModelService, RdfPort} from '@ame/domain';
+import {HistoryDirection, LoadedFilesService, ModelHistoryStore, ModelService, ModelSnapshot, RdfPort, TabsStore} from '@ame/domain';
 import {MaxGraphService} from '@ame/graph';
 import {LanguageTranslationService, NotificationsService} from '@ame/shared';
-import {computed, inject, Injectable, Injector, signal} from '@angular/core';
+import {inject, Injectable, Injector} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {SerializationMetadataState} from '@esmf/aspect-model-loader';
 import {
   CollapseChange,
   EventObject,
@@ -32,12 +31,8 @@ import {catchError, EMPTY, filter, finalize, map, Observable, switchMap, take, t
 import {ShapeSettingsStateService} from '../editor-dialog/services/shape-settings-state.service';
 import {ModelLoaderService} from '../model-loader.service';
 import {ModelRendererService} from '../model-renderer.service';
-import {TabStateService} from '../tabs/tab-state.service';
-import {GraphViewState, GraphViewStateService} from './graph-view-state.service';
+import {GraphViewStateService} from './graph-view-state.service';
 import {historyActionOf, isEditableTarget, isMacPlatform} from './history-shortcuts';
-
-/** Number of steps which can be undone per tab. */
-export const HISTORY_LIMIT = 25;
 
 /** Changes of the graph which happen within this time are recorded as one step. */
 export const HISTORY_COMMIT_DELAY_MS = 250;
@@ -45,31 +40,19 @@ export const HISTORY_COMMIT_DELAY_MS = 250;
 /** Graph changes which only change the view, but not the Aspect Model. */
 const VIEW_ONLY_CHANGES = [GeometryChange, StyleChange, CollapseChange, VisibleChange, SelectionChange];
 
-/** Everything needed to show a model again as it was: its content, its file layout and its view. */
-export interface ModelSnapshot {
-  rdf: string;
-  metadata: SerializationMetadataState;
-  view: GraphViewState;
-}
-
-interface TabHistory {
-  undo: ModelSnapshot[];
-  redo: ModelSnapshot[];
-  /** The state after the last recorded step, which is the state to go back to with the next undo. */
-  current: ModelSnapshot | null;
-}
-
 /**
  * Undo/redo for the changes of the Aspect Model in the graph (snapshot approach).
  *
- * Every change of the graph which is more than a movement of shapes is recorded as a snapshot of the model.
+ * The state (the snapshots per tab) is kept in the ModelHistoryStore. This service records the snapshots:
+ * every change of the graph which is more than a movement of shapes is recorded as a snapshot of the model.
  * Undo and redo load such a snapshot again and render it with the previous positions of the shapes.
  * The history is kept per tab and starts again when a model is loaded.
  */
 @Injectable({providedIn: 'root'})
 export class ModelHistoryService {
   private readonly injector = inject(Injector);
-  private readonly tabStateService = inject(TabStateService);
+  private readonly store = inject(ModelHistoryStore);
+  private readonly tabsStore = inject(TabsStore);
   private readonly loadedFilesService = inject(LoadedFilesService);
   private readonly modelService = inject(ModelService);
   private readonly rdfService = inject(RdfPort);
@@ -79,18 +62,13 @@ export class ModelHistoryService {
   private readonly notificationsService = inject(NotificationsService);
   private readonly translate = inject(LanguageTranslationService);
 
-  private readonly histories = new Map<string, TabHistory>();
-  private readonly revision = signal(0);
-  private readonly restoring = signal(false);
   private suspended = 0;
   private pendingCommit: ReturnType<typeof setTimeout> | null = null;
-  /** A change of the model which is not recorded yet; undo records it first, so it can already be undone. */
-  private readonly pendingContentChange = signal(false);
   private observedGraph: Graph | null = null;
 
-  public readonly isRestoring = this.restoring.asReadonly();
-  public readonly canUndo = computed(() => !this.restoring() && (this.pendingContentChange() || this.stackSize('undo') > 0));
-  public readonly canRedo = computed(() => !this.restoring() && this.stackSize('redo') > 0);
+  public readonly isRestoring = this.store.restoring;
+  public readonly canUndo = this.store.canUndo;
+  public readonly canRedo = this.store.canRedo;
 
   // Lazy on purpose: ModelLoaderService records the start of the history after loading a model.
   private get modelLoader(): ModelLoaderService {
@@ -120,31 +98,19 @@ export class ModelHistoryService {
   }
 
   /** Starts a new history for the tab with the current state of the model, e.g. after loading a model. */
-  reset(tabId: string | null = this.tabStateService.activeTabId()): void {
+  reset(tabId: string | null = this.tabsStore.activeTabId()): void {
     this.cancelPendingCommit();
     if (!tabId) return;
-
-    const openTabs = new Set(this.tabStateService.tabs().map(tab => tab.id));
-    [...this.histories.keys()].filter(id => !openTabs.has(id)).forEach(id => this.histories.delete(id));
-
-    this.histories.set(tabId, {undo: [], redo: [], current: this.capture()});
-    this.revision.update(value => value + 1);
+    this.store.start(tabId, this.capture());
   }
 
   clear(tabId: string): void {
-    if (this.histories.delete(tabId)) {
-      this.revision.update(value => value + 1);
-    }
+    this.store.remove(tabId);
   }
 
   /** Keeps the history when the id of a tab changes, e.g. when a new model is saved the first time. */
   renameTab(oldTabId: string, newTabId: string): void {
-    const history = this.histories.get(oldTabId);
-    if (!history || oldTabId === newTabId) return;
-
-    this.histories.delete(oldTabId);
-    this.histories.set(newTabId, history);
-    this.revision.update(value => value + 1);
+    this.store.renameTab(oldTabId, newTabId);
   }
 
   /** Stops recording, e.g. while a model is loaded. Every call needs a matching `resume`. */
@@ -161,30 +127,21 @@ export class ModelHistoryService {
   flush(): void {
     if (!this.pendingCommit) return;
 
-    const contentChanged = this.pendingContentChange();
+    const contentChanged = this.store.pendingChange();
     this.cancelPendingCommit();
-    if (this.suspended || this.restoring()) return;
+    if (this.suspended || this.store.restoring()) return;
 
-    const tabId = this.tabStateService.activeTabId();
+    const tabId = this.tabsStore.activeTabId();
     if (!tabId) return;
-    const history = this.histories.get(tabId) ?? {undo: [], redo: [], current: null};
-    this.histories.set(tabId, history);
 
     if (!contentChanged) {
       // moving shapes is not a step of its own, but undo and redo keep the new positions
-      if (history.current) history.current = {...history.current, view: this.viewStateService.capture()};
+      this.store.updateView(tabId, this.viewStateService.capture());
       return;
     }
 
     const snapshot = this.capture();
-    if (!snapshot) return;
-
-    if (history.current && history.current.rdf !== snapshot.rdf) {
-      this.push(history.undo, history.current);
-      history.redo = [];
-    }
-    history.current = snapshot;
-    this.revision.update(value => value + 1);
+    if (snapshot) this.store.record(tabId, snapshot);
   }
 
   /** Undo with Cmd/Ctrl+Z, redo with Cmd/Ctrl+Shift+Z (and Ctrl+Y on Windows/Linux). Text fields keep their own undo. */
@@ -200,34 +157,26 @@ export class ModelHistoryService {
     }
   }
 
-  private step(direction: 'undo' | 'redo'): void {
-    if (this.restoring()) return;
+  private step(direction: HistoryDirection): void {
+    if (this.store.restoring()) return;
     this.flush();
 
-    const history = this.histories.get(this.tabStateService.activeTabId());
-    const source = direction === 'undo' ? history?.undo : history?.redo;
-    if (!history?.current || !source?.length) return;
-
-    const target = source.pop();
-    const opposite = direction === 'undo' ? history.redo : history.undo;
-    const previous = {...history.current, view: this.viewStateService.capture()};
-    this.push(opposite, previous);
-    this.revision.update(value => value + 1);
+    const tabId = this.tabsStore.activeTabId();
+    const target = tabId ? this.store.takeStep(tabId, direction, this.viewStateService.capture()) : null;
+    if (!target) return;
 
     this.restore(target).subscribe({
-      next: () => (history.current = this.capture() ?? target),
+      next: () => this.store.completeStep(tabId, this.capture() ?? target),
       error: error => {
         console.error(error);
-        opposite.pop();
-        source.push(target);
-        this.revision.update(value => value + 1);
+        this.store.revertStep(tabId, direction, target);
         this.notificationsService.error({title: this.translate.language?.toolbar?.historyFailed ?? 'The change could not be undone'});
       },
     });
   }
 
   private restore(snapshot: ModelSnapshot): Observable<void> {
-    this.restoring.set(true);
+    this.store.setRestoring(true);
     this.cancelPendingCommit();
     // the edit dialog shows an element of the replaced model
     this.shapeSettingsStateService.closeShapeSettings();
@@ -240,8 +189,7 @@ export class ModelHistoryService {
       take(1),
       finalize(() => {
         this.cancelPendingCommit();
-        this.restoring.set(false);
-        this.revision.update(value => value + 1);
+        this.store.setRestoring(false);
       }),
     );
   }
@@ -277,10 +225,10 @@ export class ModelHistoryService {
   }
 
   private onGraphChange(changes: unknown[] | undefined): void {
-    if (this.suspended || this.restoring()) return;
+    if (this.suspended || this.store.restoring()) return;
 
     if ((changes ?? []).some(change => !VIEW_ONLY_CHANGES.some(type => change instanceof type))) {
-      this.pendingContentChange.set(true);
+      this.store.setPendingChange(true);
     }
     if (this.pendingCommit) clearTimeout(this.pendingCommit);
     this.pendingCommit = setTimeout(() => this.flush(), HISTORY_COMMIT_DELAY_MS);
@@ -289,17 +237,7 @@ export class ModelHistoryService {
   private cancelPendingCommit(): void {
     if (this.pendingCommit) clearTimeout(this.pendingCommit);
     this.pendingCommit = null;
-    this.pendingContentChange.set(false);
-  }
-
-  private push(stack: ModelSnapshot[], snapshot: ModelSnapshot): void {
-    stack.push(snapshot);
-    if (stack.length > HISTORY_LIMIT) stack.splice(0, stack.length - HISTORY_LIMIT);
-  }
-
-  private stackSize(stack: 'undo' | 'redo'): number {
-    this.revision();
-    return this.histories.get(this.tabStateService.activeTabId())?.[stack].length ?? 0;
+    this.store.setPendingChange(false);
   }
 
   private isDialogOpen(): boolean {

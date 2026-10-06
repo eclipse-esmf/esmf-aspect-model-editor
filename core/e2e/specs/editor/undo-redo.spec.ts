@@ -17,6 +17,7 @@ import {AppHelper} from '../../support/app-helper';
 import {
   FIELD_descriptionen,
   SELECTOR_editorSaveButton,
+  SELECTOR_tbCollapseToggle,
   SELECTOR_tbDeleteButton,
   SELECTOR_tbRedoButton,
   SELECTOR_tbUndoButton,
@@ -47,6 +48,9 @@ const MODEL = `# Copyright header of the user
 :ZetaCharacteristic a samm:Characteristic ;
     samm:dataType xsd:string .
 `;
+
+/** The same model in another namespace, so that it is opened in its own tab. */
+const OTHER_MODEL = MODEL.replace('org.eclipse.examples.history', 'org.eclipse.examples.other');
 
 async function edgeExists(page: Page, source: string, target: string): Promise<boolean> {
   return page.evaluate(
@@ -132,14 +136,42 @@ async function deleteShape(app: AppHelper, page: Page, name: string): Promise<vo
   await app.shapeExists(name, false);
 }
 
+/** The tooltip of the toolbar button covers the tabs while the mouse stays on the button. */
+async function hideTooltip(page: Page): Promise<void> {
+  await page.mouse.move(600, 500);
+  await expect(page.locator('.mat-mdc-tooltip-surface')).toHaveCount(0);
+}
+
 async function undo(page: Page): Promise<void> {
   await page.locator(SELECTOR_tbUndoButton).click();
   await waitForHistory(page);
+  await hideTooltip(page);
 }
 
 async function redo(page: Page): Promise<void> {
   await page.locator(SELECTOR_tbRedoButton).click();
   await waitForHistory(page);
+  await hideTooltip(page);
+}
+
+async function historyState(page: Page): Promise<{tabs: string[]; undo: number; redo: number}> {
+  return page.evaluate(() => {
+    const store = (window as any)['angular.modelHistoryService'].store;
+    return {tabs: Object.keys(store.histories()).sort(), undo: store.undoCount(), redo: store.redoCount()};
+  });
+}
+
+async function isActiveTabDirty(page: Page): Promise<boolean> {
+  return page.evaluate(() => !!(window as any)['angular.TabStateService'].activeTab()?.isDirty);
+}
+
+async function saveModel(page: Page): Promise<void> {
+  await page.evaluate(
+    () =>
+      new Promise((resolve, reject) =>
+        (window as any)['angular.fileHandlingService'].saveAspectModelToWorkspace().subscribe({complete: resolve, error: reject}),
+      ),
+  );
 }
 
 test.describe('Editor - undo/redo', () => {
@@ -344,6 +376,216 @@ test.describe('Editor - undo/redo', () => {
     await app.shapeExists('zeta');
     await expect(page.locator(SELECTOR_tbUndoButton)).not.toHaveClass(/disabled/);
 
+    await undo(page);
+    await app.shapeExists('ZetaCharacteristic');
+  });
+
+  test('undo and redo several steps one after another', async ({page}) => {
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await flushHistory(page);
+    await selectEdge(page, 'HistoryAspect', 'alpha');
+    await page.locator(SELECTOR_tbDeleteButton).click();
+    await expect.poll(() => edgeExists(page, 'HistoryAspect', 'alpha')).toBe(false);
+    await flushHistory(page);
+    await app.renameElement('zeta', 'zetaRenamed');
+    await app.shapeExists('zetaRenamed');
+    await flushHistory(page);
+    await expect.poll(() => historyState(page).then(state => state.undo)).toBe(3);
+
+    await undo(page);
+    await app.shapeExists('zeta');
+    await undo(page);
+    await expect.poll(() => edgeExists(page, 'HistoryAspect', 'alpha')).toBe(true);
+    await undo(page);
+    await app.shapeExists('ZetaCharacteristic');
+    await expect(page.locator(SELECTOR_tbUndoButton)).toHaveClass(/disabled/);
+    expect(await historyState(page)).toEqual(expect.objectContaining({undo: 0, redo: 3}));
+
+    await redo(page);
+    await app.shapeExists('ZetaCharacteristic', false);
+    await redo(page);
+    await expect.poll(() => edgeExists(page, 'HistoryAspect', 'alpha')).toBe(false);
+    await redo(page);
+    await app.shapeExists('zetaRenamed');
+    await expect(page.locator(SELECTOR_tbRedoButton)).toHaveClass(/disabled/);
+  });
+
+  test('deleting several selected elements is one step', async ({page}) => {
+    await app.clickShape('ZetaCharacteristic');
+    await app.clickShape('alpha', true);
+    await page.locator(SELECTOR_tbDeleteButton).click();
+    await app.shapeExists('ZetaCharacteristic', false);
+    await app.shapeExists('alpha', false);
+
+    await undo(page);
+    await app.shapeExists('ZetaCharacteristic');
+    await app.shapeExists('alpha');
+    await expect(page.locator(SELECTOR_tbUndoButton)).toHaveClass(/disabled/);
+  });
+
+  test('changes made quickly after each other are one step', async ({page}) => {
+    await page.evaluate(() => {
+      const graph = (window as any)['angular.maxgraphAttributeService'].graph;
+      const editor = (window as any)['angular.editorService'];
+      const byName = (name: string) =>
+        graph.getChildCells(graph.getDefaultParent(), true, false).find((c: any) => c.getMetaModelElement?.()?.element?.name === name);
+      graph.getSelectionModel().setCell(byName('ZetaCharacteristic'));
+      editor.deleteSelectedElements();
+      graph.getSelectionModel().setCell(byName('alpha'));
+      editor.deleteSelectedElements();
+    });
+    await app.shapeExists('ZetaCharacteristic', false);
+    await app.shapeExists('alpha', false);
+
+    await undo(page);
+    await app.shapeExists('ZetaCharacteristic');
+    await app.shapeExists('alpha');
+    await expect(page.locator(SELECTOR_tbUndoButton)).toHaveClass(/disabled/);
+  });
+
+  test('undo restores a deleted aspect', async ({page}) => {
+    await app.clickShape('HistoryAspect');
+    await page.locator(SELECTOR_tbDeleteButton).click();
+    // without the aspect the model becomes an element library which needs a name
+    const dialog = page.getByRole('dialog');
+    await dialog.getByRole('textbox', {name: 'Name'}).fill('HistoryLibrary');
+    await dialog.getByRole('button', {name: 'Remove Aspect'}).click();
+    await app.shapeExists('HistoryAspect', false);
+
+    await undo(page);
+    await app.shapeExists('HistoryAspect');
+    await expect.poll(() => edgeExists(page, 'HistoryAspect', 'zeta')).toBe(true);
+    await expect.poll(() => edgeExists(page, 'HistoryAspect', 'alpha')).toBe(true);
+  });
+
+  test('a cancelled edit dialog is no step', async ({page}) => {
+    await app.dbClickShape('alpha');
+    await page.locator(FIELD_descriptionen).first().fill('not saved');
+    await app.clickPropertiesCancelButton();
+    await expect(page.locator(SELECTOR_editorSaveButton)).toHaveCount(0);
+    await page.waitForTimeout(400);
+    await expect(page.locator(SELECTOR_tbUndoButton)).toHaveClass(/disabled/);
+  });
+
+  test('formatting, collapsing and expanding are no steps', async ({page}) => {
+    await page.getByTestId('formatButton').click();
+    await page.locator(SELECTOR_tbCollapseToggle).click();
+    await page.waitForTimeout(400);
+    await expect(page.locator(SELECTOR_tbUndoButton)).toHaveClass(/disabled/);
+    await page.locator(SELECTOR_tbCollapseToggle).click();
+    await page.waitForTimeout(400);
+    await expect(page.locator(SELECTOR_tbUndoButton)).toHaveClass(/disabled/);
+  });
+
+  test('undo keeps the collapsed mode', async ({page}) => {
+    await page.locator(SELECTOR_tbCollapseToggle).click();
+    await expect.poll(() => page.evaluate(() => (window as any)['angular.maxgraphAttributeService'].inCollapsedMode)).toBe(true);
+
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await undo(page);
+    await app.shapeExists('ZetaCharacteristic');
+    expect(await page.evaluate(() => (window as any)['angular.maxgraphAttributeService'].inCollapsedMode)).toBe(true);
+  });
+
+  test('the shortcuts do nothing while a dialog is open', async ({page}) => {
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await app.openSettings();
+    await page.keyboard.press('ControlOrMeta+z');
+    await page.waitForTimeout(500);
+    await app.closeDialog(SettingsDialogSelectors.settingsDialogCancelButton);
+    await app.shapeExists('ZetaCharacteristic', false);
+    await expect(page.locator(SELECTOR_tbUndoButton)).not.toHaveClass(/disabled/);
+  });
+
+  test('Ctrl+Y redoes on Windows and Linux', async ({page}) => {
+    const isMac = await page.evaluate(() => /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent));
+    test.skip(isMac, 'Cmd+Y is no shortcut on macOS');
+
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await undo(page);
+    await app.shapeExists('ZetaCharacteristic');
+    await page.locator('#graph').click({position: {x: 5, y: 5}, force: true});
+    await page.keyboard.press('Control+y');
+    await waitForHistory(page);
+    await app.shapeExists('ZetaCharacteristic', false);
+  });
+
+  test('the history is kept after saving and the modified marker follows undo and redo', async ({page}) => {
+    await saveModel(page);
+    await expect.poll(() => isActiveTabDirty(page)).toBe(false);
+
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await expect.poll(() => isActiveTabDirty(page)).toBe(true);
+    await saveModel(page);
+    await expect.poll(() => isActiveTabDirty(page)).toBe(false);
+    await expect(page.locator(SELECTOR_tbUndoButton)).not.toHaveClass(/disabled/);
+
+    await undo(page);
+    await app.shapeExists('ZetaCharacteristic');
+    await expect.poll(() => isActiveTabDirty(page)).toBe(true);
+
+    await redo(page);
+    await app.shapeExists('ZetaCharacteristic', false);
+    await expect.poll(() => isActiveTabDirty(page)).toBe(false);
+  });
+
+  test('changing prefixes in the prefix management starts a new history', async ({page}) => {
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await expect(page.locator(SELECTOR_tbUndoButton)).not.toHaveClass(/disabled/);
+
+    await page.getByTestId('tbPrefixesButton').click();
+    const dialog = page.locator('ame-prefix-management-dialog');
+    await dialog.getByTestId('prefix-row-ex').getByTestId('prefix-rename').click();
+    await dialog.getByTestId('prefix-rename-input').fill('example');
+    await dialog.getByTestId('prefix-rename-save').click();
+    await dialog.getByTestId('prefix-management-close').click();
+    await expect(dialog).toHaveCount(0);
+
+    await expect(page.locator(SELECTOR_tbUndoButton)).toHaveClass(/disabled/);
+    expect((await historyState(page)).undo).toBe(0);
+  });
+
+  test('closing a tab removes its history', async ({page}) => {
+    await page.getByTestId('editor-tab-add').click();
+    const tabs = page.getByTestId('editor-tab');
+    await expect(tabs).toHaveCount(2);
+    await app.loadModel(OTHER_MODEL);
+    await app.shapeExists('zeta');
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await expect.poll(() => historyState(page).then(state => state.tabs.length)).toBe(2);
+
+    const closedTab = await page.evaluate(() => (window as any)['angular.TabStateService'].activeTabId());
+    expect((await historyState(page)).tabs).toContain(closedTab);
+    await tabs.nth(1).getByTestId('editor-tab-close').click();
+    await page.getByRole('button', {name: "Don't Save"}).click();
+    await expect(tabs).toHaveCount(1);
+
+    await expect.poll(() => historyState(page).then(state => state.tabs)).not.toContain(closedTab);
+  });
+
+  test('switching tabs back and forth keeps undo and redo of every tab', async ({page}) => {
+    await deleteShape(app, page, 'ZetaCharacteristic');
+    await page.getByTestId('editor-tab-add').click();
+    const tabs = page.getByTestId('editor-tab');
+    await app.loadModel(OTHER_MODEL);
+    await app.shapeExists('zeta');
+    await deleteShape(app, page, 'alpha');
+    await undo(page);
+    await app.shapeExists('alpha');
+
+    await tabs.first().click();
+    await app.shapeExists('ZetaCharacteristic', false);
+    await expect(page.locator(SELECTOR_tbUndoButton)).not.toHaveClass(/disabled/);
+    await expect(page.locator(SELECTOR_tbRedoButton)).toHaveClass(/disabled/);
+
+    await tabs.nth(1).click();
+    await app.shapeExists('ZetaCharacteristic');
+    await expect(page.locator(SELECTOR_tbRedoButton)).not.toHaveClass(/disabled/);
+    await redo(page);
+    await app.shapeExists('alpha', false);
+
+    await tabs.first().click();
+    await app.shapeExists('alpha');
     await undo(page);
     await app.shapeExists('ZetaCharacteristic');
   });

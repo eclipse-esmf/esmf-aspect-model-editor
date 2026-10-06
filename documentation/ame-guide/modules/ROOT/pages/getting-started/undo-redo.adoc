@@ -59,3 +59,12 @@ Changing prefixes in the prefix management also starts a new history, because un
 * *File name:* undo changes the content of the model, not the file. If the file name changed together with a step (e.g., because the Aspect was deleted), the file name stays as it is.
 * *Missing references:* placeholders of missing referenced elements stay placeholders. Undo does not load referenced files again.
 * *Edit menu:* the *Undo* and *Redo* entries of the Edit menu in the desktop app apply to text fields only. Use the shortcuts or the toolbar buttons for the graph.
+
+[[undo-redo-technical]]
+== Technical background
+
+Undo and redo work with snapshots: after every change, the editor stores the serialized model (Turtle), the order of the statements in the file and the view (shape positions, selection, scroll position).
+Undo loads the previous snapshot again; no backend call is needed.
+
+* The `ModelHistoryStore` (`@ame/domain`, NgRx Signal Store like the `TabsStore`) keeps the history of every tab and provides `canUndo`, `canRedo`, `undoCount` and `redoCount` for the active tab.
+* The `ModelHistoryService` (`@ame/editor`) listens to changes of the graph, creates the snapshots and restores them. It is the only class that changes the store.

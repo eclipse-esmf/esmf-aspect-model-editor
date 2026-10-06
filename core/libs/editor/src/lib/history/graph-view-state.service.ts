@@ -11,28 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {GraphViewState} from '@ame/domain';
 import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService} from '@ame/graph';
 import {inject, Injectable} from '@angular/core';
 import {Cell, Point} from '@maxgraph/core';
-
-export interface ViewPoint {
-  x: number;
-  y: number;
-}
-
-/**
- * What the user sees of a model besides its content: positions of the shapes, routing of the connections and the selection.
- * Shapes are identified by the URN of their element, so the state can be applied to a newly rendered graph.
- */
-export interface GraphViewState {
-  collapsed: boolean;
-  /** Positions of the shapes by element URN (a list, in case an element is shown more than once). */
-  shapes: Record<string, ViewPoint[]>;
-  /** Waypoints of the connections by "source URN -> target URN". */
-  edges: Record<string, ViewPoint[][]>;
-  selection: string[];
-  scroll: ViewPoint;
-}
 
 @Injectable({providedIn: 'root'})
 export class GraphViewStateService {
