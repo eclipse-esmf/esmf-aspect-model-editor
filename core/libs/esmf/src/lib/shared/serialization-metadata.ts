@@ -79,7 +79,7 @@ export class SerializationMetadata {
       return content;
     }
 
-    const headerText = header.join('\n').replace(/\n+$/, '');
+    const headerText = header.join('\n').trimEnd();
     if (content.trimStart().startsWith(headerText)) {
       return content;
     }
