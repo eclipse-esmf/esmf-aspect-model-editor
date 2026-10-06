@@ -129,7 +129,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       # The backend is released as jpackage app image per platform. It is unpacked into backend/<os>/,
-      # which `pnpm run build:desktop` (utils/tauri-build.mjs) adds as bundle resource via
+      # which `pnpm run build:tauri` (utils/tauri-build.mjs) adds as bundle resource via
       # src-tauri/tauri.bundle-backend.<os>.conf.json; the app locates the launcher at runtime.
       - name: Download backend (Linux, macOS)
         if: runner.os != 'Windows'
@@ -181,7 +181,7 @@ jobs:
 
       - name: Build desktop app
         working-directory: core
-        run: pnpm run build:desktop
+        run: pnpm run build:tauri
 
       # Tauri creates the installers itself (see bundle > targets in src-tauri/tauri.<os>.conf.json):
       # Linux: .AppImage and .deb, macOS: .app and .dmg, Windows: NSIS setup .exe
