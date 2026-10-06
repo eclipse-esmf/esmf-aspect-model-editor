@@ -279,6 +279,15 @@ pub fn restart_backend(app: &AppHandle, state: &BackendState) -> BackendStatus {
     state.status()
 }
 
+/// The backend stops by itself once the process `parent_pid` has ended, so it does not outlive
+/// the app after a crash or a hard kill, when [`clean_up_backend`] never runs.
+fn backend_args(port: u16, parent_pid: u32) -> [String; 2] {
+    [
+        format!("-Dmicronaut.server.port={port}"),
+        format!("-Dame.parent-pid={parent_pid}"),
+    ]
+}
+
 fn spawn_backend(app: &AppHandle, state: &BackendState, port: u16) -> Result<(), String> {
     let binary_path =
         get_backend_path(app).ok_or_else(|| "Backend executable not found.".to_string())?;
@@ -287,7 +296,7 @@ fn spawn_backend(app: &AppHandle, state: &BackendState, port: u16) -> Result<(),
     println!("Backend port: {}", port);
 
     let mut child = Command::new(&binary_path)
-        .arg(format!("-Dmicronaut.server.port={port}"))
+        .args(backend_args(port, std::process::id()))
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
@@ -436,6 +445,17 @@ mod tests {
         touch(&executable);
         touch(&root.join(format!("{name}/lib/app/{name}.cfg")));
         executable
+    }
+
+    #[test]
+    fn backend_args_contain_port_and_parent_pid() {
+        assert_eq!(
+            backend_args(30001, 4242),
+            [
+                "-Dmicronaut.server.port=30001".to_string(),
+                "-Dame.parent-pid=4242".to_string(),
+            ]
+        );
     }
 
     #[test]

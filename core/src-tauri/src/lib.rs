@@ -102,6 +102,7 @@ fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
   init_logging(app);
   setup_menu(app);
   restore_session(app);
+  watch_termination_signals(app.handle());
 
   start_backend(
     app.handle(),
@@ -161,6 +162,40 @@ fn restore_session(app: &tauri::App) {
     handle.state::<SessionState>().flush();
   });
 }
+
+/// SIGTERM (`kill`, logout, system shutdown), SIGINT (Ctrl+C) and SIGHUP (terminal closed) end the
+/// process without a Tauri exit event. Stop the backend and keep the open windows in the session so they
+/// are restored on the next start, like after a crash.
+#[cfg(unix)]
+fn watch_termination_signals(app: &tauri::AppHandle) {
+  use tokio::signal::unix::{signal, SignalKind};
+
+  let app = app.clone();
+  tauri::async_runtime::spawn(async move {
+    let (Ok(mut term), Ok(mut int), Ok(mut hup)) = (
+      signal(SignalKind::terminate()),
+      signal(SignalKind::interrupt()),
+      signal(SignalKind::hangup()),
+    ) else {
+      log::warn!("Unable to watch termination signals");
+      return;
+    };
+
+    let code = tokio::select! {
+      _ = term.recv() => 128 + 15,
+      _ = int.recv() => 128 + 2,
+      _ = hup.recv() => 128 + 1,
+    };
+
+    app.state::<SessionState>().flush();
+    clean_up_backend(&app.state::<BackendState>());
+    std::process::exit(code);
+  });
+}
+
+// Windows has no termination signals; a killed app is covered by the backend watching its parent process.
+#[cfg(not(unix))]
+fn watch_termination_signals(_app: &tauri::AppHandle) {}
 
 fn init_logging(app: &tauri::App) {
   if cfg!(debug_assertions) {

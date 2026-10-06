@@ -33,6 +33,22 @@
   ${EndIf}
   Pop $R1
   Pop $R0
+
+  ; The backend folder carries the version in its name and the app starts the first backend it finds.
+  ; Remove the backend of a previous version, so an update never keeps or starts it.
+  RMDir /r "$INSTDIR\backend"
+!macroend
+
+!macro NSIS_HOOK_POSTUNINSTALL
+  ; Tauri only deletes the files of the installed version and keeps the folder if anything else is left
+  ; (e.g. the backend of an older version). Remove the whole folder, but only if it is the app's own folder,
+  ; so a user-chosen folder like "C:\Tools" is never deleted completely.
+  Push $R0
+  ${GetFileName} "$INSTDIR" $R0
+  ${If} $R0 == "${PRODUCTNAME}"
+    RMDir /r /REBOOTOK "$INSTDIR"
+  ${EndIf}
+  Pop $R0
 !macroend
 
 !macro NSIS_HOOK_POSTINSTALL
