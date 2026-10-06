@@ -86,8 +86,31 @@ if (process.platform !== 'win32') {
   }
 }
 
-// linuxdeploy (AppImage) ships an old `strip` which fails on libraries of current distributions
-const env = os === 'linux' ? {...process.env, NO_STRIP: 'true'} : process.env;
+/** Directories below `dir` that contain `fileName`. */
+function directoriesContaining(dir, fileName) {
+  const entries = readdirSync(dir, {withFileTypes: true});
+  const found = entries.some(entry => entry.name === fileName) ? [dir] : [];
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      found.push(...directoriesContaining(join(dir, entry.name), fileName));
+    }
+  }
+  return found;
+}
+
+function linuxBuildEnv() {
+  // The JDK libraries of the backend link against libjvm.so, which Java loads from lib/server by its full path.
+  // linuxdeploy (AppImage) checks the dependencies of every library and fails if it cannot find libjvm.so.
+  const libraryPath = [...directoriesContaining(backendDir, 'libjvm.so'), process.env.LD_LIBRARY_PATH].filter(Boolean).join(':');
+  return {
+    ...process.env,
+    // linuxdeploy ships an old `strip` which fails on libraries of current distributions
+    NO_STRIP: 'true',
+    LD_LIBRARY_PATH: libraryPath,
+  };
+}
+
+const env = os === 'linux' ? linuxBuildEnv() : process.env;
 
 const tauriCli = createRequire(import.meta.url).resolve('@tauri-apps/cli/tauri.js');
 const result = spawnSync(process.execPath, [tauriCli, 'build', '--config', backendConfig, ...args], {cwd: coreDir, stdio: 'inherit', env});
