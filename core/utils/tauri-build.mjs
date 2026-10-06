@@ -86,7 +86,10 @@ if (process.platform !== 'win32') {
   }
 }
 
+// linuxdeploy (AppImage) ships an old `strip` which fails on libraries of current distributions
+const env = os === 'linux' ? {...process.env, NO_STRIP: 'true'} : process.env;
+
 const tauriCli = createRequire(import.meta.url).resolve('@tauri-apps/cli/tauri.js');
-const result = spawnSync(process.execPath, [tauriCli, 'build', '--config', backendConfig, ...args], {cwd: coreDir, stdio: 'inherit'});
+const result = spawnSync(process.execPath, [tauriCli, 'build', '--config', backendConfig, ...args], {cwd: coreDir, stdio: 'inherit', env});
 
 process.exit(result.status ?? 1);

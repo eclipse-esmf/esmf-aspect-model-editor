@@ -78,7 +78,7 @@ Release builds take it from the platform-specific folder in the repository root:
 | Linux    | `backend/linux/`   | `ame-backend-<version>-linux/bin/...` (extracted from `*-linux.tar.gz`) |
 | Windows  | `backend/windows/` | app image containing `ame-backend*.exe` (extracted from `*-win.zip`)  |
 
-The folder is only needed for release builds (`pnpm run build:desktop`), which fail with a hint if it is missing.
+The folder is only needed for release builds (`pnpm run build:tauri`), which fail with a hint if it is missing.
 They add it as bundle resource via `core/src-tauri/tauri.bundle-backend.<os>.conf.json` (see `core/utils/tauri-build.mjs`) and start the bundled backend automatically.
 Use this script instead of `tauri build` directly, otherwise the backend is missing in the app.
 
@@ -105,8 +105,10 @@ Desktop packages must be built on the target platform (no cross-compilation). Th
 ```bash
 cd core
 
-pnpm run build:desktop
+pnpm run build:tauri
 ```
+
+On Linux the script sets `NO_STRIP=true`, because the `strip` bundled with the AppImage tooling fails on libraries of current distributions.
 
 The bundles for the current platform are written to `core/src-tauri/target/release/bundle/`:
 
