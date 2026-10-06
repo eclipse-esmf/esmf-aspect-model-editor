@@ -198,10 +198,8 @@ jobs:
               cp "$bundle"/appimage/*.AppImage "release-artifacts/$name-linux-glibc-v$glibc.AppImage"
               cp "$bundle"/deb/*.deb "release-artifacts/$name-linux-amd64.deb" ;;
             mac-*)
-              cp "$bundle"/dmg/*.dmg "release-artifacts/$name-$PLATFORM.dmg"
-              # the .app is a folder; ditto keeps symlinks, permissions and extended attributes
-              app=("$bundle"/macos/*.app)
-              ditto -c -k --sequesterRsrc --keepParent "${app[0]}" "release-artifacts/$name-$PLATFORM.app.zip" ;;
+              # only the .dmg: the .app is a folder and would need an extra archive
+              cp "$bundle"/dmg/*.dmg "release-artifacts/$name-$PLATFORM.dmg" ;;
             win)
               setup=("$bundle"/nsis/*-setup.exe)
               cp "${setup[0]}" "release-artifacts/$name-win.exe" ;;

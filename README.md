@@ -137,8 +137,8 @@ The backend release with the same version must exist before (repository `esmf-as
    | Runner           | Release assets                                                                                     |
    |------------------|----------------------------------------------------------------------------------------------------|
    | `ubuntu-latest`  | `aspect-model-editor-v<version>-linux-glibc-v<glibc>.AppImage`, `aspect-model-editor-v<version>-linux-amd64.deb` |
-   | `macos-15-intel` | `aspect-model-editor-v<version>-mac-x64.dmg`, `aspect-model-editor-v<version>-mac-x64.app.zip`     |
-   | `macos-latest`   | `aspect-model-editor-v<version>-mac-arm64.dmg`, `aspect-model-editor-v<version>-mac-arm64.app.zip` |
+   | `macos-15-intel` | `aspect-model-editor-v<version>-mac-x64.dmg`                                                       |
+   | `macos-latest`   | `aspect-model-editor-v<version>-mac-arm64.dmg`                                                     |
    | `windows-latest` | `aspect-model-editor-v<version>-win.exe` (workflow artifact only, signed and uploaded by Jenkins)  |
 
 3. `publish` publishes the release and triggers the Jenkins job which signs the Windows installer.
