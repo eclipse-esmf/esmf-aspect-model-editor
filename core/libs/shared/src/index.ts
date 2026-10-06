@@ -13,6 +13,5 @@
 
 export * from './lib/common';
 export * from './lib/contracts';
-export * from './lib/testing';
 export * from './lib/translation';
 export * from './lib/utils';

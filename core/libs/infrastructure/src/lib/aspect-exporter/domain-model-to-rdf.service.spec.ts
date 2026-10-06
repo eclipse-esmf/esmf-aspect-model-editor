@@ -47,7 +47,7 @@ vi.mock('@esmf/aspect-model-loader', () => {
   return {DefaultValue, ModelElementCache};
 });
 
-import {provideMockObject} from '@ame/shared';
+import {provideMockObject} from '@ame/shared/testing';
 import {TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it} from 'vitest';
 import {DomainModelToRdfService} from './domain-model-to-rdf.service';

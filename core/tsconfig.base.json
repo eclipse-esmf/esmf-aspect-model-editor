@@ -31,6 +31,7 @@
       "@ame/search": ["libs/search/src/index.ts"],
       "@ame/settings": ["libs/settings/src/index.ts"],
       "@ame/shared": ["libs/shared/src/index.ts"],
+      "@ame/shared/testing": ["libs/shared/src/lib/testing/index.ts"],
       "@ame/sidebar": ["libs/sidebar/src/index.ts"],
       "@ame/workbench": ["libs/workbench/src/index.ts"],
       "@ame/esmf": ["libs/esmf/src/index.ts"],

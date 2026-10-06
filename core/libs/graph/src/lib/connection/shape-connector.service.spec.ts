@@ -19,7 +19,8 @@ vi.mock('@ame/domain', () => ({
   },
 }));
 
-import {NotificationsService, provideMockObject} from '@ame/shared';
+import {NotificationsService} from '@ame/shared';
+import {provideMockObject} from '@ame/shared/testing';
 import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
