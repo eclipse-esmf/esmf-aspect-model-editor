@@ -66,9 +66,25 @@ describe('ConfirmDialogService', () => {
         closeButtonText: 'No',
         actionButtonText: undefined,
       },
-      maxWidth: 650,
-      minWidth: 550,
+      maxWidth: 'min(650px, 95vw)',
+      minWidth: 'min(550px, 95vw)',
     });
     expect(result).toBe(ConfirmDialogEnum.ok);
+  });
+
+  it('should treat a dialog closed without a result (Escape / X) as cancel', async () => {
+    vi.spyOn(dialog, 'open').mockReturnValue({afterClosed: () => of(undefined)} as unknown as MatDialogRef<ConfirmDialogComponent>);
+
+    const result = await new Promise(resolve => service.open({title: 'Delete', phrases: []}).subscribe(resolve));
+
+    expect(result).toBe(ConfirmDialogEnum.cancel);
+  });
+
+  it.each([ConfirmDialogEnum.cancel, ConfirmDialogEnum.action])('should pass through the explicit result %s', async value => {
+    vi.spyOn(dialog, 'open').mockReturnValue({afterClosed: () => of(value)} as unknown as MatDialogRef<ConfirmDialogComponent>);
+
+    const result = await new Promise(resolve => service.open({title: 'Delete', phrases: []}).subscribe(resolve));
+
+    expect(result).toBe(value);
   });
 });

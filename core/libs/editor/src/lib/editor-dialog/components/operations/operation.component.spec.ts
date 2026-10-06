@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {RdfService} from '@ame/rdf/services';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -24,7 +22,9 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
 import {EditorModelService} from '../../editor-model.service';
+import {ShapeSettingsService} from '../../services/shape-settings.service';
 import {EditorDialogValidators} from '../../validators';
 import {OperationComponent} from './operation.component';
 
@@ -56,13 +56,16 @@ describe('OperationComponent', () => {
           isElementExtern: vi.fn(() => false),
         }),
         EditorDialogValidators,
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           checkElementExists: vi.fn(() => of(false)),
         }),
         MockProvider(MaxGraphService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(NotificationsService),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
+        MockProvider(ShapeSettingsService),
+        {provide: ConfigurationService, useValue: {getSettings: vi.fn(() => ({}))}},
       ],
     }).compileComponents();
 

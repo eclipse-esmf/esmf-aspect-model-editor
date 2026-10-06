@@ -11,9 +11,6 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
 import {Component, DestroyRef, inject, signal} from '@angular/core';
 import {form, FormField} from '@angular/forms/signals';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -24,13 +21,13 @@ import {from, map, Observable, throwError} from 'rxjs';
 import {catchError, finalize, first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
-import {BrowserService, IPC_RENDERER} from '@ame/shared';
+import {LoadedFilesService, ModelApiPort, SammLanguageSettingsService} from '@ame/domain';
+import {BrowserService, DialogCloseButtonComponent, IPC_RENDERER} from '@ame/shared';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatButtonModule} from '@angular/material/button';
 import {MatOptionModule} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSelectModule} from '@angular/material/select';
 
@@ -43,6 +40,7 @@ export interface GenerateDocumentationData {
   templateUrl: './generate-documentation.component.html',
   styleUrls: ['./generate-documentation.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogModule,
     TranslocoDirective,
     MatFormFieldModule,
@@ -51,7 +49,6 @@ export interface GenerateDocumentationData {
     MatProgressSpinnerModule,
     FormField,
     MatButtonModule,
-    MatIcon,
   ],
 })
 export class GenerateDocumentationComponent {
@@ -59,7 +56,7 @@ export class GenerateDocumentationComponent {
   private destroyRef = inject(DestroyRef);
   private dialogRef = inject(MatDialogRef<GenerateDocumentationComponent>);
   private languageService = inject(SammLanguageSettingsService);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private editorService = inject(EditorService);
   private loadedFiles = inject(LoadedFilesService);
 
@@ -132,7 +129,7 @@ export class GenerateDocumentationComponent {
       .generateDocumentation(rdfContent, language, this.loadedFiles.currentLoadedFile.rdfModel.getSourceLocation())
       .pipe(
         map((documentation: string) => {
-          if (!this.browserService.isStartedAsElectronApp()) {
+          if (!this.browserService.isStartedAsTauriApp()) {
             return;
           }
 

@@ -11,4 +11,4 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-export type {FileEntry, FileInformation} from '@ame/api';
+export type {FileEntry, FileInformation} from '@ame/domain';

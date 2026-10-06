@@ -11,25 +11,45 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
 import {NamedElement} from '@esmf/aspect-model-loader';
-import {OpenElementWindowComponent} from './open-element-window.component';
+import {ModelOpenerService} from '../model-opener/model-opener.service';
 
 @Injectable({providedIn: 'root'})
 export class OpenReferencedElementService {
-  private loadedFiles = inject(LoadedFilesService);
-  private matDialog = inject(MatDialog);
+  private readonly loadedFiles = inject(LoadedFilesService);
+  private readonly modelOpener = inject(ModelOpenerService);
+  private readonly notifications = inject(NotificationsService);
+  private readonly translate = inject(LanguageTranslationService);
 
   openReferencedElement(element: NamedElement) {
     if (!element) {
-      // error notification
       return;
     }
 
-    this.matDialog.open(OpenElementWindowComponent, {
-      data: {file: this.loadedFiles.getFileFromElement(element), urn: element.aspectModelUrn},
-    });
+    if (this.loadedFiles.isElementUnresolved(element)) {
+      this.notifications.warning({
+        title: this.translate.translateService.translate('notificationService.unresolvedElementTitle'),
+        message: this.translate.translateService.translate('notificationService.unresolvedElementMessage', {
+          element: element.aspectModelUrn,
+        }),
+      });
+      return;
+    }
+
+    const namespaceFile = this.loadedFiles.getNamespaceFileFromElement(element);
+    const file = namespaceFile?.name || this.loadedFiles.getFileFromElement(element) || 'aspect.ttl';
+    const namespace = namespaceFile?.namespace || element.aspectModelUrn.split('#')[0].replace('urn:samm:', '').replace('urn:bamm:', '');
+
+    this.modelOpener
+      .promptAndOpen({
+        file,
+        namespace,
+        aspectModelUrn: element.aspectModelUrn,
+        editElementUrn: element.aspectModelUrn,
+      })
+      .subscribe();
   }
 }

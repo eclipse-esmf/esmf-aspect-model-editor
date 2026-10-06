@@ -11,25 +11,35 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileEntry, FileInformation, ModelApiService, ModelData, WorkspaceStructure} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {config} from '@ame/shared';
-import {FileStatus, SidebarStateService} from '@ame/sidebar';
-import {isVersionOutdated} from '@ame/utils';
-import {DestroyRef, Injectable, inject} from '@angular/core';
+import {
+  FileEntry,
+  FileInformation,
+  FileStatus,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelCheckerPort,
+  ModelData,
+  RdfModelUtil,
+  WorkspaceFileLocation,
+  WorkspaceNamespacesService,
+  WorkspaceStore,
+  WorkspaceStructure,
+} from '@ame/domain';
+import {config, isVersionOutdated} from '@ame/shared';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel, Samm} from '@esmf/aspect-model-loader';
-import {Observable, Subject, forkJoin, map, of, switchMap} from 'rxjs';
+import {forkJoin, map, Observable, of, Subject, switchMap} from 'rxjs';
 import {ModelLoaderService} from './model-loader.service';
 
 @Injectable({providedIn: 'root'})
-export class ModelCheckerService {
+export class ModelCheckerService implements ModelCheckerPort {
   private destroyRef = inject(DestroyRef);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private loadedFilesService = inject(LoadedFilesService);
   private modelLoader = inject(ModelLoaderService);
-  private sidebarStateService = inject(SidebarStateService);
+  private workspaceNamespaces = inject(WorkspaceNamespacesService);
+  private workspaceStore = inject(WorkspaceStore);
 
   /**
    * Gets all files from workspace and process if they have any error or missing dependencies
@@ -41,7 +51,7 @@ export class ModelCheckerService {
     let namespacesStructure: WorkspaceStructure;
 
     const extractDependencies = (fileEntries: Array<FileEntry>) => {
-      const namespaces = this.sidebarStateService.namespacesState.namespaces();
+      const namespaces = this.workspaceNamespaces.namespaces();
       const unloadedFileEntries = this.filterUnloadedFiles(fileEntries, namespaces);
 
       if (unloadedFileEntries.length === 0) {
@@ -54,6 +64,7 @@ export class ModelCheckerService {
           });
       }
 
+      // Files with unresolved references are returned as well and stay openable; missing elements become placeholders.
       return this.modelApiService.fetchAllAspectMetaModel(unloadedFileEntries).pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(fileInformation => this.parseFileModels(fileInformation)),
@@ -113,12 +124,13 @@ export class ModelCheckerService {
     const status = new FileStatus(fileName);
     const currentFile = this.loadedFilesService.currentLoadedFile;
 
+    const sammVersion = modelVersion || rdfModel?.samm?.version || 'unknown';
     status.dependencies = dependencies;
     status.missingDependencies = missingDependencies;
-    status.sammVersion = modelVersion || 'unknown';
-    status.outdated = isVersionOutdated(modelVersion, config.currentSammVersion);
+    status.sammVersion = sammVersion;
+    status.outdated = isVersionOutdated(sammVersion, config.currentSammVersion);
     status.loaded = currentFile?.absoluteName === absoluteName;
-    status.errored = status.sammVersion === 'unknown' || missingDependencies.length > 0;
+    status.errored = status.sammVersion === 'unknown';
     status.aspectModelUrn = aspectModelUrn;
 
     signal?.next(absoluteName);
@@ -148,7 +160,7 @@ export class ModelCheckerService {
     return this.modelApiService.loadNamespacesStructure(onlyAspectModels).pipe(
       takeUntilDestroyed(this.destroyRef),
       map(structure => {
-        const requests = {};
+        const requests: Record<string, WorkspaceFileLocation> = {};
         for (const namespace in structure) {
           for (const element of structure[namespace]) {
             for (const value of element.models) {

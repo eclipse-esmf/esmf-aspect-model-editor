@@ -11,32 +11,42 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {ModelService, RdfSerializerService} from '@ame/rdf/services';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {ModelSavingTrackerService, NotificationsService, SaveValidateErrorsCodes} from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslationService} from '@ame/translation';
-import {DestroyRef, inject, Injectable, Injector, runInInjectionContext} from '@angular/core';
+import {
+  ConfigurationService,
+  getNamespaceModels,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelDocumentService,
+  ModelSaverPort,
+  ModelService,
+  NamespaceFile,
+  RdfPort,
+  WorkspaceStore,
+} from '@ame/domain';
+import {LanguageTranslationService, NotificationsService, SaveValidateErrorsCodes, unresolvedElementsOf} from '@ame/shared';
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RdfModel} from '@esmf/aspect-model-loader';
 import {catchError, delayWhen, first, map, Observable, of, retry, Subscription, switchMap, tap, throwError, timer} from 'rxjs';
-import {FileHandlingService} from './editor-toolbar/services/file-handling.service';
+import {ModelSavingTrackerService} from './model-saving-tracker.service';
+
+import {TabStateService} from './tabs/tab-state.service';
 
 @Injectable({providedIn: 'root'})
-export class ModelSaverService {
+export class ModelSaverService implements ModelSaverPort {
   private destroyRef = inject(DestroyRef);
-  private modelApiService = inject(ModelApiService);
-  private rdfSerializer = inject(RdfSerializerService);
+  private modelApiService = inject(ModelApiPort);
+  private rdfSerializer = inject(RdfPort);
   private loadedFiles = inject(LoadedFilesService);
   private modelService = inject(ModelService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private notificationsService = inject(NotificationsService);
-  private sidebarService = inject(SidebarStateService);
+  private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
   private configurationService = inject(ConfigurationService);
-  private injector = inject(Injector);
+  private modelDocumentService = inject(ModelDocumentService);
+
+  private readonly tabStateService = inject(TabStateService);
 
   private saveModelSubscription$: Subscription;
 
@@ -55,16 +65,27 @@ export class ModelSaverService {
       switchMap(() => this.writeModelToWorkspace(rdfModel)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
+        this.tabStateService.setTabDirty(this.tabStateService.activeTabId(), false);
         this.notificationsService.info({title: this.translate.language.notificationService.aspectSavedSuccess});
         console.info('Aspect model was saved to the local folder');
-        this.sidebarService.workspace.refresh();
+        this.workspaceStore.triggerRefresh();
       }),
       catchError(error => {
         console.error('Error on saving aspect model', error);
-        this.notificationsService.error({
-          title: this.translate.language.notificationService.aspectSavedError,
-          message: error?.error?.message,
-        });
+        const unresolvedElements = unresolvedElementsOf(error);
+        this.notificationsService.error(
+          unresolvedElements.length
+            ? {
+                title: this.translate.translateService.translate('notificationService.unresolvedReferencesTitle'),
+                message: this.translate.translateService.translate('notificationService.unresolvedReferencesSaveMessage', {
+                  elements: unresolvedElements.join(', '),
+                }),
+              }
+            : {
+                title: this.translate.language.notificationService.aspectSavedError,
+                message: error?.error?.message,
+              },
+        );
         return of(null);
       }),
     );
@@ -131,8 +152,7 @@ export class ModelSaverService {
           }));
         }
 
-        const copyright = this.settings.copyrightHeader.join('\n');
-        const contentWithCopyright = `${copyright}\n${content}`;
+        const contentWithCopyright = this.modelDocumentService.toDocument(content, currentModel);
 
         const originalAspectModelUrn = this.currentFile?.originalAspectModelUrn;
         const newAspectModelUrn = this.currentFile?.getAnyAspectModelUrn();
@@ -144,17 +164,15 @@ export class ModelSaverService {
         }
 
         if (this.currentFile?.isNameChanged || this.currentFile?.isNamespaceChanged) {
-          return runInInjectionContext(this.injector, () => {
-            const model = this.currentFile?.originalNamespace.split(':');
-            const [namespaceName, namespaceVersion] = model && model.length === 2 ? model : ['', ''];
+          const model = this.currentFile?.originalNamespace.split(':');
+          const [namespaceName, namespaceVersion] = model && model.length === 2 ? model : ['', ''];
+          const originalName = this.currentFile?.originalName;
 
-            return inject(FileHandlingService)
-              .isFileExistOnWorkspace(namespaceName, namespaceVersion, this.currentFile?.originalName)
-              .pipe(
-                map(exists => (exists ? this.modelApiService.deleteAspectModel(originalAspectModelUrn) : of(null))),
-                switchMap(() => saveModel()),
-              );
-          });
+          return this.modelApiService.loadNamespacesStructure().pipe(
+            map(structure => getNamespaceModels(structure, namespaceName, namespaceVersion).some(m => m.name === originalName)),
+            map(exists => (exists ? this.modelApiService.deleteAspectModel(originalAspectModelUrn) : of(null))),
+            switchMap(() => saveModel()),
+          );
         }
 
         return saveModel();

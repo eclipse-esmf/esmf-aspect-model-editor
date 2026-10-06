@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, LoadedFilesService} from '@ame/cache';
-import {ElementCreatorService} from '@ame/shared';
+import {CacheUtils, ElementCreatorService, LoadedFilesService} from '@ame/domain';
 import {AsyncPipe} from '@angular/common';
 import {Component, inject, input, OnInit, output, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';

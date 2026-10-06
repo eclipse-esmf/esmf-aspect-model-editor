@@ -12,6 +12,7 @@
   -->
 
 <ng-container *transloco="let t">
+  <ame-dialog-close-button />
   <h2 mat-dialog-title>
     {{ t('connectWithDialog.connect') }}
     <span class="element-icon element-icon--small" [ngClass]="getClass(connectWithModel())">{{ getFirstLetter(connectWithModel()) }}</span

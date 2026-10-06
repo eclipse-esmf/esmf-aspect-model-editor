@@ -13,12 +13,13 @@
 
 <ng-container *transloco="let t">
   <div class="container">
+    <ame-dialog-close-button />
     <h3>{{ t('editorCanvas.shapeSetting.field.structuredValue.elementsTitle') }}</h3>
     <mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="regex">
         <mat-header-cell *matHeaderCellDef>{{ t('editorCanvas.shapeSetting.field.structuredValue.captureGroup') }}</mat-header-cell>
         <mat-cell *matCellDef="let group">
-          <span [attr.data-cy]="'regex-group-' + group.regex">{{ group.regex }}</span>
+          <span [attr.data-testid]="'regex-group-' + group.regex">{{ group.regex }}</span>
         </mat-cell>
       </ng-container>
 
@@ -29,7 +30,7 @@
             class="property-field"
             [defaultProperty]="group.property"
             [excludedProperties]="data.parentProperties || []"
-            [attr.data-cy]="'property-' + group.regex"
+            [attr.data-testid]="'property-' + group.regex"
             (propertyChange)="onPropertyChange(index, group.key, $event)"
           ></ame-structured-value-property-field>
         </mat-cell>
@@ -40,7 +41,7 @@
     </mat-table>
 
     <div class="dialog-actions">
-      <button (click)="closeModal()" type="button" mat-button data-cy="propertiesCancelButton">
+      <button (click)="closeModal()" type="button" mat-button data-testid="propertiesCancelButton">
         {{ t('editorCanvas.shapeSetting.cancel') }}
       </button>
       <button
@@ -49,7 +50,7 @@
         type="button"
         mat-flat-button
         color="primary"
-        data-cy="propertiesSaveButton"
+        data-testid="propertiesSaveButton"
       >
         {{ t('editorCanvas.shapeSetting.save') }}
       </button>

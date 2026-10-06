@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {EditorService} from '@ame/editor';
+import {DraggablePort} from '@ame/domain';
 import {basicShapeGeometry, circleShapeGeometry} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
@@ -31,7 +31,7 @@ describe('DraggableElementComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [DraggableElementComponent],
-      providers: [{provide: EditorService, useValue: editorServiceMock}],
+      providers: [{provide: DraggablePort, useValue: editorServiceMock}],
     });
 
     fixture = TestBed.createComponent(DraggableElementComponent);

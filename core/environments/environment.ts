@@ -11,7 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import packageInfo from '../package.json';
+
 export const environment = {
   production: false,
-  version: require('../package.json').version,
+  version: packageInfo.version,
 };

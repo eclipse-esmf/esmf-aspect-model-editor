@@ -11,22 +11,16 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {RdfNodeService} from '@ame/aspect-exporter';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {ConfigurationService} from '@ame/settings-dialog';
+import {ConfigurationService, LoadedFilesService, ModelApiPort, ModelService, NamespaceFile, RdfNodePort, RdfPort} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {
-  ElectronSignalsService,
   IPC_RENDERER,
+  LanguageTranslationService,
   LoadingScreenService,
-  ModelSavingTrackerService,
   NotificationsService,
+  TauriSignalsService,
   TitleService,
 } from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslationService} from '@ame/translation';
 import {TestBed} from '@angular/core/testing';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {Store} from 'n3';
@@ -37,13 +31,17 @@ import {ConfirmDialogService} from '../../confirm-dialog/confirm-dialog.service'
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
 import {EditorService} from '../../editor.service';
 import {ModelLoaderService} from '../../model-loader.service';
+import {ModelOpenerService} from '../../model-opener/model-opener.service';
 import {ModelSaverService} from '../../model-saver.service';
+import {ModelSavingTrackerService} from '../../model-saving-tracker.service';
+import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
+import {TabStateService} from '../../tabs/tab-state.service';
 import {FileHandlingService} from './file-handling.service';
 import {FileUploadService} from './file-upload.service';
 
 describe('FileHandlingService', () => {
   let service: FileHandlingService;
-  let modelApiService: ModelApiService;
+  let modelApiService: ModelApiPort;
   let modelLoaderService: ModelLoaderService;
   let loadedFilesService: LoadedFilesService;
   let loadingScreenService: LoadingScreenService;
@@ -68,10 +66,10 @@ describe('FileHandlingService', () => {
         MockProvider(ModelService, {
           synchronizeModelToRdf: vi.fn(() => of(undefined)),
         }),
-        MockProvider(RdfService, {
+        MockProvider(RdfPort, {
           serializeModel: vi.fn(() => 'turtle content'),
         }),
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           validate: vi.fn(() => of([])),
           fetchAspectMetaModel: vi.fn(() => of({content: 'model content', sourceLocation: ''} as any)),
           fetchFormatedAspectModel: vi.fn(() => of('formatted content')),
@@ -87,10 +85,6 @@ describe('FileHandlingService', () => {
           open: vi.fn(),
           close: vi.fn(),
         }),
-        MockProvider(SidebarStateService, {
-          workspace: {close: vi.fn(), refresh: vi.fn()} as any,
-          sammElements: {open: vi.fn()} as any,
-        }),
         MockProvider(LanguageTranslationService, {
           language: {
             notificationDialog: {LOADING: 'Loading', CONTENT: 'Wait', VALIDATING: 'Validating'},
@@ -99,7 +93,7 @@ describe('FileHandlingService', () => {
           } as any,
           translateService: {translate: vi.fn(() => '')} as any,
         }),
-        MockProvider(ElectronSignalsService, {call: vi.fn()}),
+        MockProvider(TauriSignalsService, {call: vi.fn()}),
         MockProvider(ConfigurationService, {
           getSettings: vi.fn(() => ({copyrightHeader: ['# Header']}) as any),
         }),
@@ -124,12 +118,19 @@ describe('FileHandlingService', () => {
         }),
         MockProvider(ModelSaverService),
         MockProvider(TitleService, {updateTitle: vi.fn()}),
-        MockProvider(RdfNodeService),
+        {provide: RdfNodePort, useValue: {updateQuads: vi.fn()}},
+        MockProvider(TabStateService, {
+          onModelLoaded: vi.fn(),
+          isActiveTabCleanEmpty: vi.fn(() => true),
+        }),
+        MockProvider(ModelOpenerService, {
+          promptForUpload: vi.fn(() => of(true)),
+        }),
       ],
     });
 
     service = TestBed.inject(FileHandlingService);
-    modelApiService = TestBed.inject(ModelApiService);
+    modelApiService = TestBed.inject(ModelApiPort);
     modelLoaderService = TestBed.inject(ModelLoaderService);
     loadedFilesService = TestBed.inject(LoadedFilesService);
     loadingScreenService = TestBed.inject(LoadingScreenService);
@@ -142,6 +143,37 @@ describe('FileHandlingService', () => {
     expect(modelApiService.validate).toHaveBeenCalledWith('valid turtle content');
     expect(modelLoaderService.renderModel).toHaveBeenCalled();
     expect(loadingScreenService.close).toHaveBeenCalled();
+  });
+
+  it('loadModel should render models which only miss referenced elements', async () => {
+    const conflict = {status: 409, error: {error: {message: 'missing', unresolvedElements: ['urn:samm:gone:1.0.0#missing']}}};
+    vi.mocked(modelApiService.validate).mockReturnValue(throwError(() => conflict));
+
+    await new Promise(resolve => service.loadModel('turtle with missing references').subscribe(resolve));
+
+    expect(modelLoaderService.renderModel).toHaveBeenCalledWith(
+      expect.objectContaining({rdfAspectModel: 'turtle with missing references'}),
+    );
+    expect(notificationsService.error).not.toHaveBeenCalled();
+  });
+
+  it('loadModel should still reject models with other validation errors', async () => {
+    const conflict = {status: 409, error: {error: {message: 'Syntax error'}}};
+    vi.mocked(modelApiService.validate).mockReturnValue(throwError(() => conflict));
+
+    await new Promise(resolve => service.loadModel('broken turtle').subscribe({error: resolve}));
+
+    expect(modelLoaderService.renderModel).not.toHaveBeenCalled();
+    expect(notificationsService.error).toHaveBeenCalledWith(expect.objectContaining({message: 'Syntax error'}));
+  });
+
+  it('loadModel should reject models with an empty list of unresolved elements', async () => {
+    const conflict = {status: 409, error: {error: {message: 'Invalid', unresolvedElements: []}}};
+    vi.mocked(modelApiService.validate).mockReturnValue(throwError(() => conflict));
+
+    await new Promise(resolve => service.loadModel('broken turtle').subscribe({error: resolve}));
+
+    expect(modelLoaderService.renderModel).not.toHaveBeenCalled();
   });
 
   it('loadEmptyModel should reset loaded files and initialize empty model', async () => {
@@ -180,5 +212,134 @@ describe('FileHandlingService', () => {
   it('copyToClipboardSync should use ipcRenderer when available', () => {
     service.copyToClipboardSync('test text');
     expect(copyToClipboardMock).toHaveBeenCalledWith('test text');
+  });
+
+  describe('saveAspectModelToWorkspace', () => {
+    let confirmDialogService: ConfirmDialogService;
+    let modelSaverService: ModelSaverService;
+    let savingTracker: ModelSavingTrackerService;
+    let handleRdfModel: ReturnType<typeof vi.spyOn>;
+    let migrateAffectedModels: ReturnType<typeof vi.spyOn>;
+    const savedModel = new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#');
+
+    function mockState(isNamespaceChanged: boolean): void {
+      vi.spyOn(service as any, 'getModelLoaderState').mockReturnValue(
+        of({
+          originalModelName: 'org.old:1.0.0:Model.ttl',
+          newModelName: 'org.new:1.0.0:Model.ttl',
+          oldFileName: 'Model.ttl',
+          newFileName: 'Model.ttl',
+          loadedFromWorkspace: true,
+          isNameChanged: false,
+          isNamespaceChanged,
+        }),
+      );
+    }
+
+    function save(): Promise<unknown> {
+      return new Promise((resolve, reject) => service.saveAspectModelToWorkspace().subscribe({next: resolve, error: reject}));
+    }
+
+    beforeEach(() => {
+      const translation = TestBed.inject(LanguageTranslationService);
+      Object.assign(translation.language as any, {
+        confirmDialog: {
+          namespaceChange: {
+            phrase4: '',
+            phrase7: '',
+            title: 'Namespace changed',
+            okButton: 'Ok',
+            actionButton: 'Keep',
+            cancelButton: 'Cancel',
+          },
+        },
+        loadingScreenDialog: {
+          ...(translation.language as any).loadingScreenDialog,
+          savingToWorkspaceTitle: 'Saving',
+          savingToWorkspaceContent: 'Wait',
+        },
+      });
+
+      confirmDialogService = TestBed.inject(ConfirmDialogService);
+      confirmDialogService.open = vi.fn() as any;
+      modelSaverService = TestBed.inject(ModelSaverService);
+      savingTracker = TestBed.inject(ModelSavingTrackerService);
+      modelSaverService.saveModel = vi.fn(() => of(savedModel)) as any;
+      handleRdfModel = vi.spyOn(service as any, 'handleRdfModel').mockImplementation(() => undefined);
+      migrateAffectedModels = vi.spyOn(service as any, 'migrateAffectedModels').mockReturnValue(of(null));
+    });
+
+    it('should save directly without a namespace change', async () => {
+      mockState(false);
+
+      await save();
+
+      expect(confirmDialogService.open).not.toHaveBeenCalled();
+      expect(modelSaverService.saveModel).toHaveBeenCalledTimes(1);
+      expect(savingTracker.updateSavedModel).toHaveBeenCalledTimes(1);
+      expect(handleRdfModel).toHaveBeenCalledWith(savedModel, expect.anything());
+      expect(loadingScreenService.close).toHaveBeenCalled();
+    });
+
+    it('should migrate and save when the namespace change is confirmed with OK', async () => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(ConfirmDialogEnum.ok)) as any;
+
+      await save();
+
+      expect(loadingScreenService.open).toHaveBeenCalledTimes(1);
+      expect(migrateAffectedModels).toHaveBeenCalledWith('org.old:1.0.0:Model.ttl', 'org.new:1.0.0:Model.ttl');
+      expect(modelSaverService.saveModel).toHaveBeenCalledTimes(1);
+      expect(savingTracker.updateSavedModel).toHaveBeenCalledTimes(1);
+    });
+
+    it('should save without migration on the "keep" action', async () => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(ConfirmDialogEnum.action)) as any;
+
+      await save();
+
+      expect(loadingScreenService.open).toHaveBeenCalledTimes(1);
+      expect(migrateAffectedModels).not.toHaveBeenCalled();
+      expect(modelSaverService.saveModel).toHaveBeenCalledTimes(1);
+    });
+
+    it.each([
+      ['Cancel', ConfirmDialogEnum.cancel],
+      ['(x) / Escape', undefined],
+      ['an unknown result', 'something-else'],
+    ])('should neither save nor mark the model as saved on %s', async (_label, result) => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(result)) as any;
+
+      await save();
+
+      expect(loadingScreenService.open).not.toHaveBeenCalled();
+      expect(migrateAffectedModels).not.toHaveBeenCalled();
+      expect(modelSaverService.saveModel).not.toHaveBeenCalled();
+      expect(savingTracker.updateSavedModel).not.toHaveBeenCalled();
+      expect(handleRdfModel).toHaveBeenCalledWith(null, expect.anything());
+    });
+
+    it('should keep the unsaved state when saving returns no model', async () => {
+      mockState(false);
+      modelSaverService.saveModel = vi.fn(() => of(null)) as any;
+
+      await save();
+
+      expect(savingTracker.updateSavedModel).not.toHaveBeenCalled();
+      expect(loadingScreenService.close).toHaveBeenCalled();
+    });
+
+    it('should close the loading screen also when saving fails', async () => {
+      mockState(true);
+      confirmDialogService.open = vi.fn(() => of(ConfirmDialogEnum.action)) as any;
+      modelSaverService.saveModel = vi.fn(() => throwError(() => new Error('disk full'))) as any;
+
+      await expect(save()).rejects.toThrow('disk full');
+
+      expect(savingTracker.updateSavedModel).not.toHaveBeenCalled();
+      expect(loadingScreenService.close).toHaveBeenCalled();
+    });
   });
 });

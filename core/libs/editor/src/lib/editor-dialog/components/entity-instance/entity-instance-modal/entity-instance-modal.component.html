@@ -1,22 +1,20 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <h3 mat-dialog-title>{{ title() }}</h3>
 
-  <button class="close-button" (click)="onClose()" mat-icon-button tabindex="-1">
-    <mat-icon>close</mat-icon>
-  </button>
+  <ame-dialog-close-button />
 
   <form (submit)="$event.preventDefault(); onSave()">
     <mat-dialog-content>
@@ -27,7 +25,7 @@
           [ngClass]="hasNameError('checkShapeName') || hasNameError('whitespace') ? 'ng-invalid-error' : ''"
           matInput
           type="text"
-          data-cy="entityValueName"
+          data-testid="entityValueName"
         />
         @if (hasNameError('required')) {
           <mat-error class="entity-form-field__error">{{ t('editorCanvas.shapeSetting.field.name.pleaseDefine') }}</mat-error>
@@ -48,10 +46,10 @@
     </mat-dialog-content>
 
     <mat-dialog-actions class="sticky-dialog-actions" align="end">
-      <button (click)="onClose()" type="button" mat-raised-button data-cy="entityCancelButton">
+      <button (click)="onClose()" type="button" mat-raised-button data-testid="entityCancelButton">
         {{ t('editorCanvas.shapeSetting.propertiesModal.cancel') }}
       </button>
-      <button [disabled]="!valid()" mat-raised-button color="primary" type="submit" data-cy="entitySaveButton">
+      <button [disabled]="!valid()" mat-raised-button color="primary" type="submit" data-testid="entitySaveButton">
         {{ t('editorCanvas.shapeSetting.propertiesModal.save') }}
       </button>
     </mat-dialog-actions>

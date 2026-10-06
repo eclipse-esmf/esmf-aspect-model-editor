@@ -1,29 +1,27 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <form (submit)="$event.preventDefault(); asyncApiForm().valid() && generateAsyncApiSpec()" novalidate>
     <h2 mat-dialog-title>{{ t('generateAsyncapiSpecDialog.title') }}</h2>
-    <button class="close-button" type="button" mat-icon-button tabindex="-1" mat-dialog-close>
-      <mat-icon>close</mat-icon>
-    </button>
+    <ame-dialog-close-button />
 
     <mat-dialog-content>
       @if (!isGenerating()) {
         <p>{{ t('generateAsyncapiSpecDialog.configuration') }}</p>
         <mat-form-field appearance="fill">
           <mat-label>{{ t('generateAsyncapiSpecDialog.language') }}</mat-label>
-          <mat-select [formField]="asyncApiForm.language" data-cy="tbLanguageButton">
+          <mat-select [formField]="asyncApiForm.language" data-testid="tbLanguageButton">
             @for (language of languages(); track language) {
               <mat-option [value]="language.tag">{{ language.name }}</mat-option>
             }
@@ -33,9 +31,9 @@
         <section>
           <mat-form-field appearance="fill">
             <mat-label>{{ t('generateAsyncapiSpecDialog.outputFileFormat') }}</mat-label>
-            <mat-select [formField]="asyncApiForm.output" data-cy="tbOutputButton">
-              <mat-option data-cy="tbOutputButton-json" value="json">JSON</mat-option>
-              <mat-option data-cy="tbOutputButton-yaml" value="yaml">YAML</mat-option>
+            <mat-select [formField]="asyncApiForm.output" data-testid="tbOutputButton">
+              <mat-option data-testid="tbOutputButton-json" value="json">JSON</mat-option>
+              <mat-option data-testid="tbOutputButton-yaml" value="yaml">YAML</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -45,7 +43,7 @@
               [formField]="asyncApiForm.applicationId"
               matInput
               placeholder="application:id or application.id"
-              data-cy="tbApplicationIdInput"
+              data-testid="tbApplicationIdInput"
             />
           </mat-form-field>
 
@@ -55,10 +53,10 @@
               [formField]="asyncApiForm.channelAddress"
               matInput
               placeholder="/foo..., foo/... or mqtt://... "
-              data-cy="tbChannelAddressInput"
+              data-testid="tbChannelAddressInput"
             />
             @if (asyncApiForm.channelAddress().invalid()) {
-              <mat-error data-cy="tbChannelAddressError">
+              <mat-error data-testid="tbChannelAddressError">
                 {{ t('generateAsyncapiSpecDialog.channelAddressError') }}
               </mat-error>
             }
@@ -78,7 +76,7 @@
             class="dialog__checkbox"
             [formField]="asyncApiForm.writeSeparateFiles"
             [matTooltip]="t('generateAsyncapiSpecDialog.writeSeparateFilesTooltip')"
-            data-cy="writeSeparateFilesCheckbox"
+            data-testid="writeSeparateFilesCheckbox"
           >
             {{ t('generateAsyncapiSpecDialog.writeSeparateFiles') }}
           </mat-checkbox>
@@ -99,7 +97,7 @@
         type="submit"
         mat-flat-button
         color="primary"
-        data-cy="tbGenerateAsyncApiButton"
+        data-testid="tbGenerateAsyncApiButton"
       >
         <span>{{ t('generateAsyncapiSpecDialog.button.generate') }}</span>
       </button></mat-dialog-actions

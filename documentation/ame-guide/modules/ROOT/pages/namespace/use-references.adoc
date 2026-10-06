@@ -28,6 +28,7 @@ image::external-reference.png[width=80%]
 
 * You can only edit a reference in the Aspect Model from which it originated. Simply double-click the reference to open a new window that displays the referenced element inside the Aspect Model it is originally from.
 * When you drag and drop a reference, it will not include all the lower connections (dependencies) of the element.
+* If the file of a referenced element is later deleted or moved, the element is shown as a placeholder. See xref:namespace/missing-references.adoc[Aspect Models with missing references].
 * Referenced elements displayed in the Aspect Model Editor should never have outgoing references. +
 Reason: models can have many referenced elements from multiple files, and these referenced elements can have multiple references. Checking every pair of referenced elements to determine whether they refer to each other or not is not feasible. 
 ====

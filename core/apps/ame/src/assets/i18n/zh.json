@@ -7,10 +7,10 @@
     "cancel": "拒绝"
   },
   "saveModalDialog": {
-    "title": "关闭前保存更改?",
-    "content": "您有未保存的更改.",
-    "continueButton": "继续编辑",
-    "discardButton": "放弃更改",
+    "title": "是否保存更改?",
+    "content": "如果不保存，您的更改将会丢失。",
+    "continueButton": "取消",
+    "discardButton": "不保存",
     "saveButton": "保存"
   },
   "sammMigration": {
@@ -54,7 +54,8 @@
   },
   "notificationService": {
     "cannotDeleteEdgeTitle": "无法删除连接",
-    "cannotDeleteEdgeMessage": "无法直接删除连接。请删除相应的元素或重新连接它们。",
+    "cannotDeleteEdgeMessage": "无法删除来自外部命名空间的元素的连接。",
+    "cannotDeleteEdgeFilteredMessage": "只有在模型未被筛选时才能删除连接。",
     "onlyTwoElementsConnection": "请只选择两个元素来连接它们",
     "referneceConnectionError": "无法连接引用",
     "recursiveElements": "递归的elements",
@@ -92,13 +93,21 @@
     "loadModelInfoMessage": "查看文件内容，请先加载一个模型。",
     "fallbackToDefaultLanguageTitle": "回退到默认语言。",
     "fallbackToDefaultLanguageDescMessage": "在{{fileName}}中找不到在{{subject}}描述的指定语言，继续使用默认语言设置。",
-    "fallbackToDefaultLanguagePrefMessage": "在{{fileName}}中找不到在{{subject}}首选名称的指定语言，继续使用默认语言设置。"
+    "fallbackToDefaultLanguagePrefMessage": "在{{fileName}}中找不到在{{subject}}首选名称的指定语言，继续使用默认语言设置。",
+    "unresolvedReferencesTitle": "未找到引用的元素",
+    "unresolvedReferencesMessage": "以下引用的元素未在工作区中定义：{{elements}}。它们显示为占位符。请将缺失的文件添加到工作区或删除这些引用，以便保存模型。",
+    "unresolvedReferencesSaveMessage": "无法保存模型。以下引用的元素未在工作区中定义：{{elements}}。请将缺失的文件添加到工作区或删除这些引用。",
+    "unresolvedElementTitle": "未找到元素",
+    "unresolvedElementMessage": "引用的元素 {{element}} 未在工作区中定义，无法打开。"
   },
   "toolbar": {
     "newLoad": "创建/加载",
     "save": "保存",
     "addFileToNamespace": "增加文件至Namespace",
     "editHighlightedCell": "编辑高亮格",
+    "undo": "撤销 (Cmd/Ctrl+Z)",
+    "redo": "重做 (Cmd/Ctrl+Shift+Z)",
+    "historyFailed": "无法撤销或重做此更改",
     "delete": "删除",
     "collapseAll": "折叠所有",
     "expandAll": "扩充所有",
@@ -116,7 +125,10 @@
     "hideNavigation": "隐藏导航",
     "showNavigation": "显示导航",
     "modelUnfiltered": "不过滤Model",
-    "modelFilteredByProperties": "根据properties过滤Model"
+    "modelFilteredByProperties": "根据properties过滤Model",
+    "prefixes": "前缀",
+    "propertyFilterActivate": "属性过滤器：仅显示属性及其结构",
+    "propertyFilterDeactivate": "移除属性过滤器：显示整个模型"
   },
   "loadMenu": {
     "newWindow": "新窗口",
@@ -146,8 +158,8 @@
     "byProperties": "通过properties"
   },
   "declareNameDialog": {
-    "title": "声明共享Model的名称",
-    "infoContent": "您将要删除该Aspect, 这会将该Aspect Model转换为共享Model。请为此共享Model选择一个名称",
+    "title": "声明元素库的名称",
+    "infoContent": "您将要删除该Aspect, 这会将该Aspect Model转换为元素库（不含Aspect的模型）。请为此元素库选择一个名称",
     "namePlaceholder": "名称 *",
     "requiredError": "必填",
     "charactersError": "允许的字符：字母数字、空格、点 (.)、减号 (-) 和下划线 (_)",
@@ -155,11 +167,6 @@
     "alreadyDefinedError": "文件名已存在于您的命名空间中",
     "removeAspect": "移除Aspect",
     "cancel": "取消"
-  },
-  "selectLanguageToJsonSchemaDialog": {
-    "title": "选择一种语言来生成JSON Schema",
-    "language": "语言",
-    "selectButton": "选择"
   },
   "generateAasxDialog": {
     "title": "生成AASX",
@@ -327,7 +334,10 @@
     "cancel": "取消",
     "resetContent": "重置内容",
     "copyToClipboard": "复制到剪切板",
-    "downloadFile": "下载文件"
+    "downloadFile": "下载文件",
+    "language": "语言",
+    "languageHint": "JSON Schema 中描述（description）的语言",
+    "copied": "已复制到剪贴板"
   },
   "sidebar": {
     "loadingElements": "正在加载元素...",
@@ -337,6 +347,7 @@
     "theRootOfAvailableNamespaces": "所有本地可获取namespaces的根",
     "workspaceTip": "要在下面的列表中查看您当前的Model, 请将其保存到Workspace",
     "sammElements": "SAMM 元素",
+    "sammElementsDocumentation": "打开 SAMM {{version}} 元模型元素文档",
     "dragIntoView": "拖到视图中",
     "empty": {
       "loadingNamespaces": "加载Namespaces...",
@@ -359,15 +370,69 @@
       "refreshing": "刷新workspace...",
       "refresh": "刷新workspace",
       "copyWorkspacePath": "复制工作区路径",
-      "copiedWorkspacePath": "工作区路径已复制到剪贴板"
+      "copiedWorkspacePath": "工作区路径已复制到剪贴板",
+      "clear": "清空工作区"
     },
     "fileMenu": {
+      "open": "打开",
       "newWindow": "在新窗口中打开",
-      "openCurrent": "在当前打开",
+      "openTab": "在新标签页中打开",
+      "openCurrent": "在当前标签页中打开",
       "findElements": "寻找元素",
       "copyFilePath": "复制文件路径",
       "copiedFilePath": "文件路径已复制到剪贴板",
-      "delete": "删除"
+      "delete": "删除",
+      "deleteNamespace": "删除命名空间版本",
+      "namespaceMenu": "打开命名空间 {{namespace}} 的菜单"
+    },
+    "elementList": {
+      "title": "元素列表",
+      "close": "关闭元素列表"
+    },
+    "deletion": {
+      "checking": "正在检查引用...",
+      "blocked": {
+        "fileTitle": "无法删除Aspect Model",
+        "namespaceTitle": "无法删除命名空间",
+        "fileMessage": "无法删除 \"{{name}}\"，因为它仍被以下文件引用：",
+        "namespaceMessage": "无法删除命名空间 \"{{name}}\"，因为它仍被以下文件引用：",
+        "hint": "请先删除这些引用，然后重试。",
+        "unreadableTitle": "以下文件无法检查。请先修复或删除它们：",
+        "elements": "被引用的元素",
+        "close": "关闭"
+      },
+      "namespace": {
+        "title": "删除命名空间版本",
+        "phrase1": "您确定要删除命名空间版本 \"{{name}}\" 吗？",
+        "phrase2": "此命名空间版本包含 {{count}} 个Aspect Model文件，全部将被删除。",
+        "phrase3": "此操作不能撤消。",
+        "ok": "删除命名空间",
+        "success": "命名空间 \"{{name}}\" 已删除"
+      },
+      "clear": {
+        "title": "清空工作区",
+        "warning": "所有命名空间的全部 {{count}} 个Aspect Model文件将从工作区中删除。",
+        "undo": "如果没有备份，此操作无法撤消。",
+        "backup": "先创建备份（工作区文件夹中的ZIP）",
+        "confirmLabel": "输入 {{word}} 以确认",
+        "cancel": "取消",
+        "ok": "清空工作区",
+        "success": "工作区已清空",
+        "successMessage": "已删除 {{count}} 个文件。",
+        "successBackup": "已删除 {{count}} 个文件。已在工作区文件夹中创建备份。"
+      },
+      "failed": "删除失败",
+      "checkFailed": "无法检查引用。未删除任何内容。",
+      "reason": {
+        "busy": "请等待当前的检查或删除完成",
+        "fileOpenHere": "此 Aspect Model 已在此窗口的标签页中打开。请关闭该标签页后再删除",
+        "fileOpenElsewhere": "此 Aspect Model 已在另一个窗口中打开。请先在该窗口中关闭它，然后再删除",
+        "namespaceOpenHere": "删除前，请先关闭此窗口中该命名空间版本的所有模型",
+        "namespaceOpenElsewhere": "该命名空间版本的模型已在另一个窗口中打开。删除前，请先在该窗口中关闭它",
+        "clearEmpty": "工作区为空",
+        "clearOpenHere": "清空工作区前，请先关闭此窗口中所有工作区模型",
+        "clearOpenElsewhere": "另一个窗口中打开了工作区模型。清空工作区前，请先在该窗口中关闭它们"
+      }
     }
   },
   "settingsDialog": {
@@ -401,7 +466,16 @@
       "darkModeTooltip": "切换编辑器和画布的暗黑模式主题。",
       "autoValidationTooltip": "完成一次验证后，经过等待时间后，将触发下一次自动验证。",
       "autoFormattingTooltip": "自动设置图表上元素的格式。",
-      "displayDisambiguationLabelTooltip": "显示需要消歧的关系标签，例如操作输入/输出、特征左/右以及设置了 notInPayload 的属性。"
+      "displayDisambiguationLabelTooltip": "显示需要消歧的关系标签，例如操作输入/输出、特征左/右以及设置了 notInPayload 的属性。",
+      "elementOrder": "保存时的元素顺序",
+      "elementOrderTooltip": "定义保存的 Turtle 文件中元素的顺序。保留文件原有顺序可使 Git 差异保持较小。元素内部的属性顺序始终遵循 SAMM 规范。",
+      "elementOrderOptions": {
+        "keepOrderAfterParent": "保留顺序，新元素插入到其父元素之后",
+        "keepOrderAppend": "保留顺序，新元素追加到末尾",
+        "formatterDefault": "ESMF SDK 格式化程序的顺序"
+      },
+      "restoreSession": "启动时恢复已打开的模型",
+      "restoreSessionTooltip": "重新打开上次会话中已保存的工作区模型，并恢复其窗口大小和位置（仅限桌面应用）。已关闭的模型不会被重新打开。"
     },
     "languages": {
       "aspectModel": "Aspect Model",
@@ -409,6 +483,7 @@
       "chooseLanguage": "选择语言",
       "english": "英语",
       "chinese": "中文",
+      "german": "德语",
       "addLanguage": "增加语言",
       "selectLanguage": "选择语言",
       "startType": "开始键入或者删除本行"
@@ -426,22 +501,38 @@
         "requiredVersion": "版本是必填项",
         "invalidVersion": "无效的版本"
       }
+    },
+    "search": {
+      "placeholder": "搜索设置",
+      "clear": "清除搜索",
+      "noResults": "没有匹配的设置"
+    },
+    "scope": {
+      "application": "适用于所有模型",
+      "applicationHint": "应用范围，保存在本机",
+      "model": "模型：{{file}}",
+      "noModel": "未加载模型",
+      "modelHint": "适用于已打开的模型，并作为新模型的默认值"
+    },
+    "description": {
+      "automatedWorkflow": "编辑时自动保存、验证和格式化。",
+      "editor": "图形的外观以及模型写入 Turtle 文件的方式。",
+      "languages": "用户界面语言以及模型中首选名称和描述的语言。",
+      "namespaces": "已打开模型的命名空间和版本。",
+      "copyright": "写在 Turtle 文件顶部的注释头。每行必须以 # 开头。"
+    },
+    "resetSection": "恢复默认值",
+    "requiresModel": "加载 Aspect Model 后才能更改这些设置。",
+    "sectionHasErrors": "此部分包含错误",
+    "errorsIn": "修复“{{section}}”中的错误",
+    "noChanges": "没有需要应用的更改",
+    "unsavedChanges": {
+      "badge": "未保存的更改",
+      "title": "放弃更改？",
+      "content": "设置中包含尚未应用的更改。",
+      "keepEditing": "继续编辑",
+      "discard": "放弃"
     }
-  },
-  "elementModelDescription": {
-    "aspect": "每个Aspect Model的根元素",
-    "abstractProperty": "抽象命名值",
-    "property": "命名值",
-    "characteristic": "Property对于Aspect的意义",
-    "abstractEntity": "多个Value的逻辑封装的抽象",
-    "entity": "多个Value的逻辑封装",
-    "unit": "一个物理单位的定义",
-    "constraint": "应用于Characteristic的限制",
-    "trait": "封装对于Characteristics的多个限制",
-    "operation": "操作代表可以在 Aspect 上触发的操作",
-    "event": "Aspect支持的一个事件定义",
-    "entityInstance": "实体的一个实例",
-    "value": "一个带有语义元数据的值"
   },
   "editorCanvas": {
     "dragElementPrompt": "拖动一个元素开始创建模型",
@@ -458,6 +549,7 @@
       "selectAllReferences": "选择所有的参考",
       "format": "格式化",
       "delete": "删除",
+      "deleteConnection": "删除连接",
       "copyToClipboard": "复制到剪切板"
     },
     "shapeSetting": {
@@ -546,7 +638,10 @@
         },
         "seeInput": {
           "typeToSearch": "输入搜索或写入 URN 或 URL",
-          "invalidUri": "无效的 URI"
+          "invalidUri": "无效的 URI",
+          "copy": "复制 URI",
+          "remove": "移除",
+          "copied": "URI 已复制到剪贴板"
         },
         "value": {
           "pleaseDefine": "请定义一个值"
@@ -578,7 +673,7 @@
   "confirmDialog": {
     "createAspect": {
       "title": "创建新的Aspect",
-      "aspectCreationWarning": "您将创建一个Aspect, 它将将此共享模型转换为Aspect Model。",
+      "aspectCreationWarning": "您将创建一个Aspect, 它将此元素库转换为Aspect Model。",
       "nameReplacementNotice": "Model的当前名称将替换为Aspect的名称",
       "closeButton": "取消",
       "okButton": "创建Aspect"
@@ -668,7 +763,9 @@
     "foldNamespaces": "折叠namespaces",
     "outdatedFile": "此文件基于较旧的SAMM版本({{sammVersion}})",
     "erroredFile": "这个文件加载出错",
-    "currentFile": "该文件在当前窗口中打开"
+    "fileWithMissingReferences": "引用了缺失命名空间中的元素：{{namespaces}}。这些元素显示为占位符。",
+    "currentFile": "该文件在当前窗口中打开",
+    "openNewModelTab": "打开新模型标签页"
   },
   "searches": {
     "elementsLabel": "寻找元素...",
@@ -684,7 +781,18 @@
         "content": "您即将从命名空间<b>{{namespace}}</b>打开文件<b>{{fileName}}</b>。<br />请选择打开的位置",
         "cancel": "取消",
         "openInThisWindow": "在当前窗口打开",
+        "openInNewTab": "在新标签页打开",
         "openInNewWindow": "在新窗口打开"
+      }
+    },
+    "elements": {
+      "partialMatches": "没有元素包含所有搜索词。显示最接近的结果。",
+      "fuzzyMatches": "没有完全匹配的结果。显示相似的元素。",
+      "fields": {
+        "name": "名称",
+        "preferredName": "首选名称",
+        "description": "描述",
+        "urn": "URN"
       }
     }
   },
@@ -728,6 +836,42 @@
     "errorMessage": "打开编辑器时出错。",
     "openingEditor": "正在打开编辑器..."
   },
+  "backendStatus": {
+    "startingTitle": "正在启动后端...",
+    "startingDescription": "Aspect Model Editor 正在启动其后端服务，这可能需要一点时间。",
+    "failedTitle": "无法启动后端",
+    "failedDescription": "您可以尝试重新启动后端或关闭应用程序。",
+    "retry": "重试",
+    "quit": "关闭应用程序"
+  },
+  "textView": {
+    "toggleLabel": "编辑器视图",
+    "graph": "编辑",
+    "aspectModel": "方面模型",
+    "graphTooltip": "显示图形化模型编辑器",
+    "textTooltip": "以 Turtle 文本显示方面模型",
+    "title": "方面模型 (Turtle)",
+    "readOnly": "只读",
+    "unformatted": "未格式化",
+    "unformattedTooltip": "后端格式化程序不可用，显示的是模型的原始序列化结果。",
+    "lines": "{{count}} 行",
+    "problems": "问题：{{count}}",
+    "nextProblem": "转到下一个问题 (F8)。",
+    "indirectUnresolved": "被引用文件使用但缺失的元素：{{elements}}",
+    "unresolvedReference": "在工作区中找不到引用的元素：{{urn}}。在该元素可用之前，无法保存模型。",
+    "search": "搜索 (Ctrl+F)",
+    "refresh": "重新加载",
+    "copy": "复制到剪贴板",
+    "copied": "方面模型已复制到剪贴板",
+    "loading": "正在准备方面模型文本...",
+    "empty": "模型为空。请在图形视图中添加元素以查看其 Turtle 表示。",
+    "loadError": "无法创建方面模型的文本表示。",
+    "retry": "重试",
+    "sortAlphabetically": "按字母顺序排列元素",
+    "sortAlphabeticallyDisabled": "当元素顺序由格式化程序定义时不可用（设置 > 编辑器）",
+    "sorted": "元素已按字母顺序排列。保存模型以将新顺序写入文件。",
+    "prefixes": "管理前缀"
+  },
   "menu": {
     "file": {
       "label": "文件",
@@ -746,7 +890,8 @@
       "copyToClipboard": "粘贴到剪切板",
       "saveToWorkspace": "保存至Workspace",
       "exportModel": "导出Model",
-      "exportPackage": "导出Package"
+      "exportPackage": "导出Package",
+      "settings": "设置..."
     },
     "view": {
       "label": "视图",
@@ -790,5 +935,50 @@
       "elements": "元素",
       "files": "文件"
     }
+  },
+  "prefixes": {
+    "prefix": "前缀",
+    "namespace": "命名空间",
+    "management": {
+      "title": "前缀",
+      "description": "前缀只是命名空间的简写。重命名前缀只会改变 IRI 在文件中的写法，IRI 本身保持不变。",
+      "status": "状态",
+      "used": "已使用",
+      "unused": "未使用",
+      "default": "（默认）",
+      "protected": "此前缀属于模型或 SAMM/RDF 词汇表，无法更改",
+      "rename": "重命名前缀",
+      "save": "保存",
+      "cancel": "取消",
+      "remove": "删除前缀",
+      "addTitle": "添加前缀",
+      "add": "添加",
+      "close": "关闭"
+    },
+    "reference": {
+      "title": "引用命名空间的前缀",
+      "description": "该元素来自一个在此 Aspect Model 中尚无前缀的命名空间。请选择文件中使用的前缀。",
+      "conflict": "被引用的文件使用前缀 \"{{ alias }}\"，但在此 Aspect Model 中它已表示 {{ namespace }}。请选择其他前缀。",
+      "example": "该元素将写为",
+      "automatic": "使用自动前缀",
+      "add": "添加前缀"
+    },
+    "errors": {
+      "invalidAlias": "前缀必须以字母开头，只能包含字母、数字、\"_\"、\"-\" 和 \".\"（不能在末尾）。不能使用保留前缀。",
+      "invalidNamespace": "请输入有效的命名空间 IRI，例如 https://example.org/battery#",
+      "aliasInUse": "该前缀已用于其他命名空间。",
+      "aliasInUseBy": "该前缀已用于 {{ namespace }}。",
+      "namespaceInUse": "该命名空间已有前缀。",
+      "unknownAlias": "该前缀不存在。",
+      "protectedAlias": "此前缀无法更改。",
+      "prefixInUse": "模型元素正在使用该前缀，无法删除。"
+    }
+  },
+  "session": {
+    "modelNotFound": "找不到所需的 Aspect Model {{name}}。",
+    "modelNotRestored": "无法恢复 Aspect Model {{name}}。"
+  },
+  "dialog": {
+    "close": "关闭 (Esc)"
   }
 }

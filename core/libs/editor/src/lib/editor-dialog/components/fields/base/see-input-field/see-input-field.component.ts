@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
+import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
+import {ClipboardService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {AsyncPipe} from '@angular/common';
 import {Component, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
@@ -57,6 +58,10 @@ interface SeeElement {
   ],
 })
 export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> implements OnInit, OnDestroy {
+  private readonly clipboard = inject(ClipboardService);
+  private readonly notifications = inject(NotificationsService);
+  private readonly translation = inject(LanguageTranslationService);
+
   public readonly seeInput = viewChild<ElementRef>('see');
   public readonly chipList = viewChild('chipList', {read: MatChipGrid});
 
@@ -111,9 +116,8 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
       }
 
       const seeValue = this.getCurrentValue();
-      const decodedValue = this.decodeUriComponent(seeValue);
       this.elements.set(
-        [...(decodedValue?.split(',') || [])].filter(Boolean).map(urn => ({
+        [...(seeValue?.split(',') || [])].filter(Boolean).map(urn => ({
           name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
           urn,
         })),
@@ -151,6 +155,17 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
     );
   }
 
+  /** Copies the URI of a see entry exactly as it is stored (no decoding). */
+  copyElement(element: SeeElement, event?: Event): void {
+    event?.stopPropagation();
+    this.clipboard.copy(element.urn);
+    this.notifications.success({
+      title: this.translation.translateService.translate('editorCanvas.shapeSetting.field.seeInput.copied'),
+      message: element.urn,
+      timeout: 3000,
+    });
+  }
+
   removeElement(element: SeeElement) {
     this.elements.set(this.elements().filter(e => e !== element));
     this.syncSeeValue();
@@ -180,12 +195,12 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
     this.disabledState.set(
       this.metaModelDialogService.isReadOnly() || this.loadedFiles.isElementExtern(this.metaModelElement) || this.isDisabled(),
     );
+    // The see values are kept exactly as written in the model: decoding them would change the URI (e.g. %23 -> #).
     const currentValue = this.getCurrentValue();
-    const decodedValue = this.decodeUriComponent(currentValue);
-    this.seeModel.set(decodedValue || '');
+    this.seeModel.set(currentValue || '');
     this.unregisterField = this.signalForm().register(this.fieldName, this.seeField);
     this.elements.set(
-      [...(decodedValue?.split(',') || [])].filter(Boolean).map(urn => ({
+      [...(currentValue?.split(',') || [])].filter(Boolean).map(urn => ({
         name: urn.includes('#') && urn.startsWith('urn:samm') ? urn.split('#')[1] : '',
         urn,
       })),
@@ -201,9 +216,5 @@ export class SeeInputFieldComponent extends InputFieldComponent<NamedElement> im
     if (this.metaModelElement) {
       this.metaModelElement.see = this.elements().map(({urn}) => urn);
     }
-  }
-
-  private decodeUriComponent(seeReference: string): string {
-    return seeReference ? decodeURIComponent(seeReference) : null;
   }
 }

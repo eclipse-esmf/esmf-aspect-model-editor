@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils} from '@ame/cache';
-import {RdfService} from '@ame/rdf/services';
+import {CacheUtils, RdfPort} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -56,7 +55,7 @@ export interface RightCharacteristicOption {
 export class RightInputFieldComponent extends InputFieldComponent<DefaultEither> implements OnInit, OnDestroy {
   private notificationsService = inject(NotificationsService);
   private validators = inject(EditorDialogValidators);
-  public rdfService = inject(RdfService);
+  public rdfService = inject(RdfPort);
 
   private readonly displayModel = signal('');
   private readonly characteristicModel = signal<Characteristic | null>(null);
@@ -107,6 +106,14 @@ export class RightInputFieldComponent extends InputFieldComponent<DefaultEither>
 
   getCurrentValue() {
     return this.previousData()?.[this.fieldName] || this.metaModelElement?.right || null;
+  }
+
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.right ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setRightControl();
   }
 
   ngOnInit(): void {

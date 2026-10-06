@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {TestBed} from '@angular/core/testing';
 import {
@@ -85,6 +85,24 @@ describe('EntityInstanceService', () => {
     expect(confirmDialogService.open).toHaveBeenCalled();
     expect(cache.get('urn:test:1.0.0#CarInstance')).toBeUndefined();
     expect(callback).toHaveBeenCalled();
+  });
+
+  it.each([undefined, ConfirmDialogEnum.cancel])('onEntityRemove keeps entity instances when the dialog is dismissed (%s)', result => {
+    vi.mocked(confirmDialogService.open).mockReturnValue(of(result));
+    const entity = new DefaultEntity({aspectModelUrn: 'urn:test:1.0.0#Vehicle', name: 'Vehicle', metaModelVersion: '2.0.0'});
+    const instance = new DefaultEntityInstance({
+      aspectModelUrn: 'urn:test:1.0.0#CarInstance',
+      name: 'CarInstance',
+      type: entity,
+      metaModelVersion: '2.0.0',
+    });
+    cache.resolveInstance(instance);
+
+    const callback = vi.fn();
+    service.onEntityRemove(entity, callback);
+
+    expect(cache.get('urn:test:1.0.0#CarInstance')).toBe(instance);
+    expect(callback).not.toHaveBeenCalled();
   });
 
   it('onNewProperty should add assertion to entity instances and notify', () => {

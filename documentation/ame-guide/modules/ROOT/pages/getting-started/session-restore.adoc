@@ -1,0 +1,76 @@
+:page-partial:
+
+[[session-restore]]
+= Restore the last session
+
+NOTE: This function is only available in the desktop app of the Aspect Model Editor.
+
+The Aspect Model Editor remembers which Aspect Models are open in which window.
+On the next start, it opens these models again and restores the size and position of their windows.
+
+[[session-restore-what]]
+== What is remembered
+
+For each window:
+
+* the opened workspace models (namespace, file name and Aspect Model URN) in the order of the tabs,
+* the active tab,
+* the window size and position, and whether the window was maximized or in fullscreen mode.
+
+Only models which are saved in the workspace are remembered.
+New models which were never saved and models loaded only via copy & paste are not restored.
+
+[[session-restore-when]]
+== When models are removed from the session
+
+The session is updated whenever you open or close a model or move or resize a window.
+
+[cols="45%,55%"]
+|===
+| Situation | Result on the next start
+
+| You close a tab
+| The model is removed from the session and is *not* restored.
+
+| You close an additional editor window
+| That window is removed from the session and is *not* restored.
+
+| You close the last editor window or quit the Aspect Model Editor
+| All windows and models which were open at that time are restored.
+
+| The Aspect Model Editor crashes, is killed or the computer is shut down
+| The last saved session is kept. All windows and models which were open in that session are restored.
+|===
+
+Example: models A, B and C are open. You close C, then the computer is shut down.
+On the next start, A and B are opened again.
+
+[[session-restore-missing]]
+== Models which no longer exist
+
+If a remembered model was deleted or moved in the meantime, it is skipped and you get the warning _The required Aspect Model <name> could not be found._ in the xref:getting-started/ui-overview.adoc#notifications[notifications].
+All other models are opened.
+If a model exists but cannot be opened, you get the error _The Aspect Model <name> could not be restored._
+
+Models whose referenced elements are missing are restored nevertheless; the missing elements are shown as placeholders, see xref:namespace/missing-references.adoc[Missing references].
+
+An additional window is closed again if none of its models can be opened.
+A window is only placed at its remembered position if its title bar is visible on one of the connected monitors, e.g. after a monitor was disconnected it is opened at the default position.
+
+[[session-restore-setting]]
+== Switch the restore on or off
+
+The restore is switched on by default.
+To switch it off, open xref:getting-started/settings.adoc#editor[Settings > Editor] and clear *Restore open models on start*.
+
+[[session-restore-file]]
+== Session file
+
+The session is stored in the file `session.json` in the configuration directory of the application, e.g.:
+
+* macOS: `~/Library/Application Support/org.eclipse.esmf.ame/session.json`
+* Windows: `%APPDATA%\org.eclipse.esmf.ame\session.json`
+* Linux: `~/.config/org.eclipse.esmf.ame/session.json`
+
+The file is written atomically, so a crash while writing does not damage it.
+If you delete the file, the editor starts without restoring any models.

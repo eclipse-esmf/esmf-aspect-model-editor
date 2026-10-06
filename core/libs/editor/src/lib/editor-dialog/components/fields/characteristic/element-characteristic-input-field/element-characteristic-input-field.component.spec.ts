@@ -11,10 +11,9 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {RdfService} from '@ame/rdf/services';
-import {ElementCreatorService, NotificationsService, SearchService} from '@ame/shared';
+import {ElementCreatorService, LoadedFilesService, NamespaceFile, RdfPort} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
+import {NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -70,7 +69,7 @@ describe('ElementCharacteristicInputFieldComponent', () => {
         }),
         MockProvider(ElementCreatorService),
         MockProvider(NotificationsService, {error: vi.fn()}),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
         MockProvider(MaxGraphService),
       ],

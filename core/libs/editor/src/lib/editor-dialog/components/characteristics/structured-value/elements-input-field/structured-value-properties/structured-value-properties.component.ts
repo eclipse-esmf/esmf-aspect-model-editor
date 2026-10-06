@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {applyEach, form, required} from '@angular/forms/signals';
 import {MatButton} from '@angular/material/button';
@@ -49,6 +50,7 @@ export interface StructuredValueTableRow {
   templateUrl: './structured-value-properties.component.html',
   styleUrls: ['./structured-value-properties.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatTable,
     MatHeaderCell,
     MatHeaderCellDef,
@@ -119,6 +121,10 @@ export class StructuredValuePropertiesComponent implements OnInit {
       }
       return updated;
     });
+  }
+
+  requestClose(): void {
+    this.closeModal();
   }
 
   closeModal(save?: boolean) {

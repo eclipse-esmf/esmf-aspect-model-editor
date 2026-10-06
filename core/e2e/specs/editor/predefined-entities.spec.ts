@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {test} from '@playwright/test';
+import {AppHelper} from '../../support/app-helper';
+import {FIELD_extends, SELECTOR_tbDeleteButton} from '../../support/constants';
+import {readFixture} from '../../support/drag-drop-utils';
+
+test.describe('Predefined Entities - Point3D, FileResource, TimeSeriesEntity', () => {
+  let helper: AppHelper;
+
+  test.beforeEach(async ({page}) => {
+    helper = new AppHelper(page);
+    await helper.startModelling();
+  });
+
+  test('should create and delete Point3d entity structure', async ({page}) => {
+    await helper.clickAddShapePlusIcon('Characteristic1');
+    await helper.dbClickShape('Entity1');
+    await helper.selectAutocomplete(FIELD_extends, 'Point3d');
+    await helper.clickSaveButton();
+
+    await helper.shapeExists('Point3d');
+    await helper.shapeExists('x');
+    await helper.shapeExists('y');
+    await helper.shapeExists('z');
+
+    // Delete Point3d
+    await helper.clickShape('Point3d');
+    await page.locator(SELECTOR_tbDeleteButton).click({force: true});
+    await helper.shapeExists('Point3d', false);
+    await helper.shapeExists('x', false);
+    await helper.shapeExists('y', false);
+    await helper.shapeExists('z', false);
+  });
+
+  test('should create and delete FileResource entity structure', async ({page}) => {
+    await helper.clickAddShapePlusIcon('Characteristic1');
+    await helper.dbClickShape('Entity1');
+    await helper.selectAutocomplete(FIELD_extends, 'FileResource');
+    await helper.clickSaveButton();
+
+    await helper.shapeExists('FileResource');
+    await helper.shapeExists('resource');
+    await helper.shapeExists('mimeType');
+
+    // Delete FileResource
+    await helper.clickShape('FileResource');
+    await page.locator(SELECTOR_tbDeleteButton).click({force: true});
+    await helper.shapeExists('FileResource', false);
+    await helper.shapeExists('resource', false);
+    await helper.shapeExists('mimeType', false);
+  });
+
+  test('should create and import TimeSeriesEntity structure', async () => {
+    const rdfString = readFixture('time-series-entity');
+    await helper.loadModel(rdfString);
+
+    await helper.shapeExists('TimeSeriesEntity');
+    await helper.shapeExists('value');
+    await helper.shapeExists('timestamp');
+    await helper.shapeExists('Timestamp');
+  });
+});

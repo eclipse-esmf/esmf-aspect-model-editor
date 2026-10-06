@@ -1,0 +1,104 @@
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
+
+<ng-container *transloco="let t">
+  <div>
+    <div>
+      <div class="settings-container">
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle
+                [formField]="form.editorConfiguration.enableHierarchicalLayout"
+                [matTooltip]="t('settingsDialog.configuration.hierarchicalLayoutTooltip')"
+              >
+                {{ t('settingsDialog.configuration.usingHierarchicalLayout') }}
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.editorConfiguration.showConnectionLabels" data-testid="connectionLabelsToggle">
+                {{ t('settingsDialog.configuration.displayDisambiguationLabel') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.displayDisambiguationLabelTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.editorConfiguration.darkMode" data-testid="darkModeToggle">
+                {{ t('settingsDialog.configuration.darkMode') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.darkModeTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-item__content">
+            <div class="setting-item__toggle">
+              <mat-slide-toggle [formField]="form.editorConfiguration.restoreSession" data-testid="restoreSessionToggle">
+                {{ t('settingsDialog.configuration.restoreSession') }}
+              </mat-slide-toggle>
+              <mat-icon
+                [matTooltipShowDelay]="0"
+                [matTooltipHideDelay]="100"
+                [matTooltip]="t('settingsDialog.configuration.restoreSessionTooltip')"
+              >
+                info
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-item__content setting-item__content--select">
+            <mat-form-field class="setting-item__select" subscriptSizing="dynamic">
+              <mat-label>{{ t('settingsDialog.configuration.elementOrder') }}</mat-label>
+              <mat-select [formField]="form.editorConfiguration.elementOrderStrategy" data-testid="elementOrderSelect">
+                @for (strategy of elementOrderStrategies; track strategy) {
+                  <mat-option [value]="strategy">{{ t('settingsDialog.configuration.elementOrderOptions.' + strategy) }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <mat-icon
+              [matTooltipShowDelay]="0"
+              [matTooltipHideDelay]="100"
+              [matTooltip]="t('settingsDialog.configuration.elementOrderTooltip')"
+            >
+              info
+            </mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

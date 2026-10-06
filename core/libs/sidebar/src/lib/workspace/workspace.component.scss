@@ -17,6 +17,7 @@ $first-column-width: 450px;
   display: flex;
   flex-direction: column;
   width: $first-column-width;
+  max-width: calc(100vw - 120px);
   height: 100%;
   background-color: var(--ame-surface-card, #f3f3f3);
   color: var(--ame-font, inherit);
@@ -32,7 +33,7 @@ $first-column-width: 450px;
 .column-two {
   position: absolute;
   top: 0;
-  left: $first-column-width;
+  left: 100%;
   z-index: 1;
 }
 
@@ -50,6 +51,15 @@ $first-column-width: 450px;
 
   .title {
     display: flex;
+  }
+
+  // A disabled button does not receive pointer events, so its tooltip sits on a wrapper.
+  .clear-wrapper {
+    display: inline-flex;
+  }
+
+  .clear:not([disabled]):hover mat-icon {
+    color: var(--ame-error, #e83f22);
   }
 
   h2 {

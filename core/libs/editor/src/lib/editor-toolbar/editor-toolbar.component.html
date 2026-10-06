@@ -1,17 +1,17 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <!-- Toolbar -->
   <div
     class="menu-items"
@@ -26,7 +26,31 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty() || selectedCells()?.length !== 1"
+        [disabled]="isTextView() || !canUndo()"
+        [matTooltip]="t('toolbar.undo')"
+        (itemClick)="onUndo()"
+        data-testid="tbUndoButton"
+      >
+        <mat-icon class="material-icons">undo</mat-icon>
+      </ame-bar-item>
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isTextView() || !canRedo()"
+        [matTooltip]="t('toolbar.redo')"
+        (itemClick)="onRedo()"
+        data-testid="tbRedoButton"
+      >
+        <mat-icon class="material-icons">redo</mat-icon>
+      </ame-bar-item>
+    </div>
+
+    <div class="menu-items__group separator">
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isTextView() || isModelEmpty() || selectedCells()?.length !== 1"
         [matTooltip]="t('toolbar.editHighlightedCell')"
         (itemClick)="editSelectedCell()"
       >
@@ -36,10 +60,10 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty() || selectedCells()?.length === 0"
+        [disabled]="isTextView() || isModelEmpty() || !hasSelection()"
         [matTooltip]="t('toolbar.delete')"
         (itemClick)="onDelete()"
-        data-cy="tbDeleteButton"
+        data-testid="tbDeleteButton"
       >
         <mat-icon class="material-icons">delete</mat-icon>
       </ame-bar-item>
@@ -47,10 +71,10 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty() || selectedCells()?.length !== 2"
+        [disabled]="isTextView() || isModelEmpty() || selectedCells()?.length !== 2"
         [matTooltip]="t('toolbar.connect')"
         (itemClick)="onConnect()"
-        data-cy="tbConnectButton"
+        data-testid="tbConnectButton"
       >
         <mat-icon class="material-icons">commit</mat-icon>
       </ame-bar-item>
@@ -59,10 +83,10 @@
         <ame-bar-item
           [matTooltipShowDelay]="0"
           [matTooltipHideDelay]="0"
-          [disabled]="isModelEmpty()"
+          [disabled]="isTextView() || isModelEmpty()"
           [matTooltip]="t('toolbar.collapseAll')"
           (itemClick)="onToggleExpand()"
-          data-cy="collapseExpandToggle"
+          data-testid="collapseExpandToggle"
         >
           <mat-icon class="material-icons rotate-45">unfold_less</mat-icon>
         </ame-bar-item>
@@ -70,10 +94,10 @@
         <ame-bar-item
           [matTooltipShowDelay]="0"
           [matTooltipHideDelay]="0"
-          [disabled]="isModelEmpty()"
+          [disabled]="isTextView() || isModelEmpty()"
           [matTooltip]="t('toolbar.expandAll')"
           (itemClick)="onToggleExpand()"
-          data-cy="collapseExpandToggle"
+          data-testid="collapseExpandToggle"
         >
           <mat-icon class="material-icons rotate-45 editor-icon-active">unfold_more</mat-icon>
         </ame-bar-item>
@@ -82,12 +106,25 @@
       <ame-bar-item
         [matTooltipShowDelay]="0"
         [matTooltipHideDelay]="0"
-        [disabled]="isModelEmpty()"
+        [disabled]="isTextView() || isModelEmpty()"
         [matTooltip]="t('toolbar.format')"
         (itemClick)="onFormat()"
-        data-cy="formatButton"
+        data-testid="formatButton"
       >
         <mat-icon class="material-icons rotate-90">schema</mat-icon>
+      </ame-bar-item>
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isTextView() || isModelEmpty()"
+        [matTooltip]="isPropertyFilterActive() ? t('toolbar.propertyFilterDeactivate') : t('toolbar.propertyFilterActivate')"
+        [class.toolbar-item--active]="isPropertyFilterActive()"
+        [attr.aria-pressed]="isPropertyFilterActive()"
+        (itemClick)="togglePropertyFilter()"
+        data-testid="tbPropertyFilterButton"
+      >
+        <mat-icon class="material-icons">filter_list</mat-icon>
       </ame-bar-item>
 
       <ame-bar-item
@@ -96,17 +133,28 @@
         [disabled]="isModelEmpty()"
         [matTooltip]="t('toolbar.validate')"
         (itemClick)="validateFile()"
-        data-cy="tbValidateButton"
+        data-testid="tbValidateButton"
       >
         <mat-icon class="material-icons">task</mat-icon>
+      </ame-bar-item>
+
+      <ame-bar-item
+        [matTooltipShowDelay]="0"
+        [matTooltipHideDelay]="0"
+        [disabled]="isModelEmpty()"
+        [matTooltip]="t('toolbar.prefixes')"
+        (itemClick)="openPrefixManagement()"
+        data-testid="tbPrefixesButton"
+      >
+        <mat-icon class="material-icons">alternate_email</mat-icon>
       </ame-bar-item>
     </div>
 
     <div class="menu-items__group">
-      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomInProgress')" (itemClick)="zoomIn()">
+      <ame-bar-item [disabled]="isTextView() || isModelEmpty()" [matTooltip]="t('editorCanvas.zoomInProgress')" (itemClick)="zoomIn()">
         <mat-icon>zoom_in</mat-icon>
       </ame-bar-item>
-      <ame-bar-item [disabled]="isModelEmpty()" [matTooltip]="t('editorCanvas.zoomOutProgress')" (itemClick)="zoomOut()">
+      <ame-bar-item [disabled]="isTextView() || isModelEmpty()" [matTooltip]="t('editorCanvas.zoomOutProgress')" (itemClick)="zoomOut()">
         <mat-icon>zoom_out</mat-icon>
       </ame-bar-item>
     </div>

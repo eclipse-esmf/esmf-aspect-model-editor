@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
+import {LoadedFilesService, NamespaceFile} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {SearchService} from '@ame/shared';
 import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';

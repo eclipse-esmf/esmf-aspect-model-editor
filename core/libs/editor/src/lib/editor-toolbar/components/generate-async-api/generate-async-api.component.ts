@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {form, FormField, pattern} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -27,11 +27,9 @@ import {finalize, map} from 'rxjs';
 import {first} from 'rxjs/operators';
 import {EditorService} from '../../../editor.service';
 
-import {AsyncApi} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
+import {AsyncApi, LoadedFilesService, SammLanguageSettingsService} from '@ame/domain';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatIcon} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
@@ -42,6 +40,7 @@ export type {AsyncApi};
   templateUrl: './generate-async-api.component.html',
   styleUrls: ['./generate-async-api.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatDialogModule,
     TranslocoDirective,
     MatFormFieldModule,
@@ -53,7 +52,6 @@ export type {AsyncApi};
     MatCheckboxModule,
     MatTooltipModule,
     MatInputModule,
-    MatIcon,
   ],
 })
 export class GenerateAsyncApiComponent implements OnInit {

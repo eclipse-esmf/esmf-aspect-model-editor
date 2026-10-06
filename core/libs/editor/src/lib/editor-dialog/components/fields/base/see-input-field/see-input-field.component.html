@@ -1,17 +1,17 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <mat-form-field
     [floatLabel]="searchField().disabled() ? 'always' : 'auto'"
     [matTooltip]="isInherited ? 'This was extended from ' + elementExtends.extends_?.name : ''"
@@ -24,12 +24,28 @@
       @for (element of elements(); track element.urn) {
         <mat-chip-row
           [matTooltip]="element.urn"
-          [attr.data-cy]="'chip__' + (element.name || element.urn)"
+          [attr.data-testid]="'chip__' + (element.name || element.urn)"
           (removed)="removeElement(element)"
           matTooltipClass="mat-tooltip--long"
         >
           <span class="chip-content">{{ element.name || element.urn }}</span>
-          <button data-cy="see-remove-chip" type="button" matChipRemove>
+          <button
+            class="see-copy-chip"
+            [attr.aria-label]="t('editorCanvas.shapeSetting.field.seeInput.copy')"
+            [matTooltip]="t('editorCanvas.shapeSetting.field.seeInput.copy')"
+            (click)="copyElement(element, $event)"
+            (keydown.enter)="$event.stopPropagation()"
+            data-testid="see-copy-chip"
+            type="button"
+          >
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <button
+            [attr.aria-label]="t('editorCanvas.shapeSetting.field.seeInput.remove')"
+            data-testid="see-remove-chip"
+            type="button"
+            matChipRemove
+          >
             <mat-icon>cancel</mat-icon>
           </button>
         </mat-chip-row>
@@ -43,17 +59,17 @@
       [matChipInputFor]="chipList"
       [placeholder]="t('editorCanvas.shapeSetting.field.seeInput.typeToSearch')"
       matInput
-      data-cy="see"
+      data-testid="see"
     />
 
     <mat-autocomplete #auto="matAutocomplete">
       @if (!(shapes$ | async)?.length && see.value) {
-        <mat-option [value]="see.value" [attr.data-cy]="'option__' + see.value" (click)="addElementToList()">
+        <mat-option [value]="see.value" [attr.data-testid]="'option__' + see.value" (click)="addElementToList()">
           <span>{{ see.value }}</span>
         </mat-option>
       }
       @for (shape of shapes$ | async; track shape.aspectModelUrn) {
-        <mat-option [value]="shape.aspectModelUrn" [attr.data-cy]="'option__' + shape.name" (click)="addElementToList(shape.name)">
+        <mat-option [value]="shape.aspectModelUrn" [attr.data-testid]="'option__' + shape.name" (click)="addElementToList(shape.name)">
           <span class="shape-name">{{ shape.name }}</span>
           <span class="shape-urn">{{ shape.aspectModelUrn }}</span>
         </mat-option>

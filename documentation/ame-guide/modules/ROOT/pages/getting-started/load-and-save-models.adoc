@@ -16,13 +16,19 @@ To start modeling, proceed as follows:
 
 . Click the xref:getting-started/ui-overview.adoc#menu-file[File menu] and select *New...*.
 . Choose one of the following options:
-* *Empty model*: to start from scratch with an empty editor canvas.
-* *Load File*: to open a file containing TTL code.
+* *Empty Model*: to start from scratch with an empty editor canvas.
+This option is only available while the current model contains elements.
+* *Load File...* (`Cmd/Ctrl+O`): to open a file containing TTL code.
 * *Copy Paste*: to copy and paste TTL code of an existing model into the text area.
 +
 image::copy-paste-file.png[width=50%]
 
-* *SimpleExample.ttl* or *Movement.ttl*: to start from the Simple Aspect or the Movement example.
+* *Examples* > *SimpleAspect.ttl* or *Movement.ttl*: to start from the Simple Aspect or the Movement example.
+
+Each model is opened in its own xref:getting-started/ui-overview.adoc#editor-tabs[editor tab], so you can work on several models in parallel.
+If the active tab contains an untouched empty model, it is replaced by the loaded model.
+Opening a model that is already open switches to its tab.
+To open a new tab with an empty model, click the *+* button in the tab bar.
 
 [[save-models]]
 == Save models
@@ -34,6 +40,13 @@ To save a model, proceed as follows:
 +
 * *Export Model*: to export the model.
 * *Export Package*: to export one of the existing namespaces.
-* *Save to Workspace*: to save the current namespace to the Workspace.
+* *Save to Workspace* (`Cmd/Ctrl+S`): to save the current model to the Workspace.
+
+Unsaved changes are indicated by a dot in the tab of the model.
+When you close a tab with unsaved changes, you are asked whether you want to save the model first.
+
+When saving, the header comment of the file and, depending on the settings, the order of the elements are kept. See xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
+
+NOTE: A model whose referenced elements are missing in the workspace can be opened, but not saved. See xref:namespace/missing-references.adoc[Aspect Models with missing references].
 
 TIP: For saving a new version of a model without overriding the existing one, see xref:modeling/model-versions.adoc[Model versions].

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {config, DataTypeService, ValueTypeResolution, ValueTypeResolverService} from '@ame/shared';
+import {LoadedFilesService, ValueTypeResolution, ValueTypeResolverService} from '@ame/domain';
+import {config, DataTypeService} from '@ame/shared';
 import {Component, computed, effect, inject, input, signal} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -23,7 +23,7 @@ import {DefaultScalar, DefaultValue} from '@esmf/aspect-model-loader';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorSignalFormContext} from '../../forms/editor-signal-form-context';
-import {ElementListComponent} from '../element-list';
+import {ElementListComponent} from '../element-list/element-list.component';
 import {BaseInputComponent, ValueInputFieldComponent} from '../fields';
 
 @Component({

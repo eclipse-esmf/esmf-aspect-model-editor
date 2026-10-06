@@ -28,7 +28,8 @@ See xref:installation.adoc#install-windows[Install the Aspect Model Editor on Wi
 
 To use the Aspect Model Editor on Mac, you need:
 
-* OS X El Capitan 10.11 or later
+* macOS 13 Ventura or later
+* a Mac with Apple silicon or Intel processor; there is a separate download for each (see xref:installation.adoc#install-mac[installation])
 
 NOTE: The Aspect Model Editor is currently not notarized or signed with an Apple Developer certificate, see xref:support/known-limitations.adoc#current-known-limitations-macos[Current limitations on macOS].
 

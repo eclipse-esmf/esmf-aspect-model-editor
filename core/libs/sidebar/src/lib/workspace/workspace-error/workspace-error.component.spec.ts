@@ -24,7 +24,7 @@ describe('WorkspaceErrorComponent', () => {
     openInVsCodeOrDefault: vi.fn(),
   };
   const mockBrowserService = {
-    isStartedAsElectronApp: vi.fn().mockReturnValue(true),
+    isStartedAsTauriApp: vi.fn().mockReturnValue(true),
   };
 
   beforeEach(() => {
@@ -74,7 +74,7 @@ describe('WorkspaceErrorComponent', () => {
     expect(compiled.textContent).toContain('Invalid syntax in model file');
   });
 
-  it('should call openInVsCodeOrDefault when clicking a file link in Electron app', () => {
+  it('should call openInVsCodeOrDefault when clicking a file link in Tauri app', () => {
     fixture.componentRef.setInput('error', {
       code: 400,
       message: 'File: /workspace/models/Invalid.ttl • Error: Something broke',
@@ -93,8 +93,8 @@ describe('WorkspaceErrorComponent', () => {
     );
   });
 
-  it('should not call openInVsCodeOrDefault when not started as Electron app', () => {
-    mockBrowserService.isStartedAsElectronApp.mockReturnValue(false);
+  it('should not call openInVsCodeOrDefault when not started as Tauri app', () => {
+    mockBrowserService.isStartedAsTauriApp.mockReturnValue(false);
 
     fixture.componentRef.setInput('error', {
       code: 400,

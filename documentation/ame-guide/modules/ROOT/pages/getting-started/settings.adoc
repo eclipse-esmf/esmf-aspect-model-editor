@@ -3,7 +3,7 @@
 [[settings]]
 = Settings
 
-To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon].
+To access the Settings dialog, click the Settings icon image:toolbar-icons/settings.png[Settings icon] in the left sidebar.
 
 [[configuration]]
 == System Configuration
@@ -32,11 +32,19 @@ image::settings-editor.png[Editor menu in Settings dialog,width=60%]
 
 * *Use "hierarchical" layout*: aligns all elements below the root Aspect.
 
-* *Display 'Entity value &ndash; entity' relationship*: displays all relationship connections from Entity instances to their related Entities.
+* *Display disambiguation labels*: displays labels on relationship connections whose meaning would otherwise be ambiguous:
+** *input* / *output* on the connections from an Operation to its Properties,
+** *left* / *right* on the connections from an Either Characteristic to its Characteristics,
+** *not in payload* on the connection from an Entity to a Property that has `notInPayload` set (only possible for Entities used by an Enumeration).
++
+Changing this setting immediately redraws the connections of the open model.
 
-* *Display 'Property - Abstract Property' relationship*: displays all relationship connections from Property instances to their related Abstract Properties.
+* *Dark mode*: switches the editor and the graph canvas to a dark color theme.
+You can also toggle the theme directly with the sun/moon icon in the left sidebar.
 
-* *Display disambiguation labels*: displays labels on the relationship connections between the elements for easier identification of the relationship (e.g., for Operations: Properties are labeled with input or output).
+* *Element order when saving*: defines the order of the elements in the saved Turtle file (*Order of the ESMF SDK formatter*, *Keep order, insert new elements after their parent* or *Keep order, append new elements at the end*). See xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
+
+* *Restore open models on start* (desktop app only): reopens the workspace models of the last session with their window size and position. See xref:getting-started/session-restore.adoc[Restore the last session].
 
 [[model-configuration]]
 == Model Configuration
@@ -48,7 +56,9 @@ In the Settings dialog, select the menu *Languages*.
 
 image::settings-languages.png[Languages menu in Settings dialog, width=60%, link=self]
 
-Define for which languages the `description` and the `preferredName` attributes for elements should be displayed.
+Under *User Interface*, choose the display language of the Aspect Model Editor itself (currently *English* or *Chinese*).
+
+Under *Aspect Model*, define for which languages the `description` and the `preferredName` attributes for elements should be displayed.
 
 Element attributes can only be added for the languages defined in your settings.
 
@@ -79,6 +89,8 @@ image::settings-namespaces.png[Languages menu in Settings dialog,width=60%]
 In the Settings dialog, select the menu *Header/Copyright*.
 
 Edit or add a header to be used with the Aspect Model.
+Every line must start with `#`.
+The header is written at the top of new models; models loaded from a file keep the header of that file, see xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
 
 image::settings-copyright-header.png[Copyright/Header menu in Settings dialog,width=55%]
 

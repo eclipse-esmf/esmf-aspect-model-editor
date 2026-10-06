@@ -1,0 +1,186 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: var(--ame-surface, #ffffff);
+  border-bottom: 1px solid var(--ame-gray-10, #cfd0d1);
+  user-select: none;
+  z-index: 1;
+}
+
+.tab-bar-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 36px;
+  box-sizing: border-box;
+  background: var(--ame-surface-card, #f8f9fa);
+  overflow: hidden;
+  position: relative;
+}
+
+.tabs-scroll-area {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0%;
+  min-width: 0;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  padding: 0 10px 0 12px;
+  border-right: 1px solid var(--ame-border-color, #cfd0d1);
+  background: var(--ame-surface-hover, #f0f2f5);
+  color: var(--ame-gray-600, #555555);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+  position: relative;
+
+  &:hover {
+    background: var(--ame-surface-selected, #e8eaed);
+    color: var(--ame-font, #000000);
+  }
+
+  &.active {
+    background: var(--ame-background, #ffffff);
+    color: var(--ame-font, #000000);
+    font-weight: 500;
+    box-shadow: inset 0 -2px 0 0 var(--ame-primary, #0066cc);
+  }
+
+  .tab-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+  }
+
+  .tab-title {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tab-dirty-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--ame-primary, #0066cc);
+    flex-shrink: 0;
+    margin-left: 2px;
+    margin-right: 2px;
+    display: inline-block;
+  }
+
+  .tab-close-btn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    opacity: 0.5;
+    transition:
+      opacity 0.15s ease,
+      background 0.15s ease;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      line-height: 14px;
+    }
+
+    &:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.08);
+    }
+  }
+}
+
+.tab-fixed-actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 100%;
+  padding: 0 4px;
+  background: var(--ame-surface-card, #f8f9fa);
+  border-left: 1px solid var(--ame-border-color, #cfd0d1);
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.04);
+  z-index: 2;
+  gap: 2px;
+}
+
+.tab-view-toggle {
+  height: 100%;
+  margin-left: 4px;
+  border-left: 1px solid var(--ame-border-color, #cfd0d1);
+}
+
+.tab-action-btn {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ame-gray-600, #666666);
+  border-radius: 4px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+
+  &:hover {
+    color: var(--ame-font, #000000);
+    background: var(--ame-surface-hover, rgba(0, 0, 0, 0.08));
+  }
+}
+
+.tab-add-btn {
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+  }
+}

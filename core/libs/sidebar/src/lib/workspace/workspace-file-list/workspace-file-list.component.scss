@@ -58,17 +58,42 @@
   overflow-x: hidden;
   padding-bottom: 1rem;
 
-  .namespace {
+  .namespace-row {
     display: flex;
     align-items: center;
     margin-top: 16px;
+    padding-right: 4px;
+
+    // Same subtle three dots as the file rows.
+    .namespace-menu {
+      display: inline-flex;
+      flex: 0 0 auto;
+      opacity: 0.4;
+      transition: opacity 120ms ease-in-out;
+
+      &[aria-expanded='true'],
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
+
+    &:hover .namespace-menu,
+    &:focus-within .namespace-menu {
+      opacity: 1;
+    }
+  }
+
+  .namespace {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: center;
     padding-left: 16px;
     padding-right: 16px;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
-    width: 100%;
     text-align: left;
     font: inherit;
     color: inherit;
@@ -107,15 +132,29 @@
 
     &:hover {
       background-color: var(--ame-surface-hover, #e1e1e1);
+    }
 
+    // The menu button is always there (discoverable, reachable with the keyboard and on touch screens)
+    // but stays subtle until the row is hovered, selected or focused.
+    &:hover,
+    &.selected,
+    &:focus-visible,
+    &:focus-within {
       > button {
-        display: inline-flex;
+        opacity: 1;
       }
     }
 
     &.selected {
       background-color: var(--ame-surface-selected, #e1e1e1);
       cursor: default;
+    }
+
+    // The element list next to the workspace shows the elements of this file.
+    &.selected--linked {
+      background-color: color-mix(in srgb, var(--ame-primary, #7599c8) 18%, var(--ame-surface-card, #f3f3f3));
+      box-shadow: inset 4px 0 0 var(--ame-primary, #7599c8);
+      font-weight: 500;
     }
 
     &.outdated {
@@ -130,6 +169,10 @@
       }
     }
 
+    &.unresolved .content mat-icon {
+      color: var(--ame-warning, #ff9800);
+    }
+
     &.errored {
       color: var(--ame-error, #f44336);
 
@@ -142,15 +185,22 @@
       }
     }
 
-    // Innerer Button
+    // Menu button (three dots)
     > button {
-      display: none;
+      display: inline-flex;
+      flex: 0 0 auto;
+      opacity: 0.4;
+      transition: opacity 120ms ease-in-out;
       background: none;
       border: none;
       cursor: pointer;
       pointer-events: auto;
       z-index: 10;
       position: relative;
+
+      &[aria-expanded='true'] {
+        opacity: 1;
+      }
 
       &:focus {
         outline: 2px solid #007bc0;
@@ -182,4 +232,9 @@
       }
     }
   }
+}
+
+// A disabled menu item does not receive pointer events, so its tooltip sits on a wrapper.
+.menu-item-wrapper {
+  display: block;
 }

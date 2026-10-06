@@ -11,13 +11,14 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ShapeSettingsStatePort} from '@ame/domain';
 import {inject, Injectable, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {Cell} from '@maxgraph/core';
 import {EditorModelService} from '../editor-model.service';
 
 @Injectable({providedIn: 'root'})
-export class ShapeSettingsStateService {
+export class ShapeSettingsStateService implements ShapeSettingsStatePort {
   private editorModelService = inject(EditorModelService);
 
   private readonly _selectedShapeForUpdate = signal<Cell | null>(null);

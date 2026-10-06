@@ -1,20 +1,20 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill" subscriptSizing="dynamic">
     <mat-label>{{ t('editorCanvas.shapeSetting.field.name.name') }}</mat-label>
-    <input class="ellipsis" [formField]="field" matInput data-cy="name" />
+    <input class="ellipsis" [formField]="field" matInput data-testid="name" />
     @if (hasError('required')) {
       <mat-error>{{ t('editorCanvas.shapeSetting.field.name.pleaseDefine') }}</mat-error>
     }

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeSelectorService} from '@ame/max-graph';
+import {LoadedFilesService, ShapeSettingsPort} from '@ame/domain';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphService, MaxGraphShapeSelectorService} from '@ame/graph';
 import {BindingsService} from '@ame/shared';
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
@@ -23,7 +23,7 @@ import {OpenReferencedElementService} from '../../open-element-window/open-eleme
 import {ShapeSettingsStateService} from './shape-settings-state.service';
 
 @Injectable({providedIn: 'root'})
-export class ShapeSettingsService {
+export class ShapeSettingsService implements ShapeSettingsPort {
   private maxgraphAttributeService = inject(MaxGraphAttributeService);
   private maxgraphService = inject(MaxGraphService);
   private maxgraphShapeSelectorService = inject(MaxGraphShapeSelectorService);
@@ -37,6 +37,7 @@ export class ShapeSettingsService {
   public readonly modelElement = this._modelElement.asReadonly();
 
   public readonly selectedCells$ = toObservable(this.maxgraphShapeSelectorService.selectedCells);
+  public readonly hasSelection$ = toObservable(this.maxgraphShapeSelectorService.hasSelection);
   public readonly hasCellsSubject$ = toObservable(computed(() => !this.maxgraphService.isModelEmpty()));
 
   setGraphListeners() {

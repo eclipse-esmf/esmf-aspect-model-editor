@@ -10,9 +10,8 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {MigratorApiService} from '@ame/api';
-import {APP_CONFIG, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {WorkspaceFacade} from '@ame/domain';
+import {APP_CONFIG, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';
@@ -63,7 +62,7 @@ describe('MigrationDialogComponent', () => {
       providers: [
         {provide: MatDialogRef, useValue: dialogRefMock},
         {provide: NotificationsService, useValue: notificationsServiceMock},
-        {provide: MigratorApiService, useValue: migratorApiMock},
+        {provide: WorkspaceFacade, useValue: migratorApiMock},
         {
           provide: APP_CONFIG,
           useValue: {
@@ -133,5 +132,23 @@ describe('MigrationDialogComponent', () => {
 
   it('should return current step index', () => {
     expect(component.currentStep()).toBe(0);
+  });
+  it('requestClose should close the dialog when no migration is running', () => {
+    component.requestClose();
+    expect(dialogRefMock.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('requestClose should be ignored while the migration is running', () => {
+    vi.useFakeTimers();
+    try {
+      component.loading.set(true);
+      vi.advanceTimersByTime(1000);
+      expect(component.loading()).toBe(true);
+
+      component.requestClose();
+      expect(dialogRefMock.close).not.toHaveBeenCalled();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

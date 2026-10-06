@@ -11,10 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {EditorService, ModelLoaderService} from '@ame/editor';
-import {MaxGraphService} from '@ame/max-graph';
+import {DraggablePort, GraphNavigatorPort, ModelLoaderPort, ModelSessionFacade, WorkspaceFacade} from '@ame/domain';
 import {provideZonelessChangeDetection, signal, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -30,7 +27,7 @@ describe('WorkspaceFileElementsComponent', () => {
   let fixture: ComponentFixture<WorkspaceFileElementsComponent>;
   let sidebarService: SidebarStateService;
   let maxgraphMock: {
-    resolveCellByModelElement: ReturnType<typeof vi.fn>;
+    isElementRendered: ReturnType<typeof vi.fn>;
     graphVersion: WritableSignal<number>;
   };
   let modelApiMock: {fetchAspectMetaModel: ReturnType<typeof vi.fn>};
@@ -41,7 +38,7 @@ describe('WorkspaceFileElementsComponent', () => {
     vi.useFakeTimers();
 
     maxgraphMock = {
-      resolveCellByModelElement: vi.fn(),
+      isElementRendered: vi.fn(),
       graphVersion: signal(0),
     };
     modelApiMock = {
@@ -86,11 +83,11 @@ describe('WorkspaceFileElementsComponent', () => {
       providers: [
         provideZonelessChangeDetection(),
         SidebarStateService,
-        {provide: MaxGraphService, useValue: maxgraphMock},
-        {provide: ModelApiService, useValue: modelApiMock},
-        {provide: ModelLoaderService, useValue: modelLoaderMock},
-        {provide: LoadedFilesService, useValue: loadedFilesMock},
-        {provide: EditorService, useValue: {makeDraggable: vi.fn()}},
+        {provide: GraphNavigatorPort, useValue: maxgraphMock},
+        {provide: WorkspaceFacade, useValue: modelApiMock},
+        {provide: ModelLoaderPort, useValue: modelLoaderMock},
+        {provide: ModelSessionFacade, useValue: loadedFilesMock},
+        {provide: DraggablePort, useValue: {makeDraggable: vi.fn()}},
       ],
     });
 
@@ -147,10 +144,10 @@ describe('WorkspaceFileElementsComponent', () => {
       aspectModelUrn: 'urn:samm:org.eclipse.esmf:1.0.0#prop1',
       metaModelVersion: '2.1.0',
     });
-    maxgraphMock.resolveCellByModelElement.mockReturnValue(true);
+    maxgraphMock.isElementRendered.mockReturnValue(true);
     expect(component.elementImported(element)).toBe(true);
 
-    maxgraphMock.resolveCellByModelElement.mockReturnValue(null);
+    maxgraphMock.isElementRendered.mockReturnValue(false);
     expect(component.elementImported(element)).toBe(false);
 
     expect(component.elementImported(null as any)).toBe(false);
@@ -345,13 +342,85 @@ describe('WorkspaceFileElementsComponent', () => {
       metaModelVersion: '2.1.0',
     });
 
-    maxgraphMock.resolveCellByModelElement.mockReturnValue({id: 'cell-1'});
+    maxgraphMock.isElementRendered.mockReturnValue(true);
     expect(component.elementImported(mockProperty)).toBe(true);
 
-    maxgraphMock.resolveCellByModelElement.mockReturnValue(null);
+    maxgraphMock.isElementRendered.mockReturnValue(false);
     maxgraphMock.graphVersion.update(v => v + 1);
     TestBed.flushEffects();
 
     expect(component.elementImported(mockProperty)).toBe(false);
+  });
+
+  describe('resize gutter', () => {
+    afterEach(() => localStorage.removeItem('ame.sidebar.fileElements.width'));
+
+    it('renders the shared resize gutter on the end edge with the panel limits', () => {
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      fixture.detectChanges();
+      const gutter = fixture.nativeElement.querySelector('[data-testid="file-elements-resize-gutter"]') as HTMLElement;
+      expect(gutter).not.toBeNull();
+      expect(gutter.tagName.toLowerCase()).toBe('ame-resize-gutter');
+      expect(gutter.classList).toContain('resize-gutter--end');
+      expect(gutter.getAttribute('role')).toBe('separator');
+      expect(gutter.getAttribute('aria-valuemin')).toBe('250');
+      expect(gutter.getAttribute('aria-valuemax')).toBe('800');
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('350px');
+    });
+
+    it('restores the persisted width onto the panel', () => {
+      localStorage.setItem('ame.sidebar.fileElements.width', '480');
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('480px');
+    });
+
+    it('clamps a persisted width below the minimum', () => {
+      localStorage.setItem('ame.sidebar.fileElements.width', '10');
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      fixture.detectChanges();
+      expect((fixture.nativeElement as HTMLElement).style.width).toBe('250px');
+    });
+  });
+  describe('header', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(WorkspaceFileElementsComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const file = new FileStatus('Cached.ttl');
+      file.aspectModelUrn = 'urn:samm:org.eclipse.esmf:1.0.0#Cached';
+      sidebarService.selection.select('org.eclipse.esmf:1.0.0', file);
+      sidebarService.fileElements.open();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+    });
+
+    function byTestId(testId: string): HTMLElement {
+      return fixture.nativeElement.querySelector(`[data-testid="${testId}"]`);
+    }
+
+    it('should name the panel, the selected file and its namespace', () => {
+      const header = byTestId('file-elements-header');
+      expect(header.querySelector('.header__overline')?.textContent).toContain('sidebar.elementList.title');
+      expect(header.querySelector('h2')?.textContent?.trim()).toBe('Cached.ttl');
+      expect(byTestId('file-elements-namespace').textContent?.trim()).toBe('org.eclipse.esmf:1.0.0');
+    });
+
+    it('should close the element list with the labelled close button', () => {
+      const close = byTestId('file-elements-close');
+      expect(close.getAttribute('aria-label')).toBe('sidebar.elementList.close');
+
+      close.click();
+
+      expect(sidebarService.fileElements.isOpened()).toBe(false);
+    });
+
+    it('should not render a header without selection', () => {
+      sidebarService.selection.reset();
+      TestBed.flushEffects();
+      fixture.detectChanges();
+      expect(byTestId('file-elements-header')).toBeNull();
+    });
   });
 });

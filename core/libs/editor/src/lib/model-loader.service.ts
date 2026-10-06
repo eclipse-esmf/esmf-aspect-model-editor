@@ -11,21 +11,46 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {FileEntry, FileInformation, ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {InstantiatorService} from '@ame/instantiator';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {BrowserService, config, ElectronSignalsService, ModelSavingTrackerService, NotificationsService, TitleService} from '@ame/shared';
-import {isVersionOutdated} from '@ame/utils';
+import {
+  FileEntry,
+  FileInformation,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelDocumentService,
+  ModelInstantiatorPort,
+  ModelLoaderPort,
+  NamespaceFile,
+  RdfModelUtil,
+  RdfPort,
+} from '@ame/domain';
+import {
+  BrowserService,
+  config,
+  isVersionOutdated,
+  LanguageTranslationService,
+  NotificationsService,
+  TauriSignalsService,
+  TitleService,
+} from '@ame/shared';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {DefaultAspect, loadAspectModel, ModelElementCache, NamedElement, RdfLoader, RdfModel} from '@esmf/aspect-model-loader';
+import {
+  DefaultAspect,
+  loadAspectModel,
+  ModelElementCache,
+  NamedElement,
+  RdfLoader,
+  RdfModel,
+  SerializationMetadataState,
+} from '@esmf/aspect-model-loader';
 import {NamedNode} from 'n3';
-import {catchError, concatMap, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {catchError, combineLatest, concatMap, finalize, first, from, map, Observable, of, switchMap, tap, throwError} from 'rxjs';
+import {ModelHistoryService} from './history/model-history.service';
 import {ModelRendererService} from './model-renderer.service';
+import {ModelSavingTrackerService} from './model-saving-tracker.service';
 import {LoadModelPayload} from './models/load-model-payload.interface';
 import {LoadingCodeErrors} from './models/loading-errors';
+import {TabStateService} from './tabs/tab-state.service';
 
 interface TmpLoadedFiles {
   files: LoadedFilesService['files'];
@@ -35,30 +60,38 @@ interface TmpLoadedFiles {
 }
 
 @Injectable({providedIn: 'root'})
-export class ModelLoaderService {
+export class ModelLoaderService implements ModelLoaderPort {
   private destroyRef = inject(DestroyRef);
   private loadedFilesService = inject(LoadedFilesService);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
   private notificationsService = inject(NotificationsService);
-  private instantiatorService = inject(InstantiatorService);
+  private instantiatorService = inject(ModelInstantiatorPort);
   private modelRenderer = inject(ModelRendererService);
   private modelSavingTracker = inject(ModelSavingTrackerService);
   private browserService = inject(BrowserService);
-  private electronSignalsService = inject(ElectronSignalsService);
-  private configurationService = inject(ConfigurationService);
+  private tauriSignalsService = inject(TauriSignalsService);
   private titleService = inject(TitleService);
+  private modelDocumentService = inject(ModelDocumentService);
+  private translate = inject(LanguageTranslationService);
+
+  private readonly tabStateService = inject(TabStateService);
+  private readonly modelHistory = inject(ModelHistoryService);
+  private readonly rdfService = inject(RdfPort);
 
   private tmpLoadedFiles: TmpLoadedFiles;
-
-  private get settings() {
-    return this.configurationService.getSettings();
-  }
 
   /**
    * Loads a model with its dependencies and renders it
    */
   renderModel(payload: LoadModelPayload) {
-    this.settings.copyrightHeader = RdfModelUtil.extractCommentsFromRdfContent(payload.rdfAspectModel);
+    // the replaced model must not end up in the undo history of the tab
+    this.modelHistory.flush();
+    this.modelHistory.suspend();
+    let suspended = true;
+    const resumeHistory = () => {
+      if (suspended) this.modelHistory.resume();
+      suspended = false;
+    };
     this.tmpLoadedFiles = {
       files: {...this.loadedFilesService.files},
       currentLoadedFile: this.loadedFilesService.currentLoadedFile,
@@ -72,9 +105,9 @@ export class ModelLoaderService {
       switchMap(() => this.modelRenderer.renderModel(payload.editElementUrn)),
       tap(() => {
         this.modelSavingTracker.updateSavedModel();
-        if (this.browserService.isStartedAsElectronApp()) {
+        if (this.browserService.isStartedAsTauriApp()) {
           const currentFile = this.loadedFilesService.currentLoadedFile;
-          this.electronSignalsService.call('updateWindowInfo', {
+          this.tauriSignalsService.call('updateWindowInfo', {
             namespace: currentFile.namespace,
             fromWorkspace: payload.fromWorkspace,
             file: currentFile.name,
@@ -84,8 +117,58 @@ export class ModelLoaderService {
           this.notificationsService.info({title: 'Aspect Model loaded', timeout: 3000});
           this.titleService.updateTitle(this.loadedFilesService.currentLoadedFile?.absoluteName);
         }
+        this.tabStateService.onModelLoaded(
+          this.loadedFilesService.currentLoadedFile,
+          payload.fromWorkspace,
+          payload.editElementUrn,
+          payload.replaceTabId,
+        );
+        this.modelHistory.reset();
+        resumeHistory();
       }),
       tap(() => (this.loadedFilesService.currentLoadedFile.namespaceFiles = {})),
+      // the rendering does not complete, so the history is resumed above; this covers errors and cancelled loading
+      finalize(resumeHistory),
+    );
+  }
+
+  /**
+   * Replaces the current model by an earlier version of it (undo/redo). The referenced files stay as they are loaded,
+   * so neither the backend nor a migration is involved. The model is not rendered.
+   */
+  restoreModel(rdfAspectModel: string, serializationState: SerializationMetadataState): Observable<NamespaceFile> {
+    const previous = this.loadedFilesService.currentLoadedFile;
+    if (!previous?.rdfModel) {
+      return throwError(() => ({code: LoadingCodeErrors.LOADING_ASPECT_MODEL, error: 'No model loaded'}));
+    }
+
+    const dependencies = Object.fromEntries(
+      this.loadedFilesService.filesAsList
+        .filter(file => file !== previous && !file.unresolved && file.rdfModel?.store)
+        .map(file => [file.absoluteName, this.rdfService.serializeModel(file.rdfModel)]),
+    );
+    const payload: LoadModelPayload = {
+      rdfAspectModel,
+      aspectModelUri: previous.rdfModel.getSourceLocation(),
+      namespaceFileName: previous.absoluteName,
+      fromWorkspace: previous.fromWorkspace,
+      aspectModelUrn: previous.originalAspectModelUrn,
+    };
+
+    const snapshot = this.loadedFilesService.getSnapshot();
+    this.loadedFilesService.removeAll();
+
+    return this.instantiateModel(dependencies, payload, {render: true, serializationState}).pipe(
+      tap(file => {
+        // the file on disk is still the one of the previous version
+        file.originalName = previous.originalName;
+        file.originalNamespace = previous.originalNamespace;
+        file.originalAspectModelUrn = previous.originalAspectModelUrn;
+      }),
+      catchError(error => {
+        this.loadedFilesService.restoreFiles(snapshot);
+        return throwError(() => error);
+      }),
     );
   }
 
@@ -95,8 +178,6 @@ export class ModelLoaderService {
    * @param absoluteFileName
    */
   loadSingleModel(payload: LoadModelPayload, render = false) {
-    const currentFileKey = payload.namespaceFileName || 'current';
-
     const migrate$ = this.parseRdfModel([{rdfAspectModel: payload.rdfAspectModel, sourceLocation: payload.aspectModelUri}]).pipe(
       takeUntilDestroyed(this.destroyRef),
       switchMap((rdfModel: RdfModel) =>
@@ -114,9 +195,32 @@ export class ModelLoaderService {
         return this.modelApiService.loadNamespacesStructure();
       }),
       switchMap(() => this.getNamespaceDependencies(payload.rdfAspectModel, payload.aspectModelUri, {}, 0)),
-      // loading in sequence all RdfModels for the current file and dependencies
-      switchMap(files => this.loadRdfModelFromFiles(files, payload)),
+      switchMap(files => this.instantiateModel(files, payload, {render, notifyMissingReferences: render})),
+      catchError(error => {
+        if (this.tmpLoadedFiles?.files) {
+          this.loadedFilesService.restoreFiles(this.tmpLoadedFiles.files);
+        }
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  /**
+   * Instantiates the model with its already fetched dependencies and registers all files.
+   */
+  private instantiateModel(
+    dependencies: Record<string, string>,
+    payload: LoadModelPayload,
+    options: {render?: boolean; notifyMissingReferences?: boolean; serializationState?: SerializationMetadataState},
+  ): Observable<NamespaceFile> {
+    const currentFileKey = payload.namespaceFileName || 'current';
+
+    // loading in sequence all RdfModels for the current file and dependencies
+    return this.loadRdfModelFromFiles(dependencies, payload).pipe(
       map(({files, rdfModels}) => {
+        if (options.serializationState) {
+          rdfModels[currentFileKey].serializationMetadata.importState(options.serializationState);
+        }
         const remainingFiles = Object.fromEntries(Object.entries(files).filter(([key]) => key !== payload.namespaceFileName));
         return {files: remainingFiles, rdfModels};
       }),
@@ -136,7 +240,7 @@ export class ModelLoaderService {
 
             const mergedFile = {...loadedFile, rdfModel: rdfModels[currentFileKey]};
             // registering all loaded files
-            const currentFile = this.registerFiles(rdfModels, mergedFile, payload, render);
+            const currentFile = this.registerFiles(rdfModels, mergedFile, payload, options.render);
             currentFile.namespaceFiles = files;
             // loading all isolated elements
             this.instantiatorService.instantiateRemainingElements(
@@ -146,9 +250,14 @@ export class ModelLoaderService {
             );
             // filtering and registering the elements by their location in files
             this.moveElementsToTheirCacheFile(rdfModels, mergedFile, payload);
+            // referenced elements without definition must neither be edited nor written into the current file
+            const missingReferences = this.moveUnresolvedElements(rdfModels, rdfModels[currentFileKey], loadedFile.cachedElements);
+            if (options.notifyMissingReferences) this.notifyMissingReferences(missingReferences);
+            // remember which element stands at which position before the user can rename elements
+            Object.values(rdfModels).forEach(rdfModel => this.modelDocumentService.bindElements(rdfModel));
 
             return of(
-              render
+              options.render
                 ? this.loadedFilesService.currentLoadedFile
                 : this.loadedFilesService.getFile(currentFile?.absoluteName || payload.namespaceFileName),
             );
@@ -159,12 +268,6 @@ export class ModelLoaderService {
           }),
         ),
       ),
-      catchError(error => {
-        if (this.tmpLoadedFiles?.files) {
-          this.loadedFilesService.restoreFiles(this.tmpLoadedFiles.files);
-        }
-        return throwError(() => error);
-      }),
     );
   }
 
@@ -221,6 +324,7 @@ export class ModelLoaderService {
           fileEntries.push({aspectModelUrn: dependency});
         }
 
+        // elements missing in the workspace are left out and shown as placeholders instead of failing the whole loading
         return fileEntries.length > 0 ? this.modelApiService.fetchAllAspectMetaModel(fileEntries) : of([]);
       }),
       switchMap((fileInformations: Array<FileInformation>) => {
@@ -346,6 +450,49 @@ export class ModelLoaderService {
     //   const fileName = RdfModelUtil.getFileNameFromRdf(payload.namespaceFileName);
     //   this.notificationsService.warning({title: `Aspect Model ${fileName} (v${version}) has newer element versions`, message});
     // }
+  }
+
+  /**
+   * Moves the elements which are referenced but not defined in any loaded file (e.g. their file is missing in the
+   * workspace) to placeholder files.
+   *
+   * @returns the URNs of the missing elements the current file references directly
+   */
+  private moveUnresolvedElements(rdfModels: Record<string, RdfModel>, currentRdfModel: RdfModel, cache: ModelElementCache): string[] {
+    const isDefined = (node: NamedNode) => Object.values(rdfModels).some(rdfModel => rdfModel.store.countQuads(node, null, null, null) > 0);
+
+    const unresolved = cache
+      .getKeys()
+      .map(urn => cache.get<NamedElement>(urn))
+      .filter(
+        element =>
+          element?.aspectModelUrn?.startsWith('urn:samm:') &&
+          !element.isPredefined &&
+          !element.isAnonymous?.() &&
+          !element.aspectModelUrn.startsWith('urn:samm:org.eclipse.esmf.samm:') &&
+          !isDefined(new NamedNode(element.aspectModelUrn)),
+      );
+
+    if (!unresolved.length) return [];
+
+    this.loadedFilesService.registerUnresolvedElements(unresolved, cache);
+    return unresolved
+      .map(element => element.aspectModelUrn)
+      .filter(urn => currentRdfModel.store.countQuads(null, null, new NamedNode(urn), null) > 0)
+      .sort();
+  }
+
+  private notifyMissingReferences(urns: string[]) {
+    if (!urns.length) return;
+
+    // selectTranslate waits for the translation file, which may not be loaded yet when a model is opened on start
+    const translateService = this.translate.translateService;
+    combineLatest([
+      translateService.selectTranslate('notificationService.unresolvedReferencesTitle'),
+      translateService.selectTranslate('notificationService.unresolvedReferencesMessage', {elements: urns.join(', ')}),
+    ])
+      .pipe(first())
+      .subscribe(([title, message]) => this.notificationsService.warning({title, message, timeout: 10000}));
   }
 
   private migrateAspectModel(oldSammVersion: string, rdfAspectModel: string): Observable<string> {

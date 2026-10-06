@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {inject, Injectable} from '@angular/core';
+import {DefaultProperty, Entity} from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
+import {map, shareReplay} from 'rxjs';
+import {EntityInstancePort} from '../../ports';
+import {BaseConnectionHandler} from '../base-connection-handler.service';
+import {SingleShapeConnector} from '../models';
+
+@Injectable({providedIn: 'root'})
+export class EntityConnectionHandler extends BaseConnectionHandler implements SingleShapeConnector<Entity> {
+  private entityInstanceService = inject(EntityInstancePort, {optional: true});
+
+  public connect(entity: Entity, source: Cell) {
+    const defaultProperty = this.elementCreator.createEmptyElement(DefaultProperty, {
+      resolveNaming: false,
+      cached: false,
+    });
+    const connect$ = this.modelElementNamingService.resolveMetaModelElement$(defaultProperty).pipe(
+      map(() => {
+        const child = this.renderTree(defaultProperty, source);
+        this.refreshPropertiesLabel(child, defaultProperty);
+
+        entity.properties.push(defaultProperty);
+        this.maxgraphService.assignToParent(child, source);
+        this.entityInstanceService.onNewProperty(defaultProperty, entity);
+        this.maxgraphService.formatCell(source, true);
+      }),
+      shareReplay(1),
+    );
+    connect$.subscribe();
+    return connect$;
+  }
+}

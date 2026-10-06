@@ -1,0 +1,106 @@
+:page-partial:
+
+[[preserve-ttl-structure]]
+= Keep the structure of TTL files
+
+Many Aspect Models are written or changed in a text editor (e.g. VS Code) and in the Aspect Model Editor.
+When the Aspect Model Editor saves a model, it writes the complete file again.
+This page describes which parts of the original file are kept and which are created again.
+
+[[preserve-what]]
+== What is kept and what is created again
+
+[cols="40%,15%,45%"]
+|===
+| Part of the file | Kept | Notes
+
+| Comment block at the top of the file (e.g. copyright)
+| yes
+| Every file keeps its own header. The header from xref:getting-started/settings.adoc#header-copyright-settings[Settings > Header/Copyright] is only used for models without a source file, e.g. new models.
+
+| Order of the elements (Aspect, Properties, Characteristics, ...)
+| configurable
+| See <<preserve-order>>. Renamed elements keep their position.
+
+| Declared prefixes
+| yes
+| Prefixes declared in the file are written even if no element uses them. See xref:getting-started/ui-overview.adoc#prefixes[Prefixes].
+
+| Order of the attributes inside an element (`samm:preferredName`, `samm:properties`, ...)
+| no
+| Always follows the SAMM specification (ESMF SDK formatter).
+
+| Indentation, line breaks and empty lines inside an element
+| no
+| Created by the ESMF SDK formatter.
+
+| Comments between or inside elements
+| no
+| Comments are not part of the RDF model and are lost on save. Only the comment block at the top of the file is kept.
+|===
+
+TIP: Use the xref:getting-started/text-view.adoc[text view] to see what the file will look like before you save it.
+
+[[preserve-order]]
+== Element order when saving
+
+Open xref:getting-started/settings.adoc#editor[Settings > Editor] and choose the *Element order when saving*:
+
+[cols="40%,60%"]
+|===
+| Option | Behavior
+
+| *Order of the ESMF SDK formatter* (default)
+| The formatter defines the order. The order of the source file is not kept.
+
+| *Keep order, insert new elements after their parent*
+| Existing elements keep their position. A new element is written after the element which uses it, e.g. a new Characteristic after its Property.
+
+| *Keep order, append new elements at the end*
+| Existing elements keep their position. New elements are written at the end of the file.
+|===
+
+Keeping the order of the file keeps Git diffs small: only the changed elements appear in the diff.
+
+To bring a model into a new order once, use *Sort elements alphabetically* in the text view and save the model.
+The Aspect stays at the top. The new order is kept for later changes.
+
+[[preserve-example]]
+== Example
+
+Source file, written in a text editor:
+
+[source,turtle]
+----
+# Copyright (c) 2026 Example Corp.
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.2.0#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:com.example:1.0.0#> .
+
+:Movement a samm:Aspect ;
+   samm:properties ( :speed ) ;
+   samm:operations ( ) .
+
+# Speed in km/h
+:speed a samm:Property ;
+   samm:characteristic :Speed .
+
+:Speed a samm:Measurement ;
+   samm:dataType xsd:float ;
+   samm-c:unit unit:kilometrePerHour .
+----
+
+With *Keep order, insert new elements after their parent*, a new Property `:direction` added in the graphical editor is saved like this:
+
+* The copyright header stays at the top.
+* `:Movement`, `:speed` and `:Speed` keep their order.
+* `:direction` is written directly after `:Movement`, which uses it, followed by its new Characteristic; then `:speed` and `:Speed` follow.
+* The comment `# Speed in km/h` is lost.
+
+[[preserve-limits]]
+== Limitations
+
+* If the formatted text cannot be split into single elements, the order of the formatter is used.

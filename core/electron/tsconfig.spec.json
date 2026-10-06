@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig.electron.json",
-  "compilerOptions": {
-    "types": ["node"],
-    "typeRoots": ["../node_modules/@types", "../node_modules"],
-    "ignoreDeprecations": "6.0"
-  },
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
-}

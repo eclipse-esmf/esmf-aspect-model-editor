@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {ElementIconComponent, sammElements} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {LoadedFilesService} from '@ame/domain';
+import {ElementIconComponent, LanguageTranslationService, sammElements} from '@ame/shared';
 import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {NamedElement} from '@esmf/aspect-model-loader';

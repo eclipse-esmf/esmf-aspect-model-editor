@@ -243,6 +243,32 @@ mat-icon {
   }
 }
 
+// Responsive dialogs: the dialog never exceeds the viewport (see provideAmeDialogDefaults),
+// header and actions stay visible and only mat-dialog-content scrolls.
+.mat-mdc-dialog-surface > * {
+  min-height: 0;
+  max-height: 100%;
+}
+
+.mat-mdc-dialog-surface .mat-mdc-dialog-content {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.mat-mdc-dialog-surface .mat-mdc-dialog-actions {
+  flex-shrink: 0;
+}
+
+// Set while a panel is resized via ame-resize-gutter.
+body.ame-resizing {
+  cursor: ew-resize;
+  user-select: none;
+
+  * {
+    transition: none !important;
+  }
+}
+
 .dialog-header {
   display: inline-flex;
   position: relative;
@@ -256,6 +282,11 @@ mat-icon {
   z-index: 2 !important;
 }
 
+// Keep dialog titles clear of the (x) button in the top right corner.
+.mat-mdc-dialog-surface:has(.close-button) .mat-mdc-dialog-title {
+  padding-right: 56px;
+}
+
 .dialog-actions {
   margin-top: 20px;
   text-align: right;
@@ -265,12 +296,14 @@ mat-icon {
   }
 }
 
-.toast-top-right {
-  top: 60px !important;
+.toast-top-center {
+  top: 16px !important;
 }
 
-.toast-container .ngx-toastr {
-  width: 350px;
+// toastr.css sets 300px for the centered positions with a more specific selector
+.toast-container.toast-top-center .ngx-toastr {
+  width: 450px;
+  max-width: calc(100vw - 32px);
 }
 
 .toast-container .ngx-toastr .toast-title {

@@ -11,11 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService} from '@ame/cache';
-import {ConfirmDialogEnum, ConfirmDialogService, FileHandlingService, ModelSaverService} from '@ame/editor';
-import {BrowserService, ElectronSignals, ElectronSignalsService, IPC_RENDERER, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ModelOpenerPort, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
+import {ClipboardService, LanguageTranslationService, NotificationsService} from '@ame/shared';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -26,8 +23,8 @@ import {MatInput} from '@angular/material/input';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {filter, finalize, switchMap} from 'rxjs';
 import {FileStatus, SidebarStateService} from '../../sidebar-state.service';
+import {WorkspaceDeletionService} from '../workspace-deletion/workspace-deletion.service';
 import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.component';
 
 @Component({
@@ -49,21 +46,19 @@ import {WorkspaceMigrateComponent} from '../workspace-migrate/workspace-migrate.
   ],
 })
 export class WorkspaceFileListComponent {
-  private electronSignalsService: ElectronSignals = inject(ElectronSignalsService);
-  private modelSaverService = inject(ModelSaverService);
-  private notificationService = inject(NotificationsService);
-  private confirmDialogService = inject(ConfirmDialogService);
-  private modelApiService = inject(ModelApiService);
-  private fileHandlingService = inject(FileHandlingService);
-  private translate = inject(LanguageTranslationService);
-  private loadedFiles = inject(LoadedFilesService);
-  private destroyRef = inject(DestroyRef);
-  private ipcRenderer = inject(IPC_RENDERER);
-  private browserService = inject(BrowserService);
+  private readonly notificationService = inject(NotificationsService);
+  private readonly modelApiService = inject(WorkspaceFacade);
+  private readonly modelOpener = inject(ModelOpenerPort, {optional: true});
+  private readonly translate = inject(LanguageTranslationService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly clipboard = inject(ClipboardService);
 
-  public sidebarService = inject(SidebarStateService);
+  public readonly sidebarService = inject(SidebarStateService);
+  public readonly workspaceStore = inject(WorkspaceStore);
+  public readonly deletion = inject(WorkspaceDeletionService);
 
   public readonly menuSelection = signal<{namespace: string; file: FileStatus} | null>(null);
+  public readonly namespaceMenuSelection = signal<string | null>(null);
   public readonly foldedStatus = signal(false);
   public readonly searched = signal<Record<string, FileStatus[]>>({});
   public readonly folded = signal<Record<string, boolean>>({});
@@ -169,32 +164,51 @@ export class WorkspaceFileListComponent {
     const selection = this.menuSelection();
     if (!selection) return false;
 
-    const {namespace, file} = selection;
-    return !(this.sidebarService.isCurrentFile(namespace, file.name) || file.outdated || file.errored);
+    const {file} = selection;
+    return !(file.outdated || file.errored);
+  }
+
+  public openContextMenu($event: MouseEvent, namespace: string, file: FileStatus, trigger: MatMenuTrigger) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    this.prepare(namespace, file);
+    trigger.openMenu();
+  }
+
+  public loadInNewTab() {
+    const selection = this.menuSelection();
+    if (!selection || selection.file.outdated || selection.file.errored) return;
+
+    this.modelOpener
+      ?.openInNewTab({
+        file: selection.file.name,
+        namespace: selection.namespace,
+        aspectModelUrn: selection.file.aspectModelUrn,
+      })
+      .subscribe();
+
+    this.menuSelection.set(null);
   }
 
   public loadInNewWindow() {
     const selection = this.menuSelection();
-    if (!selection) return;
+    if (!selection || selection.file.outdated || selection.file.errored) return;
 
-    const {namespace, file} = selection;
-
-    if (file.outdated || file.errored) {
-      return;
-    }
-
-    this.electronSignalsService.call('openWindow', {
-      namespace,
-      file: file.name,
-      fromWorkspace: true,
-      aspectModelUrn: file.aspectModelUrn,
+    this.modelOpener?.openInNewWindow({
+      namespace: selection.namespace,
+      file: selection.file.name,
+      aspectModelUrn: selection.file.aspectModelUrn,
     });
 
     this.menuSelection.set(null);
   }
 
   public isLoadDisabled() {
-    return !this.isOpenable();
+    const selection = this.menuSelection();
+    if (!selection) return true;
+
+    const {namespace, file} = selection;
+    return this.sidebarService.isCurrentFile(namespace, file.name) || !this.isOpenable();
   }
 
   public isCurrentFile(namespace?: string, fileName?: string): boolean {
@@ -203,68 +217,71 @@ export class WorkspaceFileListComponent {
 
   public isDeleteDisabled() {
     const selection = this.menuSelection();
-    if (!selection) return true;
+    return !selection || this.deletion.fileBlockReason(selection.namespace, selection.file.name) !== null;
+  }
 
-    const {namespace, file} = selection;
-    return this.sidebarService.isCurrentFile(namespace, file.name);
+  /** Explains why the selected file cannot be deleted. */
+  public deleteTooltip(): string {
+    const selection = this.menuSelection();
+    return selection ? this.deletion.blockReasonText('file', this.deletion.fileBlockReason(selection.namespace, selection.file.name)) : '';
+  }
+
+  public isNamespaceDeleteDisabled() {
+    const namespace = this.namespaceMenuSelection();
+    return !namespace || this.deletion.namespaceBlockReason(namespace) !== null;
+  }
+
+  /** Explains why the selected namespace version cannot be deleted. */
+  public namespaceDeleteTooltip(): string {
+    const namespace = this.namespaceMenuSelection();
+    return namespace ? this.deletion.blockReasonText('namespace', this.deletion.namespaceBlockReason(namespace)) : '';
+  }
+
+  public prepareNamespaceMenu(namespace: string) {
+    this.namespaceMenuSelection.set(namespace);
+  }
+
+  public deleteNamespace() {
+    const namespace = this.namespaceMenuSelection();
+    if (!namespace || this.isNamespaceDeleteDisabled()) return;
+
+    this.deletion.deleteNamespace(namespace).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+  }
+
+  public promptOpenFile(namespace: string, file: FileStatus) {
+    if (file.outdated || file.errored || this.isCurrentFile(namespace, file.name)) {
+      return;
+    }
+
+    this.modelOpener
+      ?.promptAndOpen({
+        file: file.name,
+        namespace,
+        aspectModelUrn: file.aspectModelUrn,
+      })
+      .subscribe();
   }
 
   public openFile() {
     const selection = this.menuSelection();
-    if (!selection) return;
+    if (!selection || selection.file.outdated || selection.file.errored) return;
 
-    const {namespace, file} = selection;
-    const absoluteFileName = `${namespace}:${file.name}`;
-
-    if (file.outdated || file.errored) {
-      return;
-    }
-
-    this.confirmDialogService
-      .open({
-        phrases: [
-          this.translate.translateService.translate('confirmDialog.saveBeforeLoad.phrase1', {fileName: file.name}),
-          this.translate.language.confirmDialog.saveBeforeLoad.phrase2,
-        ],
-        title: this.translate.language.confirmDialog.saveBeforeLoad.title,
-        closeButtonText: this.translate.language.confirmDialog.saveBeforeLoad.cancelButton,
-        okButtonText: this.translate.language.confirmDialog.saveBeforeLoad.okButton,
+    this.modelOpener
+      ?.openInCurrentWindow({
+        file: selection.file.name,
+        namespace: selection.namespace,
+        aspectModelUrn: selection.file.aspectModelUrn,
       })
-      .pipe(
-        filter((confirmed: ConfirmDialogEnum) => confirmed !== ConfirmDialogEnum.cancel),
-        switchMap(() => this.modelSaverService.saveModel()),
-        finalize(() => this.fileHandlingService.loadNamespaceFile(absoluteFileName, file.aspectModelUrn)),
-      )
       .subscribe();
+
+    this.menuSelection.set(null);
   }
 
   public deleteFile() {
     const selection = this.menuSelection();
-    if (!selection) return;
+    if (!selection || this.isDeleteDisabled()) return;
 
-    const {namespace, file} = selection;
-    const aspectModelFileName = `${namespace}:${file.name}`;
-
-    this.confirmDialogService
-      .open({
-        phrases: [
-          this.translate.translateService.translate('confirmDialog.deleteFile.phrase1', {fileName: file.name}),
-          this.translate.language.confirmDialog.deleteFile.phrase2,
-        ],
-        title: this.translate.language.confirmDialog.deleteFile.title,
-      })
-      .subscribe(confirm => {
-        if (confirm !== ConfirmDialogEnum.cancel) {
-          this.sidebarService.namespacesState.removeFile(namespace, file.name);
-          this.sidebarService.selection.reset();
-          this.loadedFiles.removeFile(aspectModelFileName);
-          this.modelApiService.deleteAspectModel(selection.file.aspectModelUrn).subscribe(() => {
-            this.sidebarService.namespacesState.clear();
-            this.sidebarService.workspace.refresh();
-            this.electronSignalsService.call('requestRefreshWorkspaces');
-          });
-        }
-      });
+    this.deletion.deleteFile(selection.namespace, selection.file).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   public copyNamespace() {
@@ -307,28 +324,10 @@ export class WorkspaceFileListComponent {
   }
 
   private copyToClipboard(text: string) {
-    if (this.browserService.isStartedAsElectronApp() && this.ipcRenderer?.copyToClipboard) {
-      this.ipcRenderer.copyToClipboard(text);
-    } else if (navigator.clipboard?.writeText && document.hasFocus()) {
-      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
-    } else {
-      this.fallbackCopy(text);
-    }
+    this.clipboard.copy(text);
 
     const title = this.translate.translateService.translate('sidebar.fileMenu.copiedFilePath') || 'File path copied to clipboard';
     this.notificationService.success({title, message: text});
-  }
-
-  private fallbackCopy(text: string) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
   }
 
   public prepare(namespace: string, file: FileStatus) {
@@ -361,6 +360,17 @@ export class WorkspaceFileListComponent {
       const tooltip = this.translate.language.tooltips?.erroredFile || 'File has errors';
       return `${file.name} (${tooltip})`;
     }
+    if (this.hasMissingReferences(file)) {
+      const tooltip = this.translate.translateService.translate('tooltips.fileWithMissingReferences', {
+        namespaces: file.missingDependencies.join(', '),
+      });
+      return `${file.name} (${tooltip})`;
+    }
     return file.name;
+  }
+
+  /** Files referencing namespaces which are not in the workspace can be opened; the missing elements are shown as placeholders. */
+  hasMissingReferences(file: FileStatus): boolean {
+    return !file.errored && !!file.missingDependencies?.length;
   }
 }

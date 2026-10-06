@@ -11,20 +11,20 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ShapeConnectorService} from '@ame/connection';
-import {FiltersService} from '@ame/loader-filters';
-import {MaxGraphService, MaxGraphShapeSelectorService} from '@ame/max-graph';
-import {ConfigurationService} from '@ame/settings-dialog';
-import {BindingsService, NotificationsService} from '@ame/shared';
+import {ConfigurationService, FilterAttributesService, FiltersService} from '@ame/domain';
+import {MaxGraphService, MaxGraphShapeSelectorService, ShapeConnectorService} from '@ame/graph';
+import {BindingsService, ModelFilter, NotificationsService} from '@ame/shared';
 import {signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {TranslocoTestingModule} from '@jsverse/transloco';
 import {MockProvider} from 'ng-mocks';
-import {of} from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {ShapeSettingsService} from '../editor-dialog';
 import {EditorService} from '../editor.service';
+import {ModelHistoryService} from '../history/model-history.service';
+import {PrefixManagementService} from '../prefixes/prefix-management.service';
 import {EditorToolbarComponent} from './editor-toolbar.component';
 import {FileHandlingService} from './services';
 
@@ -34,8 +34,19 @@ describe('EditorToolbarComponent', () => {
   let editorService: EditorService;
   let fileHandlingService: FileHandlingService;
   let shapeSettingsService: ShapeSettingsService;
+  let filtersService: FiltersService;
+  let activeFilter$: BehaviorSubject<ModelFilter>;
+  let isModelEmpty: ReturnType<typeof signal<boolean>>;
+  let canUndo: ReturnType<typeof signal<boolean>>;
+  let canRedo: ReturnType<typeof signal<boolean>>;
+
+  const filterButton = (): HTMLElement => fixture.nativeElement.querySelector('[data-testid="tbPropertyFilterButton"]');
 
   beforeEach(async () => {
+    activeFilter$ = new BehaviorSubject<ModelFilter>(ModelFilter.DEFAULT);
+    isModelEmpty = signal(false);
+    canUndo = signal(false);
+    canRedo = signal(false);
     await TestBed.configureTestingModule({
       imports: [
         EditorToolbarComponent,
@@ -66,6 +77,7 @@ describe('EditorToolbarComponent', () => {
         }),
         MockProvider(MaxGraphShapeSelectorService, {
           selectedCells: signal([]),
+          hasSelection: signal(false),
           selectTree: vi.fn(),
         }),
         MockProvider(MatDialog),
@@ -73,16 +85,28 @@ describe('EditorToolbarComponent', () => {
           editSelectedCell: vi.fn(),
         }),
         MockProvider(MaxGraphService, {
-          isModelEmpty: signal(false),
+          isModelEmpty,
         }),
+        MockProvider(FiltersService, {renderByFilter: vi.fn()}),
+        {
+          provide: FilterAttributesService,
+          useValue: {
+            get activeFilter() {
+              return activeFilter$.value;
+            },
+            activeFilter$: activeFilter$.asObservable(),
+          },
+        },
         MockProvider(NotificationsService),
-        MockProvider(FiltersService),
+        MockProvider(PrefixManagementService, {openManagement: vi.fn()}),
+        MockProvider(ModelHistoryService, {canUndo, canRedo, undo: vi.fn(), redo: vi.fn()}),
       ],
     }).compileComponents();
 
     editorService = TestBed.inject(EditorService);
     fileHandlingService = TestBed.inject(FileHandlingService);
     shapeSettingsService = TestBed.inject(ShapeSettingsService);
+    filtersService = TestBed.inject(FiltersService);
     fixture = TestBed.createComponent(EditorToolbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -115,5 +139,76 @@ describe('EditorToolbarComponent', () => {
   it('validateFile should call fileHandlingService.onValidateFile', () => {
     component.validateFile();
     expect(fileHandlingService.onValidateFile).toHaveBeenCalled();
+  });
+
+  describe('undo/redo', () => {
+    const button = (testId: string): HTMLElement => fixture.nativeElement.querySelector(`[data-testid="${testId}"]`);
+    const history = () => TestBed.inject(ModelHistoryService);
+
+    it('disables both buttons without steps', () => {
+      expect(button('tbUndoButton').classList).toContain('disabled');
+      expect(button('tbRedoButton').classList).toContain('disabled');
+      button('tbUndoButton').click();
+      expect(history().undo).not.toHaveBeenCalled();
+    });
+
+    it('undoes and redoes with the buttons', () => {
+      canUndo.set(true);
+      canRedo.set(true);
+      fixture.detectChanges();
+
+      button('tbUndoButton').click();
+      expect(history().undo).toHaveBeenCalled();
+      button('tbRedoButton').click();
+      expect(history().redo).toHaveBeenCalled();
+    });
+
+    it('disables both buttons in the text view', () => {
+      canUndo.set(true);
+      canRedo.set(true);
+      (component as unknown as {isTextView: ReturnType<typeof signal<boolean>>}).isTextView = signal(true);
+      fixture.detectChanges();
+
+      expect(button('tbUndoButton').classList).toContain('disabled');
+      expect(button('tbRedoButton').classList).toContain('disabled');
+    });
+  });
+
+  it('should open the prefix management', () => {
+    component.openPrefixManagement();
+    expect(TestBed.inject(PrefixManagementService).openManagement).toHaveBeenCalled();
+  });
+
+  describe('property filter', () => {
+    it('should render the property filter button enabled when a model is loaded', () => {
+      expect(filterButton()).toBeTruthy();
+      expect(filterButton().classList).not.toContain('disabled');
+      expect(filterButton().getAttribute('aria-pressed')).toBe('false');
+    });
+
+    it('should activate the property filter when inactive', () => {
+      filterButton().click();
+      expect(filtersService.renderByFilter).toHaveBeenCalledWith(ModelFilter.PROPERTIES);
+    });
+
+    it('should deactivate the property filter when active', () => {
+      activeFilter$.next(ModelFilter.PROPERTIES);
+      fixture.detectChanges();
+
+      expect(filterButton().classList).toContain('toolbar-item--active');
+      expect(filterButton().getAttribute('aria-pressed')).toBe('true');
+
+      filterButton().click();
+      expect(filtersService.renderByFilter).toHaveBeenCalledWith(ModelFilter.DEFAULT);
+    });
+
+    it('should be disabled and not react when no model is loaded', () => {
+      isModelEmpty.set(true);
+      fixture.detectChanges();
+
+      expect(filterButton().classList).toContain('disabled');
+      filterButton().click();
+      expect(filtersService.renderByFilter).not.toHaveBeenCalled();
+    });
   });
 });

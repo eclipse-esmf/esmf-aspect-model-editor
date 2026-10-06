@@ -1,23 +1,47 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
-  @if (sidebarService.selection.selection(); as currentSelection) {
-    <div class="header">
-      <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">
-        {{ currentSelection?.file }}
-      </h2>
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
-      <button (click)="sidebarService.fileElements.close()" mat-mini-fab>
+<ng-container *transloco="let t">
+  <ame-resize-gutter
+    [(width)]="width"
+    [minWidth]="minWidth"
+    [maxWidth]="maxWidth"
+    [storageKey]="storageKey"
+    edge="end"
+    data-testid="file-elements-resize-gutter"
+  ></ame-resize-gutter>
+  @if (sidebarService.selection.selection(); as currentSelection) {
+    <div class="header" data-testid="file-elements-header">
+      <div class="header__text">
+        <span class="header__overline">
+          <mat-icon>list_alt</mat-icon>
+          {{ t('sidebar.elementList.title') }}
+        </span>
+        <h2 [matTooltip]="currentSelection?.file" [matTooltipDisabled]="currentSelection?.file?.length < 28" matTooltipPosition="right">
+          {{ currentSelection?.file }}
+        </h2>
+        <span class="header__namespace" [matTooltip]="currentSelection?.namespace" data-testid="file-elements-namespace">
+          {{ currentSelection?.namespace }}
+        </span>
+      </div>
+
+      <button
+        [matTooltip]="t('sidebar.elementList.close')"
+        [attr.aria-label]="t('sidebar.elementList.close')"
+        (click)="sidebarService.fileElements.close()"
+        mat-mini-fab
+        data-testid="file-elements-close"
+      >
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -25,10 +49,10 @@
     <div class="search">
       <mat-form-field appearance="outline">
         <mat-icon matPrefix>search</mat-icon>
-        <input [placeholder]="t('sidebar.actions.searchElements')" (keyup)="search($event)" matInput data-cy="searchElements" />
+        <input [placeholder]="t('sidebar.actions.searchElements')" (keyup)="search($event)" matInput data-testid="searchElements" />
       </mat-form-field>
 
-      <button class="filter" [matMenuTriggerFor]="filter" mat-mini-fab data-cy="elementsFilterBtn">
+      <button class="filter" [matMenuTriggerFor]="filter" mat-mini-fab data-testid="elementsFilterBtn">
         <mat-icon>filter_list</mat-icon>
       </button>
     </div>
@@ -39,10 +63,10 @@
         <p>{{ t('sidebar.loadingElements') }}</p>
       </div>
     } @else {
-      <div class="elements" data-cy="fileElementsList">
+      <div class="elements" data-testid="fileElementsList">
         @for (key of elementsOrder; track key) {
           @if (searched()[key]?.length && elements()[key]?.displayed) {
-            <div class="elements__section" [class.expanded]="!elements()[key]?.hidden" [attr.data-cy]="'section-' + key">
+            <div class="elements__section" [class.expanded]="!elements()[key]?.hidden" [attr.data-testid]="'section-' + key">
               <div class="elements__header">
                 <h3 class="elements__title">{{ elements()[key]?.plural }} ({{ searched()[key]?.length }})</h3>
                 @if (searched()[key]?.length > 4) {
@@ -92,7 +116,7 @@
             <mat-checkbox
               class="filter-menu-item"
               [checked]="elements()[key]?.displayed"
-              [attr.data-cy]="'filterCheckbox-' + key"
+              [attr.data-testid]="'filterCheckbox-' + key"
               (change)="toggleFilter($event.checked, key)"
               labelPosition="before"
             >

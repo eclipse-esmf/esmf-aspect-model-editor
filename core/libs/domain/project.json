@@ -1,0 +1,22 @@
+{
+  "name": "domain",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/domain/src",
+  "prefix": "ame",
+  "targets": {
+    "test": {
+      "executor": "@angular/build:unit-test",
+      "outputs": ["{workspaceRoot}/coverage/libs/domain"],
+      "options": {
+        "tsConfig": "libs/domain/tsconfig.spec.json",
+        "buildTarget": "ame:build:development",
+        "watch": false
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "tags": ["scope:domain", "layer:domain"]
+}

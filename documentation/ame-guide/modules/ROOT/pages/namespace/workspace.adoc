@@ -24,10 +24,11 @@ The currently loaded Aspect Model is highlighted gray.
 The three-dot menu next to a model offers the options:
 
 * *Open in new window*: to open the Aspect Model in a new window
-* *Open in current*: to open the Aspect Model in the current window
+* *Open in current tab*: to replace the Aspect Model of the active tab. If the active model has unsaved changes, you are asked first; *Cancel* or kbd:[Esc] keeps it. If the Aspect Model is already open in another tab, that tab is activated instead.
+* *Open in new tab*: to open the Aspect Model in an additional tab of the current window
 * *Find elements*: to opens the Find elements section
 * *Copy file path*: to copy the file path to the clipboard
-* *Delete*: to delete the Aspect Model from the workspace
+* *Delete*: to delete the Aspect Model from the workspace (see <<delete-aspect-model>>)
 
 image:workspace-action.png[,40%]
 
@@ -44,9 +45,42 @@ did not exist in your workspace yet, these will be created additionally.
 TIP: In case you have manually added or deleted a file on your local Aspect Model Editor file directory it might happen
 that the change is not instantly visible on the Workspace. In such a case click the *refresh* icon to update the Workspace view.
 
-== Delete a namespace
+[[delete-aspect-model]]
+== Delete an Aspect Model
+
+Before an Aspect Model file is deleted, the Aspect Model Editor checks whether any other file of the workspace still uses one of its elements.
+
+* If another file references the Aspect Model, the deletion is blocked. A dialog lists the referencing files and the referenced elements. Remove these references first.
+* It does not matter whether the Aspect Model itself uses other files. Only *incoming* references block the deletion.
+* An Aspect Model that is open in a tab or in another Aspect Model Editor window cannot be deleted. Hover over the disabled *Delete* entry to see the reason.
 
 By deleting the last Aspect Model of a namespace, the folder will be deleted as well.
+
+[[delete-namespace]]
+== Delete a namespace
+
+Use the three-dot menu next to a namespace and select *Delete namespace* to delete all Aspect Models of this namespace version at once.
+
+* The Aspect Model Editor checks whether Aspect Models of *other* namespaces (or other versions of the same namespace) reference elements of this namespace version. If so, the deletion is blocked and the referencing files are listed.
+* References between the files of the namespace itself do not block the deletion.
+* Files that cannot be read are listed as well and also block the deletion, because their references cannot be checked.
+* If no references are found, a warning shows the number of Aspect Models that will be deleted. The deletion must be confirmed.
+* A namespace cannot be deleted while one of its Aspect Models is open in a tab or in another Aspect Model Editor window. The tooltip of the disabled entry tells you why.
+
+Only `.ttl` files are deleted. Empty namespace and version folders are removed afterwards.
+
+[[clear-workspace]]
+== Clear the workspace
+
+The *Clear workspace* icon in the header of the Workspace sidebar deletes all Aspect Models of the workspace.
+
+* Type `CLEAR` into the confirmation field to enable the *Clear workspace* button.
+* By default a backup (ZIP file) of the workspace is created in the workspace folder first. You can disable this option in the dialog.
+* No reference check is needed, because all Aspect Models are deleted.
+* The action is disabled while an Aspect Model of the workspace is open in any Aspect Model Editor window, or when the workspace is empty. The tooltip of the icon tells you why.
+* Folders of namespaces and versions that are left empty are removed as well.
+
+NOTE: The check of other windows is only available in the desktop application. In the browser, only the tabs of the current window are checked.
 
 == Troubleshooting
 === Aspect Model is marked with a red exclamation mark
@@ -59,3 +93,8 @@ as it will not be able to load this Aspect Model.
 In such a case you will need some expert who can fix it with a text editor.
 
 image::workspace-warning.png[Workspace warning, 85%, link=self]
+
+=== Aspect Model is marked with an orange warning icon
+The Aspect Model references elements of a namespace that is not in the workspace.
+Unlike the red error marker, the model can be opened: the missing elements are shown as placeholders.
+See xref:namespace/missing-references.adoc[Aspect Models with missing references].

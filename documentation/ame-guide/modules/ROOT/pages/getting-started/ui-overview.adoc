@@ -9,11 +9,19 @@ image::ame-ui-overview-numbers.png[Numbered UI overview, width=80%]
 
 <<toolbar>>
 
+<<element-search>>
+
+<<resize-panels>>
+
 <<workspace-sidebar>>
 
 <<graph-area>>
 
 <<edit-dialog>>
+
+<<editor-tabs>>
+
+<<keyboard-shortcuts>>
 
 [[menu]]
 == 1. Menu
@@ -30,7 +38,14 @@ image:menu-bar/menu-file.png[, width=30%, align="center"]
 
 | image:toolbar-icons/add.png[,15%,20%]
 | *New...*
-| Create, import, duplicate Aspect Models, or use a template.
+| Opens a submenu to start a new model:
+
+* *Empty Model* (header only),
+* *Load File...* &ndash; open a `.ttl` file from your file system,
+* *Copy Paste* &ndash; paste the Turtle (RDF) content of a model,
+* *Examples* &ndash; load one of the built-in examples (`SimpleAspect.ttl`, `Movement.ttl`).
+
+Each loaded model is opened in its own xref:getting-started/ui-overview.adoc#editor-tabs[editor tab].
 
 | image:toolbar-icons/note_add.png[,15%,20%]
 | *New Window*
@@ -46,7 +61,7 @@ image:menu-bar/menu-file.png[, width=30%, align="center"]
 
 | image:toolbar-icons/conntent.png[,15%,20%]
 | *Copy to Clipboard*
-| Copy the current Model's information for use elsewhere.
+| Copy the Turtle (RDF) serialization of the current Model to the system clipboard.
 
 | image:toolbar-icons/save.png[,15%,20%]
 | *Save to Workspace*
@@ -134,6 +149,10 @@ image:menu-bar/menu-edit.png[, width=30%, align="center"]
 | Create a linkage between two selected elements, establishing a relationship or flow that reflects their interaction within the model.
 |===
 
+In addition, the Edit menu contains the standard text editing commands (*Undo*, *Redo*, *Cut*, *Copy*, *Paste*, *Select All*).
+These only apply to text input fields (e.g., in the Edit dialog).
+To undo and redo changes of the graph, use the *Undo* and *Redo* buttons of the toolbar or the keyboard shortcuts, see xref:getting-started/undo-redo.adoc[Undo and redo].
+
 {nbsp}
 [[menu-valiadate]]
 === Validate Menu
@@ -169,6 +188,10 @@ image:menu-bar/menu-generate.png[, width=30%, align="center"]
 | OpenApi Specification
 | Generate OpenAPI specification.
 
+| image:toolbar-icons/api.png[,20%,20%]
+| AsyncAPI Specification
+| Generate AsyncAPI specification.
+
 | image:toolbar-icons/data_array.png[,20%,20%]
 | AASX/XML
 | Generate AASX/XML.
@@ -202,6 +225,12 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Search for files.
 |===
 
+{nbsp}
+[[menu-window]]
+=== Window Menu
+
+Contains the standard window commands *Minimize*, *Close Window* and *Toggle Full Screen*.
+
 
 [[toolbar]]
 == 2. Toolbar
@@ -211,7 +240,7 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Icon | Name | Action
 
 | image:toolbar-icons/jump.png[,20%,20%]
-| Edit highligted cell
+| Edit highlighted cell
 | Open the Edit dialog of the selected element (alternative: double-click an element inside the model).
 
 | image:toolbar-icons/delete.png[,20%,20%]
@@ -242,7 +271,50 @@ image:menu-bar/menu-search.png[, width=30%, align="center"]
 | Zoom out
 | Zoom out the Aspect Model. 
 
+| 
+| Prefixes
+| Open the prefix management of the current model, see <<prefixes>>.
+
 |===
+
+[[prefixes]]
+=== Prefixes
+
+A prefix is only a short notation for a namespace (e.g. `samm:` or `:`).
+Renaming a prefix changes how IRIs are written in the file, the IRIs themselves stay the same.
+
+The *Prefixes* dialog lists all prefixes of the current model with their namespace and whether they are *Used* or *Not used*. You can:
+
+* *Add prefix*: declares a prefix for a namespace. Declared prefixes are written to the file even if no element uses them yet.
+* *Rename prefix*: changes the short notation everywhere in the model.
+* *Remove prefix*: only possible for prefixes which are not used by elements of the model.
+
+Prefixes of the model itself and of the SAMM/RDF vocabularies are protected and cannot be changed.
+
+When you add an element of another namespace (e.g. by drag and drop from the Workspace sidebar) and the model has no prefix for that namespace yet, the dialog *Prefix for referenced namespace* asks which prefix to use.
+It suggests the prefix of the referenced file; with *Use automatic prefix* the editor chooses one.
+
+The dialog is also available in the xref:getting-started/text-view.adoc[text view] (*Manage prefixes*).
+
+[[element-search]]
+=== Element search
+
+Use *Search > Elements* (`Cmd/Ctrl+F`) in the graph view to open the element search field *Search elements...*.
+The search finds elements by their name, `preferredName` and `description`, including all languages in the model.
+It also finds words inside camelCase names, ignores accents and umlauts, and shows approximate matches when there is no exact match.
+
+Selecting a result opens that element in the xref:getting-started/ui-overview.adoc#edit-dialog[Edit dialog].
+
+NOTE: In the xref:getting-started/text-view.adoc[text view], `Cmd/Ctrl+F` opens the text search inside the Turtle text instead.
+
+[[resize-panels]]
+=== Resize panels
+
+Several side panels have a vertical resize handle with a *more_vert* icon.
+Drag the handle to change the width, use the left and right arrow keys while the handle is focused, or double-click the handle to reset the width.
+
+The widths are remembered on this device for the Workspace sidebar, the Workspace element list, the SAMM elements sidebar and the Edit dialog.
+Panels still keep their minimum and maximum widths and are clamped to the available screen size.
 
 [[workspace-sidebar]]
 == 3. Workspace sidebar
@@ -314,5 +386,75 @@ How to access the details of an element in the Edit dialog:
 * Select the element and right-click to open the context menu. Then select *Open in detail view* image:toolbar-icons/jump.png[Edit icon].
 * Select the element and click the *Edit highlighted cell* button image:toolbar-icons/jump.png[Edit icon] on the xref:getting-started/ui-overview.adoc#toolbar[toolbar].
 
+At the bottom of the Edit dialog, the lists *Incoming edges* and *Outgoing edges* show all elements that are connected to the edited element.
+Use the buttons of an entry to locate the element in the graph area canvas, open it in the Edit dialog, or &ndash; for elements from another file &ndash; open it in a new tab.
+These lists, as well as the connection-related fields (e.g., the data type of a Characteristic), are updated immediately when you add or remove connections in the graph area canvas while the Edit dialog is open.
+
 For more information, see xref:modeling/edit-elements.adoc[Edit elements].
 
+{nbsp}
+[[editor-tabs]]
+== 6. Editor tabs
+
+The Aspect Model Editor can keep several models open at the same time.
+Each opened model is shown as a tab in the tab bar above the graph area canvas.
+
+* The tab shows the file name of the model. Hover over a tab to see its namespace and file name.
+* A dot next to the file name indicates that the model has unsaved changes.
+* Click a tab to switch to that model. The open Edit dialog of a tab is restored as well.
+* Click the *+* button to open a new tab with an empty model (`new-model.ttl`, `new-model-2.ttl`, ...).
+* Click the *x* button of a tab to close it. If the model has unsaved changes, you are asked whether you want to save them first.
+When you close the last tab, a new empty model is opened.
+* Opening a model that is already open (e.g., from the Workspace sidebar) switches to its existing tab instead of opening it twice.
+* Loading a model while an untouched empty model tab is active replaces that empty tab.
+* If there are more tabs than fit into the tab bar, use the arrow buttons or the mouse wheel to scroll through them.
+* Use the switch *Edit* / *Aspect Model* at the right end of the tab bar to change between the graphical editor and the read-only Turtle text of the model, see xref:getting-started/text-view.adoc[Aspect Model text view]. The view is remembered per tab.
+* In the desktop app the open tabs and windows can be restored on the next start, see xref:getting-started/session-restore.adoc[Restore the last session].
+
+{nbsp}
+[[keyboard-shortcuts]]
+== 7. Keyboard shortcuts
+
+On macOS use *Cmd*, on Windows and Linux use *Ctrl*. Shortcuts of menu entries that are currently disabled (e.g. without a loaded model) have no effect.
+
+[cols="40%,60%"]
+|===
+| Shortcut | Action
+
+| `Cmd/Ctrl+N` | File > New... > Empty Model
+| `Cmd/Ctrl+O` | File > New... > Load File...
+| `Cmd/Ctrl+Shift+T` | File > New... > Copy Paste
+| `Cmd/Ctrl+1` | File > New... > SimpleAspect.ttl
+| `Cmd/Ctrl+2` | File > New... > Movement.ttl
+| `Cmd/Ctrl+Shift+N` | File > New Window
+| `Cmd/Ctrl+Shift+O` | File > Import Model
+| `Cmd/Ctrl+Shift+P` | File > Import Package
+| `Cmd/Ctrl+Shift+C` | File > Copy to Clipboard
+| `Cmd/Ctrl+S` | File > Save to Workspace
+| `Cmd/Ctrl+Shift+E` | File > Export Model
+| `Cmd/Ctrl+Shift+X` | File > Export Package
+| `Cmd/Ctrl+,` | Settings (macOS: application menu, Windows/Linux: File menu)
+| `Cmd/Ctrl+Shift+B` | View > Toggle Toolbar
+| `Cmd/Ctrl+Shift+M` | View > Toggle Minimap
+| `Cmd/Ctrl+Shift+A` | View > Filter Model by > None
+| `Cmd/Ctrl+Shift+R` | View > Filter Model by > Properties
+| `Cmd/Ctrl++` or `Cmd/Ctrl+=` | View > Zoom in
+| `Cmd/Ctrl+-` | View > Zoom out
+| `Cmd/Ctrl+9` | View > Zoom to Fit
+| `Cmd/Ctrl+0` | View > Zoom to 100%
+| `Cmd/Ctrl+E` | Edit > Open selected element
+| `Cmd/Ctrl+Shift+Backspace` | Edit > Remove selected element
+| `Cmd/Ctrl+Shift+D` | Edit > Collapse/Expand Model
+| `Cmd/Ctrl+Shift+L` | Edit > Format Model
+| `Cmd/Ctrl+K` | Edit > Connect selected elements
+| `Cmd/Ctrl+Shift+V` | Validate > Current Model
+| `Cmd/Ctrl+3` | Generate > HTML Documentation
+| `Cmd/Ctrl+4` | Generate > OpenAPI Specification
+| `Cmd/Ctrl+5` | Generate > AsyncAPI Specification
+| `Cmd/Ctrl+6` | Generate > AASX / XML
+| `Cmd/Ctrl+7` | Generate > Sample JSON Payload
+| `Cmd/Ctrl+8` | Generate > JSON Schema
+| `Cmd/Ctrl+F` | Search > Elements (in the text view: search in the text)
+| `Cmd/Ctrl+Shift+F` | Search > Files
+| `Delete` | Delete the selected element(s) in the graph area canvas
+|===

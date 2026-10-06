@@ -11,28 +11,36 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {ModelCheckerService} from '@ame/editor';
-import {IPC_RENDERER, NotificationsService} from '@ame/shared';
-import {LanguageTranslationService} from '@ame/translation';
+import {ModelCheckerPort, ModelValidationStore, WorkspaceFacade, WorkspaceStore} from '@ame/domain';
+import {
+  ClipboardService,
+  createDebouncedLoading,
+  LanguageTranslationService,
+  NotificationsService,
+  ResizeGutterComponent,
+} from '@ame/shared';
 import {Component, DestroyRef, effect, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatMiniFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslocoDirective} from '@jsverse/transloco';
-import {EMPTY, Subject, catchError, debounceTime, finalize, map, switchMap, tap} from 'rxjs';
+import {catchError, debounceTime, EMPTY, finalize, map, Subject, switchMap, tap} from 'rxjs';
 import {SidebarStateService} from '../sidebar-state.service';
+import {WorkspaceDeletionService} from './workspace-deletion/workspace-deletion.service';
 import {WorkspaceEmptyComponent} from './workspace-empty/workspace-empty.component';
 import {WorkspaceErrorComponent} from './workspace-error/workspace-error.component';
 import {WorkspaceFileElementsComponent} from './workspace-file-elements/workspace-file-elements.component';
 import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-list.component';
+
+export const WORKSPACE_DEFAULT_WIDTH = 450;
 
 @Component({
   selector: 'ame-workspace',
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.scss'],
   imports: [
+    ResizeGutterComponent,
     MatTooltipModule,
     MatMiniFabButton,
     MatIconModule,
@@ -44,17 +52,25 @@ import {WorkspaceFileListComponent} from './workspace-file-list/workspace-file-l
   ],
 })
 export class WorkspaceComponent {
+  protected readonly minWidth = 280;
+  protected readonly maxWidth = 900;
+  protected readonly storageKey = 'ame.sidebar.workspace.width';
+  public readonly width = signal<number | null>(WORKSPACE_DEFAULT_WIDTH);
+
   private destroyRef = inject(DestroyRef);
-  private modelChecker = inject(ModelCheckerService);
-  private modelApiService = inject(ModelApiService);
-  private ipcRenderer = inject(IPC_RENDERER);
+  private modelChecker = inject(ModelCheckerPort);
+  private modelApiService = inject(WorkspaceFacade);
+  private clipboard = inject(ClipboardService);
   private notificationsService = inject(NotificationsService);
   private translate = inject(LanguageTranslationService);
 
   public sidebarService = inject(SidebarStateService);
+  public deletion = inject(WorkspaceDeletionService);
+  public validationStore = inject(ModelValidationStore);
+  public workspaceStore = inject(WorkspaceStore);
 
   public namespaces = this.sidebarService.namespacesState;
-  public loading = signal(false);
+  public readonly loading = createDebouncedLoading();
   public error = signal<{code: number; message: string; path: string}>(null);
 
   public get namespacesKeys(): string[] {
@@ -67,7 +83,12 @@ export class WorkspaceComponent {
   private readonly refresh$ = new Subject<void>();
 
   constructor() {
+    if (typeof window !== 'undefined') {
+      (window as any)['angular.workspaceComponent'] = this;
+    }
+
     effect(() => {
+      this.workspaceStore.refreshTick();
       this.sidebarService.workspace.refreshTick();
       this.refresh$.next();
     });
@@ -77,19 +98,26 @@ export class WorkspaceComponent {
         debounceTime(50),
         tap(() => {
           this.error.set(null);
+          this.validationStore.clearWorkspaceError();
+          this.validationStore.setValidating(true);
           this.loading.set(true);
         }),
         switchMap(() =>
           this.modelChecker.detectWorkspaceErrors().pipe(
-            map(files => this.sidebarService.updateWorkspace(files)),
+            map(files => {
+              this.validationStore.setValidationStatus(true);
+              return this.sidebarService.updateWorkspace(files);
+            }),
             catchError(err => {
               if (err?.error?.error) {
                 this.error.set(err.error.error);
+                this.validationStore.setWorkspaceError(err.error.error);
               }
               return EMPTY;
             }),
             finalize(() => {
               this.loading.set(false);
+              this.validationStore.setValidating(false);
             }),
           ),
         ),
@@ -103,6 +131,22 @@ export class WorkspaceComponent {
     this.sidebarService.workspace.refresh();
   }
 
+  isClearWorkspaceDisabled(): boolean {
+    return this.loading() || this.deletion.clearBlockReason() !== null;
+  }
+
+  clearWorkspaceTooltip(): string {
+    return (
+      this.deletion.blockReasonText('clear', this.deletion.clearBlockReason()) ||
+      this.translate.translateService.translate('sidebar.workspace.clear')
+    );
+  }
+
+  clearWorkspace() {
+    if (this.isClearWorkspaceDisabled()) return;
+    this.deletion.clearWorkspace().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+  }
+
   copyWorkspacePath() {
     this.modelApiService
       .getStoragePath()
@@ -112,29 +156,11 @@ export class WorkspaceComponent {
           const pathToCopy = response?.storagePath || response?.path;
           if (!pathToCopy) return;
 
-          if (this.ipcRenderer?.copyToClipboard) {
-            this.ipcRenderer.copyToClipboard(pathToCopy);
-          } else if (navigator.clipboard?.writeText && document.hasFocus()) {
-            navigator.clipboard.writeText(pathToCopy).catch(() => this.fallbackCopy(pathToCopy));
-          } else {
-            this.fallbackCopy(pathToCopy);
-          }
+          this.clipboard.copy(pathToCopy);
 
           const title = this.translate.translateService.translate('sidebar.workspace.copiedWorkspacePath');
           this.notificationsService.success({title, message: pathToCopy});
         },
       });
-  }
-
-  private fallbackCopy(text: string) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
   }
 }

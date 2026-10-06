@@ -1,17 +1,17 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   @if (entity()) {
     <div class="source">
       @for (source of sources(); track source[0].aspectModelUrn) {
@@ -40,12 +40,12 @@
                     [disabled]="isLocked(source[0].name, i, 'value')"
                     [matAutocomplete]="entityAuto"
                     matInput
-                    data-cy="propertyValueComplex"
+                    data-testid="propertyValueComplex"
                   />
                   @if (isLocked(source[0].name, i, 'value')) {
                     <button
                       (click)="unlockValue(source[0].name, i, 'value')"
-                      data-cy="clear-entityValue-button"
+                      data-testid="clear-entityValue-button"
                       matSuffix
                       type="button"
                       mat-icon-button
@@ -76,7 +76,7 @@
               } @else {
                 <mat-form-field class="source__input" appearance="fill">
                   <mat-label>{{ t('entityValue.value') }}</mat-label>
-                  <input [formField]="propertiesForm[source[0].name][i].value" matInput type="text" data-cy="propertyValueNotComplex" />
+                  <input [formField]="propertiesForm[source[0].name][i].value" matInput type="text" data-testid="propertyValueNotComplex" />
                   @if (isRequiredInvalid(source[0], i, 'value')) {
                     <mat-error>{{ t('editorCanvas.shapeSetting.field.value.pleaseDefine') }}</mat-error>
                   }
@@ -99,12 +99,12 @@
                     [disabled]="isLocked(source[0].name, i, 'language')"
                     [matAutocomplete]="languageAuto"
                     matInput
-                    data-cy="propertyLanguageValue"
+                    data-testid="propertyLanguageValue"
                   />
                   @if (isLocked(source[0].name, i, 'language')) {
                     <button
                       (click)="unlockValue(source[0].name, i, 'language')"
-                      data-cy="clear-language-button"
+                      data-testid="clear-language-button"
                       matSuffix
                       type="button"
                       mat-icon-button
@@ -131,7 +131,7 @@
                 <div class="source__column source__column--icon">
                   @if (!i) {
                     <button
-                      [attr.data-cy]="source[0].name + 'Add'"
+                      [attr.data-testid]="source[0].name + 'Add'"
                       (click)="addLanguage(source)"
                       type="button"
                       mat-mini-fab
@@ -142,7 +142,7 @@
                     </button>
                   } @else {
                     <button
-                      [attr.data-cy]="source[0].name + 'Remove'"
+                      [attr.data-testid]="source[0].name + 'Remove'"
                       (click)="removeLanguage(source, i)"
                       type="button"
                       mat-mini-fab

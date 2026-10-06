@@ -10,7 +10,7 @@
  *
  * SPDX-License-Identifier: MPL-2.0
  */
-import {isVersionOutdated} from '@ame/utils';
+import {isVersionOutdated} from '@ame/shared';
 
 export class ExporterHelper {
   public static isVersionOutdated(fileVersion?: string, currentSammVersion?: string): boolean {

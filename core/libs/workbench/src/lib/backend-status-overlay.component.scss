@@ -1,0 +1,72 @@
+/*!
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  position: fixed;
+  inset: 0;
+  // Above Material/CDK overlays (dialogs, menus, snackbars) so nothing behind can be reached.
+  z-index: 100000;
+  display: block;
+  color: white;
+  background-color: #454e7b;
+  user-select: none;
+}
+
+.backend-status {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+h2 {
+  margin: 8px 0 0;
+  font-size: 1.3em;
+  font-weight: 400;
+}
+
+.message {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.details {
+  max-width: 600px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: rgb(0 0 0 / 20%);
+  font-family: monospace;
+  font-size: 0.85em;
+  user-select: text;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+mat-spinner {
+  --mat-progress-spinner-active-indicator-color: white;
+}
+
+button[mat-stroked-button] {
+  --mat-button-outlined-label-text-color: white;
+  --mat-button-outlined-outline-color: rgb(255 255 255 / 60%);
+}

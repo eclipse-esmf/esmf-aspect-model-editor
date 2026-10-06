@@ -1,17 +1,17 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <ame-entity-instance-search-bar
     [count]="(displayedValues() | entityInstance: searchFilter())?.length"
     [disableAddNewEntityValue]="loadedFiles.isElementExtern(enumeration())"
@@ -20,7 +20,7 @@
   ></ame-entity-instance-search-bar>
 
   @for (complexValue of displayedValues() | entityInstance: searchFilter(); track complexValue.aspectModelUrn) {
-    <mat-expansion-panel class="complex-value-items" [attr.data-cy]="complexValue.name" expanded="true">
+    <mat-expansion-panel class="complex-value-items" [attr.data-testid]="complexValue.name" expanded="true">
       <mat-expansion-panel-header class="complex-value-header">
         <mat-panel-title class="complex-value-bar">
           <span class="value-name">{{ complexValue.name }}</span>
@@ -29,7 +29,7 @@
               <mat-icon
                 [matTooltip]="t('entityValue.view.deleteComplexValue', {name: complexValue.name})"
                 (click)="onDelete(complexValue, $event)"
-                data-cy="remove-entity-value"
+                data-testid="remove-entity-value"
                 >delete
               </mat-icon>
             }

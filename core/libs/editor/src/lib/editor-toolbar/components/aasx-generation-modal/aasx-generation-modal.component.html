@@ -1,28 +1,27 @@
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
+
 <ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
   <h2 mat-dialog-title>{{ t('generateAasxDialog.title') }}</h2>
-  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
-    <mat-icon>close</mat-icon>
-  </button>
+  <ame-dialog-close-button [disabled]="isGenerating()" />
 
   <mat-dialog-content>
     @if (!isGenerating()) {
       <mat-form-field appearance="fill">
         <mat-label>{{ t('generateAasxDialog.outputFileFormat') }}</mat-label>
-        <mat-select [formField]="formatForm.format" data-cy="tbOutputButton">
-          <mat-option data-cy="tbOutputButton-aasx" value="aasx">AASX</mat-option>
-          <mat-option data-cy="tbOutputButton-xml" value="xml">XML</mat-option>
+        <mat-select [formField]="formatForm.format" data-testid="tbOutputButton">
+          <mat-option data-testid="tbOutputButton-aasx" value="aasx">AASX</mat-option>
+          <mat-option data-testid="tbOutputButton-xml" value="xml">XML</mat-option>
         </mat-select>
       </mat-form-field>
     } @else {

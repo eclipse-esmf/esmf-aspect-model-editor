@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/domain';
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
@@ -19,7 +20,7 @@ import {TranslocoDirective} from '@jsverse/transloco';
 
 @Component({
   templateUrl: './large-file-warning-dialog.html',
-  imports: [MatDialogModule, MatButtonModule, TranslocoDirective],
+  imports: [DialogCloseButtonComponent, MatDialogModule, MatButtonModule, TranslocoDirective],
 })
 export class LargeFileWarningComponent {
   private loadedFilesService = inject(LoadedFilesService);
@@ -30,6 +31,10 @@ export class LargeFileWarningComponent {
 
   constructor() {
     this.elementsCount.set(this.data?.elementsCount || 0);
+  }
+
+  requestClose(): void {
+    this.close('cancel');
   }
 
   close(response: 'open' | 'cancel') {

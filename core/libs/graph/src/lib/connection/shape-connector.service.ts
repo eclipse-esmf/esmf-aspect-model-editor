@@ -1,0 +1,333 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+import {inject, Injectable} from '@angular/core';
+import {isObservable, Observable, of} from 'rxjs';
+import {ShapeConnectorUtil} from './shape-connector-util';
+
+import {LoadedFilesService} from '@ame/domain';
+import {cellRelations, LanguageTranslationService, NotificationsService} from '@ame/shared';
+import {
+  DefaultAspect,
+  DefaultCharacteristic,
+  DefaultEither,
+  DefaultEntity,
+  DefaultEntityInstance,
+  DefaultEvent,
+  DefaultOperation,
+  DefaultProperty,
+  DefaultStructuredValue,
+  DefaultTrait,
+  NamedElement,
+} from '@esmf/aspect-model-loader';
+import {Cell} from '@maxgraph/core';
+import {environment} from 'environments/environment';
+import {MaxGraphAttributeService, MaxGraphHelper, MaxGraphShapeOverlayService, ModelInfo} from '../max-graph';
+import {MultiShapeConnector, SingleShapeConnector} from './models';
+import {
+  AbstractEntityAbstractEntityConnectionHandler,
+  AbstractEntityAbstractPropertyConnectionHandler,
+  AbstractEntityPropertyConnectionHandler,
+  AbstractPropertyAbstractPropertyConnectionHandler,
+  AspectEventConnectionHandler,
+  AspectPropertyConnectionHandler,
+  CharacteristicEntityConnectionHandler,
+  CharacteristicUnitConnectionHandler,
+  CollectionCharacteristicConnectionHandler,
+  EitherCharacteristicLeftConnectionHandler,
+  EitherCharacteristicRightConnectionHandler,
+  EntityAbstractEntityConnectionHandler,
+  EntityEntityConnectionHandler,
+  EntityPropertyConnectionHandler,
+  EnumerationEntityValueConnectionHandler,
+  EnumerationValueConnectionHandler,
+  EventPropertyConnectionHandler,
+  OperationPropertyInputConnectionHandler,
+  OperationPropertyOutputConnectionHandler,
+  PropertyAbstractPropertyConnectionHandler,
+  PropertyCharacteristicConnectionHandler,
+  PropertyPropertyConnectionHandler,
+  PropertyStructuredValueConnectionHandler,
+  PropertyValueConnectionHandler,
+  StructuredValueCharacteristicPropertyConnectionHandler,
+  TraitWithCharacteristicOrConstraintConnectionHandler,
+} from './multi-shape-connection-handlers';
+import {
+  AbstractEntityConnectionHandler,
+  AspectConnectionHandler,
+  CharacteristicConnectionHandler,
+  EitherConnectionHandler,
+  EntityConnectionHandler,
+  EntityValueConnectionHandler,
+  EventConnectionHandler,
+  OperationConnectionHandler,
+  PropertyConnectionHandler,
+  StructuredValueConnectionHandler,
+  TraitConnectionHandler,
+} from './single-connection-handlers';
+
+@Injectable({providedIn: 'root'})
+export class ShapeConnectorService {
+  private notificationsService = inject(NotificationsService);
+  private maxgraphAttributeService = inject(MaxGraphAttributeService);
+  private maxgraphShapeOverlayService = inject(MaxGraphShapeOverlayService);
+  private aspectConnectionHandler = inject(AspectConnectionHandler);
+  private propertyConnectionHandler = inject(PropertyConnectionHandler);
+  private operationConnectionHandler = inject(OperationConnectionHandler);
+  private eitherConnectionHandler = inject(EitherConnectionHandler);
+  private characteristicConnectionHandler = inject(CharacteristicConnectionHandler);
+  private entityConnectionHandler = inject(EntityConnectionHandler);
+  private abstractEntityConnectionHandler = inject(AbstractEntityConnectionHandler);
+  private eventConnectionHandler = inject(EventConnectionHandler);
+  private aspectPropertyConnectionHandler = inject(AspectPropertyConnectionHandler);
+  private aspectEventConnectionHandler = inject(AspectEventConnectionHandler);
+  private eventPropertyConnectionHandler = inject(EventPropertyConnectionHandler);
+  private operationPropertyInputConnectionHandler = inject(OperationPropertyInputConnectionHandler);
+  private operationPropertyOutputConnectionHandler = inject(OperationPropertyOutputConnectionHandler);
+  private eitherCharacteristicLeftConnectionHandler = inject(EitherCharacteristicLeftConnectionHandler);
+  private eitherCharacteristicRightConnectionHandler = inject(EitherCharacteristicRightConnectionHandler);
+  private propertyCharacteristicConnectionHandler = inject(PropertyCharacteristicConnectionHandler);
+  private characteristicEntityConnectionHandler = inject(CharacteristicEntityConnectionHandler);
+  private traitWithCharacteristicOrConstraintConnectionHandler = inject(TraitWithCharacteristicOrConstraintConnectionHandler);
+  private collectionCharacteristicConnectionHandler = inject(CollectionCharacteristicConnectionHandler);
+  private entityPropertyConnectionHandler = inject(EntityPropertyConnectionHandler);
+  private entityEntityConnectionHandler = inject(EntityEntityConnectionHandler);
+  private abstractEntityAbstractEntityConnectionHandler = inject(AbstractEntityAbstractEntityConnectionHandler);
+  private entityAbstractEntityConnectionHandler = inject(EntityAbstractEntityConnectionHandler);
+  private abstractEntityPropertyConnectionHandler = inject(AbstractEntityPropertyConnectionHandler);
+  private propertyPropertyConnectionHandler = inject(PropertyPropertyConnectionHandler);
+  private propertyValueConnectionHandler = inject(PropertyValueConnectionHandler);
+  private propertyStructuredValueConnectionHandler = inject(PropertyStructuredValueConnectionHandler);
+  private propertyAbstractPropertyConnectionHandler = inject(PropertyAbstractPropertyConnectionHandler);
+  private abstractEntityAbstractPropertyConnectionHandler = inject(AbstractEntityAbstractPropertyConnectionHandler);
+  private abstractPropertyAbstractPropertyConnectionHandler = inject(AbstractPropertyAbstractPropertyConnectionHandler);
+  private traitConnectionHandler = inject(TraitConnectionHandler);
+  private structuredValueConnectionHandler = inject(StructuredValueConnectionHandler);
+  private entityValueConnectionHandler = inject(EntityValueConnectionHandler);
+  private enumerationEntityValueConnectionHandler = inject(EnumerationEntityValueConnectionHandler);
+  private enumerationValueConnectionHandler = inject(EnumerationValueConnectionHandler);
+  private characteristicUnitConnectionHandler = inject(CharacteristicUnitConnectionHandler);
+  private structuredValuePropertyConnectionHandler = inject(StructuredValueCharacteristicPropertyConnectionHandler);
+  private translate = inject(LanguageTranslationService);
+  private loadedFilesService = inject(LoadedFilesService);
+
+  constructor() {
+    if (!environment.production) {
+      window['angular.shapeConnectorService'] = this;
+    }
+  }
+
+  connectSelectedElements(cells?: Cell[]) {
+    const selectedCells = cells || this.maxgraphAttributeService.graph.selectionModel.cells.filter(cell => !cell.isEdge());
+
+    if (selectedCells.length !== 2) {
+      return this.notificationsService.error({title: this.translate.language.notificationService.onlyTwoElementsConnection});
+    }
+
+    const firstElement = selectedCells[0].style.baseStyleNames[0];
+    const secondElement = selectedCells[1].style.baseStyleNames[0];
+    const modelElements = selectedCells.map(e => MaxGraphHelper.getModelElement(e));
+
+    if (
+      secondElement !== firstElement &&
+      cellRelations[secondElement].includes(firstElement) &&
+      !this.isConnectionException(modelElements[0], modelElements[1])
+    ) {
+      modelElements.reverse();
+      selectedCells.reverse();
+    }
+
+    if (this.loadedFilesService.isElementExtern(modelElements[0])) {
+      return this.notificationsService.error({title: this.translate.language.notificationService.referneceConnectionError});
+    }
+
+    const newConnection = this.connectShapes(modelElements[0], modelElements[1], selectedCells[0], selectedCells[1]);
+
+    if (newConnection && !(modelElements[1] instanceof DefaultEntity)) {
+      this.maxgraphShapeOverlayService.removeOverlaysByConnection(modelElements[0], selectedCells[0]);
+      this.maxgraphAttributeService.graph.clearSelection();
+    }
+  }
+
+  createAndConnectShape(metaModel: NamedElement, source: Cell, modelInfo: ModelInfo = ModelInfo.IS_CHARACTERISTIC): Observable<any> {
+    if (!metaModel) {
+      console.info('No cell selected with a meta model to connect.');
+      return of(undefined);
+    }
+
+    let connectionHandler: SingleShapeConnector<NamedElement>;
+
+    switch (true) {
+      case metaModel instanceof DefaultAspect:
+        connectionHandler = this.aspectConnectionHandler;
+        break;
+      case metaModel instanceof DefaultProperty:
+        connectionHandler = this.propertyConnectionHandler;
+        break;
+      case metaModel instanceof DefaultEither:
+        connectionHandler = this.eitherConnectionHandler;
+        break;
+      case metaModel instanceof DefaultOperation:
+        connectionHandler = this.operationConnectionHandler;
+        break;
+      case metaModel instanceof DefaultStructuredValue:
+        connectionHandler = this.structuredValueConnectionHandler;
+        break;
+      case metaModel instanceof DefaultTrait:
+        connectionHandler = this.traitConnectionHandler;
+        break;
+      case metaModel instanceof DefaultCharacteristic:
+        connectionHandler = this.characteristicConnectionHandler;
+        break;
+      case metaModel instanceof DefaultEntity && metaModel.isAbstractEntity():
+        connectionHandler = this.abstractEntityConnectionHandler;
+        break;
+      case metaModel instanceof DefaultEntity:
+        connectionHandler = this.entityConnectionHandler;
+        break;
+      case metaModel instanceof DefaultEntityInstance:
+        connectionHandler = this.entityValueConnectionHandler;
+        break;
+      case metaModel instanceof DefaultEvent:
+        connectionHandler = this.eventConnectionHandler;
+        break;
+      default:
+        throw new Error(`No shape connector found for ${metaModel.aspectModelUrn}`);
+    }
+
+    const result = connectionHandler.connect(metaModel, source, modelInfo);
+    return isObservable(result) ? result : of(result);
+  }
+
+  connectShapes(
+    parentModel: NamedElement,
+    childModel: NamedElement,
+    parentSource: Cell,
+    childSource: Cell,
+    modelInfo?: ModelInfo,
+  ): boolean {
+    let connectionHandler: MultiShapeConnector<NamedElement, NamedElement>;
+
+    switch (true) {
+      case ShapeConnectorUtil.isAspectPropertyConnection(parentModel, childModel):
+        connectionHandler = this.aspectPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isOperationPropertyInputConnection(parentModel, childModel, modelInfo):
+        connectionHandler = this.operationPropertyInputConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isOperationPropertyOutputConnection(parentModel, childModel, modelInfo):
+        connectionHandler = this.operationPropertyOutputConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isOperationPropertyConnection(parentModel, childModel) ||
+        ShapeConnectorUtil.isPropertyOperationConnection(parentModel, childModel):
+        this.notificationsService.warning({
+          title: 'For connecting input/output Properties use the icons below the Aspect or the edit the Operation properties via edit area',
+        });
+        break;
+      case ShapeConnectorUtil.isEitherCharacteristicLeftConnection(parentModel, childModel, modelInfo):
+        connectionHandler = this.eitherCharacteristicLeftConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEitherCharacteristicRightConnection(parentModel, childModel, modelInfo):
+        connectionHandler = this.eitherCharacteristicRightConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isTraitCharacteristicConnectionValid(parentModel, childModel):
+        connectionHandler = this.traitWithCharacteristicOrConstraintConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isTraitConstraintConnection(parentModel, childModel):
+        connectionHandler = this.traitWithCharacteristicOrConstraintConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isStructuredValuePropertyConnection(parentModel, childModel):
+        connectionHandler = this.structuredValuePropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyStructuredValueConnection(parentModel, childModel):
+        connectionHandler = this.propertyStructuredValueConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyCharacteristicConnection(parentModel, childModel):
+        connectionHandler = this.propertyCharacteristicConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyValueConnection(parentModel, childModel):
+        connectionHandler = this.propertyValueConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isCharacteristicEntityConnection(parentModel, childModel):
+        if ((<DefaultCharacteristic>parentModel).isPredefined) {
+          this.notificationsService.warning({title: 'The element can only be connected if the characteristic contains a class'});
+          break;
+        }
+        if (parentModel instanceof DefaultTrait || parentModel instanceof DefaultEither) {
+          this.notificationsService.warning({title: 'The elements cannot be connected'});
+          break;
+        }
+        connectionHandler = this.characteristicEntityConnectionHandler;
+        break;
+      // !!! After this point, the order of the cases is important, as the first match will be used.
+      case ShapeConnectorUtil.isAbstractEntityAbstractEntityConnection(parentModel, childModel):
+        connectionHandler = this.abstractEntityAbstractEntityConnectionHandler;
+        break;
+
+      case ShapeConnectorUtil.isAbstractEntityAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractEntityAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractPropertyAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractPropertyAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyAbstractPropertyConnection(parentModel, childModel):
+        connectionHandler = this.propertyAbstractPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAbstractEntityPropertyConnection(parentModel, childModel):
+        connectionHandler = this.abstractEntityPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEntityAbstractEntityConnection(parentModel, childModel):
+        connectionHandler = this.entityAbstractEntityConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEntityPropertyConnection(parentModel, childModel):
+        connectionHandler = this.entityPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEntityEntityConnection(parentModel, childModel):
+        connectionHandler = this.entityEntityConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isPropertyPropertyConnection(parentModel, childModel):
+        connectionHandler = this.propertyPropertyConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isCollectionCharacteristicConnection(parentModel, childModel):
+        connectionHandler = this.collectionCharacteristicConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEnumerationEntityValueConnection(parentModel, childModel):
+        connectionHandler = this.enumerationEntityValueConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEnumerationValueConnection(parentModel, childModel):
+        connectionHandler = this.enumerationValueConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isCharacteristicCollectionConnection(parentModel, childModel):
+        this.notificationsService.warning({title: 'Characteristics cannot be connected with collection'});
+        break;
+      case ShapeConnectorUtil.isCharacteristicUnitConnection(parentModel, childModel):
+        connectionHandler = this.characteristicUnitConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isAspectEventConnection(parentModel, childModel):
+        connectionHandler = this.aspectEventConnectionHandler;
+        break;
+      case ShapeConnectorUtil.isEventPropertyConnection(parentModel, childModel):
+        connectionHandler = this.eventPropertyConnectionHandler;
+        break;
+      default:
+        this.notificationsService.warning({title: 'The elements cannot be connected'});
+    }
+
+    connectionHandler?.connect(parentModel, childModel, parentSource, childSource);
+
+    return !!connectionHandler;
+  }
+
+  private isConnectionException(parentModel: NamedElement, childModel: NamedElement): boolean {
+    return ShapeConnectorUtil.isStructuredValuePropertyConnection(parentModel, childModel);
+  }
+}

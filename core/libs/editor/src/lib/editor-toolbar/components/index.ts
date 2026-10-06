@@ -16,5 +16,4 @@ export * from './generate-async-api/generate-async-api.component';
 export * from './generate-documentation/generate-documentation.component';
 export * from './generate-open-api/generate-open-api.component';
 export * from './help/document.component';
-export * from './language-sector-modal/language-selector-modal.component';
 export * from './text-model-loader-modal/text-model-loader-modal.component';

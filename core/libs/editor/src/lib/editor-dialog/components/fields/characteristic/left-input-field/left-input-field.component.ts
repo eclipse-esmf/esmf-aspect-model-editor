@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils} from '@ame/cache';
-import {RdfService} from '@ame/rdf/services';
+import {CacheUtils, RdfPort} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -56,7 +55,7 @@ export interface LeftCharacteristicOption {
 export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> implements OnInit, OnDestroy {
   private notificationsService = inject(NotificationsService);
   private validators = inject(EditorDialogValidators);
-  public rdfService = inject(RdfService);
+  public rdfService = inject(RdfPort);
 
   private readonly displayModel = signal('');
   private readonly characteristicModel = signal<Characteristic | null>(null);
@@ -103,6 +102,14 @@ export class LeftInputFieldComponent extends InputFieldComponent<DefaultEither> 
   constructor() {
     super();
     this.fieldName = 'leftCharacteristic';
+  }
+
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.left ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setLeftControl();
   }
 
   ngOnInit(): void {

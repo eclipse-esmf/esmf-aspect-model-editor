@@ -12,7 +12,7 @@
  */
 
 :host {
-  width: 320px;
+  min-width: 250px;
   height: 100%;
   background-color: var(--ame-surface-card, #f3f3f3);
   color: var(--ame-font, inherit);
@@ -31,10 +31,38 @@
   justify-content: space-between;
   min-height: 40px;
 
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 2px 4px;
+    margin-left: -4px;
+    border-radius: 4px;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+
+    .info-icon {
+      opacity: 0.7;
+      transition: opacity 0.15s ease;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background-color: color-mix(in srgb, currentColor 8%, transparent);
+
+      .info-icon {
+        opacity: 1;
+      }
+    }
+  }
+
   h2 {
     margin: 0;
     font-size: 22px;
     font-weight: 500;
+    white-space: nowrap;
   }
 }
 

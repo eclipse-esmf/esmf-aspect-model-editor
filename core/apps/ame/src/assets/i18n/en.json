@@ -7,10 +7,10 @@
     "cancel": "Cancel"
   },
   "saveModalDialog": {
-    "title": "Save changes before closing?",
-    "content": "You have unsaved changes.",
-    "continueButton": "Continue editing",
-    "discardButton": "Discard Changes",
+    "title": "Do you want to save changes?",
+    "content": "Your changes will be lost if you don't save them.",
+    "continueButton": "Cancel",
+    "discardButton": "Don't Save",
     "saveButton": "Save"
   },
   "sammMigration": {
@@ -49,7 +49,8 @@
   },
   "notificationService": {
     "cannotDeleteEdgeTitle": "Cannot remove connection",
-    "cannotDeleteEdgeMessage": "It is not possible to remove connections directly. Please remove or reconnect the elements accordingly.",
+    "cannotDeleteEdgeMessage": "Connections of elements from an external namespace cannot be removed.",
+    "cannotDeleteEdgeFilteredMessage": "Connections can only be removed while the model is not filtered.",
     "onlyTwoElementsConnection": "Please select only two elements to connect them",
     "referneceConnectionError": "Cannot connect reference",
     "recursiveElements": "Recursive elements",
@@ -89,13 +90,21 @@
     "loadModelInfoMessage": "To view the file contents, please load a model first.",
     "fallbackToDefaultLanguageTitle": "Fallback to Default Language.",
     "fallbackToDefaultLanguageDescMessage": "The specified language for {{subject}}'s description was not found in {{fileName}}. Proceeding with the default language settings.",
-    "fallbackToDefaultLanguagePrefMessage": "The specified language for {{subject}}'s preferred name was not found in {{fileName}}. Proceeding with the default language settings."
+    "fallbackToDefaultLanguagePrefMessage": "The specified language for {{subject}}'s preferred name was not found in {{fileName}}. Proceeding with the default language settings.",
+    "unresolvedReferencesTitle": "Referenced elements not found",
+    "unresolvedReferencesMessage": "The following referenced elements are not defined in the workspace: {{elements}}. They are shown as placeholders. Add the missing files to the workspace or remove the references to save the model.",
+    "unresolvedReferencesSaveMessage": "The model could not be saved. The following referenced elements are not defined in the workspace: {{elements}}. Add the missing files to the workspace or remove the references.",
+    "unresolvedElementTitle": "Element not found",
+    "unresolvedElementMessage": "The referenced element {{element}} is not defined in the workspace and cannot be opened."
   },
   "toolbar": {
     "newLoad": "New/Load",
     "save": "Save",
     "addFileToNamespace": "Add file to namespace",
     "editHighlightedCell": "Edit highlighted cell",
+    "undo": "Undo (Cmd/Ctrl+Z)",
+    "redo": "Redo (Cmd/Ctrl+Shift+Z)",
+    "historyFailed": "The change could not be undone or redone",
     "delete": "Delete",
     "collapseAll": "Collapse all",
     "expandAll": "Expand all",
@@ -113,7 +122,10 @@
     "hideNavigation": "Hide navigation!!!",
     "showNavigation": "Show navigation!!!",
     "modelUnfiltered": "Model unfiltered",
-    "modelFilteredByProperties": "Model filtered by Properties"
+    "modelFilteredByProperties": "Model filtered by Properties",
+    "prefixes": "Prefixes",
+    "propertyFilterActivate": "Property Filter: show only Properties and their structure",
+    "propertyFilterDeactivate": "Remove Property Filter: show the entire model"
   },
   "loadMenu": {
     "newWindow": "New window",
@@ -143,8 +155,8 @@
     "byProperties": "By properties"
   },
   "declareNameDialog": {
-    "title": "Declare name of Shared Model",
-    "infoContent": "You are about to remove the Aspect which will transform this Aspect Model into a Shared Model. Please choose a name for this Shared Model.",
+    "title": "Declare name of Element Library",
+    "infoContent": "You are about to remove the Aspect which will transform this Aspect Model into an Element Library (a model without an Aspect). Please choose a name for this Element Library.",
     "namePlaceholder": "Name *",
     "requiredError": "This field is required",
     "charactersError": "Allowed characters: alphanumeric, space, dot(.), minus(-) and underscore(_)",
@@ -152,11 +164,6 @@
     "alreadyDefinedError": "Filename already exists in your namespace",
     "removeAspect": "Remove Aspect",
     "cancel": "Cancel"
-  },
-  "selectLanguageToJsonSchemaDialog": {
-    "title": "Select a language to generate JSON Schema",
-    "language": "Language",
-    "selectButton": "Select"
   },
   "generateAasxDialog": {
     "title": "Generate AASX",
@@ -324,7 +331,10 @@
     "cancel": "Cancel",
     "resetContent": "Reset content",
     "copyToClipboard": "Copy to Clipboard",
-    "downloadFile": "Download file"
+    "downloadFile": "Download file",
+    "language": "Language",
+    "languageHint": "Language of the descriptions in the JSON Schema",
+    "copied": "Copied to clipboard"
   },
   "sidebar": {
     "loadingElements": "Loading elements...",
@@ -334,6 +344,7 @@
     "theRootOfAvailableNamespaces": "The root of all locally available namespaces",
     "workspaceTip": "To see your current Model in the below list, save it to workspace.",
     "sammElements": "SAMM Elements",
+    "sammElementsDocumentation": "Open the SAMM {{version}} documentation of the meta model elements",
     "dragIntoView": "Drag into view",
     "empty": {
       "loadingNamespaces": "Loading Namespaces...",
@@ -356,15 +367,69 @@
       "refreshing": "Refreshing workspace...",
       "refresh": "Refresh workspace",
       "copyWorkspacePath": "Copy workspace path",
-      "copiedWorkspacePath": "Workspace path copied to clipboard"
+      "copiedWorkspacePath": "Workspace path copied to clipboard",
+      "clear": "Clear workspace"
     },
     "fileMenu": {
+      "open": "Open",
       "newWindow": "Open in new window",
-      "openCurrent": "Open in current",
+      "openTab": "Open in new tab",
+      "openCurrent": "Open in current tab",
       "findElements": "Find elements",
       "copyFilePath": "Copy file path",
       "copiedFilePath": "File path copied to clipboard",
-      "delete": "Delete"
+      "delete": "Delete",
+      "deleteNamespace": "Delete namespace version",
+      "namespaceMenu": "Open menu for namespace {{namespace}}"
+    },
+    "elementList": {
+      "title": "Element list",
+      "close": "Close element list"
+    },
+    "deletion": {
+      "checking": "Checking references...",
+      "blocked": {
+        "fileTitle": "Aspect Model cannot be deleted",
+        "namespaceTitle": "Namespace cannot be deleted",
+        "fileMessage": "\"{{name}}\" cannot be deleted because it is still referenced by:",
+        "namespaceMessage": "Namespace \"{{name}}\" cannot be deleted because it is still referenced by:",
+        "hint": "Remove these references first, then try again.",
+        "unreadableTitle": "The following files could not be checked. Fix or remove them first:",
+        "elements": "Referenced elements",
+        "close": "Close"
+      },
+      "namespace": {
+        "title": "Delete namespace version",
+        "phrase1": "Are you sure you want to delete the namespace version \"{{name}}\"?",
+        "phrase2": "This namespace version contains {{count}} Aspect Model file(s). All of them will be deleted.",
+        "phrase3": "This action cannot be undone.",
+        "ok": "Delete namespace",
+        "success": "Namespace \"{{name}}\" deleted"
+      },
+      "clear": {
+        "title": "Clear workspace",
+        "warning": "All {{count}} Aspect Model file(s) of all namespaces will be deleted from the workspace.",
+        "undo": "This action cannot be undone without a backup.",
+        "backup": "Create a backup (ZIP in the workspace folder) first",
+        "confirmLabel": "Type {{word}} to confirm",
+        "cancel": "Cancel",
+        "ok": "Clear workspace",
+        "success": "Workspace cleared",
+        "successMessage": "{{count}} file(s) deleted.",
+        "successBackup": "{{count}} file(s) deleted. A backup was created in the workspace folder."
+      },
+      "failed": "Deletion failed",
+      "checkFailed": "References could not be checked. Nothing was deleted.",
+      "reason": {
+        "busy": "Please wait until the current check or deletion is finished",
+        "fileOpenHere": "This Aspect Model is open in a tab of this window. Close the tab to delete it",
+        "fileOpenElsewhere": "This Aspect Model is open in another window. Close it there to delete it",
+        "namespaceOpenHere": "Close all models of this namespace version in this window before deleting it",
+        "namespaceOpenElsewhere": "A model of this namespace version is open in another window. Close it there before deleting the namespace version",
+        "clearEmpty": "The workspace is empty",
+        "clearOpenHere": "Close all workspace models in this window before clearing the workspace",
+        "clearOpenElsewhere": "Workspace models are open in another window. Close them there before clearing the workspace"
+      }
     }
   },
   "settingsDialog": {
@@ -398,7 +463,16 @@
       "darkModeTooltip": "Toggle dark mode theme for the editor and graph canvas.",
       "autoValidationTooltip": "After completing a validation, after passing the waiting period the next auto-validation will be triggered.",
       "autoFormattingTooltip": "Auto format elements on the graph.",
-      "displayDisambiguationLabelTooltip": "Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set."
+      "displayDisambiguationLabelTooltip": "Displays labels on relationships that require disambiguation, e.g. Operation input/output, Characteristic Either left/right and Properties with notInPayload set.",
+      "elementOrder": "Element order when saving",
+      "elementOrderTooltip": "Defines the order of the elements in the saved Turtle file. Keeping the order of the file keeps Git diffs small. The order inside an element always follows the SAMM specification.",
+      "elementOrderOptions": {
+        "keepOrderAfterParent": "Keep order, insert new elements after their parent",
+        "keepOrderAppend": "Keep order, append new elements at the end",
+        "formatterDefault": "Order of the ESMF SDK formatter"
+      },
+      "restoreSession": "Restore open models on start",
+      "restoreSessionTooltip": "Reopens the saved workspace models of the last session with their window size and position (desktop app only). Models which were closed are not reopened."
     },
     "languages": {
       "aspectModel": "Aspect Model",
@@ -406,6 +480,7 @@
       "chooseLanguage": "Choose language",
       "english": "English",
       "chinese": "Chinese",
+      "german": "German",
       "addLanguage": "Add Language",
       "selectLanguage": "Select language",
       "startType": "Start typing to select language"
@@ -423,22 +498,38 @@
         "requiredVersion": "Version is required",
         "invalidVersion": "Not a valid version"
       }
+    },
+    "search": {
+      "placeholder": "Search settings",
+      "clear": "Clear search",
+      "noResults": "No matching settings"
+    },
+    "scope": {
+      "application": "Applies to all models",
+      "applicationHint": "Application wide, stored on this computer",
+      "model": "Model: {{file}}",
+      "noModel": "No model loaded",
+      "modelHint": "For the opened model and as default for new models"
+    },
+    "description": {
+      "automatedWorkflow": "Automatic saving, validation and formatting while you edit.",
+      "editor": "Appearance of the graph and how models are written to Turtle files.",
+      "languages": "Language of the user interface and the languages of preferred names and descriptions in the model.",
+      "namespaces": "Namespace and version of the opened model.",
+      "copyright": "Comment header written at the top of the Turtle file. Every line must start with #."
+    },
+    "resetSection": "Reset to defaults",
+    "requiresModel": "Load an Aspect Model to change these settings.",
+    "sectionHasErrors": "This section contains errors",
+    "errorsIn": "Fix errors in \"{{section}}\"",
+    "noChanges": "No changes to apply",
+    "unsavedChanges": {
+      "badge": "Unsaved changes",
+      "title": "Discard changes?",
+      "content": "The settings contain changes that have not been applied yet.",
+      "keepEditing": "Keep editing",
+      "discard": "Discard"
     }
-  },
-  "elementModelDescription": {
-    "aspect": "The root element of each Aspect Model",
-    "abstractProperty": "Abstract named value",
-    "property": "Named Value",
-    "characteristic": "The meaning of a Property in the context of the Aspect",
-    "abstractEntity": "The abstraction of a logical encapsulation of multiple values",
-    "entity": "The logical encapsulation of multiple values",
-    "unit": "A definition of a physical unit",
-    "constraint": "A limitation applied to a Characteristic",
-    "trait": "Encapsulates multiple limitations to Characteristics",
-    "operation": "An Operation represents an action that can be triggered on the Aspect",
-    "event": "A definition of an Event supported by the Aspect",
-    "entityInstance": "An instance of an Entity",
-    "value": "Represent a value enriched with semantic metadata"
   },
   "editorCanvas": {
     "dragElementPrompt": "Drag an element to start creating a model",
@@ -455,6 +546,7 @@
       "selectAllReferences": "Select all references",
       "format": "Format",
       "delete": "Delete",
+      "deleteConnection": "Delete connection",
       "copyToClipboard": "Copy to Clipboard"
     },
     "shapeSetting": {
@@ -543,7 +635,10 @@
         },
         "seeInput": {
           "typeToSearch": "Type to search or write an URN or URL",
-          "invalidUri": "Invalid URI"
+          "invalidUri": "Invalid URI",
+          "copy": "Copy URI",
+          "remove": "Remove",
+          "copied": "URI copied to clipboard"
         },
         "value": {
           "pleaseDefine": "Please define a value"
@@ -575,7 +670,7 @@
   "confirmDialog": {
     "createAspect": {
       "title": "Create new Aspect",
-      "aspectCreationWarning": "You are about to create an Aspect which will transform this Shared Model into an Aspect Model.",
+      "aspectCreationWarning": "You are about to create an Aspect which will transform this Element Library into an Aspect Model.",
       "nameReplacementNotice": "The current name of the Model will be replaced by the name of the Aspect.",
       "closeButton": "Cancel",
       "okButton": "Create Aspect"
@@ -665,7 +760,9 @@
     "foldNamespaces": "Fold namespaces",
     "outdatedFile": "This file is based on an older SAMM version ({{sammVersion}})",
     "erroredFile": "This file has loaded with errors",
-    "currentFile": "This file is currently opened in the current window"
+    "fileWithMissingReferences": "References elements of missing namespaces: {{namespaces}}. They are shown as placeholders.",
+    "currentFile": "This file is currently opened in the current window",
+    "openNewModelTab": "Open new model tab"
   },
   "searches": {
     "elementsLabel": "Search elements...",
@@ -681,7 +778,18 @@
         "content": "You are about to open the file <b>{{fileName}}</b> from namespace <b>{{namespace}}</b>.<br />Please choose where would you like to open it",
         "cancel": "Cancel",
         "openInThisWindow": "Open in this window",
+        "openInNewTab": "Open in new tab",
         "openInNewWindow": "Open in new window"
+      }
+    },
+    "elements": {
+      "partialMatches": "No element contains all terms. Showing the closest matches.",
+      "fuzzyMatches": "No exact match. Showing similar elements.",
+      "fields": {
+        "name": "Name",
+        "preferredName": "Preferred name",
+        "description": "Description",
+        "urn": "URN"
       }
     }
   },
@@ -725,6 +833,42 @@
     "errorMessage": "Something went wrong while opening the editor.",
     "openingEditor": "Opening editor..."
   },
+  "backendStatus": {
+    "startingTitle": "Starting backend...",
+    "startingDescription": "The Aspect Model Editor is starting its backend service. This may take a moment.",
+    "failedTitle": "The backend could not be started",
+    "failedDescription": "You can try to start the backend again or close the application.",
+    "retry": "Retry",
+    "quit": "Close application"
+  },
+  "textView": {
+    "toggleLabel": "Editor view",
+    "graph": "Edit",
+    "aspectModel": "Aspect Model",
+    "graphTooltip": "Show the graphical model editor",
+    "textTooltip": "Show the aspect model as ttl text",
+    "title": "Aspect Model",
+    "readOnly": "Read-only",
+    "unformatted": "Unformatted",
+    "unformattedTooltip": "The backend formatter is not available. The raw serialization of the model is shown.",
+    "lines": "{{count}} lines",
+    "problems": "Problems: {{count}}",
+    "nextProblem": "Go to the next problem (F8).",
+    "indirectUnresolved": "Missing elements used by referenced files: {{elements}}",
+    "unresolvedReference": "Referenced element not found in the workspace: {{urn}}. The model cannot be saved until the element is available.",
+    "search": "Search (Ctrl+F)",
+    "refresh": "Reload",
+    "copy": "Copy to clipboard",
+    "copied": "Aspect model copied to clipboard",
+    "loading": "Preparing aspect model text...",
+    "empty": "The model is empty. Add elements in the graph view to see their Turtle representation.",
+    "loadError": "The textual representation of the aspect model could not be created.",
+    "retry": "Try again",
+    "sortAlphabetically": "Sort elements alphabetically",
+    "sortAlphabeticallyDisabled": "Not available while the element order is defined by the formatter (Settings > Editor)",
+    "sorted": "Elements sorted alphabetically. Save the model to write the new order to the file.",
+    "prefixes": "Manage prefixes"
+  },
   "menu": {
     "file": {
       "label": "File",
@@ -743,7 +887,8 @@
       "copyToClipboard": "Copy to Clipboard",
       "saveToWorkspace": "Save to Workspace",
       "exportModel": "Export Model",
-      "exportPackage": "Export Package"
+      "exportPackage": "Export Package",
+      "settings": "Settings..."
     },
     "view": {
       "label": "View",
@@ -787,5 +932,50 @@
       "elements": "Elements",
       "files": "Files"
     }
+  },
+  "prefixes": {
+    "prefix": "Prefix",
+    "namespace": "Namespace",
+    "management": {
+      "title": "Prefixes",
+      "description": "A prefix is only a short notation for a namespace. Renaming a prefix changes how IRIs are written in the file, the IRIs themselves stay the same.",
+      "status": "Status",
+      "used": "Used",
+      "unused": "Not used",
+      "default": "(default)",
+      "protected": "This prefix belongs to the model or to the SAMM/RDF vocabularies and can not be changed",
+      "rename": "Rename prefix",
+      "save": "Save",
+      "cancel": "Cancel",
+      "remove": "Remove prefix",
+      "addTitle": "Add prefix",
+      "add": "Add",
+      "close": "Close"
+    },
+    "reference": {
+      "title": "Prefix for referenced namespace",
+      "description": "The element comes from a namespace which has no prefix in this Aspect Model yet. Choose the prefix which is used in the file.",
+      "conflict": "The referenced file uses the prefix \"{{ alias }}\", but in this Aspect Model it already stands for {{ namespace }}. Please choose another prefix.",
+      "example": "The element is written as",
+      "automatic": "Use automatic prefix",
+      "add": "Add prefix"
+    },
+    "errors": {
+      "invalidAlias": "A prefix must start with a letter and may only contain letters, digits, \"_\", \"-\" and \".\" (not at the end). Reserved prefixes can not be used.",
+      "invalidNamespace": "Please enter a valid namespace IRI, e.g. https://example.org/battery#",
+      "aliasInUse": "The prefix is already used for another namespace.",
+      "aliasInUseBy": "The prefix is already used for {{ namespace }}.",
+      "namespaceInUse": "The namespace already has a prefix.",
+      "unknownAlias": "The prefix does not exist.",
+      "protectedAlias": "This prefix can not be changed.",
+      "prefixInUse": "The prefix is used by elements of the model and can not be removed."
+    }
+  },
+  "session": {
+    "modelNotFound": "The required Aspect Model {{name}} could not be found.",
+    "modelNotRestored": "The Aspect Model {{name}} could not be restored."
+  },
+  "dialog": {
+    "close": "Close (Esc)"
   }
 }

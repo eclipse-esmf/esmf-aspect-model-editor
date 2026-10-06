@@ -1,0 +1,118 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {GraphNavigatorPort, ModelOpenerPort, ModelSessionFacade, ShapeSettingsPort} from '@ame/domain';
+import {ElementIconComponent, ElementInfo, ElementType, FullTextSearchResult, sammElements, SearchFieldMatch} from '@ame/shared';
+import {AfterViewInit, Component, computed, ElementRef, inject, signal, viewChild} from '@angular/core';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {NamedElement} from '@esmf/aspect-model-loader';
+import {TranslocoDirective} from '@jsverse/transloco';
+import {debounceTime, distinctUntilChanged} from 'rxjs';
+import {SearchesStateService} from '../search-state.service';
+
+const SEARCH_DEBOUNCE_MS = 100;
+
+@Component({
+  selector: 'ame-elements-search',
+  templateUrl: './elements-search.component.html',
+  styleUrls: ['./elements-search.component.scss'],
+  imports: [MatInputModule, MatAutocompleteModule, MatFormFieldModule, MatIconModule, ElementIconComponent, TranslocoDirective],
+})
+export class ElementsSearchComponent implements AfterViewInit {
+  private readonly graphNavigator = inject(GraphNavigatorPort);
+  private readonly shapeSettingsService = inject(ShapeSettingsPort);
+  private readonly searchesStateService = inject(SearchesStateService);
+  private readonly modelOpener = inject(ModelOpenerPort);
+
+  public readonly loadedFiles = inject(ModelSessionFacade);
+
+  private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+
+  public readonly searchQuery = signal('');
+  public readonly results = signal<FullTextSearchResult<NamedElement>[]>([]);
+  public readonly elements = computed(() => this.results().map(result => result.item));
+
+  /** Set when no element contains all terms or only the typo tolerant search found something. */
+  public readonly approximateResults = computed<'partial' | 'fuzzy' | null>(() => {
+    const [first] = this.results();
+    if (!this.searchQuery().trim() || !first) {
+      return null;
+    }
+    return first.fuzzy ? 'fuzzy' : first.partial ? 'partial' : null;
+  });
+
+  public readonly transformedElements = computed(() => {
+    return this.results().map(result => {
+      const element = result.item;
+      const [type, elementData] = this.getElementType(element);
+      return {
+        element,
+        symbol: elementData?.symbol,
+        type,
+        hint: this.getMatchHint(result.matches),
+      };
+    });
+  });
+
+  constructor() {
+    toObservable(this.searchQuery)
+      .pipe(debounceTime(SEARCH_DEBOUNCE_MS), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe(value => this.results.set(this.graphNavigator.searchElementsWithDetails(value)));
+  }
+
+  ngAfterViewInit() {
+    // Focus the input as soon as the search overlay is opened so the user can start typing immediately.
+    this.searchInput()?.nativeElement.focus();
+  }
+
+  openElement(element: NamedElement) {
+    if (this.loadedFiles.isElementExtern(element) && !element.isPredefined) {
+      const file = this.loadedFiles.getFileFromElement(element) || 'aspect.ttl';
+      const namespace = element.aspectModelUrn.replace('urn:samm:', '').replace('urn:bamm:', '').split('#')[0];
+
+      this.modelOpener
+        .promptAndOpen({
+          file,
+          namespace,
+          aspectModelUrn: element.aspectModelUrn,
+          editElementUrn: element.aspectModelUrn,
+        })
+        .subscribe();
+    } else {
+      this.shapeSettingsService.editModel(element);
+      requestAnimationFrame(() => {
+        this.graphNavigator.navigateToElement(element.aspectModelUrn);
+      });
+    }
+
+    this.searchQuery.set('');
+    this.closeSearch();
+  }
+
+  closeSearch() {
+    this.searchesStateService.elementsSearch.close();
+  }
+
+  /** The field shown below the element name: the best match which is not the name itself, otherwise the URN. */
+  private getMatchHint(matches: SearchFieldMatch[]): SearchFieldMatch | null {
+    return matches.find(match => match.key === 'preferredName' || match.key === 'description') ?? null;
+  }
+
+  private getElementType(element: NamedElement): [ElementType, ElementInfo[ElementType]] {
+    return Object.entries(sammElements).find(([, value]) => element instanceof value.class) || (['', null] as any);
+  }
+}

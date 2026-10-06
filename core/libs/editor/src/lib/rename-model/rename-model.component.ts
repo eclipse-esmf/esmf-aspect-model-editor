@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
+import {createDebouncedLoading, DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {form, FormField, pattern, required, validate} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,7 +19,7 @@ import {MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef} from '
 import {MatIconModule} from '@angular/material/icon';
 import {TranslocoDirective} from '@jsverse/transloco';
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService, ModelApiPort} from '@ame/domain';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -34,6 +34,7 @@ export interface RenameModelFormData {
   templateUrl: './rename-model.component.html',
   styleUrls: ['./rename-model.component.scss'],
   imports: [
+    DialogCloseButtonComponent,
     MatIconModule,
     MatDialogModule,
     TranslocoDirective,
@@ -48,7 +49,7 @@ export interface RenameModelFormData {
 export class RenameModelComponent {
   private dialogRef = inject(MatDialogRef<RenameModelComponent>);
   private loadedFilesService = inject(LoadedFilesService);
-  private modelApiService = inject(ModelApiService);
+  private modelApiService = inject(ModelApiPort);
 
   public data = inject(MAT_DIALOG_DATA) as {namespaces: string; rdfModel: RdfModel};
 
@@ -75,7 +76,7 @@ export class RenameModelComponent {
     });
   });
 
-  public loading = signal(true);
+  public readonly loading = createDebouncedLoading();
 
   constructor() {
     this.loading.set(true);
@@ -97,6 +98,10 @@ export class RenameModelComponent {
       },
       {} as Record<string, boolean>,
     );
+  }
+
+  requestClose(): void {
+    this.closeAndGiveResult(false);
   }
 
   closeAndGiveResult(result: boolean) {

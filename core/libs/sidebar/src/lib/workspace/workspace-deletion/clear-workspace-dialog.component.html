@@ -1,0 +1,51 @@
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
+
+<ng-container *transloco="let t">
+  <h2 mat-dialog-title>{{ t('sidebar.deletion.clear.title') }}</h2>
+  <ame-dialog-close-button />
+
+  <mat-dialog-content>
+    <div class="warning" role="alert" data-testid="clear-workspace-warning">
+      <mat-icon>warning</mat-icon>
+      <div>
+        <p>{{ t('sidebar.deletion.clear.warning', {count: data.fileCount}) }}</p>
+        <p>{{ t('sidebar.deletion.clear.undo') }}</p>
+      </div>
+    </div>
+
+    <mat-checkbox [checked]="backup()" (change)="backup.set($event.checked)" data-testid="clear-workspace-backup">
+      {{ t('sidebar.deletion.clear.backup') }}
+    </mat-checkbox>
+
+    <mat-form-field class="confirm" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>{{ t('sidebar.deletion.clear.confirmLabel', {word: confirmWord}) }}</mat-label>
+      <input
+        [value]="typed()"
+        (input)="typed.set($any($event.target).value)"
+        (keydown.enter)="clear()"
+        matInput
+        autocomplete="off"
+        spellcheck="false"
+        data-testid="clear-workspace-confirm-input"
+      />
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button (click)="cancel()" mat-flat-button data-testid="clear-workspace-cancel">{{ t('sidebar.deletion.clear.cancel') }}</button>
+    <button [disabled]="!confirmed()" (click)="clear()" mat-flat-button color="warn" data-testid="clear-workspace-ok">
+      {{ t('sidebar.deletion.clear.ok') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

@@ -36,3 +36,30 @@ mat-form-field {
 .error {
   padding-left: 15px;
 }
+
+.see-copy-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.54;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    opacity: 0.87;
+  }
+
+  mat-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 16px;
+  }
+}

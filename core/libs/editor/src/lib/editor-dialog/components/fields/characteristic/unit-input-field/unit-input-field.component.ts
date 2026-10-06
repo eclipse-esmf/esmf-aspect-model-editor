@@ -100,6 +100,14 @@ export class UnitInputFieldComponent
     this.fieldName = 'unit';
   }
 
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.unit ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.initUnitFormControl();
+  }
+
   ngOnInit() {
     this.getMetaModelData()
       .pipe(takeUntilDestroyed(this.destroyRef))

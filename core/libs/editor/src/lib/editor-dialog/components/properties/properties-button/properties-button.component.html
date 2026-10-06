@@ -1,23 +1,23 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <div class="properties-button">
     <p [class.predefined]="isPredefined">
       <mat-icon>tune</mat-icon>
       <span>{{ t('editorCanvas.shapeSetting.propertiesConfiguration') }}</span>
     </p>
-    <button (click)="openPropertiesTable()" color="primary" mat-button type="button" data-cy="properties-modal-button">
+    <button (click)="openPropertiesTable()" color="primary" mat-button type="button" data-testid="properties-modal-button">
       <span>{{ t('editorCanvas.shapeSetting.configure') }}</span>
     </button>
   </div>

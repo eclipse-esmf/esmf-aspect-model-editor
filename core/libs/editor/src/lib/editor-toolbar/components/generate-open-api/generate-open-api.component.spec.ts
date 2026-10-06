@@ -11,9 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -61,7 +59,7 @@ describe('GenerateOpenApiComponent', () => {
         }),
         MockProvider(NotificationsService),
         MockProvider(EditorDialogValidators),
-        MockProvider(ModelApiService),
+        MockProvider(ModelApiPort),
         MockProvider(LoadedFilesService, {
           currentLoadedFile: new NamespaceFile(new RdfModel(new Store(), '2.0.0', 'urn:test:1.0.0#'), new ModelElementCache(), aspect),
         }),

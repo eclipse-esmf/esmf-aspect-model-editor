@@ -1,27 +1,25 @@
-<ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
 
+<ng-container *transloco="let t">
   <h2 mat-dialog-title>{{ t('generateHtmlDocDialog.title') }}</h2>
-  <button class="close-button" mat-icon-button tabindex="-1" mat-dialog-close>
-    <mat-icon>close</mat-icon>
-  </button>
+  <ame-dialog-close-button />
 
   <mat-dialog-content>
     @if (!isGenerating()) {
       <mat-form-field appearance="fill">
         <mat-label>{{ t('generateHtmlDocDialog.language') }}</mat-label>
-        <mat-select [formField]="docForm.language" data-cy="htmlGenerationLanguage">
+        <mat-select [formField]="docForm.language" data-testid="htmlGenerationLanguage">
           @for (language of languages(); track language) {
             <mat-option [value]="language.tag">{{ language.name }}</mat-option>
           }
@@ -37,10 +35,10 @@
 
   <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close>{{ t('generateHtmlDocDialog.button.cancel') }}</button>
-    <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbOpenDoc">
+    <button (click)="openDocumentation()" type="button" mat-flat-button color="primary" data-testid="tbOpenDoc">
       {{ t('generateHtmlDocDialog.button.openDoc') }}
     </button>
-    <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-cy="tbDownloadDoc">
+    <button (click)="downloadDocumentation()" type="button" mat-flat-button color="primary" data-testid="tbDownloadDoc">
       {{ t('generateHtmlDocDialog.button.downloadDoc') }}
     </button>
   </mat-dialog-actions>

@@ -1,0 +1,71 @@
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
+
+<ng-container *transloco="let t">
+  <h2 mat-dialog-title>
+    {{ data.kind === 'file' ? t('sidebar.deletion.blocked.fileTitle') : t('sidebar.deletion.blocked.namespaceTitle') }}
+  </h2>
+  <ame-dialog-close-button />
+
+  <mat-dialog-content data-testid="references-dialog-content">
+    @if (data.report.references.length) {
+      <p>
+        {{
+          data.kind === 'file'
+            ? t('sidebar.deletion.blocked.fileMessage', {name: data.name})
+            : t('sidebar.deletion.blocked.namespaceMessage', {name: data.name})
+        }}
+      </p>
+      <ul class="references" data-testid="references-list">
+        @for (reference of data.report.references; track reference.namespace + reference.version + reference.fileName) {
+          <li data-testid="references-item">
+            <div class="file">
+              <mat-icon>description</mat-icon>
+              <strong>{{ reference.fileName }}</strong>
+              <span class="namespace">{{ reference.namespace }}:{{ reference.version }}</span>
+            </div>
+            <div class="elements" [attr.aria-label]="t('sidebar.deletion.blocked.elements')">
+              @for (element of reference.referencedElements; track element) {
+                <code [attr.title]="element">{{ shortUrn(element) }}</code>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (data.report.unreadableFiles.length) {
+      <p>{{ t('sidebar.deletion.blocked.unreadableTitle') }}</p>
+      <ul class="references unreadable" data-testid="unreadable-list">
+        @for (file of data.report.unreadableFiles; track file.namespace + file.version + file.fileName) {
+          <li data-testid="unreadable-item">
+            <div class="file">
+              <mat-icon>error</mat-icon>
+              <strong>{{ file.fileName }}</strong>
+              <span class="namespace">{{ file.namespace }}:{{ file.version }}</span>
+            </div>
+            <div class="message">{{ file.message }}</div>
+          </li>
+        }
+      </ul>
+    }
+
+    <p class="hint">{{ t('sidebar.deletion.blocked.hint') }}</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button [mat-dialog-close]="undefined" mat-flat-button color="primary" data-testid="references-dialog-close">
+      {{ t('sidebar.deletion.blocked.close') }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

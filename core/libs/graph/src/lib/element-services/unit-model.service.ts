@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import {getModelElement} from '@ame/shared';
+import {Injectable} from '@angular/core';
+import {DefaultQuantityKind, DefaultUnit, NamedElement, SammU} from '@esmf/aspect-model-loader';
+import {BaseModelService} from './base-model-service';
+
+declare const sammUDefinition: any;
+
+@Injectable({providedIn: 'root'})
+export class UnitModelService extends BaseModelService {
+  private get sammU(): SammU {
+    return this.loadedFile?.rdfModel.sammU;
+  }
+
+  isApplicable(metaModelElement: NamedElement): boolean {
+    return metaModelElement instanceof DefaultUnit;
+  }
+
+  update(cell: any, form: {[key: string]: any}) {
+    const modelElement = getModelElement<DefaultUnit>(cell);
+    super.update(cell, form);
+    modelElement.referenceUnit = form.referenceUnit;
+    modelElement.code = form.code;
+    modelElement.conversionFactor = form.conversionFactor;
+    modelElement.numericConversionFactor = form.numericConversionFactor;
+    modelElement.quantityKinds = form.quanitKinds;
+    modelElement.symbol = form.symbol;
+
+    // update quantity kind
+    modelElement.quantityKinds =
+      form.quantityKindsChipList?.map(qk => {
+        const urn = `${this.sammU.getNamespace()}${qk}`;
+        const quantityKind = sammUDefinition.quantityKinds[qk];
+        return new DefaultQuantityKind({
+          metaModelVersion: modelElement.metaModelVersion,
+          aspectModelUrn: urn,
+          name: qk,
+          label: quantityKind.label,
+        });
+      }) || [];
+
+    this.graphAdapter?.updateCell(cell);
+  }
+
+  delete(cell: any) {
+    super.delete(cell);
+    const modelElement = getModelElement(cell);
+    const outgoingEdges = this.graphAdapter?.getOutgoingEdges(cell) || [];
+    const incomingEdges = this.graphAdapter?.getIncomingEdges(cell) || [];
+    this.graphAdapter?.checkAndAddTopShapeActionIcon(outgoingEdges, modelElement);
+    this.graphAdapter?.checkAndAddShapeActionIcon(incomingEdges, modelElement);
+    this.graphAdapter?.removeCells([cell]);
+  }
+}

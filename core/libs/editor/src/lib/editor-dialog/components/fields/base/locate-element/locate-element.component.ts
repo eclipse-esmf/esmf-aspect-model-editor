@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphService} from '@ame/max-graph';
+import {MaxGraphService} from '@ame/graph';
 import {Component, inject} from '@angular/core';
 import {toSignal} from '@angular/core/rxjs-interop';
 import {MatIconButton} from '@angular/material/button';

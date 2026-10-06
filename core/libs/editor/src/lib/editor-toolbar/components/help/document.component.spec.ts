@@ -37,7 +37,7 @@ describe('DocumentComponent', () => {
         {provide: IPC_RENDERER, useValue: ipcRenderer},
         {provide: APP_CONFIG, useValue: {version: '1.0.0'}},
         MockProvider(BrowserService, {
-          isStartedAsElectronApp: vi.fn(() => true),
+          isStartedAsTauriApp: vi.fn(() => true),
         }),
       ],
     }).compileComponents();
@@ -52,15 +52,16 @@ describe('DocumentComponent', () => {
     expect(component.AMEDocumentationLink()).toBe('https://eclipse-esmf.github.io/ame-guide/introduction.html');
   });
 
-  it('openLink should open external link via ipcRenderer in electron app', () => {
-    const event = {
-      preventDefault: vi.fn(),
-      target: {href: 'https://eclipse-esmf.github.io/ame-guide/introduction.html'},
-    } as unknown as MouseEvent;
+  it('should open the documentation link via ipcRenderer in tauri app', () => {
+    const link: HTMLAnchorElement = fixture.nativeElement.querySelector(
+      'a[href="https://eclipse-esmf.github.io/ame-guide/introduction.html"]',
+    );
+    const event = new MouseEvent('click', {bubbles: true, cancelable: true});
 
-    component.openLink(event);
+    link.dispatchEvent(event);
 
-    expect(event.preventDefault).toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(true);
+    expect(ipcRenderer.openExternalLink).toHaveBeenCalledTimes(1);
     expect(ipcRenderer.openExternalLink).toHaveBeenCalledWith('https://eclipse-esmf.github.io/ame-guide/introduction.html');
   });
 });

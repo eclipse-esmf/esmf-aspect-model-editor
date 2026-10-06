@@ -12,9 +12,7 @@
   -->
 
 <h3 mat-dialog-title>{{ data.title }}</h3>
-<button class="close-button" (click)="closeAndGiveResult(confirmDialogEnum.cancel)" mat-icon-button tabindex="-1">
-  <mat-icon>close</mat-icon>
-</button>
+<ame-dialog-close-button />
 
 <mat-dialog-content>
   @for (text of data.phrases; track text) {
@@ -23,13 +21,13 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button (click)="closeAndGiveResult(confirmDialogEnum.cancel)" mat-flat-button data-cy="cancelBtn">{{ data.closeButtonText }}</button>
+  <button (click)="closeAndGiveResult(confirmDialogEnum.cancel)" mat-flat-button data-testid="cancelBtn">{{ data.closeButtonText }}</button>
   @if (data.actionButtonText) {
-    <button (click)="closeAndGiveResult(confirmDialogEnum.action)" mat-flat-button data-cy="actionBtn">
+    <button (click)="closeAndGiveResult(confirmDialogEnum.action)" mat-flat-button data-testid="actionBtn">
       {{ data.actionButtonText }}
     </button>
   }
-  <button (click)="closeAndGiveResult(confirmDialogEnum.ok)" mat-flat-button color="primary" data-cy="okBtn">
+  <button (click)="closeAndGiveResult(confirmDialogEnum.ok)" mat-flat-button color="primary" data-testid="okBtn">
     {{ data.okButtonText }}
   </button>
 </mat-dialog-actions>

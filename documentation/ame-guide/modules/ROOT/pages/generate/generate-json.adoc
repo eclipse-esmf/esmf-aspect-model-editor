@@ -37,7 +37,12 @@ After selecting *Generate* -> *JSON Schema*, a JSON schema will be generated for
 
 image::json-schema.png[Generate JSON schema, width=70%]
 
+The `description` fields inside the schema are taken from the `samm:description` texts of the model in one language.
+The schema is generated in the language of the user interface if the model contains texts in it, otherwise in English or in the first language of the model.
+If the model contains several languages, the preview offers a *Language* selection to generate the schema again in another language.
+
 * You can now:
+** Switch the language of the descriptions (models with several languages only).
 ** Edit the source in the preview.
 ** Use the *Copy to Clipboard* function and continue editing with another tool.
 ** Download the file locally.

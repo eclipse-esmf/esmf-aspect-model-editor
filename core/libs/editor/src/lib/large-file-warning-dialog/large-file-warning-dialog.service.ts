@@ -14,6 +14,7 @@
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable, of} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {LargeFileWarningComponent} from './large-file-warning-dialog';
 
 @Injectable({providedIn: 'root'})
@@ -21,6 +22,12 @@ export class LargeFileWarningService {
   private matDialog = inject(MatDialog);
 
   openDialog(elementsCount: number): Observable<'open' | 'cancel' | 'ignore'> {
-    return elementsCount > 99 ? this.matDialog.open(LargeFileWarningComponent, {data: {elementsCount}}).afterClosed() : of('ignore');
+    if (elementsCount <= 99) return of('ignore');
+
+    // A dialog closed without an explicit answer must never load the large model.
+    return this.matDialog
+      .open<LargeFileWarningComponent, {elementsCount: number}, 'open' | 'cancel'>(LargeFileWarningComponent, {data: {elementsCount}})
+      .afterClosed()
+      .pipe(map(response => response ?? 'cancel'));
   }
 }

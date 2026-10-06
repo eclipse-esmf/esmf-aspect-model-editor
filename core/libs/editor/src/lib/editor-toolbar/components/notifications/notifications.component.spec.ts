@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {IPC_RENDERER, NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
+import {ClipboardService, IPC_RENDERER, NotificationModel, NotificationsService, NotificationType} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -92,6 +92,12 @@ describe('NotificationsComponent', () => {
     component.copyToClipboard('Some error text', mockNotification);
     expect(copyToClipboardMock).toHaveBeenCalledWith('Some error text');
     expect(component.copiedElement()).toBe(mockNotification);
+  });
+
+  it('copyToClipboard should use the shared ClipboardService', () => {
+    const copy = vi.spyOn(TestBed.inject(ClipboardService), 'copy');
+    component.copyToClipboard('text');
+    expect(copy).toHaveBeenCalledWith('text');
   });
 
   it('copyToClipboard should do nothing if text is empty', () => {

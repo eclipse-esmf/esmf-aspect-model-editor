@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {SettingDialogComponent} from '@ame/settings-dialog';
+import {SettingsDialogPort} from '@ame/domain';
 import {TestBed} from '@angular/core/testing';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {of} from 'rxjs';
@@ -28,6 +28,7 @@ describe('InformationHandlingService', () => {
     TestBed.configureTestingModule({
       providers: [
         InformationHandlingService,
+        {provide: SettingsDialogPort, useValue: {open: vi.fn()}},
         {
           provide: MatDialog,
           useValue: {
@@ -41,13 +42,9 @@ describe('InformationHandlingService', () => {
     dialog = TestBed.inject(MatDialog);
   });
 
-  it('openSettingsDialog should open SettingDialogComponent', () => {
+  it('openSettingsDialog should delegate to the settings dialog port', () => {
     service.openSettingsDialog();
-    expect(dialog.open).toHaveBeenCalledWith(SettingDialogComponent, {
-      panelClass: 'settings-dialog-container',
-      width: '60%',
-      autoFocus: false,
-    });
+    expect(TestBed.inject(SettingsDialogPort).open).toHaveBeenCalled();
   });
 
   it('openHelpDialog should open DocumentComponent', () => {

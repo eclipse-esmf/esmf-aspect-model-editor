@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -23,6 +22,8 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {BehaviorSubject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../../open-element-window/open-element-window.service';
+import {TabStateService} from '../../../../tabs/tab-state.service';
 import {EditorModelService} from '../../../editor-model.service';
 import {EditorDialogValidators} from '../../../validators';
 import {TraitCharacteristicComponent} from './trait-characteristic.component';
@@ -54,6 +55,7 @@ describe('TraitCharacteristicComponent', () => {
         TranslocoTestingModule.forRoot({langs: {en: {}}, translocoConfig: {availableLangs: ['en'], defaultLang: 'en'}}),
       ],
       providers: [
+        MockProvider(ModelApiPort),
         MockProvider(EditorModelService, {
           getMetaModelElement: vi.fn(() => elementSubject.asObservable()),
           isReadOnly: vi.fn(() => false),
@@ -64,9 +66,11 @@ describe('TraitCharacteristicComponent', () => {
           isElementExtern: vi.fn(() => false),
         }),
         EditorDialogValidators,
+        MockProvider(TabStateService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(MaxGraphService),
         MockProvider(NotificationsService),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
       ],
     }).compileComponents();

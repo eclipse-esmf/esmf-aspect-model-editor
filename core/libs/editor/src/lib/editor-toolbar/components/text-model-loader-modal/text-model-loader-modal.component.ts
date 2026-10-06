@@ -11,12 +11,12 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {DialogCloseButtonComponent} from '@ame/shared';
 import {Component, inject, signal} from '@angular/core';
 import {form, FormField, required} from '@angular/forms/signals';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIcon} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import {TranslocoDirective} from '@jsverse/transloco';
 import {first} from 'rxjs';
@@ -33,16 +33,24 @@ export interface TextModelFormData {
       :host {
         display: block;
         max-width: 900px;
-        min-width: 700px;
+        min-width: min(700px, 90vw);
       }
 
       textarea {
-        min-height: 300px;
+        min-height: min(300px, 35vh);
         max-height: 500px;
       }
     `,
   ],
-  imports: [TranslocoDirective, MatDialogModule, MatFormFieldModule, MatButtonModule, MatInputModule, MatIcon, FormField],
+  imports: [
+    DialogCloseButtonComponent,
+    TranslocoDirective,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    FormField,
+  ],
 })
 export class TextModelLoaderModalComponent {
   private fileHandlingService = inject(FileHandlingService);

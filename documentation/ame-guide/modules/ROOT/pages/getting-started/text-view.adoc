@@ -1,0 +1,89 @@
+:page-partial:
+
+[[text-view]]
+= Aspect Model text view
+
+Besides the graphical editor, the Aspect Model Editor can show the current model as Turtle (TTL) text.
+This shows you which TTL the graphical editor writes, for example if you also edit your models in a text editor such as VS Code.
+
+[[text-view-switch]]
+== Switch between graph and text
+
+Use the switch at the right end of the xref:getting-started/ui-overview.adoc#editor-tabs[tab bar]:
+
+* *Edit*: the graphical editor
+* *Aspect Model*: the text view of the model
+
+There is no separate menu entry or keyboard shortcut for switching between these two views.
+
+The view is remembered per tab. When you switch to the text view, an open Edit dialog, the element search and the sidebar are closed, because the text view uses the full width of the editor.
+
+[[text-view-content]]
+== What the text view shows
+
+The text is created the same way as when the model is saved: the current state of the editor, *including unsaved changes*, is formatted by the backend.
+The element order and the header comment are applied as described in xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].
+
+* The text has line numbers, syntax highlighting and folding.
+* The header shows the number of lines and the number of problems, see <<text-view-problems>>.
+* If the backend formatter is not available, the raw serialization of the model is shown and marked as *Unformatted*.
+* If one graph element is selected when you open the text view, the text scrolls to the statement of this element.
+
+NOTE: The text view is *read-only*. To change the model, switch back to *Edit*. The text is updated automatically when you switch to another tab, change the model or change the prefixes. *Reload* creates it again on demand.
+
+[[text-view-problems]]
+== Problems in the text
+
+Problems are underlined in red and marked with an error icon in the gutter.
+Hover over the underlined text or the gutter icon to see the message.
+
+[cols="30%,70%"]
+|===
+| Problem | Where it is marked
+
+| Validation issue of the last validation
+| The element the issue belongs to, where it is defined. If it is not defined in the file, its first reference.
+
+| Referenced element that is missing in the workspace (shown as placeholder in the graph)
+| Every reference to the element. The message is _Referenced element not found in the workspace: <URN>_.
+|===
+
+Comments and string literals are not marked, even if they contain the name of an element.
+
+The header shows one counter for all problems, e.g. *Problems: 3*.
+
+* Click the counter or press `F8` in the text to jump to the next problem.
+* Missing elements that are only used by referenced files are not written in the text and therefore not underlined.
+  They are included in the counter and listed in its tooltip, e.g. _Missing elements used by referenced files: <URNs>_.
+* The marks disappear when the problem is solved: run the validation again, or add the missing file to the workspace and open the model again.
+  If a validation fails because of missing references, the issues of the previous validation are removed, because they are outdated.
+
+[[text-view-actions]]
+== Actions in the text view
+
+[cols="30%,70%"]
+|===
+| Action | Description
+
+| *Search* (`Cmd/Ctrl+F`)
+| Opens the search panel of the text.
+
+| *Sort elements alphabetically*
+| Sorts the elements of the model once by name; the Aspect stays at the top. Save the model to write the new order to the file. Not available while the element order is defined by the formatter (*Settings > Editor*).
+
+| *Manage prefixes*
+| Opens the prefix management of the model, see xref:getting-started/ui-overview.adoc#prefixes[Prefixes].
+
+| *Reload*
+| Creates the text again from the current state of the editor.
+
+| *Copy to clipboard*
+| Copies the complete text.
+|===
+
+[[text-view-limits]]
+== Limitations
+
+* The text cannot be edited.
+* While the text view is shown, the actions of the toolbar that work on the graph (e.g. zoom, format, filter, connect, delete) are disabled; validation and prefix management remain available.
+* Comments inside the model and the formatting of single elements are created by the formatter. They can differ from the source file, see xref:getting-started/preserve-ttl-structure.adoc[Keep the structure of TTL files].

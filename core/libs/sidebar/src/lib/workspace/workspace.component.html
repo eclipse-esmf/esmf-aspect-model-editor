@@ -1,16 +1,25 @@
+<!--
+~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+~
+~ See the AUTHORS file(s) distributed with this work for
+~ additional information regarding authorship.
+~
+~ This Source Code Form is subject to the terms of the Mozilla Public
+~ License, v. 2.0. If a copy of the MPL was not distributed with this
+~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+~
+~ SPDX-License-Identifier: MPL-2.0
+-->
+
 <ng-container *transloco="let t">
-  <!--
-  ~ Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
-  ~
-  ~ See the AUTHORS file(s) distributed with this work for
-  ~ additional information regarding authorship.
-  ~
-  ~ This Source Code Form is subject to the terms of the Mozilla Public
-  ~ License, v. 2.0. If a copy of the MPL was not distributed with this
-  ~ file, You can obtain one at https://mozilla.org/MPL/2.0/.
-  ~
-  ~ SPDX-License-Identifier: MPL-2.0
-  -->
+  <ame-resize-gutter
+    [(width)]="width"
+    [minWidth]="minWidth"
+    [maxWidth]="maxWidth"
+    [storageKey]="storageKey"
+    edge="end"
+    data-testid="workspace-resize-gutter"
+  ></ame-resize-gutter>
 
   <div class="header">
     <div class="title">
@@ -21,7 +30,7 @@
         [matTooltip]="t('sidebar.workspace.copyWorkspacePath')"
         (click)="copyWorkspacePath()"
         mat-mini-fab
-        data-cy="workspaceCopyPathButton"
+        data-testid="workspaceCopyPathButton"
       >
         <mat-icon>content_copy</mat-icon>
       </button>
@@ -34,13 +43,26 @@
         [disabled]="loading()"
         (click)="refreshWorkspace()"
         mat-mini-fab
-        data-cy="workspaceRefreshButton"
+        data-testid="workspaceRefreshButton"
       >
         <mat-icon>refresh</mat-icon>
       </button>
+
+      <span class="clear-wrapper" [matTooltip]="clearWorkspaceTooltip()">
+        <button
+          class="clear"
+          [disabled]="isClearWorkspaceDisabled()"
+          [attr.aria-label]="t('sidebar.workspace.clear')"
+          (click)="clearWorkspace()"
+          mat-mini-fab
+          data-testid="workspaceClearButton"
+        >
+          <mat-icon>delete_sweep</mat-icon>
+        </button>
+      </span>
     </div>
 
-    <button (click)="sidebarService.workspace.close()" mat-mini-fab data-cy="sidebar-close">
+    <button (click)="sidebarService.workspace.close()" mat-mini-fab data-testid="sidebar-close">
       <mat-icon>close</mat-icon>
     </button>
   </div>

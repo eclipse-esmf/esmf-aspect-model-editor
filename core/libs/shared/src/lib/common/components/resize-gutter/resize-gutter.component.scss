@@ -1,0 +1,106 @@
+/*!
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  // Sits inside the panel on the resizable edge, so it never covers the graph.
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  z-index: 10;
+  user-select: none;
+  touch-action: none;
+  cursor: ew-resize;
+  outline: none;
+
+  &:hover,
+  &:focus-visible,
+  &.resize-gutter--active {
+    .resize-gutter__indication-line {
+      opacity: 1;
+    }
+
+    .resize-gutter__handle {
+      opacity: 1;
+      background-color: color-mix(in srgb, var(--ame-primary, #7599c8) 18%, transparent);
+      color: var(--ame-primary, #7599c8);
+    }
+  }
+
+  &:focus-visible .resize-gutter__handle {
+    outline: 2px solid var(--ame-primary, #7599c8);
+    outline-offset: 1px;
+  }
+}
+
+:host(.resize-gutter--end) {
+  right: 0;
+
+  .resize-gutter__indication-line {
+    right: 0;
+  }
+}
+
+:host(.resize-gutter--start) {
+  left: 0;
+
+  .resize-gutter__indication-line {
+    left: 0;
+  }
+}
+
+.resize-gutter {
+  &__indication-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--ame-primary, #7599c8);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &__handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 40px;
+    border-radius: 6px;
+    color: var(--ame-font, #333333);
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
+    opacity: 0.6;
+    transition:
+      opacity 0.2s ease,
+      background-color 0.2s ease;
+    pointer-events: none;
+  }
+
+  &__icon {
+    // The icon is wider than the handle: without flex: none the flexbox shrinks the icon box to the
+    // handle width while the glyph keeps its size, which renders the glyph off-centre.
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    font-size: 18px;
+    line-height: 1;
+    overflow: visible;
+  }
+}

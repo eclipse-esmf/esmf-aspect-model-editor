@@ -11,7 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {CacheUtils, LoadedFilesService, NamespaceFile} from '@ame/cache';
+import {CacheUtils, LoadedFilesService, NamespaceFile} from '@ame/domain';
 import {NotificationsService} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -111,6 +111,14 @@ export class EntityExtendsFieldComponent extends InputFieldComponent<DefaultEnti
   constructor() {
     super();
     this.fieldName = 'extends';
+  }
+
+  protected override graphRelation(): unknown {
+    return (this.metaModelElement as any)?.extends_ ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setExtendsControl();
   }
 
   ngOnInit(): void {

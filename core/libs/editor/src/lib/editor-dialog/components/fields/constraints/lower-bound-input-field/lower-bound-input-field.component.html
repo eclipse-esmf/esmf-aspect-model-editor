@@ -13,7 +13,7 @@
 
 <mat-form-field [floatLabel]="field().disabled() ? 'always' : 'auto'" appearance="fill">
   <mat-label>lowerBoundDefinition</mat-label>
-  <mat-select [formField]="field" data-cy="lowerBoundDefinition">
+  <mat-select [formField]="field" data-testid="lowerBoundDefinition">
     @for (lowerBoundDefinition of lowerBoundDefinitionList(); track lowerBoundDefinition) {
       <mat-option [value]="lowerBoundDefinition.value">
         {{ lowerBoundDefinition.value }}

@@ -1,0 +1,291 @@
+/*!
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: min(640px, 95vh);
+  max-height: 100%;
+}
+
+.settings {
+  &__dirty {
+    margin-left: 12px;
+    vertical-align: middle;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--ame-font, #333333);
+    background-color: color-mix(in srgb, var(--ame-orange, #f59e0b) 25%, transparent);
+  }
+
+  &__dialog-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+    // The split layout switches to a stacked layout in narrow dialogs (container query below).
+    container-type: inline-size;
+  }
+
+  &__split-layout {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    height: 100%;
+  }
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 230px;
+    min-height: 0;
+    padding-right: 16px;
+    border-right: 1px solid var(--ame-gray-20, #e0e0e0);
+  }
+
+  &__search {
+    width: 100%;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+
+  &__tree {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  &__group {
+    margin-bottom: 12px;
+  }
+
+  &__group-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.8;
+
+    mat-icon {
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+    }
+  }
+
+  &__group-hint {
+    margin: 2px 0 6px 24px;
+    font-size: 12px;
+    line-height: 16px;
+    opacity: 0.65;
+  }
+
+  &__tree-node {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 36px;
+    padding: 0 8px 0 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--ame-primary, #7599c8) 9%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--ame-primary, #7599c8);
+      outline-offset: -2px;
+    }
+
+    &--selected {
+      font-weight: 500;
+      background-color: color-mix(in srgb, var(--ame-primary, #7599c8) 18%, transparent);
+      box-shadow: inset 3px 0 0 var(--ame-primary, #7599c8);
+    }
+  }
+
+  &__node-name--error {
+    color: var(--ame-red, #d32f2f);
+  }
+
+  &__error-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    color: var(--ame-red, #d32f2f);
+  }
+
+  &__lock-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    opacity: 0.6;
+  }
+
+  &__no-results {
+    padding: 8px 24px;
+    opacity: 0.7;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+  }
+
+  &__section-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--ame-gray-20, #e0e0e0);
+  }
+
+  &__section-heading {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__section-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  &__scope {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 100%;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 20px;
+    background-color: color-mix(in srgb, var(--ame-primary, #7599c8) 15%, transparent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    mat-icon {
+      flex: none;
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+
+    &--model {
+      background-color: color-mix(in srgb, var(--ame-green, #4caf50) 18%, transparent);
+    }
+  }
+
+  &__section-description {
+    flex: 1 1 100%;
+    order: 3;
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.75;
+  }
+
+  &__reset {
+    order: 2;
+    margin-left: auto;
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    background-color: color-mix(in srgb, var(--ame-primary, #7599c8) 12%, transparent);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__actions-spacer {
+    flex: 1;
+  }
+
+  &__error-summary {
+    color: var(--ame-red, #d32f2f);
+  }
+}
+
+.dialog-actions {
+  border-top: 1px solid var(--ame-gray-20, #e0e0e0);
+}
+
+// Narrow dialogs (small windows): navigation on top as a horizontal, scrollable list.
+@container (max-width: 640px) {
+  .settings__split-layout {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .settings__nav {
+    flex: none;
+    padding-right: 0;
+    padding-bottom: 8px;
+    border-right: none;
+    border-bottom: 1px solid var(--ame-gray-20, #e0e0e0);
+  }
+
+  .settings__tree {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .settings__group {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0;
+  }
+
+  .settings__group-title,
+  .settings__group-hint {
+    display: none;
+  }
+
+  .settings__tree-node {
+    flex: none;
+    white-space: nowrap;
+    padding: 0 12px;
+  }
+
+  .settings__content {
+    overflow: visible;
+  }
+}

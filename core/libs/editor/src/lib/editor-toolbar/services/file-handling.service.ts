@@ -11,43 +11,57 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService, ModelData} from '@ame/api';
-import {RdfNodeService} from '@ame/aspect-exporter';
-import {LoadedFilePayload, LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {ModelService, RdfService} from '@ame/rdf/services';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {ConfigurationService} from '@ame/settings-dialog';
 import {
-  ElectronSignalsService,
+  FileHandlingPort,
+  getNamespaceModels,
+  LoadedFilePayload,
+  LoadedFilesService,
+  ModelApiPort,
+  ModelData,
+  ModelDocumentService,
+  ModelService,
+  NamespaceFile,
+  RdfModelUtil,
+  RdfNodePort,
+  RdfPort,
+  UiShellStore,
+  WorkspaceStore,
+} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
+import {
+  ClipboardService,
+  decodeText,
+  FileTypes,
+  FileUploadService,
   GeneralConfig,
-  IPC_RENDERER,
+  LanguageTranslationService,
   LoadingScreenOptions,
   LoadingScreenService,
-  ModelSavingTrackerService,
   NotificationsService,
+  readFile,
   SaveValidateErrorsCodes,
+  TauriSignalsService,
   TitleService,
+  unresolvedElementsOf,
 } from '@ame/shared';
-import {SidebarStateService} from '@ame/sidebar';
-import {LanguageTranslationService} from '@ame/translation';
-import {decodeText, readFile} from '@ame/utils';
 import {DestroyRef, inject, Injectable} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
+import {environment} from 'environments/environment';
 import {saveAs} from 'file-saver';
 import {BlankNode, NamedNode, Store} from 'n3';
 import {forkJoin, Observable, of, throwError} from 'rxjs';
 import {catchError, finalize, first, map, switchMap, tap} from 'rxjs/operators';
-import {environment} from '../../../../../../environments/environment';
 import {ConfirmDialogService, DialogOptions} from '../../confirm-dialog/confirm-dialog.service';
 import {ShapeSettingsStateService} from '../../editor-dialog/services/shape-settings-state.service';
 import {EditorService} from '../../editor.service';
 import {ModelLoaderService} from '../../model-loader.service';
+import {ModelOpenerService} from '../../model-opener/model-opener.service';
 import {ModelSaverService} from '../../model-saver.service';
+import {ModelSavingTrackerService} from '../../model-saving-tracker.service';
 import {ConfirmDialogEnum} from '../../models/confirm-dialog.enum';
+import {TabStateService} from '../../tabs/tab-state.service';
 import {FileUploadOptions} from '../interfaces/file-upload-options';
-import {FileTypes, FileUploadService} from './file-upload.service';
 
 export interface FileInfo {
   content: BufferSource;
@@ -77,19 +91,20 @@ interface ModelLoaderState {
 }
 
 @Injectable({providedIn: 'root'})
-export class FileHandlingService {
+export class FileHandlingService implements FileHandlingPort {
   private destroyRef = inject(DestroyRef);
   private editorService = inject(EditorService);
   private modelService = inject(ModelService);
-  private rdfService = inject(RdfService);
-  private modelApiService = inject(ModelApiService);
+  private rdfService = inject(RdfPort);
+  private modelApiService = inject(ModelApiPort);
   private confirmDialogService = inject(ConfirmDialogService);
   private notificationsService = inject(NotificationsService);
   private loadingScreenService = inject(LoadingScreenService);
-  private sidebarService = inject(SidebarStateService);
+  private uiShellStore = inject(UiShellStore);
+  private workspaceStore = inject(WorkspaceStore);
   private translate = inject(LanguageTranslationService);
-  private electronSignalsService = inject(ElectronSignalsService);
-  private configurationService = inject(ConfigurationService);
+  private tauriSignalsService = inject(TauriSignalsService);
+  private modelDocumentService = inject(ModelDocumentService);
   private modelSaveTracker = inject(ModelSavingTrackerService);
   private fileUploadService = inject(FileUploadService);
   private shapeSettingsStateService = inject(ShapeSettingsStateService);
@@ -98,8 +113,12 @@ export class FileHandlingService {
   private loadedFilesService = inject(LoadedFilesService);
   private modelSaverService = inject(ModelSaverService);
   private titleService = inject(TitleService);
-  private rdfNodeService = inject(RdfNodeService);
-  private ipcRenderer = inject(IPC_RENDERER, {optional: true});
+  private clipboard = inject(ClipboardService);
+  private rdfNodeService = inject(RdfNodePort);
+
+  private readonly tabStateService = inject(TabStateService);
+
+  private readonly modelOpenerService = inject(ModelOpenerService);
 
   get currentLoadedFile() {
     return this.loadedFilesService.currentLoadedFile;
@@ -112,10 +131,30 @@ export class FileHandlingService {
   }
 
   onLoadModel(fileInfo?: FileInfo) {
-    this.loadModel(decodeText(fileInfo.content)).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
+    if (!fileInfo) return;
+    const modelContent = decodeText(fileInfo.content);
+    if (!modelContent) return;
+
+    if (this.tabStateService.isActiveTabCleanEmpty()) {
+      this.loadModel(modelContent).pipe(takeUntilDestroyed(this.destroyRef), first()).subscribe();
+      return;
+    }
+
+    const fileName = fileInfo.name || fileInfo.path?.split(/[/\\]/).pop() || 'Model.ttl';
+    const namespaceMatch =
+      modelContent.match(/@prefix\s+:[ \t]*<urn:samm:([^#]+)#>/i) || modelContent.match(/@prefix\s+\w+:[ \t]*<urn:samm:([^#]+)#>/i);
+    const namespace = namespaceMatch ? namespaceMatch[1] : '';
+
+    this.modelOpenerService
+      .promptForUpload({fileName, namespace, modelContent})
+      .pipe(takeUntilDestroyed(this.destroyRef), first())
+      .subscribe();
   }
 
-  loadModel(modelContent: string): Observable<any> {
+  /**
+   * Loads a model from its content. With `replaceTabId` the model replaces the one shown in that tab.
+   */
+  loadModel(modelContent: string, replaceTabId?: string): Observable<any> {
     if (!modelContent) return of(null);
 
     const loadingScreenOptions: LoadingScreenOptions = {
@@ -126,11 +165,13 @@ export class FileHandlingService {
     this.loadingScreenService.open(loadingScreenOptions);
 
     return this.modelApiService.validate(modelContent).pipe(
+      // Models which are only missing referenced elements are opened anyway; the elements are shown as placeholders.
+      catchError(httpError => (unresolvedElementsOf(httpError).length ? of([]) : throwError(() => httpError))),
       switchMap(validations => {
         const found = validations.find(({errorCode}) => errorCode === 'ERR_PROCESSING');
         return found
           ? throwError(() => found.message)
-          : this.modelLoaderService.renderModel({aspectModelUri: '', rdfAspectModel: modelContent});
+          : this.modelLoaderService.renderModel({aspectModelUri: '', rdfAspectModel: modelContent, replaceTabId});
       }),
       catchError(httpError => {
         this.notificationsService.error({
@@ -146,12 +187,15 @@ export class FileHandlingService {
         if (this.currentLoadedFile?.rdfModel) {
           this.shapeSettingsStateService.closeShapeSettings();
         }
-        this.sidebarService.workspace.close();
+        this.uiShellStore.closeSidebar();
       }),
     );
   }
 
-  loadNamespaceFile(absoluteFileName: string, aspectModelUrn: string) {
+  /**
+   * Loads a workspace file. With `replaceTabId` the model replaces the one shown in that tab.
+   */
+  loadNamespaceFile(absoluteFileName: string, aspectModelUrn: string, replaceTabId?: string) {
     this.modelApiService
       .fetchAspectMetaModel(aspectModelUrn)
       .pipe(
@@ -171,6 +215,7 @@ export class FileHandlingService {
             aspectModelUrn,
             namespaceFileName: absoluteFileName,
             fromWorkspace: true,
+            replaceTabId,
           }),
         ),
         first(),
@@ -230,7 +275,7 @@ export class FileHandlingService {
 
     return of(true).pipe(
       map(() => {
-        this.sidebarService.sammElements.open();
+        this.uiShellStore.openSidebar('sammElements');
 
         if (this.maxgraphService.graph?.model) {
           this.maxgraphService.deleteAllShapes();
@@ -238,6 +283,7 @@ export class FileHandlingService {
 
         this.modelSaveTracker.updateSavedModel(true);
         this.titleService.updateTitle(absoluteName);
+        this.tabStateService.onModelLoaded(this.loadedFilesService.currentLoadedFile);
       }),
       finalize(() => this.loadingScreenService.close()),
     );
@@ -265,9 +311,7 @@ export class FileHandlingService {
       map(() => this.rdfService.serializeModel(rdfModel)),
       switchMap(serializedModel => this.modelApiService.fetchFormatedAspectModel(serializedModel, rdfModel.getSourceLocation())),
       switchMap(formattedModel => {
-        const header = this.configurationService.getSettings().copyrightHeader.join('\n');
-        const fullText = header + '\n\n' + formattedModel;
-        return of(fullText);
+        return of(this.modelDocumentService.toDocument(formattedModel, rdfModel));
       }),
       catchError(httpError => {
         this.notificationsService.error({title: 'Copying error', message: httpError?.error?.error?.message});
@@ -285,32 +329,7 @@ export class FileHandlingService {
   }
 
   copyToClipboardSync(text: string) {
-    if (!text) return;
-
-    if (this.ipcRenderer?.copyToClipboard) {
-      this.ipcRenderer.copyToClipboard(text);
-      return;
-    }
-
-    window.focus();
-
-    if (navigator.clipboard && document.hasFocus()) {
-      navigator.clipboard.writeText(text).catch(() => this.fallbackCopy(text));
-    } else {
-      this.fallbackCopy(text);
-    }
-  }
-
-  fallbackCopy(text: string) {
-    const el = document.createElement('textarea');
-    el.value = text;
-    el.setAttribute('readonly', '');
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
+    this.clipboard.copy(text);
   }
 
   onExportAsAspectModelFile() {
@@ -339,8 +358,10 @@ export class FileHandlingService {
         const rdfModelTtl = this.rdfService.serializeModel(rdfModel);
         return this.modelApiService.fetchFormatedAspectModel(rdfModelTtl, rdfModel.getSourceLocation()).pipe(
           tap(formattedModel => {
-            const header = this.configurationService.getSettings().copyrightHeader.join('\n');
-            saveAs(new Blob([header + '\n\n' + formattedModel], {type: 'text/turtle;charset=utf-8'}), fileName);
+            saveAs(
+              new Blob([this.modelDocumentService.toDocument(formattedModel, rdfModel)], {type: 'text/turtle;charset=utf-8'}),
+              fileName,
+            );
           }),
         );
       }),
@@ -367,12 +388,16 @@ export class FileHandlingService {
       switchMap(() => this.getModelLoaderState()),
       tap(state => (modelState = state)),
       switchMap(() => this.handleNamespaceChange(modelState)),
-      switchMap(confirm => (confirm !== ConfirmDialogEnum.cancel ? this.modelSaverService.saveModel() : of(null))),
-      tap(rdfModel => this.handleRdfModel(rdfModel, modelState)),
-      finalize(() => {
-        this.modelSaveTracker.updateSavedModel();
-        this.loadingScreenService.close();
+      // Save only on an explicit decision (OK or "keep namespace"); cancel, (x) and Escape keep the model unsaved.
+      switchMap(confirm =>
+        confirm === ConfirmDialogEnum.ok || confirm === ConfirmDialogEnum.action ? this.modelSaverService.saveModel() : of(null),
+      ),
+      tap(rdfModel => {
+        // A cancelled save must keep the "unsaved changes" state of the model.
+        if (rdfModel) this.modelSaveTracker.updateSavedModel();
+        this.handleRdfModel(rdfModel, modelState);
       }),
+      finalize(() => this.loadingScreenService.close()),
     );
   }
 
@@ -397,7 +422,7 @@ export class FileHandlingService {
 
   addFileToNamespace(fileInfo: FileInfoParsed): Observable<any> {
     return this.addFileToWorkspace(fileInfo.name, fileInfo.content, {showNotifications: true}).pipe(
-      map(() => this.electronSignalsService.call('requestRefreshWorkspaces')),
+      map(() => this.tauriSignalsService.call('requestRefreshWorkspaces')),
     );
   }
 
@@ -466,14 +491,17 @@ export class FileHandlingService {
             message: this.translate.language.notificationService.fileAddedSuccessMessage,
           });
         }
-        this.sidebarService.workspace.refresh();
+        this.workspaceStore.triggerRefresh();
       }),
       switchMap(() => this.handleFileVersionConflicts(newModelAbsoluteFileName, newModelContent)),
       catchError(httpError => {
         if (uploadOptions.showNotifications) {
           this.notificationsService.error({
             title: this.translate.language.notificationService.fileAddedErrorTitle,
-            message: httpError?.error?.error?.message || this.translate.language.notificationService.fileAddedErrorMessage,
+            message:
+              httpError?.error?.error?.message ||
+              httpError?.error?.message ||
+              this.translate.language.notificationService.fileAddedErrorMessage,
           });
         }
         return throwError(() => 'Adding file to workspace failed');
@@ -616,7 +644,9 @@ export class FileHandlingService {
     };
 
     return this.confirmDialogService.open(confirmationDialogConfig).pipe(
-      tap(() => this.loadingScreenService.open(loadingDialogConfig)),
+      tap(confirm => {
+        if (confirm === ConfirmDialogEnum.ok || confirm === ConfirmDialogEnum.action) this.loadingScreenService.open(loadingDialogConfig);
+      }),
       switchMap(confirm => {
         if (confirm === ConfirmDialogEnum.ok) {
           return this.migrateAffectedModels(modelState.originalModelName, modelState.newModelName).pipe(map(() => confirm));
@@ -684,8 +714,9 @@ export class FileHandlingService {
 
     this.currentLoadedFile?.resetOriginalUrn();
     this.currentLoadedFile?.setExistsInWorkspace();
+    this.tabStateService.markActiveTabInWorkspace(this.currentLoadedFile);
 
-    this.electronSignalsService.call('updateWindowInfo', {
+    this.tauriSignalsService.call('updateWindowInfo', {
       namespace: this.currentLoadedFile?.namespace || '',
       fromWorkspace: true,
       file: this.currentLoadedFile?.name,
@@ -723,13 +754,9 @@ export class FileHandlingService {
    * @returns - a list of model data objects
    */
   private getAllWorkspaceModelsByNamespace(namespaceName: string, namespaceVersion: string) {
-    return this.modelApiService.loadNamespacesStructure().pipe(
-      map(namespacesStructure => {
-        const targetNamespaces = namespacesStructure?.[namespaceName];
-        const targetNamespace = targetNamespaces?.find(ns => ns?.version === namespaceVersion);
-        return targetNamespace?.models ?? [];
-      }),
-    );
+    return this.modelApiService
+      .loadNamespacesStructure()
+      .pipe(map(namespacesStructure => getNamespaceModels(namespacesStructure, namespaceName, namespaceVersion)));
   }
 
   /**
@@ -737,7 +764,7 @@ export class FileHandlingService {
    * Adds files to LoadedFilesService accordingly.
    *
    * @param namespace - the target namespace to load models from
-   * @param modelsData - data of the models to load (typically taken from a workspace structure, e.g. from ModelApiService.loadNamespacesStructure method)
+   * @param modelsData - data of the models to load (typically taken from a workspace structure, e.g. from ModelApiPort.loadNamespacesStructure method)
    * @returns - a list of loaded files
    */
   private loadNamespaceModels(namespace: string, modelsData: ModelData[]) {
@@ -789,11 +816,5 @@ export class FileHandlingService {
         fromWorkspace: true,
       } as LoadedFilePayload;
     });
-  }
-
-  isFileExistOnWorkspace(namespaceName: string, namespaceVersion: string, fileName: string): Observable<boolean> {
-    return this.getAllWorkspaceModelsByNamespace(namespaceName, namespaceVersion).pipe(
-      map((models: ModelData[]) => models.some((model: ModelData) => model.name === fileName)),
-    );
   }
 }

@@ -11,8 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {extractNamespace} from '@ame/utils';
+import {LoadedFilesService} from '@ame/domain';
+import {extractNamespace} from '@ame/shared';
 import {NgClass} from '@angular/common';
 import {Component, computed, effect, inject, input, signal, viewChildren} from '@angular/core';
 import {form, FormField, validate} from '@angular/forms/signals';

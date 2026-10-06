@@ -11,12 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {CharacteristicClassType} from '@ame/editor';
-import {ModelElementNamingService} from '@ame/meta-model';
-import {ModelService} from '@ame/rdf/services';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
-import {ElementCreatorService} from '@ame/shared';
+import {ElementCreatorService, LoadedFilesService, ModelElementNamingService, ModelService, SammLanguageSettingsService} from '@ame/domain';
 import {KeyValuePipe} from '@angular/common';
 import {Component, DestroyRef, inject, OnInit, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -44,6 +39,7 @@ import {
   useLoader,
 } from '@esmf/aspect-model-loader';
 import {DataFactory} from 'n3';
+import {CharacteristicClassType} from '../../../../../editor.types';
 import {EditorModelService} from '../../../../editor-model.service';
 import {DropdownFieldComponent} from '../../dropdown-field.component';
 

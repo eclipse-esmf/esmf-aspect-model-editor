@@ -11,9 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {MaxGraphHelper, MaxGraphService} from '@ame/max-graph';
-import {RdfService} from '@ame/rdf/services';
-import {RdfModelUtil} from '@ame/rdf/utils';
+import {RdfModelUtil, RdfPort} from '@ame/domain';
+import {MaxGraphHelper, MaxGraphService} from '@ame/graph';
 import {config, DataTypeService, ElementIconComponent} from '@ame/shared';
 import {Component, computed, inject, OnDestroy, OnInit, signal, Signal} from '@angular/core';
 import {rxResource, takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -72,7 +71,7 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
 
   public dataTypeService = inject(DataTypeService);
   public maxgraphService = inject(MaxGraphService);
-  public rdfService = inject(RdfService);
+  public rdfService = inject(RdfPort);
 
   public entitiesDisabled = signal(false);
   private readonly displayModel = signal('');
@@ -129,6 +128,14 @@ export class DataTypeInputFieldComponent extends InputFieldComponent<DefaultChar
   constructor() {
     super();
     this.fieldName = 'dataTypeEntity';
+  }
+
+  protected override graphRelation(): unknown {
+    return this.metaModelElement?.dataType ?? null;
+  }
+
+  protected override syncGraphRelation(): void {
+    this.setDataTypeControl();
   }
 
   ngOnInit(): void {

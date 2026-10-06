@@ -58,7 +58,6 @@ pipeline {
         script {
           sh "mkdir -p signed_dir"
           sh "curl -o signed_dir/aspect-model-editor-v${env.version}-win.exe -F file=@unpack_win_dir/aspect-model-editor-v${env.version}-win.exe https://cbi.eclipse.org/authenticode/sign"
-          sh "cd signed_dir && zip -r ../aspect-model-editor-v${env.version}-win.zip ."
         }
       }
     }
@@ -68,7 +67,7 @@ pipeline {
         script {
           def repo = "eclipse-esmf/esmf-aspect-model-editor"
           def tagName = "v${env.version}"
-          def fileNameWin = "aspect-model-editor-v${env.version}-win.zip"
+          def fileNameWin = "aspect-model-editor-v${env.version}-win.exe"
           def releaseId = ""
 
           def tagExists = sh(script: """
@@ -104,14 +103,14 @@ pipeline {
                          -H "Accept: application/vnd.github+json" \\
                          -H "Authorization: Bearer \$GITHUB_BOT_TOKEN" \
                          -H "Content-Type: application/octet-stream" \
-                         --data-binary @${fileNameWin} \
+                         --data-binary @signed_dir/${fileNameWin} \
                          "https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${fileNameWin}"
                     """
 
           sh """
                     curl -X DELETE \
                          -H "Authorization: Bearer \$GITHUB_BOT_TOKEN" \
-                         "https://api.github.com/repos/eclipse-esmf/esmf-aspect-model-editor-backend/git/refs/heads/pre_release_configuration"
+                         "https://api.github.com/repos/${repo}/git/refs/heads/pre_release_configuration"
                     """
         }
       }

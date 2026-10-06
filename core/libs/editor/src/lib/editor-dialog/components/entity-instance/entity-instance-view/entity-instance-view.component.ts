@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/domain';
+import {viewportSafeWidth} from '@ame/shared';
 import {SelectionModel} from '@angular/cdk/collections';
 import {Component, effect, inject, input, OnDestroy, OnInit, output, signal} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
@@ -143,7 +144,7 @@ export class EntityInstanceViewComponent implements OnInit, OnDestroy {
         dataType: this.signalForm().get('newDataType') || this.signalForm().get('dataTypeEntity') || this.enumeration().dataType,
         complexValues: this.displayedValues(),
       },
-      minWidth: '700px',
+      minWidth: viewportSafeWidth(700),
     };
     this.matDialog
       .open(EntityInstanceModalComponent, config)

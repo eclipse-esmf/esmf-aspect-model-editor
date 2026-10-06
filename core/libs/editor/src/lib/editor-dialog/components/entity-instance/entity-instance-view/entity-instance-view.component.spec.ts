@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
+import {LoadedFilesService} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialog} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -74,6 +74,14 @@ describe('EntityInstanceViewComponent', () => {
 
     expect(emitted).toHaveBeenLastCalledWith([existing, created]);
     expect(context.value().newEntityValues).toEqual([nested]);
+  });
+
+  it('opens the new entity instance dialog with a viewport-safe minimum width', () => {
+    vi.mocked(dialog.open).mockReturnValue({beforeClosed: () => of(null), afterClosed: () => of(null)} as never);
+
+    component.onNew();
+
+    expect(dialog.open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({minWidth: 'min(700px, 95vw)'}));
   });
 
   it('does not report a newly created and then removed value as persisted deletion', () => {

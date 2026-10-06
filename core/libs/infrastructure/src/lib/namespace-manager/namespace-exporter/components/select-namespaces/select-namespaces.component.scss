@@ -1,0 +1,97 @@
+/*!
+ * Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+ *
+ * See the AUTHORS file(s) distributed with this work for
+ * additional information regarding authorship.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+h2[mat-dialog-title] {
+  margin: 0;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  height: 40vh;
+  min-height: min(400px, 50vh);
+}
+
+mat-checkbox {
+  ::ng-deep {
+    .mat-checkbox-inner-container {
+      margin-right: 1rem;
+    }
+
+    .mat-checkbox-label {
+      display: flex;
+      gap: 20px;
+    }
+  }
+}
+
+.files {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checkbox-info {
+  display: flex;
+  flex-direction: column;
+
+  .dependencies {
+    font-size: 12px;
+    line-height: 1.1;
+  }
+
+  .model {
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .namespace {
+    font-size: 15px;
+  }
+}
+
+.namespace-list {
+  display: flex;
+  flex-direction: column;
+
+  .column-title {
+    font-size: 16px;
+  }
+
+  mat-checkbox:not(:last-child) {
+    margin-bottom: 18px;
+
+    :ng-deep {
+      .mat-checkbox-inner-container {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+.extracting {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 4rem;
+
+  &__message {
+    margin-top: 1rem;
+  }
+}

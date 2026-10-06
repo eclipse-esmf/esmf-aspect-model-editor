@@ -35,12 +35,28 @@ This section lists features that can be achieved within the Aspect Model Editor,
 | Category | Title | Explanation
 
 | Usability
-| Copy & paste, undo & redo
-| Popular editing features such as copy & paste and undo & redo are not supported. Users want to use familiar keyboard shortcuts for editing their Aspect Models.
+| Copy & paste
+| Copy & paste of graph elements is not supported. The *Cut*, *Copy* and *Paste* commands of the Edit menu only apply to text input fields.
+
+| Usability
+| Undo & redo
+| Undo & redo of the graph is limited to the last 25 changes per tab; moving shapes is not undone. See xref:getting-started/undo-redo.adoc#undo-redo-limits[Undo and redo].
 
 | Usability
 | Aspect Repository and Entity Repository
 | This version of the Aspect Model Editor supports only file-based operations. Users also want to share Aspects and Entities for reuse.
+
+| References
+| Saving models with missing references
+| An Aspect Model whose referenced elements are missing in the workspace can be opened, but not saved. See xref:namespace/missing-references.adoc[Aspect Models with missing references].
+
+| References
+| Missing elements of existing namespaces in the Workspace sidebar
+| The Workspace sidebar only marks files that reference a missing *namespace*. A missing element of a namespace that exists in the workspace is only detected when the model is opened.
+
+| Workspace
+| Open models in other windows (browser)
+| Only the desktop application knows which models are open in other windows. In the browser, deleting files and namespaces and clearing the workspace only consider the tabs of the current window.
 |===
 
 [[current-known-limitations-macos]]
@@ -51,7 +67,7 @@ This section lists limitations that are specific to running the Aspect Model Edi
 [[macos-notarization]]
 === No notarization or code signing
 
-The Electron application is currently not notarized or signed with an Apple Developer certificate. As a result, macOS Gatekeeper blocks the app from starting and marks it as quarantined after downloading.
+The Tauri application is currently not notarized or signed with an Apple Developer certificate. As a result, macOS Gatekeeper blocks the app from starting and marks it as quarantined after downloading.
 
 To run the application, use one of the following workarounds:
 
@@ -59,13 +75,13 @@ To run the application, use one of the following workarounds:
 +
 [source,bash]
 ----
-xattr -r -d com.apple.quarantine /path/to/Aspect-Model-Editor.app
+xattr -r -d com.apple.quarantine "/Applications/Aspect Model Editor.app"
 ----
 
 * Allow the app manually via *System Settings* -> *Privacy & Security*: after the first blocked launch attempt, scroll down to the security section and click *Open Anyway*.
 
 For installation steps on macOS, see xref:installation.adoc#install-mac[Install the Aspect Model Editor on Mac].
-If you encounter a JavaScript error on startup instead, see xref:support/known-issues.adoc#javascript-mac-ame3.0.0[macOS: JavaScript error occurred in the main process].
+If the application starts but the backend service does not work, see xref:support/known-issues.adoc#macos-app-cannot-be-opened[macOS: Application cannot be opened or backend does not start].
 
 ++++
 <style>

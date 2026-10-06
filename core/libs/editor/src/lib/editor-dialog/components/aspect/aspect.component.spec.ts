@@ -11,10 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {ModelApiService} from '@ame/api';
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {MaxGraphService} from '@ame/max-graph';
-import {RdfService} from '@ame/rdf/services';
+import {LoadedFilesService, ModelApiPort, NamespaceFile, RdfPort} from '@ame/domain';
+import {MaxGraphService} from '@ame/graph';
 import {NotificationsService, SearchService} from '@ame/shared';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -24,11 +22,18 @@ import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {OpenReferencedElementService} from '../../../open-element-window/open-element-window.service';
+import {TabStateService} from '../../../tabs/tab-state.service';
 import {EditorModelService} from '../../editor-model.service';
 import {EditorDialogValidators} from '../../validators';
 import {AspectComponent} from './aspect.component';
 
 describe('AspectComponent', () => {
+  const deps = (AspectComponent as any).ɵcmp.dependencies;
+  console.log(
+    'AspectComponent dependencies:',
+    deps.map((d: any) => (d ? d.name : 'UNDEFINED')),
+  );
   let component: AspectComponent;
   let fixture: ComponentFixture<AspectComponent>;
 
@@ -55,12 +60,14 @@ describe('AspectComponent', () => {
           isElementExtern: vi.fn(() => false),
         }),
         EditorDialogValidators,
-        MockProvider(ModelApiService, {
+        MockProvider(ModelApiPort, {
           checkElementExists: vi.fn(() => of(false)),
         }),
+        MockProvider(TabStateService),
+        MockProvider(OpenReferencedElementService),
         MockProvider(MaxGraphService),
         MockProvider(NotificationsService),
-        MockProvider(RdfService),
+        MockProvider(RdfPort),
         MockProvider(SearchService),
       ],
     }).compileComponents();

@@ -11,23 +11,18 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+import {ConfirmDialogEnum, ConfirmDialogPort, DialogOptions} from '@ame/domain';
+import {viewportSafeWidth} from '@ame/shared';
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Observable} from 'rxjs';
-import {first} from 'rxjs/operators';
-import {ConfirmDialogEnum} from '../models/confirm-dialog.enum';
+import {first, map} from 'rxjs/operators';
 import {ConfirmDialogComponent} from './confirm-dialog.component';
 
-export interface DialogOptions {
-  phrases: string[];
-  title: string;
-  closeButtonText?: string;
-  okButtonText?: string;
-  actionButtonText?: string;
-}
+export {DialogOptions};
 
 @Injectable({providedIn: 'root'})
-export class ConfirmDialogService {
+export class ConfirmDialogService implements ConfirmDialogPort {
   private matDialog = inject(MatDialog);
 
   open({phrases, title, closeButtonText, okButtonText, actionButtonText}: DialogOptions): Observable<ConfirmDialogEnum> {
@@ -40,10 +35,14 @@ export class ConfirmDialogService {
           actionButtonText: actionButtonText || undefined,
           okButtonText: okButtonText || 'Continue',
         },
-        maxWidth: 650,
-        minWidth: 550,
+        maxWidth: viewportSafeWidth(650),
+        minWidth: viewportSafeWidth(550),
       })
       .afterClosed()
-      .pipe(first());
+      .pipe(
+        first(),
+        // A dialog dismissed without a decision (e.g. closed programmatically) is always a cancel.
+        map(result => result ?? ConfirmDialogEnum.cancel),
+      );
   }
 }

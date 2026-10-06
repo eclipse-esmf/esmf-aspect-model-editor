@@ -11,8 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService, NamespaceFile} from '@ame/cache';
-import {SammLanguageSettingsService} from '@ame/settings-dialog';
+import {LoadedFilesService, NamespaceFile, SammLanguageSettingsService} from '@ame/domain';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';

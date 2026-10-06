@@ -11,9 +11,10 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {LoadedFilesService} from '@ame/cache';
-import {RdfModelUtil} from '@ame/rdf/utils';
-import {computed, effect, inject, Injectable, signal} from '@angular/core';
+import {FileStatus, ModelSessionFacade, UiShellStore, WorkspaceNamespacesService, WorkspaceStore} from '@ame/domain';
+import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
+
+export {FileStatus};
 
 class SidebarState {
   readonly opened = signal(false);
@@ -74,68 +75,17 @@ export class Selection {
   }
 }
 
-export class FileStatus {
-  public loaded = false;
-  public outdated = false;
-  public errored = false;
-  public isLoadedInWorkspace = false;
-  public sammVersion = '';
-  public dependencies: string[] = [];
-  public missingDependencies: string[] = [];
-  public aspectModelUrn = '';
-
-  constructor(public name: string) {}
-}
-
-export class NamespacesManager {
-  private loadedFilesService = inject(LoadedFilesService);
-  readonly namespaces = signal<Record<string, FileStatus[]>>({});
-  readonly hasOutdatedFiles = signal(false);
-  readonly namespacesKeys = computed(() => Object.keys(this.namespaces()));
-
-  get currentFile() {
-    return this.loadedFilesService?.currentLoadedFile;
-  }
-
-  setFile(namespace: string, fileStatus: FileStatus) {
-    this.namespaces.update(map => {
-      const arr = map[namespace] ? [...map[namespace], fileStatus] : [fileStatus];
-      return {...map, [namespace]: arr};
-    });
-    return fileStatus;
-  }
-
-  getFile(namespace: string, file: string): FileStatus | undefined {
-    return this.namespaces()[namespace]?.find(fs => fs.name === file);
-  }
-
-  removeFile(namespace: string, file: string) {
-    this.namespaces.update(map => {
-      const list = map[namespace];
-      if (!list) return map;
-      const filtered = list.filter(fs => fs.name !== file);
-      if (filtered.length === 0) {
-        const {[namespace]: _, ...rest} = map;
-        return rest;
-      }
-      return {...map, [namespace]: filtered};
-    });
-  }
-
-  clear() {
-    this.namespaces.set({});
-  }
-}
-
 @Injectable({providedIn: 'root'})
 export class SidebarStateService {
-  private loadedFilesService = inject(LoadedFilesService);
+  private loadedFilesService = inject(ModelSessionFacade);
+  public readonly uiShellStore = inject(UiShellStore);
+  public readonly workspaceStore = inject(WorkspaceStore);
 
   public sammElements = new SidebarState();
   public workspace = new SidebarStateWithRefresh();
   public fileElements = new SidebarState();
   public selection = new Selection();
-  public namespacesState = new NamespacesManager();
+  public namespacesState = inject(WorkspaceNamespacesService);
 
   constructor() {
     this.manageSidebars();
@@ -155,18 +105,7 @@ export class SidebarStateService {
   }
 
   updateWorkspace(fileStatus: FileStatus[] = []) {
-    for (const status of fileStatus) {
-      status.isLoadedInWorkspace = true;
-      const chunks = RdfModelUtil.splitAspectModelUrnIntoChunks(status.aspectModelUrn);
-      const namespace = chunks[2];
-      const version = chunks[3];
-      this.namespacesState.setFile(`${namespace}:${version}`, status);
-    }
-
-    const allNamespaces = this.namespacesState.namespaces();
-    const hasOutdated = Object.values(allNamespaces).some(files => files.some(f => f.outdated));
-    this.namespacesState.hasOutdatedFiles.set(hasOutdated);
-    return allNamespaces;
+    return this.namespacesState.applyFileStatuses(fileStatus);
   }
 
   private manageSidebars() {
@@ -174,25 +113,53 @@ export class SidebarStateService {
       if (this.sammElements.isOpened()) {
         this.workspace.close();
         this.fileElements.close();
+        this.uiShellStore.openSidebar('sammElements');
       }
     });
 
     effect(() => {
       if (this.workspace.isOpened()) {
         this.sammElements.close();
+        this.uiShellStore.openSidebar('workspace');
       } else {
         this.fileElements.close();
+        if (!this.sammElements.isOpened()) {
+          this.uiShellStore.closeSidebar();
+        }
       }
     });
 
     effect(() => {
       const opened = this.fileElements.isOpened();
-      if (!opened) this.selection.reset();
+      if (!opened) {
+        this.selection.reset();
+        this.workspaceStore.selectFile(null);
+      }
     });
 
     effect(() => {
       const sel = this.selection.selection();
-      if (sel) this.fileElements.open();
+      if (sel) {
+        this.fileElements.open();
+        this.uiShellStore.openSidebar('fileElements');
+        this.workspaceStore.selectFile(sel);
+      }
+    });
+
+    // UiShellStore is the source of truth for other features (e.g. editor) to open/close sidebars.
+    effect(() => {
+      const open = this.uiShellStore.sidebarOpen();
+      const tab = this.uiShellStore.activeSidebarTab();
+      untracked(() => {
+        if (!open || tab === null) {
+          if (this.sammElements.opened()) this.sammElements.close();
+          if (this.workspace.opened()) this.workspace.close();
+        } else if (tab === 'sammElements' && !this.sammElements.opened()) {
+          this.sammElements.open();
+        } else if ((tab === 'workspace' || tab === 'fileElements') && !this.workspace.opened()) {
+          this.workspace.open();
+        }
+      });
     });
   }
 }
