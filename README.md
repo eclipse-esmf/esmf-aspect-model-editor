@@ -123,6 +123,9 @@ The backend app image contains its own Java runtime and therefore matches the pr
 Unsigned macOS builds may be blocked by Gatekeeper. Remove the quarantine flag with
 `xattr -rd com.apple.quarantine "/Applications/Aspect Model Editor.app"`.
 
+On Linux (AppImage and `.deb`) the app sets `WEBKIT_DISABLE_DMABUF_RENDERER=1` at startup, because the DMA-BUF renderer of WebKitGTK shows a blank window with several GPU drivers (e.g. NVIDIA, virtual machines). An explicitly set value is kept.
+If the window still stays blank or flickers, start the app with `WEBKIT_DISABLE_COMPOSITING_MODE=1` (slower rendering), e.g. `WEBKIT_DISABLE_COMPOSITING_MODE=1 ./Aspect-Model-Editor.AppImage`.
+
 #### Release
 
 The workflow `.github/workflows/tagged_release.yml` (manually started with the release version) creates the release.
