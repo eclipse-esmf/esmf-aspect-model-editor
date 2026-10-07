@@ -1,0 +1,15 @@
+# Build context of Dockerfile.tauri: only the sources of core, without local build output and dependencies
+*
+!core
+core/**/node_modules
+core/**/.DS_Store
+core/.angular
+core/.nx
+core/.husky/_
+core/dist
+core/test-results
+core/playwright-report
+core/src-tauri/target
+core/src-tauri/gen
+core/src-tauri/logs
+core/**/logs
