@@ -1,0 +1,3 @@
+# Dockerfile.tauri runs bash scripts (heredocs); a Windows checkout with CRLF line endings would break them
+Dockerfile.tauri text eol=lf
+Dockerfile.tauri.dockerignore text eol=lf
