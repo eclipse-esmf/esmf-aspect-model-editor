@@ -128,7 +128,7 @@
     "license-report": "^6.3.0",
     "ng-mocks": "^14.11.0",
     "ng-packagr": "20.2.0",
-    "nx": "23.1.1",
+    "nx": "23.2.1",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-attributes": "^1.0.0",
     "prettier-plugin-organize-imports": "^4.1.0",
