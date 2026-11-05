@@ -11,6 +11,7 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
+export * from './backend-auth.interceptor';
 export * from './migrator-api.service';
 export * from './model-api.service';
 export * from './model-validator.service';

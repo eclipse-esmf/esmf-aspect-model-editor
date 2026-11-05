@@ -42,6 +42,8 @@ export class BackendStatusService {
 
   readonly status = this._status.asReadonly();
   readonly isReady = computed(() => this._status().state === 'ready');
+  /** Token that authenticates requests to the backend started by the desktop shell. */
+  readonly authToken = computed(() => (this.isDesktop && !this.isE2e ? (this._status().token ?? null) : null));
   /** Stays true once the backend was ready, so a later crash does not tear down the loaded editor. */
   readonly hasBeenReady = this._hasBeenReady.asReadonly();
   readonly retrying = this._retrying.asReadonly();
