@@ -22,7 +22,6 @@ import {ModelApiService} from './model-api.service';
 
 const config: AppConfig = {
   environment: 'dev',
-  ameService: 'http://localhost:9090',
   ameVersion: '1.0.0',
   assetLocation: 'assets',
   minSammVersion: '2.0.0',
@@ -34,7 +33,6 @@ const config: AppConfig = {
     models: '/ame/api/models',
     generate: '/ame/api/generate',
     package: '/ame/api/package',
-    fileHandling: '/ame/api/file-handling',
   },
 };
 
@@ -159,7 +157,7 @@ describe('MigratorApiService', () => {
     service.createBackup().subscribe(value => (result = value));
 
     const req = httpMock.expectOne('http://localhost:9090/ame/api/package/backup-workspace');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toBe('POST');
     req.flush('backup-id-123');
 
     expect(result).toBe('backup-id-123');
@@ -172,7 +170,7 @@ describe('MigratorApiService', () => {
     service.migrateWorkspace(true).subscribe(value => (result = value));
 
     const req = httpMock.expectOne(req => req.url === 'http://localhost:9090/ame/api/models/migrate-workspace');
-    expect(req.request.method).toBe('GET');
+    expect(req.request.method).toBe('POST');
     expect(req.request.params.get('setNewVersion')).toBe('true');
     req.flush({success: 'ok', errors: []});
 

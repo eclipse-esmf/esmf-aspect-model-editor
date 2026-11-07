@@ -14,11 +14,12 @@
 use std::{
     fs,
     io::{BufRead, BufReader},
-    net::{SocketAddr, TcpListener, TcpStream},
+    net::{SocketAddr, TcpStream},
     path::{Path, PathBuf},
     process::{Child, Command, Stdio},
     sync::{
         atomic::{AtomicU64, Ordering},
+        mpsc::{self, Receiver, RecvTimeoutError},
         Mutex,
     },
     thread,
@@ -35,6 +36,16 @@ const DEV_PORT: u16 = 9090;
 const PROBE_TIMEOUT: Duration = Duration::from_millis(500);
 const STARTUP_POLL_INTERVAL: Duration = Duration::from_millis(250);
 const RUNNING_POLL_INTERVAL: Duration = Duration::from_secs(1);
+/// Time the backend gets to shut down gracefully (and write its class data sharing archive) before it is killed.
+const SHUTDOWN_TIMEOUT: Duration = Duration::from_secs(5);
+const SHUTDOWN_POLL_INTERVAL: Duration = Duration::from_millis(50);
+
+/// Line the backend prints to stdout once its HTTP server accepts connections.
+const READY_PREFIX: &str = "AME_BACKEND_READY port=";
+/// Environment variable and request header that carry the per-start secret shared with the backend.
+const AUTH_TOKEN_ENV: &str = "AME_AUTH_TOKEN";
+const JAVA_TOOL_OPTIONS_ENV: &str = "JAVA_TOOL_OPTIONS";
+const CDS_ARCHIVE_FILE: &str = "ame-backend.jsa";
 
 #[cfg(debug_assertions)]
 const STARTUP_TIMEOUT: Duration = Duration::from_secs(30);
@@ -55,6 +66,8 @@ pub struct BackendStatus {
     pub state: BackendPhase,
     pub port: String,
     pub message: Option<String>,
+    /// Secret the UI sends as `X-AME-Token` header; `None` when the backend was started externally (development).
+    pub token: Option<String>,
     /// Monotonic counter so the frontend can discard out-of-order updates.
     pub revision: u64,
 }
@@ -63,6 +76,7 @@ pub struct BackendState {
     pub port: Mutex<String>,
     pub child_process: Mutex<Option<Child>>,
     status: Mutex<BackendStatus>,
+    token: Mutex<Option<String>>,
     /// Incremented on every (re)start so monitors of a previous attempt stop reporting.
     generation: AtomicU64,
 }
@@ -76,8 +90,10 @@ impl BackendState {
                 state: BackendPhase::Starting,
                 port: DEV_PORT.to_string(),
                 message: None,
+                token: None,
                 revision: 0,
             }),
+            token: Mutex::new(None),
             generation: AtomicU64::new(0),
         }
     }
@@ -112,6 +128,7 @@ impl BackendState {
         status.state = state;
         status.message = message;
         status.port = self.port.lock().unwrap().clone();
+        status.token = self.token.lock().unwrap().clone();
         status.revision += 1;
         Some(status.clone())
     }
@@ -145,21 +162,44 @@ pub fn is_port_reachable(port: u16) -> bool {
     TcpStream::connect_timeout(&SocketAddr::from(([127, 0, 0, 1], port)), PROBE_TIMEOUT).is_ok()
 }
 
-pub fn find_free_port() -> u16 {
-    for port in 30000..31000 {
-        if let Ok(listener) = TcpListener::bind(("127.0.0.1", port)) {
-            drop(listener);
-            return port;
-        }
-    }
+/// Extracts the port from the readiness line printed by the backend.
+fn parse_ready_line(line: &str) -> Option<u16> {
+    line.trim()
+        .strip_prefix(READY_PREFIX)?
+        .parse()
+        .ok()
+        .filter(|port| *port != 0)
+}
 
-    if let Ok(listener) = TcpListener::bind("127.0.0.1:0") {
-        if let Ok(addr) = listener.local_addr() {
-            return addr.port();
-        }
-    }
+fn generate_token() -> Result<String, String> {
+    let mut bytes = [0u8; 32];
+    getrandom::fill(&mut bytes)
+        .map_err(|error| format!("Failed to create backend token: {error}"))?;
+    Ok(bytes.iter().map(|byte| format!("{byte:02x}")).collect())
+}
 
-    9090
+/// JVM options for a dynamic AppCDS archive: created on the first graceful shutdown, reused afterwards
+/// and recreated automatically when the backend changes. Options the user set are kept.
+fn java_tool_options(archive: &Path, existing: Option<&str>) -> String {
+    let cds = format!(
+        "-XX:SharedArchiveFile=\"{}\" -XX:+AutoCreateSharedArchive -Xlog:cds*=error",
+        archive.display()
+    );
+    match existing
+        .map(str::trim)
+        .filter(|options| !options.is_empty())
+    {
+        Some(options) => format!("{options} {cds}"),
+        None => cds,
+    }
+}
+
+fn cds_archive_path(app: &AppHandle) -> Option<PathBuf> {
+    let dir = app.path().app_cache_dir().ok()?.join("backend");
+    fs::create_dir_all(&dir)
+        .map_err(|error| eprintln!("Class data sharing disabled, cannot create {dir:?}: {error}"))
+        .ok()?;
+    Some(dir.join(CDS_ARCHIVE_FILE))
 }
 
 fn get_backend_path(app: &AppHandle) -> Option<PathBuf> {
@@ -253,20 +293,39 @@ fn sorted_entries(dir: &Path) -> Vec<PathBuf> {
 pub fn start_backend(app: &AppHandle, state: &BackendState) {
     let generation = state.next_generation();
     let dev_mode = cfg!(debug_assertions);
-    let port = if dev_mode { DEV_PORT } else { find_free_port() };
-    *state.port.lock().unwrap() = port.to_string();
+    // The port of a spawned backend is chosen by the operating system and known once it reports readiness.
+    *state.port.lock().unwrap() = if dev_mode {
+        DEV_PORT.to_string()
+    } else {
+        String::new()
+    };
+    *state.token.lock().unwrap() = None;
 
     set_status(app, state, generation, BackendPhase::Starting, None);
 
-    if dev_mode {
-        println!("Development mode: expecting backend on port {port}");
-    } else if let Err(message) = spawn_backend(app, state, port) {
-        set_status(app, state, generation, BackendPhase::Failed, Some(message));
-        return;
-    }
+    let readiness = if dev_mode {
+        println!("Development mode: expecting backend on port {DEV_PORT}");
+        Readiness::Probe(DEV_PORT)
+    } else {
+        match generate_token().and_then(|token| spawn_backend(app, state, token)) {
+            Ok(announced) => Readiness::Announced(announced),
+            Err(message) => {
+                set_status(app, state, generation, BackendPhase::Failed, Some(message));
+                return;
+            }
+        }
+    };
 
     let app_handle = app.clone();
-    thread::spawn(move || monitor_backend(app_handle, generation, port));
+    thread::spawn(move || monitor_backend(app_handle, generation, readiness));
+}
+
+/// How the monitor learns that the backend accepts connections.
+enum Readiness {
+    /// Externally started backend on a fixed port (development).
+    Probe(u16),
+    /// Spawned backend announcing its port on stdout.
+    Announced(Receiver<u16>),
 }
 
 /// Restarts the backend after a failure. Ignored while a start is in progress or the backend is ready.
@@ -279,34 +338,55 @@ pub fn restart_backend(app: &AppHandle, state: &BackendState) -> BackendStatus {
     state.status()
 }
 
-/// The backend stops by itself once the process `parent_pid` has ended, so it does not outlive
-/// the app after a crash or a hard kill, when [`clean_up_backend`] never runs.
-fn backend_args(port: u16, parent_pid: u32) -> [String; 2] {
+/// Port `-1` lets the operating system pick a free port, avoiding a race between choosing and binding it.
+/// The backend stops by itself once its stdin is closed ([`clean_up_backend`]) or the process `parent_pid`
+/// has ended, so it does not outlive the app after a crash or a hard kill.
+fn backend_args(parent_pid: u32) -> [String; 3] {
     [
-        format!("-Dmicronaut.server.port={port}"),
+        "-Dmicronaut.server.port=-1".to_string(),
         format!("-Dame.parent-pid={parent_pid}"),
+        "-Dame.exit-on-stdin-eof=true".to_string(),
     ]
 }
 
-fn spawn_backend(app: &AppHandle, state: &BackendState, port: u16) -> Result<(), String> {
+fn spawn_backend(
+    app: &AppHandle,
+    state: &BackendState,
+    token: String,
+) -> Result<Receiver<u16>, String> {
     let binary_path =
         get_backend_path(app).ok_or_else(|| "Backend executable not found.".to_string())?;
 
     println!("Starting backend from: {:?}", binary_path);
-    println!("Backend port: {}", port);
 
-    let mut child = Command::new(&binary_path)
-        .args(backend_args(port, std::process::id()))
+    let mut command = Command::new(&binary_path);
+    command
+        .args(backend_args(std::process::id()))
+        .env(AUTH_TOKEN_ENV, &token)
+        .stdin(Stdio::piped())
         .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
+        .stderr(Stdio::piped());
+    if let Some(archive) = cds_archive_path(app) {
+        let existing = std::env::var(JAVA_TOOL_OPTIONS_ENV).ok();
+        command.env(
+            JAVA_TOOL_OPTIONS_ENV,
+            java_tool_options(&archive, existing.as_deref()),
+        );
+    }
+
+    let mut child = command
         .spawn()
         .map_err(|error| format!("Failed to start backend process: {error}"))?;
 
     println!("Backend started with PID {}", child.id());
 
+    let (ready_sender, ready_receiver) = mpsc::channel();
     if let Some(stdout) = child.stdout.take() {
         thread::spawn(move || {
             for line in BufReader::new(stdout).lines().map_while(Result::ok) {
+                if let Some(port) = parse_ready_line(&line) {
+                    let _ = ready_sender.send(port);
+                }
                 println!("[backend] {line}");
             }
         });
@@ -320,13 +400,14 @@ fn spawn_backend(app: &AppHandle, state: &BackendState, port: u16) -> Result<(),
         });
     }
 
+    *state.token.lock().unwrap() = Some(token);
     *state.child_process.lock().unwrap() = Some(child);
-    Ok(())
+    Ok(ready_receiver)
 }
 
-/// Polls the backend port until it accepts connections, then keeps watching the process
+/// Waits until the backend accepts connections, then keeps watching the process
 /// so an unexpected crash is reported to the UI.
-fn monitor_backend(app: AppHandle, generation: u64, port: u16) {
+fn monitor_backend(app: AppHandle, generation: u64, readiness: Readiness) {
     let state = app.state::<BackendState>();
     let deadline = Instant::now() + STARTUP_TIMEOUT;
     let mut ready = false;
@@ -353,15 +434,34 @@ fn monitor_backend(app: AppHandle, generation: u64, port: u16) {
             continue;
         }
 
-        if is_port_reachable(port) {
+        let ready_port = match &readiness {
+            Readiness::Probe(port) => is_port_reachable(*port).then_some(*port).or_else(|| {
+                thread::sleep(STARTUP_POLL_INTERVAL);
+                None
+            }),
+            Readiness::Announced(receiver) => match receiver.recv_timeout(STARTUP_POLL_INTERVAL) {
+                Ok(port) => Some(port),
+                Err(RecvTimeoutError::Timeout) => None,
+                // stdout closed: the process is about to exit, which is reported in the next iteration.
+                Err(RecvTimeoutError::Disconnected) => {
+                    thread::sleep(STARTUP_POLL_INTERVAL);
+                    None
+                }
+            },
+        };
+
+        if let Some(port) = ready_port {
             ready = true;
+            if state.is_current(generation) {
+                *state.port.lock().unwrap() = port.to_string();
+            }
             set_status(&app, &state, generation, BackendPhase::Ready, None);
-            if cfg!(debug_assertions) {
+            if matches!(readiness, Readiness::Probe(_)) {
                 return;
             }
         } else if Instant::now() >= deadline {
             let message = format!(
-                "The backend did not respond on port {port} within {} seconds.",
+                "The backend did not report readiness within {} seconds.",
                 STARTUP_TIMEOUT.as_secs()
             );
             set_status(
@@ -375,19 +475,35 @@ fn monitor_backend(app: AppHandle, generation: u64, port: u16) {
                 clean_up_backend(&state);
             }
             return;
-        } else {
-            thread::sleep(STARTUP_POLL_INTERVAL);
         }
     }
 }
 
 pub fn clean_up_backend(state: &BackendState) {
-    let mut child_guard = state.child_process.lock().unwrap();
+    let child = state.child_process.lock().unwrap().take();
+    if let Some(child) = child {
+        println!("Cleaning up backend process PID {}", child.id());
+        shut_down(child, SHUTDOWN_TIMEOUT);
+    }
+}
 
-    if let Some(mut child) = child_guard.take() {
+/// Closes the stdin of the backend so it shuts down gracefully; kills it if it is still running after `timeout`.
+/// Returns whether the process stopped by itself.
+fn shut_down(mut child: Child, timeout: Duration) -> bool {
+    drop(child.stdin.take());
+
+    let deadline = Instant::now() + timeout;
+    let graceful = loop {
+        match child.try_wait() {
+            Ok(Some(_)) | Err(_) => break true,
+            Ok(None) if Instant::now() >= deadline => break false,
+            Ok(None) => thread::sleep(SHUTDOWN_POLL_INTERVAL),
+        }
+    };
+
+    if !graceful {
         let pid = child.id();
-
-        println!("Cleaning up backend process PID {pid}");
+        eprintln!("Backend process PID {pid} did not stop within {timeout:?}, killing it");
 
         #[cfg(target_os = "windows")]
         {
@@ -400,14 +516,16 @@ pub fn clean_up_backend(state: &BackendState) {
         {
             let _ = child.kill();
         }
-
-        let _ = child.wait();
     }
+
+    let _ = child.wait();
+    graceful
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::net::TcpListener;
 
     fn temp_dir(name: &str) -> PathBuf {
         let dir =
@@ -448,13 +566,50 @@ mod tests {
     }
 
     #[test]
-    fn backend_args_contain_port_and_parent_pid() {
+    fn backend_args_request_os_port_and_graceful_shutdown() {
         assert_eq!(
-            backend_args(30001, 4242),
+            backend_args(4242),
             [
-                "-Dmicronaut.server.port=30001".to_string(),
+                "-Dmicronaut.server.port=-1".to_string(),
                 "-Dame.parent-pid=4242".to_string(),
+                "-Dame.exit-on-stdin-eof=true".to_string(),
             ]
+        );
+    }
+
+    #[test]
+    fn parses_ready_line() {
+        assert_eq!(
+            parse_ready_line("AME_BACKEND_READY port=30001"),
+            Some(30001)
+        );
+        assert_eq!(
+            parse_ready_line("AME_BACKEND_READY port=30001\r"),
+            Some(30001)
+        );
+        assert_eq!(parse_ready_line("AME_BACKEND_READY port=0"), None);
+        assert_eq!(parse_ready_line("AME_BACKEND_READY port=abc"), None);
+        assert_eq!(parse_ready_line("Startup completed in 500ms"), None);
+    }
+
+    #[test]
+    fn generates_distinct_hex_tokens() {
+        let first = generate_token().unwrap();
+        let second = generate_token().unwrap();
+        assert_eq!(first.len(), 64);
+        assert!(first.chars().all(|c| c.is_ascii_hexdigit()));
+        assert_ne!(first, second);
+    }
+
+    #[test]
+    fn java_tool_options_enable_cds_and_keep_user_options() {
+        let archive = Path::new("/cache dir/ame-backend.jsa");
+        let cds = "-XX:SharedArchiveFile=\"/cache dir/ame-backend.jsa\" -XX:+AutoCreateSharedArchive -Xlog:cds*=error";
+        assert_eq!(java_tool_options(archive, None), cds);
+        assert_eq!(java_tool_options(archive, Some("  ")), cds);
+        assert_eq!(
+            java_tool_options(archive, Some("-Xmx2g")),
+            format!("-Xmx2g {cds}")
         );
     }
 
@@ -484,6 +639,7 @@ mod tests {
         let state = BackendState::new();
         let generation = state.next_generation();
         *state.port.lock().unwrap() = "30001".to_string();
+        *state.token.lock().unwrap() = Some("secret".to_string());
 
         let starting = state
             .update_status(generation, BackendPhase::Starting, None)
@@ -494,6 +650,7 @@ mod tests {
 
         assert_eq!(starting.revision + 1, ready.revision);
         assert_eq!(ready.port, "30001");
+        assert_eq!(ready.token.as_deref(), Some("secret"));
         assert!(state.is_ready());
     }
 
@@ -522,11 +679,12 @@ mod tests {
             state: BackendPhase::Failed,
             port: "30001".to_string(),
             message: Some("boom".to_string()),
+            token: Some("secret".to_string()),
             revision: 3,
         };
         assert_eq!(
             serde_json::to_value(status).unwrap(),
-            serde_json::json!({"state": "failed", "port": "30001", "message": "boom", "revision": 3})
+            serde_json::json!({"state": "failed", "port": "30001", "message": "boom", "token": "secret", "revision": 3})
         );
     }
 
@@ -557,5 +715,29 @@ mod tests {
 
         assert!(exit.is_some());
         assert!(state.child_process.lock().unwrap().is_none());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn closing_stdin_stops_backend_gracefully() {
+        let child = Command::new("cat")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::null())
+            .spawn()
+            .unwrap();
+        assert!(shut_down(child, Duration::from_secs(5)));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn kills_backend_that_ignores_stdin() {
+        let child = Command::new("sleep")
+            .arg("30")
+            .stdin(Stdio::piped())
+            .spawn()
+            .unwrap();
+        let started = Instant::now();
+        assert!(!shut_down(child, Duration::from_millis(200)));
+        assert!(started.elapsed() < Duration::from_secs(10));
     }
 }

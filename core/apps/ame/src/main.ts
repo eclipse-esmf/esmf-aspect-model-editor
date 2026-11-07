@@ -11,7 +11,8 @@
  * SPDX-License-Identifier: MPL-2.0
  */
 
-import {HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr} from '@angular/common/http';
+import {backendAuthInterceptor} from '@ame/infrastructure';
+import {HttpClient, provideHttpClient, withInterceptors, withInterceptorsFromDi, withXhr} from '@angular/common/http';
 import {enableProdMode, importProvidersFrom, inject, provideZonelessChangeDetection} from '@angular/core';
 import {bootstrapApplication} from '@angular/platform-browser';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
@@ -38,7 +39,7 @@ const bootstrap = () =>
     providers: [
       provideZonelessChangeDetection(),
       provideRouter(APP_ROUTES, withPreloading(PreloadAllModules)),
-      provideHttpClient(withXhr(), withInterceptorsFromDi()),
+      provideHttpClient(withXhr(), withInterceptors([backendAuthInterceptor]), withInterceptorsFromDi()),
       provideAnimationsAsync(),
       importProvidersFrom(ToastrModule.forRoot(TOAST_CONFIG)),
       provideTransloco({

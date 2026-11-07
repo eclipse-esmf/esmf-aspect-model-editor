@@ -30,6 +30,8 @@ tauri-plugin-process = "2"
 open = "5"
 tokio = { version = "1", features = ["full"] }
 dirs = "5"
+# Random token that authenticates the UI against the backend sidecar.
+getrandom = "0.3"
 
 [dev-dependencies]
 tauri = { version = "2.11.3", features = ["test", "tray-icon"] }
