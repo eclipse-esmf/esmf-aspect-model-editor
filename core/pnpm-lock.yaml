@@ -33,8 +33,8 @@ importers:
         specifier: 22.1.3
         version: 22.1.3(@angular/animations@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))
       '@angular/router':
-        specifier: 22.1.3
-        version: 22.1.3(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(@angular/platform-browser@22.1.3(@angular/animations@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(rxjs@7.8.1)
+        specifier: 22.2.1
+        version: 22.2.1(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(@angular/platform-browser@22.1.3(@angular/animations@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(rxjs@7.8.1)
       '@codemirror/commands':
         specifier: 6.11.1
         version: 6.11.1
@@ -567,13 +567,13 @@ packages:
       '@angular/animations':
         optional: true
 
-  '@angular/router@22.1.3':
-    resolution: {integrity: sha512-23owvZKCpdL7Yh3EzBj4OLf3x0z+jT9b57Qk96wdwI8Lsyf9L78/RJPYCutJ5r+zq3pFM/BHVKyd+2hkfH7N6Q==}
+  '@angular/router@22.2.1':
+    resolution: {integrity: sha512-HJfJ4yA1znKd9YFtbDOJfKmD12x0PhS7LkmYdWlJRu2WkQZRBVrdGKdmbvV5UvrqCRllVWKpzw1TIZJM69rlcw==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
     peerDependencies:
-      '@angular/common': 22.1.3
-      '@angular/core': 22.1.3
-      '@angular/platform-browser': 22.1.3
+      '@angular/common': 22.2.1
+      '@angular/core': 22.2.1
+      '@angular/platform-browser': 22.2.1
       rxjs: ^6.5.3 || ^7.4.0
 
   '@arr/every@1.0.1':
@@ -8579,7 +8579,7 @@ snapshots:
     optionalDependencies:
       '@angular/animations': 22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))
 
-  '@angular/router@22.1.3(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(@angular/platform-browser@22.1.3(@angular/animations@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(rxjs@7.8.1)':
+  '@angular/router@22.2.1(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(@angular/platform-browser@22.1.3(@angular/animations@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(@angular/common@22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1))(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)))(rxjs@7.8.1)':
     dependencies:
       '@angular/common': 22.1.3(@angular/core@22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3))(rxjs@7.8.1)
       '@angular/core': 22.1.3(@angular/compiler@22.1.3)(rxjs@7.8.1)(zone.js@0.16.3)
