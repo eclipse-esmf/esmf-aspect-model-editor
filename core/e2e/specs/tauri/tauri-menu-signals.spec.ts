@@ -17,6 +17,18 @@ import {SELECTOR_editorCancelButton, SELECTOR_editorSaveButton} from '../../supp
 import {readFixture} from '../../support/drag-drop-utils';
 import {TauriHelper} from '../../support/tauri-helper';
 
+const SELECTOR_workspaceErrorFileLink = 'ame-workspace-error a.file-link';
+
+async function injectWorkspaceError(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    (window as any)['angular.workspaceComponent']?.error.set({
+      code: 400,
+      message: 'File: /models/Invalid.ttl • Error: Parse error',
+      path: '/models/Invalid.ttl',
+    });
+  });
+}
+
 test.describe('Tauri Menu & IPC Integration', () => {
   let app: AppHelper;
   let tauri: TauriHelper;
@@ -273,33 +285,23 @@ test.describe('Tauri Menu & IPC Integration', () => {
     await page.locator(SELECTOR_workspaceBtn).click();
     await expect(page.locator('ame-workspace')).toBeVisible();
 
-    // Trigger workspace error
-    await page.evaluate(() => {
-      const workspaceComponent = (window as any)['angular.workspaceComponent'];
-      if (workspaceComponent) {
-        workspaceComponent.error.set({
-          code: 400,
-          message: 'File: /models/Invalid.ttl • Error: Parse error',
-          path: '/models/Invalid.ttl',
-        });
-      }
-    });
+    // The workspace refresh triggered by opening the sidebar resets the error asynchronously,
+    // so inject the error and click until the click hits the rendered link.
+    await expect(async () => {
+      await injectWorkspaceError(page);
+      await tauri.clearSentEvents();
+      await page.locator(SELECTOR_workspaceErrorFileLink).click({timeout: 2000});
 
-    const fileLink = page.locator('ame-workspace-error a.file-link');
-    await expect(fileLink).toBeVisible();
-
-    await tauri.clearSentEvents();
-    await fileLink.click({force: true});
-
-    await expect
-      .poll(
-        async () => {
-          const events = await tauri.getSentEvents('openInVsCodeOrDefault');
-          return events.some(e => e.args?.[0] === 'vscode://file//models/Invalid.ttl' && e.args?.[1] === '/models/Invalid.ttl');
-        },
-        {timeout: 10000},
-      )
-      .toBe(true);
+      await expect
+        .poll(
+          async () => {
+            const events = await tauri.getSentEvents('openInVsCodeOrDefault');
+            return events.some(e => e.args?.[0] === 'vscode://file//models/Invalid.ttl' && e.args?.[1] === '/models/Invalid.ttl');
+          },
+          {timeout: 2000},
+        )
+        .toBe(true);
+    }).toPass({timeout: 15000});
   });
 
   test('should handle context menu right click on links for open in browser and copy link address', async ({page}) => {
@@ -308,34 +310,23 @@ test.describe('Tauri Menu & IPC Integration', () => {
     await page.locator(SELECTOR_workspaceBtn).click();
     await expect(page.locator('ame-workspace')).toBeVisible();
 
-    // Trigger workspace error to show a link
-    await page.evaluate(() => {
-      const workspaceComponent = (window as any)['angular.workspaceComponent'];
-      if (workspaceComponent) {
-        workspaceComponent.error.set({
-          code: 400,
-          message: 'File: /models/Invalid.ttl • Error: Parse error',
-          path: '/models/Invalid.ttl',
-        });
-      }
-    });
+    // 1. Right click on the link to trigger native context menu. The workspace refresh triggered by
+    // opening the sidebar resets the error asynchronously, so retry until the click hits the rendered link.
+    await expect(async () => {
+      await injectWorkspaceError(page);
+      await tauri.clearSentEvents();
+      await page.locator(SELECTOR_workspaceErrorFileLink).click({button: 'right', timeout: 2000});
 
-    const fileLink = page.locator('ame-workspace-error a.file-link');
-    await expect(fileLink).toBeVisible();
-
-    // 1. Right click on the link to trigger native context menu
-    await tauri.clearSentEvents();
-    await fileLink.click({button: 'right', force: true});
-
-    await expect
-      .poll(
-        async () => {
-          const events = await tauri.getSentEvents('showContextMenu');
-          return events.some(e => e.args?.[0]?.href?.includes('/models/Invalid.ttl'));
-        },
-        {timeout: 10000},
-      )
-      .toBe(true);
+      await expect
+        .poll(
+          async () => {
+            const events = await tauri.getSentEvents('showContextMenu');
+            return events.some(e => e.args?.[0]?.href?.includes('/models/Invalid.ttl'));
+          },
+          {timeout: 2000},
+        )
+        .toBe(true);
+    }).toPass({timeout: 15000});
 
     // 2. Select "Copy link address" (ctx_copy) and verify copyToClipboard is triggered with the href
     await tauri.clearSentEvents();

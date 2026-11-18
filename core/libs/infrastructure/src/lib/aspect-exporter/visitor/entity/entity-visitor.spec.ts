@@ -87,6 +87,26 @@ describe('Entity Visitor', () => {
     expect(service.rdfNodeService.update).toHaveBeenCalledWith(namedChar, {dataType: 'samm#entity1'});
   });
 
+  it('should not update parent characteristic defined in another file', () => {
+    const externChar = new DefaultCharacteristic({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#externChar',
+      name: 'externChar',
+    });
+    const entityWithExternParent = new DefaultEntity({
+      metaModelVersion: '1',
+      aspectModelUrn: 'samm#entity1',
+      name: 'entity1',
+      properties: [],
+    });
+    entityWithExternParent.addParent(externChar);
+    vi.spyOn(service.loadedFilesService, 'isElementExtern').mockImplementation(el => el === externChar);
+
+    service.visit(entityWithExternParent);
+
+    expect(service.rdfNodeService.update).not.toHaveBeenCalledWith(externChar, expect.anything());
+  });
+
   it('should not update parent anonymous characteristic as named node', () => {
     const anonChar = new DefaultCharacteristic({
       metaModelVersion: '1',
