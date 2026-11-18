@@ -1,4 +1,5 @@
 {
+  "mainBinaryName": "aspect-model-editor",
   "bundle": {
     "targets": ["appimage", "deb"]
   }

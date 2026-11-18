@@ -57,6 +57,9 @@ backend/*
 **/.files
 lsp
 
+# output of Dockerfile.tauri (--target artifacts)
+/docker-build
+
 # playwright
 **/playwright-report
 **/test-results

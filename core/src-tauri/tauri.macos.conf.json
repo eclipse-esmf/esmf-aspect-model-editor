@@ -1,4 +1,5 @@
 {
+  "mainBinaryName": "Aspect Model Editor",
   "bundle": {
     "targets": ["app", "dmg"],
     "macOS": {

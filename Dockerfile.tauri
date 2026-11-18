@@ -1,0 +1,195 @@
+# syntax=docker/dockerfile:1
+
+# Copyright (c) 2026 Robert Bosch Manufacturing Solutions GmbH
+#
+# See the AUTHORS file(s) distributed with this work for
+# additional information regarding authorship.
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+#
+# SPDX-License-Identifier: MPL-2.0
+
+# Reproducible Linux build of the desktop app (Tauri) including the bundled backend, see README
+# ("Reproducible Linux build with Docker"). Mirrors the release workflows of both repositories:
+#
+#   backend-source  backend sources (git clone or a local checkout via --build-context backend-source=<dir>)
+#   backend         mvn install + jlink + jpackage app image, like .github/actions/package-app-image of the backend
+#   tauri           pnpm run build:tauri with the backend in backend/linux, like .github/workflows/tagged_release.yml,
+#                   then checks that the bundles contain the backend and that the bundled backend starts
+#   artifacts       only the bundles, for `--target artifacts --output <dir>`
+#
+# Usage (from the repository root; linux/amd64 is required, also on Apple silicon):
+#   docker build --platform linux/amd64 -f Dockerfile.tauri -t ame-tauri-build .
+
+ARG BACKEND_REPOSITORY=eclipse-esmf/esmf-aspect-model-editor-backend
+ARG BACKEND_REF=main
+
+FROM scratch AS backend-source
+ARG BACKEND_REPOSITORY
+ARG BACKEND_REF
+ADD --keep-git-dir=false https://github.com/${BACKEND_REPOSITORY}.git#${BACKEND_REF} /
+
+# Java version of the backend workflows (actions/setup-java, temurin 25.0.3)
+FROM eclipse-temurin:25.0.3_9-jdk-jammy AS backend
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ARG MAVEN_VERSION=3.9.16
+ARG BACKEND_SKIP_TESTS=false
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/* \
+    && maven_url="https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+    && curl -fsSL --retry 3 -o /tmp/maven.tar.gz "$maven_url" \
+    && echo "$(curl -fsSL --retry 3 "$maven_url.sha512")  /tmp/maven.tar.gz" | sha512sum -c - \
+    && tar -xzf /tmp/maven.tar.gz -C /opt \
+    && rm /tmp/maven.tar.gz \
+    && ln -s "/opt/apache-maven-${MAVEN_VERSION}/bin/mvn" /usr/local/bin/mvn
+
+WORKDIR /src
+COPY --from=backend-source / .
+
+# Same Maven call as the backend workflows; the pull request check runs the tests, the release skips them.
+RUN --mount=type=cache,target=/root/.m2 \
+    skip_tests=$([ "$BACKEND_SKIP_TESTS" = true ] && echo -DskipTests || true) \
+    && MAVEN_OPTS="-Xmx4096m" mvn -B clean install $skip_tests -Dmaven.wagon.httpconnectionManager.ttlSeconds=60
+
+# jlink and jpackage options of .github/actions/package-app-image (Linux) in the backend repository
+RUN <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+target=aspect-model-editor-runtime/target
+jars=("$target"/aspect-model-editor-runtime-*.jar)
+if [ "${#jars[@]}" -ne 1 ] || [ ! -f "${jars[0]}" ]; then
+  echo "Expected exactly one runtime jar in $target, found: ${jars[*]}" >&2
+  exit 1
+fi
+jar=$(basename "${jars[0]}")
+version=${jar#aspect-model-editor-runtime-}
+version=${version%.jar}
+name="ame-backend-$version-linux"
+
+jlink --no-header-files --no-man-pages --strip-debug --compress=zip-6 \
+  --add-modules java.se,jdk.unsupported,jdk.crypto.ec,jdk.crypto.cryptoki,jdk.charsets,jdk.zipfs,jdk.management,jdk.attach,jdk.jfr \
+  --output "$target/jlink-runtime"
+mkdir -p "$target/jpackage-input"
+cp "$target/$jar" "$target/jpackage-input/"
+
+jpackage --type app-image \
+  --name "$name" \
+  --input "$target/jpackage-input" \
+  --main-jar "$jar" \
+  --main-class org.eclipse.esmf.ame.Application \
+  --runtime-image "$target/jlink-runtime" \
+  --java-options "--enable-native-access=ALL-UNNAMED" \
+  --java-options "--sun-misc-unsafe-memory-access=allow" \
+  --java-options "-Dpolyglotimpl.DisableMultiReleaseCheck=true" \
+  --dest /out/linux
+
+test -x "/out/linux/$name/bin/$name" || { echo "jpackage did not create the launcher $name/bin/$name" >&2; exit 1; }
+EOF
+
+# Ubuntu 22.04 like the Linux release runner: the glibc version decides on which distributions the AppImage runs
+FROM ubuntu:22.04 AS tauri
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+ARG NODE_VERSION=22.23.3
+ARG PNPM_VERSION=11.24.0
+ARG RUST_VERSION=1.98.1
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Linux build dependencies of the release workflow plus the tools the GitHub runner provides.
+# libasound2 is also preinstalled on the runner: the Java runtime of the backend (java.desktop) links against it,
+# and linuxdeploy fails if a dependency of a bundled library is missing.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       build-essential ca-certificates curl file xz-utils \
+       libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libasound2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# The release is built for x86_64 only, e.g. nx has no native binary for linux-arm64 in package.json
+RUN arch=$(dpkg --print-architecture) \
+    && if [ "$arch" != amd64 ]; then echo "Build with --platform linux/amd64 (found $arch)." >&2; exit 1; fi \
+    && curl -fsSL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" \
+       | tar -xJ -C /usr/local --strip-components=1 \
+    && npm install -g "pnpm@${PNPM_VERSION}"
+
+ENV RUSTUP_HOME=/usr/local/rustup CARGO_HOME=/usr/local/cargo PATH=/usr/local/cargo/bin:$PATH
+RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile minimal --default-toolchain "${RUST_VERSION}"
+
+# linuxdeploy (AppImage) is an AppImage itself and needs FUSE, which is not available in a container
+ENV APPIMAGE_EXTRACT_AND_RUN=1 HUSKY=0 CI=true
+
+# Tauri downloads the AppImage tools into ~/.cache/tauri unless they exist. The appimage plugin (same URL as Tauri)
+# carries the AppImage magic bytes "AI\x02" at offset 8, which the x86_64 emulation of Docker on Apple silicon does
+# not accept as ELF binary ("Exec format error"). The bytes only serve desktop integration of AppImages and the
+# plugin is not part of the bundle, so they are cleared to run the build emulated as well.
+RUN mkdir -p /root/.cache/tauri \
+    && plugin=/root/.cache/tauri/linuxdeploy-plugin-appimage.AppImage \
+    && curl -fsSL --retry 3 -o "$plugin" \
+       https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage \
+    && printf '\0\0\0' | dd of="$plugin" bs=1 seek=8 count=3 conv=notrunc status=none \
+    && chmod +x "$plugin"
+
+WORKDIR /ame/core
+COPY core/package.json core/pnpm-lock.yaml core/pnpm-workspace.yaml ./
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile && pnpm rebuild nx
+
+COPY core/ ./
+COPY --from=backend /out/linux /ame/backend/linux
+
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    pnpm run build:tauri
+
+# The bundles must contain the backend, and the bundled backend must start with its own Java runtime
+RUN <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+bundle=src-tauri/target/release/bundle
+
+launcher_in() {
+  find "$1" -path '*/backend/linux/ame-backend-*/bin/ame-backend-*' -type f -perm -u+x | head -n 1
+}
+
+appdir=$(find "$bundle/appimage" -maxdepth 1 -name '*.AppDir' -type d | head -n 1)
+appimage=$(find "$bundle/appimage" -maxdepth 1 -name '*.AppImage' -type f | head -n 1)
+deb=$(find "$bundle/deb" -maxdepth 1 -name '*.deb' -type f | head -n 1)
+[ -n "$appimage" ] || { echo "No AppImage created" >&2; exit 1; }
+[ -n "$deb" ] || { echo "No .deb created" >&2; exit 1; }
+[ -n "$appdir" ] && [ -n "$(launcher_in "$appdir")" ] || { echo "The AppImage does not contain the backend" >&2; exit 1; }
+
+deb_root=$(mktemp -d)
+dpkg-deb -x "$deb" "$deb_root"
+launcher=$(launcher_in "$deb_root")
+[ -n "$launcher" ] || { echo "The .deb does not contain the backend" >&2; exit 1; }
+[ -n "$(find "$deb_root" -path '*/assets/aspect-models/com.examples/1.0.0/*' -type f | head -n 1)" ] \
+  || { echo "The .deb does not contain the example models" >&2; exit 1; }
+binary=$(node -p "require('./src-tauri/tauri.linux.conf.json').mainBinaryName")
+[ -x "$deb_root/usr/bin/$binary" ] || { echo "The .deb does not contain the program /usr/bin/$binary" >&2; exit 1; }
+grep -qx "Exec=$binary" "$deb_root"/usr/share/applications/*.desktop \
+  || { echo "The .deb does not contain a start menu entry for $binary" >&2; exit 1; }
+
+echo "Starting the bundled backend $launcher"
+port=39124
+"$launcher" "-Dmicronaut.server.port=$port" > /tmp/backend.log 2>&1 &
+pid=$!
+for _ in $(seq 1 180); do
+  if curl -fsS "http://127.0.0.1:$port/ame/api/models/storage-path" > /dev/null 2>&1; then
+    echo "The bundled backend is running"
+    kill "$pid"
+    rm -rf "$deb_root"
+    exit 0
+  fi
+  kill -0 "$pid" 2> /dev/null || break
+  sleep 1
+done
+cat /tmp/backend.log >&2
+echo "The bundled backend did not start" >&2
+exit 1
+EOF
+
+FROM scratch AS artifacts
+COPY --from=tauri /ame/core/src-tauri/target/release/bundle/appimage/*.AppImage /ame/core/src-tauri/target/release/bundle/deb/*.deb /
+
+FROM tauri
