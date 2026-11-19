@@ -13,7 +13,6 @@
 
 export interface AppConfig {
   environment: string;
-  ameService: string;
   ameVersion: string;
   assetLocation: string;
   minSammVersion: string;
@@ -25,6 +24,5 @@ export interface AppConfig {
     models: string;
     generate: string;
     package: string;
-    fileHandling: string;
   };
 }

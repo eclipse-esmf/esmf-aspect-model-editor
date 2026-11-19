@@ -19,19 +19,17 @@ const defaultPort = '9090';
 
 export const config: AppConfig = {
   environment: 'dev',
-  ameService: 'http://localhost:9090',
   ameVersion: packageJson?.version,
   assetLocation: 'assets',
   minSammVersion: '2.0.0',
   currentSammVersion: '2.2.0',
   sdkVersion: '2.16.0',
-  defaultPort: '9090',
+  defaultPort,
   serviceUrl: `http://localhost:${defaultPort}`,
   api: {
     models: '/ame/api/models',
     generate: '/ame/api/generate',
     package: '/ame/api/package',
-    fileHandling: '/ame/api/file-handling',
   },
 };
 

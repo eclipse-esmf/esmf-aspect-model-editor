@@ -25,7 +25,6 @@ describe('Config', () => {
     expect(config.api.models).toBe('/ame/api/models');
     expect(config.api.generate).toBe('/ame/api/generate');
     expect(config.api.package).toBe('/ame/api/package');
-    expect(config.api.fileHandling).toBe('/ame/api/file-handling');
   });
 
   it('should provide APP_CONFIG via DI token factory', () => {

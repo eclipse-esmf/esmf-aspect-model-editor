@@ -23,6 +23,8 @@ export interface BackendStatus {
   state: BackendPhase;
   port: string;
   message: string | null;
+  /** Secret for the `X-AME-Token` header; absent when the backend was started externally (development). */
+  token?: string | null;
   /** Increases with every change; used to drop out-of-order updates. */
   revision: number;
 }

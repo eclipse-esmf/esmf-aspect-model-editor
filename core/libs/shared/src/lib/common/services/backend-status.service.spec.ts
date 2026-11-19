@@ -152,4 +152,18 @@ describe('BackendStatusService', () => {
     service.quit();
     expect(ipcRenderer.quitApp).toHaveBeenCalled();
   });
+
+  it('exposes the backend token of the desktop shell', async () => {
+    const service = create();
+    expect(service.authToken()).toBeNull();
+
+    listeners.get(TAURI_EVENTS.RESPONSE.BACKEND_STATUS)({...status('ready', 2), token: 'secret'});
+
+    expect(service.authToken()).toBe('secret');
+  });
+
+  it('has no backend token in the browser', () => {
+    isTauri = false;
+    expect(create().authToken()).toBeNull();
+  });
 });

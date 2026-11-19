@@ -22,7 +22,6 @@ import {ModelValidatorService} from './model-validator.service';
 
 const config: AppConfig = {
   environment: 'dev',
-  ameService: 'http://localhost:9090',
   ameVersion: '1.0.0',
   assetLocation: 'assets',
   minSammVersion: '2.0.0',
@@ -34,7 +33,6 @@ const config: AppConfig = {
     models: '/ame/api/models',
     generate: '/ame/api/generate',
     package: '/ame/api/package',
-    fileHandling: '/ame/api/file-handling',
   },
 };
 

@@ -69,11 +69,11 @@ export class MigratorApiService {
   }
 
   createBackup(): Observable<string> {
-    return this.http.get<string>(`${this.serviceUrl}${this.api.package}/backup-workspace`);
+    return this.http.post<string>(`${this.serviceUrl}${this.api.package}/backup-workspace`, null);
   }
 
   migrateWorkspace(setNewVersion: boolean): Observable<MigrationStatus> {
     const params = {setNewVersion: setNewVersion.toString()};
-    return this.http.get<MigrationStatus>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, {params});
+    return this.http.post<MigrationStatus>(`${this.serviceUrl}${this.api.models}/migrate-workspace`, null, {params});
   }
 }
