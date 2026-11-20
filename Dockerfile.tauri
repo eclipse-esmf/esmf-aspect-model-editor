@@ -31,8 +31,8 @@ ARG BACKEND_REPOSITORY
 ARG BACKEND_REF
 ADD --keep-git-dir=false https://github.com/${BACKEND_REPOSITORY}.git#${BACKEND_REF} /
 
-# Java version of the backend workflows (actions/setup-java, temurin 25.0.3)
-FROM eclipse-temurin:25.0.3_9-jdk-jammy AS backend
+# Java version of the backend workflows (actions/setup-java, temurin 25.0.5)
+FROM eclipse-temurin:25.0.5_8-jdk-jammy AS backend
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ARG MAVEN_VERSION=3.9.16
 ARG BACKEND_SKIP_TESTS=false

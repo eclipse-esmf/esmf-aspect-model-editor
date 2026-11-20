@@ -152,7 +152,7 @@ The build fails as soon as one of these steps fails.
 | Tool | Version |
 |------|---------|
 | Base image | Ubuntu 22.04, the release runner; it decides the glibc version of the AppImage |
-| Java | Temurin 25.0.3 |
+| Java | Temurin 25.0.5 |
 | Maven | 3.9.16 |
 | Node.js | 22.23.3 |
 | pnpm | 11.24.0 |
