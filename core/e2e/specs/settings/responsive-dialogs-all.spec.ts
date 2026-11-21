@@ -164,7 +164,7 @@ for (const viewport of SMALL_VIEWPORTS) {
         'GENERATE_HTML_DOCUMENTATION',
         'GENERATE_OPEN_API_SPECIFICATION',
         'GENERATE_ASYNC_API_SPECIFICATION',
-        'GENERATE_AASX_XML',
+        'GENERATE_AAS',
       ]) {
         test(`generate dialog (${signal})`, async ({page}) => {
           await tauri.emitSignal(signal);

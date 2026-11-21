@@ -145,7 +145,7 @@
   "generateDocumentMenu": {
     "generateHtmlDocument": "生成HTML文档",
     "generateOpenapiSpecification": "生成OpenAPI规格",
-    "generateAasxXml": "生成AASX/XML"
+    "generateAasxXmlJson": "生成AASX/XML/JSON"
   },
   "downloadJsonMenu": {
     "generateSampleJsonPayload": "生成JSON payload样例",
@@ -169,7 +169,7 @@
     "cancel": "取消"
   },
   "generateAasxDialog": {
-    "title": "生成AASX",
+    "title": "生成AAS",
     "outputFileFormat": "产出文件格式",
     "generating": "生成中...",
     "cancel": "取消",
@@ -926,7 +926,7 @@
       "htmlDocumentation": "HTML文档",
       "openApiSpecification": "OpenAPI规格",
       "asyncApiSpecification": "",
-      "aasxXml": "AASX / XML",
+      "aasxXmlJson": "AASX / XML / JSON",
       "sampleJsonPayload": "JSON Payload示例",
       "jsonSchema": "JSON格式"
     },

@@ -43,7 +43,7 @@ const HAS_CELLS_MENU_IDS = [
   'GENERATE_HTML_DOCUMENTATION',
   'GENERATE_OPEN_API_SPECIFICATION',
   'GENERATE_ASYNC_API_SPECIFICATION',
-  'GENERATE_AASX_XML',
+  'GENERATE_AAS',
   'GENERATE_JSON_PAYLOAD',
   'GENERATE_JSON_SCHEMA',
   'SEARCH_ELEMENTS',
@@ -212,7 +212,7 @@ export class EditorTauriBridge implements ITauriIpcBridge {
     ipc.on(TAURI_EVENTS.SIGNAL.GENERATE_HTML_DOCUMENTATION, () => this.generateHandlingService.onGenerateDocumentation());
     ipc.on(TAURI_EVENTS.SIGNAL.GENERATE_OPEN_API_SPECIFICATION, () => this.generateHandlingService.onGenerateOpenApiSpec());
     ipc.on(TAURI_EVENTS.SIGNAL.GENERATE_ASYNC_API_SPECIFICATION, () => this.generateHandlingService.onGenerateAsyncApiSpec());
-    ipc.on(TAURI_EVENTS.SIGNAL.GENERATE_AASX_XML, () => this.generateHandlingService.onGenerateAASXFile());
+    ipc.on(TAURI_EVENTS.SIGNAL.GENERATE_AAS, () => this.generateHandlingService.onGenerateAASXFile());
     ipc.on(TAURI_EVENTS.SIGNAL.GENERATE_JSON_PAYLOAD, () => this.generateHandlingService.onGenerateJsonSample());
     ipc.on(TAURI_EVENTS.SIGNAL.GENERATE_JSON_SCHEMA, () => this.generateHandlingService.onGenerateJsonSchema());
   }

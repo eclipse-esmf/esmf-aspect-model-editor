@@ -373,9 +373,17 @@ export class ModelApiService implements ModelApiPort {
     });
   }
 
-  generatetAASasXML(rdfContent: string, sourceLocation?: string): Observable<string> {
+  generateAASasXML(rdfContent: string, sourceLocation?: string): Observable<string> {
     const {formData, uri} = this.createAspectModelFormData(rdfContent);
     return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-xml`, formData, {
+      headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
+      responseType: 'text',
+    });
+  }
+
+  generateAASasJSON(rdfContent: string, sourceLocation?: string): Observable<string> {
+    const {formData, uri} = this.createAspectModelFormData(rdfContent);
+    return this.http.post(`${this.serviceUrl}${this.api.generate}/aas-json`, formData, {
       headers: new HttpHeaderBuilder().withFileUri(sourceLocation ? sourceLocation : uri.toString()).build(),
       responseType: 'text',
     });
