@@ -38,5 +38,6 @@ export abstract class ModelApiPort {
   abstract generateOpenApiSpec(rdfContent: string, openApi: OpenApi, sourceLocation?: string): Observable<string>;
   abstract generateAsyncApiSpec(rdfContent: string, asyncApi: AsyncApi, sourceLocation?: string): Observable<any>;
   abstract generateAASX(rdfContent: string, sourceLocation?: string): Observable<string>;
-  abstract generatetAASasXML(rdfContent: string, sourceLocation?: string): Observable<string>;
+  abstract generateAASasJSON(rdfContent: string, sourceLocation?: string): Observable<string>;
+  abstract generateAASasXML(rdfContent: string, sourceLocation?: string): Observable<string>;
 }

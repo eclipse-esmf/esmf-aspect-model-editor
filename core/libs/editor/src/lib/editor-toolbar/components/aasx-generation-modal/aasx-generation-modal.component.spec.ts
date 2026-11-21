@@ -17,11 +17,14 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DefaultAspect, ModelElementCache, RdfModel} from '@esmf/aspect-model-loader';
 import {TranslocoTestingModule} from '@jsverse/transloco';
+import {saveAs} from 'file-saver';
 import {Store} from 'n3';
 import {MockProvider} from 'ng-mocks';
 import {of, Subject} from 'rxjs';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {AASXGenerationModalComponent} from './aasx-generation-modal.component';
+
+vi.mock('file-saver', () => ({saveAs: vi.fn()}));
 
 describe('AASXGenerationModalComponent', () => {
   let component: AASXGenerationModalComponent;
@@ -50,7 +53,8 @@ describe('AASXGenerationModalComponent', () => {
         {provide: MatDialogRef, useValue: dialogRef},
         MockProvider(ModelApiPort, {
           generateAASX: vi.fn(() => of('aasx blob content')),
-          generatetAASasXML: vi.fn(() => of('<xml></xml>')),
+          generateAASasXML: vi.fn(() => of('<xml></xml>')),
+          generateAASasJSON: vi.fn(() => of('{"assetAdministrationShells":[]}')),
         }),
         MockProvider(RdfPort, {
           serializeModel: vi.fn(() => 'turtle content'),
@@ -102,6 +106,13 @@ describe('AASXGenerationModalComponent', () => {
     component.generate();
 
     expect(modelApiService.generateAASX).toHaveBeenCalled();
+    expect(dialogRef.close).toHaveBeenCalled();
+  });
+  it('generates and saves JSON with the appropriate file type and name', () => {
+    component.formatModel.set({format: 'json'});
+    component.generate();
+    expect(modelApiService.generateAASasJSON).toHaveBeenCalledWith('turtle content', undefined);
+    expect(saveAs).toHaveBeenCalledWith(expect.objectContaining({type: 'application/json'}), expect.stringMatching(/-aas\.json$/));
     expect(dialogRef.close).toHaveBeenCalled();
   });
 });

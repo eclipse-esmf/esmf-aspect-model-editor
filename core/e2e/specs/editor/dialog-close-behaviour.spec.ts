@@ -78,7 +78,7 @@ const MODEL_DIALOGS: Record<string, Opener> = {
   'generate documentation': async (_page, {tauri}) => tauri.emitSignal('GENERATE_HTML_DOCUMENTATION'),
   'generate OpenAPI': async (_page, {tauri}) => tauri.emitSignal('GENERATE_OPEN_API_SPECIFICATION'),
   'generate AsyncAPI': async (_page, {tauri}) => tauri.emitSignal('GENERATE_ASYNC_API_SPECIFICATION'),
-  'generate AASX': async (_page, {tauri}) => tauri.emitSignal('GENERATE_AASX_XML'),
+  'generate AASX': async (_page, {tauri}) => tauri.emitSignal('GENERATE_AAS'),
   settings: async (_page, {app}) => app.openSettings(),
 };
 

@@ -73,7 +73,7 @@ pub(crate) const MENU_SHORTCUTS: &[(&str, &str)] = &[
     ("GENERATE_HTML_DOCUMENTATION", "CmdOrCtrl+3"),
     ("GENERATE_OPEN_API_SPECIFICATION", "CmdOrCtrl+4"),
     ("GENERATE_ASYNC_API_SPECIFICATION", "CmdOrCtrl+5"),
-    ("GENERATE_AASX_XML", "CmdOrCtrl+6"),
+    ("GENERATE_AAS", "CmdOrCtrl+6"),
     ("GENERATE_JSON_PAYLOAD", "CmdOrCtrl+7"),
     ("GENERATE_JSON_SCHEMA", "CmdOrCtrl+8"),
     // Search
@@ -292,7 +292,7 @@ fn build_generate_submenu<R: Runtime>(app: &AppHandle<R>) -> Result<Submenu<R>, 
         "AsyncAPI Specification",
         false,
     )?;
-    let gen_aasx = item(app, "GENERATE_AASX_XML", "AASX / XML", false)?;
+    let gen_aasx = item(app, "GENERATE_AAS", "AASX / XML / JSON", false)?;
     let sep = PredefinedMenuItem::separator(app)?;
     let gen_json_sample = item(app, "GENERATE_JSON_PAYLOAD", "Sample JSON Payload", false)?;
     let gen_json_schema = item(app, "GENERATE_JSON_SCHEMA", "JSON Schema", false)?;
@@ -740,8 +740,8 @@ pub fn translate_menu<R: Runtime>(app: &AppHandle<R>, translation: &serde_json::
             gen.get("asyncApiSpecification").and_then(|v| v.as_str()),
         ));
         mappings.push((
-            "GENERATE_AASX_XML",
-            gen.get("aasxXml").and_then(|v| v.as_str()),
+            "GENERATE_AAS",
+            gen.get("aasxXmlJson").and_then(|v| v.as_str()),
         ));
         mappings.push((
             "GENERATE_JSON_PAYLOAD",
@@ -973,7 +973,7 @@ mod tests {
             "GENERATE_HTML_DOCUMENTATION",
             "GENERATE_OPEN_API_SPECIFICATION",
             "GENERATE_ASYNC_API_SPECIFICATION",
-            "GENERATE_AASX_XML",
+            "GENERATE_AAS",
             "GENERATE_JSON_PAYLOAD",
             "GENERATE_JSON_SCHEMA",
             "SEARCH_ELEMENTS",

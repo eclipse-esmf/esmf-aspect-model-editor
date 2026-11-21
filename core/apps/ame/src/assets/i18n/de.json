@@ -142,7 +142,7 @@
   "generateDocumentMenu": {
     "generateHtmlDocument": "HTML-Dokumentation generieren",
     "generateOpenapiSpecification": "OpenAPI-Spezifikation generieren",
-    "generateAasxXml": "AASX/XML generieren"
+    "generateAasxXmlJson": "AASX/XML/JSON generieren"
   },
   "downloadJsonMenu": {
     "generateSampleJsonPayload": "Beispiel-JSON-Payload generieren",
@@ -166,7 +166,7 @@
     "cancel": "Abbrechen"
   },
   "generateAasxDialog": {
-    "title": "AASX generieren",
+    "title": "AAS generieren",
     "outputFileFormat": "Ausgabedateiformat",
     "generating": "Wird generiert...",
     "cancel": "Abbrechen",
@@ -923,7 +923,7 @@
       "htmlDocumentation": "HTML-Dokumentation",
       "openApiSpecification": "OpenAPI-Spezifikation",
       "asyncApiSpecification": "AsyncAPI-Spezifikation",
-      "aasxXml": "AASX / XML",
+      "aasxXmlJson": "AASX / XML / JSON",
       "sampleJsonPayload": "Beispiel-JSON-Payload",
       "jsonSchema": "JSON Schema"
     },

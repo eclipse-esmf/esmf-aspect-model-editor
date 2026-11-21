@@ -74,7 +74,7 @@ test.describe('Generation - Comprehensive Suite', () => {
     }
   });
 
-  test('should verify AASX and XML AAS generation modals', async ({page}) => {
+  test('should verify AASX, XML, and JSON AAS generation modals', async ({page}) => {
     await page.evaluate(() => {
       const generateService = (window as any)['angular.generateHandlingService'];
       generateService?.openGenerateAasModal?.();

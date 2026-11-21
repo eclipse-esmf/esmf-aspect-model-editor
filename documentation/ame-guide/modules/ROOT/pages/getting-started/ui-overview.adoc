@@ -193,8 +193,8 @@ image:menu-bar/menu-generate.png[, width=30%, align="center"]
 | Generate AsyncAPI specification.
 
 | image:toolbar-icons/data_array.png[,20%,20%]
-| AASX/XML
-| Generate AASX/XML.
+| AASX/XML/JSON
+| Generate AASX/XML/JSON.
 
 | image:toolbar-icons/description.png[,20%,20%]
 | Sample JSON Payload
@@ -451,7 +451,7 @@ On macOS use *Cmd*, on Windows and Linux use *Ctrl*. Shortcuts of menu entries t
 | `Cmd/Ctrl+3` | Generate > HTML Documentation
 | `Cmd/Ctrl+4` | Generate > OpenAPI Specification
 | `Cmd/Ctrl+5` | Generate > AsyncAPI Specification
-| `Cmd/Ctrl+6` | Generate > AASX / XML
+| `Cmd/Ctrl+6` | Generate > AASX / XML / JSON
 | `Cmd/Ctrl+7` | Generate > Sample JSON Payload
 | `Cmd/Ctrl+8` | Generate > JSON Schema
 | `Cmd/Ctrl+F` | Search > Elements (in the text view: search in the text)

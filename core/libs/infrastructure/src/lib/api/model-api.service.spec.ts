@@ -757,17 +757,31 @@ describe('ModelApiService', () => {
     });
   });
 
-  describe('generatetAASasXML', () => {
+  describe('generateAASasXML', () => {
     beforeEach(() => configureTestBed());
 
     it('should generate the AAS as XML', () => {
       let result: string;
-      service.generatetAASasXML('<ttl content>', 'file:///source.ttl').subscribe(value => (result = value));
+      service.generateAASasXML('<ttl content>', 'file:///source.ttl').subscribe(value => (result = value));
 
       const req = httpMock.expectOne(`${generateUrl}/aas-xml`);
       req.flush('<xml content>');
 
       expect(result).toBe('<xml content>');
+    });
+  });
+  describe('generateAASasJSON', () => {
+    beforeEach(() => configureTestBed());
+
+    it('should send the aspect model and return JSON as text', () => {
+      let result: string;
+      service.generateAASasJSON('<ttl content>', 'file:///source.ttl').subscribe(value => (result = value));
+      const req = httpMock.expectOne(`${generateUrl}/aas-json`);
+      expect(req.request.method).toBe('POST');
+      expect(req.request.responseType).toBe('text');
+      expect(req.request.body.get('aspectModel')).toBeInstanceOf(File);
+      req.flush('{"assetAdministrationShells":[]}');
+      expect(result).toBe('{"assetAdministrationShells":[]}');
     });
   });
 });

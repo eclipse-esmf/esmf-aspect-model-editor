@@ -48,7 +48,7 @@ export class AASXGenerationModalComponent {
   private dialogRef = inject(MatDialogRef<AASXGenerationModalComponent>);
   private loadedFilesService = inject(LoadedFilesService);
 
-  formatModel = signal<{format: string}>({format: 'aasx'});
+  formatModel = signal<{format: 'aasx' | 'xml' | 'json'}>({format: 'aasx'});
   formatForm = form(this.formatModel);
   isGenerating = signal(false);
 
@@ -63,20 +63,23 @@ export class AASXGenerationModalComponent {
     const rdfModel = this.rdfService.serializeModel(currentFile.rdfModel);
     const sourceLocation = currentFile.rdfModel.getSourceLocation();
     const selectedFormat = this.formatModel().format;
-    const assx =
+    const output =
       selectedFormat === 'aasx'
         ? this.modelApiService.generateAASX(rdfModel, sourceLocation)
-        : this.modelApiService.generatetAASasXML(rdfModel, sourceLocation);
+        : selectedFormat === 'xml'
+          ? this.modelApiService.generateAASasXML(rdfModel, sourceLocation)
+          : this.modelApiService.generateAASasJSON(rdfModel, sourceLocation);
 
-    assx
+    output
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         first(),
         tap(content => {
-          const file = new Blob([content], {type: selectedFormat === 'aasx' ? 'text/aasx' : 'text/xml'});
+          const contentTypes = {aasx: 'text/aasx', xml: 'text/xml', json: 'application/json'};
+          const file = new Blob([content], {type: contentTypes[selectedFormat]});
 
           const aspectName = currentFile.name.endsWith('.ttl') ? currentFile.name.slice(0, -4) : currentFile.name;
-          const fileName = `${aspectName}${selectedFormat === 'aasx' ? '.aasx' : '-aas.xml'}`;
+          const fileName = `${aspectName}${selectedFormat === 'aasx' ? '.aasx' : `-aas.${selectedFormat}`}`;
           saveAs(file, fileName);
         }),
         finalize(() => {
